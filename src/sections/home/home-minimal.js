@@ -57,7 +57,7 @@ export default function HomeMinimal() {
 
         <m.div variants={varFade().inDown}>
           <Typography variant="h2">
-            What Next.
+            What Next.Zen
             <br /> helps you?
           </Typography>
         </m.div>
