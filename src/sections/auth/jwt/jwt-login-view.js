@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
@@ -25,17 +26,20 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { createTheme } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
+import { useNavData } from 'src/layouts/dashboard/config-navigation';
 
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
   const { login } = useAuthContext();
 
+  const navigate = useNavigate();
+
   const router = useRouter();
 
   const theme = useTheme();
 
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('1');
 
   const searchParams = useSearchParams();
 
@@ -66,6 +70,7 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      console.log(data);
       await login?.(data.email, data.password);
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
@@ -73,6 +78,9 @@ export default function JwtLoginView() {
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
+    // console.log('called');
+    // navigate('/dashboard');
+    // await login?.(data.email, data.password);
   });
 
   const renderHead = (
@@ -134,9 +142,9 @@ export default function JwtLoginView() {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
-      {/* <Alert severity="info" sx={{ mb: 3 }}>
+      <Alert severity="info" sx={{ mb: 3 }}>
         Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert> */}
+      </Alert>
 
       {renderForm}
     </FormProvider>
