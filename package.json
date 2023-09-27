@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "Next.Zen TO SPACE",
   "private": true,
-  "proxy":"https://api-dev-minimal-v510.vercel.app",
+  "proxy":"http://192.168.1.189:8081/loginuser",
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
