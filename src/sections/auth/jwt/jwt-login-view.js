@@ -70,7 +70,6 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data);
       await login?.(data.email, data.password);
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
@@ -78,9 +77,6 @@ export default function JwtLoginView() {
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
-    // console.log('called');
-    // navigate('/dashboard');
-    // await login?.(data.email, data.password);
   });
 
   const renderHead = (

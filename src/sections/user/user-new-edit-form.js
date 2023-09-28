@@ -79,6 +79,8 @@ export default function UserNewEditForm({ currentUser }) {
     defaultValues,
   });
 
+  const m2 = useForm();
+
   const {
     reset,
     watch,
@@ -92,6 +94,7 @@ export default function UserNewEditForm({ currentUser }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      console.log(data, 'data');
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');

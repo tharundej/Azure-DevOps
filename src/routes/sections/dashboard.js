@@ -65,6 +65,9 @@ const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
 // ----------------------------------------------------------------------
 
+// signup------------------------
+const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
+
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -80,6 +83,7 @@ export const dashboardRoutes = [
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
+      { path: 'signup', element: <SignupHome /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },

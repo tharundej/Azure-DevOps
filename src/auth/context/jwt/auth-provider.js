@@ -104,6 +104,9 @@ export function AuthProvider({ children }) {
       password,
     };
 
+    // console.log(data, 'data ......');
+
+    // const response = await axios.post('http://192.168.1.189:3001/loginuser', data);
     const response = await axios.post(endpoints.auth.login, data);
 
     const { accessToken, user } = response.data;
