@@ -61,7 +61,15 @@ export function useNavData() {
             title: t('app'),
             path: paths.dashboard.root,
             icon: ICONS.dashboard,
+          
           },
+          {
+            title: t('table'),
+            path: paths.dashboard.table.basictable,
+            icon: ICONS.dashboard,
+            
+          },
+          
           // {
           //   title: t('ecommerce'),
           //   path: paths.dashboard.general.ecommerce,

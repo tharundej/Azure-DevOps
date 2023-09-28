@@ -1,10 +1,10 @@
 {
-  "name": "Next zen",
+  "name": "Nextzen",
   "author": "Infobell It",
   "version": "0.0.1",
   "description": "Next.Zen TO SPACE",
   "private": true,
-  "proxy":"http://192.168.1.189:8081/loginuser",
+  "proxy":"https://api-dev-minimal-v510.vercel.app",
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
