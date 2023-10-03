@@ -64,6 +64,9 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
 // ----------------------------------------------------------------------
+const BasicTable = lazy(() => import('src/nextzen/BasicTable'));
+const UserNewEditForm1 = lazy(() => import('src/nextzen/components/UserNewEditForm1'));
+
 
 // signup------------------------
 const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
@@ -80,6 +83,7 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
+    
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
@@ -88,6 +92,15 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
+      
+      { path: 'basictable', 
+       children:[
+        { element: <BasicTable />, index: true },
+        { path: 'userneweditform', element: <UserNewEditForm1 /> },
+       ],
+    
+    
+    },
       {
         path: 'user',
         children: [
@@ -98,6 +111,9 @@ export const dashboardRoutes = [
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
+
+          // { path: 'basictable', element: <BasicTable /> },
+          
         ],
       },
       {

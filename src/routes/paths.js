@@ -61,7 +61,8 @@ export const paths = {
     },
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
-      register: `${ROOTS.AUTH}/jwt/register`,
+      register: `${ROOTS.AUTH}/jwt/signup`,
+      general: `${ROOTS.AUTH}/jwt/general`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -107,7 +108,13 @@ export const paths = {
       booking: `${ROOTS.DASHBOARD}/booking`,
       file: `${ROOTS.DASHBOARD}/file`,
       signup: `${ROOTS.DASHBOARD}/signup`,
+      general: `${ROOTS.DASHBOARD}/general`,
     },
+    table: {
+      basictable: `${ROOTS.DASHBOARD}/basictable`,
+      userneweditform: `${ROOTS.DASHBOARD}/basictable/userneweditform`,
+    },
+
     user: {
       root: `${ROOTS.DASHBOARD}/user`,
       new: `${ROOTS.DASHBOARD}/user/new`,
@@ -115,6 +122,7 @@ export const paths = {
       cards: `${ROOTS.DASHBOARD}/user/cards`,
       profile: `${ROOTS.DASHBOARD}/user/profile`,
       account: `${ROOTS.DASHBOARD}/user/account`,
+
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,

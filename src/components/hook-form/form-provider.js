@@ -4,7 +4,7 @@ import { FormProvider as Form } from 'react-hook-form';
 // ----------------------------------------------------------------------
 
 export default function FormProvider({ children, onSubmit, methods }) {
-  console.log(children, 'children');
+ 
   return (
     <Form {...methods}>
       <form onSubmit={onSubmit}>{children}</form>
