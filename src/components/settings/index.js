@@ -1,2 +1,3 @@
-export { useSettingsContext } from './settings-context';
-export { SettingsProvider } from './settings-provider';
+export * from './context';
+
+export { default as SettingsDrawer } from './drawer';

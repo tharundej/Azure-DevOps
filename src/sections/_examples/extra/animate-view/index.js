@@ -1,61 +1,78 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Unstable_Grid2';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Container from '@mui/material/Container';
+// routes
+import { paths } from 'src/routes/paths';
+// components
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
-import Toolbar from './toolbar';
-import ContainerView from './container';
-import ControlPanel from '../control-panel';
+import Inview from './inview';
+import OtherView from './other';
+import ScrollView from './scroll';
+import DialogView from './dialog';
+import BackgroundView from './background';
 
 // ----------------------------------------------------------------------
 
-export default function BackgroundView() {
-  const [count, setCount] = useState(0);
-  const [selectVariant, setSelectVariant] = useState('kenburnsTop');
+const TABS = [
+  { value: 'inview', label: 'In View', component: <Inview /> },
+  { value: 'scroll', label: 'Scroll', component: <ScrollView /> },
+  { value: 'dialog', label: 'Dialog', component: <DialogView /> },
+  { value: 'background', label: 'Background', component: <BackgroundView /> },
+  { value: 'other', label: 'Other', component: <OtherView /> },
+];
 
-  const handleChangeVariant = (event) => {
-    setCount(count + 1);
-    setSelectVariant(event.target.value);
-  };
+// ----------------------------------------------------------------------
+
+export default function AnimateView() {
+  const [currentTab, setCurrentTab] = useState('inview');
+
+  const handleChangeTab = useCallback((event, newValue) => {
+    setCurrentTab(newValue);
+  }, []);
 
   return (
-    <Card sx={{ p: 3 }}>
-      <Grid container sx={{ mb: 3 }}>
-        <Grid xs={12} md={9}>
-          <Toolbar onRefresh={() => setCount(count + 1)} />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={3}>
-        <Grid xs={12} md={9}>
-          <ContainerView key={count} selectVariant={selectVariant} />
-        </Grid>
-
-        <Grid xs={12} md={3}>
-          <ControlPanel
-            variantKey={variantKey}
-            selectVariant={selectVariant}
-            onChangeVariant={handleChangeVariant}
+    <>
+      <Box
+        sx={{
+          py: 5,
+          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800'),
+        }}
+      >
+        <Container>
+          <CustomBreadcrumbs
+            heading="Animate"
+            links={[
+              {
+                name: 'Components',
+                href: paths.components,
+              },
+              { name: 'Animate' },
+            ]}
+            moreLink={['https://www.framer.com/api/motion']}
           />
-        </Grid>
-      </Grid>
-    </Card>
+        </Container>
+      </Box>
+
+      <Container sx={{ my: 10 }}>
+        <Tabs value={currentTab} onChange={handleChangeTab}>
+          {TABS.map((tab) => (
+            <Tab key={tab.value} value={tab.value} label={tab.label} />
+          ))}
+        </Tabs>
+
+        {TABS.map(
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value} sx={{ mt: 5 }}>
+                {tab.component}
+              </Box>
+            )
+        )}
+      </Container>
+    </>
   );
 }
-
-// ----------------------------------------------------------------------
-
-const variantKey = [
-  {
-    type: 'kenburns',
-    values: ['kenburnsTop', 'kenburnsBottom', 'kenburnsLeft', 'kenburnsRight'],
-  },
-  {
-    type: 'pan',
-    values: ['panTop', 'panBottom', 'panLeft', 'panRight'],
-  },
-  {
-    type: 'color change',
-    values: ['color2x', 'color3x', 'color4x', 'color5x'],
-  },
-];
