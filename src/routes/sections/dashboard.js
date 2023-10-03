@@ -64,8 +64,12 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
 // ----------------------------------------------------------------------
-const BasicTable = lazy(() => import('src/nextzen/BasicTable'));
-const UserNewEditForm1 = lazy(() => import('src/nextzen/components/UserNewEditForm1'));
+// const BasicTable = lazy(() => import('src/nextzen/Table/BasicTable'));
+const UserNewEditForm1 = lazy(() => import('src/nextzen/Table/components/UserNewEditForm1'));
+// const UserEditView = lazy(() => import('src/nextzen/components/UserEditViews'));
+const Edits = lazy(() => import('src/nextzen/Table/components/Edits'));
+const ReuseTable = lazy(()=>import ("src/nextzen/Table/reusetable"));
+const ReuseTableTwo = lazy(()=>import ("src/nextzen/Table/Reuseabletwo"));
 
 
 export const dashboardRoutes = [
@@ -89,14 +93,32 @@ export const dashboardRoutes = [
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
       
-      { path: 'basictable', 
+      { path: 'reusetable', 
        children:[
-        { element: <BasicTable />, index: true },
+        { element: <ReuseTable/>, index: true },
         { path: 'userneweditform', element: <UserNewEditForm1 /> },
+        { path: ':id/edit', element: <Edits /> },
+        // { path: 'reusetable', element: <ReuseTable /> },
+        { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+        
        ],
     
     
     },
+
+    { path: 'reusetabletwo', 
+    children:[
+     { element: <ReuseTableTwo />, index: true },
+    //  { path: 'userneweditform', element: <UserNewEditForm1 /> },
+    //  { path: ':id/edit', element: <Edits /> },
+     // { path: 'reusetable', element: <ReuseTable /> },
+    //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+     
+    ],
+ 
+ 
+ },
+
       {
         path: 'user',
         children: [
@@ -108,7 +130,8 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
 
-          // { path: 'basictable', element: <BasicTable /> },
+          // { path: 'reusetable', element: <ReuseTable /> },
+          // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
           
         ],
       },

@@ -5,7 +5,7 @@
   "description": "Next.Zen TO SPACE",
   "private": true,
   "proxy":"https://api-dev-minimal-v510.vercel.app",
-  "scripts": {
+  "scripts": { 
     "start": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",

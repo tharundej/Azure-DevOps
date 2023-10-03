@@ -65,8 +65,15 @@ export function useNavData() {
           },
           {
             title: t('table'),
-            path: paths.dashboard.table.basictable,
+            path: paths.dashboard.table.root,
             icon: ICONS.dashboard,
+            
+          },
+
+          {
+            title: t('Employee Management'),
+            path: paths.dashboard.employee.root,
+            icon: ICONS.user,
             
           },
           
