@@ -67,9 +67,9 @@ const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 const BasicTable = lazy(() => import('src/nextzen/BasicTable'));
 const UserNewEditForm1 = lazy(() => import('src/nextzen/components/UserNewEditForm1'));
 
-
 // signup------------------------
 const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
+const OboardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 export const dashboardRoutes = [
   {
@@ -83,7 +83,7 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
-    
+
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
@@ -92,15 +92,15 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
-      
-      { path: 'basictable', 
-       children:[
-        { element: <BasicTable />, index: true },
-        { path: 'userneweditform', element: <UserNewEditForm1 /> },
-       ],
-    
-    
-    },
+
+      {
+        path: 'basictable',
+        children: [
+          { element: <BasicTable />, index: true },
+          { path: 'userneweditform', element: <UserNewEditForm1 /> },
+          { path: 'onboardform', element: <OboardForm /> },
+        ],
+      },
       {
         path: 'user',
         children: [
@@ -113,7 +113,6 @@ export const dashboardRoutes = [
           { path: 'account', element: <UserAccountPage /> },
 
           // { path: 'basictable', element: <BasicTable /> },
-          
         ],
       },
       {
