@@ -137,7 +137,7 @@ console.log(headdata,"headdata importtttt---------")
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.edit(id));
+      router.push(paths.dashboard.table.edit(id));
     },
     [router]
   );

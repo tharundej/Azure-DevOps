@@ -13,10 +13,10 @@ import UserEditViews  from "./UserEditViews";
 // ----------------------------------------------------------------------
 
 export default function UserEdit() {
-  // const params = useParams();
+  const params = useParams();
 
-  // const { id } = params;
-  const { id } = "22";
+  const { id } = params;
+  // const { id } = "22";
 
 
   return (

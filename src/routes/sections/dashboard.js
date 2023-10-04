@@ -93,13 +93,13 @@ export const dashboardRoutes = [
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
       
-      { path: 'reusetable', 
+      { path: 'table', 
        children:[
         { element: <ReuseTable/>, index: true },
         { path: 'userneweditform', element: <UserNewEditForm1 /> },
         { path: ':id/edit', element: <Edits /> },
         // { path: 'reusetable', element: <ReuseTable /> },
-        { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+        // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
         
        ],
     
@@ -109,7 +109,8 @@ export const dashboardRoutes = [
     { path: 'reusetabletwo', 
     children:[
      { element: <ReuseTableTwo />, index: true },
-    //  { path: 'userneweditform', element: <UserNewEditForm1 /> },
+     { path: ':id/edit', element: <Edits /> },
+     { path: 'userneweditform', element: <UserNewEditForm1 /> },
     //  { path: ':id/edit', element: <Edits /> },
      // { path: 'reusetable', element: <ReuseTable /> },
     //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },

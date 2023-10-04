@@ -111,17 +111,23 @@ export const paths = {
       
     },
     table:{
-      root: `${ROOTS.DASHBOARD}/reusetable`,
-      userneweditform: `${ROOTS.DASHBOARD}/reusetable/userneweditform`,
+      root: `${ROOTS.DASHBOARD}/table`,
+      userneweditform: `${ROOTS.DASHBOARD}/table/userneweditform`,
       
-      edit: (id) => `${ROOTS.DASHBOARD}/reusetable/${id}/edit`,
+      edit: (id) => `${ROOTS.DASHBOARD}/table/${id}/edit`,
       demo: {
-        edit: `${ROOTS.DASHBOARD}/reusetable/${MOCK_ID}/edit`,
+        edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       },
 
     },
     employee:{
       root: `${ROOTS.DASHBOARD}/reusetabletwo`,
+      userneweditform: `${ROOTS.DASHBOARD}/reusetabletwo/userneweditform`,
+      
+      edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
+      },
     },
     user: {
       root: `${ROOTS.DASHBOARD}/user`,
