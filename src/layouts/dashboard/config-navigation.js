@@ -81,43 +81,43 @@ export function useNavData() {
           },
           {
             title: t('Leave Management'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.leave.root,
             icon: ICONS.user,
             
           },
           {
             title: t('Time Sheet Management'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.timesheet.root,
             icon: ICONS.user,
             
           },
           {
             title: t('Claims'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.claims.root,
             icon: ICONS.user,
             
           },
           {
             title: t('Payroll'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.payroll.root,
             icon: ICONS.user,
             
           },
           {
             title: t('IT Declaration'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.itdeclaration.root,
             icon: ICONS.user,
             
           },
           {
             title: t('Monthly Additional Deductions'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.monthlydeductions.root,
             icon: ICONS.user,
             
           },
           {
             title: t('Appraisal Management'),
-            path: paths.dashboard.root,
+            path: paths.dashboard.appraisal.root,
             icon: ICONS.user,
             
           },

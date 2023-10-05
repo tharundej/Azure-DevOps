@@ -146,6 +146,51 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+
+
+    itdeclaration:{
+      root: `${ROOTS.DASHBOARD}/itdeclaration`,
+     
+    },
+    leave:{
+      root: `${ROOTS.DASHBOARD}/leave`,
+     
+    },
+
+
+    
+    timesheet:{
+      root: `${ROOTS.DASHBOARD}/timesheet`,
+     
+    },
+
+
+
+    claims:{
+      root: `${ROOTS.DASHBOARD}/claims`,
+     
+    },
+
+
+    payroll:{
+      root: `${ROOTS.DASHBOARD}/payroll`,
+     
+    },
+    monthlydeductions:{
+      root: `${ROOTS.DASHBOARD}/monthlydeductions`,
+     
+    },
+
+    appraisal:{
+      root: `${ROOTS.DASHBOARD}/appraisal`,
+     
+    },
+
+
+
+
+    // monthlydeductions
+
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
