@@ -37,37 +37,87 @@ export default function GeneralInformation({ currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('Country is required'),
-    company: Yup.string().required('Company is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role is required'),
-    zipCode: Yup.string().required('Zip code is required'),
-    avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
+    company_id: Yup.string(),
+    company_name: Yup.string(),
+    image_name: Yup.string(),
+    image_data: Yup.string(),
+    first_name: Yup.string(),
+    middle_name: Yup.string(),
+    last_name: Yup.string(),
+    email_id: Yup.string(),
+    contact_number: Yup.string(),
+    emergency_contact_number: Yup.string(),
+    date_of_birth: Yup.string(),
+    father_name: Yup.string(),
+    mother_name: Yup.string(),
+    marital_status: Yup.string(),
+    nationality: Yup.string(),
+    religion: Yup.string(),
+    blood_group: Yup.string(),
+    offer_date: Yup.string(),
+    joining_date: Yup.string(),
+    p_address_line1: Yup.string(),
+    p_address_line2: Yup.string(),
+    p_city: Yup.string(),
+    p_state: Yup.string(),
+    p_pincode: Yup.string(),
+    r_address_line1: Yup.string(),
+    r_address_line2: Yup.string(),
+    r_city: Yup.string(),
+    r_state: Yup.string(),
+    r_pincode: Yup.string(),
+
+    // first_name: Yup.string().required('First Name is required'),
+
+    // middle_name: Yup.string().required('Middle Name is required'),
+
+    // name: Yup.string().required('Name is required'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    // phoneNumber: Yup.string().required('Phone number is required'),
+    // address: Yup.string().required('Address is required'),
+    // country: Yup.string().required('Country is required'),
+    // company: Yup.string().required('Company is required'),
+    // state: Yup.string().required('State is required'),
+    // city: Yup.string().required('City is required'),
+    // role: Yup.string().required('Role is required'),
+    // zipCode: Yup.string().required('Zip code is required'),
+    // avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
     // not required
-    status: Yup.string(),
-    isVerified: Yup.boolean(),
+    // status: Yup.string(),
+    // isVerified: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      city: currentUser?.city || '',
-      role: currentUser?.role || '',
-      email: currentUser?.email || '',
-      state: currentUser?.state || '',
-      status: currentUser?.status || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      zipCode: currentUser?.zipCode || '',
-      company: currentUser?.company || '',
-      avatarUrl: currentUser?.avatarUrl || null,
-      phoneNumber: currentUser?.phoneNumber || '',
-      isVerified: currentUser?.isVerified || true,
+      // company_id: currentUser?.company_id || '',
+      // company_name: currentUser?.company_name || '',
+      // image_name: currentUser?.image_name || '',
+      // image_data: currentUser?.image_data || '',
+      first_name: currentUser?.first_name || '',
+      middle_name: currentUser?.middle_name || '',
+      last_name: currentUser?.last_name || '',
+      email_id: currentUser?.email_id || '',
+      contact_number: currentUser?.contact_number || '',
+      emergency_contact_number: currentUser?.emergency_contact_number || '',
+      date_of_birth: currentUser?.date_of_birth || '',
+      father_name: currentUser?.father_name || '',
+      mother_name: currentUser?.mother_name || '',
+      marital_status: currentUser?.marital_status || '',
+      nationality: currentUser?.nationality || '',
+      religion: currentUser?.religion || '',
+      blood_group: currentUser?.blood_group || '',
+      offer_date: currentUser?.offer_date || '',
+      joining_date: currentUser?.joining_date || '',
+      p_address_line1: currentUser?.p_address_line1 || '',
+      p_address_line2: currentUser?.p_address_line2 || '',
+      p_city: currentUser?.p_city || '',
+      p_state: currentUser?.p_state || '',
+      p_pincode: currentUser?.p_pincode || '',
+      r_address_line1: currentUser?.r_address_line1 || '',
+      r_address_line2: currentUser?.r_address_line2 || '',
+      r_city: currentUser?.r_city || '',
+      r_state: currentUser?.r_state || '',
+      r_pincode: currentUser?.r_pincode || '',
     }),
     [currentUser]
   );
@@ -91,13 +141,14 @@ export default function GeneralInformation({ currentUser }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('uyfgv');
     try {
-      console.log(data, 'data111');
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.user.list);
-      console.info('DATA', data);
+      console.log(data, 'data111ugsghghh');
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
@@ -220,7 +271,34 @@ export default function GeneralInformation({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="name" label="Full Name" />
+                <RHFTextField name="first_name" label="First Name " />
+                <RHFTextField name="middle_name" label="Middle Name " />
+                <RHFTextField name="last_name" label="Last Name " />
+                <RHFTextField name="email_id" label="Email Id " />
+                <RHFTextField name="contact_number" label="Contact Number " />
+                <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
+                <RHFTextField name="date_of_birth" label=" Birth " />
+                <RHFTextField name="father_name" label="Father Name " />
+                <RHFTextField name="mother_name" label="Mother Name " />
+                <RHFTextField name="marital_status" label="Martial Status " />
+                <RHFTextField name="nationality" label="Nationality " />
+                <RHFTextField name="religion" label="Religion " />
+                <RHFTextField name="blood_group" label="Blood Group " />
+                <RHFTextField name="offer_date" label="Offer Date " />
+                <RHFTextField name="joining_date" label="Joining Date " />
+                <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
+                <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
+                <RHFTextField name="p_city" label="City " />
+                <RHFTextField name="p_state" label="State " />
+                <RHFTextField name="p_pincode" label="Pincode " />
+                <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
+                <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
+                <RHFTextField name="r_city" label="Resendial City " />
+                <RHFTextField name="r_state" label="Resendial State " />
+                <RHFTextField name="r_pincode" label="Resendial Pincode" />
+                <RHFUploadAvatar name="avatar" label="image_name" />
+
+                {/* <RHFTextField name="name" label="Full Name" />
                 <RHFTextField name="email" label="Email Address" />
                 <RHFTextField name="phoneNumber" label="Phone Number" />
 
@@ -258,7 +336,7 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="address" label="Address" />
                 <RHFTextField name="zipCode" label="Zip/Code" />
                 <RHFTextField name="company" label="Company" />
-                <RHFTextField name="role" label="Role" />
+                <RHFTextField name="role" label="Role" /> */}
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>

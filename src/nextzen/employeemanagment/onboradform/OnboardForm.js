@@ -8,8 +8,9 @@ import Typography from '@mui/material/Typography';
 
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
+import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 
-const steps = ['General Information', 'Create an ad group', 'Create an ad'];
+const steps = ['General Information', 'Education Details', 'Previous Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -90,6 +91,9 @@ export default function OnBoardForm() {
             )}
             {activeStep + 1 === 2 && (
               <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} />
+            )}
+            {activeStep + 1 === 3 && (
+              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
