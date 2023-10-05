@@ -6,7 +6,7 @@
   "private": true,
   "proxy": "https://api-dev-minimal-v510.vercel.app",
   "scripts": {
-    "start": "set PORT=3001 && react-scripts start",
+    "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",

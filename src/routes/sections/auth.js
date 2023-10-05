@@ -8,6 +8,7 @@ import AuthClassicLayout from 'src/layouts/auth/classic';
 // components
 import { SplashScreen } from 'src/components/loading-screen';
 import GeneralInfo from 'src/nextzen/signup/GeneralInfo';
+import { JwtRegisterView } from 'src/nextzen/signup/Index';
 
 // ----------------------------------------------------------------------
 
@@ -21,8 +22,11 @@ const AmplifyForgotPasswordPage = lazy(() => import('src/pages/auth/amplify/forg
 // JWT
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
-const Signup = lazy(() => import('src/nextzen/signup/SignupHome'));
-const General = lazy(() => import('src/nextzen/signup/GeneralInfo'));
+const Signup = lazy(() => import('src/nextzen/signup/JwtRegisterView'));
+const General = lazy(() => import('src/nextzen/signup/JwtLoginView'));
+const VerifyOtp=lazy(()=>import('src/nextzen/signup/VerifyOtp'));
+const CreatePassword = lazy(()=>import('src/nextzen/signup/CreatePassword'));
+const ForgotPassword = lazy(()=>import('src/nextzen/signup/ForgotPassword'));
 
 // FIREBASE
 const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
@@ -98,10 +102,27 @@ const authJwt = {
     {
       path: 'register',
       element: (
-        <AuthClassicLayout title="Manage the job more effectively with Next.Zen">
-          <JwtRegisterPage />
-        </AuthClassicLayout>
+        // <AuthClassicLayout title="Manage the job more effectively with Next.Zen">
+          <JwtRegisterView />
+        // </AuthClassicLayout>
       ),
+    },
+    // {
+    //   path: 'verifyotp',
+    //   element:(
+    //     <VerifyOtp/>
+    //   )
+    // },
+    {
+      path: 'createpassword',
+      element:(
+        <CreatePassword/>
+      )
+    },
+    {path: 'forgotpassword',
+     element:(
+      <ForgotPassword/>
+     )
     },
     {
       path: 'signup',

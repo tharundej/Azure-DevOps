@@ -4,7 +4,7 @@ import AnimateView from 'src/sections/_examples/extra/animate-view';
 
 // ----------------------------------------------------------------------
 
-export default function AnimatePage() {
+export default function AnimatePage() { 
   return (
     <>
       <Helmet>
