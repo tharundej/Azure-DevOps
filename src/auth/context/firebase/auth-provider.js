@@ -135,17 +135,14 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (email, password, firstName, lastName) => {
-    const newUser = await createUserWithEmailAndPassword(AUTH, email, password);
-
-    await sendEmailVerification(newUser.user);
-
-    const userProfile = doc(collection(DB, 'users'), newUser.user?.uid);
-
-    await setDoc(userProfile, {
-      uid: newUser.user?.uid,
-      email,
-      displayName: `${firstName} ${lastName}`,
-    });
+    // const newUser = await createUserWithEmailAndPassword(AUTH, email, password);
+    // await sendEmailVerification(newUser.user);
+    // const userProfile = doc(collection(DB, 'users'), newUser.user?.uid);
+    // await setDoc(userProfile, {
+    //   uid: newUser.user?.uid,
+    //   email,
+    //   displayName: `${firstName} ${lastName}`,
+    // });
   }, []);
 
   // LOGOUT

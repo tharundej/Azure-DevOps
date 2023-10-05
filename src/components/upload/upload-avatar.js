@@ -53,7 +53,7 @@ export default function UploadAvatar({ error, file, disabled, helperText, sx, ..
         width: 1,
         height: 1,
         zIndex: 9,
-        borderRadius: '50%',
+        borderRadius: '20%',
         position: 'absolute',
         color: 'text.disabled',
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
@@ -88,7 +88,7 @@ export default function UploadAvatar({ error, file, disabled, helperText, sx, ..
         width: 1,
         height: 1,
         overflow: 'hidden',
-        borderRadius: '50%',
+        borderRadius: '0%',
         position: 'relative',
       }}
     >
@@ -108,7 +108,7 @@ export default function UploadAvatar({ error, file, disabled, helperText, sx, ..
           height: 144,
           cursor: 'pointer',
           overflow: 'hidden',
-          borderRadius: '50%',
+          borderRadius: '20%',
           border: (theme) => `1px dashed ${alpha(theme.palette.grey[500], 0.2)}`,
           ...(isDragActive && {
             opacity: 0.72,

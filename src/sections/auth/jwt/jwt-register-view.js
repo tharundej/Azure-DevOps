@@ -71,7 +71,7 @@ export default function JwtRegisterView() {
 
       await register?.(data.email, data.password, data.firstName, data.lastName);
 
-      router.push(returnTo || PATH_AFTER_LOGIN);
+      // router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();

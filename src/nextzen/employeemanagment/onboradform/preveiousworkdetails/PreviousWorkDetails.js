@@ -24,7 +24,7 @@ import IconButton from '@mui/material/IconButton';
 import { Stack } from '@mui/system';
 
 export default function PreviousWorkDetails({ currentUser }) {
-  const [value, setValue] = React.useState(dayjs('2022-04-17'));
+  const [value, setValue] = React.useState(dayjs(new Date()));
   const [defaultValues, setDefaultValues] = useState([
     {
       previuos_company: 'a',
@@ -41,6 +41,14 @@ export default function PreviousWorkDetails({ currentUser }) {
     one: 'a',
     two: 'b',
   };
+  function formatDateToYYYYMMDD(newValue) {
+    const date = new Date(newValue.$d);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${year}/${month}/${day}`;
+  }
 
   const handleAdd = () => {
     setDefaultValues((prev) => [...prev, obj]);
@@ -72,7 +80,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
                         label="From"
-                        defaultValue={dayjs('2022-04-17')}
+                        defaultValue={dayjs(new Date())}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -84,7 +92,10 @@ export default function PreviousWorkDetails({ currentUser }) {
                         sx={{ width: '100%', paddingLeft: '3px' }}
                         label="To"
                         value={value}
-                        onChange={(newValue) => setValue(newValue)}
+                        defaultValue={dayjs(new Date())}
+                        onChange={(newValue) => {
+                          setValue(newValue);
+                        }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>

@@ -69,7 +69,7 @@ const UserNewEditForm1 = lazy(() => import('src/nextzen/components/UserNewEditFo
 
 // signup------------------------
 const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
-const OboardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
+const OnboardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 export const dashboardRoutes = [
   {
@@ -98,7 +98,7 @@ export const dashboardRoutes = [
         children: [
           { element: <BasicTable />, index: true },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OboardForm /> },
+          { path: 'onboardform', element: <OnboardForm /> },
         ],
       },
       {

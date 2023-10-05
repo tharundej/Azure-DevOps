@@ -30,6 +30,7 @@ import FormProvider, {
   RHFUploadAvatar,
   RHFAutocomplete,
 } from 'src/components/hook-form';
+import axios from 'axios';
 
 export default function GeneralInformation({ currentUser }) {
   const router = useRouter();
@@ -41,10 +42,10 @@ export default function GeneralInformation({ currentUser }) {
     company_name: Yup.string(),
     image_name: Yup.string(),
     image_data: Yup.string(),
-    first_name: Yup.string(),
+    first_name: Yup.string().required('First Name is Required'),
     middle_name: Yup.string(),
-    last_name: Yup.string(),
-    email_id: Yup.string(),
+    last_name: Yup.string('Last Name is Required'),
+    email_id: Yup.string().email().required('Email is Required'),
     contact_number: Yup.string(),
     emergency_contact_number: Yup.string(),
     date_of_birth: Yup.string(),
@@ -142,8 +143,22 @@ export default function GeneralInformation({ currentUser }) {
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
+
     try {
       console.log(data, 'data111ugsghghh');
+
+      data.company_id = '0001';
+      data.company_name = 'infbell';
+      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
       // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
@@ -296,7 +311,6 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
                 <RHFTextField name="r_pincode" label="Resendial Pincode" />
-                <RHFUploadAvatar name="avatar" label="image_name" />
 
                 {/* <RHFTextField name="name" label="Full Name" />
                 <RHFTextField name="email" label="Email Address" />
