@@ -63,6 +63,79 @@ export function useNavData() {
             icon: ICONS.dashboard,
           },
           // {
+          //   title: t('signup'),
+          //   path: paths.dashboard.general.signup,
+          //   icon: ICONS.ecommerce,
+          // },
+          {
+            title: t('table'),
+            path: paths.dashboard.table.root,
+            icon: ICONS.dashboard,
+          },
+
+          {
+            title: t('Employee Management'),
+            path: paths.dashboard.employee.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Leave Management'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Time Sheet Management'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Claims'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Payroll'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('IT Declaration'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Monthly Additional Deductions'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Appraisal Management'),
+            path: paths.dashboard.root,
+            icon: ICONS.user,
+            
+          },
+          {
+            title: t('Configuration'),
+            path: paths.dashboard.employee.root,
+            icon: ICONS.user,
+            children: [
+              { title: t('profile'), path: paths.dashboard.user.root },
+              { title: t('cards'), path: paths.dashboard.user.cards },
+              { title: t('list'), path: paths.dashboard.user.list },
+              
+            ],
+            
+          },
+          
+          
+          // {
           //   title: t('ecommerce'),
           //   path: paths.dashboard.general.ecommerce,
           //   icon: ICONS.ecommerce,

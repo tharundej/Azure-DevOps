@@ -64,6 +64,16 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
 // ----------------------------------------------------------------------
+// const BasicTable = lazy(() => import('src/nextzen/Table/BasicTable'));
+const UserNewEditForm1 = lazy(() => import('src/nextzen/Table/components/UserNewEditForm1'));
+// const UserEditView = lazy(() => import('src/nextzen/components/UserEditViews'));
+const Edits = lazy(() => import('src/nextzen/Table/components/Edits'));
+const ReuseTable = lazy(() => import('src/nextzen/Table/reusetable'));
+const ReuseTableTwo = lazy(() => import('src/nextzen/Table/Reuseabletwo'));
+
+// signup------------------------
+const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
+const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 export const dashboardRoutes = [
   {
@@ -77,13 +87,41 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
+
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
+      { path: 'signup', element: <SignupHome /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
+
+      {
+        path: 'table',
+        children: [
+          { element: <ReuseTable />, index: true },
+          { path: 'userneweditform', element: <UserNewEditForm1 /> },
+          { path: ':id/edit', element: <Edits /> },
+
+          // { path: 'reusetable', element: <ReuseTable /> },
+          // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+        ],
+      },
+
+      {
+        path: 'reusetabletwo',
+        children: [
+          { element: <ReuseTableTwo />, index: true },
+          { path: ':id/edit', element: <Edits /> },
+          { path: 'userneweditform', element: <UserNewEditForm1 /> },
+          { path: 'onboardform', element: <OnBoardForm /> },
+          //  { path: ':id/edit', element: <Edits /> },
+          // { path: 'reusetable', element: <ReuseTable /> },
+          //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+        ],
+      },
+
       {
         path: 'user',
         children: [
@@ -94,6 +132,9 @@ export const dashboardRoutes = [
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
+
+          // { path: 'reusetable', element: <ReuseTable /> },
+          // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
         ],
       },
       {

@@ -5,6 +5,7 @@ import axios, { endpoints } from 'src/utils/axios';
 //
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
+// import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
 
@@ -104,6 +105,9 @@ export function AuthProvider({ children }) {
       password,
     };
 
+    // console.log(data, 'data ......');
+
+    //  const response = await axios.post('http://localhost:3001/loginuser', data);
     const response = await axios.post(endpoints.auth.login, data);
 
     const { accessToken, user } = response.data;
@@ -122,29 +126,46 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
+  const register = useCallback(async (cin, company_name, company_registration_no, company_ceo_name,company_type,email_id,phone_no,first_name,middle_name,last_name,security_q1,security_a1,security_q2,security_a2) => {
     const data = {
-      email,
-      password,
-      firstName,
-      lastName,
+      cin, 
+      company_name, 
+      company_registration_no, 
+      company_ceo_name,
+      company_date_of_incorporation:'2023-09-12',
+      company_type,
+      email_id,
+      phone_no,
+      first_name,
+      middle_name,
+      last_name,
+      security_q1,
+      security_a1,
+      security_q2,
+      security_a2
     };
+      console.log(data, 'data ......');
+   
+     const response = await axios.post('http://localhost:3001/register', data);
+    // const response = await axios.post(endpoints.auth.register, data);
 
-    const response = await axios.post(endpoints.auth.register, data);
-
-    const { accessToken, user } = response.data;
-
-    sessionStorage.setItem(STORAGE_KEY, accessToken);
-
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user: {
-          ...user,
-          accessToken,
-        },
-      },
-    });
+    console.log(response)
+    if(!response?.data?.jwt){
+      console.log('failed')
+      return
+    }
+    const  accessToken  = response.data.jwt;
+    localStorage.setItem('jwt_access_token',accessToken);
+    // sessionStorage.setItem(STORAGE_KEY, accessToken);
+    // dispatch({
+    //   type: 'REGISTER',
+    //   payload: {
+    //     user: {
+    //       ...user,
+    //       accessToken,
+    //     },
+    //   },
+    // });
   }, []);
 
   // LOGOUT

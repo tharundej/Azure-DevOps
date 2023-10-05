@@ -33,7 +33,7 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-export default function UserNewEditForm({ currentUser }) {
+export default function UserNewEditForm1({ currentUser }) {
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -79,8 +79,6 @@ export default function UserNewEditForm({ currentUser }) {
     defaultValues,
   });
 
-  const m2 = useForm();
-
   const {
     reset,
     watch,
@@ -94,7 +92,6 @@ export default function UserNewEditForm({ currentUser }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data, 'data');
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
@@ -122,7 +119,6 @@ export default function UserNewEditForm({ currentUser }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      Nithin
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
@@ -284,6 +280,6 @@ export default function UserNewEditForm({ currentUser }) {
   );
 }
 
-UserNewEditForm.propTypes = {
+UserNewEditForm1.propTypes = {
   currentUser: PropTypes.object,
 };

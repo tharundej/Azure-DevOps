@@ -15,6 +15,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { bgBlur } from 'src/theme/css';
 // routes
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 // components
 import Logo from 'src/components/logo';
 import Label from 'src/components/label';
@@ -88,9 +89,9 @@ export default function Header() {
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-            <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
-              Purchase Now
-            </Button>
+            <Link href={paths.auth.jwt.register} component={RouterLink} variant="subtitle2">
+              <Button variant="contained">Sign Up</Button>
+            </Link>
 
             {mdUp && <LoginButton />}
 
