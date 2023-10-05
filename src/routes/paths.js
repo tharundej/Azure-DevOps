@@ -63,7 +63,10 @@ export const paths = {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
       general: `${ROOTS.AUTH}/jwt/general`,
-    },
+      verifyotp:`${ROOTS.AUTH}/jwt/verifyotp`,
+      createpassword:`${ROOTS.AUTH}/jwt/createpassword`,
+      forgotpassword:`${ROOTS.AUTH}/jwt/forgotpassword`,
+    },  
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
       verify: `${ROOTS.AUTH}/firebase/verify`,
@@ -107,14 +110,29 @@ export const paths = {
       banking: `${ROOTS.DASHBOARD}/banking`,
       booking: `${ROOTS.DASHBOARD}/booking`,
       file: `${ROOTS.DASHBOARD}/file`,
-      signup: `${ROOTS.DASHBOARD}/signup`,
+      // signup: `${ROOTS.DASHBOARD}/signup`,
       general: `${ROOTS.DASHBOARD}/general`,
     },
-    table: {
-      basictable: `${ROOTS.DASHBOARD}/basictable`,
-      userneweditform: `${ROOTS.DASHBOARD}/basictable/userneweditform`,
-    },
+    table:{
+      root: `${ROOTS.DASHBOARD}/table`,
+      userneweditform: `${ROOTS.DASHBOARD}/table/userneweditform`,
+      
+      edit: (id) => `${ROOTS.DASHBOARD}/table/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
+      },
 
+    },
+    employee:{
+      root: `${ROOTS.DASHBOARD}/reusetabletwo`,
+      userneweditform: `${ROOTS.DASHBOARD}/reusetabletwo/userneweditform`,
+      onboardform: `${ROOTS.DASHBOARD}/reusetabletwo/onboardform`,
+      
+      edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
+      },
+    },
     user: {
       root: `${ROOTS.DASHBOARD}/user`,
       new: `${ROOTS.DASHBOARD}/user/new`,

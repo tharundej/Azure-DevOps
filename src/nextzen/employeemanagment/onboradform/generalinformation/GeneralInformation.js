@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -22,6 +27,7 @@ import { useRouter } from 'src/routes/hooks';
 import { countries } from 'src/assets/data';
 // components
 import Label from 'src/components/label';
+
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -32,7 +38,14 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
+import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+
 export default function GeneralInformation({ currentUser }) {
+  const [datesUsed, setDatesUsed] = useState({
+    date_of_birth: dayjs(new Date()),
+    joining_date: dayjs(new Date()),
+    offer_date: dayjs(new Date()),
+  });
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -145,11 +158,15 @@ export default function GeneralInformation({ currentUser }) {
     console.log('uyfgv');
 
     try {
-      console.log(data, 'data111ugsghghh');
-
       data.company_id = '0001';
       data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+
+      console.log(data, 'data111ugsghghh');
+
       const response = await axios.post('http://localhost:8081/onboarding', data).then(
         (successData) => {
           console.log('sucess', successData);
@@ -292,15 +309,60 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="email_id" label="Email Id " />
                 <RHFTextField name="contact_number" label="Contact Number " />
                 <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
-                <RHFTextField name="date_of_birth" label=" Birth " />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Birth"
+                      value={datesUsed?.date_of_birth}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          date_of_birth: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 <RHFTextField name="father_name" label="Father Name " />
                 <RHFTextField name="mother_name" label="Mother Name " />
                 <RHFTextField name="marital_status" label="Martial Status " />
                 <RHFTextField name="nationality" label="Nationality " />
                 <RHFTextField name="religion" label="Religion " />
                 <RHFTextField name="blood_group" label="Blood Group " />
-                <RHFTextField name="offer_date" label="Offer Date " />
-                <RHFTextField name="joining_date" label="Joining Date " />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Offer Date"
+                      value={datesUsed?.date_of_birth}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          offer_date: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Joining Date"
+                      value={datesUsed?.date_of_birth}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          joining_date: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
                 <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
                 <RHFTextField name="p_city" label="City " />
