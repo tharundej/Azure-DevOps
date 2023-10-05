@@ -62,6 +62,7 @@ export const paths = {
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
+      general: `${ROOTS.AUTH}/jwt/general`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -106,9 +107,8 @@ export const paths = {
       banking: `${ROOTS.DASHBOARD}/banking`,
       booking: `${ROOTS.DASHBOARD}/booking`,
       file: `${ROOTS.DASHBOARD}/file`,
-      // basictable: `${ROOTS.DASHBOARD}/basictable`,
-      // userneweditform1: `${ROOTS.DASHBOARD}/basictable/UserNewEditForm1`,
-      
+      signup: `${ROOTS.DASHBOARD}/signup`,
+      general: `${ROOTS.DASHBOARD}/general`,
     },
     table:{
       root: `${ROOTS.DASHBOARD}/table`,
@@ -123,6 +123,7 @@ export const paths = {
     employee:{
       root: `${ROOTS.DASHBOARD}/reusetabletwo`,
       userneweditform: `${ROOTS.DASHBOARD}/reusetabletwo/userneweditform`,
+      onboardform: `${ROOTS.DASHBOARD}/reusetabletwo/onboardform`,
       
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
@@ -136,7 +137,7 @@ export const paths = {
       cards: `${ROOTS.DASHBOARD}/user/cards`,
       profile: `${ROOTS.DASHBOARD}/user/profile`,
       account: `${ROOTS.DASHBOARD}/user/account`,
-    
+
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,

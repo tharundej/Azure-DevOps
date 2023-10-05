@@ -71,6 +71,9 @@ const Edits = lazy(() => import('src/nextzen/Table/components/Edits'));
 const ReuseTable = lazy(()=>import ("src/nextzen/Table/reusetable"));
 const ReuseTableTwo = lazy(()=>import ("src/nextzen/Table/Reuseabletwo"));
 
+// signup------------------------
+const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
+const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 export const dashboardRoutes = [
   {
@@ -84,10 +87,11 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
-    
+
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
+      { path: 'signup', element: <SignupHome /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
@@ -98,6 +102,8 @@ export const dashboardRoutes = [
         { element: <ReuseTable/>, index: true },
         { path: 'userneweditform', element: <UserNewEditForm1 /> },
         { path: ':id/edit', element: <Edits /> },
+        
+
         // { path: 'reusetable', element: <ReuseTable /> },
         // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
         
@@ -111,6 +117,7 @@ export const dashboardRoutes = [
      { element: <ReuseTableTwo />, index: true },
      { path: ':id/edit', element: <Edits /> },
      { path: 'userneweditform', element: <UserNewEditForm1 /> },
+     { path: 'onboardform', element: <OnBoardForm /> },
     //  { path: ':id/edit', element: <Edits /> },
      // { path: 'reusetable', element: <ReuseTable /> },
     //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },

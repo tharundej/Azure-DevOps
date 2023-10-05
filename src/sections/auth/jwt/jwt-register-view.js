@@ -51,6 +51,7 @@ export default function JwtRegisterView() {
     lastName: '',
     email: '',
     password: '',
+    anil: '',
   };
 
   const methods = useForm({
@@ -66,6 +67,8 @@ export default function JwtRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      console.log(data, 'aasthaaa');
+
       await register?.(data.email, data.password, data.firstName, data.lastName);
 
       router.push(returnTo || PATH_AFTER_LOGIN);
@@ -119,10 +122,12 @@ export default function JwtRegisterView() {
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <RHFTextField name="firstName" label="First name" />
+          <RHFTextField name="phonenumber" label="phn" type="number" />
           <RHFTextField name="lastName" label="Last name" />
         </Stack>
 
         <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="anil" label="anil" />
 
         <RHFTextField
           name="password"
