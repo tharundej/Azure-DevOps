@@ -63,7 +63,10 @@ export const paths = {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
       general: `${ROOTS.AUTH}/jwt/general`,
-    },
+      verifyotp:`${ROOTS.AUTH}/jwt/verifyotp`,
+      createpassword:`${ROOTS.AUTH}/jwt/createpassword`,
+      forgotpassword:`${ROOTS.AUTH}/jwt/forgotpassword`,
+    },  
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
       verify: `${ROOTS.AUTH}/firebase/verify`,
@@ -107,7 +110,7 @@ export const paths = {
       banking: `${ROOTS.DASHBOARD}/banking`,
       booking: `${ROOTS.DASHBOARD}/booking`,
       file: `${ROOTS.DASHBOARD}/file`,
-      signup: `${ROOTS.DASHBOARD}/signup`,
+      // signup: `${ROOTS.DASHBOARD}/signup`,
       general: `${ROOTS.DASHBOARD}/general`,
     },
     table: {

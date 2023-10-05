@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // sections
-import { JwtLoginView } from 'src/sections/auth/jwt';
-
+// import { JwtLoginView } from 'src/sections/auth/jwt';
+import JwtLoginView from 'src/nextzen/signup/JwtLoginView';
 // ----------------------------------------------------------------------
 
 export default function LoginPage() {
