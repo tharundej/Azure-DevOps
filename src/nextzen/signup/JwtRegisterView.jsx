@@ -253,8 +253,8 @@ export default function JwtRegisterView() {
       
     </Box>
 
-        {/* <RHFTextField
-          name="password"
+          {/* <RHFTextField
+            name="password"
           label="Password"
           type={password.value ? 'text' : 'password'}
           InputProps={{
