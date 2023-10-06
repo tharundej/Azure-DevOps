@@ -1,18 +1,3 @@
-// import React from 'react'
-
-// export default function VerifyOtp  ()  {
-//   return (
-    
-//     <div>   
-   
-   
-//     <h1>haaaadghhhhhhhhhhhhhhhhhhhhhhi</h1>
-//    </div>
-//   )
-
-  
-// }
-
 import * as Yup from 'yup';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -74,11 +59,10 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const payload ={
-            "jwt_token_string" : localStorage.getItem('jwt_access_token'),
-            "otp":data.code
-        }
-        const response = await axios.post('http://localhost:3001/verify_register_otp', payload);
+        const apiUrl='http://localhost:3001/verifyotp';
+        const otp=data.code;
+        const Url=`${apiUrl}?otp=${otp}`
+        const response = await axios.get(Url);
         console.log(response?.status)
         if(response?.status===200){
             console.log('sucess')
@@ -141,7 +125,7 @@ export default function VerifyOtp() {
 
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.login}
+        href={paths.auth.jwt.createpassword}
         color="inherit"
         variant="subtitle2"
         sx={{
