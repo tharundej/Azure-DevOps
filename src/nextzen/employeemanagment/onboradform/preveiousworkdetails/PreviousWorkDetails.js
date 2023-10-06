@@ -27,12 +27,12 @@ export default function PreviousWorkDetails({ currentUser }) {
   const [value, setValue] = React.useState(dayjs(new Date()));
   const [defaultValues, setDefaultValues] = useState([
     {
-      previuos_company: '',
+      previous_company: '',
       desgination: '',
       from: dayjs(new Date()),
       to: dayjs(new Date()),
       employement_type: '',
-      primary_skills: '',
+      primary_skills: [],
       releving_letter: '',
     },
   ]);
@@ -43,7 +43,7 @@ export default function PreviousWorkDetails({ currentUser }) {
     from: dayjs(new Date()),
     to: dayjs(new Date()),
     employement_type: '',
-    primary_skills: '',
+    primary_skills: [],
     releving_letter: '',
   };
   function formatDateToYYYYMMDD(newValue) {
@@ -74,6 +74,11 @@ export default function PreviousWorkDetails({ currentUser }) {
   const handleSubmit = () => {
     console.log(defaultValues);
   };
+  const handleChangeMultiple = (event, values, index, name) => {
+    const newObj = defaultValues;
+    newObj[index][name] = values;
+    setDefaultValues(newObj);
+  };
   return (
     <Stack>
       <form style={{ padding: '40px' }}>
@@ -100,7 +105,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                     name="desgination"
                     label="Desgination"
                     onChange={(e) => {
-                      handleChange(e, index);
+                      handleChange(e, index, 'desgination');
                     }}
                     variant="outlined"
                   />
@@ -141,11 +146,14 @@ export default function PreviousWorkDetails({ currentUser }) {
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Employement Type</InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value="1"
+                      labelId="Employement Type"
+                      id="Employement Type"
+                      value={item?.employement_type}
+                      name="employmen_type"
                       label="Employement Type"
-                      //   onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e, index, 'employmen_type');
+                      }}
                     >
                       <MenuItem value={1}>Primary</MenuItem>
                       <MenuItem value={2}>Contract</MenuItem>
@@ -155,9 +163,12 @@ export default function PreviousWorkDetails({ currentUser }) {
                 <Grid md={6} xs={12} item>
                   <Autocomplete
                     multiple
-                    id="tags-filled"
+                    id="Primary Skills"
                     options={top100Films.map((option) => option.title)}
                     freeSolo
+                    onChange={(e, values) => {
+                      handleChangeMultiple(e, values, index, 'primary_skills');
+                    }}
                     renderTags={(value1, getTagProps) =>
                       value1.map((option, index1) => (
                         <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
