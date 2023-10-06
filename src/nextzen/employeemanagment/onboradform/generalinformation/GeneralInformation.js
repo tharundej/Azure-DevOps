@@ -141,8 +141,6 @@ export default function GeneralInformation({ currentUser }) {
     defaultValues,
   });
 
-  const m2 = useForm();
-
   const {
     reset,
     watch,

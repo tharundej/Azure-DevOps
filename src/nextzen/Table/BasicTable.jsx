@@ -45,7 +45,6 @@ import UserTableFiltersResult from './components/UserTableFiltersResult';
 
 // ----------------------------------------------------------------------
 
-
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 // const TABLE_HEAD = [
@@ -56,8 +55,6 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 //   { id: 'status', label: 'Status', width: 100 },
 //   { id: '', width: 88 },
 // ];
- 
-
 
 const defaultFilters = {
   name: '',
@@ -67,13 +64,12 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({headdata, bodydata})=> {
-const TABLE_HEAD= headdata;
-const  _userList =bodydata;
-console.log(headdata,"headdata importtttt---------")
-// console.log(a,"aaaaaaaaaaaaaaaaaa---------")
+const BasicTable = ({ headdata, bodydata }) => {
+  const TABLE_HEAD = headdata;
+  const _userList = bodydata;
+  console.log(headdata, 'headdata importtttt---------');
+  // console.log(a,"aaaaaaaaaaaaaaaaaa---------")
 
-  
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -152,8 +148,8 @@ console.log(headdata,"headdata importtttt---------")
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
-  console.log(dataFiltered,"dataFiltered-------------")
-  console.log(tableData,"tableData-------------")
+  console.log(dataFiltered, 'dataFiltered-------------');
+  console.log(tableData, 'tableData-------------');
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -343,7 +339,7 @@ console.log(headdata,"headdata importtttt---------")
       />
     </>
   );
-}
+};
 
 // ----------------------------------------------------------------------
 
@@ -377,7 +373,6 @@ function applyFilter({ inputData, comparator, filters }) {
   return inputData;
 }
 
-
 BasicTable.propTypes = {
   headdata: PropTypes.object,
 };
@@ -386,14 +381,8 @@ BasicTable.propTypes = {
   bodydata: PropTypes.object,
 };
 
-
-
-
 export { BasicTable };
 // export default function BasicTable();
-
-
-
 
 // import isEqual from 'lodash/isEqual';
 // import { useState, useCallback } from 'react';
