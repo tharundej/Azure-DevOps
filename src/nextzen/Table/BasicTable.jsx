@@ -1,33 +1,32 @@
-import PropTypes from 'prop-types';
-import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import PropTypes from "prop-types";
+import isEqual from "lodash/isEqual";
+import { useState, useCallback } from "react";
 // @mui
-import { alpha } from '@mui/material/styles';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
+import { alpha } from "@mui/material/styles";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import IconButton from "@mui/material/IconButton";
+import TableContainer from "@mui/material/TableContainer";
 // routes
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 // _mock
-import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, USER_STATUS_OPTIONS } from "src/_mock";
 // hooks
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 // components
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import { useSettingsContext } from "src/components/settings";
 import {
   useTable,
   getComparator,
@@ -37,43 +36,22 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from 'src/components/table';
+} from "src/components/table";
 //
-import UserTableRow from './components/UserTableRow';
-import UserTableToolbar from './components/UserTableToolbar';
-import UserTableFiltersResult from './components/UserTableFiltersResult';
-
-// ----------------------------------------------------------------------
-
-
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
-
-// const TABLE_HEAD = [
-//   { id: 'name', label: 'Name' },
-//   { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-//   { id: 'company', label: 'Company', width: 220 },
-//   { id: 'role', label: 'Role', width: 180 },
-//   { id: 'status', label: 'Status', width: 100 },
-//   { id: '', width: 88 },
-// ];
- 
-
+import UserTableRow from "./components/UserTableRow";
 
 const defaultFilters = {
-  name: '',
+  name: "",
   role: [],
-  status: 'all',
+  status: "all",
 };
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({headdata, bodydata})=> {
-const TABLE_HEAD= headdata;
-const  _userList =bodydata;
-console.log(headdata,"headdata importtttt---------")
-// console.log(a,"aaaaaaaaaaaaaaaaaa---------")
+const BasicTable = ({ headdata, bodydata, rowActions }) => {
+  const TABLE_HEAD = headdata;
+  const _userList = bodydata;
 
-  
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -125,7 +103,9 @@ console.log(headdata,"headdata importtttt---------")
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    const deleteRows = tableData.filter(
+      (row) => !table.selected.includes(row.id)
+    );
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
@@ -142,106 +122,20 @@ console.log(headdata,"headdata importtttt---------")
     [router]
   );
 
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
-      handleFilters('status', newValue);
+      handleFilters("status", newValue);
     },
     [handleFilters]
   );
 
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
-  console.log(dataFiltered,"dataFiltered-------------")
-  console.log(tableData,"tableData-------------")
+
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        {/* <CustomBreadcrumbs
-          heading="List"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'table', href: paths.dashboard.table.root },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.employee.onboardform  }
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New User1
-            </Button>
-          }
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        /> */}
-
+      <Container maxWidth={settings.themeStretch ? false : "lg"}>
         <Card>
-          {/* <Tabs
-            value={filters.status}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-            }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab
-                key={tab.value}
-                iconPosition="end"
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label
-                    variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
-                    }
-                    color={
-                      (tab.value === 'active' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'banned' && 'error') ||
-                      'default'
-                    }
-                  >
-                    {tab.value === 'all' && _userList.length}
-                    {tab.value === 'active' &&
-                      _userList.filter((user) => user.status === 'active').length}
-
-                    {tab.value === 'pending' &&
-                      _userList.filter((user) => user.status === 'pending').length}
-                    {tab.value === 'banned' &&
-                      _userList.filter((user) => user.status === 'banned').length}
-                    {tab.value === 'rejected' &&
-                      _userList.filter((user) => user.status === 'rejected').length}
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs> */}
-
-          {/* <UserTableToolbar
-            filters={filters}
-            onFilters={handleFilters}
-            //
-            roleOptions={_roles}
-          /> */}
-
-          {/* {canReset && (
-            <UserTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )} */}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -262,7 +156,10 @@ console.log(headdata,"headdata importtttt---------")
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table
+                size={table.dense ? "small" : "medium"}
+                sx={{ minWidth: 960 }}
+              >
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -276,6 +173,7 @@ console.log(headdata,"headdata importtttt---------")
                       tableData.map((row) => row.id)
                     )
                   }
+                  rowActions={rowActions || []}
                 />
 
                 <TableBody>
@@ -292,12 +190,18 @@ console.log(headdata,"headdata importtttt---------")
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
+                        headerContent={TABLE_HEAD}
+                        rowActions={rowActions || []}
                       />
                     ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(
+                      table.page,
+                      table.rowsPerPage,
+                      tableData.length
+                    )}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -312,7 +216,6 @@ console.log(headdata,"headdata importtttt---------")
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
             dense={table.dense}
             onChangeDense={table.onChangeDense}
           />
@@ -325,7 +228,8 @@ console.log(headdata,"headdata importtttt---------")
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete{" "}
+            <strong> {table.selected.length} </strong> items?
           </>
         }
         action={
@@ -343,9 +247,8 @@ console.log(headdata,"headdata importtttt---------")
       />
     </>
   );
-}
+};
 
-// ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, role } = filters;
@@ -366,7 +269,7 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (status !== 'all') {
+  if (status !== "all") {
     inputData = inputData.filter((user) => user.status === status);
   }
 
@@ -377,7 +280,6 @@ function applyFilter({ inputData, comparator, filters }) {
   return inputData;
 }
 
-
 BasicTable.propTypes = {
   headdata: PropTypes.object,
 };
@@ -385,12 +287,8 @@ BasicTable.propTypes = {
 BasicTable.propTypes = {
   bodydata: PropTypes.object,
 };
-
-
-
+BasicTable.propTypes = {
+  rowActions: PropTypes.any,
+};
 
 export { BasicTable };
-// export default function BasicTable();
-
-
-
