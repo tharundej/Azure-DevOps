@@ -30,7 +30,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useSearchParams, useRouter } from 'src/routes/hooks';
 // config
-import { PATH_FOR_CREATE_PASSWORD,} from 'src/config-global';
+import { PATH_FOR_CREATE_PASSWORD, PATH_FOR_VERIFY,} from 'src/config-global';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // components
@@ -105,7 +105,7 @@ export default function JwtRegisterView() {
       await register?.(data.cin, data.company_name, data.company_registration_no, data.company_ceo_name,data.company_type,data.email_id,data.phone_no,data.first_name,data.middle_name,data.last_name,data.security_q1,data.security_a1,data.security_q2,data.security_a2);
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
-      router.push(returnTo ||  PATH_FOR_CREATE_PASSWORD);
+      router.push(returnTo ||  PATH_FOR_VERIFY);
     } catch (error) {
       console.error(error);
       reset();

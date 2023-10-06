@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
-import { useEffect, useReducer, useCallback, useMemo } from 'react';
+import { useEffect, useReducer, useCallback, useMemo,useState } from 'react';
 // utils
 import axios, { endpoints } from 'src/utils/axios';
 //
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
+
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
@@ -54,7 +57,8 @@ const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [OptVerify,setOptVerify]=useState(false);
+  const router = useRouter();
   const initialize = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
@@ -108,8 +112,11 @@ export function AuthProvider({ children }) {
     // console.log(data, 'data ......');
 
     //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    const response = await axios.post(endpoints.auth.login, data);
+    // const response = await axios.post(endpoints.auth.login, data);
 
+     const response = await axios.post('http://localhost:3001/loginuser', data);
+    // const response = await axios.post(endpoints.auth.login, data);
+  
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
@@ -167,6 +174,10 @@ export function AuthProvider({ children }) {
     //   },
     // });
   }, []);
+
+
+
+
 
   // LOGOUT
   const logout = useCallback(async () => {

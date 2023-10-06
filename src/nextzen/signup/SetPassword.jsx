@@ -76,11 +76,12 @@ export default function AmplifyNewPasswordView() {
     try {
 
       const payload ={
+        "jwt_token_string" : localStorage.getItem('jwt_access_token'),
         "password":data.password
     }
-    const response = await axios.post('http://localhost:3001/newpassword', payload);
-    console.log(response?.data,'new password',response?.data?.Message);
-    if(response?.status===200){
+    const response = await axios.post('http://localhost:3001/', payload);
+    console.log(response?.status)
+    if(response?.status_code===200){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
       }
@@ -149,7 +150,7 @@ export default function AmplifyNewPasswordView() {
         variant="contained"
         loading={isSubmitting}
       >
-        Create Password
+        Update Password
       </LoadingButton>
 
       <Typography variant="body2">
