@@ -22,6 +22,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import  Grid  from '@mui/material/Grid';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // routes
@@ -113,7 +114,7 @@ export default function VerifyOtp() {
       <RHFCode name="code" />
 
       <LoadingButton
-        fullWidth
+        sx={{width:'80px'}}
         size="large"
         type="submit"
         variant="contained"
@@ -159,13 +160,14 @@ export default function VerifyOtp() {
     <>
       <EmailInboxIcon sx={{ height: 96 }} />
 
-      <Stack spacing={1} sx={{ my: 5 }}>
+      <Stack spacing={1} sx={{  my: 5 }}>
+        <Grid container  flexDirection="column" justifyContent='center' alignItems='center'>
         <Typography variant="h3">Please check your email!</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          We have emailed a 6-digit confirmation code to {email}, please enter the code in below
-          box to verify your email.
+          Please Enter The OTP
         </Typography>
+        </Grid>
       </Stack>
     </>
   );

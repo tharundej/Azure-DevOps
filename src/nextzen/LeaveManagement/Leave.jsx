@@ -7,7 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
-import ReusableTabs from '../tabs/ReusableTabs';
+// import ReusableTabs from '../tabs/ReusableTabs';
+
 const bull = (
   <Box
     component="span"
@@ -54,7 +55,7 @@ export default function BasicCard() {
       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
     </div> */}
 
-    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
+    {/* <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/> */}
 
 
     </Card>

@@ -102,7 +102,7 @@ export default function AmplifyNewPasswordView() {
   }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center">
+    <Stack spacing={3} alignItems="center" >
       {/* <RHFTextField
         name="email"
         label="Email"
@@ -143,7 +143,6 @@ export default function AmplifyNewPasswordView() {
       />
 
       <LoadingButton
-        fullWidth
         size="large"
         type="submit"
         variant="contained"
