@@ -2,6 +2,24 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { styled } from '@mui/system'; // Import styled from @mui/system
+
+const CustomTab = styled(Tab)(({ theme }) => ({
+  borderRadius: '16px',
+  padding: '8px 16px',
+  marginRight: '8px',
+  backgroundColor: "#fff",
+  color: 'black',
+  '&.Mui-selected': {
+    backgroundColor: "#9fc5e8",
+  },
+  '&.MuiTab-root': {
+    borderBottom: 'none', 
+  },
+  '&:first-child': {
+    marginLeft: '6px', // Add left margin to the first tab
+  },
+}));
 
 function ReusableTabs({ tabLabels, tabContents }) {
   const [value, setValue] = useState(0);
@@ -15,13 +33,15 @@ function ReusableTabs({ tabLabels, tabContents }) {
       <Tabs
         value={value}
         onChange={handleChange}
-        indicatorColor="primary"
-        textColor="primary"
         variant="scrollable"
         scrollButtons="auto"
+        TabIndicatorProps={{ style: { display: 'none' } }} 
       >
         {tabLabels.map((label, index) => (
-          <Tab label={label} key={index} />
+          <CustomTab
+            label={label}
+            key={index}
+          />
         ))}
       </Tabs>
       {tabContents.map((content, index) => (
@@ -38,4 +58,4 @@ ReusableTabs.propTypes = {
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
-export default {ReusableTabs};
+export default ReusableTabs;
