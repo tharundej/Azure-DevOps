@@ -79,7 +79,7 @@ const BasicTable = ({ headdata, bodydata }) => {
   const confirm = useBoolean();
 
   const [tableData, setTableData] = useState(_userList);
-
+console.log(tableData,"tabledata----");
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({
@@ -87,8 +87,8 @@ const BasicTable = ({ headdata, bodydata }) => {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
-  const dataInPage = dataFiltered.slice(
+  console.log(tableData,"tableData-------------",dataFiltered)
+  const dataInPage = dataFiltered?.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
@@ -97,7 +97,7 @@ const BasicTable = ({ headdata, bodydata }) => {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
   const handleFilters = useCallback(
     (name, value) => {
@@ -117,7 +117,7 @@ const BasicTable = ({ headdata, bodydata }) => {
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, table, tableData]
+    [dataInPage?.length, table, tableData]
   );
 
   const handleDeleteRows = useCallback(() => {
@@ -125,11 +125,11 @@ const BasicTable = ({ headdata, bodydata }) => {
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
+      totalRows: tableData?.length,
+      totalRowsInPage: dataInPage?.length,
+      totalRowsFiltered: dataFiltered?.length,
     });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  }, [dataFiltered?.length, dataInPage?.length, table, tableData]);
 
   const handleEditRow = useCallback(
     (id) => {
@@ -202,16 +202,16 @@ const BasicTable = ({ headdata, bodydata }) => {
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _userList.length}
+                    {tab.value === 'all' && _userList?.length}
                     {tab.value === 'active' &&
-                      _userList.filter((user) => user.status === 'active').length}
+                      _userList?.filter((user) => user.status === 'active').length}
 
                     {tab.value === 'pending' &&
-                      _userList.filter((user) => user.status === 'pending').length}
+                      _userList?.filter((user) => user.status === 'pending').length}
                     {tab.value === 'banned' &&
-                      _userList.filter((user) => user.status === 'banned').length}
+                      _userList?.filter((user) => user.status === 'banned').length}
                     {tab.value === 'rejected' &&
-                      _userList.filter((user) => user.status === 'rejected').length}
+                      _userList?.filter((user) => user.status === 'rejected').length}
                   </Label>
                 }
               />
@@ -241,11 +241,11 @@ const BasicTable = ({ headdata, bodydata }) => {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={tableData.length}
+              rowCount={tableData?.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
+                table?.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData?.map((row) => row.id)
                 )
               }
               action={
@@ -263,20 +263,19 @@ const BasicTable = ({ headdata, bodydata }) => {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={tableData?.length}
                   numSelected={table.selected.length}
-                  onSort={table.onSort}
+                  onSort={table?.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
+                    table?.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(
+                  {dataFiltered?.slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
@@ -293,7 +292,7 @@ const BasicTable = ({ headdata, bodydata }) => {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData?.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -303,7 +302,7 @@ const BasicTable = ({ headdata, bodydata }) => {
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
+            count={dataFiltered?.length}
             page={table.page}
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}
@@ -346,18 +345,18 @@ const BasicTable = ({ headdata, bodydata }) => {
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, role } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis?.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
+    inputData = inputData?.filter(
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }

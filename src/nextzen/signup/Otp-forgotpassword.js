@@ -1,18 +1,3 @@
-// import React from 'react'
-
-// export default function VerifyOtp  ()  {
-//   return (
-    
-//     <div>   
-   
-   
-//     <h1>haaaadghhhhhhhhhhhhhhhhhhhhhhi</h1>
-//    </div>
-//   )
-
-  
-// }
-
 import * as Yup from 'yup';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,7 +7,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import  Grid  from '@mui/material/Grid';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // routes
@@ -75,11 +59,10 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const payload ={
-            "jwt_token_string" : localStorage.getItem('jwt_access_token'),
-            "otp":data.code
-        }
-        const response = await axios.post('http://localhost:3001/verify_register_otp', payload);
+        const apiUrl='http://localhost:3001/verifyotp';
+        const otp=data.code;
+        const Url=`${apiUrl}?otp=${otp}`
+        const response = await axios.get(Url);
         console.log(response?.status)
         if(response?.status===200){
             console.log('sucess')
@@ -114,7 +97,7 @@ export default function VerifyOtp() {
       <RHFCode name="code" />
 
       <LoadingButton
-        sx={{width:'80px'}}
+        fullWidth
         size="large"
         type="submit"
         variant="contained"
@@ -142,7 +125,7 @@ export default function VerifyOtp() {
 
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.login}
+        href={paths.auth.jwt.createpassword}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -160,14 +143,13 @@ export default function VerifyOtp() {
     <>
       <EmailInboxIcon sx={{ height: 96 }} />
 
-      <Stack spacing={1} sx={{  my: 5 }}>
-        <Grid container  flexDirection="column" justifyContent='center' alignItems='center'>
+      <Stack spacing={1} sx={{ my: 5 }}>
         <Typography variant="h3">Please check your email!</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please Enter The OTP
+          We have emailed a 6-digit confirmation code to {email}, please enter the code in below
+          box to verify your email.
         </Typography>
-        </Grid>
       </Stack>
     </>
   );

@@ -76,10 +76,11 @@ export default function AmplifyNewPasswordView() {
     try {
 
       const payload ={
+        "jwt_token_string" : localStorage.getItem('jwt_access_token'),
         "password":data.password
     }
-    const response = await axios.post('http://localhost:3001/newpassword', payload);
-    console.log(response?.data,'new password',response?.data?.Message);
+    const response = await axios.post('http://localhost:3001/', payload);
+    console.log(response?.status)
     if(response?.status===200){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
@@ -102,7 +103,7 @@ export default function AmplifyNewPasswordView() {
   }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center" >
+    <Stack spacing={3} alignItems="center">
       {/* <RHFTextField
         name="email"
         label="Email"
@@ -143,12 +144,13 @@ export default function AmplifyNewPasswordView() {
       />
 
       <LoadingButton
+        fullWidth
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
       >
-        Create Password
+        Update Password
       </LoadingButton>
 
       <Typography variant="body2">
