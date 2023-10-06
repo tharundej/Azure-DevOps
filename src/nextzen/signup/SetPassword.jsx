@@ -81,7 +81,7 @@ export default function AmplifyNewPasswordView() {
     }
     const response = await axios.post('http://localhost:3001/', payload);
     console.log(response?.status)
-    if(response?.status_code===200){
+    if(response?.status===200){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
       }

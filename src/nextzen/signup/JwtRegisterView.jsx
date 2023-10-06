@@ -30,12 +30,12 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useSearchParams, useRouter } from 'src/routes/hooks';
 // config
-import { PATH_FOR_CREATE_PASSWORD, PATH_FOR_VERIFY,} from 'src/config-global';
+import { PATH_FOR_CREATE_PASSWORD, PATH_FOR_VERIFY } from 'src/config-global';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
-import FormProvider, { RHFTextField ,RHFAutocomplete} from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -51,16 +51,17 @@ export default function JwtRegisterView() {
   const returnTo = searchParams.get('returnTo');
 
   const password = useBoolean();
-  
 
   const RegisterSchema = Yup.object().shape({
-    cin:Yup.number().required('CIN is required'),
+    cin: Yup.number().required('CIN is required'),
     company_name: Yup.string().required('Compnay name required'),
-    company_registration_no:Yup.number().required('Company Registration Number is required'),
+    company_registration_no: Yup.number().required('Company Registration Number is required'),
     company_ceo_name: Yup.string().required('CEO name required'),
     company_type: Yup.string().required('Compnay type required'),
-    email_id: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    phone_no:Yup.number().required('Phone No is required'),
+    email_id: Yup.string()
+      .required('Email is required')
+      .email('Email must be a valid email address'),
+    phone_no: Yup.number().required('Phone No is required'),
     first_name: Yup.string().required('First name required'),
     middle_name: Yup.string(),
     last_name: Yup.string().required('Last name required'),
@@ -71,20 +72,20 @@ export default function JwtRegisterView() {
   });
 
   const defaultValues = {
-    cin:'',
-    company_name:'',
-    company_registration_no:'',
-    company_ceo_name:'',
-    company_type:'',
-    email_id:'',
-    phone_no:'',
-    first_name:'',
-    middle_name:'',
-    last_name:'',
-    security_q1:'',
-    security_a1:'',
-    security_q2:'',
-    security_a2:'',
+    cin: null,
+    company_name: '',
+    company_registration_no: null,
+    company_ceo_name: '',
+    company_type: '',
+    email_id: '',
+    phone_no: null,
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    security_q1: '',
+    security_a1: '',
+    security_q2: '',
+    security_a2: '',
   };
 
   const methods = useForm({
@@ -101,11 +102,26 @@ export default function JwtRegisterView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       // console.log(data, 'rammmm');
-          
-      await register?.(data.cin, data.company_name, data.company_registration_no, data.company_ceo_name,data.company_type,data.email_id,data.phone_no,data.first_name,data.middle_name,data.last_name,data.security_q1,data.security_a1,data.security_q2,data.security_a2);
+
+      await register?.(
+        data.cin,
+        data.company_name,
+        data.company_registration_no,
+        data.company_ceo_name,
+        data.company_type,
+        data.email_id,
+        data.phone_no,
+        data.first_name,
+        data.middle_name,
+        data.last_name,
+        data.security_q1,
+        data.security_a1,
+        data.security_q2,
+        data.security_a2
+      );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
-      router.push(returnTo ||  PATH_FOR_VERIFY);
+      router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {
       console.error(error);
       reset();
@@ -114,10 +130,10 @@ export default function JwtRegisterView() {
   });
 
   const renderHead = (
-    <Stack spacing={2} sx={{ mb: 5, position: 'relative',alignItems:'center'}} >
-      <Typography variant="h4" >Get started absolutely free</Typography>
+    <Stack spacing={2} sx={{ mb: 5, position: 'relative', alignItems: 'center' }}>
+      <Typography variant="h4">Register</Typography>
 
-      <Stack direction="row" spacing={0.5} >
+      <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
 
         <Link href={paths.auth.jwt.login} component={RouterLink} variant="subtitle2">
@@ -156,104 +172,104 @@ export default function JwtRegisterView() {
   //   textAlign: 'center',
   //   color: theme.palette.text.secondary,
   // }));
-  const companyTypes=[
-    {type: 'Public'},
-    {type: 'Private'}
-  ]
-  const securityQuestions=[
-    {question:'What is your mother maiden name'},
-    {question:'What is your favorite childhood pet name?'},
-    {question:'What is your favorite book or author?'},
-    {question:'In what city were you born?'},
-    {question:'What is your favorite food or dish?'},
-  ]
+  const companyTypes = [{ type: 'Public' }, { type: 'Private' }];
+  const securityQuestions = [
+    { question: 'What is your mother maiden name' },
+    { question: 'What is your favorite childhood pet name?' },
+    { question: 'What is your favorite book or author?' },
+    { question: 'In what city were you born?' },
+    { question: 'What is your favorite food or dish?' },
+  ];
 
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5}>
+      <Stack style={{padding:'10px'}}spacing={3.5}>
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
- 
-        <Box sx={{ flexGrow: 1 }}>
-        
-        <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-      <Grid container  spacing={2}>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="cin" label="CIN" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="company_name" label="Company Name" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="company_registration_no" label="Company Registration No" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-        <DatePicker label="Company date of ncorporation" />
-      </DemoContainer>
-    </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="company_ceo_name" label="Company Ceo Name" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFAutocomplete 
-        name="company_type" 
-        label="Company Type" 
-        options={companyTypes.map((companyType)=>companyType.type)}  />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="email_id" label="Email" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="phone_no" label="Phone No" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="first_name" label="first Name" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="middle_name" label="Middle Name" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-        <RHFTextField name="last_name" label="Last Name" />
-        </Grid>
-        <Grid item xs={12} md={12}>
-        <RHFAutocomplete name="security_q1" label="Security Question-1" 
-        options={securityQuestions.map((securityQuestion)=>securityQuestion.question)}/>
-        </Grid>
-        <Grid item xs={12} md={12}>
-        <RHFTextField name="security_a1" label="Security answer" />
-        </Grid>
-        <Grid item xs={12} md={12}>
-        <RHFAutocomplete 
-        name="security_q2" 
-        label="Security Question-2" 
-        options={securityQuestions.map((securityQuestion)=>securityQuestion.question)}/>
-        </Grid>
-        <Grid item xs={12} md={12}>
-        <RHFTextField name="security_a2" label="Security answer" />
-        </Grid>
-      </Grid>
-      </CardContent>
-      <CardActions>
-      <LoadingButton
-          // fullWidth
-          color="inherit"
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          style={{ display: 'block', margin: '0 auto' }}
-        >
-          Create account
-        </LoadingButton>
-      </CardActions>
-      </Card>
-      
-    </Box>
 
-          {/* <RHFTextField
+        <Box sx={{ flexGrow: 1 }}>
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="cin" label="CIN" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="company_name" label="Company Name" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="company_registration_no" label="Company Registration No" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker label="Company date of ncorporation" />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="company_ceo_name" label="Company Ceo Name" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFAutocomplete
+                    name="company_type"
+                    label="Company Type"
+                    options={companyTypes.map((companyType) => companyType.type)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="email_id" label="Email" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="phone_no" label="Phone No" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="first_name" label="first Name" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="middle_name" label="Middle Name" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <RHFTextField name="last_name" label="Last Name" />
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <RHFAutocomplete
+                    name="security_q1"
+                    label="Security Question-1"
+                    options={securityQuestions.map((securityQuestion) => securityQuestion.question)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <RHFTextField name="security_a1" label="Security answer" />
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <RHFAutocomplete
+                    name="security_q2"
+                    label="Security Question-2"
+                    options={securityQuestions.map((securityQuestion) => securityQuestion.question)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <RHFTextField name="security_a2" label="Security answer" />
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardActions>
+              <LoadingButton
+                // fullWidth
+                color="inherit"
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                style={{ display: 'block', margin: '0 auto' }}
+              >
+                Create account
+              </LoadingButton>
+            </CardActions>
+          </Card>
+        </Box>
+
+        {/* <RHFTextField
             name="password"
           label="Password"
           type={password.value ? 'text' : 'password'}

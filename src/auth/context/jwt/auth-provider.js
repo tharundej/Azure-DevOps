@@ -114,7 +114,7 @@ export function AuthProvider({ children }) {
     //  const response = await axios.post('http://localhost:3001/loginuser', data);
     const response = await axios.post(endpoints.auth.login, data);
 
-    //  const response = await axios.post('http://localhost:3001/loginuser', data);
+    // //  const response = await axios.post('http://localhost:3001/loginuser', data);
     // const response = await axios.post(endpoints.auth.login, data);
   
     const { accessToken, user } = response.data;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
+import Step from '@mui/material/Step';  
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -64,59 +64,7 @@ export default function OnBoardForm() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper nonLinear activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {allStepsCompleted() ? (
-          <>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </>
-        ) : (
-          <>
-            {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} />
-            )}
-            {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} />
-            )}
-            {activeStep + 1 === 3 && (
-              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
-            )}
-            {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
-              </Button>
-
-              <Button onClick={handleComplete}>
-                {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-              </Button>
-            </Box>
-          </>
-        )}
-      </div>
+      <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} />
     </Box>
   );
 }

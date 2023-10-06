@@ -46,22 +46,21 @@ export default function AmplifyForgotPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      
-      const payload={
-        "email_id" : data.email
-      }
+      const payload = {
+        email_id: data.email,
+      };
 
-      const response = await axios.post('http://localhost:3001/checkUserExists',payload);
+      const response = await axios.post('http://localhost:3001/checkUserExists', payload);
       // await forgotPassword?.(data.email);
-    
+
       // const searchParams = new URLSearchParams({
       //   email: data.email,
       // }).toString();
-      console.log(response?.status)
-        if(response?.status===200){
-            console.log('sucess')
-            router.push(paths.auth.jwt.otpverification);
-          }
+      console.log(response?.status);
+      if (response?.status === 200) {
+        console.log('sucess');
+        router.push(paths.auth.jwt.otpverification);
+      }
       // const href = `${paths.auth.jwt.otpverification}?${searchParams}`;
       // router.push(href);
     } catch (error) {
@@ -107,8 +106,7 @@ export default function AmplifyForgotPasswordView() {
         <Typography variant="h3">Forgot your password?</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter the email address associated with your account and We will email you a link
-          to reset your password.
+          Please enter the email address associated with your account and We will email you a OTP to Verify and reset your password.
         </Typography>
       </Stack>
     </>
