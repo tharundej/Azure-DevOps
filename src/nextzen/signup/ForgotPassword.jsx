@@ -6,6 +6,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -73,7 +74,7 @@ export default function AmplifyForgotPasswordView() {
       <RHFTextField name="email" label="Email address" />
 
       <LoadingButton
-        fullWidth
+        // fullWidth
         size="large"
         type="submit"
         variant="contained"
@@ -103,11 +104,13 @@ export default function AmplifyForgotPasswordView() {
       <PasswordIcon sx={{ height: 96 }} />
 
       <Stack spacing={1} sx={{ my: 5 }}>
-        <Typography variant="h3">Forgot your password?</Typography>
+        <Grid container flexDirection="column" justifyContent="center" alignItems="center">
+          <Typography variant="h3">Forgot your password?</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter the email address associated with your account and We will email you a OTP to Verify and reset your password.
-        </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Please enter the email address to request a OTP to Verify and Reset your Password.
+          </Typography>
+        </Grid>
       </Stack>
     </>
   );

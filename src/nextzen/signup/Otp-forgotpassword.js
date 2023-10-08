@@ -21,6 +21,8 @@ import { EmailInboxIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
+import { Grid } from '@mui/material';
+import { column } from 'stylis';
 
 // ----------------------------------------------------------------------
 
@@ -97,7 +99,7 @@ export default function VerifyOtp() {
       <RHFCode name="code" />
 
       <LoadingButton
-        fullWidth
+        sx={{width:'80px'}}
         size="large"
         type="submit"
         variant="contained"
@@ -142,14 +144,14 @@ export default function VerifyOtp() {
   const renderHead = (
     <>
       <EmailInboxIcon sx={{ height: 96 }} />
-
       <Stack spacing={1} sx={{ my: 5 }}>
+      <Grid container flexDirection="column" justifyContent="center" alignContent="center">
         <Typography variant="h3">Please check your email!</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          We have emailed a 6-digit confirmation code to {email}, please enter the code in below
-          box to verify your email.
+        Please enter the OTP to Verify and Reset your Password.
         </Typography>
+        </Grid>
       </Stack>
     </>
   );
