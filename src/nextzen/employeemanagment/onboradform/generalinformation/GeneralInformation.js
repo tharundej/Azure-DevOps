@@ -200,6 +200,10 @@ export default function GeneralInformation({ currentUser }) {
     },
     [setValue]
   );
+
+  const onCl=()=>{
+    onSubmit();
+  }
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -423,7 +427,10 @@ export default function GeneralInformation({ currentUser }) {
             </Card>
           </Grid>
         </Grid>
+
+
       </FormProvider>
+      <Button onClick={e=>onCl()}>onn</Button>
     </div>
   );
 }
