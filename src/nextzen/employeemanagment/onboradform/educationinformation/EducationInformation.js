@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useImperativeHandle,forwardRef } from 'react';
 import { TextField, Button } from '@mui/material';
 
-export default function EducationInformation({ currentUser }) {
+const  EducationInformation=forwardRef((props,ref)=> {
+  useImperativeHandle(ref,()=>({
+    childFunctionEducation(){
+    
+    }
+  }))
+  const currentUser=props.currentUser;
   const [defaultValues, setDefaultValues] = useState([
     {
       one: 'a',
@@ -19,7 +25,7 @@ export default function EducationInformation({ currentUser }) {
   const handleAdd = () => {
     setDefaultValues((prev) => [...prev, obj]);
   };
-  useEffect(() => {}, []);
+  
   return (
     <>
       <form>
@@ -52,7 +58,9 @@ export default function EducationInformation({ currentUser }) {
       </form>
     </>
   );
-}
+})
 EducationInformation.propTypes = {
   currentUser: PropTypes.object,
 };
+
+export default EducationInformation;

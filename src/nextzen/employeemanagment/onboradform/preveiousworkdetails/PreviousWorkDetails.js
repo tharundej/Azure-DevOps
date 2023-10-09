@@ -12,6 +12,7 @@ import {
   InputLabel,
   Autocomplete,
   Chip,
+  Typography,
 } from '@mui/material';
 
 import dayjs from 'dayjs';
@@ -19,12 +20,13 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import PhotoCamera from '@mui/icons-material';
+// import PhotoCamera from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Stack } from '@mui/system';
 
 export default function PreviousWorkDetails({ currentUser }) {
   const [value, setValue] = React.useState(dayjs(new Date()));
+  const [attachmentString,setAttachmentString]=useState("");
   const [defaultValues, setDefaultValues] = useState([
     {
       previous_company: '',
@@ -79,6 +81,66 @@ export default function PreviousWorkDetails({ currentUser }) {
     newObj[index][name] = values;
     setDefaultValues(newObj);
   };
+
+  function getBase64(file) {
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+
+      console.log(reader.result);
+
+    };
+
+    reader.onerror = function (error) {
+
+      console.log('Error: ', error);
+
+    };
+
+ }
+
+
+
+ function handleFileSelect(event) {
+
+  const fileInput = event.target;
+
+  const file = fileInput.files[0];
+
+
+
+  if (file) {
+
+    const reader = new FileReader();
+
+
+
+    reader.onload = function (e) {
+
+      const base64String = e.target.result;
+
+      console.log('Base64 string:', base64String);
+
+      setAttachmentString(base64String)
+
+      // setImage( [base64String]);
+
+      // setViewImage(true);
+
+      // Here, you can send the `base64String` to your server or perform other actions.
+
+    };
+
+
+
+    reader.readAsDataURL(file);
+
+  }
+
+}
   return (
     <Stack>
       <form style={{ padding: '40px' }}>
@@ -204,10 +266,22 @@ export default function PreviousWorkDetails({ currentUser }) {
                   </FormControl>
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <IconButton color="primary" aria-label="upload picture" component="label">
-                    <input hidden accept="image/*" type="file" />
-                    {/* <PhotoCamera /> */}Upload File
-                  </IconButton>
+                  <Typography>Salary Slips</Typography>
+                <input
+
+                  type="file"
+
+                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+                  id="fileInput"
+
+                  onChange={(e)=>{
+
+                    handleFileSelect(e)
+
+                  }}
+
+                  />
                 </Grid>
               </Grid>
             </Grid>

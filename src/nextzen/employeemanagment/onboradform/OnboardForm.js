@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{useRef}  from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -15,6 +15,8 @@ const steps = ['General Information', 'Education Details', 'Previous Work Detail
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+
+  const childref=useRef(null);
 
   function totalSteps() {
     return steps.length;
@@ -33,6 +35,15 @@ export default function OnBoardForm() {
   }
 
   const handleNext = () => {
+
+
+    if(activeStep+1===1){
+      console.log('11')
+      const returnResponse=childref.current.childFunctionGeneral()
+    }
+
+    
+ 
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
@@ -62,6 +73,11 @@ export default function OnBoardForm() {
     setCompleted({});
   };
 
+  const callBeta=()=>{
+     childref.current.childFunctionGeneral();
+    // childref.current.childFunction1();
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
@@ -87,10 +103,10 @@ export default function OnBoardForm() {
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} />
+              <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} ref={childref} />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} />
+              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
               <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
@@ -117,6 +133,7 @@ export default function OnBoardForm() {
           </>
         )}
       </div>
+      <Button onClick={e=>callBeta()}>Hii</Button>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -40,7 +40,19 @@ import axios from 'axios';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
-export default function GeneralInformation({ currentUser }) {
+const   GeneralInformation=forwardRef((props,ref)=> {
+
+  const currentUser=props.currentUser;
+
+  useImperativeHandle(ref,()=>({
+    childFunctionGeneral(){
+     onSubmit();
+      
+    }
+  }))
+
+ 
+
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -102,6 +114,7 @@ export default function GeneralInformation({ currentUser }) {
   });
 
   const defaultValues = useMemo(
+    
     () => ({
       // company_id: currentUser?.company_id || '',
       // company_name: currentUser?.company_name || '',
@@ -155,7 +168,7 @@ export default function GeneralInformation({ currentUser }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log(data,'aaa');
 
     try {
       data.company_id = '0001';
@@ -165,7 +178,7 @@ export default function GeneralInformation({ currentUser }) {
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
       data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
-      console.log(data, 'data111ugsghghh');
+      
 
       const response = await axios.post('http://localhost:8081/onboarding', data).then(
         (successData) => {
@@ -200,10 +213,6 @@ export default function GeneralInformation({ currentUser }) {
     },
     [setValue]
   );
-
-  const onCl=()=>{
-    onSubmit();
-  }
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -427,14 +436,13 @@ export default function GeneralInformation({ currentUser }) {
             </Card>
           </Grid>
         </Grid>
-
-
       </FormProvider>
-      <Button onClick={e=>onCl()}>onn</Button>
     </div>
   );
-}
+})
 
 GeneralInformation.propTypes = {
   currentUser: PropTypes.object,
 };
+
+export default GeneralInformation;

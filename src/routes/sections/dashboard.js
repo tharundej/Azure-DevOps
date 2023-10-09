@@ -90,6 +90,9 @@ const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
 
+const PaySchedule = lazy(()=> import('src/nextzen/Payroll/payschedule/PaySchedule'))
+
+const PayScheduleform = lazy(()=> import('src/nextzen/Payroll/payschedule/PayScheduleform'));
 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
@@ -186,7 +189,7 @@ export const dashboardRoutes = [
         children: [
           { element: <Claims />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
+          
           
         ],
       },
@@ -196,7 +199,8 @@ export const dashboardRoutes = [
         children: [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
+          {path: 'payschedule',element:<PaySchedule/>},
+          {path:'payscheduleform',element:<PayScheduleform/>}
           
         ],
       },
