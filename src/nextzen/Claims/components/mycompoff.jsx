@@ -35,8 +35,8 @@ export default function UserListPage() {
   ];
   const bodyContent = [
     {
-      name: "Surendra",
-      email: "suri@infobellIt.com",
+      name: "Malli",
+      email: "Malli@infobellIt.com",
       phoneNumber: "9879876789",
       company: "Infobell",
       role: "UI Developer",
@@ -46,18 +46,9 @@ export default function UserListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: reusetable</title>
+        <title> Dashboard: mycompoff</title>
       </Helmet>
-<Button
 
-component={RouterLink}
-
-href={paths.dashboard.employee.onboardform}
-
-variant="contained"
-
-startIcon={<Iconify icon="mingcute:add-line" />}
->Add New Employee</Button>
       <BasicTable
         headdata={TABLE_HEAD}
         bodydata={bodyContent}

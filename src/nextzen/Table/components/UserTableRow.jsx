@@ -37,11 +37,11 @@ export default function UserTableRow({
   const quickEdit = useBoolean();
 
   const popover = usePopover();
-  const data = [
-    { name: 'approve', icon: 'hh', path: 'jjj' },
-    { name: 'view', icon: 'hh', path: 'jjj' },
-    { name: 'eerr', icon: 'hh', path: 'jjj' },
-  ];
+  // const data = [
+  //   { name: 'approve', icon: 'hh', path: 'jjj' },
+  //   { name: 'view', icon: 'hh', path: 'jjj' },
+  //   { name: 'eerr', icon: 'hh', path: 'jjj' },
+  // ];
 
   return (
     <>
@@ -56,6 +56,7 @@ export default function UserTableRow({
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
+                  width:ele.width || ''
                 }}
               >
                 {ele.containesAvatar && (

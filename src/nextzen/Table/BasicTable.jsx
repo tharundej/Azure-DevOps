@@ -46,6 +46,7 @@ const defaultFilters = {
   status: 'all',
 };
 
+
 // ----------------------------------------------------------------------
 
 const BasicTable = ({ headdata, bodydata, rowActions }) => {
