@@ -176,6 +176,11 @@ export const paths = {
 
     payroll:{
       root: `${ROOTS.DASHBOARD}/payroll`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
+      // },
+      payscheduleform:`${ROOTS.DASHBOARD}/payroll/payschedule/payscheduleform`
      
     },
     monthlydeductions:{

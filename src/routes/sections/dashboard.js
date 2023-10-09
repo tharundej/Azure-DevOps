@@ -200,7 +200,7 @@ export const dashboardRoutes = [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
           {path: 'payschedule',element:<PaySchedule/>},
-          {path:'payscheduleform',element:<PayScheduleform/>}
+          {path:':id/payscheduleform',element:<PayScheduleform/>}
           
         ],
       },
