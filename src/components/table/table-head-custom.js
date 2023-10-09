@@ -32,7 +32,9 @@ export default function TableHeadCustom({
   onSort,
   onSelectAllRows,
   sx,
+  rowActions=[]
 }) {
+  const empty_space = '  ';
   return (
     <TableHead sx={sx}>
       <TableRow>
@@ -73,7 +75,14 @@ export default function TableHeadCustom({
             )}
           </TableCell>
         ))}
-      </TableRow>
+       {rowActions.length>0 && 
+       
+       <TableCell   key='headCell.id'
+            align='left'
+            sortDirection={ false}
+          >{empty_space}</TableCell>
+        }
+        </TableRow>
     </TableHead>
   );
 }
@@ -87,4 +96,5 @@ TableHeadCustom.propTypes = {
   numSelected: PropTypes.number,
   onSelectAllRows: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']),
+  rowActions:PropTypes.any
 };
