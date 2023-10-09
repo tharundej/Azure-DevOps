@@ -38,9 +38,9 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function GeneralInformation({ currentUser }) {
+export default function TimeForm({ currentUser }) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -51,35 +51,35 @@ export default function GeneralInformation({ currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    company_id: Yup.string(),
-    company_name: Yup.string(),
-    image_name: Yup.string(),
-    image_data: Yup.string(),
-    first_name: Yup.string().required('First Name is Required'),
-    middle_name: Yup.string(),
-    last_name: Yup.string('Last Name is Required'),
-    email_id: Yup.string().email().required('Email is Required'),
-    contact_number: Yup.string(),
-    emergency_contact_number: Yup.string(),
-    date_of_birth: Yup.string(),
-    father_name: Yup.string(),
-    mother_name: Yup.string(),
-    marital_status: Yup.string(),
-    nationality: Yup.string(),
-    religion: Yup.string(),
-    blood_group: Yup.string(),
-    offer_date: Yup.string(),
-    joining_date: Yup.string(),
-    p_address_line1: Yup.string(),
-    p_address_line2: Yup.string(),
-    p_city: Yup.string(),
-    p_state: Yup.string(),
-    p_pincode: Yup.string(),
-    r_address_line1: Yup.string(),
-    r_address_line2: Yup.string(),
-    r_city: Yup.string(),
-    r_state: Yup.string(),
-    r_pincode: Yup.string(),
+    Employe_id: Yup.string(),
+    Employe_Name: Yup.string(),
+    Project_Name: Yup.string(),
+    Activity_Name: Yup.string(),
+    Monday: Yup.string().required('First Name is Required'),
+    Tuesday: Yup.string(),
+    Wednesday: Yup.string('Last Name is Required'),
+    Thursday: Yup.string().email().required('Email is Required'),
+    Friday: Yup.string(),
+    Saturday : Yup.string(),
+    Sunday: Yup.string(),
+    Total_hours: Yup.string(),
+    Comment: Yup.string(),
+    // marital_status: Yup.string(),
+    // nationality: Yup.string(),
+    // religion: Yup.string(),
+    // blood_group: Yup.string(),
+    // offer_date: Yup.string(),
+    // joining_date: Yup.string(),
+    // p_address_line1: Yup.string(),
+    // p_address_line2: Yup.string(),
+    // p_city: Yup.string(),
+    // p_state: Yup.string(),
+    // p_pincode: Yup.string(),
+    // r_address_line1: Yup.string(),
+    // r_address_line2: Yup.string(),
+    // r_city: Yup.string(),
+    // r_state: Yup.string(),
+    // r_pincode: Yup.string(),
 
     // first_name: Yup.string().required('First Name is required'),
 
@@ -107,31 +107,31 @@ export default function GeneralInformation({ currentUser }) {
       // company_name: currentUser?.company_name || '',
       // image_name: currentUser?.image_name || '',
       // image_data: currentUser?.image_data || '',
-      first_name: currentUser?.first_name || '',
-      middle_name: currentUser?.middle_name || '',
-      last_name: currentUser?.last_name || '',
-      email_id: currentUser?.email_id || '',
-      contact_number: currentUser?.contact_number || '',
-      emergency_contact_number: currentUser?.emergency_contact_number || '',
-      date_of_birth: currentUser?.date_of_birth || '',
-      father_name: currentUser?.father_name || '',
-      mother_name: currentUser?.mother_name || '',
-      marital_status: currentUser?.marital_status || '',
-      nationality: currentUser?.nationality || '',
-      religion: currentUser?.religion || '',
-      blood_group: currentUser?.blood_group || '',
-      offer_date: currentUser?.offer_date || '',
-      joining_date: currentUser?.joining_date || '',
-      p_address_line1: currentUser?.p_address_line1 || '',
-      p_address_line2: currentUser?.p_address_line2 || '',
-      p_city: currentUser?.p_city || '',
-      p_state: currentUser?.p_state || '',
-      p_pincode: currentUser?.p_pincode || '',
-      r_address_line1: currentUser?.r_address_line1 || '',
-      r_address_line2: currentUser?.r_address_line2 || '',
-      r_city: currentUser?.r_city || '',
-      r_state: currentUser?.r_state || '',
-      r_pincode: currentUser?.r_pincode || '',
+      Employe_id: currentUser?.Employe_id || '',
+      Employe_Name: currentUser?.Employe_Name || '',
+      Project_Name: currentUser?.Project_Name || '',
+      Activity_Name: currentUser?.Activity_Name || '',
+      Monday: currentUser?.Monday || '',
+      Tuesday: currentUser?.Tuesday || '',
+      Wednesday: currentUser?.Wednesday || '',
+      Thursday: currentUser?.Thursday || '',
+      Friday: currentUser?.Friday || '',
+      Saturday: currentUser?.Saturday || '',
+      Sunday: currentUser?.Sunday || '',
+      Total_hours: currentUser?.Total_hours || '',
+      Comment: currentUser?.Comment || '',
+    //   offer_date: currentUser?.offer_date || '',
+    //   joining_date: currentUser?.joining_date || '',
+    //   p_address_line1: currentUser?.p_address_line1 || '',
+    //   p_address_line2: currentUser?.p_address_line2 || '',
+    //   p_city: currentUser?.p_city || '',
+    //   p_state: currentUser?.p_state || '',
+    //   p_pincode: currentUser?.p_pincode || '',
+    //   r_address_line1: currentUser?.r_address_line1 || '',
+    //   r_address_line2: currentUser?.r_address_line2 || '',
+    //   r_city: currentUser?.r_city || '',
+    //   r_state: currentUser?.r_state || '',
+    //   r_pincode: currentUser?.r_pincode || '',
     }),
     [currentUser]
   );
@@ -144,7 +144,7 @@ export default function GeneralInformation({ currentUser }) {
   const m2 = useForm();
 
   const {
-    reset,
+    reset, 
     watch,
     control,
     setValue,
@@ -204,8 +204,8 @@ export default function GeneralInformation({ currentUser }) {
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
-          <Grid xs={12} md={4}>
-            <Card sx={{ pt: 10, pb: 5, px: 3 }}>
+          <Grid xs={12} md={12}>
+            {/* <Card sx={{ pt: 10, pb: 5, px: 3 }}>
               {currentUser && (
                 <Label
                   color={
@@ -289,27 +289,27 @@ export default function GeneralInformation({ currentUser }) {
                 }
                 sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
               />
-            </Card>
+            </Card> */}
           </Grid>
 
-          <Grid xs={12} md={8}>
+          <Grid xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Box
-                rowGap={3}
-                columnGap={2}
+                rowGap={1}
+                columnGap={1}
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
+                  sm: 'repeat(7, 1fr)',
                 }}
               >
-                <RHFTextField name="first_name" label="First Name" />
-                <RHFTextField name="middle_name" label="Middle Name " />
-                <RHFTextField name="last_name" label="Last Name " />
-                <RHFTextField name="email_id" label="Email Id " />
-                <RHFTextField name="contact_number" label="Contact Number " />
-                <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <RHFTextField name="Employe_id" label="Employe id  " />
+                <RHFTextField name="Employe_Name" label=" Employe Name " />
+                <RHFTextField name="Project_Name" label="Project Name  " />
+                <RHFTextField name="Activity_Name" label="Activity Name " />
+                <RHFTextField name="Monday" label="Monday" />
+                <RHFTextField name="Tuesday" label="Tuesday" />
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -324,14 +324,14 @@ export default function GeneralInformation({ currentUser }) {
                       }}
                     />
                   </DemoContainer>
-                </LocalizationProvider>
-                <RHFTextField name="father_name" label="Father Name " />
-                <RHFTextField name="mother_name" label="Mother Name " />
-                <RHFTextField name="marital_status" label="Martial Status " />
-                <RHFTextField name="nationality" label="Nationality " />
-                <RHFTextField name="religion" label="Religion " />
-                <RHFTextField name="blood_group" label="Blood Group " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                </LocalizationProvider> */}
+                <RHFTextField name="Wednesday" label="Wednesday" />
+                <RHFTextField name="Thursday" label="Thursday" />
+                <RHFTextField name="Friday" label="Friday" />
+                <RHFTextField name="Saturday" label="Saturday " />
+                <RHFTextField name="Sunday" label="Sunday " />
+                {/* <RHFTextField name="blood_group" label="Blood Group " /> */}
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -346,8 +346,8 @@ export default function GeneralInformation({ currentUser }) {
                       }}
                     />
                   </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                </LocalizationProvider> */}
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -362,17 +362,17 @@ export default function GeneralInformation({ currentUser }) {
                       }}
                     />
                   </DemoContainer>
-                </LocalizationProvider>
-                <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
-                <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
-                <RHFTextField name="p_city" label="City " />
+                </LocalizationProvider> */}
+                <RHFTextField name="Total_hours" label="Total hours" />
+                <RHFTextField name="Comment" label="Comment" />
+                {/* <RHFTextField name="p_city" label="City " />
                 <RHFTextField name="p_state" label="State " />
                 <RHFTextField name="p_pincode" label="Pincode " />
                 <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
                 <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
-                <RHFTextField name="r_pincode" label="Resendial Pincode" />
+                <RHFTextField name="r_pincode" label="Resendial Pincode" /> */}
 
                 {/* <RHFTextField name="name" label="Full Name" />
                 <RHFTextField name="email" label="Email Address" />
@@ -428,6 +428,6 @@ export default function GeneralInformation({ currentUser }) {
   );
 }
 
-GeneralInformation.propTypes = {
+TimeForm.propTypes = {
   currentUser: PropTypes.object,
 };
