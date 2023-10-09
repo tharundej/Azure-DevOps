@@ -9,6 +9,7 @@ import { _userList } from 'src/_mock';
 import { useState } from 'react';
 import { BasicTable } from '../Table/BasicTable';
 import TimeForm from './TimeForm';
+import ReusableTabs from '../tabs/ReusableTabs';
 
 const bull = (
   <Box
@@ -37,6 +38,10 @@ export default function BasicCard() {
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       }
+      const tabLabels = ["Projects" , "My Timesheet" , "Approvals"]
+      const tabContents = [
+        <div>  </div>
+      ]
   return (
     <>
       {showForm && (
@@ -56,6 +61,7 @@ export default function BasicCard() {
         <Button size="small" onClick={handleTimeForm}>Learn More</Button>
       </CardActions>
     </Card>
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
     <BasicTable  headdata={TABLE_HEAD} bodydata={_userList}/>
   
     </>
