@@ -42,15 +42,15 @@ export default function TimeSheetTable() {
     
         },
     
-        { id: "Project_Id", label: "Project_Id", width: 180, type: "text" },
+        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project_Name", width: 220, type: "text" },
+        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
     
         { id: "Date", label: "Date", width: 180, type: "text" },
     
         { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working_Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking_Time", width: 100, type: "text" },
+        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
+        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
@@ -120,8 +120,8 @@ export default function TimeSheetTable() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   <Button className="button" onClick={handleTimeForm}>Add Time Sheet</Button>
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+<Button className="button" >Filter</Button>
+<Button className="button" >Report</Button>
 </Container>
     <BasicTable
 

@@ -23,11 +23,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 // routes
 import { useRouter } from 'src/routes/hooks';
 // assets
-import { countries } from 'src/assets/data';
 // components
-import Label from 'src/components/label';
-
-import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,

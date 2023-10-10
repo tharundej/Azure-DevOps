@@ -138,10 +138,10 @@ export default function TimeForm({ currentUser }) {
         <Grid container spacing={3}>
  <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
-              <Typography>
+              <Typography sx={{marginLeft:'8px'}}>
                 ADD YOUR TIMELINE TO PROJECT IS HERE .....
               </Typography>
-              <Typography>
+              <Typography sx={{marginLeft:'8px'}}>
                 Time Sheet
               </Typography>
             </Grid>

@@ -43,15 +43,15 @@ export default function TimeProject() {
     
         },
     
-        { id: "Project_Id", label: "Project_Id", width: 180, type: "text" },
+        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project_Name", width: 220, type: "text" },
+        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
     
         { id: "Date", label: "Date", width: 180, type: "text" },
     
         { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working_Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking_Time", width: 100, type: "text" },
+        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
+        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
