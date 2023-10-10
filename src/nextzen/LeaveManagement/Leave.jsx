@@ -17,7 +17,11 @@ import { _userList } from 'src/_mock';
 import ReusableTabs from '../tabs/ReusableTabs';
 
 import Approveleave from './approveleave/ApproveLeave';
+
 import Applyleave from './applyleave/ApplyLeave';
+
+import CalendarView from './leavecalendar/Calendar/view/calendar-view';
+
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -34,15 +38,15 @@ export default function BasicCard() {
     <div>
       <Applyleave />
     </div>,
-    <div>Tab 3 Content</div>,
+    <div><CalendarView/></div>,
   ];
 
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Leave management
-        </Typography>
+        </Typography> */}
       </CardContent>
       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
     </Card>
