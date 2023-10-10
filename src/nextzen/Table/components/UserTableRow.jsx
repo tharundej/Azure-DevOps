@@ -19,7 +19,10 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 //
 import { ASSETS_API } from 'src/config-global';
-import UserQuickEditForm from './UserQuickEditForm';
+// import UserQuickEditForm from './UserQuickEditForm';
+import { useRouter } from 'src/routes/hooks';
+
+import { RouterLink } from 'src/routes/components'; 
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +46,14 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
+
+  const handleClick = () => {
+    // alert('Button Clicked!');
+    // Add any other actions you want to perform here
+    // component={RouterLink}
+
+// href={paths.dashboard.employee.onboardform}
+  };
   return (
     <>
       <TableRow hover selected={selected}>
@@ -122,7 +133,7 @@ export default function UserTableRow({
                 }}
               >
                 <Iconify icon="solar:pen-bold" />
-                {item?.name}
+                {item?.name }
               </MenuItem>
             </>
           ))}

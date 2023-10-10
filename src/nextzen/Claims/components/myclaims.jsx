@@ -123,87 +123,22 @@ export default function UserListPage({currentUser}) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    company_id: Yup.string(),
-    company_name: Yup.string(),
-    image_name: Yup.string(),
-    image_data: Yup.string(),
-    first_name: Yup.string().required('First Name is Required'),
-    middle_name: Yup.string(),
-    last_name: Yup.string('Last Name is Required'),
-    email_id: Yup.string().email().required('Email is Required'),
-    contact_number: Yup.string(),
-    emergency_contact_number: Yup.string(),
-    date_of_birth: Yup.string(),
-    father_name: Yup.string(),
-    mother_name: Yup.string(),
-    marital_status: Yup.string(),
-    nationality: Yup.string(),
-    religion: Yup.string(),
-    blood_group: Yup.string(),
-    offer_date: Yup.string(),
-    joining_date: Yup.string(),
-    p_address_line1: Yup.string(),
-    p_address_line2: Yup.string(),
-    p_city: Yup.string(),
-    p_state: Yup.string(),
-    p_pincode: Yup.string(),
-    r_address_line1: Yup.string(),
-    r_address_line2: Yup.string(),
-    r_city: Yup.string(),
-    r_state: Yup.string(),
-    r_pincode: Yup.string(),
+    claim_amount: Yup.string().required('Claim Amount is Required'),
+    comments: Yup.string(),
 
-    // first_name: Yup.string().required('First Name is required'),
+    
 
-    // middle_name: Yup.string().required('Middle Name is required'),
-
-    // name: Yup.string().required('Name is required'),
-    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    // phoneNumber: Yup.string().required('Phone number is required'),
-    // address: Yup.string().required('Address is required'),
-    // country: Yup.string().required('Country is required'),
-    // company: Yup.string().required('Company is required'),
-    // state: Yup.string().required('State is required'),
-    // city: Yup.string().required('City is required'),
-    // role: Yup.string().required('Role is required'),
-    // zipCode: Yup.string().required('Zip code is required'),
-    // avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
-    // not required
-    // status: Yup.string(),
-    // isVerified: Yup.boolean(),
+    
   });
 
   const defaultValues = useMemo(
     () => ({
-      // company_id: currentUser?.company_id || '',
-      // company_name: currentUser?.company_name || '',
+      claim_amount: currentUser?.claim_amount || '',
+      comments: currentUser?.comments || '',
       // image_name: currentUser?.image_name || '',
       // image_data: currentUser?.image_data || '',
-      first_name: currentUser?.first_name || '',
-      middle_name: currentUser?.middle_name || '',
-      last_name: currentUser?.last_name || '',
-      email_id: currentUser?.email_id || '',
-      contact_number: currentUser?.contact_number || '',
-      emergency_contact_number: currentUser?.emergency_contact_number || '',
-      date_of_birth: currentUser?.date_of_birth || '',
-      father_name: currentUser?.father_name || '',
-      mother_name: currentUser?.mother_name || '',
-      marital_status: currentUser?.marital_status || '',
-      nationality: currentUser?.nationality || '',
-      religion: currentUser?.religion || '',
-      blood_group: currentUser?.blood_group || '',
-      offer_date: currentUser?.offer_date || '',
-      joining_date: currentUser?.joining_date || '',
-      p_address_line1: currentUser?.p_address_line1 || '',
-      p_address_line2: currentUser?.p_address_line2 || '',
-      p_city: currentUser?.p_city || '',
-      p_state: currentUser?.p_state || '',
-      p_pincode: currentUser?.p_pincode || '',
-      r_address_line1: currentUser?.r_address_line1 || '',
-      r_address_line2: currentUser?.r_address_line2 || '',
-      r_city: currentUser?.r_city || '',
-      r_state: currentUser?.r_state || '',
-      r_pincode: currentUser?.r_pincode || '',
+      
+     
     }),
     [currentUser]
   );
@@ -365,7 +300,7 @@ export default function UserListPage({currentUser}) {
                 />
                 
                 
-            <RHFTextField name="name" label="Claim Amount" />
+            <RHFTextField name="claim_amount" label="Claim Amount" />
             <Grid sx={{alignSelf:"flex-start"}}  >
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
@@ -380,7 +315,7 @@ export default function UserListPage({currentUser}) {
                     {/* </DemoContainer> */}
                   </LocalizationProvider>
                 </Grid>
-            <RHFTextField name="email" label="comments" />
+            <RHFTextField name="comments" label="comments" />
             {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
         <Grid sx={{alignSelf:"flex-end"}}>
          
