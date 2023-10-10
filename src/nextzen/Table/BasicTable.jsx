@@ -1,32 +1,32 @@
-import PropTypes from "prop-types";
-import isEqual from "lodash/isEqual";
-import { useState, useCallback } from "react";
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
+import { useState, useCallback } from 'react';
 // @mui
-import { alpha } from "@mui/material/styles";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import { alpha } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 // routes
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 // _mock
-import { _roles, USER_STATUS_OPTIONS } from "src/_mock";
+import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
+import Label from 'src/components/label';
+import Iconify from 'src/components/iconify';
+import Scrollbar from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
 import {
   useTable,
   getComparator,
@@ -36,14 +36,14 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 //
-import UserTableRow from "./components/UserTableRow";
+import UserTableRow from './components/UserTableRow';
 
 const defaultFilters = {
-  name: "",
+  name: '',
   role: [],
-  status: "all",
+  status: 'all',
 };
 
 // ----------------------------------------------------------------------
@@ -69,6 +69,8 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
+
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -103,9 +105,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter(
-      (row) => !table.selected.includes(row.id)
-    );
+    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
@@ -122,18 +122,16 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     [router]
   );
 
-
   const handleFilterStatus = useCallback(
     (event, newValue) => {
-      handleFilters("status", newValue);
+      handleFilters('status', newValue);
     },
     [handleFilters]
   );
 
-
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Card>
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
@@ -156,10 +154,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -228,8 +223,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={
@@ -248,7 +242,6 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     </>
   );
 };
-
 
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, role } = filters;
@@ -269,7 +262,7 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (status !== "all") {
+  if (status !== 'all') {
     inputData = inputData.filter((user) => user.status === status);
   }
 

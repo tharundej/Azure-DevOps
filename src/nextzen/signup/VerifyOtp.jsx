@@ -165,7 +165,7 @@ export default function VerifyOtp() {
         <Typography variant="h3">Please check your email!</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please Enter The OTP
+        Please enter the OTP to Verify and Create your Password.
         </Typography>
         </Grid>
       </Stack>

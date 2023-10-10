@@ -1,25 +1,25 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 // @mui
-import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import TableCell from "@mui/material/TableCell";
-import IconButton from "@mui/material/IconButton";
-import ListItemText from "@mui/material/ListItemText";
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
 // hooks
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
-import { ConfirmDialog } from "src/components/custom-dialog";
+import Label from 'src/components/label';
+import Iconify from 'src/components/iconify';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 //
-import { ASSETS_API } from "src/config-global";
-import UserQuickEditForm from "./UserQuickEditForm";
+import { ASSETS_API } from 'src/config-global';
+import UserQuickEditForm from './UserQuickEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -38,9 +38,9 @@ export default function UserTableRow({
 
   const popover = usePopover();
   const data = [
-    { name: "approve", icon: "hh", path: "jjj" },
-    { name: "view", icon: "hh", path: "jjj" },
-    { name: "eerr", icon: "hh", path: "jjj" },
+    { name: 'approve', icon: 'hh', path: 'jjj' },
+    { name: 'view', icon: 'hh', path: 'jjj' },
+    { name: 'eerr', icon: 'hh', path: 'jjj' },
   ];
 
   return (
@@ -54,8 +54,8 @@ export default function UserTableRow({
             <>
               <TableCell
                 sx={{
-                  display: ele.containesAvatar ? "flex" : "",
-                  alignItems: ele.containesAvatar ? "center" : "",
+                  display: ele.containesAvatar ? 'flex' : '',
+                  alignItems: ele.containesAvatar ? 'center' : '',
                 }}
               >
                 {ele.containesAvatar && (
@@ -70,28 +70,26 @@ export default function UserTableRow({
                   />
                 )}
 
-                {ele.type === "text" && (
+                {ele.type === 'text' && (
                   <ListItemText
                     primary={row[ele.id]}
-                    secondary={
-                      (ele.secondaryText && row[ele.secondaryText]) || ""
-                    }
-                    primaryTypographyProps={{ typography: "body2" }}
+                    secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                    primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
-                      component: "span",
-                      color: "text.disabled",
+                      component: 'span',
+                      color: 'text.disabled',
                     }}
                   />
                 )}
 
-                {ele.type === "badge" && (
+                {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === "active" && "success") ||
-                      (row[ele.id] === "pending" && "warning") ||
-                      (row[ele.id] === "banned" && "error") ||
-                      "default"
+                      (row[ele.id] === 'active' && 'success') ||
+                      (row[ele.id] === 'pending' && 'warning') ||
+                      (row[ele.id] === 'banned' && 'error') ||
+                      'default'
                     }
                   >
                     {row[ele.id]}
@@ -102,11 +100,8 @@ export default function UserTableRow({
           ))}
 
         {rowActions && rowActions.length > 0 && (
-          <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
-            <IconButton
-              color={popover.open ? "inherit" : "default"}
-              onClick={popover.onOpen}
-            >
+          <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+            <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           </TableCell>

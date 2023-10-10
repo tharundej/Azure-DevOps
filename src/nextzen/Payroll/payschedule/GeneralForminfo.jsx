@@ -18,6 +18,11 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import axios from 'axios';
 
 export default function GeneralForminfo({ currentUser }) {
+  const [datesUsed, setDatesUsed] = useState({
+    date_of_birth: dayjs(new Date()),
+    joining_date: dayjs(new Date()),
+    offer_date: dayjs(new Date()),
+  });
   //   const [datesUsed, setDatesUsed] = useState({
   //     date_of_birth: dayjs(new Date()),
   //     joining_date: dayjs(new Date()),
@@ -105,12 +110,12 @@ export default function GeneralForminfo({ currentUser }) {
     [setValue]
   );
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '20px'}}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3} paddingTo={10}>
-          <Grid xs={12} md={6}>
-            <Card sx={{ p: 3 }}>
-              <Box
+        <Grid container spacing={3}  >
+          <Grid xs={12} md={12} >
+            <Card sx={{p:3}} >
+              <Box 
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -118,7 +123,9 @@ export default function GeneralForminfo({ currentUser }) {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
+                
               >
+               
                 <RHFTextField name="employee_type" label="Employee Type " />
                 <RHFTextField name="payschedule_type" label="Pay Schedule Type " />
                 <RHFTextField name="pay_type" label="Pay Type " />
@@ -136,6 +143,8 @@ export default function GeneralForminfo({ currentUser }) {
               </Stack>
             </Card>
           </Grid>
+
+          
         </Grid>
       </FormProvider>
     </div>

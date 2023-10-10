@@ -11,7 +11,7 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 
-export default function UserListPage() {
+export default function EmployeeTable() {
   const TABLE_HEAD = [
     {
       id: 'name',
@@ -35,7 +35,7 @@ export default function UserListPage() {
   ];
   const bodyContent = [
     {
-      name: 'Surendra',
+      name: 'ssurendra',
       email: 'suri@infobellIt.com',
       phoneNumber: '9879876789',
       company: 'Infobell',
@@ -46,7 +46,7 @@ export default function UserListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: reusetable</title>
+        <title> Dashboard: Employees</title>
       </Helmet>
       <Button
         component={RouterLink}

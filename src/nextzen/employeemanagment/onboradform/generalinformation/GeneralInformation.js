@@ -428,11 +428,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="role" label="Role" /> */}
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
+             
             </Card>
           </Grid>
         </Grid>

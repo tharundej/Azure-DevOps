@@ -20,20 +20,20 @@ import Approveleave from './approveleave/ApproveLeave';
 import Applyleave from './applyleave/ApplyLeave';
 
 const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
+  <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
   </Box>
 );
 
 export default function BasicCard() {
-
   const tabLabels = ['Approve Leave', 'Apply Leave', 'Leave Calendar'];
   const tabContents = [
-    <div><Approveleave /></div>,
-    <div><Applyleave/></div>,
+    <div>
+      <Approveleave />
+    </div>,
+    <div>
+      <Applyleave />
+    </div>,
     <div>Tab 3 Content</div>,
   ];
 
@@ -43,9 +43,8 @@ export default function BasicCard() {
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Leave management
         </Typography>
-       
       </CardContent>
- <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
     </Card>
   );
 }

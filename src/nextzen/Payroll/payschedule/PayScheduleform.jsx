@@ -5,7 +5,7 @@ import GeneralForminfo from './GeneralForminfo';
 export default function PayScheduleform() {
     return (
       <Box sx={{ width: '100%' }}>
-        <GeneralForminfo style={{ paddingTop: '20px' }} currentUser={{}} />
+        <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
       </Box>
     );
   }

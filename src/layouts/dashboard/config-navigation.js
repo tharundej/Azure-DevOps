@@ -121,18 +121,18 @@ export function useNavData() {
             icon: ICONS.user,
             
           },
-          {
-            title: t('Configuration'),
-            path: paths.dashboard.employee.root,
-            icon: ICONS.user,
-            children: [
-              { title: t('profile'), path: paths.dashboard.user.root },
-              { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('list'), path: paths.dashboard.user.list },
+          // {
+          //   title: t('Configuration'),
+          //   path: paths.dashboard.employee.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: t('profile'), path: paths.dashboard.user.root },
+          //     { title: t('cards'), path: paths.dashboard.user.cards },
+          //     { title: t('list'), path: paths.dashboard.user.list },
               
-            ],
+          //   ],
             
-          },
+          // },
           
           
           // {

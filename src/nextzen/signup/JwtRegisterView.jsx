@@ -183,7 +183,7 @@ export default function JwtRegisterView() {
 
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack style={{padding:'10px'}}spacing={3.5}>
+      <Stack style={{ padding: '10px' }} spacing={3.5}>
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
         <Box sx={{ flexGrow: 1 }}>

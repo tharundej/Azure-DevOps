@@ -9,6 +9,10 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
+// employee Management
+
+const EmployeeTable = lazy(() => import('src/nextzen/employeemanagment/employeestable/Employeestable'));
+
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
@@ -136,9 +140,9 @@ export const dashboardRoutes = [
       },
 
       {
-        path: 'reusetabletwo',
+        path: 'employeetable',
         children: [
-          { element: <ReuseTableTwo />, index: true },
+          { element: <EmployeeTable />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm /> },
@@ -200,7 +204,7 @@ export const dashboardRoutes = [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
           {path: 'payschedule',element:<PaySchedule/>},
-          {path:'payscheduleform',element:<PayScheduleform/>}
+          {path:':id/payscheduleform',element:<PayScheduleform/>}
           
         ],
       },

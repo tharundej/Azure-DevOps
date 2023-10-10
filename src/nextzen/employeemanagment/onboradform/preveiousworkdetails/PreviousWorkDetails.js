@@ -145,7 +145,7 @@ export default function PreviousWorkDetails({ currentUser }) {
     <Stack>
       <form style={{ padding: '40px' }}>
         <>
-          {defaultValues.map((item, index) => (
+          {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>

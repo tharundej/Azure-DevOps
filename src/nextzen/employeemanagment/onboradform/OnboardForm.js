@@ -9,8 +9,9 @@ import Typography from '@mui/material/Typography';
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
 import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
+import DocumentsUpload from './documentsupoad/DocumentsUpload';
 
-const steps = ['General Information', 'Education Details', 'Previous Work Details'];
+const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -36,21 +37,23 @@ export default function OnBoardForm() {
 
   const handleNext = () => {
 
-
+    let returnResponse;
     if(activeStep+1===1){
       console.log('11')
-      const returnResponse=childref.current.childFunctionGeneral()
+      returnResponse= childref.current.childFunctionGeneral()
+    }
+    else if(activeStep+1===2){
+      console.log("2");
     }
 
     
  
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
+    // const newActiveStep =
+    //   isLastStep() && !allStepsCompleted()
+    //     ? 
+    //       steps.findIndex((step, i) => !(i in completed))
+    //     : activeStep + 1;
+    // setActiveStep(newActiveStep);
   };
 
   const handleBack = () => {
@@ -111,6 +114,9 @@ export default function OnBoardForm() {
             {activeStep + 1 === 3 && (
               <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
             )}
+             {activeStep + 1 === 4 && (
+              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]} />
+            )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
@@ -123,17 +129,15 @@ export default function OnBoardForm() {
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
+                Save and Continue
               </Button>
 
-              <Button onClick={handleComplete}>
-                {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-              </Button>
+             
             </Box>
           </>
         )}
       </div>
-      <Button onClick={e=>callBeta()}>Hii</Button>
+     
     </Box>
   );
 }
