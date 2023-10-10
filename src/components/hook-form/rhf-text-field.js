@@ -13,7 +13,7 @@ export default function RHFTextField({ name, helperText, type, ...other }) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div style={{padding:'10px',width:'450px'}}>
+        <div >
         <TextField
           {...field}
           fullWidth

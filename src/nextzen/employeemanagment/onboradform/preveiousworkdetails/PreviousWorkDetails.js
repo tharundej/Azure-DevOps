@@ -82,7 +82,7 @@ export default function PreviousWorkDetails({ currentUser }) {
   return (
     <Stack>
       <form style={{ padding: '40px' }}>
-        <>
+        
           {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -212,7 +212,7 @@ export default function PreviousWorkDetails({ currentUser }) {
               </Grid>
             </Grid>
           ))}
-        </>
+        
 
         <Button
           variant="contained"

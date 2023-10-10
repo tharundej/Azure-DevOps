@@ -14,7 +14,7 @@ export default function RHFCode({ name, ...other }) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div style={{padding:'10px',width:'350px'}}>
+        <div >
           <MuiOtpInput
             {...field}
             autoFocus

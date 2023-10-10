@@ -6,7 +6,7 @@ import { styled } from '@mui/system'; // Import styled from @mui/system
 
 const CustomTab = styled(Tab)(({ theme }) => ({
   borderRadius: '16px',
-  padding: '8px 16px',
+  padding: '4px 12px',
   marginRight: '8px',
   backgroundColor: "#fff",
   color: 'black',

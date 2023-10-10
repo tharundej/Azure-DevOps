@@ -30,15 +30,14 @@ export default function BasicCard() {
     { id: 'employeeType', label: 'Employee Type',  type: "text" },
     { id: 'payscheduleType', label:'Pay Schedule Type', type: "text" },
     { id: 'payType', label: 'Pay Type',  type: "text" },
-    { id: 'basicPay', label: 'Basic Pay',  type: "text" },
-    { id: 'hra', label: 'HRA',  type: "text" },
-    { id: 'da',label:'DA',  type: "text" },
-    {id: 'employeePf', label: 'Employee PF',  type: "text"},
-    { id: 'employerPf',label:'Employer PF', type: "text"},
-    {id: 'tds',label:'TDS', type: "text"}
+    { id: 'basicPay', label: 'Basic Pay %',  type: "text" },
+    { id: 'hra', label: 'HRA %',  type: "text"},
+    { id: 'da',label:'DA %',  type: "text" },
+    {id: 'employeePf', label: 'Employee PF %',  type: "text"},
+    { id: 'employerPf',label:'Employer PF %', type: "text"},
+    {id: 'tds',label:'TDS %', type: "text"}
   ];
   const actions = [
-    { name: "Approve", icon: "hh", path: "jjj" },
     { name: "View", icon: "hh", path: "jjj" },
     { name: "Edit", icon: "hh", path: "jjj" },
   ];
@@ -47,12 +46,12 @@ export default function BasicCard() {
       employeeType: "Permanent",
       payscheduleType: "Weekly",
       payType: "CTC",
-      basicPay: "32000",
-      hra: "20000",
-      da: "1400",
-      employeePf:"2000",
-      employerPf:"2000",
-      tds:"1800"
+      basicPay: "40",
+      hra: "20",
+      da: "8",
+      employeePf:"6",
+      employerPf:"6",
+      tds:"20"
     },
   ];
   // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
@@ -61,11 +60,11 @@ export default function BasicCard() {
   //   <div>Tab 2 Content</div>,
   //   <div>Tab 3 Content</div>,
   // ];
-  const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 700);
+  const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 
   React.useEffect(() => {
     const handleResize = () => {
-      setIsLargeDevice(window.innerWidth > 700);
+      setIsLargeDevice(window.innerWidth > 530);
     };
 
     window.addEventListener('resize', handleResize);
