@@ -81,6 +81,8 @@ const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform
 
 // claims------------------------
 const Claims = lazy(() => import('src/nextzen/Claims/Claims'));
+const CompoffApprove = lazy(() => import('src/nextzen/Claims/components/compoffapprove'));
+const MyCompoff = lazy(() => import('src/nextzen/Claims/components/mycompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -192,7 +194,8 @@ export const dashboardRoutes = [
         path: 'claims',
         children: [
           { element: <Claims />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
+          { path: 'compoffapprove', element: <CompoffApprove /> },
+          { path: 'mycompoff', element: <MyCompoff /> },
           
           
         ],

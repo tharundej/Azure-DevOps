@@ -14,10 +14,10 @@ import Iconify from 'src/components/iconify';
 export default function UserListPage() {
   const TABLE_HEAD = [
     {
-      id: 'name',
-      label: ' Name',
-      type: 'text',
-      containesAvatar: true,
+      id: "name",
+      label: " Name",
+      type: "text",
+      containesAvatar: false,
 
       secondaryText: 'email',
     },

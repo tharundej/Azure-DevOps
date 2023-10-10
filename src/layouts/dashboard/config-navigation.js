@@ -95,6 +95,13 @@ export function useNavData() {
             title: t('Claims'),
             path: paths.dashboard.claims.root,
             icon: ICONS.user,
+            // children: [
+            //   { 
+            //     title: t('profile'), 
+            //   path: paths.dashboard.claims.compoffapprove },
+              
+              
+            // ],
             
           },
           {
