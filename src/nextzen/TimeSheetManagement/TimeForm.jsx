@@ -64,49 +64,12 @@ export default function TimeForm({ currentUser }) {
     Sunday: Yup.string(),
     Total_hours: Yup.string(),
     Comment: Yup.string(),
-    // marital_status: Yup.string(),
-    // nationality: Yup.string(),
-    // religion: Yup.string(),
-    // blood_group: Yup.string(),
-    // offer_date: Yup.string(),
-    // joining_date: Yup.string(),
-    // p_address_line1: Yup.string(),
-    // p_address_line2: Yup.string(),
-    // p_city: Yup.string(),
-    // p_state: Yup.string(),
-    // p_pincode: Yup.string(),
-    // r_address_line1: Yup.string(),
-    // r_address_line2: Yup.string(),
-    // r_city: Yup.string(),
-    // r_state: Yup.string(),
-    // r_pincode: Yup.string(),
-
-    // first_name: Yup.string().required('First Name is required'),
-
-    // middle_name: Yup.string().required('Middle Name is required'),
-
-    // name: Yup.string().required('Name is required'),
-    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    // phoneNumber: Yup.string().required('Phone number is required'),
-    // address: Yup.string().required('Address is required'),
-    // country: Yup.string().required('Country is required'),
-    // company: Yup.string().required('Company is required'),
-    // state: Yup.string().required('State is required'),
-    // city: Yup.string().required('City is required'),
-    // role: Yup.string().required('Role is required'),
-    // zipCode: Yup.string().required('Zip code is required'),
-    // avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
-    // not required
-    // status: Yup.string(),
-    // isVerified: Yup.boolean(),
+   
   });
 
   const defaultValues = useMemo(
     () => ({
-      // company_id: currentUser?.company_id || '',
-      // company_name: currentUser?.company_name || '',
-      // image_name: currentUser?.image_name || '',
-      // image_data: currentUser?.image_data || '',
+   
       Employe_id: currentUser?.Employe_id || '',
       Employe_Name: currentUser?.Employe_Name || '',
       Project_Name: currentUser?.Project_Name || '',
@@ -120,18 +83,7 @@ export default function TimeForm({ currentUser }) {
       Sunday: currentUser?.Sunday || '',
       Total_hours: currentUser?.Total_hours || '',
       Comment: currentUser?.Comment || '',
-    //   offer_date: currentUser?.offer_date || '',
-    //   joining_date: currentUser?.joining_date || '',
-    //   p_address_line1: currentUser?.p_address_line1 || '',
-    //   p_address_line2: currentUser?.p_address_line2 || '',
-    //   p_city: currentUser?.p_city || '',
-    //   p_state: currentUser?.p_state || '',
-    //   p_pincode: currentUser?.p_pincode || '',
-    //   r_address_line1: currentUser?.r_address_line1 || '',
-    //   r_address_line2: currentUser?.r_address_line2 || '',
-    //   r_city: currentUser?.r_city || '',
-    //   r_state: currentUser?.r_state || '',
-    //   r_pincode: currentUser?.r_pincode || '',
+   
     }),
     [currentUser]
   );
@@ -175,124 +127,24 @@ export default function TimeForm({ currentUser }) {
           console.log('lllll', error);
         }
       );
-
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
   });
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
-          <Grid xs={12} md={12}>
-            {/* <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-              {currentUser && (
-                <Label
-                  color={
-                    (values.status === 'active' && 'success') ||
-                    (values.status === 'banned' && 'error') ||
-                    'warning'
-                  }
-                  sx={{ position: 'absolute', top: 24, right: 24 }}
-                >
-                  {values.status}
-                </Label>
-              )}
-
-              <Box sx={{ mb: 5 }}>
-                <RHFUploadAvatar
-                  name="avatarUrl"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  helperText={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        mt: 3,
-                        mx: 'auto',
-                        display: 'block',
-                        textAlign: 'center',
-                        color: 'text.disabled',
-                      }}
-                    >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
-                    </Typography>
-                  }
-                />
-              </Box>
-
-              {currentUser && (
-                <FormControlLabel
-                  labelPlacement="start"
-                  control={
-                    <Controller
-                      name="status"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          {...field}
-                          checked={field.value !== 'active'}
-                          onChange={(event) =>
-                            field.onChange(event.target.checked ? 'banned' : 'active')
-                          }
-                        />
-                      )}
-                    />
-                  }
-                  label={
-                    <>
-                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                        Banned
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Apply disable account
-                      </Typography>
-                    </>
-                  }
-                  sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-                />
-              )}
-
-              <RHFSwitch
-                name="isVerified"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Email Verified
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Disabling this will automatically send the user a verification email
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              />
-            </Card> */}
-          </Grid>
-
-          <Grid xs={12} md={12}>
+ <Grid xs={12} md={12}>
+            <Grid sx={{padding:'8px'}}>
+              <Typography>
+                ADD YOUR TIMELINE TO PROJECT IS HERE .....
+              </Typography>
+              <Typography>
+                Time Sheet
+              </Typography>
+            </Grid>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={1}
@@ -309,110 +161,14 @@ export default function TimeForm({ currentUser }) {
                 <RHFTextField name="Activity_Name" label="Activity Name " />
                 <RHFTextField name="Monday" label="Monday" />
                 <RHFTextField name="Tuesday" label="Tuesday" />
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Birth"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          date_of_birth: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider> */}
                 <RHFTextField name="Wednesday" label="Wednesday" />
                 <RHFTextField name="Thursday" label="Thursday" />
                 <RHFTextField name="Friday" label="Friday" />
                 <RHFTextField name="Saturday" label="Saturday " />
                 <RHFTextField name="Sunday" label="Sunday " />
-                {/* <RHFTextField name="blood_group" label="Blood Group " /> */}
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Offer Date"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          offer_date: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider> */}
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Joining Date"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          joining_date: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider> */}
                 <RHFTextField name="Total_hours" label="Total hours" />
                 <RHFTextField name="Comment" label="Comment" />
-                {/* <RHFTextField name="p_city" label="City " />
-                <RHFTextField name="p_state" label="State " />
-                <RHFTextField name="p_pincode" label="Pincode " />
-                <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
-                <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
-                <RHFTextField name="r_city" label="Resendial City " />
-                <RHFTextField name="r_state" label="Resendial State " />
-                <RHFTextField name="r_pincode" label="Resendial Pincode" /> */}
-
-                {/* <RHFTextField name="name" label="Full Name" />
-                <RHFTextField name="email" label="Email Address" />
-                <RHFTextField name="phoneNumber" label="Phone Number" />
-
-                <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  options={countries.map((country) => country.label)}
-                  getOptionLabel={(option) => option}
-                  isOptionEqualToValue={(option, value) => option === value}
-                  renderOption={(props, option) => {
-                    const { code, label, phone } = countries.filter(
-                      (country) => country.label === option
-                    )[0];
-
-                    if (!label) {
-                      return null;
-                    }
-
-                    return (
-                      <li {...props} key={label}>
-                        <Iconify
-                          key={label}
-                          icon={`circle-flags:${code.toLowerCase()}`}
-                          width={28}
-                          sx={{ mr: 1 }}
-                        />
-                        {label} ({code}) +{phone}
-                      </li>
-                    );
-                  }}
-                />
-
-                <RHFTextField name="state" label="State/Region" />
-                <RHFTextField name="city" label="City" />
-                <RHFTextField name="address" label="Address" />
-                <RHFTextField name="zipCode" label="Zip/Code" />
-                <RHFTextField name="company" label="Company" />
-                <RHFTextField name="role" label="Role" /> */}
+             
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
