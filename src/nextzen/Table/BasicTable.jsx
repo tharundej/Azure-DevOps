@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -49,9 +49,8 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ headdata, bodydata, rowActions }) => {
-  const TABLE_HEAD = headdata;
-  const _userList = bodydata;
+const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
+  const [TABLE_HEAD, setTableHead] = useState(headdata);
 
   const table = useTable();
 
@@ -61,7 +60,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState(bodydata);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -71,6 +70,11 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     filters,
   });
 
+
+  useEffect(()=>{
+    setTableHead(headdata)
+    setTableData(bodydata)
+  },[headdata, bodydata])
 
 
   const dataInPage = dataFiltered.slice(
@@ -115,13 +119,21 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
       totalRowsFiltered: dataFiltered.length,
     });
   }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  
 
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.table.edit(id));
-    },
-    [router]
-  );
+  const handleEditRowClicked=()=>{
+    console.log("1");
+    onhandleCalled()
+  }
+  // const handleEditRow = useCallback(
+
+   
+    
+  //   (id) => {
+  //     router.push(paths.dashboard.table.edit(id));
+  //   },
+  //   [router]
+  // );
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -185,7 +197,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        onEditRow={() => handleEditRowClicked()}
                         headerContent={TABLE_HEAD}
                         rowActions={rowActions || []}
                       />
@@ -283,6 +295,9 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.any,
+};
+BasicTable.propTypes = {
+  onhandleCalled: PropTypes.any,
 };
 
 export { BasicTable };

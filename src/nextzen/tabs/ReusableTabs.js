@@ -36,15 +36,16 @@ function ReusableTabs({ tabLabels, tabContents }) {
         variant="scrollable"
         scrollButtons="auto"
         TabIndicatorProps={{ style: { display: 'none' } }} 
+      
       >
-        {tabLabels.map((label, index) => (
+        {tabLabels?.map((label, index) => (
           <CustomTab
             label={label}
             key={index}
           />
         ))}
       </Tabs>
-      {tabContents.map((content, index) => (
+      {tabContents?.map((content, index) => (
         <div key={index} hidden={value !== index}>
           {value === index && content}
         </div>

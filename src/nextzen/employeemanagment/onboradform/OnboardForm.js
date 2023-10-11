@@ -10,6 +10,8 @@ import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
 import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 import DocumentsUpload from './documentsupoad/DocumentsUpload';
+import CurrentWork from './currentwork/CurrentWork'
+
 
 const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
@@ -82,7 +84,7 @@ export default function OnBoardForm() {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }} >
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -116,6 +118,9 @@ export default function OnBoardForm() {
             )}
              {activeStep + 1 === 4 && (
               <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]} />
+            )}
+             {activeStep + 1 === 5 && (
+              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
