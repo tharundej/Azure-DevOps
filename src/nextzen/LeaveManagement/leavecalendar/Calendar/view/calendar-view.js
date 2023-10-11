@@ -57,20 +57,23 @@ const defaultFilters = {
 // ----------------------------------------------------------------------
 
 const CustomTab = styled(Tab)(({ theme }) => ({
-  borderRadius: '16px',
-  padding: '8px 16px',
-  marginRight: '8px',
-  backgroundColor: "#fff",
-  color: 'black',
+ 
+  padding:"5px",
+  color: "#000",
+  cursor: "pointer",
   '&.Mui-selected': {
-    backgroundColor: "black",
-  },
-  '&.MuiTab-root': {
-    borderBottom: 'none', 
+    backgroundColor: "#DFEBFE",
+    borderRadius:"0.5rem",
+    color:"#3B82F6"
   },
   '&:first-child': {
-    marginLeft: '6px', // Add left margin to the first tab
+    marginLeft: '8px', // Add left margin to the first tab
   },
+  // '&.Mui-hover': {
+  //   backgroundColor: "#EEEEEE",
+  //   borderRadius:"0.5rem",
+  //   color:"#637381"
+  // },
 }));
 
 export default function CalendarView() {
@@ -165,68 +168,10 @@ export default function CalendarView() {
     <>
 
     <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary"  TabIndicatorProps={{ style: { display: 'none' } }} sx={{marginTop:"5px"}}>
-      <Tab label="Leave Request" 
-    sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}
-    />
-      <Tab label="History"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
-      <Tab label="Pending"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
-      <Tab label="Approved"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
+    <CustomTab label="Leave Request" />
+      <CustomTab label="History"  />
+      <CustomTab label="Pending" />
+      <CustomTab label="Approved" />
     </Tabs>
   <br/>
     {(tabIndex===0) && <>

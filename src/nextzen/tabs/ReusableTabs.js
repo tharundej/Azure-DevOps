@@ -9,9 +9,9 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   padding: '8px 16px',
   marginRight: '8px',
   backgroundColor: "#fff",
-  color: 'black',
   '&.Mui-selected': {
-    backgroundColor: "#9fc5e8",
+    backgroundColor: "#DFEBFE",
+    color:"#3B82F6"
   },
   '&.MuiTab-root': {
     borderBottom: 'none', 
