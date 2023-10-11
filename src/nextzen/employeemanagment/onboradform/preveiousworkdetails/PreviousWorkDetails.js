@@ -12,6 +12,7 @@ import {
   InputLabel,
   Autocomplete,
   Chip,
+  Typography,
 } from '@mui/material';
 
 import dayjs from 'dayjs';
@@ -25,14 +26,15 @@ import { Stack } from '@mui/system';
 
 export default function PreviousWorkDetails({ currentUser }) {
   const [value, setValue] = React.useState(dayjs(new Date()));
+  const [attachmentString,setAttachmentString]=useState("");
   const [defaultValues, setDefaultValues] = useState([
     {
-      previuos_company: '',
+      previous_company: '',
       desgination: '',
       from: dayjs(new Date()),
       to: dayjs(new Date()),
       employement_type: '',
-      primary_skills: '',
+      primary_skills: [],
       releving_letter: '',
     },
   ]);
@@ -43,7 +45,7 @@ export default function PreviousWorkDetails({ currentUser }) {
     from: dayjs(new Date()),
     to: dayjs(new Date()),
     employement_type: '',
-    primary_skills: '',
+    primary_skills: [],
     releving_letter: '',
   };
   function formatDateToYYYYMMDD(newValue) {
@@ -74,11 +76,76 @@ export default function PreviousWorkDetails({ currentUser }) {
   const handleSubmit = () => {
     console.log(defaultValues);
   };
+  const handleChangeMultiple = (event, values, index, name) => {
+    const newObj = defaultValues;
+    newObj[index][name] = values;
+    setDefaultValues(newObj);
+  };
+
+  function getBase64(file) {
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+
+      console.log(reader.result);
+
+    };
+
+    reader.onerror = function (error) {
+
+      console.log('Error: ', error);
+
+    };
+
+ }
+
+
+
+ function handleFileSelect(event) {
+
+  const fileInput = event.target;
+
+  const file = fileInput.files[0];
+
+
+
+  if (file) {
+
+    const reader = new FileReader();
+
+
+
+    reader.onload = function (e) {
+
+      const base64String = e.target.result;
+
+      console.log('Base64 string:', base64String);
+
+      setAttachmentString(base64String)
+
+      // setImage( [base64String]);
+
+      // setViewImage(true);
+
+      // Here, you can send the `base64String` to your server or perform other actions.
+
+    };
+
+
+
+    reader.readAsDataURL(file);
+
+  }
+
+}
   return (
     <Stack>
       <form style={{ padding: '40px' }}>
         <>
-          {defaultValues.map((item, index) => (
+          {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
@@ -100,7 +167,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                     name="desgination"
                     label="Desgination"
                     onChange={(e) => {
-                      handleChange(e, index);
+                      handleChange(e, index, 'desgination');
                     }}
                     variant="outlined"
                   />
@@ -141,11 +208,14 @@ export default function PreviousWorkDetails({ currentUser }) {
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Employement Type</InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value="1"
+                      labelId="Employement Type"
+                      id="Employement Type"
+                      value={item?.employement_type}
+                      name="employmen_type"
                       label="Employement Type"
-                      //   onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e, index, 'employmen_type');
+                      }}
                     >
                       <MenuItem value={1}>Primary</MenuItem>
                       <MenuItem value={2}>Contract</MenuItem>
@@ -155,9 +225,12 @@ export default function PreviousWorkDetails({ currentUser }) {
                 <Grid md={6} xs={12} item>
                   <Autocomplete
                     multiple
-                    id="tags-filled"
+                    id="Primary Skills"
                     options={top100Films.map((option) => option.title)}
                     freeSolo
+                    onChange={(e, values) => {
+                      handleChangeMultiple(e, values, index, 'primary_skills');
+                    }}
                     renderTags={(value1, getTagProps) =>
                       value1.map((option, index1) => (
                         <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
@@ -193,16 +266,28 @@ export default function PreviousWorkDetails({ currentUser }) {
                   </FormControl>
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <IconButton color="primary" aria-label="upload picture" component="label">
-                    <input hidden accept="image/*" type="file" />
-                    {/* <PhotoCamera /> */}Upload File
-                  </IconButton>
+                  <Typography>Salary Slips</Typography>
+                <input
+
+                  type="file"
+
+                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+                  id="fileInput"
+
+                  onChange={(e)=>{
+
+                    handleFileSelect(e)
+
+                  }}
+
+                  />
                 </Grid>
               </Grid>
             </Grid>
           ))}
         </>
-
+        <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
           color="primary"
@@ -210,9 +295,10 @@ export default function PreviousWorkDetails({ currentUser }) {
             handleAdd();
           }}
         >
-          Add
+          Add Experience
         </Button>
-        <Button
+        </Grid>
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -220,7 +306,7 @@ export default function PreviousWorkDetails({ currentUser }) {
           }}
         >
           Submit
-        </Button>
+        </Button> */}
       </form>
     </Stack>
   );

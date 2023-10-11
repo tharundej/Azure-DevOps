@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -40,7 +40,19 @@ import axios from 'axios';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
-export default function GeneralInformation({ currentUser }) {
+const   GeneralInformation=forwardRef((props,ref)=> {
+
+  const currentUser=props.currentUser;
+
+  useImperativeHandle(ref,()=>({
+    childFunctionGeneral(){
+     onSubmit();
+      
+    }
+  }))
+
+ 
+
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -102,6 +114,7 @@ export default function GeneralInformation({ currentUser }) {
   });
 
   const defaultValues = useMemo(
+    
     () => ({
       // company_id: currentUser?.company_id || '',
       // company_name: currentUser?.company_name || '',
@@ -155,19 +168,19 @@ export default function GeneralInformation({ currentUser }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log(data,'general information');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      data.company_id = 'comp1';
+      data.company_name = 'DXC';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
       data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
-      console.log(data, 'data111ugsghghh');
+      
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -303,12 +316,12 @@ export default function GeneralInformation({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="first_name" label="First Name" />
+                <RHFTextField name="first_name" label="First Name " />
                 <RHFTextField name="middle_name" label="Middle Name " />
                 <RHFTextField name="last_name" label="Last Name " />
                 <RHFTextField name="email_id" label="Email Id " />
                 <RHFTextField name="contact_number" label="Contact Number " />
-                <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
+                <RHFTextField name="emergency_contact_number" label="Emergency Contact Number " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -368,8 +381,8 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="p_city" label="City " />
                 <RHFTextField name="p_state" label="State " />
                 <RHFTextField name="p_pincode" label="Pincode " />
-                <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
-                <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
+                <RHFTextField name="r_address_line1" label="Resendial Address Line1" />
+                <RHFTextField name="r_address_line2" label="Resendial Address Line2" />
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
                 <RHFTextField name="r_pincode" label="Resendial Pincode" />
@@ -415,19 +428,17 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="role" label="Role" /> */}
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
+             
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
     </div>
   );
-}
+})
 
 GeneralInformation.propTypes = {
   currentUser: PropTypes.object,
 };
+
+export default GeneralInformation;

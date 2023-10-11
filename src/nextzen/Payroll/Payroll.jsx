@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {BasicTable} from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
+import ReusableTabs from '../tabs/ReusableTabs';
+
+import PaySchedule from './payschedule/PaySchedule';
 
 const bull = (
   <Box
@@ -47,20 +50,32 @@ const bull = (
 //   );
 // }
 export default function BasicCard() {
+  const tabLabels = ['Pay Schedule', 'Pay Run', 'Pay Schedule History'];
+  const tabContents = [
+    <div>
+      <PaySchedule/>
+    </div>,
+    <div>
+      Tab 2 Content
+    </div>,
+    <div>Tab 3 Content</div>,
+  ];
+
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Payroll Management
           
-        </Typography>
+        </Typography> */}
        
       
        
       </CardContent>
-      <CardActions>
+      {/* <CardActions>
         <Button size="small">Learn More</Button>
-      </CardActions>
+      </CardActions> */}
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
     </Card>
   );
 }

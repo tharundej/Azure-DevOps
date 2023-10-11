@@ -9,9 +9,9 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   padding: '8px 16px',
   marginRight: '8px',
   backgroundColor: "#fff",
-  color: 'black',
   '&.Mui-selected': {
-    backgroundColor: "#9fc5e8",
+    backgroundColor: "#DFEBFE",
+    color:"#3B82F6"
   },
   '&.MuiTab-root': {
     borderBottom: 'none', 
@@ -35,16 +35,18 @@ function ReusableTabs({ tabLabels, tabContents }) {
         onChange={handleChange}
         variant="scrollable"
         scrollButtons="auto"
+        sx={{paddingBottom:"20px"}}
         TabIndicatorProps={{ style: { display: 'none' } }} 
+      
       >
-        {tabLabels.map((label, index) => (
+        {tabLabels?.map((label, index) => (
           <CustomTab
             label={label}
             key={index}
           />
         ))}
       </Tabs>
-      {tabContents.map((content, index) => (
+      {tabContents?.map((content, index) => (
         <div key={index} hidden={value !== index}>
           {value === index && content}
         </div>

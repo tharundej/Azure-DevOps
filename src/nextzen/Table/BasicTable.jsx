@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -37,7 +37,7 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
-//
+
 import UserTableRow from './components/UserTableRow';
 
 const defaultFilters = {
@@ -46,11 +46,11 @@ const defaultFilters = {
   status: 'all',
 };
 
+
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ headdata, bodydata, rowActions }) => {
-  const TABLE_HEAD = headdata;
-  const _userList = bodydata;
+const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
+  const [TABLE_HEAD, setTableHead] = useState(headdata);
 
   const table = useTable();
 
@@ -60,7 +60,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState(bodydata);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -70,12 +70,19 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     filters,
   });
 
-  const dataInPage = dataFiltered.slice(
+
+  useEffect(()=>{
+    setTableHead(headdata)
+    setTableData(bodydata)
+  },[headdata, bodydata])
+
+
+  const dataInPage = dataFiltered?.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table?.dense ? 52 : 72;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -83,7 +90,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
   const handleFilters = useCallback(
     (name, value) => {
-      table.onResetPage();
+      table?.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -94,16 +101,16 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
   const handleDeleteRow = useCallback(
     (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
+      const deleteRow = tableData?.filter((row) => row.id !== id);
       setTableData(deleteRow);
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
+      table.onUpdatePageDeleteRow(dataInPage?.length);
     },
     [dataInPage.length, table, tableData]
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    const deleteRows = tableData?.filter((row) => !table?.selected?.includes(row.id));
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
@@ -111,14 +118,22 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  }, [dataFiltered?.length, dataInPage?.length, table, tableData]);
+  
 
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.table.edit(id));
-    },
-    [router]
-  );
+  const handleEditRowClicked=()=>{
+    console.log("1");
+    onhandleCalled()
+  }
+  // const handleEditRow = useCallback(
+
+   
+    
+  //   (id) => {
+  //     router.push(paths.dashboard.table.edit(id));
+  //   },
+  //   [router]
+  // );
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -131,11 +146,11 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Card>
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
+              numSelected={table?.selected?.length}
+              rowCount={tableData?.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
@@ -152,13 +167,13 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table?.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
+                  order={table?.order}
+                  orderBy={table?.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
+                  rowCount={tableData?.length}
+                  numSelected={table?.selected?.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
@@ -171,18 +186,18 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
                 <TableBody>
                   {dataFiltered
-                    .slice(
+                    ?.slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    ?.map((row) => (
                       <UserTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        onEditRow={() => handleEditRowClicked()}
                         headerContent={TABLE_HEAD}
                         rowActions={rowActions || []}
                       />
@@ -190,7 +205,11 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(
+                      table?.page,
+                      table?.rowsPerPage,
+                      tableData?.length
+                    )}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -200,13 +219,13 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
+            count={dataFiltered?.length}
+            page={table?.page}
+            rowsPerPage={table?.rowsPerPage}
+            onPageChange={table?.onChangePage}
+            onRowsPerPageChange={table?.onChangeRowsPerPage}
+            dense={table?.dense}
+            onChangeDense={table?.onChangeDense}
           />
         </Card>
       </Container>
@@ -217,7 +236,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table?.selected?.length} </strong> items?
           </>
         }
         action={
@@ -257,11 +276,11 @@ function applyFilter({ inputData, comparator, filters }) {
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+    inputData = inputData?.filter((user) => user?.status === status);
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData?.filter((user) => role?.includes(user.role));
   }
 
   return inputData;
@@ -276,6 +295,9 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.any,
+};
+BasicTable.propTypes = {
+  onhandleCalled: PropTypes.any,
 };
 
 export { BasicTable };

@@ -19,7 +19,10 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 //
 import { ASSETS_API } from 'src/config-global';
-import UserQuickEditForm from './UserQuickEditForm';
+// import UserQuickEditForm from './UserQuickEditForm';
+import { useRouter } from 'src/routes/hooks';
+
+import { RouterLink } from 'src/routes/components'; 
 
 // ----------------------------------------------------------------------
 
@@ -37,12 +40,20 @@ export default function UserTableRow({
   const quickEdit = useBoolean();
 
   const popover = usePopover();
-  const data = [
-    { name: 'approve', icon: 'hh', path: 'jjj' },
-    { name: 'view', icon: 'hh', path: 'jjj' },
-    { name: 'eerr', icon: 'hh', path: 'jjj' },
-  ];
+  // const data = [
+  //   { name: 'approve', icon: 'hh', path: 'jjj' },
+  //   { name: 'view', icon: 'hh', path: 'jjj' },
+  //   { name: 'eerr', icon: 'hh', path: 'jjj' },
+  // ];
 
+
+  const handleClick = () => {
+    // alert('Button Clicked!');
+    // Add any other actions you want to perform here
+    // component={RouterLink}
+
+// href={paths.dashboard.employee.onboardform}
+  };
   return (
     <>
       <TableRow hover selected={selected}>
@@ -56,6 +67,7 @@ export default function UserTableRow({
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
+                  width:ele.width || ''
                 }}
               >
                 {ele.containesAvatar && (
@@ -99,7 +111,7 @@ export default function UserTableRow({
             </>
           ))}
 
-        {rowActions && rowActions.length > 0 && (
+        {rowActions && rowActions?.length > 0 && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />
@@ -121,7 +133,7 @@ export default function UserTableRow({
                 }}
               >
                 <Iconify icon="solar:pen-bold" />
-                {item?.name}
+                {item?.name }
               </MenuItem>
             </>
           ))}

@@ -5,9 +5,10 @@ import { GuestGuard } from 'src/auth/guard';
 // layouts
 import CompactLayout from 'src/layouts/compact';
 import AuthClassicLayout from 'src/layouts/auth/classic';
+
 // components
 import { SplashScreen } from 'src/components/loading-screen';
-import GeneralInfo from 'src/nextzen/signup/GeneralInfo';
+
 import { JwtRegisterView } from 'src/nextzen/signup/Index';
 
 // ----------------------------------------------------------------------

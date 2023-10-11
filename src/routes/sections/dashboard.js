@@ -11,6 +11,10 @@ import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 
 // ----------------------------------------------------------------------
 
+// employee Management
+
+const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
+
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
@@ -78,7 +82,9 @@ const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
 const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 // claims------------------------
-const Claims = lazy(() => import('src/nextzen/Claims/Claims'));
+const Claims = lazy(() => import('src/nextzen/claims/Claims'));
+const CompoffApprove = lazy(() => import('src/nextzen/claims/components/compoffapprove'));
+const MyCompoff = lazy(() => import('src/nextzen/claims/components/mycompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -138,9 +144,9 @@ export const dashboardRoutes = [
       },
 
       {
-        path: 'reusetabletwo',
+        path: 'employeemanagementhome',
         children: [
-          { element: <ReuseTableTwo />, index: true },
+          { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm /> },
@@ -208,7 +214,8 @@ export const dashboardRoutes = [
         path: 'claims',
         children: [
           { element: <Claims />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
+          { path: 'compoffapprove', element: <CompoffApprove /> },
+          { path: 'mycompoff', element: <MyCompoff /> },
           
           
         ],
@@ -220,7 +227,7 @@ export const dashboardRoutes = [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
           {path: 'payschedule',element:<PaySchedule/>},
-          {path:'payscheduleform',element:<PayScheduleform/>}
+          {path:':id/payscheduleform',element:<PayScheduleform/>}
           
         ],
       },
