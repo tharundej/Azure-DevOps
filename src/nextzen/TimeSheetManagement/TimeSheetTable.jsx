@@ -13,6 +13,7 @@ import { BasicTable } from '../Table/BasicTable';
 import TimeForm from './TimeForm';
 import ReusableTabs from '../tabs/ReusableTabs';
 import './Time.css';
+
 const bull = (
   <Box
     component="span"
