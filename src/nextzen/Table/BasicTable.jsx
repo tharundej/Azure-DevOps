@@ -77,20 +77,20 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
   },[headdata, bodydata])
 
 
-  const dataInPage = dataFiltered.slice(
+  const dataInPage = dataFiltered?.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table?.dense ? 52 : 72;
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
   const handleFilters = useCallback(
     (name, value) => {
-      table.onResetPage();
+      table?.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -101,24 +101,24 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
 
   const handleDeleteRow = useCallback(
     (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
+      const deleteRow = tableData?.filter((row) => row.id !== id);
       setTableData(deleteRow);
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
+      table.onUpdatePageDeleteRow(dataInPage?.length);
     },
-    [dataInPage.length, table, tableData]
+    [dataInPage?.length, table, tableData]
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    const deleteRows = tableData?.filter((row) => !table?.selected?.includes(row.id));
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
+      totalRows: tableData?.length,
+      totalRowsInPage: dataInPage?.length,
+      totalRowsFiltered: dataFiltered?.length,
     });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  }, [dataFiltered?.length, dataInPage?.length, table, tableData]);
   
 
   const handleEditRowClicked=()=>{
@@ -149,12 +149,12 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
+              numSelected={table?.selected?.length}
+              rowCount={tableData?.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData?.map((row) => row.id)
                 )
               }
               action={
@@ -167,18 +167,18 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table?.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
+                  order={table?.order}
+                  orderBy={table?.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
+                  rowCount={tableData?.length}
+                  numSelected={table?.selected?.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                   rowActions={rowActions || []}
@@ -186,11 +186,11 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
 
                 <TableBody>
                   {dataFiltered
-                    .slice(
+                    ?.slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    ?.map((row) => (
                       <UserTableRow
                         key={row.id}
                         row={row}
@@ -206,9 +206,9 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
                   <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      tableData.length
+                      table?.page,
+                      table?.rowsPerPage,
+                      tableData?.length
                     )}
                   />
 
@@ -219,13 +219,13 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
+            count={dataFiltered?.length}
+            page={table?.page}
+            rowsPerPage={table?.rowsPerPage}
+            onPageChange={table?.onChangePage}
+            onRowsPerPageChange={table?.onChangeRowsPerPage}
+            dense={table?.dense}
+            onChangeDense={table?.onChangeDense}
           />
         </Card>
       </Container>
@@ -236,7 +236,7 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table?.selected?.length} </strong> items?
           </>
         }
         action={
@@ -259,28 +259,28 @@ const BasicTable = ({ headdata, bodydata, rowActions,onhandleCalled }) => {
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, role } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis?.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
+    inputData = inputData?.filter(
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+    inputData = inputData?.filter((user) => user?.status === status);
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData?.filter((user) => role?.includes(user.role));
   }
 
   return inputData;
