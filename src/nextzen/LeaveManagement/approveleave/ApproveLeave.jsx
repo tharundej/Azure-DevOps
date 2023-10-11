@@ -17,7 +17,7 @@ export default function Approveleave(){
       marginBottom: '16px', // Add margin at the bottom
     };
     const cardHeaderStyle = {
-      backgroundColor: '#007bff',
+      backgroundColor: '#3B82F6',
       color: '#fff',
       padding: '16px',
       textAlign: 'center',
@@ -27,7 +27,7 @@ export default function Approveleave(){
       padding: '16px', 
       // fontWeight: 'bold', 
       fontSize: '18px', 
-      backgroundColor: '#9fc5e8', // Change the background color
+      backgroundColor: '#DFEBFE', // Change the background color
       display: 'flex',
      flexDirection: 'column',
      justifyContent: 'center',
@@ -56,6 +56,7 @@ export default function Approveleave(){
         },
         { id: "employee", label: "Employee", type: "text" },
         { id: "date", label: "Date", type: "text" },
+        {id : "net_leave_balance",label:"Leave Balance",type:"text"},
         { id: "leave_type", label: "Leave Type", type: "text" },
         { id: "start_date", label: "start Date", type: "text" },
         {id: "end_date",label:"End Date",type:"text"},
@@ -73,6 +74,7 @@ export default function Approveleave(){
           employee_id: "IB341",
           employee: "Harsha Priya",
           date: "07-10-2023",
+          net_leave_balance:"3",
           leave_type:"Annual Leave",
           start_date: "31-10-2023",
           end_date: "03-11-2023",
@@ -83,6 +85,7 @@ export default function Approveleave(){
           employee_id: "IB340",
           employee: "Harsha Priya",
           date: "10-10-2023",
+          net_leave_balance:"4",
           leave_type:"Sick Leave",
           start_date: "29-10-2023",
           end_date: "03-11-2023",
