@@ -35,6 +35,7 @@ function ReusableTabs({ tabLabels, tabContents }) {
         onChange={handleChange}
         variant="scrollable"
         scrollButtons="auto"
+        sx={{paddingBottom:"20px"}}
         TabIndicatorProps={{ style: { display: 'none' } }} 
       >
         {tabLabels.map((label, index) => (

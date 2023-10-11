@@ -14,7 +14,7 @@ import { useState, useEffect, useCallback } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 
-import {Card,Stack,Button,Dialog,Container,Typography,DialogTitle,Tab,Tabs} from '@mui/material';
+import {Card,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Tab,Tabs} from '@mui/material';
 
 // utils
 import { fTimestamp } from 'src/utils/format-time';
@@ -164,6 +164,27 @@ export default function CalendarView() {
     setTabIndex(value);
   }
 
+  const historydata = [
+    {
+      appliedleave:"AL",
+      from_date:"31-10-2023",
+      to_date:"02-11-2023",
+      no_of_days:"3",
+      day_span:"Full Day",
+      leave_reason:"Due to some Personal Work not able to attend the office.",
+      leave_status:"Approved",
+    },
+    {
+      appliedleave:"SL",
+      from_date:"31-10-2023",
+      to_date:"02-11-2023",
+      no_of_days:"3",
+      day_span:"Full Day",
+      leave_reason:"Due to some Personal Work not able to attend the office.",
+      leave_status:"Approved",
+    }
+  ]
+
   return (
     <>
 
@@ -284,7 +305,25 @@ export default function CalendarView() {
       />
       </>}
       {(tabIndex === 1) &&<>
-      History
+    <Card>
+      <CardContent>
+                {
+                  historydata?.map((itm) => (
+                   
+                      <Card >
+                        <CardContent >
+                          <Typography><span style={{fontWeight:500}}>Applied Leave:</span> {itm?.appliedleave}</Typography>
+                          <Typography><span>No of leave day(s):</span> {itm?.no_of_days}</Typography>
+                          <Typography><span>Day Span:</span> {itm?.day_span}</Typography>
+                          <Typography><span>Leave Reason:</span> {itm?.leave_reason}</Typography>
+                          <Typography><span>Leave Status:</span> {itm?.leave_status}</Typography>
+                        </CardContent>
+                      </Card>
+                    )
+                  )
+                }
+      </CardContent>
+    </Card>
       </>}
       {(tabIndex ===2) && <>Pending</>}
       {(tabIndex===3) &&<>Approved</>}
