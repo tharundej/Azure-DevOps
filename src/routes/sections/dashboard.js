@@ -9,6 +9,10 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
+// employee Management
+
+const EmployeeTable = lazy(() => import('src/nextzen/employeemanagment/employeestable/Employeestable'));
+
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
@@ -76,7 +80,9 @@ const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
 const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 // claims------------------------
-const Claims = lazy(() => import('src/nextzen/Claims/Claims'));
+const Claims = lazy(() => import('src/nextzen/claims/Claims'));
+const CompoffApprove = lazy(() => import('src/nextzen/claims/components/compoffapprove'));
+const MyCompoff = lazy(() => import('src/nextzen/claims/components/mycompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -136,9 +142,9 @@ export const dashboardRoutes = [
       },
 
       {
-        path: 'reusetabletwo',
+        path: 'employeetable',
         children: [
-          { element: <ReuseTableTwo />, index: true },
+          { element: <EmployeeTable />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm /> },
@@ -188,7 +194,8 @@ export const dashboardRoutes = [
         path: 'claims',
         children: [
           { element: <Claims />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
+          { path: 'compoffapprove', element: <CompoffApprove /> },
+          { path: 'mycompoff', element: <MyCompoff /> },
           
           
         ],

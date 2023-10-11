@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
@@ -38,9 +39,20 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
+const StyledContainer = styled('div')({
+  background: 'url("/assets/background/overlay_3.jpg")', 
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  minHeight: '100vh'
+});
 
 export default function JwtRegisterView() {
   const { register } = useAuthContext();
+
+  const [datesUsed, setDatesUsed] = useState({
+    date_of_corporation: dayjs(new Date()),
+    
+  });
 
   const router = useRouter();
 
@@ -187,8 +199,8 @@ export default function JwtRegisterView() {
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
         <Box sx={{ flexGrow: 1 }}>
-          <Card sx={{ minWidth: 275 }}>
-            <CardContent>
+          <Card sx={{ minWidth: 275, background:"#ffffffc9" }}>
+            <CardContent >
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                   <RHFTextField name="cin" label="CIN" />
@@ -200,11 +212,22 @@ export default function JwtRegisterView() {
                   <RHFTextField name="company_registration_no" label="Company Registration No" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Company date of ncorporation" />
-                    </DemoContainer>
-                  </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Date Of Incorporation"
+                      // value={datesUsed?.date_of_birth}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          
+                          date_of_corporation: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <RHFTextField name="company_ceo_name" label="Company Ceo Name" />
@@ -299,12 +322,16 @@ export default function JwtRegisterView() {
   );
 
   return (
-    <>
+    <StyledContainer>
+      <div style={{backgroundColor:"#ffffffba", height:"100%"}}>
+
       {renderHead}
 
       {renderForm}
 
       {renderTerms}
-    </>
+        
+      </div>
+      </StyledContainer>
   );
 }

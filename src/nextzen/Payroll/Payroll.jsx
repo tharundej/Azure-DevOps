@@ -1,3 +1,4 @@
+import { useState ,useEffect } from 'react';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,6 +10,11 @@ import {BasicTable} from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
 import ReusableTabs from '../tabs/ReusableTabs';
 import PaySchedule from './payschedule/PaySchedule';
+import Payrun from './Payrun/Payrun';
+import CreatePayRun from './CreatePayRun/CreatePayRun';
+import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions/CalculateEarningsAndDeductions';
+
+
 const bull = (
   <Box
     component="span"
@@ -47,21 +53,48 @@ const bull = (
 //       </Card>
 //   );
 // }
+const isCreatePayrun=false;
 export default function BasicCard() {
+const [show ,setShow] = useState(true)
+const [payRunView, setPayRunView] = useState(1)
+const handleCreatePayrun = (value) =>{
+  setShow(false);
+  setPayRunView(value)
+}
+
+const changeOfTabHandeler = () => {
+  setPayRunView(1)
+}
+useEffect(()=>{
+console.log(" i am called in useEffect")
+setShow(true)
+},[show])
   const tabLabels = ['Pay Schedule', 'Pay Run', 'Pay Schedule History'];
   const tabContents = [
     <div>
       <PaySchedule/>
     </div>,
     <div>
-      Tab 2 Content
+      {
+        payRunView === 1 && <Payrun  handleCreatePayrun = {() => handleCreatePayrun(2)}/>
+      }
+      {
+        payRunView === 2 && <CreatePayRun  moveToPageFunction = {()=> handleCreatePayrun(3)}/>
+      }
+      {
+        payRunView === 3 && <CalculateEarningsAndDeductions/>
+      }
+      {/* <CreatePayRun/> */}
     </div>,
-    <div>Tab 3 Content</div>,
+    <div>
+      <CalculateEarningsAndDeductions/>
+    </div>,
   ];
 
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
+    <>
+    {/* // <Card sx={{ minWidth: 275 }}> */}
+      <CardContent >
         {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Payroll Management
           
@@ -70,10 +103,8 @@ export default function BasicCard() {
       
        
       </CardContent>
-      {/* <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions> */}
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
-    </Card>
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} handleCreatePayrun={handleCreatePayrun} changeOfTab={changeOfTabHandeler}/>
+    {/* // </Card> */}
+    </>
   );
 }

@@ -122,7 +122,7 @@ export default function JwtLoginView() {
       </Link>
 
       <LoadingButton
-        fullWidth
+        // fullWidth
         color="inherit"
         size="large"
         type="submit"

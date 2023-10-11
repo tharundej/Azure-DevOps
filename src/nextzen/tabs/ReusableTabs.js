@@ -21,11 +21,13 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   },
 }));
 
-function ReusableTabs({ tabLabels, tabContents }) {
+function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    changeOfTab(newValue)
+    // handleCreatePayrun()
   };
 
   return (
@@ -56,6 +58,7 @@ function ReusableTabs({ tabLabels, tabContents }) {
 ReusableTabs.propTypes = {
   tabLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
+  changeOfTab: PropTypes.any
 };
 
 export default ReusableTabs;

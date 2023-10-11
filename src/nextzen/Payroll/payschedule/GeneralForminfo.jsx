@@ -111,9 +111,9 @@ export default function GeneralForminfo({ currentUser }) {
   );
   return (
     <div style={{ paddingTop: '20px'}}>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3} xs={12} alignItems='center'>
-        <Grid xs={12} md={8}>
+      <FormProvider methods={methods} onSubmit={onSubmit} >
+        <Grid container sx={12}  >
+        <Grid xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={3}
@@ -124,38 +124,39 @@ export default function GeneralForminfo({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-               
+               <Grid item xs={12} sm={12} md={12}>
                 <RHFTextField name="employee_type" label="Employee Type " />
-                <Grid item xs={12} sm={6} md={12}>
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
                 <RHFAutocomplete 
                   name="payschedule_type"
                   label="Pay Schedule Type"
                   options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={12}>
+              <Grid item xs={12} sm={12} md={12}>
                 <RHFAutocomplete
                   name="pay_type"
                   label="Pay Type"
                   options={payTypes.map((payType) => payType.type)}
                 />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                 <RHFTextField name="basic_pay" label="Basic Pay %" />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                   
                 <RHFTextField name="hra" label="HRA %" />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                   
                 <RHFTextField name="da" label="DA %" />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                   
                 <RHFTextField name="employee_pf" label="Employee PF %" />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                   
                 <RHFTextField name="employer_pf" label="Employer PF %" />
                 </Grid>

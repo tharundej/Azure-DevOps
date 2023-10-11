@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -42,7 +40,19 @@ import axios from 'axios';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
-export default function GeneralInformation({ currentUser }) {
+const   GeneralInformation=forwardRef((props,ref)=> {
+
+  const currentUser=props.currentUser;
+
+  useImperativeHandle(ref,()=>({
+    childFunctionGeneral(){
+     onSubmit();
+      
+    }
+  }))
+
+ 
+
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -104,6 +114,7 @@ export default function GeneralInformation({ currentUser }) {
   });
 
   const defaultValues = useMemo(
+    
     () => ({
       // company_id: currentUser?.company_id || '',
       // company_name: currentUser?.company_name || '',
@@ -143,6 +154,8 @@ export default function GeneralInformation({ currentUser }) {
     defaultValues,
   });
 
+  const m2 = useForm();
+
   const {
     reset,
     watch,
@@ -155,7 +168,7 @@ export default function GeneralInformation({ currentUser }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log(data,'aaa');
 
     try {
       data.company_id = '0001';
@@ -165,7 +178,7 @@ export default function GeneralInformation({ currentUser }) {
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
       data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
-      console.log(data, 'data111ugsghghh');
+      
 
       const response = await axios.post('http://localhost:8081/onboarding', data).then(
         (successData) => {
@@ -415,19 +428,17 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="role" label="Role" /> */}
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
+             
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
     </div>
   );
-}
+})
 
 GeneralInformation.propTypes = {
   currentUser: PropTypes.object,
 };
+
+export default GeneralInformation;

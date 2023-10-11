@@ -46,6 +46,7 @@ const defaultFilters = {
   status: 'all',
 };
 
+
 // ----------------------------------------------------------------------
 
 const BasicTable = ({ headdata, bodydata, rowActions }) => {
@@ -69,6 +70,8 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
+
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -131,7 +134,7 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Card>
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -190,7 +193,11 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(
+                      table.page,
+                      table.rowsPerPage,
+                      tableData.length
+                    )}
                   />
 
                   <TableNoData notFound={notFound} />

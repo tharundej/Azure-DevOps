@@ -90,10 +90,10 @@ export default function Header() {
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
             <Link href={paths.auth.jwt.register} component={RouterLink} variant="subtitle2">
-              <Button variant="contained">Sign Up</Button>
+              <Button variant="contained" sx={{marginRight:'10px'}}>Sign Up</Button>
             </Link>
 
-            {mdUp && <LoginButton />}
+            { true && <LoginButton />}
 
             <SettingsButton
               sx={{

@@ -1,130 +1,105 @@
-// import * as React from 'react';
-// import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-// import CardActions from '@mui/material/CardActions';
-// import CardContent from '@mui/material/CardContent';
-// import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
-
-// const bull = (
-//   <Box
-//     component="span"
-//     sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-//   >
-//     •
-//   </Box>
-// );
-
-// export default function BasicCard() {
-//   return (
-//     <Card sx={{ minWidth: 275 }}>
-//       <CardContent>
-//         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-//           Claims
-//         </Typography>
-       
-      
-       
-//       </CardContent>
-//       <CardActions>
-//         <Button size="small">Learn More</Button>
-//       </CardActions>
-//     </Card>
-//   );
-// }
-
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import ReusableTabs from '../tabs/ReusableTabs';
+import CompoffApprove from './components/compoffapprove';
+import MyCompoff from './components/mycompoff';
+import MyClaims from "./components/myclaims"
 
-export default function AccessibleTabs1() {
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+const bull = (
+  <Box
+    component="span"
+    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
+  >
+    •
+  </Box>
+);
+
+
+
+export default function BasicCard() {
+
+  const TABLE_HEAD = [
+    {
+      id: "name",
+      label: " Name",
+      type: "text",
+      containesAvatar: false,
+
+      secondaryText: "email",
+    },
+    { id: "phoneNumber", label: "contact", width: 180, type: "text" },
+    { id: "company", label: "Company", width: 220, type: "text" },
+    { id: "role", label: "Role", width: 180, type: "text" },
+    { id: "status", label: "Status", width: 100, type: "badge" },
+    // { id: '', width: 88 },
+  ];
+
+  const actions = [
+    { name: "approve", icon: "hh", path: "jjj" },
+    { name: "view", icon: "hh", path: "jjj" },
+    { name: "eerr", icon: "hh", path: "jjj" },
+  ];
+  const bodyContent = [
+    {
+      name: "Surendra",
+      email: "suri@infobellIt.com",
+      phoneNumber: "9879876789",
+      company: "Infobell",
+      role: "UI Developer",
+      status: "active",
+    },
+  ];
+  const tabLabels = ['My Claims', 'My Compoff', 'Compoff Approve'];
+  const tabContents = [
+    <div>
+
+      <MyClaims currentUser={{}}/>
+    </div>,
+    <div>
+      <MyCompoff />
+    </div>,
+    <div><CompoffApprove /></div>,
+  ];
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Tabs sx={{borderRadius:"10px",Color:"red",borderWidth:"2px"}}
-        onChange={handleChange}
-        value={value}
-        aria-label="Tabs where selection follows focus"
-        selectionFollowsFocus
-      >
-        <Tab  sx={{borderRadius:"10px",borderColor:"red",borderWidth:"2px"}} label="Item One" />
-        <Tab label="Item Two" />
-        <Tab label="Item Three" />
-      </Tabs>
-    </Box>
+    // <Card sx={{ minWidth: 275 }}>
+    //   <CardContent>
+    //     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+    //       Leave management
+    //     </Typography>
+    //   </CardContent>
+    //   <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    // </Card>
+    
+    <>
+      {/* <Helmet>
+        <title> Dashboard: claims </title>
+      </Helmet> */}
+{/* <Button
+
+component={RouterLink}
+
+href={paths.dashboard.employee.onboardform}
+
+variant="contained"
+
+startIcon={<Iconify icon="mingcute:add-line" />}
+>Add New Employee</Button> */}
+      
+   
+  
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    {/* <BasicTable
+        headdata={TABLE_HEAD}
+        bodydata={bodyContent}
+        rowActions={actions}
+      /> */}
+    </>
   );
 }
 
-// import React, { useState } from 'react';
-// import Tabs from '@mui/material/Tabs';
-// import Tab from '@mui/material/Tab';
-// import Box from '@mui/material/Box';
-
-// const CustomTabs = () => {
-//   const [value, setValue] = useState(0);
-//   const [clicked, setClicked] = useState(false);
-
-//   const handleChange = (event, newValue) => {
-//     setValue(newValue);
-//     setClicked(true);
-//   };
-
-//   return (
-//     <Box sx={{ width: '100%' }}>
-//       <Tabs
-//         sx={{
-//           borderRadius: "10px",
-//           borderColor: "red",
-//           borderWidth: "2px",
-//           '& .Mui-selected': {
-//             backgroundColor: 'red', // Color when selected
-//             color: 'white', // Text color when selected
-//           },
-//           '& .MuiTab-root': {
-//             backgroundColor: clicked ? 'red' : 'white', // Initial background color
-//             color: clicked ? 'white' : 'black', // Initial text color
-//           },
-//         }}
-//         onChange={handleChange}
-//         value={value}
-//         aria-label="Tabs where selection follows focus"
-//         selectionFollowsFocus
-//       >
-//         <Tab
-//           sx={{
-//             borderRadius: "10px",
-//             borderColor: "red",
-//             borderWidth: "2px",
-//             minWidth: 'auto', // Adjust width as needed
-//           }}
-//           label="Item One"
-//         />
-//         <Tab
-//           sx={{
-//             borderRadius: "10px",
-//             borderColor: "red",
-//             borderWidth: "2px",
-//             minWidth: 'auto', // Adjust width as needed
-//           }}
-//           label="Item Two"
-//         />
-//         <Tab
-//           sx={{
-//             borderRadius: "10px",
-//             borderColor: "red",
-//             borderWidth: "2px",
-//             minWidth: 'auto', // Adjust width as needed
-//           }}
-//           label="Item Three"
-//         />
-//       </Tabs>
-//     </Box>
-//   );
-// };
-
-// export default CustomTabs;

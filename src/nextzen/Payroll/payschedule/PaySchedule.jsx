@@ -76,9 +76,6 @@ export default function BasicCard() {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent sx={{display:'flex', justifyContent:'flex-end',alignItems:'center'}}>
-        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Pay Schedule
-        </Typography> */} 
       <Grid
           container
           alignItems="center"
