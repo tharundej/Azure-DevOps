@@ -18,7 +18,7 @@ import ReusableTabs from '../tabs/ReusableTabs';
 
 import Approveleave from './approveleave/ApproveLeave';
 
-import Applyleave from './applyleave/ApplyLeave';
+import Applyleave from './applyleave/applyleave';
 
 import CalendarView from './leavecalendar/Calendar/view/calendar-view';
 

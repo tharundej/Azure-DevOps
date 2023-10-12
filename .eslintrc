@@ -33,10 +33,6 @@
     "no-console": 0,
     "no-param-reassign": 0,
     "naming-convention": 0,
-<<<<<<< HEAD
-    // "import/newline-after-import": "off",
-=======
->>>>>>> 08823c42fa0d06bb3a61f40090aac31fcb6d1c9c
     "default-param-last": 0,
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
@@ -53,6 +49,7 @@
     "import/prefer-default-export": 0,
     "react/function-component-definition": 0,
     "jsx-a11y/control-has-associated-label": 0,
+    "react/prop-types": "off",
    
 
     "react/jsx-no-useless-fragment": [
