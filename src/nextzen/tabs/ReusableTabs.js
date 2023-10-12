@@ -23,10 +23,12 @@ const CustomTab = styled(Tab)(({ theme }) => ({
 
 function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
   const [value, setValue] = useState(0);
-
+ 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    changeOfTab(newValue)
+    if(typeof changeOfTab === 'function'){
+      changeOfTab(newValue)
+    }
     // handleCreatePayrun()
   };
 
@@ -47,7 +49,7 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
         ))}
       </Tabs>
       {tabContents.map((content, index) => (
-        <div key={index} hidden={value !== index}>
+        <div style={{padding:"0.25rem"}} key={index} hidden={value !== index}>
           {value === index && content}
         </div>
       ))}
@@ -60,5 +62,4 @@ ReusableTabs.propTypes = {
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
   changeOfTab: PropTypes.any
 };
-
 export default ReusableTabs;

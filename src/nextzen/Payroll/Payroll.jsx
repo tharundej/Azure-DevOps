@@ -53,7 +53,6 @@ const bull = (
 //       </Card>
 //   );
 // }
-const isCreatePayrun=false;
 export default function BasicCard() {
 const [show ,setShow] = useState(true)
 const [payRunView, setPayRunView] = useState(1)
@@ -74,7 +73,7 @@ setShow(true)
     <div>
       <PaySchedule/>
     </div>,
-    <div>
+    <div >
       {
         payRunView === 1 && <Payrun  handleCreatePayrun = {() => handleCreatePayrun(2)}/>
       }

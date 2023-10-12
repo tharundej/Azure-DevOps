@@ -102,7 +102,7 @@ export default function AmplifyNewPasswordView() {
   }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center" >
+    <Stack spacing={3} alignItems="center" sx={{maxWidth:'400px'}}>
       {/* <RHFTextField
         name="email"
         label="Email"
@@ -188,7 +188,7 @@ export default function AmplifyNewPasswordView() {
     <>
       <SentIcon sx={{ height: 96 }} />
 
-      <Stack spacing={1} sx={{ my: 5 }}>
+      <Stack spacing={1} sx={{ my: 5}}>
         <Typography variant="h3">Create Password!</Typography>
 
         {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
