@@ -1,17 +1,13 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import DialogActions from '@mui/material/DialogActions';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography} from '@mui/material';
+
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -21,7 +17,7 @@ import { createEvent, updateEvent, deleteEvent } from 'src/api/calendar';
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFTextField, RHFSwitch } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch,RHFRadioGroup } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -93,6 +89,38 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     }
   }, [currentEvent?.id, enqueueSnackbar, onClose]);
 
+  const [attachmentString,setAttachmentString] = useState("");
+  function getBase64(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      console.log(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+ }
+
+ function handleFileSelect(event) {
+  const fileInput = event.target;
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const base64String = e.target.result;
+      console.log('Base64 string:', base64String);
+      setAttachmentString(base64String)
+      // setImage( [base64String]);
+      // setViewImage(true);
+      // Here, you can send the `base64String` to your server or perform other actions.
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3 }}>
@@ -100,8 +128,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
         <RHFTextField name="description" label="Description" multiline rows={3} />
 
-        <RHFSwitch name="allDay" label="All day" />
-
+        {/* <RHFSwitch name="allDay" label="All day" /> */}
+       
         <Controller
           name="start"
           control={control}
@@ -149,7 +177,26 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
             />
           )}
         />
-
+         <RHFRadioGroup
+              row
+              name="day_span"
+              label="Day Span"
+              spacing={4}
+              options={[
+                { value: 'full_day', label: 'Full Day' },
+                { value: 'first_half', label:'First Half' },
+                { value: 'second_half', label: 'Second Half' },
+              ]}
+            />
+<Typography variant="subtitle2">Attachments</Typography>
+<input
+  type="file"
+  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  id="fileInput"
+  onChange={(e)=>{
+    handleFileSelect(e)
+  }}
+/>
         <Controller
           name="color"
           control={control}

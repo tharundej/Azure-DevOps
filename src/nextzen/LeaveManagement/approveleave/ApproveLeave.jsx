@@ -1,5 +1,7 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
 
+import SearchFilter from 'src/nextzen/filterSearch/FilterSearch';
+
 import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
@@ -93,6 +95,22 @@ export default function Approveleave(){
           status:'Rejected'
         },
       ];
+
+  const  FilterValues =[
+    {
+      fieldName : "Gender",
+      options : ["Male","Female"]
+    },
+    {
+      fieldName : "Leave Type",
+      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
+    }
+  ]
+
+  const handleValues = (data) => {
+    console.log(data);
+  }
+  
  return (
     <Card >
     <div style={cardStyle}>
@@ -114,7 +132,7 @@ export default function Approveleave(){
             </Card>
           </Grid>
           <Grid item xs={6} sm={6} md={4} lg={3}>
-          
+{/*           
                <TextField
            sx={{margin:'8px'}}
             // value={filters.name}
@@ -130,13 +148,15 @@ export default function Approveleave(){
               border:'none',
             }}
           />
-           
+            */}
           </Grid>
         </Grid>
       </div>
 
+
+
+<SearchFilter filterOptions={FilterValues} handleFilters={handleValues}/>
       
-    
        <BasicTable  
          headdata={TABLE_HEAD}
         bodydata={bodyContent}
