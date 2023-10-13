@@ -6,6 +6,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -17,6 +18,7 @@ import { PasswordIcon } from 'src/assets/icons';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +47,23 @@ export default function AmplifyForgotPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await forgotPassword?.(data.email);
-    
-      const searchParams = new URLSearchParams({
-        email: data.email,
-      }).toString();
+      const payload = {
+        email_id: data.email,
+      };
 
-      const href = `${paths.auth.amplify.newPassword}?${searchParams}`;
-      router.push(href);
+      const response = await axios.post('http://localhost:3001/checkUserExists', payload);
+      // await forgotPassword?.(data.email);
+
+      // const searchParams = new URLSearchParams({
+      //   email: data.email,
+      // }).toString();
+      console.log(response?.status);
+      if (response?.status === 200) {
+        console.log('sucess');
+        router.push(paths.auth.jwt.otpverification);
+      }
+      // const href = `${paths.auth.jwt.otpverification}?${searchParams}`;
+      // router.push(href);
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +74,7 @@ export default function AmplifyForgotPasswordView() {
       <RHFTextField name="email" label="Email address" />
 
       <LoadingButton
-        fullWidth
+        // fullWidth
         size="large"
         type="submit"
         variant="contained"
@@ -93,12 +104,13 @@ export default function AmplifyForgotPasswordView() {
       <PasswordIcon sx={{ height: 96 }} />
 
       <Stack spacing={1} sx={{ my: 5 }}>
-        <Typography variant="h3">Forgot your password?</Typography>
+        <Grid container flexDirection="column" justifyContent="center" alignItems="center">
+          <Typography variant="h3">Forgot your password?</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter the email address associated with your account and We will email you a link
-          to reset your password.
-        </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Please enter the email address to request a OTP to Verify and Reset your Password.
+          </Typography>
+        </Grid>
       </Stack>
     </>
   );

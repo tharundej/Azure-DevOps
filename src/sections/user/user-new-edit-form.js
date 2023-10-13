@@ -241,7 +241,7 @@ export default function UserNewEditForm({ currentUser }) {
                 options={countries.map((country) => country.label)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
+                renderOption={(propss, option) => {
                   const { code, label, phone } = countries.filter(
                     (country) => country.label === option
                   )[0];
@@ -251,7 +251,7 @@ export default function UserNewEditForm({ currentUser }) {
                   }
 
                   return (
-                    <li {...props} key={label}>
+                    <li {...propss} key={label}>
                       <Iconify
                         key={label}
                         icon={`circle-flags:${code.toLowerCase()}`}

@@ -1,8 +1,7 @@
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
@@ -24,25 +23,26 @@ import { SentIcon } from 'src/assets/icons';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
-export default function CreatePassword() {
+export default function AmplifyNewPasswordView() {
   const { newPassword, forgotPassword } = useAuthContext();
-
-  const [OptVerify,setOptVerify]=useState(false);
 
   const router = useRouter();
 
   const searchParams = useSearchParams();
 
+  const email = searchParams.get('email');
 
   const password = useBoolean();
 
-  const { countdown, counting, startCountdown } = useCountdownSeconds(180);
+  const { countdown, counting, startCountdown } = useCountdownSeconds(60);
 
   const VerifySchema = Yup.object().shape({
-    code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
+    // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('Password is required'),
@@ -53,6 +53,7 @@ export default function CreatePassword() {
 
   const defaultValues = {
     code: '',
+    // email: email || '',
     password: '',
     confirmPassword: '',
   };
@@ -70,22 +71,22 @@ export default function CreatePassword() {
   } = methods;
 
   const values = watch();
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const payload ={
-            "jwt_token_string" : localStorage.getItem('jwt_access_token'),
-            "otp":data.code,
-            "password":data.password,
-        }
-        const response = await axios.post('http://localhost:3001/verify', payload);
-        console.log(response?.status)
-        if(response?.status===201){
-            console.log('sucess')
-            router.push(paths.auth.jwt.createpassword);
-          }
-      await newPassword?.( data.code, data.password);
 
-      router.push(paths.auth.jwt.login);
+      const payload ={
+        "password":data.password
+    }
+    const response = await axios.post('http://localhost:3001/newpassword', payload);
+    console.log(response?.data,'new password',response?.data?.Message);
+    if(response?.status===200){
+        console.log('sucess')
+        router.push(paths.auth.jwt.login);
+      }
+      // await newPassword?.(data.email, data.code, data.password);
+
+      // router.push(paths.auth.jwt.login);
     } catch (error) {
       console.error(error);
     }
@@ -101,11 +102,16 @@ export default function CreatePassword() {
   }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center">
-      {  !OptVerify &&
-      <RHFCode name="code" />
-      } 
-      {  OptVerify &&
+    <Stack spacing={3} alignItems="center" >
+      {/* <RHFTextField
+        name="email"
+        label="Email"
+        placeholder="example@gmail.com"
+        InputLabelProps={{ shrink: true }}
+      /> */}
+
+      {/* <RHFCode name="code" /> */}
+
       <RHFTextField
         name="password"
         label="Password"
@@ -120,8 +126,7 @@ export default function CreatePassword() {
           ),
         }}
       />
-    }
-    {  OptVerify &&
+
       <RHFTextField
         name="confirmPassword"
         label="Confirm New Password"
@@ -136,18 +141,16 @@ export default function CreatePassword() {
           ),
         }}
       />
-    }
-      
+
       <LoadingButton
-        fullWidth
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
       >
-       {OptVerify===false?"Verify OTP":"Create Password"}
+        Create Password
       </LoadingButton>
-      {  !OptVerify &&
+
       <Typography variant="body2">
         {`Don’t have a code? `}
         <Link
@@ -164,7 +167,7 @@ export default function CreatePassword() {
           Resend code {counting && `(${countdown}s)`}
         </Link>
       </Typography>
-      }
+
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}
@@ -184,27 +187,16 @@ export default function CreatePassword() {
   const renderHead = (
     <>
       <SentIcon sx={{ height: 96 }} />
-      {  !OptVerify ?
-      <Stack spacing={1} sx={{ my: 5 }}>
-        <Typography variant="h3">Request sent successfully!</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter the 6-digit confirmation code sent to your email.
-          {/* <br />
-          Please enter the code in below box to verify your email. */}
-        </Typography>
+      <Stack spacing={1} sx={{ my: 5 }}>
+        <Typography variant="h3">Create Password!</Typography>
+
+        {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          We&apos;ve sent a 6-digit confirmation email to your email.
+          <br />
+          Please enter the code in below box to verify your email.
+        </Typography> */}
       </Stack>
-      :
-      <Stack spacing={1} sx={{ my: 5 }}>
-      <Typography variant="h3">OTP Verification successfully!</Typography>
-
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Please Create a New Password.
-        {/* <br />
-        Please enter the code in below box to verify your email. */}
-      </Typography>
-    </Stack>
-  }
     </>
   );
 

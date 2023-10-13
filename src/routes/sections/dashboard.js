@@ -9,6 +9,10 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
+// employee Management
+
+const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
+
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
@@ -76,7 +80,9 @@ const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
 const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 // claims------------------------
-const Claims = lazy(() => import('src/nextzen/Claims/Claims'));
+const Claims = lazy(() => import('src/nextzen/claims/Claims'));
+const CompoffApprove = lazy(() => import('src/nextzen/claims/components/CompoffApprove'));
+const MyCompoff = lazy(() => import('src/nextzen/claims/components/MyCompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -90,6 +96,9 @@ const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
 
+const PaySchedule = lazy(()=> import('src/nextzen/Payroll/payschedule/PaySchedule'))
+
+const PayScheduleform = lazy(()=> import('src/nextzen/Payroll/payschedule/PayScheduleform'));
 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
@@ -133,9 +142,9 @@ export const dashboardRoutes = [
       },
 
       {
-        path: 'reusetabletwo',
+        path: 'employeemanagementhome',
         children: [
-          { element: <ReuseTableTwo />, index: true },
+          { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm /> },
@@ -185,8 +194,9 @@ export const dashboardRoutes = [
         path: 'claims',
         children: [
           { element: <Claims />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        
+          { path: 'compoffapprove', element: <CompoffApprove /> },
+          { path: 'mycompoff', element: <MyCompoff /> },
+          
           
         ],
       },
@@ -196,7 +206,8 @@ export const dashboardRoutes = [
         children: [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
+          {path: 'payschedule',element:<PaySchedule/>},
+          {path:':id/payscheduleform',element:<PayScheduleform/>}
           
         ],
       },

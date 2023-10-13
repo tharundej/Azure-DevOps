@@ -66,6 +66,8 @@ export const paths = {
       verifyotp:`${ROOTS.AUTH}/jwt/verifyotp`,
       createpassword:`${ROOTS.AUTH}/jwt/createpassword`,
       forgotpassword:`${ROOTS.AUTH}/jwt/forgotpassword`,
+      setpassword:`${ROOTS.AUTH}/jwt/setpassword`,
+      otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
     },  
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -124,9 +126,9 @@ export const paths = {
 
     },
     employee:{
-      root: `${ROOTS.DASHBOARD}/reusetabletwo`,
-      userneweditform: `${ROOTS.DASHBOARD}/reusetabletwo/userneweditform`,
-      onboardform: `${ROOTS.DASHBOARD}/reusetabletwo/onboardform`,
+      root: `${ROOTS.DASHBOARD}/employeemanagementhome`,
+      userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
+      onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
       
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
@@ -168,12 +170,19 @@ export const paths = {
 
     claims:{
       root: `${ROOTS.DASHBOARD}/claims`,
+      compoffapprove: `${ROOTS.DASHBOARD}/claims/compoffapprove`,
+      mycompoff:`${ROOTS.DASHBOARD}/claims/ mycompoff`,
      
     },
 
 
     payroll:{
       root: `${ROOTS.DASHBOARD}/payroll`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
+      // },
+      payscheduleform:`${ROOTS.DASHBOARD}/payroll/payschedule/payscheduleform`
      
     },
     monthlydeductions:{

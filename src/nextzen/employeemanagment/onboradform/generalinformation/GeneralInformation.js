@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -37,10 +37,38 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 import axios from 'axios';
+import SnackBar from 'src/nextzen/global/SnackBar';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
-export default function GeneralInformation({ currentUser }) {
+
+const   GeneralInformation=forwardRef((props,ref)=> {
+
+ 
+  const [openSnackBar,setopenSnackBar]=useState(false);
+  const [severitySnackbar,setseveritySnackbar]=useState("");
+  const [messageSnackbar,setmessageSnackbar]=useState('');
+
+
+  const currentUser=props.currentUser;
+
+  useImperativeHandle(ref,()=>({
+    childFunctionGeneral(){
+      onSubmit();
+
+
+
+
+      
+    }
+  }))
+
+  const handleCloseSnackBar=()=>{
+    setopenSnackBar(false)
+  }
+
+ 
+
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -59,8 +87,8 @@ export default function GeneralInformation({ currentUser }) {
     middle_name: Yup.string(),
     last_name: Yup.string('Last Name is Required'),
     email_id: Yup.string().email().required('Email is Required'),
-    contact_number: Yup.string(),
-    emergency_contact_number: Yup.string(),
+    contact_number: Yup.number(),
+    emergency_contact_number: Yup.number(),
     date_of_birth: Yup.string(),
     father_name: Yup.string(),
     mother_name: Yup.string(),
@@ -70,16 +98,16 @@ export default function GeneralInformation({ currentUser }) {
     blood_group: Yup.string(),
     offer_date: Yup.string(),
     joining_date: Yup.string(),
-    p_address_line1: Yup.string(),
+    p_address_line1: Yup.string().required('Address is Required'),
     p_address_line2: Yup.string(),
-    p_city: Yup.string(),
-    p_state: Yup.string(),
-    p_pincode: Yup.string(),
+    p_city: Yup.string().required('City is Required'),
+    p_state: Yup.string().required('State is Required'),
+    p_pincode: Yup.number().required('Pin Code is Required'),
     r_address_line1: Yup.string(),
     r_address_line2: Yup.string(),
     r_city: Yup.string(),
     r_state: Yup.string(),
-    r_pincode: Yup.string(),
+    r_pincode: Yup.number(),
 
     // first_name: Yup.string().required('First Name is required'),
 
@@ -102,6 +130,7 @@ export default function GeneralInformation({ currentUser }) {
   });
 
   const defaultValues = useMemo(
+    
     () => ({
       // company_id: currentUser?.company_id || '',
       // company_name: currentUser?.company_name || '',
@@ -111,8 +140,8 @@ export default function GeneralInformation({ currentUser }) {
       middle_name: currentUser?.middle_name || '',
       last_name: currentUser?.last_name || '',
       email_id: currentUser?.email_id || '',
-      contact_number: currentUser?.contact_number || '',
-      emergency_contact_number: currentUser?.emergency_contact_number || '',
+      contact_number: currentUser?.contact_number || undefined,
+      emergency_contact_number: currentUser?.emergency_contact_number || undefined,
       date_of_birth: currentUser?.date_of_birth || '',
       father_name: currentUser?.father_name || '',
       mother_name: currentUser?.mother_name || '',
@@ -126,12 +155,12 @@ export default function GeneralInformation({ currentUser }) {
       p_address_line2: currentUser?.p_address_line2 || '',
       p_city: currentUser?.p_city || '',
       p_state: currentUser?.p_state || '',
-      p_pincode: currentUser?.p_pincode || '',
+      p_pincode: currentUser?.p_pincode || undefined,
       r_address_line1: currentUser?.r_address_line1 || '',
       r_address_line2: currentUser?.r_address_line2 || '',
       r_city: currentUser?.r_city || '',
       r_state: currentUser?.r_state || '',
-      r_pincode: currentUser?.r_pincode || '',
+      r_pincode: currentUser?.r_pincode || undefined,
     }),
     [currentUser]
   );
@@ -154,27 +183,66 @@ export default function GeneralInformation({ currentUser }) {
 
   const values = watch();
 
+  const ApiHitGeneralInformation=(dataGeneral)=>{
+        const data1 = dataGeneral;
+        let emp_id;
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'http://192.168.0.193:3001/erp/onBoarding',
+          headers: { 
+            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc', 
+            'Content-Type': 'text/plain'
+          },
+          data : data1
+        };
+        
+        axios.request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setopenSnackBar(true);
+          setseveritySnackbar("success");
+          setmessageSnackbar("Onboarded Sucessfully")
+          
+          props.nextStep();
+        })
+        .catch((error) => {
+          console.log(error);
+          setopenSnackBar(true);
+          setseveritySnackbar("warning");
+          setmessageSnackbar("User Alredy Present")
+        });
+
+  }
+
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log(data,'general information');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      data.company_id = 'comp1';
+      data.company_name = 'DXC';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
       data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
-      console.log(data, 'data111ugsghghh');
+      
+       ApiHitGeneralInformation(data);
+      // const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //     console.log(props)
+      //     if(props){
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      //       props.nextStep();
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
+
+      
 
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
@@ -209,6 +277,8 @@ export default function GeneralInformation({ currentUser }) {
               {currentUser && (
                 <Label
                   color={
+
+                    
                     (values.status === 'active' && 'success') ||
                     (values.status === 'banned' && 'error') ||
                     'warning'
@@ -292,7 +362,7 @@ export default function GeneralInformation({ currentUser }) {
             </Card>
           </Grid>
 
-          <Grid xs={12} md={8}>
+          <Grid  xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={3}
@@ -303,12 +373,15 @@ export default function GeneralInformation({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+
+                
+                
                 <RHFTextField name="first_name" label="First Name " />
                 <RHFTextField name="middle_name" label="Middle Name " />
                 <RHFTextField name="last_name" label="Last Name " />
                 <RHFTextField name="email_id" label="Email Id " />
                 <RHFTextField name="contact_number" label="Contact Number " />
-                <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
+                <RHFTextField name="emergency_contact_number" label="Emergency Contact Number " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -363,16 +436,18 @@ export default function GeneralInformation({ currentUser }) {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                
                 <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
                 <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
                 <RHFTextField name="p_city" label="City " />
                 <RHFTextField name="p_state" label="State " />
                 <RHFTextField name="p_pincode" label="Pincode " />
-                <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
-                <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
+                <RHFTextField name="r_address_line1" label="Resendial Address Line1" />
+                <RHFTextField name="r_address_line2" label="Resendial Address Line2" />
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
                 <RHFTextField name="r_pincode" label="Resendial Pincode" />
+           
 
                 {/* <RHFTextField name="name" label="Full Name" />
                 <RHFTextField name="email" label="Email Address" />
@@ -415,19 +490,19 @@ export default function GeneralInformation({ currentUser }) {
                 <RHFTextField name="role" label="Role" /> */}
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
+             
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
+      <SnackBar open={openSnackBar} severity={severitySnackbar} message={messageSnackbar} handleCloseSnackBar={handleCloseSnackBar}/>
     </div>
   );
-}
+})
 
 GeneralInformation.propTypes = {
   currentUser: PropTypes.object,
+  nextStep: PropTypes.any,
 };
+
+export default GeneralInformation;
