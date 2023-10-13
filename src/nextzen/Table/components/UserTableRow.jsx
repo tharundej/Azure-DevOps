@@ -47,13 +47,7 @@ export default function UserTableRow({
   // ];
 
 
-  const handleClick = () => {
-    // alert('Button Clicked!');
-    // Add any other actions you want to perform here
-    // component={RouterLink}
-
-// href={paths.dashboard.employee.onboardform}
-  };
+  
   return (
     <>
       <TableRow hover selected={selected}>
@@ -128,11 +122,13 @@ export default function UserTableRow({
             <>
               <MenuItem
                 onClick={() => {
-                  onEditRow();
+                  onEditRow(item);
+                
                   popover.onClose();
                 }}
               >
                 <Iconify icon="solar:pen-bold" />
+                {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>

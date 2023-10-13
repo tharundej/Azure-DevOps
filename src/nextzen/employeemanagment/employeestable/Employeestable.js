@@ -54,7 +54,51 @@ export default function EmployeeTable() {
   },[])
 
 
+  const defaultPayload={
 
+ 
+
+    "Count": 3,
+
+ 
+
+    "Page": 0,
+
+ 
+
+    "Search": "",
+
+ 
+
+    "Eid": "E1",
+
+ 
+
+    "fFromDate": "",
+
+ 
+
+    "fToDate": "",
+
+ 
+
+    "fLeaveTypeName": "",
+
+ 
+
+    "fStatus": "",
+
+ 
+
+    "order":1,
+
+ 
+
+    "orderBy":"al.apply_date"
+
+ 
+
+}
   
 
 
@@ -111,9 +155,14 @@ export default function EmployeeTable() {
       >
         Add New Employee
       </Button>
+      {/* endpoint="/listLeave"
 
+      defaultPayload={defaultPayload}
 
-      <BasicTable headdata={TABLE_HEAD} bodydata={bodyContent} rowActions={actions} onhandleCalled={handleCalled} />
+      headerData={TABLE_HEAD} */}
+
+      <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload}
+ />
     </>
   );
 }

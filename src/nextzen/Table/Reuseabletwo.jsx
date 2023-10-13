@@ -42,7 +42,14 @@ export default function UserListPage() {
       role: 'UI Developer',
       status: 'active',
     },
+
+
   ];
+
+  const handleClickAction = (event) => {
+    console.log(event)
+   
+  };
   return (
     <>
       <Helmet>
