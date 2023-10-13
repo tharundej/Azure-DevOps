@@ -30,28 +30,30 @@ import FormProvider, {
   RHFTextField,
   RHFUploadAvatar,
   RHFAutocomplete,
+  RHFSelect,
 } from 'src/components/hook-form';
 import axios from 'axios';
-import instance  from 'src/api/BaseURL';
-import { Autocomplete } from '@mui/lab';
-import { Button } from '@mui/material';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function AddTimeProject({ currentUser }) {
+import { Autocomplete } from '@mui/lab';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import { Button } from '@mui/material';
+
+export default function AssignShift({ currentUser }) {
   const [datesUsed, setDatesUsed] = useState({
     Start_date: dayjs(new Date()),
-    End_date: dayjs(new Date()),
+    SelectShift_Terms: dayjs(new Date()),
     Due_Date: dayjs(new Date()),
   });
   const router = useRouter();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Project_Name: Yup.string(),
-    Start_date: Yup.string(),
-    End_date: Yup.string(),
-    Due_Date: Yup.string().required('First Name is Required'),
-    Status: Yup.string(),
+    Select_Shift: Yup.string(),
+    ShiftGroup_Name: Yup.string(),
+    SelectShift_Terms: Yup.string(),
+    Start_Date: Yup.string().required('First Name is Required'),
+    End_Date: Yup.string(),
    
    
   });
@@ -59,11 +61,11 @@ export default function AddTimeProject({ currentUser }) {
   const defaultValues = useMemo(
     () => ({
    
-        Project_Name: currentUser?.Project_Name || '',
-        Start_date: currentUser?.Start_date || '',
-        End_date: currentUser?.End_date || '',
-        Due_Date: currentUser?.Due_Date || '',
-        Status: currentUser?.Status || '',
+        Select_Shift: currentUser?.Select_Shift || '',
+        ShiftGroup_Name: currentUser?.ShiftGroup_Name || '',
+        SelectShift_Terms: currentUser?.SelectShift_Terms || '',
+        Start_Date: currentUser?.Start_Date || '',
+        End_Date: currentUser?.End_Date || '',
   
    
     }),
@@ -87,11 +89,8 @@ export default function AddTimeProject({ currentUser }) {
   } = methods;
 
   const values = watch();
-const [sendData, setSendData] = useState({
-  projectId : '',  
-})
+
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:", data)
     console.log('uyfgv');
 
     try {
@@ -104,7 +103,7 @@ const [sendData, setSendData] = useState({
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addProject', data).then(
+      const response = await axios.post('http://localhost:8081/onboarding', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -134,7 +133,7 @@ const [sendData, setSendData] = useState({
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                ADD YOUR  POJECT  HERE .....
+              Assign Shift to Shift Group Here ...
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
@@ -147,117 +146,84 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="Project_Name" label=" Project Name  " />
-                <span>
-                    <Typography sx={{marginLeft:'5px'}}>
-                        Previous Project id was 2 next is 3
-                    </Typography>
-                </span>
+               
+
+<RHFSelect name="Select_Shift" label="Select Shift">
+
+  <option value="full_day" >Full Day</option>
+
+  <option value="first_half" >First Half</option>
+
+  <option value="second_half" >Second Half</option>
+
+  </RHFSelect>
+
+  <RHFSelect name="ShiftGroup_Name" label="Shift Group Name ">
+
+<option value="full_day" >Full Day</option>
+
+<option value="first_half" >First Half</option>
+
+<option value="second_half" >Second Half</option>
+
+</RHFSelect>
+
+<RHFSelect name="SelectShift_Terms" label="Select Shift Terms">
+
+<option value="full_day" >Full Day</option>
+
+<option value="first_half" >First Half</option>
+
+<option value="second_half" >Second Half</option>
+
+</RHFSelect>
+
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Start date"
-                      value={datesUsed?.Start_date}
+                      label="Start Date"
+                      value={datesUsed?.Start_Date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          Start_date: newValue,
+                          Start_Date: newValue,
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="End date"
-                      value={datesUsed?.End_date}
+                      label="End Date"
+                      value={datesUsed?.End_Date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          date_of_birth: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Due Date"
-                      value={datesUsed?.Due_Date}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          Due_Date: newValue,
+                          End_Date: newValue,
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
                 
-                <RHFTextField name="Status" label="Status" />
-     <Typography sx={{marginLeft:'5px'}}>
-        Add Project Activities Here Based on Project Nature ...
-     </Typography>
-     <br/>
-     <Grid md={10} xs={12} item>
-
-<Autocomplete
-
-  multiple
-
-  id="Primary Skills"
-
-  options={top100Films.map((option) => option.title)}
-
-  freeSolo
 
 
-  renderTags={(value1, getTagProps) =>
 
-    value1.map((option, index1) => (
-
-      <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
-
-    ))
-
-  }
-
-  renderInput={(params) => (
-
-    <TextField
-
-      {...params}
-
-      variant="filled"
-
-      label="Activity Name"
-
-      placeholder="Favorites"
-
-    />
-
-  )}
-
-/>
-
-</Grid>
 
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton onClick={onSubmit} type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
+              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Assign Shift'}
                 </LoadingButton>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
               </Stack>
-              <Button onClick={onSubmit}>hii</Button>
             </Card>
           </Grid>
         </Grid>
@@ -266,6 +232,6 @@ const [sendData, setSendData] = useState({
   );
 }
 
-AddTimeProject.propTypes = {
+AssignShift.propTypes = {
   currentUser: PropTypes.object,
 };
