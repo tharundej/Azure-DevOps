@@ -100,8 +100,12 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getTableData = () => {
+  const getTableData = (actionType, data) => {
 
+    const initialDefaultPayloadCopy = initialDefaultPayload;
+    if(actionType === 'pageChange'){
+      initialDefaultPayloadCopy.Page = data;
+    }
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -110,7 +114,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       },
-      data: initialDefaultPayload
+      data: initialDefaultPayloadCopy
 
     };
 
@@ -119,17 +123,24 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
       setTableData(response?.data?.Applied_Leave || []);
-      console.log(response?.data?.Applied_Leave,"table body dataa----------->")
+      // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
       // console.log(response?.data?.data?.bodyContent);
+      // setTableData(response?.data?.data?.bodyContent || []);
       // setTABLE_HEAD(response?.data?.data?.headerContent || []);
-      // setRowActions(response?.data?.data?.actions || []);
-      setTotalRecordsCount(response?.data?.Total_entry || 0)
+      setRowActions(response?.data?.data?.actions || []);
+      setTotalRecordsCount(response?.data?.data?.Total_entry || 0)
       console.log(response?.data?.Total_entry,"total no of records-->")
 
       // leave list api
       console.log("leave list api integration")
       console.log(response)
 
+      if(actionType === 'pageChange'){
+        // let initialDefaultPayloadCopy = 
+        setInitialDefaultPayload((prevData)=>({
+          ...prevData, Page:data
+        }))
+      }
 
     })
 
@@ -204,6 +215,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
   const onPageChangeHandeler = (event, data) =>{
 
+    console.log(data)
      const updatedPayload = {
     ...initialDefaultPayload,
        Page: newPage + 1, // Assuming you want to increment the page by 1
@@ -213,7 +225,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
     // initialDefaultPayload?.page+1;
     // setInitialDefaultPayload()
     // initialDefaultPayload?.page+1;
-    getTableData();
+    getTableData('pageChange', data);
 
     console.log(event, data)
     console.log("page changed========",updatedPayload)
