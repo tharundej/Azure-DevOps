@@ -1,3 +1,4 @@
+import { useState ,useEffect } from 'react';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,6 +11,10 @@ import { _userList } from 'src/_mock';
 import ReusableTabs from '../tabs/ReusableTabs';
 
 import PaySchedule from './payschedule/PaySchedule';
+import Payrun from './Payrun/Payrun';
+import CreatePayRun from './CreatePayRun/CreatePayRun';
+import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions/CalculateEarningsAndDeductions';
+import SearchFilter from '../filterSearch/FilterSearch';
 
 const bull = (
   <Box
@@ -50,20 +55,70 @@ const bull = (
 //   );
 // }
 export default function BasicCard() {
+const [show ,setShow] = useState(true)
+const [payRunView, setPayRunView] = useState(1)
+const handleCreatePayrun = (value) =>{
+  setShow(false);
+  setPayRunView(value)
+}
+
+const changeOfTabHandeler = () => {
+  setPayRunView(1)
+}
+useEffect(()=>{
+console.log(" i am called in useEffect")
+setShow(true)
+},[show])
   const tabLabels = ['Pay Schedule', 'Pay Run', 'Pay Schedule History'];
   const tabContents = [
     <div>
       <PaySchedule/>
     </div>,
-    <div>
-      Tab 2 Content
+    <div >
+      {
+        payRunView === 1 && <Payrun  handleCreatePayrun = {() => handleCreatePayrun(2)}/>
+      }
+      {
+        payRunView === 2 && <CreatePayRun  moveToPageFunction = {()=> handleCreatePayrun(3)}/>
+      }
+      {
+        payRunView === 3 && <CalculateEarningsAndDeductions/>
+      }
+      {/* <CreatePayRun/> */}
     </div>,
-    <div>Tab 3 Content</div>,
+    <div>
+      <CalculateEarningsAndDeductions/>
+    </div>,
   ];
+  // --- filter
+  const  FilterValues =[
 
+    {
+      id: '1',
+
+      fieldName : "Gender",
+
+      options : ["Male","Female"]
+
+    },
+
+    {
+      id:'2',
+
+      fieldName : "Leave Type",
+
+      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
+
+    }
+
+  ];
+  const handleFilters=(data)=>{
+    console.log(data);
+  }
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
+    <>
+    {/* // <Card sx={{ minWidth: 275 }}> */}
+      <CardContent >
         {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Payroll Management
           
@@ -72,10 +127,11 @@ export default function BasicCard() {
       
        
       </CardContent>
-      {/* <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions> */}
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
-    </Card>
+      
+      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters}/>
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} handleCreatePayrun={handleCreatePayrun} changeOfTab={changeOfTabHandeler}/>
+    
+    {/* // </Card> */}
+    </>
   );
 }

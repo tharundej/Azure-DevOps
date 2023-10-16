@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFTextField,RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
 export default function GeneralForminfo({ currentUser }) {
@@ -61,9 +61,9 @@ export default function GeneralForminfo({ currentUser }) {
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-
+  const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
   //   const m2 = useForm();
-
+  const payTypes=[{type:'Weekly'},{type:'Monthly'}];
   const {
     setValue,
     handleSubmit,
@@ -111,11 +111,11 @@ export default function GeneralForminfo({ currentUser }) {
   );
   return (
     <div style={{ paddingTop: '20px'}}>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3}  >
-          <Grid xs={12} md={12} >
-            <Card sx={{p:3}} >
-              <Box 
+      <FormProvider methods={methods} onSubmit={onSubmit} >
+        <Grid container sx={12}  >
+        <Grid xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -123,28 +123,52 @@ export default function GeneralForminfo({ currentUser }) {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-                
               >
-               
+               <Grid item xs={12} sm={12} md={12}>
                 <RHFTextField name="employee_type" label="Employee Type " />
-                <RHFTextField name="payschedule_type" label="Pay Schedule Type " />
-                <RHFTextField name="pay_type" label="Pay Type " />
-                <RHFTextField name="basic_pay" label="Basic Pay " />
-                <RHFTextField name="hra" label="HRA " />
-                <RHFTextField name="da" label="DA " />
-                <RHFTextField name="employee_pf" label="Employee PF " />
-                <RHFTextField name="employer_pf" label="Employer PF " />
-              </Box>
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                <RHFAutocomplete 
+                  name="payschedule_type"
+                  label="Pay Schedule Type"
+                  options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={12}>
+                <RHFAutocomplete
+                  name="pay_type"
+                  label="Pay Type"
+                  options={payTypes.map((payType) => payType.type)}
+                />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                <RHFTextField name="basic_pay" label="Basic Pay %" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                  
+                <RHFTextField name="hra" label="HRA %" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                  
+                <RHFTextField name="da" label="DA %" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                  
+                <RHFTextField name="employee_pf" label="Employee PF %" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                  
+                <RHFTextField name="employer_pf" label="Employer PF %" />
+                </Grid>
 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Save Changes'}
                 </LoadingButton>
               </Stack>
+              </Box>
             </Card>
           </Grid>
-
-          
         </Grid>
       </FormProvider>
     </div>

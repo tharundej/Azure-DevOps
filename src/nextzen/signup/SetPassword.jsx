@@ -24,6 +24,7 @@ import { SentIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
+import { CardContent } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -103,7 +104,11 @@ export default function AmplifyNewPasswordView() {
   }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center">
+    <Stack spacing={3} alignItems="center" sx={{
+      maxWidth: '400px',
+      mx: 'auto', // Center horizontally
+      my: 'auto', // Center vertically
+    }}>
       {/* <RHFTextField
         name="email"
         label="Email"
@@ -144,7 +149,6 @@ export default function AmplifyNewPasswordView() {
       />
 
       <LoadingButton
-        fullWidth
         size="large"
         type="submit"
         variant="contained"
@@ -190,8 +194,8 @@ export default function AmplifyNewPasswordView() {
     <>
       <SentIcon sx={{ height: 96 }} />
 
-      <Stack spacing={1} sx={{ my: 5 }}>
-        <Typography variant="h3">Create Password!</Typography>
+      <Stack spacing={1} sx={{ justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+        <Typography variant="h3">Set New Password</Typography>
 
         {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           We&apos;ve sent a 6-digit confirmation email to your email.
@@ -203,10 +207,12 @@ export default function AmplifyNewPasswordView() {
   );
 
   return (
+    <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
       {renderForm}
     </FormProvider>
+    </CardContent>
   );
 }
