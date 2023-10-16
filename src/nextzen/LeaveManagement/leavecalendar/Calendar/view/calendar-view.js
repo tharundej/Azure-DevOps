@@ -184,11 +184,22 @@ export default function CalendarView() {
     }
   ]
   const [expanded, setExpanded] = useState(Array(historydata?.length).fill(false));
-
+  const [pending,setPending] = useState(Array(historydata?.length).fill(false));
+  const [approved,setApproved] = useState(Array(historydata?.length).fill(false));
   const handleExpanded=(index)=>{
   const newExpanded = [...expanded];
   newExpanded[index] = !newExpanded[index];
   setExpanded(newExpanded);
+}
+const handlePending=(index)=>{
+  const newExpanded = [...pending];
+  newExpanded[index] = !newExpanded[index];
+  setPending(newExpanded);
+}
+const handleApproved=(index)=>{
+  const newExpanded = [...approved];
+  newExpanded[index] = !newExpanded[index];
+  setApproved(newExpanded);
 }
 
 const dynamicValue = 1;
@@ -205,20 +216,18 @@ const dynamicValue = 1;
     {(tabIndex===0) && <>
      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
+          alignItems="flex-end"
+          justifyContent="flex-end"
+          // sx={{
+          //   mb: { xs: 3, md: 5 },
+          // }}
         >
-          {/* <Typography variant="h4">Calendar </Typography> */}
           <Button
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={onOpenForm}
           >
-            New Event
+           Leave Request
           </Button>
         </Stack>
 
@@ -284,7 +293,7 @@ const dynamicValue = 1;
         }}
       >
         <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> {currentEvent?.id ? 'Edit Event' : 'Add Event'}</>}
+          {openForm && <> {currentEvent?.id ? 'Edit Event' : 'Leave Request'}</>}
         </DialogTitle>
 
         <CalendarForm
@@ -361,10 +370,10 @@ const dynamicValue = 1;
 
                         <CardContent >
                           
-               { (!expanded[index])?  <>
+               { (!pending[index])?  <>
                <Typography>
                 <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
-                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
+                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handlePending(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
                 <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
               </Typography>
                 <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
@@ -372,9 +381,9 @@ const dynamicValue = 1;
                 </Typography>
                   </>
                  :<>
-                  <Typography >
+                  <Typography>
                             <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}
-                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
+                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handlePending(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
                 <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
                   </Typography>
                           <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
@@ -397,10 +406,10 @@ const dynamicValue = 1;
 
                         <CardContent >
                           
-               { (!expanded[index])?  <>
+               { (!approved[index])?  <>
                <Typography>
                 <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
-                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
+                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleApproved(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
                 <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
               </Typography>
                 <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
@@ -410,7 +419,7 @@ const dynamicValue = 1;
                  :<>
                   <Typography >
                             <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}
-                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
+                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleApproved(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
                 <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
                   </Typography>
                           <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}

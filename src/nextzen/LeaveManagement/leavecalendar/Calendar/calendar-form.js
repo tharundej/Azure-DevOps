@@ -55,9 +55,9 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     const eventData = {
       id: currentEvent?.id ? currentEvent?.id : uuidv4(),
       color: data?.color,
-      title: data?.title,
+      leave_type: data?.leave_type,
       allDay: data?.allDay,
-      description: data?.description,
+      comments: data?.comments,
       end: data?.end,
       start: data?.start,
     };
@@ -124,9 +124,9 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3 }}>
-        <RHFTextField name="title" label="Title" />
+        <RHFTextField name="leave_type" label="Leave Type" />
 
-        <RHFTextField name="description" label="Description" multiline rows={3} />
+        <RHFTextField name="Comments" label="Comments" multiline rows={3} />
 
         {/* <RHFSwitch name="allDay" label="All day" /> */}
        
@@ -197,7 +197,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     handleFileSelect(e)
   }}
 />
-        <Controller
+        {/* <Controller
           name="color"
           control={control}
           render={({ field }) => (
@@ -207,7 +207,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
               colors={colorOptions}
             />
           )}
-        />
+        /> */}
       </Stack>
 
       <DialogActions>
