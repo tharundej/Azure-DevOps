@@ -275,9 +275,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
     : '';
 
-  // const displayValue = selectedRange && selectedRange.length === 2
-  //   ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}`
-  //   : '';
+  
 
   const handleFIlterOptions=(data)=>{
     console.log(data)
@@ -300,9 +298,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <SearchFilter  handleFilters={handleFIlterOptions}/>
         <Card>
           {/* <CardContent> */}
-          <SearchFilter  handleFilters={handleFIlterOptions}/>
+        
         
           {/* </CardContent> */}
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
