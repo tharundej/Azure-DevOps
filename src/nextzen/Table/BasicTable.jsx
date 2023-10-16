@@ -76,7 +76,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
-  const countValue = initialDefaultPayload.Count;
+  const countValue = initialDefaultPayload?.Count;
   console.log(countValue,"initialDefaultPayload------")
 
   const pageSize = 1;
@@ -429,8 +429,8 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
             count={totalRecordsCount}
             // count={countValue}
             
-            page={initialDefaultPayload.Page}
-            rowsPerPage={initialDefaultPayload.Count}
+            page={initialDefaultPayload?.Page}
+            rowsPerPage={initialDefaultPayload?.Count}
             onPageChange={onPageChangeHandeler}
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
           // dense={table.dense}
