@@ -6,11 +6,15 @@ import { useState } from 'react';
 
  
 
+import { styled } from '@mui/system';
+
+ 
+
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 
  
 
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button} from '@mui/material';
+import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent, DialogActions} from '@mui/material';
 
  
 
@@ -38,6 +42,36 @@ import dayjs from 'dayjs';
 
  
 
+import Dialog from '@mui/material/Dialog';
+
+ 
+
+import DialogTitle from '@mui/material/DialogTitle';
+
+ 
+
+import formatDateToYYYYMMDD from '../global/GetDateFormat';
+
+ 
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+
+    '& .MuiDialogContent-root': {
+
+      padding: theme.spacing(2),
+
+      overflow:"hidden"
+
+    },
+
+    '& .MuiDialogActions-root': {
+
+      padding: theme.spacing(1),
+
+    },
+
+  }));
+
  
 
 export default function SearchFilter({handleFilters,filterOptions}){
@@ -46,11 +80,13 @@ export default function SearchFilter({handleFilters,filterOptions}){
 
     const [filterData,SetFilterData] = useState([])
 
+    const [options,setOptions]=useState([])
+
     const [dates, setDates] = useState({
 
-        start_date: dayjs(new Date()),
+        start_date: null,
 
-        end_date: dayjs(new Date()),
+        end_date: null,
 
       });
 
@@ -58,71 +94,213 @@ export default function SearchFilter({handleFilters,filterOptions}){
 
 const [searchText,setSearchText] = useState('');
 
+const [selectedValues,SetSelectedValues] = useState('');
+
+const [openFilter, setOpenFilter] = useState(false);
+
+const [closeFilter,setCloseFilter] = useState(false);
+
+const handleSelectedValues = (fieldName, option) => {
+
+    SetSelectedValues((prevSelectedOptions) => ({
+
+      ...prevSelectedOptions,
+
+      [fieldName]: option,
+
+    }));
+
+  };
+
+  const fieldNames = filterOptions?.map((filterOption) => filterOption.fieldName);
+
+ 
+
+  console.log(fieldNames);
+
+  const handleOpenFilter = () => {
+
+    setOpenFilter(true);
+
+  };
+
+  const handleCloseFilter = () => {
+
+    setOpenFilter(false);
+
+  };
+
+ 
+
 const handleOptions = () =>{
 
-    if (searchText) {
+    const newFilterData = {};
 
-        const newFilter = {'search' :searchText };
+ 
 
-        SetFilterData([...filterData, newFilter]);
+  // Merge the selected values from Autocomplete components into filterData
 
-    }
+  Object.keys(selectedValues).forEach((fieldName) => {
 
-    handleFilterCallback();
+    newFilterData[fieldName] = selectedValues[fieldName];
+
+  });
+
+ 
+
+  // Add Date Range values to filterData
+
+  if(dates?.start_date){
+
+    newFilterData.start_date = formatDateToYYYYMMDD(dates?.start_date)
+
+  };
+
+  if(dates?.end_date){
+
+    newFilterData.end_date = formatDateToYYYYMMDD(dates?.end_date)
+
+  };
+
+ 
+
+  // Add the "search" value to filterData
+
+  if (searchText) {
+
+    newFilterData.search = searchText;
+
+  }
+
+  const hasFilterCriteria = Object.keys(newFilterData).length > 0;
+
+ 
+
+//   if (hasFilterCriteria) {
+
+//     // Call handleFilters with the combined filterData
+
+//    
+
+//   } else {
+
+//     // Handle the case when no filter criteria are provided
+
+//     // You can decide what to do in this case, such as showing a message or doing nothing.
+
+//     // For example, you can log a message to the console.
+
+//     alert('No filter criteria provided');
+
+//   }
+
+handleFilters(newFilterData);
+
+setOpen(false);
+
+}
+
+const handleClick=(fieldName)=>{
+
+    const isPresent = filterOptions.find((filterOption) => filterOption.fieldName === fieldName);
+
+   if(isPresent)
+
+   {
+
+     setOptions(isPresent?.options)
+
+   }
+
+}
+
+const handleFilterCancel = () =>{
+
+   
+
+    setSearchText('');
+
+    SetFilterData([]);
+
+    setDates({
+
+        start_date: null,
+
+        end_date: null,
+
+    });
+
+    SetSelectedValues('');
+
+    handleFilters(filterData)
+
+   
 
 }
 
  
 
-const handleFilterCallback=()=>{
+  const [open, setOpen] = useState(false);
 
-    if(filterData.length>0){
+ 
 
-        handleFilters(filterData)
+  const handleClickOpen = () => {
 
-    }
+    setOpen(true);
 
-}
+  };
+
+  const handleClose = () => {
+
+    setOpen(false);
+
+  };
+
+ 
 
     return (
 
+        <>
+
+        <Stack sx={{justifyContent:'flex-end',display:"flex",float:"right",alignItems:"flex-end"}}>
+
+            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+
+           <Iconify icon="mi:filter"/>
+
+      </Button>
+
+ 
+
+      </Stack>
+
+      <BootstrapDialog
+
+        onClose={handleClose}
+
+        aria-labelledby="customized-dialog-title"
+
+        open={open}
+
+ 
+
+      >
+
+        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+
+        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+
+        </DialogTitle>
+
+ 
+
+        <DialogContent sx={{mt:0,paddingBottom:0}}>
+
         <Grid container spacing={1} style={{margin:'1rem'}}>
 
- 
+       
 
-<Grid item xs={12} sm={6} md={6} lg={3}>
-
-         <TextField
-
-         sx={{width:"200px"}}
-
-            placeholder="Search..."
-
-            onChange = {(e)=>setSearchText(e.target.value)}
-
-            InputProps={{
-
-              startAdornment: (
-
-                <InputAdornment position="start">
-
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-
-                </InputAdornment>
-
-              ),
-
-              border:'none',
-
-            }}
-
-          />
-
-        </Grid>
-
- 
-
-        <Grid item xs={12} sm={6} md={6} lg={3}>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
 
 <LocalizationProvider dateAdapter={AdapterDayjs}>
 
@@ -132,9 +310,9 @@ const handleFilterCallback=()=>{
 
                       placeholder="Start Date"
 
-                    //   value={dates?.start_date}
+                      value={dates?.start_date}
 
-                    //   defaultValue={dayjs(new Date())}
+                      defaultValue={dates?.start_date}
 
                       onChange={(newValue) => {
 
@@ -156,19 +334,17 @@ const handleFilterCallback=()=>{
 
    
 
-        <Grid item xs={12} sm={6} md={6} lg={3}>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
 
                     <DatePicker
 
-                     
-
                       placeholder="End Date"
 
-                    //   value={dates?.end_date}
+                      value={dates?.end_date}
 
-                    //   defaultValue={dayjs(new Date())}
+                      defaultValue={dates?.end_date}
 
                       onChange={(newValue) => {
 
@@ -188,33 +364,13 @@ const handleFilterCallback=()=>{
 
           </Grid>
 
-        {filterOptions?.length <= 1?
-
-        <Grid item xs={12} sm={6} md={6} lg={3} >
-
-           <Autocomplete
-
-              disablePortal
-
-              id="combo-box-demo"
-
-              options={filterOptions[0]?.options}
-
-              sx={{zIndex: 9999}}
-
-                renderInput={(params) => <TextField {...params} label={filterOptions[0]?.fieldName} sx={{width:"200px"}}/>}
-
-            />
-
-        </Grid>
-
-        :
+       
 
            <>
 
            {filterOptions?.map((item,index)=>(
 
-           <Grid item xs={12} sm={6} md={6} lg={3} >
+           <Grid item xs={12} sm={6} md={6} lg={6} >
 
            <Autocomplete
 
@@ -224,9 +380,17 @@ const handleFilterCallback=()=>{
 
               options={filterOptions[index]?.options}
 
+              value={selectedValues[filterOptions[index]?.fieldName] || null}
+
+            onChange={(event, newValue) => {
+
+                handleSelectedValues(filterOptions[index]?.fieldName, newValue);
+
+            }}
+
               sx={{zIndex: 9999}}
 
-                renderInput={(params) => <TextField {...params} label={filterOptions[index]?.fieldName} sx={{width:"200px"}}/>}
+                renderInput={(params) => <TextField {...params} label={filterOptions[index]?.fieldName} sx={{width:"240px"}}/>}
 
             />
 
@@ -234,17 +398,31 @@ const handleFilterCallback=()=>{
 
            ))}
 
-           </>}
+           </>
 
- 
-
-         
-
-          <Button onClick={handleOptions}>Apply</Button>
+       
 
     </Grid>
 
+    <div style={{width:"100%",textAlign:"right",display:"block",paddingRight:"2rem",paddingBottom:0}} >
+
+       <Button onClick={handleOptions} style={{backgroundColor:"#3B82F6",color:"white",marginRight:5}}>Apply</Button>
+
+          <Button onClick={handleFilterCancel} style={{backgroundColor:"#cc0000",color:"white"}}>Reset</Button>
+
+       </div>
+
+    </DialogContent>
+
+   
+
+    </BootstrapDialog>
+
+    </>
+
     )
+
+   
 
 }
 
