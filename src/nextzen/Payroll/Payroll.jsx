@@ -13,7 +13,7 @@ import PaySchedule from './payschedule/PaySchedule';
 import Payrun from './Payrun/Payrun';
 import CreatePayRun from './CreatePayRun/CreatePayRun';
 import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions/CalculateEarningsAndDeductions';
-
+import SearchFilter from '../filterSearch/FilterSearch';
 
 const bull = (
   <Box
@@ -89,7 +89,31 @@ setShow(true)
       <CalculateEarningsAndDeductions/>
     </div>,
   ];
+  // --- filter
+  const  FilterValues =[
 
+    {
+      id: '1',
+
+      fieldName : "Gender",
+
+      options : ["Male","Female"]
+
+    },
+
+    {
+      id:'2',
+
+      fieldName : "Leave Type",
+
+      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
+
+    }
+
+  ];
+  const handleFilters=(data)=>{
+    console.log(data);
+  }
   return (
     <>
     {/* // <Card sx={{ minWidth: 275 }}> */}
@@ -102,7 +126,10 @@ setShow(true)
       
        
       </CardContent>
+      
+      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters}/>
       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} handleCreatePayrun={handleCreatePayrun} changeOfTab={changeOfTabHandeler}/>
+    
     {/* // </Card> */}
     </>
   );
