@@ -55,7 +55,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 
-export default function UserListPage({ currentUser }) {
+export default function MyClaims({ currentUser }) {
 
   // const defaultPayload = {
   //   "count":5,
@@ -83,7 +83,7 @@ export default function UserListPage({ currentUser }) {
 
   const defaultPayload={
 
-    "count": 10,
+    "Count": 5,
 
     "page": 0,
 
@@ -279,7 +279,7 @@ export default function UserListPage({ currentUser }) {
       >
         <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Applly All Claims</DialogTitle>
+          <DialogTitle>Apply All Claims</DialogTitle>
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -451,7 +451,7 @@ export default function UserListPage({ currentUser }) {
     </>
   );
 }
-UserListPage.propTypes = {
+MyClaims.propTypes = {
   currentUser: PropTypes.object,
 };
 
