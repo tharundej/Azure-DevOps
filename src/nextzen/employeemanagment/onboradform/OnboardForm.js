@@ -1,4 +1,4 @@
-import React,{useRef}  from 'react';
+import React,{useRef,useState}  from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -10,12 +10,15 @@ import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
 import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 import DocumentsUpload from './documentsupoad/DocumentsUpload';
+import CurrentWork from './currentwork/CurrentWork'
+
 
 const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+  const [employeeId,setemployeeId]=useState("");
 
   const childref=useRef(null);
 
@@ -40,21 +43,28 @@ export default function OnBoardForm() {
     let returnResponse;
     if(activeStep+1===1){
       console.log('11')
-      returnResponse= childref.current.childFunctionGeneral()
+      childref.current.childFunctionGeneral();
+    
+
+     
+      
     }
     else if(activeStep+1===2){
-      console.log("2");
+      childref.current.childFunctionEducation()
     }
 
     
  
-    // const newActiveStep =
-    //   isLastStep() && !allStepsCompleted()
-    //     ? 
-    //       steps.findIndex((step, i) => !(i in completed))
-    //     : activeStep + 1;
-    // setActiveStep(newActiveStep);
+    
   };
+  const handleNextIncrement=()=>{
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? 
+          steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1;
+    setActiveStep(newActiveStep);
+  }
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -82,7 +92,7 @@ export default function OnBoardForm() {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }} >
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -106,16 +116,19 @@ export default function OnBoardForm() {
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} ref={childref} />
+              <GeneralInformation style={{ paddingTop: '20px' }} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} ref={childref}/>
+              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}  ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
               <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
             )}
              {activeStep + 1 === 4 && (
               <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]} />
+            )}
+             {activeStep + 1 === 5 && (
+              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>

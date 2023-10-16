@@ -18,8 +18,6 @@ import ReusableTabs from '../tabs/ReusableTabs';
 
 import Approveleave from './approveleave/ApproveLeave';
 
-import Applyleave from './applyleave/applyleave';
-
 import CalendarView from './leavecalendar/Calendar/view/calendar-view';
 
 
@@ -30,25 +28,17 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Approve Leave', 'Apply Leave', 'Leave Calendar'];
+  const tabLabels = ['Approve Leave','Leave Calendar'];
   const tabContents = [
     <div>
       <Approveleave />
-    </div>,
-    <div>
-      <Applyleave />
     </div>,
     <div><CalendarView/></div>,
   ];
 
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Leave management
-        </Typography> */}
-      </CardContent>
+    
       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    </Card>
+
   );
 }

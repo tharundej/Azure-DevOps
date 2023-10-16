@@ -126,9 +126,9 @@ export const paths = {
 
     },
     employee:{
-      root: `${ROOTS.DASHBOARD}/employeetable`,
+      root: `${ROOTS.DASHBOARD}/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-      onboardform: `${ROOTS.DASHBOARD}/employeetable/onboardform`,
+      onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
       
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {

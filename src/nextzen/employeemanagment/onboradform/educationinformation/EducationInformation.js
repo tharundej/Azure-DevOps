@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
   TextField,
   Button,
@@ -23,26 +23,67 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import PhotoCamera from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Stack } from '@mui/system';
+import axios from 'axios';
 
-export default function EducationInformation({ currentUser }) {
+const   EducationInformation=forwardRef((props,ref)=> {
+  useImperativeHandle(ref,()=>({
+    childFunctionEducation(){
+     handleSubmit();
+      
+    }
+  }))
+  const currentUser=props.currentUser;
   const [value, setValue] = React.useState(dayjs(new Date()));
-  const [attachmentString,setAttachmentString]=useState("");
+  const [attachmentString,setAttachmentString]=useState([]);
   const [defaultValues, setDefaultValues] = useState([
     {
       name_of_the_degree: currentUser?.name_of_the_degree || '',
       stream: currentUser?.stream || '',
       university:currentUser?.stream ||  '',
       year_of_passing:currentUser?.year_of_passing || null,
+      document_name: "sample.pdf",
+      grade_type:'CGPA',
+      grade:8.34,
+      document_data:""
+
       
      
     },
   ]);
+  const ApiHitEducation=(dataEducation)=>{
+    console.log("api called")
+      const data1 = dataEducation;
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addEducation',
+        headers: { 
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc', 
+          'Content-Type': 'text/plain'
+        },
+        data : data1
+      };
+
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
 
   const obj =  {
-    name_of_the_degree: '',
-    stream: '',
-    university: '',
-    year_of_passing:null,
+    name_of_the_degree:  '',
+      stream:  '',
+      university:  '',
+      year_of_passing: null,
+      document_data:'',
+      grade_type:'CGPA',
+      grade:8.34,
+     
     
    
   };
@@ -60,7 +101,15 @@ export default function EducationInformation({ currentUser }) {
   };
   const handleChange = (e, index, field) => {
     const newObj = defaultValues;
-    newObj[index][field] = e?.target?.value || '';
+    if(field==="year_of_passing"){
+      newObj[index][field] = parseInt(e?.target?.value || null,10);
+    }
+    else{
+      newObj[index][field]=e?.target?.value || '';
+    }
+    
+
+    console.log(newObj,'newObjj')
 
     setDefaultValues(newObj);
   };
@@ -72,8 +121,19 @@ export default function EducationInformation({ currentUser }) {
   };
 
   const handleSubmit = () => {
-    console.log(defaultValues,'Salary Slips');
+   
+    // call api here
+    const obj1={
+    company_id: "comp1",
+
+    employee_id: "Info1",
+
+    education:defaultValues
+    }
+    console.log(obj1,'education hit');
+    ApiHitEducation(obj1);
   };
+  
   const handleChangeMultiple = (event, values, index, name) => {
     const newObj = defaultValues;
     newObj[index][name] = values;
@@ -102,7 +162,7 @@ export default function EducationInformation({ currentUser }) {
 
 
 
- function handleFileSelect(event) {
+ function handleFileSelect(event,index,name) {
 
   const fileInput = event.target;
 
@@ -124,6 +184,11 @@ export default function EducationInformation({ currentUser }) {
 
       setAttachmentString(base64String)
 
+      const newObj = defaultValues;
+      newObj[index][name] = base64String;
+    setDefaultValues(newObj);
+
+
       // setImage( [base64String]);
 
       // setViewImage(true);
@@ -140,7 +205,7 @@ export default function EducationInformation({ currentUser }) {
 
 }
   return (
-    <Stack>
+    <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -154,7 +219,7 @@ export default function EducationInformation({ currentUser }) {
                     label="Name Of the Degree"
                     variant="outlined"
                     id="name_of_the_degree"
-                    value={item?.name_of_the_degree}
+                    // value={item?.name_of_the_degree}
                     onChange={(e) => {
                       handleChange(e, index, 'name_of_the_degree');
                     }}
@@ -167,9 +232,9 @@ export default function EducationInformation({ currentUser }) {
                     name="Stream"
                     label="Stream"
                     id="stream"
-                    value={item?.stream}
+                    // value={item?.stream}
                     onChange={(e) => {
-                      handleChange(e, index, 'Stream');
+                      handleChange(e, index, 'stream');
                     }}
                     variant="outlined"
                   />
@@ -184,7 +249,7 @@ export default function EducationInformation({ currentUser }) {
                     label="University"
                     variant="outlined"
                     id="university"
-                    value={item?.university}
+                    // value={item?.university}
                     onChange={(e) => {
                       handleChange(e, index, 'university');
                     }}
@@ -195,9 +260,9 @@ export default function EducationInformation({ currentUser }) {
                     fullWidth
                     type="number"
                     name="year_of_passing"
-                    label="Year Of Passing"
+                    label="Year of Passing"
                     id="year_of_passing"
-                    value={item?.year_of_passing}
+                    // value={item?.year_of_passing}
                     onChange={(e) => {
                       handleChange(e, index, 'year_of_passing');
                     }}
@@ -217,13 +282,13 @@ export default function EducationInformation({ currentUser }) {
 
                   accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
-                  id="fileInput"
+                  id="attachment"
 
-                  onChange={(e)=>{
+                  // onChange={(e)=>{
 
-                    handleFileSelect(e)
+                  //   handleFileSelect(e,index,"document_data")
 
-                  }}
+                  // }}
 
                   />
                 </Grid>
@@ -231,7 +296,7 @@ export default function EducationInformation({ currentUser }) {
             </Grid>
           ))}
         </>
-
+          <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
           color="primary"
@@ -239,9 +304,10 @@ export default function EducationInformation({ currentUser }) {
             handleAdd();
           }}
         >
-          Add
+          Add Education
         </Button>
-        <Button
+        </Grid>
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -249,13 +315,14 @@ export default function EducationInformation({ currentUser }) {
           }}
         >
           Submit
-        </Button>
+        </Button> */}
       </form>
     </Stack>
   );
-}
+})
 EducationInformation.propTypes = {
   currentUser: PropTypes.object,
+  
 };
 
 const top100Films = [
@@ -272,3 +339,5 @@ const top100Films = [
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
 ];
+
+export default EducationInformation;

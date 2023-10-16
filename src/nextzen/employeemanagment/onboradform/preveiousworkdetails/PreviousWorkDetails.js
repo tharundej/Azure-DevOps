@@ -210,14 +210,14 @@ export default function PreviousWorkDetails({ currentUser }) {
                     <Select
                       labelId="Employement Type"
                       id="Employement Type"
-                      value={item?.employement_type}
+                      // value={item?.employement_type}
                       name="employmen_type"
                       label="Employement Type"
                       onChange={(e) => {
                         handleChange(e, index, 'employmen_type');
                       }}
                     >
-                      <MenuItem value={1}>Primary</MenuItem>
+                      <MenuItem value={1}>Primary1</MenuItem>
                       <MenuItem value={2}>Contract</MenuItem>
                     </Select>
                   </FormControl>
@@ -287,7 +287,7 @@ export default function PreviousWorkDetails({ currentUser }) {
             </Grid>
           ))}
         </>
-
+        <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
           color="primary"
@@ -295,9 +295,10 @@ export default function PreviousWorkDetails({ currentUser }) {
             handleAdd();
           }}
         >
-          Add
+          Add Experience
         </Button>
-        <Button
+        </Grid>
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -305,7 +306,7 @@ export default function PreviousWorkDetails({ currentUser }) {
           }}
         >
           Submit
-        </Button>
+        </Button> */}
       </form>
     </Stack>
   );

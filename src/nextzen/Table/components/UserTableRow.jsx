@@ -105,7 +105,7 @@ export default function UserTableRow({
             </>
           ))}
 
-        {rowActions && rowActions.length > 0 && (
+        {rowActions && rowActions?.length > 0 && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />

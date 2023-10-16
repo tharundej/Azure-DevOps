@@ -1,5 +1,7 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
 
+
+
 import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
@@ -17,7 +19,7 @@ export default function Approveleave(){
       marginBottom: '16px', // Add margin at the bottom
     };
     const cardHeaderStyle = {
-      backgroundColor: '#007bff',
+      backgroundColor: '#3B82F6',
       color: '#fff',
       padding: '16px',
       textAlign: 'center',
@@ -27,7 +29,7 @@ export default function Approveleave(){
       padding: '16px', 
       // fontWeight: 'bold', 
       fontSize: '18px', 
-      backgroundColor: '#9fc5e8', // Change the background color
+      backgroundColor: '#DFEBFE', // Change the background color
       display: 'flex',
      flexDirection: 'column',
      justifyContent: 'center',
@@ -56,6 +58,7 @@ export default function Approveleave(){
         },
         { id: "employee", label: "Employee", type: "text" },
         { id: "date", label: "Date", type: "text" },
+        {id : "net_leave_balance",label:"Leave Balance",type:"text"},
         { id: "leave_type", label: "Leave Type", type: "text" },
         { id: "start_date", label: "start Date", type: "text" },
         {id: "end_date",label:"End Date",type:"text"},
@@ -73,6 +76,7 @@ export default function Approveleave(){
           employee_id: "IB341",
           employee: "Harsha Priya",
           date: "07-10-2023",
+          net_leave_balance:"3",
           leave_type:"Annual Leave",
           start_date: "31-10-2023",
           end_date: "03-11-2023",
@@ -83,6 +87,7 @@ export default function Approveleave(){
           employee_id: "IB340",
           employee: "Harsha Priya",
           date: "10-10-2023",
+          net_leave_balance:"4",
           leave_type:"Sick Leave",
           start_date: "29-10-2023",
           end_date: "03-11-2023",
@@ -90,15 +95,31 @@ export default function Approveleave(){
           status:'Rejected'
         },
       ];
+
+  const  FilterValues =[
+    {
+      fieldName : "Gender",
+      options : ["Male","Female"]
+    },
+    {
+      fieldName : "Leave Type",
+      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
+    }
+  ]
+
+  const handleValues = (data) => {
+    console.log(data);
+  }
+  
  return (
     <Card >
-    <div style={cardStyle}>
+    {/* <div style={cardStyle}>
     <Grid container spacing={4}>
           <Grid item xs={6} sm={6} md={4} lg={3}>
             <Card sx={{ margin: "8px" }}>
               <div style={cardHeaderStyle}>Pending</div>
               <CardContent style={cardContentStyle}>
-                <Typography variant="h4">10</Typography> {/* Replace with actual count */}
+                <Typography variant="h4">10</Typography> 
               </CardContent>
             </Card>
           </Grid>
@@ -106,34 +127,20 @@ export default function Approveleave(){
             <Card sx={{ margin: "8px" }}>
               <div style={cardHeaderStyle}>Approved</div>
               <CardContent style={cardContentStyle}>
-                <Typography variant="h4">1</Typography> {/* Replace with actual count */}
+                <Typography variant="h4">1</Typography> 
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={6} sm={6} md={4} lg={3}>
-          
-               <TextField
-           sx={{margin:'8px'}}
-            // value={filters.name}
-            // onChange={handleFilterName}
-            
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-              border:'none',
-            }}
-          />
-           
+
           </Grid>
         </Grid>
       </div>
 
-      
-    
+
+
+<SearchFilter filterOptions={FilterValues} handleFilters={handleValues}/>
+       */}
        <BasicTable  
          headdata={TABLE_HEAD}
         bodydata={bodyContent}

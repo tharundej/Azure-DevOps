@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import {BasicTable} from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
 import ReusableTabs from '../tabs/ReusableTabs';
+
 import PaySchedule from './payschedule/PaySchedule';
 
 const bull = (

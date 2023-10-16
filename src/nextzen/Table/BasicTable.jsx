@@ -34,7 +34,7 @@ import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 import { useBoolean } from 'src/hooks/use-boolean';
 // datarange 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 // components
@@ -58,6 +58,7 @@ import { DateRangePicker } from 'rsuite';
 import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 import Style from "../styles/Style.module.css";
+
 import SearchFilter from '../filterSearch/FilterSearch';
 
 
@@ -76,7 +77,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
-  const countValue = initialDefaultPayload.Count;
+  const countValue = initialDefaultPayload?.Count;
   console.log(countValue,"initialDefaultPayload------")
 const [filterHeaders, setFilterHeaders]=useState([])
   const pageSize = 1;
@@ -185,11 +186,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
   const handleFilters = useCallback(
     (name, value) => {
-      table.onResetPage();
+      table?.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -307,12 +308,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
+              numSelected={table?.selected?.length}
+              rowCount={tableData?.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData?.map((row) => row.id)
                 )
               }
               action={
@@ -330,13 +331,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
+                  rowCount={tableData?.length}
+                  numSelected={table?.selected?.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                   rowActions={rowActions || []}
@@ -373,8 +374,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
             count={totalRecordsCount}
             // count={countValue}
             
-            page={initialDefaultPayload.Page}
-            rowsPerPage={initialDefaultPayload.Count}
+            page={initialDefaultPayload?.Page}
+            rowsPerPage={initialDefaultPayload?.Count}
             onPageChange={onPageChangeHandeler}
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
           // dense={table.dense}
@@ -409,46 +410,48 @@ function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, "inputData checkingggggggggggg")
   const { name, status, role } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis?.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
+    inputData = inputData?.filter(
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+    inputData = inputData?.filter((user) => user?.status === status);
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData?.filter((user) => role?.includes(user.role));
   }
 
   return inputData;
 }
 
-// BasicTable.propTypes = {
-//   headdata: PropTypes.object,
-// };
+BasicTable.propTypes = {
+  endpoint: PropTypes.string,
+};
 
-// BasicTable.propTypes = {
-//   bodydata: PropTypes.object,
-// };
-// BasicTable.propTypes = {
-//   rowActions: PropTypes.any,
-// };
+BasicTable.propTypes = {
+  defaultPayload: PropTypes.object,
+};
+BasicTable.propTypes = {
+  headerData: PropTypes.any,
+};
 // BasicTable.propTypes = {
 //   handleClickEvent: PropTypes.func
 // };
+
+
 
 
 export { BasicTable };
