@@ -38,19 +38,26 @@ import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 export default function AddTimeProject({ currentUser }) {
+  
   const [datesUsed, setDatesUsed] = useState({
-    Start_date: dayjs(new Date()),
-    End_date: dayjs(new Date()),
-    Due_Date: dayjs(new Date()),
+    start_date: dayjs(new Date()),
+    end_date: dayjs(new Date()),
+    due_date: dayjs(new Date()),
+    // activity_name:[]
   });
+  const [selectedActivity, setSelectedActivity] = useState([]);
+
+  const handleSelectChange = (event, values) => {
+    setSelectedActivity(values);
+  };
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Project_Name: Yup.string(),
-    Start_date: Yup.string(),
-    End_date: Yup.string(),
-    Due_Date: Yup.string().required('First Name is Required'),
+    project_name: Yup.string(),
+    // start_date: Yup.string(),
+    // end_date: Yup.string(),
+    // due_date: Yup.string().required('First Name is Required'),
     Status: Yup.string(),
    
    
@@ -59,10 +66,10 @@ export default function AddTimeProject({ currentUser }) {
   const defaultValues = useMemo(
     () => ({
    
-        Project_Name: currentUser?.Project_Name || '',
-        Start_date: currentUser?.Start_date || '',
-        End_date: currentUser?.End_date || '',
-        Due_Date: currentUser?.Due_Date || '',
+        project_name: currentUser?.project_name || '',
+        start_date: currentUser?.start_date || '',
+        end_date: currentUser?.end_date || '',
+        due_date: currentUser?.due_date || '',
         Status: currentUser?.Status || '',
   
    
@@ -95,12 +102,14 @@ const [sendData, setSendData] = useState({
     console.log('uyfgv');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      // data.company_id = '0001';
+      // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
+      data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
+      data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
+      data.selectedActivity = selectedActivity;
+      data.company_id = "0001";
 
       console.log(data, 'data111ugsghghh');
 
@@ -147,7 +156,7 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="Project_Name" label=" Project Name  " />
+                <RHFTextField name="project_name" label=" Project Name  " />
                 <span>
                     <Typography sx={{marginLeft:'5px'}}>
                         Previous Project id was 2 next is 3
@@ -158,12 +167,12 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Start date"
-                      value={datesUsed?.Start_date}
+                      value={datesUsed?.start_date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          Start_date: newValue,
+                          start_date: newValue,
                         }));
                       }}
                     />
@@ -174,7 +183,7 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="End date"
-                      value={datesUsed?.End_date}
+                      value={datesUsed?.end_date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
@@ -190,12 +199,12 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Due Date"
-                      value={datesUsed?.Due_Date}
+                      value={datesUsed?.due_date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          Due_Date: newValue,
+                          due_date: newValue,
                         }));
                       }}
                     />
@@ -209,44 +218,27 @@ const [sendData, setSendData] = useState({
      <br/>
      <Grid md={10} xs={12} item>
 
-<Autocomplete
-
-  multiple
-
-  id="Primary Skills"
-
-  options={top100Films.map((option) => option.title)}
-
-  freeSolo
-
-
-  renderTags={(value1, getTagProps) =>
-
-    value1.map((option, index1) => (
-
-      <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
-
-    ))
-
-  }
-
-  renderInput={(params) => (
-
-    <TextField
-
-      {...params}
-
-      variant="filled"
-
-      label="Activity Name"
-
-      placeholder="Favorites"
-
-    />
-
-  )}
-
-/>
+     <Autocomplete
+        multiple
+        id="activity_name"
+        options={top100Films.map((option) => option.title)}
+        freeSolo
+        onChange={handleSelectChange} // Attach the handleSelectChange function
+        value={selectedActivity} // Pass the selected values
+        renderTags={(value1, getTagProps) =>
+          value1.map((option, index1) => (
+            <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="filled"
+            label="Activity Name"
+            placeholder="Favorites"
+          />
+        )}
+      />
 
 </Grid>
 

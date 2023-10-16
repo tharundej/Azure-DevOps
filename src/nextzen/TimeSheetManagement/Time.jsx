@@ -1,3 +1,4 @@
+import { height } from '@mui/system';
 import * as React from 'react';
 
 import ReusableTabs from '../tabs/ReusableTabs';
@@ -17,7 +18,7 @@ export default function BasicCard() {
   return (
     <>
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    <hr/>
+    <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     </>
   );
 }

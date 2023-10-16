@@ -6,9 +6,9 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ReusableTabs from '../tabs/ReusableTabs';
-import CompoffApprove from './components/compoffapprove';
-import MyCompoff from './components/mycompoff';
-import MyClaims from "./components/myclaims"
+import CompoffApprove from './components/CompoffApprove';
+import MyCompoff from './components/MyCompoff';
+import MyClaims from "./components/MyClaims"
 
 const bull = (
   <Box
@@ -93,7 +93,7 @@ startIcon={<Iconify icon="mingcute:add-line" />}
       
    
   
-    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
     {/* <BasicTable
         headdata={TABLE_HEAD}
         bodydata={bodyContent}

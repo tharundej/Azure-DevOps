@@ -37,19 +37,35 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 import axios from 'axios';
+import SnackBar from 'src/nextzen/global/SnackBar';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
+
 const   GeneralInformation=forwardRef((props,ref)=> {
+
+ 
+  const [openSnackBar,setopenSnackBar]=useState(false);
+  const [severitySnackbar,setseveritySnackbar]=useState("");
+  const [messageSnackbar,setmessageSnackbar]=useState('');
+
 
   const currentUser=props.currentUser;
 
   useImperativeHandle(ref,()=>({
     childFunctionGeneral(){
-     onSubmit();
+      onSubmit();
+
+
+
+
       
     }
   }))
+
+  const handleCloseSnackBar=()=>{
+    setopenSnackBar(false)
+  }
 
  
 
@@ -71,8 +87,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     middle_name: Yup.string(),
     last_name: Yup.string('Last Name is Required'),
     email_id: Yup.string().email().required('Email is Required'),
-    contact_number: Yup.string(),
-    emergency_contact_number: Yup.string(),
+    contact_number: Yup.number(),
+    emergency_contact_number: Yup.number(),
     date_of_birth: Yup.string(),
     father_name: Yup.string(),
     mother_name: Yup.string(),
@@ -82,16 +98,16 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     blood_group: Yup.string(),
     offer_date: Yup.string(),
     joining_date: Yup.string(),
-    p_address_line1: Yup.string(),
+    p_address_line1: Yup.string().required('Address is Required'),
     p_address_line2: Yup.string(),
-    p_city: Yup.string(),
-    p_state: Yup.string(),
-    p_pincode: Yup.string(),
+    p_city: Yup.string().required('City is Required'),
+    p_state: Yup.string().required('State is Required'),
+    p_pincode: Yup.number().required('Pin Code is Required'),
     r_address_line1: Yup.string(),
     r_address_line2: Yup.string(),
     r_city: Yup.string(),
     r_state: Yup.string(),
-    r_pincode: Yup.string(),
+    r_pincode: Yup.number(),
 
     // first_name: Yup.string().required('First Name is required'),
 
@@ -124,8 +140,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       middle_name: currentUser?.middle_name || '',
       last_name: currentUser?.last_name || '',
       email_id: currentUser?.email_id || '',
-      contact_number: currentUser?.contact_number || '',
-      emergency_contact_number: currentUser?.emergency_contact_number || '',
+      contact_number: currentUser?.contact_number || undefined,
+      emergency_contact_number: currentUser?.emergency_contact_number || undefined,
       date_of_birth: currentUser?.date_of_birth || '',
       father_name: currentUser?.father_name || '',
       mother_name: currentUser?.mother_name || '',
@@ -139,12 +155,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       p_address_line2: currentUser?.p_address_line2 || '',
       p_city: currentUser?.p_city || '',
       p_state: currentUser?.p_state || '',
-      p_pincode: currentUser?.p_pincode || '',
+      p_pincode: currentUser?.p_pincode || undefined,
       r_address_line1: currentUser?.r_address_line1 || '',
       r_address_line2: currentUser?.r_address_line2 || '',
       r_city: currentUser?.r_city || '',
       r_state: currentUser?.r_state || '',
-      r_pincode: currentUser?.r_pincode || '',
+      r_pincode: currentUser?.r_pincode || undefined,
     }),
     [currentUser]
   );
@@ -167,6 +183,38 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   const values = watch();
 
+  const ApiHitGeneralInformation=(dataGeneral)=>{
+        const data1 = dataGeneral;
+        let emp_id;
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'http://192.168.0.193:3001/erp/onBoarding',
+          headers: { 
+            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc', 
+            'Content-Type': 'text/plain'
+          },
+          data : data1
+        };
+        
+        axios.request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setopenSnackBar(true);
+          setseveritySnackbar("success");
+          setmessageSnackbar("Onboarded Sucessfully")
+          
+          props.nextStep();
+        })
+        .catch((error) => {
+          console.log(error);
+          setopenSnackBar(true);
+          setseveritySnackbar("warning");
+          setmessageSnackbar("User Alredy Present")
+        });
+
+  }
+
   const onSubmit = handleSubmit(async (data) => {
     console.log(data,'general information');
 
@@ -179,15 +227,22 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
       
+       ApiHitGeneralInformation(data);
+      // const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //     console.log(props)
+      //     if(props){
 
-      const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      //       props.nextStep();
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
+
+      
 
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
@@ -222,6 +277,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               {currentUser && (
                 <Label
                   color={
+
+                    
                     (values.status === 'active' && 'success') ||
                     (values.status === 'banned' && 'error') ||
                     'warning'
@@ -305,7 +362,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
             </Card>
           </Grid>
 
-          <Grid xs={12} md={8}>
+          <Grid  xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={3}
@@ -316,6 +373,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+
+                
+                
                 <RHFTextField name="first_name" label="First Name " />
                 <RHFTextField name="middle_name" label="Middle Name " />
                 <RHFTextField name="last_name" label="Last Name " />
@@ -376,6 +436,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                
                 <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
                 <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
                 <RHFTextField name="p_city" label="City " />
@@ -386,6 +447,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
                 <RHFTextField name="r_pincode" label="Resendial Pincode" />
+           
 
                 {/* <RHFTextField name="name" label="Full Name" />
                 <RHFTextField name="email" label="Email Address" />
@@ -433,12 +495,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           </Grid>
         </Grid>
       </FormProvider>
+      <SnackBar open={openSnackBar} severity={severitySnackbar} message={messageSnackbar} handleCloseSnackBar={handleCloseSnackBar}/>
     </div>
   );
 })
 
 GeneralInformation.propTypes = {
   currentUser: PropTypes.object,
+  nextStep: PropTypes.any,
 };
 
 export default GeneralInformation;

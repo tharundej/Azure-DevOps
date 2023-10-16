@@ -6,9 +6,10 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { _userList } from 'src/_mock';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
+import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
 import TimeForm from './TimeForm';
 import ReusableTabs from '../tabs/ReusableTabs';
@@ -100,8 +101,30 @@ export default function TimeProject() {
       const handleTimeForm =()=>{
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
-      }
+      } 
+      
     
+      const[tableData,SetTableData] = useState({})
+      console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
+      const [SendData,setSendData]= useState({
+        Page: 1,
+        Count: 5,
+      })
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await instance.post('listProject', SendData);
+            SetTableData(response.data);
+            console.log('Success:', response.data);
+          } catch (error) {
+            console.error('Error:', error);
+            // Handle errors here
+          }
+        };
+      
+        fetchData(); // Call the fetchData function when the component mounts or when SendData changes
+      }, [SendData]);
+      
   return (
     <>
       {showForm && (
@@ -118,7 +141,7 @@ export default function TimeProject() {
  <AddTimeProject currentUser={{}} />
       </Dialog>
     )}
-
+<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   <Button className="button" onClick={handleTimeForm}>Add Project</Button>

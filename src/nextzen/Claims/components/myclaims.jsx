@@ -1,4 +1,4 @@
-import React,{useState,useMemo} from 'react';
+import React, { useState, useMemo } from 'react';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -55,29 +55,70 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 
-export default function UserListPage({currentUser}) {
+export default function UserListPage({ currentUser }) {
 
-  
+  // const defaultPayload = {
+  //   "count":5,
+  //   "page":0
+  // }
   const TABLE_HEAD = [
     {
-      id: "name",
-      label: " Name",
+      // id: "name",
+      id: "employee",
+      label: " Employee Name",
+      width: 180,
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "phoneNumber", label: "contact", width: 180, type: "text" },
-    { id: "company", label: "Company", width: 220, type: "text" },
-    { id: "role", label: "Role", width: 180, type: "text" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
+    { id: "apply_date", label: "Apply Date", width: 180, type: "text" },
+    { id: "employee_id", label: "Employee Id", width: 220, type: "text" },
+    { id: "from_date", label: "From Date", width: 180, type: "text" },
+    { id: "leave_type", label: "Leave Type", width: 100, type: "badge" },
     // { id: '', width: 88 },
-  ];
+  ]
+
+
+
+  const defaultPayload={
+
+    "count": 10,
+
+    "page": 0,
+
+    "search": "",
+
+    "eid": "E2",
+
+"externalFilters":{
+
+    "fFromDate": "2023-10-23",
+
+    "fToDate": "",
+
+    "fLeaveTypeName": "",
+
+    "fStatus": ""
+
+},
+
+"sort": {
+
+    "key":1,
+
+    "orderBy":"al.apply_date"
+
+}
+
+}
+  
 
   const actions = [
-    { name: "approve", icon: "hh", path: "jjj" },
-    { name: "view", icon: "hh", path: "jjj" },
-    { name: "eerr", icon: "hh", path: "jjj" },
+    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+    { name: "View", icon: "hh", id: 'view' },
+    { name: "Edit", icon: "hh", id: 'edit' },
+    { name: "Delete", icon: "hh", id: 'delete' },
   ];
   const bodyContent = [
     {
@@ -100,7 +141,7 @@ export default function UserListPage({currentUser}) {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: "75%",
-    height:"50%",
+    height: "50%",
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -126,9 +167,9 @@ export default function UserListPage({currentUser}) {
     claim_amount: Yup.string().required('Claim Amount is Required'),
     comments: Yup.string(),
 
-    
 
-    
+
+
   });
 
   const defaultValues = useMemo(
@@ -137,8 +178,8 @@ export default function UserListPage({currentUser}) {
       comments: currentUser?.comments || '',
       // image_name: currentUser?.image_name || '',
       // image_data: currentUser?.image_data || '',
-      
-     
+
+
     }),
     [currentUser]
   );
@@ -191,49 +232,72 @@ export default function UserListPage({currentUser}) {
     }
   });
   // for upload docmunt
-  
+
+  const onclickActions = (event) => {
+    console.log(event)
+    if (event && event.eventData) {
+      if (event.eventData.type === 'serviceCall') {
+        // serviceCall(event.eventData.endpoint,event.rowData)
+        
+      } else {
+          // navigate[event.eventData.route]
+      }
+    }
+  }
+
+
+  const serviceCall = (endpoint, payload) => {
+
+  }
   return (
     <>
       <Helmet>
         <title> Dashboard: myclaims</title>
       </Helmet>
-      {/* <h1>hello</h1> */}
-      {/* <Search/> */}
-      {/* <Button>add
 
-    </Button> */}
-    <Button onClick={handleOpen}>Open modal</Button>
-      
-       <Dialog
-      fullWidth
-      maxWidth={false}
-      open={open}
-      // onClose={handleClose}
-      PaperProps={{
-        sx: { maxWidth: 720 },
-      }}
-    >
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-      {/* methods={methods} onSubmit={onSubmit} */}
-        <DialogTitle>Applly All Claims</DialogTitle>
+      <Button onClick={handleOpen}>Open modal</Button>
+      {/* <Grid container spacing={1}>
+        <Grid item xs={6}>
+          <TextField fullWidth label="Search">o</TextField>
+        </Grid>
+        <Grid item xs={6}>
+          <Button sx={{ alignSelf: "center" }} variant="contained" onClick={handleOpen}>Open modal</Button>
+          <Button variant="contained" >Filter</Button>
+          <Button variant="contained" >exports</Button>
+        </Grid>
+       
+      </Grid> */}
 
-        <DialogContent>
-          {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          <DialogTitle>Applly All Claims</DialogTitle>
+
+          <DialogContent>
+            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
             Account is waiting for confirmation
           </Alert> */}
-         
 
-          <Box
-            rowGap={3}
-            columnGap={2}
-            display="grid"
-            marginTop={2}
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
-          >
-            {/* <RHFSelect name="status" label="Status">
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              {/* <RHFSelect name="status" label="Status">
               {USER_STATUS_OPTIONS.map((status) => (
                 <MenuItem key={status.value} value={status.value}>
                   {status.label}
@@ -241,145 +305,148 @@ export default function UserListPage({currentUser}) {
               ))}
             </RHFSelect> */}
 
-            {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-            <RHFAutocomplete
-                  name="country"
-                  label="Type Of Claim"
-                  options={countries.map((country) => country.label)}
-                  getOptionLabel={(option) => option}
-                  isOptionEqualToValue={(option, value) => option === value}
-                  renderOption={(props, option) => {
-                    const { code, label, phone } = countries.filter(
-                      (country) => country.label === option
-                    )[0];
+              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+              <RHFAutocomplete
+                name="country"
+                label="Type Of Claim"
+                options={countries.map((country) => country.label)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(props, option) => {
+                  const { code, label, phone } = countries.filter(
+                    (country) => country.label === option
+                  )[0];
 
-                    if (!label) {
-                      return null;
-                    }
+                  if (!label) {
+                    return null;
+                  }
 
-                    return (
-                      <li {...props} key={label}>
-                        <Iconify
-                          key={label}
-                          icon={`circle-flags:${code.toLowerCase()}`}
-                          width={28}
-                          sx={{ mr: 1 }}
-                        />
-                        {label} ({code}) +{phone}
-                      </li>
-                    );
-                  }}
-                />
-                <RHFAutocomplete
-                  name="country"
-                  label=" Currency for Reimbursement"
-                  options={countries.map((country) => country.label)}
-                  getOptionLabel={(option) => option}
-                  isOptionEqualToValue={(option, value) => option === value}
-                  renderOption={(props, option) => {
-                    const { code, label, phone } = countries.filter(
-                      (country) => country.label === option
-                    )[0];
-
-                    if (!label) {
-                      return null;
-                    }
-
-                    return (
-                      <li {...props} key={label}>
-                        <Iconify
-                          key={label}
-                          icon={`circle-flags:${code.toLowerCase()}`}
-                          width={28}
-                          sx={{ mr: 1 }}
-                        />
-                        {label} ({code}) +{phone}
-                      </li>
-                    );
-                  }}
-                />
-                
-                
-            <RHFTextField name="claim_amount" label="Claim Amount" />
-            <Grid sx={{alignSelf:"flex-start"}}  >
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
-                      <DatePicker
-                        sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="To"
-                        // value={item?.to}
-                        onChange={(newValue) => {
-                          handleChangeDate(newValue,'to');
-                        }}
+                  return (
+                    <li {...props} key={label}>
+                      <Iconify
+                        key={label}
+                        icon={`circle-flags:${code.toLowerCase()}`}
+                        width={28}
+                        sx={{ mr: 1 }}
                       />
-                    {/* </DemoContainer> */}
-                  </LocalizationProvider>
-                </Grid>
-            <RHFTextField name="comments" label="comments" />
-            {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
-        <Grid sx={{alignSelf:"flex-end"}}>
-         
-            <Controller
-        name="file"
-        control={control}
-        defaultValue={null}
-        render={({ field }) => (
-          <input
-            {...field}
-            type="file"
-            accept=".doc, .pdf"
-          />
-        )}
-      />
-      </Grid>
-      <TextField
-      fullWidth
-      variant="outlined"
-      InputLabelProps={{ htmlFor: 'contained-button-file' }}
-      label="Upload Document"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <input
-              accept=".doc,.pdf"
-              style={{ display: 'none' }}
-              id="contained-button-file"
-              multiple
-              type="file"
-            />
-            <label htmlFor="contained-button-file">
-              {/* <CloudUploadIcon /> */}
-              <CloudUploadIcon/>
-            </label>
-          </InputAdornment>
-        ),
-      }}
-    />     
-      
-      
- 
-           
-          </Box>
-          
-           
-        </DialogContent>
+                      {label} ({code}) +{phone}
+                    </li>
+                  );
+                }}
+              />
+              <RHFAutocomplete
+                name="country"
+                label=" Currency for Reimbursement"
+                options={countries.map((country) => country.label)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(props, option) => {
+                  const { code, label, phone } = countries.filter(
+                    (country) => country.label === option
+                  )[0];
 
-        <DialogActions>
-          <Button variant="outlined" onClick={handleClose}>
-            Cancel
-          </Button>
+                  if (!label) {
+                    return null;
+                  }
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
-          </LoadingButton>
-        </DialogActions>
-      </FormProvider>
-    </Dialog>
+                  return (
+                    <li {...props} key={label}>
+                      <Iconify
+                        key={label}
+                        icon={`circle-flags:${code.toLowerCase()}`}
+                        width={28}
+                        sx={{ mr: 1 }}
+                      />
+                      {label} ({code}) +{phone}
+                    </li>
+                  );
+                }}
+              />
+
+
+              <RHFTextField name="claim_amount" label="Claim Amount" />
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="To"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                      handleChangeDate(newValue, 'to');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <RHFTextField name="comments" label="comments" />
+              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
+              <Grid sx={{ alignSelf: "flex-end" }}>
+
+                <Controller
+                  name="file"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="file"
+                      accept=".doc, .pdf"
+                    />
+                  )}
+                />
+              </Grid>
+              <TextField
+                fullWidth
+                variant="outlined"
+                InputLabelProps={{ htmlFor: 'contained-button-file' }}
+                label="Upload Document"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <input
+                        accept=".doc,.pdf"
+                        style={{ display: 'none' }}
+                        id="contained-button-file"
+                        multiple
+                        type="file"
+                      />
+                      <label htmlFor="contained-button-file">
+                        {/* <CloudUploadIcon /> */}
+                        <CloudUploadIcon />
+                      </label>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
 
       <BasicTable
-        headdata={TABLE_HEAD}
-        bodydata={bodyContent}
-        rowActions={actions}
+
+      endpoint="/listLeave"
+      defaultPayload={defaultPayload}
+      headerData={TABLE_HEAD}
+      
+       
       />
     </>
   );

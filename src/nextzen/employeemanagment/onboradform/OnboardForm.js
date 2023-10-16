@@ -1,4 +1,4 @@
-import React,{useRef}  from 'react';
+import React,{useRef,useState}  from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -18,6 +18,7 @@ const steps = ['General Information', 'Education Details', 'Previous Work Detail
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+  const [employeeId,setemployeeId]=useState("");
 
   const childref=useRef(null);
 
@@ -42,21 +43,28 @@ export default function OnBoardForm() {
     let returnResponse;
     if(activeStep+1===1){
       console.log('11')
-      returnResponse= childref.current.childFunctionGeneral()
+      childref.current.childFunctionGeneral();
+    
+
+     
+      
     }
     else if(activeStep+1===2){
-      console.log("2");
+      childref.current.childFunctionEducation()
     }
 
     
  
-    // const newActiveStep =
-    //   isLastStep() && !allStepsCompleted()
-    //     ? 
-    //       steps.findIndex((step, i) => !(i in completed))
-    //     : activeStep + 1;
-    // setActiveStep(newActiveStep);
+    
   };
+  const handleNextIncrement=()=>{
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? 
+          steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1;
+    setActiveStep(newActiveStep);
+  }
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -108,10 +116,10 @@ export default function OnBoardForm() {
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} currentUser={{}} ref={childref} />
+              <GeneralInformation style={{ paddingTop: '20px' }} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]} ref={childref}/>
+              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}  ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
               <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
