@@ -58,7 +58,7 @@ export default function EmployeeTable() {
 
  
 
-    "Count": 3,
+    "Count": 10,
 
  
 
@@ -102,25 +102,37 @@ export default function EmployeeTable() {
   
 
 
-  const [TABLE_HEAD,setTableHead] =useState( [
-    {
-      id: 'employee_id',
-      label: ' Employee id',
-      type: 'text',
-      containesAvatar: true,
+const TABLE_HEAD = [
 
-      secondaryText: 'name',
-    },
-    { id: 'first_name', label: 'First Name', width: 250, type: 'text' },
-    { id: 'last_name', label: 'Last name', width: 220, type: 'text' },
-    { id: 'contact_number', label: 'Contact Number', width: 300, type: 'text' },
-    { id: 'employment_type', label: 'Employment Type', width: 100 ,  type: 'text'},
-   
-    { id: 'department_name', label: 'Department Name', width: 280, type: 'text' },
-    { id: 'working_location', label: 'Working Location', width: 220, type: 'text' },
-    { id: 'reporting_manager_name', label: 'Reporting Manager Name', width: 180, type: 'text' }
-    
-  ]);
+  {
+
+    id: "employee",
+
+    label: " Employee Name",
+
+    width: 180,
+
+    type: "text",
+
+    containesAvatar: false,
+
+
+
+    secondaryText: "email",
+
+  },
+
+  { id: "apply_date", label: "Apply Date", width: 180, type: "text" },
+
+  { id: "employee_id", label: "Employee Id", width: 220, type: "text" },
+
+  { id: "from_date", label: "From Date", width: 180, type: "text" },
+
+  { id: "leave_type", label: "Leave Type", width: 100, type: "badge" },
+
+  // { id: '', width: 88 },
+
+]
 
   const actions = [
     { name: 'approve', icon: 'hh', path: 'jjj' },
