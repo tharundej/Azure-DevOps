@@ -63,6 +63,7 @@ export default function UserListPage({ currentUser }) {
   // }
   const TABLE_HEAD = [
     {
+      // id: "name",
       id: "employee",
       label: " Employee Name",
       width: 180,
@@ -82,25 +83,33 @@ export default function UserListPage({ currentUser }) {
 
   const defaultPayload={
 
-    "Count": 3,
+    "count": 10,
 
-    "Page": 0,
+    "page": 0,
 
-    "Search": "",
+    "search": "",
 
-    "Eid": "E1",
+    "eid": "E2",
 
-    "fFromDate": "",
+"externalFilters":{
+
+    "fFromDate": "2023-10-23",
 
     "fToDate": "",
 
     "fLeaveTypeName": "",
 
-    "fStatus": "",
+    "fStatus": ""
 
-    "order":1,
+},
+
+"sort": {
+
+    "key":1,
 
     "orderBy":"al.apply_date"
+
+}
 
 }
   

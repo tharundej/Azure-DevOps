@@ -58,6 +58,7 @@ import { DateRangePicker } from 'rsuite';
 import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 import Style from "../styles/Style.module.css";
+
 import SearchFilter from '../filterSearch/FilterSearch';
 
 
@@ -78,7 +79,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
   console.log(initialDefaultPayload?.Page,"page value")
   const countValue = initialDefaultPayload?.Count;
   console.log(countValue,"initialDefaultPayload------")
-
+const [filterHeaders, setFilterHeaders]=useState([])
   const pageSize = 1;
   const [page, setPage] = useState(1);
 
@@ -100,21 +101,24 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getTableData = (actionType, data) => {
+  const getTableData = (payload) => {
 
-    const initialDefaultPayloadCopy = initialDefaultPayload;
-    if(actionType === 'pageChange'){
-      initialDefaultPayloadCopy.Page = data;
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
     }
+    // if(actionType === 'pageChange'){
+    //   initialDefaultPayloadCopy.Page = data;
+    // }
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       },
-      data: initialDefaultPayloadCopy
+      data:  initialDefaultPayloadCopy
 
     };
 
@@ -127,20 +131,21 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
       // console.log(response?.data?.data?.bodyContent);
       // setTableData(response?.data?.data?.bodyContent || []);
       // setTABLE_HEAD(response?.data?.data?.headerContent || []);
-      setRowActions(response?.data?.data?.actions || []);
-      setTotalRecordsCount(response?.data?.data?.Total_entry || 0)
+      setRowActions(response?.data?.actions || []);
+      setFilterHeaders(response?.data?.Filter_Headers || []);
+      setTotalRecordsCount(response?.data?.Total_entry || 0)
       console.log(response?.data?.Total_entry,"total no of records-->")
 
       // leave list api
       console.log("leave list api integration")
       console.log(response)
 
-      if(actionType === 'pageChange'){
-        // let initialDefaultPayloadCopy = 
-        setInitialDefaultPayload((prevData)=>({
-          ...prevData, Page:data
-        }))
-      }
+      // if(actionType === 'pageChange'){
+      //   // let initialDefaultPayloadCopy = 
+      //   setInitialDefaultPayload((prevData)=>({
+      //     ...prevData, Page:data
+      //   }))
+      // }
 
     })
 
@@ -215,26 +220,37 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
   const onPageChangeHandeler = (event, data) =>{
 
-    console.log(data)
-     const updatedPayload = {
-    ...initialDefaultPayload,
-       Page: newPage + 1, // Assuming you want to increment the page by 1
-     };
-     setInitialDefaultPayload(updatedPayload)
-    // ...initialDefaultPayload,
-    // initialDefaultPayload?.page+1;
-    // setInitialDefaultPayload()
-    // initialDefaultPayload?.page+1;
-    getTableData('pageChange', data);
+    const payload = initialDefaultPayload;
+    payload.Page = data;
+    setInitialDefaultPayload(payload)
+    getTableData(payload)
 
-    console.log(event, data)
-    console.log("page changed========",updatedPayload)
-
+    
     
   }
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
+    const payload = initialDefaultPayload;
+    payload.Count = event.target.value;
+    payload.Page = 0;
+    setInitialDefaultPayload(payload)
+    getTableData(payload)
   }
+
+  // Search functionality
+  const handleSearch = (searchTerm) => {
+    const payload = initialDefaultPayload;
+    setInitialDefaultPayload(prevPayload => ({
+      ...prevPayload,
+      Search: searchTerm,
+      // Filter_Headers:
+     
+    }));
+    getTableData(payload)
+  }
+
+
+  
 
   // daterange picker
   const [isOpen, setIsOpen] = useState(false);
@@ -263,102 +279,32 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
   // const displayValue = selectedRange && selectedRange.length === 2
   //   ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}`
   //   : '';
+
+  const handleFIlterOptions=(data)=>{
+    console.log(data)
+    const payload = initialDefaultPayload;
+    setInitialDefaultPayload(prevPayload => ({
+      ...prevPayload,
+      // Search: searchTerm,
+      Filter_Headers:data
+     
+    }));
+    getTableData(payload)
+
+    console.log(payload,"after filter effected")
+    
+
+  }
+  
+
+  
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Card>
           {/* <CardContent> */}
-          <SearchFilter />
-          <Grid container spacing={1} >
-            <Grid item xs={12} md={5} >
-              {/* <TextField sx={{ margin: "0.4em",}} fullWidth placeholder="Search" >o</TextField> */}
-              <TextField
-              sx={{ margin: "0.4rem", }} 
-              fullWidth 
-              // label="Search"
-              placeholder='search'
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-              variant="outlined"
-               size="small"
-            />
-            </Grid>
-            <Grid item xs={12} md={7} container flex justifyContent="flex-end" >
-            {/* <DateRangePicker /> */}
-            <TextField
-              sx={{ margin: "0.4rem", }} 
-              fullWidth 
-              // label="Search"
-              onClick={handleOpen}
-              value={displayValue}
-              // value={selectedRange ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}` : ""}
-              // value={selectedRange ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}` : ""}
-              placeholder='select date range'
-              id="filled-hidden-label-small"
-              defaultValue="Select date range"
-              variant="outlined"
-               size="small"
-            />
-             {/* <Popover
-        open={isOpen}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <Button onClose={handleClose}>close</Button>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateRangeCalendar
-            onChange={handleDateChange}
-          />
-        </LocalizationProvider>
-      </Popover>
-           */}
-     
-{/* <Popover
-        open={isOpen}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateRangeCalendar
-            onChange={handleDateChange}
-          />
-        </LocalizationProvider>
-      </Popover> */}
-  
-
-
-            
-
-
-              {/* <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Open modal</Button>
-              <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Filter</Button>
-              <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Exports</Button> */}
-
-
-
-              {/* <Grid item >
-          <Button variant="contained" >Filter</Button>
-        </Grid>
-        <Grid item >
-          <Button variant="contained" sx={{ borderWidth: "2px", Color: "green" }}>Exports</Button>
-        </Grid> */}
-            </Grid>
-
-          </Grid>
+          <SearchFilter  handleFilters={handleFIlterOptions}/>
+        
           {/* </CardContent> */}
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
