@@ -51,11 +51,15 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   //   marginBottom:"0 !important", borderBottom:"3px solid #3b82f6 !important"
   // }
 
-function ReusableTabs({ tabLabels, tabContents }) {
+function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
   const [value, setValue] = useState(0);
-
+ 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(typeof changeOfTab === 'function'){
+      changeOfTab(newValue)
+    }
+    // handleCreatePayrun()
   };
 
   return (
@@ -91,6 +95,6 @@ function ReusableTabs({ tabLabels, tabContents }) {
 ReusableTabs.propTypes = {
   tabLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
+  changeOfTab: PropTypes.any
 };
-
 export default ReusableTabs;

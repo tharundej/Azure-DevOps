@@ -11,7 +11,8 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 
-export default function UserListPage() {
+export default function MyCompoff() {
+
   const TABLE_HEAD = [
     {
       id: "employee",
@@ -33,7 +34,7 @@ export default function UserListPage() {
 
   const defaultPayload={
 
-    "Count": 3,
+    "Count": 5,
 
     "Page": 0,
 
@@ -54,6 +55,7 @@ export default function UserListPage() {
     "orderBy":"al.apply_date"
 
 }
+  
 
   const actions = [
     { name: "approve", icon: "hh", path: "jjj" },
@@ -62,8 +64,8 @@ export default function UserListPage() {
   ];
   const bodyContent = [
     {
-      name: "Surendramalli",
-      email: "surrendramalli@infobellIt.com",
+      name: "Malli",
+      email: "Malli@infobellIt.com",
       phoneNumber: "9879876789",
       company: "Infobell",
       role: "UI Developer",
@@ -73,13 +75,13 @@ export default function UserListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: compoffapprove</title>
+        <title> Dashboard: mycompoff</title>
       </Helmet>
 
       <BasicTable
-        endpoint="/listLeave"
-        defaultPayload={defaultPayload}
-        headerData={TABLE_HEAD}
+         endpoint="/listLeave"
+         defaultPayload={defaultPayload}
+         headerData={TABLE_HEAD}
       />
     </>
   );

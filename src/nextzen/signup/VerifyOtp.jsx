@@ -37,6 +37,7 @@ import { EmailInboxIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
+import { CardContent } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -173,10 +174,12 @@ export default function VerifyOtp() {
   );
 
   return (
+    <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
       {renderForm}
     </FormProvider>
+    </CardContent>
   );
 }
