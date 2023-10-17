@@ -124,10 +124,10 @@ export default function CalendarFilters({
       </Typography>
 
       <Scrollbar sx={{ height: 1 }}>
-        {orderBy(events, ['end'], ['desc']).map((event) => (
+        {orderBy(events, ['to_date_unix'], ['desc']).map((event) => (
           <ListItemButton
             key={event.id}
-            onClick={() => onClickEvent(`${event.id}`)}
+            onClick={() => onClickEvent(`${event.leave_id}`)}
             sx={{
               py: 1.5,
               borderBottom: (theme) => `dashed 1px ${theme.palette.divider}`,
@@ -141,7 +141,7 @@ export default function CalendarFilters({
                 height: 0,
                 position: 'absolute',
                 borderRight: '10px solid transparent',
-                borderTop: `10px solid ${event.color}`,
+                borderTop: `10px solid red`,
               }}
             />
 
@@ -149,7 +149,7 @@ export default function CalendarFilters({
               disableTypography
               primary={
                 <Typography variant="subtitle2" sx={{ fontSize: 13, mt: 0.5 }}>
-                  {event.title}
+                  {event.leavetype_name}
                 </Typography>
               }
               secondary={
@@ -158,16 +158,16 @@ export default function CalendarFilters({
                   component="div"
                   sx={{ fontSize: 11, color: 'text.disabled' }}
                 >
-                  {event.allDay ? (
-                    fDateTime(event.start, 'dd MMM yy')
-                  ) : (
+                  {/* {event.allDay ? (
+                    fDateTime(event.from_date_unix, 'dd MMM yy')
+                  ) : ( */}
                     <>
-                      {`${fDateTime(event.start, 'dd MMM yy p')} - ${fDateTime(
-                        event.end,
+                      {`${fDateTime(event.from_date_unix, 'dd MMM yy p')} - ${fDateTime(
+                        event.to_date_unix,
                         'dd MMM yy p'
                       )}`}
                     </>
-                  )}
+                  
                 </Typography>
               }
               sx={{ display: 'flex', flexDirection: 'column-reverse' }}
