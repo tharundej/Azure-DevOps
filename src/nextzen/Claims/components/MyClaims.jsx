@@ -66,16 +66,21 @@ export default function MyClaims({ currentUser }) {
       // id: "name",
       id: "employee",
       label: " Employee Name",
-      width: 180,
+      width: 200,
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "apply_date", label: "Apply Date", width: 180, type: "text" },
-    { id: "employee_id", label: "Employee Id", width: 220, type: "text" },
-    { id: "from_date", label: "From Date", width: 180, type: "text" },
-    { id: "leave_type", label: "Leave Type", width: 100, type: "badge" },
+    { id: "apply_date", label: "Claim Amount", width: 200, type: "text" },
+    { id: "employee_id", label: "Claim Type", width: 200, type: "text" },
+    { id: "from_date", label: "Claim Date", width: 180, type: "text" },
+    { id: "leave_type", label: "Expense Date", width: 100, type: "badge" },
+    // { id: "leave_type", label: "Approval Amount", width: 100, type: "badge" },
+    // { id: "leave_type", label: "Approval Date", width: 100, type: "badge" },
+    // { id: "leave_type", label: "Approver Name", width: 100, type: "badge" },
+    // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
+    // { id: "leave_type", label: "Status", width: 100, type: "badge" },
     // { id: '', width: 88 },
   ]
 
@@ -83,17 +88,17 @@ export default function MyClaims({ currentUser }) {
 
   const defaultPayload={
 
-    "Count": 5,
+    "count": 5,
 
     "page": 0,
 
     "search": "",
 
-    "eid": "E2",
+    "eid": "E1",
 
 "externalFilters":{
 
-    "fFromDate": "2023-10-23",
+    "fFromDate": "",
 
     "fToDate": "",
 
@@ -113,8 +118,12 @@ export default function MyClaims({ currentUser }) {
 
 }
   
+const handleClick=()=>{
+    console.log("fn passing ")
+}
 
   const actions = [
+
     { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
     { name: "View", icon: "hh", id: 'view' },
     { name: "Edit", icon: "hh", id: 'edit' },
@@ -234,9 +243,10 @@ export default function MyClaims({ currentUser }) {
   // for upload docmunt
 
   const onclickActions = (event) => {
-   // console.log(event)
-    if (event && event.eventData) {
-      if (event.eventData.type === 'serviceCall') {
+    console.log( "my claims from to basic table")
+    console.log(event)
+    if (event && event?.eventData) {
+      if (event?.eventData?.type === 'serviceCall') {
         // serviceCall(event.eventData.endpoint,event.rowData)
         
       } else {
@@ -255,7 +265,7 @@ export default function MyClaims({ currentUser }) {
         <title> Dashboard: myclaims</title>
       </Helmet>
 
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button>
       {/* <Grid container spacing={1}>
         <Grid item xs={6}>
           <TextField fullWidth label="Search">o</TextField>
@@ -445,6 +455,7 @@ export default function MyClaims({ currentUser }) {
       endpoint="/listLeave"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
+      rowActions={actions}
       
        
       />
