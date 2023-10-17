@@ -63,7 +63,7 @@ const methods = useForm({
 });
 const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
 //   const m2 = useForm();
-const payTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
+const payTypes = [{ type: 'Karnataka' }, { type: 'Kerala' }];
 const {
   setValue,
   handleSubmit,
