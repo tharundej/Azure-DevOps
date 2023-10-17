@@ -144,7 +144,7 @@ export default function PreviousWorkDetails({ currentUser }) {
   return (
     <Stack>
       <form style={{ padding: '40px' }}>
-        
+        <>
           {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -210,14 +210,14 @@ export default function PreviousWorkDetails({ currentUser }) {
                     <Select
                       labelId="Employement Type"
                       id="Employement Type"
-                      value={item?.employement_type}
+                      // value={item?.employement_type}
                       name="employmen_type"
                       label="Employement Type"
                       onChange={(e) => {
                         handleChange(e, index, 'employmen_type');
                       }}
                     >
-                      <MenuItem value={1}>Primary</MenuItem>
+                      <MenuItem value={1}>Primary1</MenuItem>
                       <MenuItem value={2}>Contract</MenuItem>
                     </Select>
                   </FormControl>
@@ -286,7 +286,7 @@ export default function PreviousWorkDetails({ currentUser }) {
               </Grid>
             </Grid>
           ))}
-        
+        </>
         <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"

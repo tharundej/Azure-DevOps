@@ -71,13 +71,10 @@ export default function AmplifyForgotPasswordView() {
   });
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center" >
-      <RHFTextField name="email" label="Email address" sx={{
-        width:{
-          xs: '100%', // for extra-small screens and up
-          sm: '50%',  // for small screens and up
-          md: '40%', // for medium screens and up
-        },}} />
+    <Stack spacing={3} alignItems="center" sx={{maxWidth: '400px',
+    mx: 'auto', // Center horizontally
+    my: 'auto',}} >
+      <RHFTextField name="email" label="Email address"  />
 
       <LoadingButton
         // fullWidth
@@ -114,7 +111,7 @@ export default function AmplifyForgotPasswordView() {
           <Typography variant="h3">Forgot your password?</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Please enter the email address to request a OTP to Verify and Reset your Password.
+          Please enter your email to request a password reset OTP.
           </Typography>
         </Grid>
       </Stack>

@@ -14,19 +14,46 @@ import Iconify from 'src/components/iconify';
 export default function UserListPage() {
   const TABLE_HEAD = [
     {
-      id: "name",
-      label: " Name",
+      id: "employee",
+      label: " Employee Name",
+      width: 180,
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "phoneNumber", label: "contact", width: 180, type: "text" },
-    { id: "company", label: "Company", width: 220, type: "text" },
-    { id: "role", label: "Role", width: 180, type: "text" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
+    { id: "apply_date", label: "Apply Date", width: 180, type: "text" },
+    { id: "employee_id", label: "Employee Id", width: 220, type: "text" },
+    { id: "from_date", label: "From Date", width: 180, type: "text" },
+    { id: "leave_type", label: "Leave Type", width: 100, type: "badge" },
     // { id: '', width: 88 },
-  ];
+  ]
+
+
+
+  const defaultPayload={
+
+    "Count": 5,
+
+    "Page": 0,
+
+    "Search": "",
+
+    "Eid": "E1",
+
+    "fFromDate": "",
+
+    "fToDate": "",
+
+    "fLeaveTypeName": "",
+
+    "fStatus": "",
+
+    "order":1,
+
+    "orderBy":"al.apply_date"
+
+}
 
   const actions = [
     { name: "approve", icon: "hh", path: "jjj" },
@@ -35,8 +62,8 @@ export default function UserListPage() {
   ];
   const bodyContent = [
     {
-      name: "Malli",
-      email: "Malli@infobellIt.com",
+      name: "Surendramalli",
+      email: "surrendramalli@infobellIt.com",
       phoneNumber: "9879876789",
       company: "Infobell",
       role: "UI Developer",
@@ -46,13 +73,13 @@ export default function UserListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: mycompoff</title>
+        <title> Dashboard: compoffapprove</title>
       </Helmet>
 
       <BasicTable
-        headdata={TABLE_HEAD}
-        bodydata={bodyContent}
-        rowActions={actions}
+        endpoint="/listLeave"
+        defaultPayload={defaultPayload}
+        headerData={TABLE_HEAD}
       />
     </>
   );

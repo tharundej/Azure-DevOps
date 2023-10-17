@@ -81,8 +81,8 @@ const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform
 
 // claims------------------------
 const Claims = lazy(() => import('src/nextzen/claims/Claims'));
-const CompoffApprove = lazy(() => import('src/nextzen/claims/components/compoffapprove'));
-const MyCompoff = lazy(() => import('src/nextzen/claims/components/mycompoff'));
+const CompoffApprove = lazy(() => import('src/nextzen/claims/components/CompoffApprove'));
+const MyCompoff = lazy(() => import('src/nextzen/claims/components/MyCompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
