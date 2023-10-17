@@ -5,6 +5,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import MasterDetails from './masterDetails/MasterDetails';
+import ReusableTabs from '../tabs/ReusableTabs';
+import DeclarationDetails from './declarationDetails/DeclarationDetails';
+import RentDetails from './rentDetails/RentDetails';
+import LicPremium from './licPremium/LicPremium';
+import HouseProperty from './houseProperty/HouseProperty';
+import MedicalPremium from './medicalPremium/MedicalPremium';
 
 const bull = (
   <Box
@@ -16,20 +23,31 @@ const bull = (
 );
 
 export default function BasicCard() {
+  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Prooerty','Medical Insurance Premium','Master Deatils'];
+  const tabContents = [
+    <div>
+      <DeclarationDetails/>
+    </div>,
+    <div>
+      <RentDetails/>
+    </div>,
+    <div>
+      <LicPremium/>
+    </div>,
+    <div>
+      <HouseProperty/>
+    </div>,
+    <div>
+      <MedicalPremium/>
+    </div>,
+    <div>
+      <MasterDetails/>
+    </div>
+  ]
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          IT Declaration management
-          
-        </Typography>
-       
-      
-       
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+    <ReusableTabs
+        tabLabels={tabLabels}
+        tabContents={tabContents}
+      />
   );
 }

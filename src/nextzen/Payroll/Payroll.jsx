@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import * as Yup from 'yup';
@@ -23,12 +24,13 @@ import { useRouter } from 'src/routes/hooks';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 import ReusableTabs from '../tabs/ReusableTabs';
+import SearchFilter from '../filterSearch/FilterSearch';
 import PaySchedule from './payschedule/PaySchedule';
 import Payrun from './Payrun/Payrun';
 import CreatePayRun from './CreatePayRun/CreatePayRun';
 import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions/CalculateEarningsAndDeductions';
-import SearchFilter from '../filterSearch/FilterSearch';
 import GeneralForminfo from './payschedule/GeneralForminfo';
 
 const bull = (
@@ -166,28 +168,30 @@ export default function BasicCard(currentUser) {
     defaultValues,
   });
 
-  const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
+  const payscheduleTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
   //   const m2 = useForm();
-  const payTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
+  const payTypes = [
+    { type: 'CTC' },
+    {
+      type: 'CTCs                                                                                ',
+    },
+  ];
   const {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
   });
-    const handleFilters=(data)=>{
-      console.log(data);
-    }
-  
-  
+  const handleFilters = (data) => {
+    console.log(data);
+  };
+
   return (
     <>
-      
-      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters}/>
+      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters} />
       <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}

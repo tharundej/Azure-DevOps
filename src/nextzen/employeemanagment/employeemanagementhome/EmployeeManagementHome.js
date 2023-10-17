@@ -1,9 +1,11 @@
 import React from 'react'
 
-import ReusableTabs from 'src/nextzen/tabs/ReusableTabs'
+import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 
-import EmployeeTable from '../employeestable/Employeestable';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import EmployeeTable from '../employeestable/Employeestable';
+import { StatouryTable } from '../statoury/StatouryTable';
+
 
 function EmployeeManagementHome  () {
     const tabLabels = ['EmployeeTable', 'Statoury'];
@@ -13,10 +15,10 @@ function EmployeeManagementHome  () {
      <EmployeeTable/>
     </div>,
     <div>
-     <h2>1222</h2>
+     <StatouryTable/>
     </div>
   ];
-  const [TABLE_HEAD,setTableHead] =useState( [
+  const [TABLE_HEAD,setTableHead] =React.useState( [
     {
       id: 'employee_id',
       label: ' Employee id',
@@ -57,7 +59,6 @@ function EmployeeManagementHome  () {
         tabLabels={tabLabels}
         tabContents={tabContents}
       />
-      <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"/>
       </>
   )
 }

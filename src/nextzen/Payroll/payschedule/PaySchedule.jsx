@@ -56,6 +56,11 @@ export default function BasicCard() {
       tds: '20',
     },
   ];
+  const defaultPayload = {
+    Page: 1,
+
+    Count: 5,
+  };
   // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
   // const tabContents = [
   //   <div>Tab 1 Content</div>,
@@ -78,7 +83,12 @@ export default function BasicCard() {
   return (
     <>
       <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
-      <BasicTable headdata={TABLE_HEAD} bodydata={bodyContent} rowActions={actions} />
+      <BasicTable
+        headerData={TABLE_HEAD}
+        endpoint="/listLeave"
+        defaultPayload={defaultPayload}
+        rowActions={actions}
+      />
     </>
   );
 }

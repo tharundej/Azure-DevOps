@@ -87,7 +87,7 @@ export default function CalendarView() {
   const [filters, setFilters] = useState(defaultFilters);
 
   const { events, eventsLoading } = useGetEvents();
-
+console.log(events,"eventtsss")
   const dateError =
     filters.startDate && filters.endDate
       ? filters.startDate.getTime() > filters.endDate.getTime()
@@ -144,6 +144,7 @@ export default function CalendarView() {
     dateError,
   });
 
+console.log(dataFiltered,"filteredtt")
   const renderResults = (
     <CalendarFiltersResult
       filters={filters}
