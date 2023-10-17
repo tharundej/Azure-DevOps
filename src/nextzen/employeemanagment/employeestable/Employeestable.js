@@ -2,6 +2,8 @@ import { useEffect,useState,useCallback } from 'react';
 
 
 import { Helmet } from 'react-helmet-async';
+
+import { Grid } from '@mui/material';
 // sections
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import Button from '@mui/material/Button';
@@ -19,6 +21,31 @@ import axios from 'axios';
 
 export default function EmployeeTable() {
 
+  const [filterOptions,setFilterOptions]=useState({
+    dates:[
+      {
+      display:'Joining Date',
+      field_name:'joining_date'
+    },
+    {
+      display:'Offer Date',
+      field_name:'offer_date'
+    }
+  ],
+  dropdowns:[
+    {
+      display:'Status',
+      options:["active","inactive"],
+      field_name:'status'
+    },
+    {
+      display:'Employement Type',
+      options:["Permanent","Contract"],
+      field_name:'employement_type'
+    }
+  ]
+  })
+
   const [bodyContent,setBodyContent]=useState([])
   const [body_for_employee,setBody]=useState({
     "count" : 5,
@@ -32,9 +59,9 @@ export default function EmployeeTable() {
       method: 'POST',
       maxBodyLength: Infinity,
       url: 'http://192.168.0.222:3001/erp/employeeDetails',
-      headers: { 
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      },
+      // headers: { 
+      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
+      // },
       data:data1
     };
     
@@ -53,59 +80,72 @@ export default function EmployeeTable() {
    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-
   const defaultPayload={
 
  
 
-    "Count": 3,
+    "Page":1,
+    
+     
+    
+    "Count":5
+    
+     
+    
+    }
+
+//   const defaultPayload={
 
  
 
-    "Page": 0,
+//     "Count": 5,
 
  
 
-    "Search": "",
+//     "Page": 0,
 
  
 
-    "Eid": "E1",
+//     "Search": "",
 
  
 
-    "fFromDate": "",
+//     "Eid": "E1",
 
  
 
-    "fToDate": "",
+//     "fFromDate": "",
 
  
 
-    "fLeaveTypeName": "",
+//     "fToDate": "",
 
  
 
-    "fStatus": "",
+//     "fLeaveTypeName": "",
 
  
 
-    "order":1,
+//     "fStatus": "",
 
  
 
-    "orderBy":"al.apply_date"
+//     "order":1,
 
  
 
-}
+//     "orderBy":"al.apply_date"
+
+ 
+
+// }
   
 
 
   const [TABLE_HEAD,setTableHead] =useState( [
     {
-      id: 'employee_id',
-      label: ' Employee id',
+      id: 'project_id',
+      label: 'project_id',
       type: 'text',
       containesAvatar: true,
 
@@ -146,6 +186,12 @@ export default function EmployeeTable() {
       <Helmet>
         <title> Dashboard: Employees</title>
       </Helmet>
+
+      <Grid>
+        {/* <Grid md={8}>
+
+        </Grid> */}
+        <Grid  >
       <Button
         component={RouterLink}
         href={paths.dashboard.employee.onboardform}
@@ -155,13 +201,17 @@ export default function EmployeeTable() {
       >
         Add New Employee
       </Button>
+      </Grid>
+      </Grid>
       {/* endpoint="/listLeave"
 
       defaultPayload={defaultPayload}
 
       headerData={TABLE_HEAD} */}
 
-      <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload}
+      <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} filterOptions={filterOptions}
+
+Sea="SearchFilter"
  />
     </>
   );

@@ -1,12 +1,13 @@
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 
-import { useState } from 'react';
+import React,{ useEffect, useState,useCallback } from 'react';
 
 import { styled } from '@mui/system';
 
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent, DialogActions} from '@mui/material';
+import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
+   DialogActions,Typography} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
 
@@ -24,7 +25,30 @@ import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
 
+import { Today } from '@mui/icons-material';
+
+
+import { useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+
+import CustomDateRangePicker from '../global/CustomDateRangePicker';
+
+
+
+
+const defaultFilters = {
+  name: '',
+  type: [],
+  startDate: null,
+  endDate: null,
+};
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -35,98 +59,205 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       padding: theme.spacing(1),
     },
   }));
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 export default function SearchFilter({handleFilters,filterOptions}){
-  
-    const [filterData,SetFilterData] = useState([])
-    const [options,setOptions]=useState([])
-    const [dates, setDates] = useState({
-        start_date: null,
-        end_date: null,
-      });
+  const theme = useTheme();
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+  ];
 
-const [searchText,setSearchText] = useState('');
-const [selectedValues,SetSelectedValues] = useState('');
-const [openFilter, setOpenFilter] = useState(false);
-const [closeFilter,setCloseFilter] = useState(false);
-const handleSelectedValues = (fieldName, option) => {
-    SetSelectedValues((prevSelectedOptions) => ({
-      ...prevSelectedOptions,
-      [fieldName]: option,
-    }));
-  };
-  const fieldNames = filterOptions?.map((filterOption) => filterOption.fieldName);
+  const [dropdown,setDropdown]=useState({
 
-  console.log(fieldNames);
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
+  })
 
-const handleOptions = () =>{
-    const newFilterData = {};
+  const [dateError,setDataError]=useState("")
+  const [filters,setFilters]=useState(defaultFilters)
+  const [personName, setPersonName] = React.useState([]);
 
-  // Merge the selected values from Autocomplete components into filterData
-  Object.keys(selectedValues).forEach((fieldName) => {
-    newFilterData[fieldName] = selectedValues[fieldName];
-  });
+  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
+  const [dropdownstatus,setDropdownStatus]=useState([])
 
-  // Add Date Range values to filterData
-  if(dates?.start_date){
-    newFilterData.start_date = formatDateToYYYYMMDD(dates?.start_date)
-  };
-  if(dates?.end_date){
-    newFilterData.end_date = formatDateToYYYYMMDD(dates?.end_date)
-  };
+  const [datesFiledArray,setDatesFiledArray]=useState(
+    [
+      {
+        field:'joining_date',
+        from:'joining_date_from',
+        to:'joining_date_to'
+      },
+      {
+        field:'offer_date',
+        from:'offer_date_from',
+        to:'offer_date_to'
+      }
+    ]
+  )
 
-  // Add the "search" value to filterData
-  if (searchText) {
-    newFilterData.search = searchText;
-  }
-  const hasFilterCriteria = Object.keys(newFilterData).length > 0;
+  const [dropdownFiledArray,setDropdownFiledArray]=useState(
+    [
+      {
+        field:'status',
+        options:[]
+      },
+      {
+        field:'employment_type',
+        options:[]
+      }
+    ]
+  )
 
-//   if (hasFilterCriteria) {
-//     // Call handleFilters with the combined filterData
-//     
-//   } else {
-//     // Handle the case when no filter criteria are provided
-//     // You can decide what to do in this case, such as showing a message or doing nothing.
-//     // For example, you can log a message to the console.
-//     alert('No filter criteria provided');
-//   }
-handleFilters(newFilterData);
-setOpen(false);
-}
-const handleClick=(fieldName)=>{
-    const isPresent = filterOptions.find((filterOption) => filterOption.fieldName === fieldName);
-   if(isPresent)
-   {
-     setOptions(isPresent?.options)
-   }
-}
-const handleFilterCancel = () =>{
-   
-    setSearchText('');
-    SetFilterData([]);
-    setDates({
-        start_date: null,
-        end_date: null,
-    });
-    SetSelectedValues('');
-    handleFilters(filterData)
+
+  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
+  const [datesData,setDatesData]=useState([])
+
+  const [dates,setDates]=useState({
+    joining_date_from:null,
+    joining_date_to:null,
+    offer_date_from:null,
+    offer_date_to:null
+  })
+
+  function formDateDataStructure(){
+
+    return new Promise((resolve) => {
+     
+
+      const arr1={};
+       datesFiledArray.forEach((item,index)=>{  
+         
+        arr1[item.field]={
+          from:dates[item?.from],
+          to:dates[item?.to]
+        }
+
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        
+         
+        //  arr1.push(obj);
+       
+         
+        })
+        setDatesData(arr1);
+        resolve(arr1)
+        
+    })
     
-}
 
-  const [open, setOpen] = useState(false);
+  }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  function formWithDropdown(data){
+
+    return new Promise((resolve) => {
+     
+
+      const arr1={};
+       dropdownFiledArray.forEach((item,index)=>{  
+         
+        if(dropdown[item.field]?.length>0){
+          const arrayOfStrings = dropdown[item.field];
+          const commaSeparatedString = arrayOfStrings.join(', ');
+          data[item.field]=commaSeparatedString;
+        }
+        
+
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        
+         
+        //  arr1.push(obj);
+       
+         
+        })
+        // setDatesData(arr1);
+        resolve(arr1)
+        
+    })
+    
+
+  }
+  
+
+    const [open,setOpen]=useState(false);
+    const [openDateRange,setOpendateRange]=useState(false);
+    const handleClickOpen=()=>{
+      setOpen(true);
+    }
+    const handleClickClose=()=>{
+      setOpen(false)
+    }
+
+
+    const handleChangeDropDown = (event,field) => {
+      const {
+        target: { value },
+      } = event;
+      
+      if(field==="employment_type"){
+        setDropdownEmployemtType(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="status"){
+        setDropdownStatus(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+    
+
+        // On autofill we get a stringified value.
+        
+      
+        console.log(value);
+     // console.log( typeof value === 'string' ? value.split(',') : value,)
+    };
+
+    const handleApply=async()=>{
+      setDatesData([]);
+      const data = await formDateDataStructure();
+      const data1=await formWithDropdown(data);
+      console.log(data,';;;')
+
+      
+    }
+    
+
   
     return (
         <>
@@ -136,76 +267,176 @@ const handleFilterCancel = () =>{
       </Button>
 
       </Stack>
+      <Grid md={8} xs={12}>
+
+        <TextField placeholder='Search....' 
+        // onChange={handleSeacrch}
+        
+        />
+      </Grid>
       <BootstrapDialog
-        onClose={handleClose}
+        onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
 
       >
+        
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
         <DialogContent sx={{mt:0,paddingBottom:0}}>
-        <Grid container spacing={1} style={{margin:'1rem'}}>
-       
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-<LocalizationProvider dateAdapter={AdapterDayjs}>
+
+          
+
+          <Grid>
+
+                <Grid>
+            <Typography>Joining Date</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
                     <DatePicker
-                     
-                      placeholder="Start Date"
-                      value={dates?.start_date}
-                      defaultValue={dates?.start_date}
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.joining_date_from}
+                      defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          start_date: newValue,
+                          joining_date_from: newValue,
                         }));
                       }}
                     />
+                  </DemoContainer>
                 </LocalizationProvider>
-        </Grid>
-    
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
                     <DatePicker
-                      placeholder="End Date"
-                      value={dates?.end_date}
-                      defaultValue={dates?.end_date}
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.joining_date_to}
+                      defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          end_date: newValue,
+                          joining_date_to: newValue,
                         }));
                       }}
                     />
-          </LocalizationProvider>
-          </Grid>
-       
-           <>
-           {filterOptions?.map((item,index)=>(
-           <Grid item xs={12} sm={6} md={6} lg={6} >
-           <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={filterOptions[index]?.options}
-              value={selectedValues[filterOptions[index]?.fieldName] || null}
-            onChange={(event, newValue) => {
-                handleSelectedValues(filterOptions[index]?.fieldName, newValue);
-            }}
-              sx={{zIndex: 9999}}
-                renderInput={(params) => <TextField {...params} label={filterOptions[index]?.fieldName} sx={{width:"240px"}}/>}
-            />
-        </Grid>
-           ))}
-           </>
-       
-    </Grid>
-    <div style={{width:"100%",textAlign:"right",display:"block",paddingRight:"2rem",paddingBottom:0}} >
-       <Button onClick={handleOptions} style={{backgroundColor:"#3B82F6",color:"white",marginRight:5}}>Apply</Button>
-          <Button onClick={handleFilterCancel} style={{backgroundColor:"#cc0000",color:"white"}}>Reset</Button>
-       </div>
-    </DialogContent>
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+                </Grid>
+                <Grid marginTop={2}>
+            <Typography>Offer Date</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.offer_date_from}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          offer_date_from: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.offer_date_to}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          offer_date_to: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+                </Grid>
+
+                <Grid>
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownstatus}
+                  onChange={(e)=>handleChangeDropDown(e,'status')}
+                  input={<OutlinedInput label="Status" />}
+                  MenuProps={MenuProps}
+                >
+                  {names.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_2"
+                  id="demo-multiple-status_2"
+                  multiple
+                  value={dropdownEmployemtType}
+                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
+                  input={<OutlinedInput label="Employemt Type" />}
+                  MenuProps={MenuProps}
+                >
+                  {names.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
+               </Grid>
+
+
+           
+         </DialogContent>
+         <Button onClick={()=>{handleApply()}}>Apply</Button>
    
     </BootstrapDialog>
     </>

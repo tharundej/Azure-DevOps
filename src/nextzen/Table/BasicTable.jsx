@@ -72,8 +72,8 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
-
+const BasicTable = ({ endpoint, defaultPayload ,headerData,filterOptions,Sea}) => {
+  const Se1="SearchFilter"
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
  console.log(initialDefaultPayload,"initialDefaultPayload====================")
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
@@ -115,7 +115,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      url:`https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/listProject`,
+      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       },
@@ -295,12 +296,18 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   }
   
-
+ 
   
   return (
     <>
+    {console.log(filterOptions,'filterOptionsfilterOptions')}
+
+    
+   <SearchFilter/>
+
+
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <SearchFilter  handleFilters={handleFIlterOptions}/>
+     
         <Card>
           {/* <CardContent> */}
         
@@ -448,6 +455,12 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
   headerData: PropTypes.any,
+};
+BasicTable.propTypes = {
+  filterOptions: PropTypes.object,
+};
+BasicTable.propTypes = {
+Sea: PropTypes.string,
 };
 // BasicTable.propTypes = {
 //   handleClickEvent: PropTypes.func
