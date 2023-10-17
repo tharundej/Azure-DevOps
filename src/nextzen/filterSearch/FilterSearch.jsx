@@ -242,11 +242,11 @@ SearchFilter.propTypes = {
   handleFilters: PropTypes.any,
 };
 
-SearchFilter.propTypes = {
-  filterOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      fieldName: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.string),
-    })
-  ),
-};
+SearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

@@ -73,10 +73,11 @@ const defaultFilters = {
 const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
+ console.log(initialDefaultPayload,"initialDefaultPayload====================")
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
   const countValue = initialDefaultPayload?.Count;
-  console.log(countValue,"initialDefaultPayload------")
+  console.log(countValue,"initialDefaultPayload count value------")
 const [filterHeaders, setFilterHeaders]=useState([])
   const pageSize = 1;
   const [page, setPage] = useState(1);
@@ -274,9 +275,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
     : '';
 
-  // const displayValue = selectedRange && selectedRange.length === 2
-  //   ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}`
-  //   : '';
+  
 
   const handleFIlterOptions=(data)=>{
     console.log(data)
@@ -299,9 +298,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <SearchFilter  handleFilters={handleFIlterOptions}/>
         <Card>
           {/* <CardContent> */}
-          <SearchFilter  handleFilters={handleFIlterOptions}/>
+        
         
           {/* </CardContent> */}
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
@@ -375,6 +375,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
             
             page={initialDefaultPayload?.Page}
             rowsPerPage={initialDefaultPayload?.Count}
+            // rowsPerPage={25}
             onPageChange={onPageChangeHandeler}
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
           // dense={table.dense}
