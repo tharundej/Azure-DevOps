@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import {BasicTable} from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
 import ReusableTabs from '../tabs/ReusableTabs';
-
 import PaySchedule from './payschedule/PaySchedule';
 import Payrun from './Payrun/Payrun';
 import CreatePayRun from './CreatePayRun/CreatePayRun';
@@ -54,7 +53,6 @@ const bull = (
 //       </Card>
 //   );
 // }
-const isCreatePayrun=false;
 export default function BasicCard() {
 const [show ,setShow] = useState(true)
 const [payRunView, setPayRunView] = useState(1)
@@ -75,7 +73,7 @@ setShow(true)
     <div>
       <PaySchedule/>
     </div>,
-    <div>
+    <div >
       {
         payRunView === 1 && <Payrun  handleCreatePayrun = {() => handleCreatePayrun(2)}/>
       }

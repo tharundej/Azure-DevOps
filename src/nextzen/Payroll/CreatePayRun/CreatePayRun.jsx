@@ -101,6 +101,64 @@ grosspay:"40000",
       medicalAllowance:"2000"
 
     },
+    {
+
+      employeeType: "Permanent",
+      employeeName: "benak",
+      employeeid:"123",
+      salaryMonth:"August",
+      CTCOfYear:"4,80,000",
+      CTCOfMonth:"40,000",
+      basicofMonth:"16,000",
+
+      basicPay: "32000",
+
+      hra: "20000",
+
+      da: "1400",
+      lta:"1600",
+      specialAllowance:"2000",
+
+      employeePf:"2000",
+conveyanceAllowance:"7400",
+professionalTax:"250",
+esic:"1000",
+grosspay:"40000",
+      employerPf:"2000",
+
+      tds:"1800",
+      medicalAllowance:"2000"
+
+    },
+    {
+
+      employeeType: "Permanent",
+      employeeName: "benak",
+      employeeid:"123",
+      salaryMonth:"August",
+      CTCOfYear:"4,80,000",
+      CTCOfMonth:"40,000",
+      basicofMonth:"16,000",
+
+      basicPay: "32000",
+
+      hra: "20000",
+
+      da: "1400",
+      lta:"1600",
+      specialAllowance:"2000",
+
+      employeePf:"2000",
+conveyanceAllowance:"7400",
+professionalTax:"250",
+esic:"1000",
+grosspay:"40000",
+      employerPf:"2000",
+
+      tds:"1800",
+      medicalAllowance:"2000"
+
+    },
 
   ];
   const [personName, setPersonName] = React.useState();
@@ -119,26 +177,27 @@ grosspay:"40000",
         <Grid item>
           <Paper
             elevation={0}
-            style={{ padding: '20px', width: '426px', backgroundColor: '#D9D9D9' }}
+            style={{ padding: '20px', width: '426px', backgroundColor: '#D9D9D9',height:'160px' }}
           >
             <Typography>
-              <span style={{ color: '#7D7878' }}>Period:</span>{' '}
-              <span style={{ color: '#000000' }}> 01/08/2023 To 31/08/2023</span>
+              <span style={{ color: '#7D7878',fontWeight:'bold' , fontSize: '1rem' }}>Period:</span>{' '}
+              <span style={{ color: '#000000', fontSize: '1rem' }}> 01/08/2023 To 31/08/2023</span>
             </Typography>
             <Grid container spacing={2} style={{ marginTop: '23px', marginBottom: '36px' }}>
               <Grid item xs={4} alignItems="flex-start">
                 <Grid
                   container
                   direction="column"
-                  spacing={2}
+                  spacing={0}
                   alignItems="center"
-                  style={{ paddingTop: ' 0px !important' }}
+                  
+                  style={{ paddingTop: '0px !important' }}
                 >
-                  <Grid item>
-                    <Typography style={{ color: '#7D7878' }}>11,34,023.09</Typography>
+                  <Grid item >
+                    <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>11,34,023.09</Typography>
                   </Grid>
                   <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography style={{ color: '#000000' }}>PAYROLL COST</Typography>
+                    <Typography style={{ color: '#7D7878' ,fontWeight:'bold', fontSize: '0.9rem'}}>PAYROLL COST</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -146,10 +205,10 @@ grosspay:"40000",
               <Grid item xs={8} justifyContent="flex-start">
                 <Grid container direction="column" spacing={2} alignItems="center">
                   <Grid item>
-                    <Typography style={{ color: '#7D7878' }}>11,34,023.99</Typography>
+                    <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>11,34,023.99</Typography>
                   </Grid>
                   <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography style={{ color: '#000000' }}>EMPLOYEE’S GROSS PAY</Typography>
+                    <Typography style={{ color: '#7D7878' ,fontWeight:'bold', fontSize: '0.9rem'}}>EMPLOYEE’S GROSS PAY</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -162,24 +221,24 @@ grosspay:"40000",
             style={{
               padding: '20px',
               border: '2px solid #D9D9D9',
-              height: '189px',
+              height: '162px',
               width: '200px',
             }}
           >
-            <Grid container spacing={2} alignItems="center" justifyContent="center">
+            <Grid container spacing={2} alignItems="center" justifyContent="center" >
               {/* Typography components */}
-              <Grid item xs={12}>
-                <Typography align="center">PAY DAY</Typography>
+              <Grid item xs={12} >
+                <Typography align="center" style={{color: '#7D7878', fontWeight:'bold' }}>PAY DAY</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0 }} className="override-grid-padding">
                 <Typography variant="h6" align="center">
                   31
                 </Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0 ,color: '#7D7878'}} className="override-grid-padding">
                 <Typography align="center">AUG, 2023</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0,color: '#7D7878' }} className="override-grid-padding">
                 <Typography align="center">200 Employees</Typography>
               </Grid>
             </Grid>
@@ -187,12 +246,12 @@ grosspay:"40000",
         </Grid>
 
         <Grid item>
-          <Paper elevation={0} style={{ width: '351px' }}>
-            <Grid container spacing={2} style={{ marginTop: '23px', marginBottom: '36px' }}>
+          <Paper elevation={0} style={{ width: '351px',height:'70px' }}>
+            <Grid container spacing={2} style={{ marginTop: '5px', marginBottom: '36px' }}>
               <Grid item xs={12} alignItems="flex-start">
                 <Grid container direction="row" spacing={2} alignItems="center">
                   <Grid item xs={6}>
-                    <Typography style={{ color: '#7D7878' }}>Tax & Deductions</Typography>
+                    <Typography style={{ color: '#000000',fontWeight:'bold' }}>Tax & Deductions</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -205,7 +264,9 @@ grosspay:"40000",
                   alignItems="center"
                   justifyContent="flex-end"
                 >
-                  <Grid item xs={6} />
+                  <Grid item xs={6}>
+                    <Typography style={{ color: '#7D7878' }}>Taxes</Typography>
+                  </Grid>
 
                   <Grid item xs={6}>
                     <Typography style={{ color: '#000000' }}>11,34,023.09</Typography>
