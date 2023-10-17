@@ -134,23 +134,23 @@ export default function CalculateEarningsAndDeductions() {
             style={{ padding: '20px', width: '426px', backgroundColor: '#D9D9D9',height:'160px' }}
           >
             <Typography>
-              <span style={{ color: '#000000',fontWeight: 'bold' }}>Period:</span>{' '}
-              <span style={{ color: '#000000' }}> 01/08/2023 To 31/08/2023</span>
+              <span style={{color: '#7D7878',fontWeight:'bold' , fontSize: '1rem' }}>Period:</span>{' '}
+              <span style={{ color: '#000000', fontSize: '1rem' }}> 01/08/2023 To 31/08/2023</span>
             </Typography>
             <Grid container spacing={2} style={{ marginTop: '23px', marginBottom: '36px' }}>
               <Grid item xs={4} alignItems="flex-start">
                 <Grid
                   container
                   direction="column"
-                  spacing={2}
+                  spacing={0}
                   alignItems="center"
                   style={{ paddingTop: ' 0px !important' }}
                 >
                   <Grid item>
-                    <Typography style={{ color: '#000000' }}>11,34,023.09</Typography>
+                    <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>11,34,023.09</Typography>
                   </Grid>
                   <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography style={{ color: '#000000' ,fontWeight:'bold'}}>PAYROLL COST</Typography>
+                    <Typography style={{ color: '#7D7878' ,fontWeight:'bold', fontSize: '0.9rem'}}>PAYROLL COST</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -158,10 +158,10 @@ export default function CalculateEarningsAndDeductions() {
               <Grid item xs={8} justifyContent="flex-start">
                 <Grid container direction="column" spacing={2} alignItems="center">
                   <Grid item>
-                    <Typography style={{ color: '#000000' }}>11,34,023.99</Typography>
+                    <Typography style={{ color: '#000000' , fontSize: '0.9rem'}}>11,34,023.99</Typography>
                   </Grid>
                   <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography style={{ color: '#000000' ,fontWeight:'bold'}}>EMPLOYEE’S GROSS PAY</Typography>
+                    <Typography style={{ color: '#7D7878' ,fontWeight:'bold', fontSize: '0.9rem'}}>EMPLOYEE’S GROSS PAY</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -174,24 +174,24 @@ export default function CalculateEarningsAndDeductions() {
             style={{
               padding: '20px',
               border: '2px solid #D9D9D9',
-              height: '169px',
+              height: '162px',
               width: '200px',
             }}
           >
             <Grid container spacing={2} alignItems="center" justifyContent="center">
               {/* Typography components */}
               <Grid item xs={12}>
-                <Typography align="center" style={{ color: '#000000' ,fontWeight:'bold'}}>PAY DAY</Typography>
+                <Typography align="center" style={{ color: '#7D7878' ,fontWeight:'bold'}}>PAY DAY</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0 }} className="override-grid-padding">
                 <Typography variant="h6" align="center">
                   31
                 </Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0,color: '#7D7878' }} className="override-grid-padding">
                 <Typography align="center">AUG, 2023</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingTop: 0 ,color: '#7D7878'}} className="override-grid-padding">
                 <Typography align="center">200 Employees</Typography>
               </Grid>
             </Grid>
@@ -200,7 +200,7 @@ export default function CalculateEarningsAndDeductions() {
 
         <Grid item>
           <Paper elevation={0} style={{ width: '351px',height:'70px' }}>
-            <Grid container spacing={2} style={{ marginTop: '23px', marginBottom: '36px' }}>
+            <Grid container spacing={2} style={{ marginTop: '5px', marginBottom: '36px' }}>
               <Grid item xs={12} alignItems="flex-start">
                 <Grid container direction="row" spacing={2} alignItems="center">
                   <Grid item xs={6}>
@@ -349,4 +349,5 @@ export default function CalculateEarningsAndDeductions() {
     </Box>
   );
 }
+
 

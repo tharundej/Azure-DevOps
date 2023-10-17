@@ -1,15 +1,25 @@
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import Dialog from '@mui/material/Dialog';
+import Popover from '@mui/material/Popover';
+import DialogContent from '@mui/material/DialogContent';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -17,10 +27,15 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import Pagination from '@mui/material/Pagination';
 // _mock
 import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
+// datarange 
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -38,7 +53,13 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
+import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
+import Style from "../styles/Style.module.css";
+
+import SearchFilter from '../filterSearch/FilterSearch';
+
+
 
 const defaultFilters = {
   name: '',
@@ -49,9 +70,97 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ headdata, bodydata, rowActions }) => {
-  const TABLE_HEAD = headdata;
-  const _userList = bodydata;
+const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
+
+  const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
+  const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
+  console.log(initialDefaultPayload?.Page,"page value")
+  const countValue = initialDefaultPayload?.Count;
+  console.log(countValue,"initialDefaultPayload------")
+const [filterHeaders, setFilterHeaders]=useState([])
+  const pageSize = 1;
+  const [page, setPage] = useState(1);
+
+  const [totalRecordsCount, setTotalRecordsCount] = useState(0)
+  // const defaultPayloaddata =defaultPayload;
+  //   const endpointdata =endpoint;
+  // const [TABLE_HEAD, setTABLE_HEAD] = useState();
+
+   const TABLE_HEAD = headerData;
+  // const[_userList, set_userList] = useState(bodydata);
+  const [tableData, setTableData] = useState([]);
+
+  const [rowActions, setRowActions] = useState()
+  // console.log(endpointdata,"endpoint urlll")
+  // console.log(defaultPayloaddata,"endpoint urlll")
+
+  useEffect(() => {
+    getTableData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const getTableData = (payload) => {
+
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
+    // if(actionType === 'pageChange'){
+    //   initialDefaultPayloadCopy.Page = data;
+    // }
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      // url: `http://localhost:4001${endpoint}`,
+      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      headers: {
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
+      },
+      data:  initialDefaultPayloadCopy
+
+    };
+
+
+
+    axios.request(config).then((response) => {
+      // // console.log(response?.data?.bodyContent);
+      setTableData(response?.data?.Applied_Leave || []);
+      // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
+      // console.log(response?.data?.data?.bodyContent);
+      // setTableData(response?.data?.data?.bodyContent || []);
+      // setTABLE_HEAD(response?.data?.data?.headerContent || []);
+      setRowActions(response?.data?.actions || []);
+      setFilterHeaders(response?.data?.Filter_Headers || []);
+      setTotalRecordsCount(response?.data?.Total_entry || 0)
+      console.log(response?.data?.Total_entry,"total no of records-->")
+
+      // leave list api
+      console.log("leave list api integration")
+      console.log(response)
+
+      // if(actionType === 'pageChange'){
+      //   // let initialDefaultPayloadCopy = 
+      //   setInitialDefaultPayload((prevData)=>({
+      //     ...prevData, Page:data
+      //   }))
+      // }
+
+    })
+
+      .catch((error) => {
+
+        console.log(error);
+
+      });
+  }
+
+
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  // const currentPageRecords = tableData.slice(startIndex, endIndex);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const table = useTable();
 
@@ -61,32 +170,25 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
 
   const [filters, setFilters] = useState(defaultFilters);
-
+  // const dataFiltered = tableData.slice(startIndex, endIndex);
   const dataFiltered = applyFilter({
     inputData: tableData,
+    // console.log(inputData,"inputData checkingggggggggggg"),
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
-
-
-  const dataInPage = dataFiltered.slice(
-    table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
-  );
 
   const denseHeight = table.dense ? 52 : 72;
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
   const handleFilters = useCallback(
     (name, value) => {
-      table.onResetPage();
+      table?.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -95,33 +197,16 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     [table]
   );
 
-  const handleDeleteRow = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
+  const handleDeleteRow = (event) => {
+    console.log(event)
+  }
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
 
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
 
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+  const handleEditRow = (rowData, eventData) => {
+    console.log(rowData, eventData)
 
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.table.edit(id));
-    },
-    [router]
-  );
+  }
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -130,19 +215,104 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
     [handleFilters]
   );
 
+
+  const onPageChangeHandeler = (event, data) =>{
+
+    const payload = initialDefaultPayload;
+    payload.Page = data;
+    setInitialDefaultPayload(payload)
+    getTableData(payload)
+
+    
+    
+  }
+  const onChangeRowsPerPageHandeler = (event) => {
+    console.log(event)
+    const payload = initialDefaultPayload;
+    payload.Count = event.target.value;
+    payload.Page = 0;
+    setInitialDefaultPayload(payload)
+    getTableData(payload)
+  }
+
+  // Search functionality
+  const handleSearch = (searchTerm) => {
+    const payload = initialDefaultPayload;
+    setInitialDefaultPayload(prevPayload => ({
+      ...prevPayload,
+      Search: searchTerm,
+      // Filter_Headers:
+     
+    }));
+    getTableData(payload)
+  }
+
+
+  
+
+  // daterange picker
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedRange, setSelectedRange] = useState(null);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  const handleDateChange = (newValue) => {
+    console.log("newValue", newValue);
+    setSelectedRange(newValue);
+    // handleClose();
+  };
+
+  const isValidDate = (date) => date instanceof Date && !Number.isNaN(date);
+
+  const displayValue = selectedRange && isValidDate(selectedRange[0]) && isValidDate(selectedRange[1])
+    ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
+    : '';
+
+  // const displayValue = selectedRange && selectedRange.length === 2
+  //   ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}`
+  //   : '';
+
+  const handleFIlterOptions=(data)=>{
+    console.log(data)
+    const payload = initialDefaultPayload;
+    setInitialDefaultPayload(prevPayload => ({
+      ...prevPayload,
+      // Search: searchTerm,
+      Filter_Headers:data
+     
+    }));
+    getTableData(payload)
+
+    // console.log(payload,"after filter effected")
+    
+
+  }
+  
+
+  
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Card>
+          {/* <CardContent> */}
+          <SearchFilter  handleFilters={handleFIlterOptions}/>
+        
+          {/* </CardContent> */}
           <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
+              numSelected={table?.selected?.length}
+              rowCount={tableData?.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData?.map((row) => row.id)
                 )
               }
               action={
@@ -156,133 +326,131 @@ const BasicTable = ({ headdata, bodydata, rowActions }) => {
 
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
+                {TABLE_HEAD && <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
+                  rowCount={tableData?.length}
+                  numSelected={table?.selected?.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                   rowActions={rowActions || []}
-                />
+                />}
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        headerContent={TABLE_HEAD}
-                        rowActions={rowActions || []}
-                      />
-                    ))}
+              
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      tableData.length
-                    )}
-                  />
+                  <TableBody>
+                    {console.log(tableData)}
+                    {tableData && tableData.length > 0 && tableData
+                     
+                      .map((row) => (
+                        <UserTableRow
+                          key={row.id}
+                          row={row}
+                          selected={table.selected.includes(row.id)}
+                          onSelectRow={() => table.onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onEditRow={(event) => { handleEditRow(row, event) }}
+                          headerContent={TABLE_HEAD}
+                          rowActions={rowActions || []}
+                        />
+                      ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
+
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+              
               </Table>
             </Scrollbar>
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
+            count={totalRecordsCount}
+            // count={countValue}
+            
+            page={initialDefaultPayload?.Page}
+            rowsPerPage={initialDefaultPayload?.Count}
+            onPageChange={onPageChangeHandeler}
+            onRowsPerPageChange={onChangeRowsPerPageHandeler}
+          // dense={table.dense}
+          // onChangeDense={table.onChangeDense}
           />
+          {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
+            <Grid item xs={1.5} >
+              <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
+                   
+            </Grid >
+            <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
+            <Pagination 
+            count={Math.ceil(tableData.length / pageSize)} 
+            // count={10}
+            page={page}
+            onChange={handleChange}
+            shape="rounded"
+            />
+
+            </Grid>
+           
+            </Grid> */}
         </Card>
       </Container>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+     
     </>
   );
 };
 
 function applyFilter({ inputData, comparator, filters }) {
+  // console.log(inputData, "inputData checkingggggggggggg")
   const { name, status, role } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis?.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
+    inputData = inputData?.filter(
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+    inputData = inputData?.filter((user) => user?.status === status);
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData?.filter((user) => role?.includes(user.role));
   }
 
   return inputData;
 }
 
 BasicTable.propTypes = {
-  headdata: PropTypes.object,
+  endpoint: PropTypes.string,
 };
 
 BasicTable.propTypes = {
-  bodydata: PropTypes.object,
+  defaultPayload: PropTypes.object,
 };
 BasicTable.propTypes = {
-  rowActions: PropTypes.any,
+  headerData: PropTypes.any,
 };
+// BasicTable.propTypes = {
+//   handleClickEvent: PropTypes.func
+// };
+
+
+
 
 export { BasicTable };
