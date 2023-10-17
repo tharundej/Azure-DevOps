@@ -1,5 +1,7 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
 
+
+
 import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
@@ -93,15 +95,31 @@ export default function Approveleave(){
           status:'Rejected'
         },
       ];
+
+  const  FilterValues =[
+    {
+      fieldName : "Gender",
+      options : ["Male","Female"]
+    },
+    {
+      fieldName : "Leave Type",
+      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
+    }
+  ]
+
+  const handleValues = (data) => {
+    console.log(data);
+  }
+  
  return (
     <Card >
-    <div style={cardStyle}>
+    {/* <div style={cardStyle}>
     <Grid container spacing={4}>
           <Grid item xs={6} sm={6} md={4} lg={3}>
             <Card sx={{ margin: "8px" }}>
               <div style={cardHeaderStyle}>Pending</div>
               <CardContent style={cardContentStyle}>
-                <Typography variant="h4">10</Typography> {/* Replace with actual count */}
+                <Typography variant="h4">10</Typography> 
               </CardContent>
             </Card>
           </Grid>
@@ -109,34 +127,20 @@ export default function Approveleave(){
             <Card sx={{ margin: "8px" }}>
               <div style={cardHeaderStyle}>Approved</div>
               <CardContent style={cardContentStyle}>
-                <Typography variant="h4">1</Typography> {/* Replace with actual count */}
+                <Typography variant="h4">1</Typography> 
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={6} sm={6} md={4} lg={3}>
-          
-               <TextField
-           sx={{margin:'8px'}}
-            // value={filters.name}
-            // onChange={handleFilterName}
-            
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-              border:'none',
-            }}
-          />
-           
+
           </Grid>
         </Grid>
       </div>
 
-      
-    
+
+
+<SearchFilter filterOptions={FilterValues} handleFilters={handleValues}/>
+       */}
        <BasicTable  
          headdata={TABLE_HEAD}
         bodydata={bodyContent}

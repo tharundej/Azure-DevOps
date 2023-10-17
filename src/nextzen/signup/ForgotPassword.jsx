@@ -19,6 +19,7 @@ import { PasswordIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import axios from 'axios';
+import { CardContent } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -70,8 +71,10 @@ export default function AmplifyForgotPasswordView() {
   });
 
   const renderForm = (
-    <Stack spacing={3} alignItems="center">
-      <RHFTextField name="email" label="Email address" />
+    <Stack spacing={3} alignItems="center" sx={{maxWidth: '400px',
+    mx: 'auto', // Center horizontally
+    my: 'auto',}} >
+      <RHFTextField name="email" label="Email address"  />
 
       <LoadingButton
         // fullWidth
@@ -108,7 +111,7 @@ export default function AmplifyForgotPasswordView() {
           <Typography variant="h3">Forgot your password?</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Please enter the email address to request a OTP to Verify and Reset your Password.
+          Please enter your email to request a password reset OTP.
           </Typography>
         </Grid>
       </Stack>
@@ -116,10 +119,12 @@ export default function AmplifyForgotPasswordView() {
   );
 
   return (
+    <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
       {renderForm}
     </FormProvider>
+    </CardContent>
   );
 }

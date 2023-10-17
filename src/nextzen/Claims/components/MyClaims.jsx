@@ -55,7 +55,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 
-export default function UserListPage({ currentUser }) {
+export default function MyClaims({ currentUser }) {
 
   // const defaultPayload = {
   //   "count":5,
@@ -63,6 +63,7 @@ export default function UserListPage({ currentUser }) {
   // }
   const TABLE_HEAD = [
     {
+      // id: "name",
       id: "employee",
       label: " Employee Name",
       width: 180,
@@ -82,25 +83,33 @@ export default function UserListPage({ currentUser }) {
 
   const defaultPayload={
 
-    "Count": 3,
+    "Count": 5,
 
-    "Page": 0,
+    "page": 0,
 
-    "Search": "",
+    "search": "",
 
-    "Eid": "E1",
+    "eid": "E2",
 
-    "fFromDate": "",
+"externalFilters":{
+
+    "fFromDate": "2023-10-23",
 
     "fToDate": "",
 
     "fLeaveTypeName": "",
 
-    "fStatus": "",
+    "fStatus": ""
 
-    "order":1,
+},
+
+"sort": {
+
+    "key":1,
 
     "orderBy":"al.apply_date"
+
+}
 
 }
   
@@ -270,7 +279,7 @@ export default function UserListPage({ currentUser }) {
       >
         <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Applly All Claims</DialogTitle>
+          <DialogTitle>Apply All Claims</DialogTitle>
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -442,7 +451,7 @@ export default function UserListPage({ currentUser }) {
     </>
   );
 }
-UserListPage.propTypes = {
+MyClaims.propTypes = {
   currentUser: PropTypes.object,
 };
 
