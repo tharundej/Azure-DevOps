@@ -21,6 +21,14 @@ import axios from 'axios';
 
 export default function EmployeeTable() {
 
+  const actions = [
+
+    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+    { name: "View", icon: "hh", id: 'view' },
+    { name: "Edit", icon: "hh", id: 'edit' },
+    { name: "Delete", icon: "hh", id: 'delete' },
+  ];
+
   const [filterOptions,setFilterOptions]=useState({
     dates:[
       {
@@ -162,11 +170,7 @@ export default function EmployeeTable() {
     
   ]);
 
-  const actions = [
-    { name: 'approve', icon: 'hh', path: 'jjj' },
-    { name: 'view', icon: 'hh', path: 'jjj' },
-    { name: 'eerr', icon: 'hh', path: 'jjj' },
-  ];
+
   // const bodyContent = [
   //   {
   //     name: 'ssurendra',
@@ -211,7 +215,7 @@ export default function EmployeeTable() {
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-Sea="SearchFilter"
+rowActions={actions}
  />
     </>
   );

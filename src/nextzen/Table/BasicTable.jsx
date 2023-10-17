@@ -23,6 +23,10 @@ import DialogContent from '@mui/material/DialogContent';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -43,6 +47,7 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
+import Paper from '@mui/material/Paper';
 import {
   useTable,
   getComparator,
@@ -59,6 +64,7 @@ import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 import Style from "../styles/Style.module.css";
 
+
 import SearchFilter from '../filterSearch/FilterSearch';
 
 
@@ -72,10 +78,14 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData,filterOptions,Sea}) => {
-  const Se1="SearchFilter"
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions}) => {
+  const popover = usePopover();
+  
+
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
  console.log(initialDefaultPayload,"initialDefaultPayload====================")
+//  console.log(actions,"actions==......")
+//  console.log(onclickActions(),"onclickActions  function --->")
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
   const countValue = initialDefaultPayload?.Count;
@@ -93,11 +103,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // const[_userList, set_userList] = useState(bodydata);
   const [tableData, setTableData] = useState([]);
 
-  const [rowActions, setRowActions] = useState()
+  // const [rowActions, setRowActions] = useState(actions);
   // console.log(endpointdata,"endpoint urlll")
   // console.log(defaultPayloaddata,"endpoint urlll")
 
   useEffect(() => {
+    // onclickActions();
     getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -115,8 +126,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url:`https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/listProject`,
-      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       },
@@ -128,14 +138,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
-      setTableData(response?.data?.Applied_Leave || []);
+      setTableData(response?.data?.appliedLeave || []);
       // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
       // console.log(response?.data?.data?.bodyContent);
       // setTableData(response?.data?.data?.bodyContent || []);
       // setTABLE_HEAD(response?.data?.data?.headerContent || []);
-      setRowActions(response?.data?.actions || []);
-      setFilterHeaders(response?.data?.Filter_Headers || []);
-      setTotalRecordsCount(response?.data?.Total_entry || 0)
+      // setRowActions(response?.data?.actions || []);
+      setFilterHeaders(response?.data?.filterHeaders || []);
+      setTotalRecordsCount(response?.data?.totalEntry || 0)
       console.log(response?.data?.Total_entry,"total no of records-->")
 
       // leave list api
@@ -207,8 +217,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
 
 
-  const handleEditRow = (rowData, eventData) => {
-    console.log(rowData, eventData)
+  const handleEditRow = (rowData) => {
+    // console.log(rowData, eventData)
+
+
+    
 
   }
 
@@ -223,7 +236,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const onPageChangeHandeler = (event, data) =>{
 
     const payload = initialDefaultPayload;
-    payload.Page = data;
+    payload.page = data;
     setInitialDefaultPayload(payload)
     getTableData(payload)
 
@@ -233,8 +246,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
-    payload.Count = event.target.value;
-    payload.Page = 0;
+    payload.count = event.target.value;
+    payload.page = 0;
     setInitialDefaultPayload(payload)
     getTableData(payload)
   }
@@ -244,7 +257,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
-      Search: searchTerm,
+      search: searchTerm,
       // Filter_Headers:
      
     }));
@@ -296,24 +309,16 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   }
   
- 
+
   
   return (
     <>
-    {console.log(filterOptions,'filterOptionsfilterOptions')}
-
-    
-   <SearchFilter/>
-
-
+      <SearchFilter />
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-     
+    
         <Card>
-          {/* <CardContent> */}
-        
-        
-          {/* </CardContent> */}
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+       
+          <TableContainer   sx={{ position: "relative", overflow: "unset"  }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table?.selected?.length}
@@ -334,7 +339,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
                 {TABLE_HEAD && <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -354,10 +359,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
               
 
                   <TableBody>
+                 
+                          
+        
                     {console.log(tableData)}
                     {tableData && tableData.length > 0 && tableData
                      
                       .map((row) => (
+                        <>
                         <UserTableRow
                           key={row.id}
                           row={row}
@@ -368,7 +377,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
                           headerContent={TABLE_HEAD}
                           rowActions={rowActions || []}
                         />
+                       
+
+
+                        </>
                       ))}
+        
 
 
                     <TableNoData notFound={notFound} />
@@ -382,13 +396,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
             count={totalRecordsCount}
             // count={countValue}
             
-            page={initialDefaultPayload?.Page}
-            rowsPerPage={initialDefaultPayload?.Count}
+            page={initialDefaultPayload?.page}
+            rowsPerPage={initialDefaultPayload?.count}
             // rowsPerPage={25}
             onPageChange={onPageChangeHandeler}
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
-          // dense={table.dense}
-          // onChangeDense={table.onChangeDense}
+          dense={table.dense}
+          onChangeDense={table.onChangeDense}
           />
           {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
@@ -456,15 +470,13 @@ BasicTable.propTypes = {
 BasicTable.propTypes = {
   headerData: PropTypes.any,
 };
-BasicTable.propTypes = {
-  filterOptions: PropTypes.object,
-};
-BasicTable.propTypes = {
-Sea: PropTypes.string,
-};
+
 // BasicTable.propTypes = {
-//   handleClickEvent: PropTypes.func
+//   onclickActions: PropTypes.func,
 // };
+BasicTable.propTypes = {
+   rowActions: PropTypes.func
+};
 
 
 
