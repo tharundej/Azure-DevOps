@@ -140,7 +140,7 @@ export default function EducationInformation({ currentUser }) {
 
 }
   return (
-    <Stack>
+    <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -231,7 +231,7 @@ export default function EducationInformation({ currentUser }) {
             </Grid>
           ))}
         </>
-
+          <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
           color="primary"
@@ -239,9 +239,10 @@ export default function EducationInformation({ currentUser }) {
             handleAdd();
           }}
         >
-          Add
+          Add Education
         </Button>
-        <Button
+        </Grid>
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -249,7 +250,7 @@ export default function EducationInformation({ currentUser }) {
           }}
         >
           Submit
-        </Button>
+        </Button> */}
       </form>
     </Stack>
   );

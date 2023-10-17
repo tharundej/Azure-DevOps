@@ -287,7 +287,7 @@ export default function PreviousWorkDetails({ currentUser }) {
             </Grid>
           ))}
         
-
+        <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
           color="primary"
@@ -295,9 +295,10 @@ export default function PreviousWorkDetails({ currentUser }) {
             handleAdd();
           }}
         >
-          Add
+          Add Experience
         </Button>
-        <Button
+        </Grid>
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -305,7 +306,7 @@ export default function PreviousWorkDetails({ currentUser }) {
           }}
         >
           Submit
-        </Button>
+        </Button> */}
       </form>
     </Stack>
   );

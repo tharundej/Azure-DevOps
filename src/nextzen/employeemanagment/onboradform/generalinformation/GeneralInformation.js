@@ -168,11 +168,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,'aaa');
+    console.log(data,'general information');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      data.company_id = 'comp1';
+      data.company_name = 'DXC';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
@@ -180,7 +180,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
       
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -321,7 +321,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="last_name" label="Last Name " />
                 <RHFTextField name="email_id" label="Email Id " />
                 <RHFTextField name="contact_number" label="Contact Number " />
-                <RHFTextField name="emergency_contact_number" label="Emergency COntact Number " />
+                <RHFTextField name="emergency_contact_number" label="Emergency Contact Number " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -381,8 +381,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="p_city" label="City " />
                 <RHFTextField name="p_state" label="State " />
                 <RHFTextField name="p_pincode" label="Pincode " />
-                <RHFTextField name="r_address_line1" label="Resendial Address Line1 " />
-                <RHFTextField name="r_address_line2" label="Resendial Address Line2 " />
+                <RHFTextField name="r_address_line1" label="Resendial Address Line1" />
+                <RHFTextField name="r_address_line2" label="Resendial Address Line2" />
                 <RHFTextField name="r_city" label="Resendial City " />
                 <RHFTextField name="r_state" label="Resendial State " />
                 <RHFTextField name="r_pincode" label="Resendial Pincode" />

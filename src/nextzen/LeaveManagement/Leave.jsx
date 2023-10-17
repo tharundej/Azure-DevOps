@@ -42,13 +42,8 @@ export default function BasicCard() {
   ];
 
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Leave management
-        </Typography> */}
-      </CardContent>
+    
       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    </Card>
+
   );
 }

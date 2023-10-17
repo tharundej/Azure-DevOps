@@ -14,7 +14,7 @@ import { useState, useEffect, useCallback } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 
-import {Card,Stack,Button,Dialog,Container,Typography,DialogTitle,Tab,Tabs} from '@mui/material';
+import {Card,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Tab,Tabs} from '@mui/material';
 
 // utils
 import { fTimestamp } from 'src/utils/format-time';
@@ -57,20 +57,23 @@ const defaultFilters = {
 // ----------------------------------------------------------------------
 
 const CustomTab = styled(Tab)(({ theme }) => ({
-  borderRadius: '16px',
-  padding: '8px 16px',
-  marginRight: '8px',
-  backgroundColor: "#fff",
-  color: 'black',
+ 
+  padding:"5px",
+  color: "#000",
+  cursor: "pointer",
   '&.Mui-selected': {
-    backgroundColor: "black",
-  },
-  '&.MuiTab-root': {
-    borderBottom: 'none', 
+    backgroundColor: "#DFEBFE",
+    borderRadius:"0.5rem",
+    color:"#3B82F6"
   },
   '&:first-child': {
-    marginLeft: '6px', // Add left margin to the first tab
+    marginLeft: '8px', // Add left margin to the first tab
   },
+  // '&.Mui-hover': {
+  //   backgroundColor: "#EEEEEE",
+  //   borderRadius:"0.5rem",
+  //   color:"#637381"
+  // },
 }));
 
 export default function CalendarView() {
@@ -161,72 +164,35 @@ export default function CalendarView() {
     setTabIndex(value);
   }
 
+  const historydata = [
+    {
+      appliedleave:"AL",
+      from_date:"31-10-2023",
+      to_date:"02-11-2023",
+      no_of_days:"3",
+      day_span:"Full Day",
+      leave_reason:"Due to some Personal Work not able to attend the office.",
+      leave_status:"Approved",
+    },
+    {
+      appliedleave:"SL",
+      from_date:"31-10-2023",
+      to_date:"02-11-2023",
+      no_of_days:"3",
+      day_span:"Full Day",
+      leave_reason:"Due to some Personal Work not able to attend the office.",
+      leave_status:"Approved",
+    }
+  ]
+
   return (
     <>
 
     <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary"  TabIndicatorProps={{ style: { display: 'none' } }} sx={{marginTop:"5px"}}>
-      <Tab label="Leave Request" 
-    sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}
-    />
-      <Tab label="History"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
-      <Tab label="Pending"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
-      <Tab label="Approved"  sx={{
-      marginLeft: "8px",
-      padding:"5px",
-      color: "#000",
-      cursor: "pointer",
-      '&.Mui-selected': {
-        backgroundColor: "#2196f3",
-        borderRadius:"0.5rem",
-      },
-      '&:hover': {
-        backgroundColor: "#757de8",
-        borderRadius:"0.5rem",
-        color:"black"
-      },
-    }}/>
+    <CustomTab label="Leave Request" />
+      <CustomTab label="History"  />
+      <CustomTab label="Pending" />
+      <CustomTab label="Approved" />
     </Tabs>
   <br/>
     {(tabIndex===0) && <>
@@ -339,7 +305,25 @@ export default function CalendarView() {
       />
       </>}
       {(tabIndex === 1) &&<>
-      History
+    <Card>
+      <CardContent>
+                {
+                  historydata?.map((itm) => (
+                   
+                      <Card >
+                        <CardContent >
+                          <Typography><span style={{fontWeight:500}}>Applied Leave:</span> {itm?.appliedleave}</Typography>
+                          <Typography><span>No of leave day(s):</span> {itm?.no_of_days}</Typography>
+                          <Typography><span>Day Span:</span> {itm?.day_span}</Typography>
+                          <Typography><span>Leave Reason:</span> {itm?.leave_reason}</Typography>
+                          <Typography><span>Leave Status:</span> {itm?.leave_status}</Typography>
+                        </CardContent>
+                      </Card>
+                    )
+                  )
+                }
+      </CardContent>
+    </Card>
       </>}
       {(tabIndex ===2) && <>Pending</>}
       {(tabIndex===3) &&<>Approved</>}

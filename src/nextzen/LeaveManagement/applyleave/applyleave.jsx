@@ -101,7 +101,9 @@ export default function Applyleave(){
     // };
  
     return (
-        <Grid style={{margin:'0.5rem'}}>
+       
+       <Card>
+       <Grid style={{margin:'0.5rem'}}>
     <FormProvider methods={methods} >
     <Grid container spacing={4} >
           <Grid item xs={12} sm={6} md={6} lg={4}>
@@ -222,5 +224,6 @@ export default function Applyleave(){
      </FormProvider> 
            
         </Grid>
+        </Card>
     )
 }

@@ -11,7 +11,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 // employee Management
 
-const EmployeeTable = lazy(() => import('src/nextzen/employeemanagment/employeestable/Employeestable'));
+const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -142,9 +142,9 @@ export const dashboardRoutes = [
       },
 
       {
-        path: 'employeetable',
+        path: 'employeemanagementhome',
         children: [
-          { element: <EmployeeTable />, index: true },
+          { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm /> },
