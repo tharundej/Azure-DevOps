@@ -11,6 +11,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback } from 'react';
+
+import axios from 'axios';
+
 // @mui
 import { useTheme } from '@mui/material/styles';
 
@@ -31,6 +34,8 @@ import Iconify from 'src/components/iconify';
 
 import { useSettingsContext } from 'src/components/settings';
 
+import { BasicTable } from 'src/nextzen/Table/BasicTable';
+
 import { styled } from '@mui/system'; // Import styled from @mui/system
 
 import { useCalendar, useEvent } from '../hooks';
@@ -45,12 +50,13 @@ import CalendarFilters from '../calendar-filters';
 
 import CalendarFiltersResult from '../calendar-filters-result';
 
+
 // ----------------------------------------------------------------------
 
 const defaultFilters = {
   colors: [],
-  startDate: null,
-  endDate: null,
+  from_date: null,
+  to_date: null,
 };
 
 // ----------------------------------------------------------------------
@@ -87,10 +93,13 @@ export default function CalendarView() {
   const [filters, setFilters] = useState(defaultFilters);
 
   const { events, eventsLoading } = useGetEvents();
-console.log(events,"eventtsss")
+
+  console.log(eventsLoading,"event calendar view",events)
+
+
   const dateError =
-    filters.startDate && filters.endDate
-      ? filters.startDate.getTime() > filters.endDate.getTime()
+    filters.from_date && filters.to_date
+      ? filters.from_date.getTime() > filters.to_date.getTime()
       : false;
 
   const {
@@ -136,15 +145,19 @@ console.log(events,"eventtsss")
     setFilters(defaultFilters);
   }, []);
 
-  const canReset = !!filters.colors.length || (!!filters.startDate && !!filters.endDate);
+  const canReset = !!filters.colors.length || (!!filters.from_date && !!filters.to_date);
 
   const dataFiltered = applyFilter({
     inputData: events,
     filters,
     dateError,
   });
-
-console.log(dataFiltered,"filteredtt")
+  const updatedEvents = dataFiltered.map((event) => ({
+    title: event.leavetype_name,
+    start: event.from_date_unix,
+    end: event.to_date_unix,
+  }));
+  
   const renderResults = (
     <CalendarFiltersResult
       filters={filters}
@@ -157,13 +170,16 @@ console.log(dataFiltered,"filteredtt")
       sx={{ mb: { xs: 3, md: 5 } }}
     />
   );
-
+  const timezone = "Asia/Kolkata";
   const [tabIndex, setTabIndex] = useState(0);
-  
+  const [listData,setListData] = useState();
   const handleChange = (event, value) => {
     setTabIndex(value);
   }
-
+  console.log(dataFiltered); // Log event data
+  console.log(view); // Log the current view
+  console.log(updatedEvents,"eventssssssssssssssssssssssssss"); // Log the current date
+  
   const historydata = [
     {
       appliedleave:"AL",
@@ -184,6 +200,38 @@ console.log(dataFiltered,"filteredtt")
       leave_status:"Approved",
     }
   ]
+
+  useEffect(()=>{
+    if(tabIndex===2){
+      PendingApproved(true)
+    }
+    if(tabIndex===3){
+      PendingApproved(false)
+    }
+  },[tabIndex])
+  const PendingApproved =(e)=>{
+    const payload = {
+      employee_id:"ibm2",
+      flag:e
+    }
+    const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/pendingapproved`,
+    data:  payload
+  };
+
+  axios.request(config).then((response) => {
+    console.log(response,"responsssee",response?.data)
+    setListData(response?.data)
+  })
+
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
+
   const [expanded, setExpanded] = useState(Array(historydata?.length).fill(false));
   const [pending,setPending] = useState(Array(historydata?.length).fill(false));
   const [approved,setApproved] = useState(Array(historydata?.length).fill(false));
@@ -204,6 +252,9 @@ const handleApproved=(index)=>{
 }
 
 const dynamicValue = 1;
+
+
+console.log(dataFiltered,"filtereddataa")
   return (
     <>
 
@@ -260,7 +311,7 @@ const dynamicValue = 1;
               initialView={view}
               dayMaxEventRows={3}
               eventDisplay="block"
-              events={dataFiltered}
+              events={updatedEvents}
               headerToolbar={false}
               select={onSelectRange}
               eventClick={onClickEvent}
@@ -278,6 +329,8 @@ const dynamicValue = 1;
                 timeGridPlugin,
                 interactionPlugin,
               ]}
+            timeZone = {timezone}
+               
             />
           </StyledCalendar>
         </Card>
@@ -320,11 +373,11 @@ const dynamicValue = 1;
         colorOptions={CALENDAR_COLOR_OPTIONS}
         onClickEvent={onClickEventInFilters}
       />
-      </>}
-      {(tabIndex === 1) &&<>
-    {/* <Card > */}
-    
-            
+      </>
+      }
+      {(tabIndex === 1) &&
+      <>
+         
                 {
                   historydata?.map((itm,index) => (
                    
@@ -336,7 +389,7 @@ const dynamicValue = 1;
                <Typography>
                 <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
                 <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
+             
               </Typography>
                 <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
                 
@@ -344,9 +397,10 @@ const dynamicValue = 1;
                   </>
                  :<>
                   <Typography >
-                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}
+                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave} <br/>
+                            <span >From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
+               
                   </Typography>
                           <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
                           
@@ -359,23 +413,23 @@ const dynamicValue = 1;
                       </Card>
                     )
                   )
-                }
-     
-    {/* </Card> */}
+               }
+        
       </>}
       {(tabIndex ===2) && <>
                 {
-                  historydata?.map((itm,index) => (
+                  listData?.response?.map((itm,index) => (
                    
                       <Card sx={{margin:"10px"}}>
 
-                        <CardContent >
+                     
+                        <CardContent>
                           
                { (!pending[index])?  <>
                <Typography>
-                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
+                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.Leave_type}  
                 <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handlePending(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
+              
               </Typography>
                 <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
                 
@@ -383,25 +437,27 @@ const dynamicValue = 1;
                   </>
                  :<>
                   <Typography>
-                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}
+                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.Leave_type}<br/>
+                            <span>From : {itm?.From_date} <b>-</b> To : {itm?.To_date}</span>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handlePending(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
                   </Typography>
                           <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
                           
                            </Typography>
-                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.day_span}</Typography>
+                          <Typography><span style={{fontWeight:600}}>Day Span : </span> 
+                         Full Day</Typography>
                           <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.leave_reason}</Typography>
                           <Typography><span style={{fontWeight:600}}>Leave Status : </span> {itm?.leave_status}</Typography>
                           </>}
                         </CardContent>
+                       
                       </Card>
                     )
                   )
                 }</>}
       {(tabIndex===3) &&<>
                 {
-                  historydata?.map((itm,index) => (
+                  listData?.response?.map((itm,index) => (
                    
                       <Card sx={{margin:"10px"}}>
 
@@ -409,9 +465,9 @@ const dynamicValue = 1;
                           
                { (!approved[index])?  <>
                <Typography>
-                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
+                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.Leave_type}
                 <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleApproved(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
+               
               </Typography>
                 <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
                 
@@ -419,14 +475,15 @@ const dynamicValue = 1;
                   </>
                  :<>
                   <Typography >
-                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}
+                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.Leave_type}<br/>
+                            <span>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleApproved(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
-                <span style={{float:"right",marginRight:5}}>From : {itm?.from_date} <b>-</b> To : {itm?.to_date}</span>
+                
                   </Typography>
                           <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
                           
                            </Typography>
-                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.day_span}</Typography>
+                          <Typography><span style={{fontWeight:600}}>Day Span : </span> Full Day</Typography>
                           <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.leave_reason}</Typography>
                           <Typography><span style={{fontWeight:600}}>Leave Status : </span> {itm?.leave_status}</Typography>
                           </>}
@@ -442,7 +499,7 @@ const dynamicValue = 1;
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, filters, dateError }) {
-  const { colors, startDate, endDate } = filters;
+  const { colors, from_date, to_date } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -453,14 +510,14 @@ function applyFilter({ inputData, filters, dateError }) {
   }
 
   if (!dateError) {
-    if (startDate && endDate) {
+    if (from_date && to_date) {
       inputData = inputData.filter(
         (event) =>
-          fTimestamp(event.start) >= fTimestamp(startDate) &&
-          fTimestamp(event.end) <= fTimestamp(endDate)
+          fTimestamp(event.from_date_unix) >= fTimestamp(from_date) &&
+          fTimestamp(event.to_date_unix) <= fTimestamp(to_date)
       );
     }
   }
-
+console.log(inputData,"inputdataaaa")
   return inputData;
 }
