@@ -261,19 +261,27 @@ export default function SearchFilter({handleFilters,filterOptions}){
   
     return (
         <>
-        <Stack sx={{justifyContent:'flex-end',display:"flex",float:"right",alignItems:"flex-end"}}>
+          <Grid container alignItems="center" paddingBottom="10px">
+            <Grid md={8} xs={8} item>
+
+            <TextField placeholder='Search....' 
+            fullWidth
+            // onChange={handleSeacrch}
+
+            />
+            </Grid>
+
+            <Grid md={4} xs={4} item>
+
+        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
       </Button>
 
       </Stack>
-      <Grid md={8} xs={12}>
-
-        <TextField placeholder='Search....' 
-        // onChange={handleSeacrch}
-        
-        />
       </Grid>
+         </Grid>
+     
       <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
