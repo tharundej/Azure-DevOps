@@ -78,7 +78,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData}) => {
   const popover = usePopover();
   
 
@@ -106,6 +106,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // const [rowActions, setRowActions] = useState(actions);
   // console.log(endpointdata,"endpoint urlll")
   // console.log(defaultPayloaddata,"endpoint urlll")
+
+
+  // const bodyData = 'appliedLeave';
 
   useEffect(() => {
     // onclickActions();
@@ -138,7 +141,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
-      setTableData(response?.data?.appliedLeave || []);
+      setTableData(response?.data?.[bodyData]|| []);
       // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
       // console.log(response?.data?.data?.bodyContent);
       // setTableData(response?.data?.data?.bodyContent || []);
@@ -217,8 +220,18 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
 
 
-  const handleEditRow = (rowData) => {
-    // console.log(rowData, eventData)
+  const handleEditRow = (rowData,eventData) => {
+    console.log(rowData, eventData)
+    if (eventData?.type === "serviceCall"){
+      console.log("servce call will called ")
+    }
+    else if (eventData?.type === "edit"){
+
+      console.log("servce call will called for path navigation")
+    }
+    else{
+      console.log("servce call will called for path navigation")
+    }
 
 
     
@@ -471,9 +484,9 @@ BasicTable.propTypes = {
   headerData: PropTypes.any,
 };
 
-// BasicTable.propTypes = {
-//   onclickActions: PropTypes.func,
-// };
+BasicTable.propTypes = {
+  bodyData: PropTypes.func,
+};
 BasicTable.propTypes = {
    rowActions: PropTypes.func
 };
