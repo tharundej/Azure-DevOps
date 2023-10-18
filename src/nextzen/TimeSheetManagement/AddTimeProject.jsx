@@ -45,7 +45,7 @@ export default function AddTimeProject({ currentUser }) {
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-  const [selectedActivity, setSelectedActivity] = useState([]);
+  const [activity_name, setSelectedActivity] = useState([]);
 
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
@@ -58,7 +58,7 @@ export default function AddTimeProject({ currentUser }) {
     // start_date: Yup.string(),
     // end_date: Yup.string(),
     // due_date: Yup.string().required('First Name is Required'),
-    Status: Yup.string(),
+    status: Yup.string(),
    
    
   });
@@ -70,7 +70,7 @@ export default function AddTimeProject({ currentUser }) {
         start_date: currentUser?.start_date || '',
         end_date: currentUser?.end_date || '',
         due_date: currentUser?.due_date || '',
-        Status: currentUser?.Status || '',
+        status: currentUser?.status || '',
   
    
     }),
@@ -108,8 +108,9 @@ const [sendData, setSendData] = useState({
       data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
       data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.selectedActivity = selectedActivity;
+      data.activity_name = activity_name;
       data.company_id = "0001";
+      data.delete =   0;
 
       console.log(data, 'data111ugsghghh');
 
@@ -211,7 +212,7 @@ const [sendData, setSendData] = useState({
                   </DemoContainer>
                 </LocalizationProvider>
                 
-                <RHFTextField name="Status" label="Status" />
+                <RHFTextField name="status" label="status" />
      <Typography sx={{marginLeft:'5px'}}>
         Add Project Activities Here Based on Project Nature ...
      </Typography>
@@ -224,7 +225,7 @@ const [sendData, setSendData] = useState({
         options={top100Films.map((option) => option.title)}
         freeSolo
         onChange={handleSelectChange} // Attach the handleSelectChange function
-        value={selectedActivity} // Pass the selected values
+        value={activity_name} // Pass the selected values
         renderTags={(value1, getTagProps) =>
           value1.map((option, index1) => (
             <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />

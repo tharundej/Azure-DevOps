@@ -11,10 +11,8 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
-import TimeForm from './TimeForm';
 import ReusableTabs from '../tabs/ReusableTabs';
-import './Time.css';
-import AddTimeProject from './AddTimeProject';
+import SalaryAdvanceForm from './SalaryAdvaceForm';
 
 const bull = (
   <Box
@@ -25,13 +23,13 @@ const bull = (
   </Box>
 );
 
-export default function TimeProject() {
+export default function Deduction() {
    
       const TABLE_HEAD = [
 
         {
     
-          id: "project_id",
+          id: "Employe_name",
     
           label: " SL_NO",
     
@@ -45,16 +43,21 @@ export default function TimeProject() {
     
         },
     
-        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
+        { id: "Employe_name", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
+        { id: "Dedution_type", label: "Dedution type", width: 220, type: "text" },
     
-        { id: "Date", label: "Date", width: 180, type: "text" },
+        { id: "Taken_amount", label: "Taken Amount", width: 180, type: "text" },
     
-        { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
-        { id: "status", label: "status", width: 100, type: "text" },
+        { id: "Paid_date", label: "Paid Date", width: 100, type: "text" },
+        { id: "Paid_amount", label: "paid Amount", width: 100, type: "text" },
+        { id: "Instalment_no", label: "Instalment No ", width: 100, type: "text" },
+        { id: "Intrest_rate", label: "Intrest rate", width: 100, type: "text" },
+        { id: "Dedution_from", label: "Dedution From", width: 100, type: "text" },
+        { id: "Dedution_date", label: " Dedution_date", width: 100, type: "text" },
+        { id: "Dedution_amount", label: "Dedution amount ", width: 100, type: "text" },
+        { id: "Balence_amount", label: "Balence amount ", width: 100, type: "text" },
+        { id: "Comment", label: "Comment", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -78,20 +81,24 @@ export default function TimeProject() {
     
           SL_NO: "1",
     
-          Project_Id: "Aswin!23",
+          Employe_name: "Aswin!23",
     
-          Project_Name: "BellErp",
+          Dedution_type: "BellErp",
     
-          Date: "12/12/2023",
+          Taken_amount: "12/12/2023",
     
-          Activity: "Coding",
+          Paid_date: "Coding",
     
           Working_Time: "2hour 40minutes",
 
-          TotalWorking_Time: "122hour 40minutes",
+          Instalment_no: "122hour 40minutes",
 
-          status: "Approved",
-          aswin: "Approved",
+          Intrest_rate: "Intrest_rate",
+          Dedution_from: "Approved",
+          Dedution_date: "Approved",
+          Dedution_amount: "100000",
+          Balence_amount: "20000",
+          Comment: "Approved",
     
         },
     
@@ -115,7 +122,7 @@ export default function TimeProject() {
       
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -126,13 +133,13 @@ export default function TimeProject() {
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}} />
+ <SalaryAdvanceForm currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Add Project</Button>
+  {/* <Button className="button" onClick={handleTimeForm}>Apply Salary Advance</Button> */}
 <Button className="button">Filter</Button>
 <Button className="button">Report</Button>
 </Container>

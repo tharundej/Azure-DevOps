@@ -1,20 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { _userList } from 'src/_mock';
+
 import { useState, useEffect } from 'react';
 import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
-import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
-import TimeForm from './TimeForm';
-import ReusableTabs from '../tabs/ReusableTabs';
-import './Time.css';
-import AddTimeProject from './AddTimeProject';
+
+import ApplyLoan from './ApplyLoan';
 
 const bull = (
   <Box
@@ -25,13 +19,13 @@ const bull = (
   </Box>
 );
 
-export default function TimeProject() {
+export default function Loans() {
    
       const TABLE_HEAD = [
 
         {
     
-          id: "project_id",
+          id: "Employe_name",
     
           label: " SL_NO",
     
@@ -45,16 +39,19 @@ export default function TimeProject() {
     
         },
     
-        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
+        { id: "Employe_name", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
+        { id: "Request_date", label: "request Date", width: 220, type: "text" },
     
-        { id: "Date", label: "Date", width: 180, type: "text" },
+        { id: "Request_amount", label: "Request Amount", width: 180, type: "text" },
     
-        { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
+        { id: "Paid_date", label: "Paid Date", width: 100, type: "text" },
+        { id: "Paid_amount", label: "paid Amount", width: 100, type: "text" },
+        { id: "No_Instalment", label: "No Instalment ", width: 100, type: "text" },
+        { id: "Intrest_rate", label: "Intrest Rate", width: 100, type: "text" },
+        { id: "Approver_name", label: " Approver Name", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
+        { id: "Payment_status", label: "Payment Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -78,19 +75,22 @@ export default function TimeProject() {
     
           SL_NO: "1",
     
-          Project_Id: "Aswin!23",
+          Employe_name: "Aswin!23",
     
-          Project_Name: "BellErp",
+          Request_date: "BellErp",
     
-          Date: "12/12/2023",
+          Request_amount: "12/12/2023",
     
-          Activity: "Coding",
+          Paid_date: "Coding",
     
           Working_Time: "2hour 40minutes",
 
-          TotalWorking_Time: "122hour 40minutes",
+          No_Instalment: "122hour 40minutes",
 
+          Intrest_rate: "Intrest_rate",
+          Approver_name:"aswin",
           status: "Approved",
+          Payment_status: "Approved",
           aswin: "Approved",
     
         },
@@ -126,13 +126,13 @@ export default function TimeProject() {
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}} />
+ <ApplyLoan currentUser={{}} />
       </Dialog>
     )}
 <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Add Project</Button>
+  <Button className="button" onClick={handleTimeForm}>Apply Loan </Button>
 <Button className="button">Filter</Button>
 <Button className="button">Report</Button>
 </Container>

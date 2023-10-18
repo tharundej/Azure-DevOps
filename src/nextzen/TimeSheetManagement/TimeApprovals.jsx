@@ -27,7 +27,7 @@ export default function TimeApprovals() {
       // const TABLE_HEAD = [
       //   { id: 'SL_NO', label: ' SL NO' },
       //   { id: 'Project_Id', label: 'Project Id', width: 180 },
-      //   { id: 'Project_Name', label: 'Project Name', width: 220 },
+      //   { id: 'project_name', label: 'Project Name', width: 220 },
       //   { id: 'Date', label: 'Date', width: 180 },
       //   { id: 'Activity', label: 'Activity', width: 100 },
       //   { id: 'Working_Time', label: 'Working Time', width: 100 },
@@ -53,20 +53,43 @@ export default function TimeApprovals() {
     
         },
     
-        { id: "Employe_Id", label: "Employe Id", width: 180, type: "text" },
-        { id: "Employe_Name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_id", label: "Employe Id", width: 180, type: "text" },
+        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project_Name", width: 220, type: "text" },    
-        { id: "Activity_name", label: "Activity Name", width: 100, type: "text" },
-        { id: "Duration", label: "Duration", width: 100, type: "text" },
-        { id: "Hours_Worked", label: "Hours Worked", width: 100, type: "text" },
+        { id: "project_name", label: "project_name", width: 220, type: "text" },    
+        { id: "activity_name", label: "Activity Name", width: 100, type: "text" },
+        { id: "duration", label: "duration", width: 100, type: "text" },
+        { id: "hours_worked", label: "Hours Worked", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
       ];
     
-     
+     const defaultPayload={
+      
+    "employee_id": "E1",      // Replace with the actual employee ID
+
+    "page": "1",
+
+    "limit": "2",
+
+    "sort_by": "employee_name",  // Replace with the desired sorting field
+
+    "sort_order": "asc",         // Replace with "asc" or "desc"
+
+ 
+
+    "search": "",            // Replace with the search term
+
+    "filter_employee_name": "",  // Replace with the desired filter values
+
+    "filter_project_name": "",
+
+    "filter_activity_name": "",
+
+    "filter_status": ""
+     }
     
       const actions = [
     
@@ -86,18 +109,18 @@ export default function TimeApprovals() {
     
           Project_Id: "Aswin!23",
 
-          Employe_Id: 'Aswi!23',
+          employee_id: 'Aswi!23',
           
-          Employe_Name: "Aswin",
+          employee_name: "Aswin",
 
-          Project_Name: "BellErp",
+          project_name: "BellErp",
 
     
-          Activity_name: "Coding",
+          activity_name: "Coding",
     
-          Duration: "2hour 40minutes",
+          duration: "2hour 40minutes",
 
-          Hours_Worked: "122hour 40minutes",
+          hours_worked: "122hour 40minutes",
 
           status: "Approved",
           
@@ -125,9 +148,11 @@ export default function TimeApprovals() {
 </Container>
     <BasicTable
 
-headdata={TABLE_HEAD}
+headerData={TABLE_HEAD}
 
-bodydata={bodyContent}
+// bodydata={bodyContent}
+defaultPayload={defaultPayload}
+endpoint='timeSheetApprovals'
 
 rowActions={actions}
 

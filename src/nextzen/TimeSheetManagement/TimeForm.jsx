@@ -51,7 +51,7 @@ export default function TimeForm({ currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Employe_id: Yup.string(),
+    employee_id: Yup.string(),
     Employe_Name: Yup.string(),
     Project_Name: Yup.string(),
     Activity_Name: Yup.string(),
@@ -70,7 +70,7 @@ export default function TimeForm({ currentUser }) {
   const defaultValues = useMemo(
     () => ({
    
-      Employe_id: currentUser?.Employe_id || '',
+      employee_id: currentUser?.employee_id || '',
       Employe_Name: currentUser?.Employe_Name || '',
       Project_Name: currentUser?.Project_Name || '',
       Activity_Name: currentUser?.Activity_Name || '',
@@ -155,7 +155,7 @@ export default function TimeForm({ currentUser }) {
                   sm: 'repeat(7, 1fr)',
                 }}
               >
-                <RHFTextField name="Employe_id" label="Employe id  " />
+                <RHFTextField name="employee_id" label="Employe id  " />
                 <RHFTextField name="Employe_Name" label=" Employe Name " />
                 <RHFTextField name="Project_Name" label="Project Name  " />
                 <RHFTextField name="Activity_Name" label="Activity Name " />
