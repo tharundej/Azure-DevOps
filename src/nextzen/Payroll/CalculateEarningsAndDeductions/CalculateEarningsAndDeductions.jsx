@@ -386,7 +386,7 @@ export default function CalculateEarningsAndDeductions() {
       {console.log(bodyContent, 'body content', actions)}
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listLeave"
+        // endpoint="/listLeave"
         defaultPayload={defaultPayload}
         rowActions={actions}
       />
