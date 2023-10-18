@@ -253,7 +253,8 @@ export default function SearchFilter({handleFilters,filterOptions}){
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
       console.log(data,';;;')
-
+      // call parent function and pass it
+      
       
     }
     
