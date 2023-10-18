@@ -105,10 +105,10 @@ export default function RentDetails() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Months</TableCell>
-                  <TableCell>Metro/Non-Metro</TableCell>
-                  <TableCell>Rent Amount</TableCell>
-                  <TableCell>Submitted Amount</TableCell>
+                  <TableCell style={{ width: '25%' }}>Months</TableCell>
+                  <TableCell style={{ width: '25%' }}>Metro/Non-Metro</TableCell>
+                  <TableCell style={{ width: '25%' }}>Rent Amount</TableCell>
+                  <TableCell style={{ width: '25%' }}>Submitted Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
