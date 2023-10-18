@@ -173,7 +173,7 @@ export default function RentDetails() {
 
 {/* Text and Radio Buttons in a single line */}
 <Grid item container direction="row" alignItems="center">
-  <Typography component="span">
+  <Typography component="span"  marginLeft='10px'>
     Whether PAN Of The Landlord Available:
   </Typography>
   <RadioGroup

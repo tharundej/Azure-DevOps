@@ -191,7 +191,7 @@ export default function BasicCard(currentUser) {
 
   return (
     <>
-      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters} />
+      
       <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
