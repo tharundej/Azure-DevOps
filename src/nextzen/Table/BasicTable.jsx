@@ -66,6 +66,9 @@ import Style from "../styles/Style.module.css";
 
 
 import SearchFilter from '../filterSearch/FilterSearch';
+import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+
+
 
 
 
@@ -78,7 +81,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
   const popover = usePopover();
   
 
@@ -305,9 +308,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
     : '';
 
   
-
+const [test, setTest]= useState();
   const handleFIlterOptions=(data)=>{
-    console.log(data)
+    setTest(data)
+    console.log(data,"filtered data")
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
@@ -321,18 +325,20 @@ const [filterHeaders, setFilterHeaders]=useState([])
     
 
   }
+
+  console.log(test,"filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr data")
   
 
   
   return (
     <>
-      
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <SearchFilter />
+      {false && <SearchFilter/>}
+      <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
     
         <Card>
        
-          <TableContainer   sx={{ position: "relative", overflow: "unset"  }}>
+          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table?.selected?.length}
@@ -490,6 +496,9 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
    rowActions: PropTypes.func
+};
+BasicTable.propTypes = {
+  filterName: PropTypes.any
 };
 
 
