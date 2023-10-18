@@ -17,10 +17,10 @@ export default axiosInstance;
 
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-
-  const res = await axiosInstance.get(url, { ...config });
-
-  return res.data;
+  console.log(url,"urlll",args);
+  const res = await axiosInstance.post(url, { ...config });
+console.log(res.data.data,"resdataa")
+  return res.data.data;
 };
 
 // ----------------------------------------------------------------------

@@ -326,8 +326,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
   
   return (
     <>
-      <SearchFilter  handleFilters={handleFIlterOptions}/>
+      
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <SearchFilter />
     
         <Card>
        
