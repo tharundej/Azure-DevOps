@@ -8,7 +8,10 @@ import Typography from '@mui/material/Typography';
 
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
+
 import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
+
+
 import DocumentsUpload from './documentsupoad/DocumentsUpload';
 import CurrentWork from './currentwork/CurrentWork'
 
