@@ -9,15 +9,11 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFTextField,RHFAutocomplete  } from 'src/components/hook-form';
 import dayjs from 'dayjs';
 import './LicPReimum.css'
 
-// const useStyles = makeStyles({
-//   tableHeader: {
-//     backgroundColor: '#2196f3', // Blue color for the header
-//     color: 'white',
-//   },
-// });
 const headings = [
   'S.No',
   'Policy Number',
@@ -33,13 +29,11 @@ const headings = [
   'Action'
 ];
 
-// const createData = () => {
-//   // You can create your rows of data here if needed
-//   return [];
-// };
 
 export default function LicPremium() {
- 
+  const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
+  const treatmentTypes = [{ type: 'No' }, { type: 'Yes' }];
+  const pinjuredPersonDisability = [{ type: 'NA' }, { type: 'No' } , {type:"Yes"}];
   const sampleRows = [
     {
       sno: 1,
@@ -64,8 +58,10 @@ export default function LicPremium() {
   const benak =()=>{
     console.log("testing ")
   }
+  const methods = useForm();
   return (
     <div>
+      <FormProvider {...methods}>
     <Grid container spacing={2} style={{marginTop:"1rem"}}>
                 <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
            <Grid item>
@@ -92,6 +88,19 @@ export default function LicPremium() {
           </Grid>
         </Grid>
       {/* Row 1 */}
+
+      <Grid item container xs={12} spacing={2}>
+        <Grid item xs={6}>
+          {/* <Typography >Policy Number </Typography> */}
+          <TextField label="Name Of The Landloard " variant="outlined" fullWidth />
+        </Grid>
+       
+        <Grid item xs={6}>
+          {/* <Typography >Insured Person Name </Typography> */}
+          <TextField label="Address Of The Landloard" variant="outlined" fullWidth />
+        </Grid>
+      </Grid>
+
       <Grid item container xs={12} spacing={2}>
         <Grid item xs={4}>
           {/* <Typography >Policy Number </Typography> */}
@@ -131,7 +140,11 @@ export default function LicPremium() {
         </Grid>
         <Grid item xs={4}>
           {/* <Typography >RelationShip</Typography> */}
-          <TextField label="RelationShip" variant="outlined" fullWidth />
+          <RHFAutocomplete 
+                  name="payschedule_type"
+                  label="RelationShip "
+                  options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
+                />
         </Grid>
         <Grid item xs={4}>
           {/* <Typography >Premium Amount For Which Proof Attched Now </Typography> */}
@@ -150,14 +163,24 @@ export default function LicPremium() {
         </Grid>
         <Grid item xs={4}>
           {/* <Typography >Treatment For Specific Disease Under 80DDB</Typography> */}
-          <TextField label="Treatment For Specific Disease Under 80DDB" variant="outlined" fullWidth />
+          {/* <TextField label="Treatment For Specific Disease Under 80DDB" variant="outlined" fullWidth /> */}
+          <RHFAutocomplete 
+                  name="treatement_type"
+                  label="Treatment For Specific Disease Under 80DDB"
+                  options={treatmentTypes.map((payscheduleType) => payscheduleType.type)}
+                />
         </Grid>
       </Grid>
 
       <Grid item container xs={12} spacing={2}>
         <Grid item xs={4}>
           {/* <Typography >Does The Injured Person Have Disability under 80U</Typography> */}
-          <TextField label="Does The Injured Person Have Disability under 80U" variant="outlined" fullWidth />
+          {/* <TextField label="Does The Injured Person Have Disability under 80U" variant="outlined" fullWidth /> */}
+          <RHFAutocomplete 
+                  name="pinjuredPersonDisability"
+                  label="Does The Injured Person Have Disability under 80U"
+                  options={pinjuredPersonDisability.map((payscheduleType) => payscheduleType.type)}
+                />
         </Grid>
         {/* <Grid item xs={4}>
           <Typography >Premium Considered For Deduction</Typography>
@@ -240,6 +263,7 @@ export default function LicPremium() {
   
 
 
+    </FormProvider>
 
     </div>
    

@@ -1,25 +1,40 @@
-import { useState ,useEffect } from 'react';
+/* eslint-disable import/no-named-as-default */
+import { useState, useEffect } from 'react';
 import * as React from 'react';
+import * as Yup from 'yup';
 import Box from '@mui/material/Box';
+import PropTypes from 'prop-types';
+import Iconify from 'src/components/iconify';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {BasicTable} from 'src/nextzen/Table/BasicTable';
+import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { _userList } from 'src/_mock';
+import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
+import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import LoadingButton from '@mui/lab/LoadingButton';
+import MenuItem from '@mui/material/MenuItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import { useRouter } from 'src/routes/hooks';
+import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import ReusableTabs from '../tabs/ReusableTabs';
+import SearchFilter from '../filterSearch/FilterSearch';
 import PaySchedule from './payschedule/PaySchedule';
 import Payrun from './Payrun/Payrun';
 import CreatePayRun from './CreatePayRun/CreatePayRun';
 import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions/CalculateEarningsAndDeductions';
-import SearchFilter from '../filterSearch/FilterSearch';
+import GeneralForminfo from './payschedule/GeneralForminfo';
 
 const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
+  <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
   </Box>
 );
@@ -46,91 +61,146 @@ const bull = (
 //       <CardContent>
 //         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
 //           Pay Schedule
-          
+
 //         </Typography>
 //         <BasicTable headdata={TABLE_HEAD} bodydata={_userList}/>
 //       </CardContent>
 //       </Card>
 //   );
 // }
-export default function BasicCard() {
-const [show ,setShow] = useState(true)
-const [payRunView, setPayRunView] = useState(1)
-const handleCreatePayrun = (value) =>{
-  setShow(false);
-  setPayRunView(value)
-}
+export default function BasicCard(currentUser) {
+  const [show, setShow] = useState(true);
+  const [payRunView, setPayRunView] = useState(1);
+  const handleCreatePayrun = (value) => {
+    setShow(false);
+    setPayRunView(value);
+  };
 
-const changeOfTabHandeler = () => {
-  setPayRunView(1)
-}
-useEffect(()=>{
-console.log(" i am called in useEffect")
-setShow(true)
-},[show])
+  const changeOfTabHandeler = () => {
+    setPayRunView(1);
+  };
+  useEffect(() => {
+    console.log(' i am called in useEffect');
+    setShow(true);
+  }, [show]);
   const tabLabels = ['Pay Schedule', 'Pay Run', 'Pay Schedule History'];
   const tabContents = [
     <div>
-      <PaySchedule/>
+      <PaySchedule />
     </div>,
-    <div >
-      {
-        payRunView === 1 && <Payrun  handleCreatePayrun = {() => handleCreatePayrun(2)}/>
-      }
-      {
-        payRunView === 2 && <CreatePayRun  moveToPageFunction = {()=> handleCreatePayrun(3)}/>
-      }
-      {
-        payRunView === 3 && <CalculateEarningsAndDeductions/>
-      }
+    <div>
+      {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} />}
+      {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)} />}
+      {payRunView === 3 && <CalculateEarningsAndDeductions />}
       {/* <CreatePayRun/> */}
     </div>,
     <div>
-      <CalculateEarningsAndDeductions/>
+      <CalculateEarningsAndDeductions />
     </div>,
   ];
   // --- filter
-  const  FilterValues =[
-
+  const FilterValues = [
     {
       id: '1',
 
-      fieldName : "Gender",
+      fieldName: 'Gender',
 
-      options : ["Male","Female"]
-
+      options: ['Male', 'Female'],
     },
 
     {
-      id:'2',
+      id: '2',
 
-      fieldName : "Leave Type",
+      fieldName: 'Leave Type',
 
-      options : ["Annual Leave","Sick Leave","Paid Leave","Casual Leave"]
-
-    }
-
+      options: ['Annual Leave', 'Sick Leave', 'Paid Leave', 'Casual Leave'],
+    },
   ];
-  const handleFilters=(data)=>{
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '75%',
+    height: '50%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  // form related data
+
+  const router = useRouter();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const NewUserSchema = Yup.object().shape({
+    employee_type: Yup.string().required('Employee Type is Required'),
+    payschedule_type: Yup.string().required('Payschedule Type is Required'),
+    pay_type: Yup.string().required('Pay Type is Required'),
+    basic_pay: Yup.number().required('Basic Pay is Required'),
+    hra: Yup.number().required('HRA is Required'),
+    da: Yup.number().required('DA is Required'),
+    employee_pf: Yup.number().required('Employee PF is Required'),
+    employer_pf: Yup.number().required('Employer PF is Required'),
+  });
+
+  const defaultValues = React.useMemo(
+    () => ({
+      employee_type: currentUser?.employee_type || '',
+      payschedule_type: currentUser?.payschedule_type || '',
+      pay_type: currentUser?.pay_type || '',
+      basic_pay: currentUser?.basic_pay || null,
+      hra: currentUser?.hra || null,
+      da: currentUser?.da || null,
+      employee_pf: currentUser?.employee_pf || null,
+      employer_pf: currentUser?.employer_pf || null,
+    }),
+    [currentUser]
+  );
+
+  const methods = useForm({
+    resolver: yupResolver(NewUserSchema),
+    defaultValues,
+  });
+
+  const payscheduleTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
+  //   const m2 = useForm();
+  const payTypes = [
+    { type: 'CTC' },
+    {
+      type: 'CTCs                                                                                ',
+    },
+  ];
+  const {
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log('uyfgv');
+  });
+  const handleFilters = (data) => {
     console.log(data);
-  }
+  };
+
   return (
     <>
-    {/* // <Card sx={{ minWidth: 275 }}> */}
-      <CardContent >
-        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Payroll Management
-          
-        </Typography> */}
-     
       
-       
-      </CardContent>
-      
-      <SearchFilter filterOptions={FilterValues} handleFilters={handleFilters}/>
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} handleCreatePayrun={handleCreatePayrun} changeOfTab={changeOfTabHandeler}/>
-    
-    {/* // </Card> */}
+      <ReusableTabs
+        tabLabels={tabLabels}
+        tabContents={tabContents}
+        handleCreatePayrun={handleCreatePayrun}
+        changeOfTab={changeOfTabHandeler}
+      />
     </>
   );
 }
+BasicCard.prototype = {
+  currentUser: PropTypes.object,
+};

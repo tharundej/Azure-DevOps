@@ -4,6 +4,7 @@ import { Grid } from '@mui/material';
 import GeneralForminfo from './GeneralForminfo';
 
 export default function PayScheduleform() {
+  
     return (
       <Grid>
       {/* <Box sx={{ width: '100%' }}> */}

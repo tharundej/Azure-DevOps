@@ -34,13 +34,15 @@ export default function MyCompoff() {
 
   const defaultPayload={
 
-    "Count": 5,
+    "count": 5,
 
-    "Page": 0,
+    "page": 0,
 
-    "Search": "",
+    "search": "",
 
-    "Eid": "E1",
+    "eid": "E2",
+
+"externalFilters":{
 
     "fFromDate": "",
 
@@ -48,11 +50,17 @@ export default function MyCompoff() {
 
     "fLeaveTypeName": "",
 
-    "fStatus": "",
+    "fStatus": ""
 
-    "order":1,
+},
+
+"sort": {
+
+    "key":1,
 
     "orderBy":"al.apply_date"
+
+}
 
 }
   
@@ -72,16 +80,32 @@ export default function MyCompoff() {
       status: "active",
     },
   ];
+
+  const onclickActions = (event) => {
+    console.log( "my claims from to basic table")
+    console.log(event)
+    if (event && event?.eventData) {
+      if (event?.eventData?.type === 'serviceCall') {
+        // serviceCall(event.eventData.endpoint,event.rowData)
+        
+      } else {
+          // navigate[event.eventData.route]
+      }
+    }
+  }
   return (
     <>
       <Helmet>
         <title> Dashboard: mycompoff</title>
       </Helmet>
+      
 
       <BasicTable
          endpoint="/listLeave"
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
+         rowActions={actions}
+        //  onclickActions={onclickActions}
       />
     </>
   );

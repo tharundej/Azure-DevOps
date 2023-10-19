@@ -8,15 +8,13 @@
 // import Iconify from 'src/components/iconify/iconify';
 // import './DeclarationDetails.css'
 
-
-
 // const HeadeinCard = ({ taxSection ,taxScheme , taxLimit  }) => {
 //     const [data, setData] = useState([
 //         { id: 1, name: 'John Doe' },
 //         { id: 2, name: 'Jane Doe' },
 //         // Add more data as needed
 //       ]);
-    
+
 //       const handleChange = (id, key, value) => {
 //         setData((prevData) =>
 //           prevData.map((item) =>
@@ -25,17 +23,16 @@
 //         );
 //       };
 //     return(
-//     //     <Box 
+//     //     <Box
 //     //     borderBottom={1}
-//     //     borderColor="#000000" 
-//     //     bgcolor="#e3e3e3" 
-      
+//     //     borderColor="#000000"
+//     //     bgcolor="#e3e3e3"
+
 //     //    >
 
-       
 //         <Grid container xs={12}  spacing={0} alignItems="center" direction="row"
 //          borderBottom={1}
-//          borderColor="#000000" 
+//          borderColor="#000000"
 //          bgcolor="#e3e3e3"
 //          style={{ paddingTop: 0 }} className="override-grid-padding" >
 //             <Grid item xs={5}>
@@ -61,7 +58,7 @@
 //             <TextField
 //            size="small"
 //             sx={{
-              
+
 //                 '& .MuiInputBase-input': {
 //                   border: '1px solid #ccc', // Gray border for the text input
 //                   backgroundColor: '#ffffff', // White background color inside the text input
@@ -75,16 +72,16 @@
 //             </Grid>
 //         </Grid>
 //         // </Box>
-       
+
 //     )
-   
+
 //   };
 //  // PropTypes for InnerComponent
 // HeadeinCard.propTypes = {
-//     taxLimit: PropTypes.any, 
-//     taxScheme: PropTypes.any, 
-//     taxSection: PropTypes.any, 
-    
+//     taxLimit: PropTypes.any,
+//     taxScheme: PropTypes.any,
+//     taxSection: PropTypes.any,
+
 //   };
 
 // const DeclarationDetails = () => {
@@ -94,7 +91,7 @@
 //     return(
 //         <Box style={{marginTop:"1rem"}}>
 //         <Grid container spacing={2} alignItems="center" direction="colum">
-          
+
 //             <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row">
 //       <Grid item>
 //         <TextField
@@ -120,7 +117,6 @@
 //       </Grid>
 //     </Grid>
 
-           
 //         <Grid item xs={12} style={{marginTop:"1rem" ,marginBottom:"5px"}}>
 //        <Grid container spacing={3}  alignItems="center" direction="row" >
 //             <Grid item xs={5}>
@@ -130,7 +126,7 @@
 //             </Grid>
 //             <Grid  item xs={2} >
 //                     <Typography style={{ color: '#000000' ,fontWeight:'400'}} >
-//                    Tax Scheme 
+//                    Tax Scheme
 //                     </Typography>
 //             </Grid>
 //             <Grid item xs={2}>
@@ -147,28 +143,28 @@
 
 // </Grid>
 //           <Grid item xs={12}   style={{ paddingTop: 0 }} className="override-grid-padding">
-//           <HeadeinCard  taxSection="sextion 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
+//           <HeadeinCard  taxSection="section 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
 //         taxLimit="25000.000"/>
 //           </Grid>
-       
+
 //           <Grid item xs={12}  style={{ paddingTop: 0 }} className="override-grid-padding">
-//           <HeadeinCard  taxSection="sextion 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
+//           <HeadeinCard  taxSection="section 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
 //         taxLimit="25000.000"/>
 //           </Grid>
 //           <Grid item xs={12}  style={{ paddingTop: 0 }} className="override-grid-padding">
-//           <HeadeinCard  taxSection="sextion 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
+//           <HeadeinCard  taxSection="section 80D  -Medical insurance premium for parent" taxScheme="  Chapter VI A "
 //         taxLimit="25000.000"/>
 //           </Grid>
 //         </Grid>
 //             </Box>
-//     )   
-  
+//     )
+
 // }
 
 // import React, { useState } from 'react';
 // import { DataGrid } from '@mui/x-data-grid';
 // import { TextField } from '@mui/material';
-// import PropTypes from 'prop-types'; 
+// import PropTypes from 'prop-types';
 // import './DeclarationDetails.css'
 
 // const DeclarationDetails = () => {
@@ -206,8 +202,7 @@
 //       ),
 //     },
 //   ];
-  
- 
+
 //   return (
 //     <div style={{ height: 400, width: '100%' }}>
 //       <DataGrid
@@ -218,14 +213,11 @@
 //         disableSelectionOnClick
 //         getRowId={(row) => row.id}
 //         getRowClassName={(params) => (params.index % 2 === 0 ? 'gray-row' : 'white-row')}
-      
+
 //       />
 //     </div>
 //   );
 // };
-
-
-
 
 // Define propTypes for the component
 // DeclarationDetails.propTypes = {
@@ -333,7 +325,7 @@
 
 // export default DeclarationDetails;
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -344,24 +336,18 @@ import {
   Paper,
   TextField,
   TablePagination,
-  Grid,Button
+  Grid,
+  Button,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
-import Iconify from 'src/components/iconify/iconify'
-import './DeclarationDetails.css'
+import Iconify from 'src/components/iconify/iconify';
+import './DeclarationDetails.css';
+import axios from 'axios';
 
 const DeclarationDetails = () => {
-  const [data, setData] = useState([
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' },
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' }, 
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' },
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' },
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' },
-    { TaxSection: "sextion 80D  -Medical insurance premium for parent", TaxScheme: 'John Doe', Limit: 25, Declar: 'john.doe@example.com' },
-    // Add more data as needed
-  ]);
-
+  const [data, setData] = useState();
+  const [reloading ,setReloading] = useState(false)
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -376,45 +362,152 @@ const DeclarationDetails = () => {
   };
 
   const handleNameChange = (id) => (event) => {
-    const newData = data.map((item) =>
+    const newData = data?.map((item) =>
       item.id === id ? { ...item, name: event.target.value } : item
     );
     setData(newData);
   };
 
-  const handleAgeChange = (id) => (event) => {
-    const newData = data.map((item) =>
-      item.id === id ? { ...item, age: event.target.value } : item
+  const handleAgeChange = (config_id) => (event) => {
+    console.log("i am called ")
+    const newData = data?.map((item) =>
+      item.config_id === config_id ? { ...item, declared: event.target.value } : item
     );
-    setData(newData);
+  setData(newData)
+  console.log(data , " datadataaaaaaa")
   };
 
+  const getDeclarationsList = async () => {
+    const payload = {
+      employee_id: 'Info1',
+
+      company_id: 'comp1',
+
+      financial_year: 2019,
+
+      rows_per_page: 8,
+
+      page_num: 1,
+
+      filter_by: [],
+
+      sort_order: ["asc"],
+
+    order_by: ["config_id"],
+
+      search: '',
+    };
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getDeclarations',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data?.rows;
+          console.log(JSON.stringify(response.data));
+          setData(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(result, 'resultsreults');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getDeclarationsList();
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloading]);
+  const updateDeclarationsList = async () => {
+    const newArray = data?.map((item) => ({
+      "config_id": item.config_id,
+      "declared":parseInt(item.declared, 10)
+    }));
+    console.log(newArray ,"newarray");
+    const payload = {
+
+      "employee_id": "Info1",
+  
+      "company_id": "comp1",
+  
+      "financial_year": 2019,
+  
+      "records": newArray
+  
+  }
+  
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateDeclarations',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setReloading(!reloading)
+          console.log(JSON.stringify(response.data));
+        
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  
+  }
+
+ 
   return (
     <div>
-                <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
-       <Grid item>
-         <TextField
-          sx={{ width: '20vw' }}
-          // value={filters.name}
-          // onChange={handleFilterName}
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-            border: 'none',
-          }}
-        />
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="flex-end"
+        direction="row"
+        style={{ marginBottom: '1rem' }}
+      >
+        <Grid item>
+          <TextField
+            sx={{ width: '20vw' }}
+            // value={filters.name}
+            // onChange={handleFilterName}
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+              border: 'none',
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <Button className="button">Filter</Button>
+        </Grid>
+        <Grid item>
+          <Button className="button">Report</Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Button className="button">Filter</Button>
-      </Grid>
-      <Grid item>
-        <Button className="button">Report</Button>
-      </Grid>
-    </Grid>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -426,38 +519,60 @@ const DeclarationDetails = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => (
-              <TableRow style={{height: "20px", borderBottom: '1px solid black', backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2'}} key={row.TaxSection}>
-                <TableCell style={{ width: "36rem" ,padding:"4px !important"}}>{row.TaxSection}</TableCell>
-                <TableCell>
-                {row.TaxScheme} 
-                </TableCell>
-                <TableCell>
-                {row.Limit} 
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    type="number"
-                    value={row.Declar}
-                    onChange={handleAgeChange(row.id)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {data &&
+              data
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                ?.map((row, index) => (
+                  <TableRow
+                    style={{
+                      height: '20px',
+                      borderBottom: '1px solid black',
+                      backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
+                    }}
+                    key={row.config_id}
+                  >
+                    <TableCell style={{ width: '36rem', padding: '4px !important' }}>
+                      {row.tax_section}
+                    </TableCell>
+                    <TableCell>{row.tax_scheme}</TableCell>
+                    <TableCell>{row.tax_limit}</TableCell>
+                    <TableCell>
+                      <TextField
+                        type="number"
+                        value={row.declared}
+                        onChange={handleAgeChange(row.config_id)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+    
+      <Grid container spacing={2} alignItems="center" xs={12}  direction="row"style={{marginBottom:"1rem"}}> 
+          <Grid  item container xs={12} spacing={2} alignItems="center"  justifyContent="flex-Start" direction="row"style={{marginBottom:"1rem"}}>
+        
+        
+          <Grid item xs={4} sm={2}>
+            <Button className="button" onClick={updateDeclarationsList}>Save</Button>
+          </Grid>
+          <Grid item xs={8} sm={10}>
+          <TablePagination
+        rowsPerPageOptions={[5, 10 , 50]}
         component="div"
-        count={data.length}
+        count={data?.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+          </Grid>
+        </Grid>
+      
+          </Grid>
     </div>
   );
 };
+
 
 export default DeclarationDetails;
