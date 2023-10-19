@@ -46,7 +46,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     firsthalf:Yup.string(),
     secondhalf:Yup.string(),
     attachment:Yup.string(),
-    status_date:Yup.string()
+    status_date:Yup.string(),
+    color:Yup.string()
   });
 
   const methods = useForm({
@@ -70,22 +71,18 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     toDate: dayjs(new Date()),
     
   });
-  const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate > datesUsed?.toDate : false;
+  const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
-
     const selectedValue = data?.day_span;
 
     const fulldayValue = selectedValue === "full_day" ? "1" : "0";
     const firsthalfValue = selectedValue === "first_half" ? "1" : "0";
     const secondhalfValue = selectedValue === "second_half" ? "1" : "0";
-    
-    
-  console.log(data, "dataaaaaaaaaaaaaaaa");
 
     const eventData = {
       leave_type_id:data?.leave_type_id,
-      company_id: "C1",
-      employee_id:"E1",
+      company_id: "COMP1",
+      employee_id:"info1",
       comments: data?.comments,
       apply_date: "",
       from_date: formatDateToYYYYMMDD(datesUsed?.fromDate),
@@ -95,35 +92,26 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
       firsthalf:firsthalfValue,
       secondhalf:secondhalfValue,
       attachment: attachmentString,
-      status_date:""
+      status_date:"",
+      color:(data?.leave_type_id===1)?"#0c1f31":(data?.leave_type_id===2)?"#d4a085":(data?.leave_type_id===3)?"#c9de8c":"#ffbed1"
     };
-    console.log(eventData, "payload dataaaa");
     try {
-      if (!dateError) {
-        if (currentEvent?.leave_id) {
-          await updateEvent(eventData);
-          enqueueSnackbar('Update success!');
-        } 
-        else {
-          try {
-            await createEvent(eventData);
-            // enqueueSnackbar('Create success!', { variant: 'success' });
-          }
-           catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-              // Display the error message from the response
-              enqueueSnackbar(error.response.data.message, { variant: 'error' });
-            } else {
-              // Display a generic error message
-              enqueueSnackbar('An error occurred while creating the event.', { variant: 'error' });
-            }
-          }
-        }
-        onClose();
-        reset();
-      }
+      const result = await createEvent(eventData);
+      // Handle the successful result if needed.
+      // Close the form and reset it.
+      onClose();
+      reset();
     } catch (error) {
-      console.error(error);
+      // Handle the error, e.g., show a snackbar.
+      if (error.response && error.response.data && error.response.data.message) {
+        if (error.response.data["show message"] === "user") {
+          // Display the error message from the response
+          enqueueSnackbar(error.response.data.message, { variant: 'error' });
+       }
+      } else {
+        // Display a generic error message
+        enqueueSnackbar('An error occurred while creating the event.', { variant: 'error' });
+      }
     }
   });
 
@@ -177,9 +165,10 @@ useEffect(()=>{
 
 const getLeaveList = () => {
   const payload = {
-      company_id: "C1"
+    company_id: "COMP1",
+     employee_id:"info1"
+  
   }
- 
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
@@ -199,8 +188,9 @@ const getLeaveList = () => {
 
 const AvailableLeaves = () => {
   const payload = {
-      company_id: "C1",
-      employee_id:"E1"
+    company_id: "COMP1",
+     employee_id:"info1"
+  
   }
  
   const config = {
@@ -325,7 +315,7 @@ const AvailableLeaves = () => {
           type="submit"
           variant="contained"
           loading={isSubmitting}
-          disabled={dateError}
+          // disabled={dateError}
         >
           Save Changes
         </LoadingButton>

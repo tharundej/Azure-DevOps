@@ -11,6 +11,7 @@ import { useState } from 'react';
 import {Typography,CardContent,Grid,Card,TextField,InputAdornment} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
+import LeaveFilter from '../LeaveFilter';
  
 export default function Approveleave(){
    const theme = useTheme();
@@ -18,7 +19,7 @@ export default function Approveleave(){
         "count": 5,
         "page": 0,
         "search": "",
-        "eid": "E2",
+        "eid": "info1",
     "externalFilters":{
         "fFromDate": "",
         "fToDate": "",
@@ -60,6 +61,14 @@ export default function Approveleave(){
 
   
  return (
-     <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} rowActions={actions}/>
+  <>
+  <BasicTable 
+  headerData={TABLE_HEAD} 
+  endpoint="/listLeave"  
+  defaultPayload={defaultPayload} 
+  rowActions={actions} 
+  bodyData = 'appliedLeave'
+  filterName="LeavelistFilter"/>
+  </>
  )
 }

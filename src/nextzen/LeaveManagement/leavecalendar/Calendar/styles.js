@@ -47,7 +47,7 @@ export const StyledCalendar = styled('div')(({ theme }) => ({
     padding: '2px 4px',
     borderRadius: 6,
     // backgroundColor: theme.palette.common.white,
-    backgroundColor:"	#e8caf1",
+    // backgroundColor:"#e8caf1",
     '&:before': {
       top: 0,
       left: 0,
@@ -66,9 +66,9 @@ export const StyledCalendar = styled('div')(({ theme }) => ({
       },
     },
   },
-  '& .fc .fc-event[data-event-type="leave"]':{
-     backgroundColor:"red"
-  },
+  // '& .fc .fc-event[data-event-type="leave"]':{
+  //    backgroundColor:"red"
+  // },
   // '& .fc .fc-event[data-event-type="holiday"]': {
   //   borderColor: 'transparent !important',
   //   backgroundColor: 'transparent !important',

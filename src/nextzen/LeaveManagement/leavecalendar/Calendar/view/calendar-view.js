@@ -139,8 +139,11 @@ useEffect(()=>{
 
   const holidayslist = (e) => {
     const payload = {
-      company_id:"c1"
+      company_id: "COMP1",
+       employee_id:"info1"
+    
     }
+    
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
@@ -187,9 +190,11 @@ useEffect(()=>{
     title: event.leavetype_name,
     start: event.from_date,
     end: event.to_date,
-    type:"leave"
+    type:"leave",
+    color:event.color
   }));
   
+  console.log(updatedEvents,"eventsssss")
   const HolidayEvents = listOfHolidays?
   listOfHolidays?.map((event)=>({
     title : event.holiday_name,
@@ -260,7 +265,7 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/pendingapproved`,
+    url: `http://192.168.1.87:3001/erp/pendingapproved`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -409,23 +414,6 @@ const dynamicValue = listData?.response?.length;
           onClose={onCloseForm}
         />
       </Dialog>
-
-      {/* <CalendarFilters
-        open={openFilters.value}
-        onClose={openFilters.onFalse}
-        //
-        filters={filters}
-        onFilters={handleFilters}
-        //
-        canReset={canReset}
-        onResetFilters={handleResetFilters}
-        //
-        dateError={dateError}
-        //
-        events={events}
-        colorOptions={CALENDAR_COLOR_OPTIONS}
-        onClickEvent={onClickEventInFilters}
-      /> */}
       </>
       }
       {(tabIndex === 1) &&
@@ -597,9 +585,10 @@ function applyFilter({ inputData, filters, dateError }) {
 
 function renderEventContent(eventContent) {
   const {event} = eventContent; // Get the event title
+  const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
   return (
     
-      <div style={{color:"black",fontWeight:"700"}}>{event?.title}</div>
+      <div style={{color:"black",fontWeight:"700",backgroundColor,padding:"4px"}}>{event?.title}</div>
     
   );
 }

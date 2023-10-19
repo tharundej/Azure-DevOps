@@ -93,6 +93,7 @@
         "args": "after-used",
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "no-useless-catch": "warn"
   }
 }
