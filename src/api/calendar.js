@@ -1,63 +1,88 @@
-import { useMemo } from 'react';
+import { useMemo, useState,useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
+
+import axios from 'axios';
 // utils
 import { fetcher, endpoints } from 'src/utils/axios';
 
+
 // ----------------------------------------------------------------------
 
-const URL = endpoints.calendar;
+const ApplyLeave = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave";
+const URL = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList";
+
 
 const options = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-};
+  company_id: "COMP1",
+   employee_id:"info1"
+
+}
+
 
 export function useGetEvents() {
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, options);
+
+  const { data, isLoading, error, isValidating } = useSWR([URL,options] ,fetcher);
 
   const memoizedValue = useMemo(() => {
-    const events = data?.events.map((event) => ({
+    const events = data?.map((event) => ({
       ...event,
-      textColor: event.color,
     }));
-
+console.log(events,"eventsssss")
     return {
       events: events || [],
       eventsLoading: isLoading,
       eventsError: error,
       eventsValidating: isValidating,
-      eventsEmpty: !isLoading && !data?.events.length,
+      eventsEmpty: !isLoading && !data?.length,
     };
-  }, [data?.events, error, isLoading, isValidating]);
-
+  }, [data, error, isLoading, isValidating]);
   return memoizedValue;
 }
 
 // ----------------------------------------------------------------------
 
 export async function createEvent(eventData) {
+  console.log(eventData,"eventdata")
   /**
    * Work on server
    */
   // const data = { eventData };
-  // await axios.post(URL, data);
-
+  // try {
+  // await axios.post(ApplyLeave, eventData);
+  // mutate([URL,options]); 
+  // }
+  // catch(error){
+  //    console.log(error.response.data)
+  // }
+  try {
+    const response = await axios.post(ApplyLeave, eventData);
+    // Check the response for errors and throw an error if needed.
+    if (response.data.success === false) {
+      throw new Error(response.data.message);
+    }
+    // If successful, return any necessary data.
+    mutate([URL,options]); 
+    return response.data;
+  } 
+  catch (error) {
+    throw error; // Re-throw the error to propagate it up.
+  }
   /**
    * Work in local
    */
-  mutate(
-    URL,
-    (currentData) => {
-      const events = [...currentData.events, eventData];
+  // mutate(
+  //   URL,
+  //   (currentData) => {
+  //     const events = [...currentData.events, eventData];
 
-      return {
-        ...currentData,
-        events,
-      };
-    },
-    false
-  );
+  //     return {
+  //       ...currentData,
+  //       events,
+  //     };
+  //   },
+  //   false
+  // );
+
 }
 
 // ----------------------------------------------------------------------

@@ -1,17 +1,12 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useCallback,useState } from 'react';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import DialogActions from '@mui/material/DialogActions';
+import { LoadingButton } from '@mui/lab';
+import { MenuItem,Typography,IconButton,Tooltip,Button,Stack,Box,DialogActions} from '@mui/material';
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -21,21 +16,27 @@ import { createEvent, updateEvent, deleteEvent } from 'src/api/calendar';
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFTextField, RHFSwitch } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch ,RHFSelect,RHFRadioGroup} from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
-
+  const [attachmentString,setAttachmentString] = useState("");
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000, 'Description must be at most 5000 characters'),
-    // not required
-    color: Yup.string(),
-    allDay: Yup.boolean(),
-    start: Yup.mixed(),
-    end: Yup.mixed(),
+    leave_type_id:Yup.string(),
+    company_id:Yup.string(),
+    employee_id:Yup.string(),
+    from_date: Yup.mixed(),
+    to_date: Yup.mixed(),
+    comments: Yup.string(),
+    apply_date:Yup.string(),
+    status:Yup.number(),
+    fullday:Yup.string(),
+    firsthalf:Yup.string(),
+    secondhalf:Yup.string(),
+    attachment:Yup.string(),
+    status_date:Yup.string()
   });
 
   const methods = useForm({
@@ -56,14 +57,21 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const dateError = values.start && values.end ? values.start > values.end : false;
 
   const onSubmit = handleSubmit(async (data) => {
+
     const eventData = {
-      id: currentEvent?.id ? currentEvent?.id : uuidv4(),
-      color: data?.color,
-      title: data?.title,
-      allDay: data?.allDay,
-      description: data?.description,
-      end: data?.end,
-      start: data?.start,
+      leave_type_id:data?.leave_type_id,
+      company_id: "C1",
+      employee_id:"E1",
+      comments: data?.comments,
+      apply_date: data?.apply_date,
+      from_date:data?.from_date,
+      to_date:data?.to_date,
+      status:data?.status,
+      fullday:data?.fullday,
+      firsthalf:data?.firsthalf,
+      secondhalf:data?.secondhalf,
+      attachment: attachmentString,
+      status_date:""
     };
 
     try {
@@ -93,15 +101,60 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     }
   }, [currentEvent?.id, enqueueSnackbar, onClose]);
 
+    
+  function getBase64(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      console.log(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+ }
+
+ function handleFileSelect(event) {
+  const fileInput = event.target;
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const base64String = e.target.result;
+      console.log('Base64 string:', base64String);
+      setAttachmentString(base64String)
+      // setImage( [base64String]);
+      // setViewImage(true);
+      // Here, you can send the `base64String` to your server or perform other actions.
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+const USER_STATUS_OPTIONS = 
+[
+  { 
+    id:"1", 
+    value:"Sick Leave" 
+  },
+  {
+     id:"2",
+     value:"Annual Leave"
+  }
+]
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3 }}>
-        <RHFTextField name="title" label="Title" />
+      <RHFSelect name="leave_type_id" label="Leave Type">
+              {USER_STATUS_OPTIONS.map((status) => (
+                <MenuItem value={status.id} key={status.id}>
+                  {status.value}
+                </MenuItem>
+              ))}
+            </RHFSelect> 
 
-        <RHFTextField name="description" label="Description" multiline rows={3} />
-
-        <RHFSwitch name="allDay" label="All day" />
-
+        <RHFTextField name="comments" label="Comments" multiline rows={3} />
         <Controller
           name="start"
           control={control}
@@ -149,7 +202,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
             />
           )}
         />
-
+{/* 
         <Controller
           name="color"
           control={control}
@@ -160,7 +213,27 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
               colors={colorOptions}
             />
           )}
-        />
+        /> */}
+
+<RHFRadioGroup
+              row
+              label="Day Span"
+              spacing={4}
+              options={[
+                { value: 'full_day', label: 'Full Day' },
+                { value: 'first_half', label:'First Half' },
+                { value: 'second_half', label: 'Second Half' },
+              ]}
+            />
+            <Typography variant="subtitle2">Attachments</Typography>
+<input
+  type="file"
+  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  id="fileInput"
+  onChange={(e)=>{
+    handleFileSelect(e)
+  }}
+/>
       </Stack>
 
       <DialogActions>

@@ -86,24 +86,29 @@ export default function useCalendar() {
     (arg) => {
       if (calendarEl) {
         const calendarApi = calendarEl.getApi();
-
+           console.log(calendarApi,"calendarapi",arg)
         calendarApi.unselect();
       }
+     
       onOpenForm();
       setSelectedRange({
         start: fTimestamp(arg.start),
         end: fTimestamp(arg.end),
       });
     },
+  
     [calendarEl, onOpenForm]
+   
   );
+
+ 
 
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
-
+console.log(arg,"eventttt")
       onOpenForm();
-      setSelectEventId(event.id);
+      setSelectEventId(event.leave_id);
     },
     [onOpenForm]
   );
@@ -112,10 +117,9 @@ export default function useCalendar() {
     const { event } = arg;
 
     updateEvent({
-      id: event.id,
-      allDay: event.allDay,
-      start: fTimestamp(event.start),
-      end: fTimestamp(event.end),
+      // id: event.id,
+      from_date: fTimestamp(event.from_date),
+      to_date: fTimestamp(event.to_date),
     });
   }, []);
 
@@ -123,10 +127,9 @@ export default function useCalendar() {
     const { event } = arg;
 
     updateEvent({
-      id: event.id,
-      allDay: event.allDay,
-      start: fTimestamp(event.start),
-      end: fTimestamp(event.end),
+      // id: event.id,
+      from_date: fTimestamp(event.from_date),
+      to_date: fTimestamp(event.end_date),
     });
   }, []);
 

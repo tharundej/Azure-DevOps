@@ -2,6 +2,8 @@ import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
 
+import axios from 'axios';
+
 import { styled } from '@mui/system';
 
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
@@ -35,12 +37,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-
-import CustomDateRangePicker from '../global/CustomDateRangePicker';
-
-
 
 
 const defaultFilters = {
@@ -70,23 +67,40 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
   };
 
-  
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
-export default function SearchFilter({filterSearch,filterData}){
+
+export default function LeaveFilter({filterData,filterOptions}){
   const theme = useTheme();
-  const pfTypenames = [
-    'TypeA',
-    'TypeH'
-    
-  ];
+  const [leaveType,SetLeaveType]= useState();
+
+  const getLeaveType = () => {
+    const payload = {
+        company_id: "C1"
+    }
+   
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.236:3001/erp/getLeaveType`,
+      data:  payload
+    };
+  
+    axios.request(config).then((response) => {
+      console.log(response,"responsssee",response?.list)
+      SetLeaveType(response?.data?.list)
+    })
+  
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const leaves = [
+    'Sick Leave',
+    'Paid Leave',
+    'Vacation Leave',
+    'Annual Leave'
+  ]
 
   const [dropdown,setDropdown]=useState({
 
@@ -96,78 +110,45 @@ export default function SearchFilter({filterSearch,filterData}){
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
 
-  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
+  const [dropdownLeaveType,setDropdownLeaveType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
 
-  const [datesFiledArray,setDatesFiledArray]=useState(
-    [
-      {
-        field:'joining_date',
-        from:'joining_date_from',
-        to:'joining_date_to'
-      },
-      {
-        field:'offer_date',
-        from:'offer_date_from',
-        to:'offer_date_to'
-      }
-    ]
-  )
+  // const [datesFiledArray,setDatesFiledArray]=useState(
+  //   [
+  //     {
+  //       field:'fFromDate',
+  //       from:'fFromDate',
+  //     },
+  //     {
+  //       field:'fToDate',
+  //       to:'offer_date_to'
+  //     }
+  //   ]
+  // )
 
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'pfType',
+        field:'fStatus',
         options:[]
       },
       {
-        field:'employment_type',
+        field:'fLeaveTypeName',
         options:[]
       }
     ]
   )
 
-
-  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joining_date_from:null,
-    joining_date_to:null,
-    offer_date_from:null,
-    offer_date_to:null
+    fFromDate:null,
+    fToDate:null
   })
 
   function formDateDataStructure(){
 
-    return new Promise((resolve) => {
-     
-
-      const arr1={};
-       datesFiledArray.forEach((item,index)=>{  
-         
-        arr1[item.field]={
-          from:dates[item?.from],
-          to:dates[item?.to]
-        }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
-         
-        })
-        setDatesData(arr1);
-        resolve(arr1)
-        
-    })
-    
-
+      return dates;
   }
 
   function formWithDropdown(data){
@@ -183,20 +164,9 @@ export default function SearchFilter({filterSearch,filterData}){
           const commaSeparatedString = arrayOfStrings.join(', ');
           data[item.field]=commaSeparatedString;
         }
-        
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
          
         })
-        // setDatesData(arr1);
+
         resolve(arr1)
         
     })
@@ -209,6 +179,7 @@ export default function SearchFilter({filterSearch,filterData}){
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
+      getLeaveType();
     }
     const handleClickClose=()=>{
       setOpen(false)
@@ -220,41 +191,29 @@ export default function SearchFilter({filterSearch,filterData}){
         target: { value },
       } = event;
       
-      if(field==="employment_type"){
-        setDropdownEmployemtType(value)
+      if(field==="fLeaveTypeName"){
+        setDropdownLeaveType(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="pfType"){
+      else if(field==="fStatus"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-    
-
-        // On autofill we get a stringified value.
-        
-      
+  
         console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
-    const handleApply=async()=>{
+    const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      console.log(data,';;;')
-
       filterData(data);
-      // call parent function and pass it
+      console.log(data,'anillll')
       
-      
-    }
-
-    const handleSearch=(e)=>{
-      filterSearch(e?.target?.value)
     }
     
 
@@ -266,7 +225,7 @@ export default function SearchFilter({filterSearch,filterData}){
 
             <TextField placeholder='Search....' 
             fullWidth
-             onChange={e=>{handleSearch(e)}}
+            // onChange={handleSeacrch}
 
             />
             </Grid>
@@ -299,8 +258,8 @@ export default function SearchFilter({filterSearch,filterData}){
 
           <Grid>
 
-                {/* <Grid>
-            <Typography>Joining Date</Typography>
+                <Grid>
+            <Typography>Leave Duration</Typography>
      
 
             <Grid container flexDirection="row">
@@ -310,12 +269,12 @@ export default function SearchFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.joining_date_from}
+                      value={dates?.fFromDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_from: newValue,
+                          fFromDate: formatDateToYYYYMMDD(newValue),
                         }));
                       }}
                     />
@@ -328,12 +287,12 @@ export default function SearchFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.joining_date_to}
+                      value={dates?.fToDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_to: newValue,
+                          fToDate: formatDateToYYYYMMDD(newValue),
                         }));
                       }}
                     />
@@ -342,102 +301,53 @@ export default function SearchFilter({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid marginTop={2}>
-            <Typography>Offer Date</Typography>
-     
-
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.offer_date_from}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_from: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.offer_date_to}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_to: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid> */}
-
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="fStatus">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'pfType')}
-                  input={<OutlinedInput label="PF Type" />}
+                  onChange={(e)=>handleChangeDropDown(e,'fStatus')}
+                  input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
-                  {pfTypenames.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
+                 
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="approve">Approved</MenuItem>
+                    <MenuItem value="reject">Rejected</MenuItem>
+                  
                 </Select>
               </FormControl>
                    </Grid>
 
-                   {/* <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
+                <InputLabel fullWidth id="fLeaveTypeName">Leave Type</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_2"
                   id="demo-multiple-status_2"
                   multiple
-                  value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
-                  input={<OutlinedInput label="Employemt Type" />}
+                  value={dropdownLeaveType}
+                  onChange={(e)=>handleChangeDropDown(e,'fLeaveTypeName')}
+                  input={<OutlinedInput label="Leave Type" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
+                  {leaves.map((leave) => (
                     <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
+                      key={leave}
+                      value={leave}
                     >
-                      {name}
+                      {leave}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-                   </Grid> */}
+                   </Grid>
                 </Grid>
                </Grid>
 
@@ -452,17 +362,18 @@ export default function SearchFilter({filterSearch,filterData}){
     
 }
 
-SearchFilter.propTypes={
-  filterSearch: PropTypes.any,
-  filterData:PropTypes.any
-    
+// ClaimSearchFilter.propTypes={
+//     handleFilters: PropTypes.any,
+// }
+LeaveFilter.propTypes={
+    filterData: PropTypes.func,
 }
 
-// SearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+LeaveFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

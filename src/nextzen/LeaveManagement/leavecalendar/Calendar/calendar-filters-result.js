@@ -22,7 +22,7 @@ export default function CalendarFiltersResult({
   results,
   ...other
 }) {
-  const shortLabel = shortDateLabel(filters.startDate, filters.endDate);
+  const shortLabel = shortDateLabel(filters.from_date, filters.end_date);
 
   const handleRemoveColor = (inputValue) => {
     const newValue = filters.colors.filter((item) => item !== inputValue);
@@ -30,8 +30,8 @@ export default function CalendarFiltersResult({
   };
 
   const handleRemoveDate = () => {
-    onFilters('startDate', null);
-    onFilters('endDate', null);
+    onFilters('from_date', null);
+    onFilters('end_date', null);
   };
 
   return (
@@ -68,7 +68,7 @@ export default function CalendarFiltersResult({
           </Block>
         )}
 
-        {filters.startDate && filters.endDate && (
+        {filters.from_date && filters.end_date && (
           <Block label="Date:">
             <Chip size="small" label={shortLabel} onDelete={handleRemoveDate} />
           </Block>

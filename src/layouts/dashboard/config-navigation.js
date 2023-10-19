@@ -189,6 +189,16 @@ export function useNavData() {
               { title: t('account'), path: paths.dashboard.user.account },
             ],
           },
+          // ORDER
+          {
+            title: t('order'),
+            path: paths.dashboard.order.root,
+            icon: ICONS.order,
+            children: [
+              { title: t('list'), path: paths.dashboard.order.root },
+              { title: t('details'), path: paths.dashboard.order.demo.details },
+            ],
+          },
 
           // PRODUCT
           // {
@@ -206,16 +216,7 @@ export function useNavData() {
           //   ],
           // },
 
-          // ORDER
-          // {
-          //   title: t('order'),
-          //   path: paths.dashboard.order.root,
-          //   icon: ICONS.order,
-          //   children: [
-          //     { title: t('list'), path: paths.dashboard.order.root },
-          //     { title: t('details'), path: paths.dashboard.order.demo.details },
-          //   ],
-          // },
+         
 
           // INVOICE
           // {
