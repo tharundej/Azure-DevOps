@@ -80,12 +80,19 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SearchFilter({filterSearch,filterData}){
+export default function ClaimSearchFilter({filterData,filterOptions}){
   const theme = useTheme();
-  const pfTypenames = [
-    'TypeA',
-    'TypeH'
-    
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
   ];
 
   const [dropdown,setDropdown]=useState({
@@ -117,7 +124,7 @@ export default function SearchFilter({filterSearch,filterData}){
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'pfType',
+        field:'status',
         options:[]
       },
       {
@@ -226,7 +233,7 @@ export default function SearchFilter({filterSearch,filterData}){
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="pfType"){
+      else if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
@@ -241,20 +248,15 @@ export default function SearchFilter({filterSearch,filterData}){
      // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
-    const handleApply=async()=>{
+    const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
+      filterData(data);
       console.log(data,';;;')
 
-      filterData(data);
-      // call parent function and pass it
+    //   filterData(data);
       
-      
-    }
-
-    const handleSearch=(e)=>{
-      filterSearch(e?.target?.value)
     }
     
 
@@ -266,7 +268,7 @@ export default function SearchFilter({filterSearch,filterData}){
 
             <TextField placeholder='Search....' 
             fullWidth
-             onChange={e=>{handleSearch(e)}}
+            // onChange={handleSeacrch}
 
             />
             </Grid>
@@ -299,7 +301,7 @@ export default function SearchFilter({filterSearch,filterData}){
 
           <Grid>
 
-                {/* <Grid>
+                <Grid>
             <Typography>Joining Date</Typography>
      
 
@@ -384,7 +386,7 @@ export default function SearchFilter({filterSearch,filterData}){
                 </LocalizationProvider>
                 </Grid>
                 </Grid>
-                </Grid> */}
+                </Grid>
 
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
@@ -396,11 +398,11 @@ export default function SearchFilter({filterSearch,filterData}){
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'pfType')}
-                  input={<OutlinedInput label="PF Type" />}
+                  onChange={(e)=>handleChangeDropDown(e,'status')}
+                  input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
-                  {pfTypenames.map((name) => (
+                  {names.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
@@ -413,7 +415,7 @@ export default function SearchFilter({filterSearch,filterData}){
               </FormControl>
                    </Grid>
 
-                   {/* <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
@@ -437,7 +439,7 @@ export default function SearchFilter({filterSearch,filterData}){
                   ))}
                 </Select>
               </FormControl>
-                   </Grid> */}
+                   </Grid>
                 </Grid>
                </Grid>
 
@@ -452,17 +454,18 @@ export default function SearchFilter({filterSearch,filterData}){
     
 }
 
-SearchFilter.propTypes={
-  filterSearch: PropTypes.any,
-  filterData:PropTypes.any
-    
+// ClaimSearchFilter.propTypes={
+//     handleFilters: PropTypes.any,
+// }
+ClaimSearchFilter.propTypes={
+    filterData: PropTypes.func,
 }
 
-// SearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+ClaimSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}
