@@ -125,6 +125,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
     // }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
@@ -373,7 +377,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       
+      
     
         <Card>
        

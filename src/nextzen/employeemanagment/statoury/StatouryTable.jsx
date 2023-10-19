@@ -29,6 +29,7 @@ export const StatouryTable = () => {
     { id: 'esicNumber', label: 'ESIC Number', type: 'text' },
     { id: 'ptNumber', label: 'PT Number', type: 'text' },
     { id: 'lwfNumber', label: 'LWF', type: 'text' },
+    { id: 'pfType', label: 'PF Type', type: 'text' },
   ]);
   const defaultPayload ={
 
@@ -83,7 +84,7 @@ export const StatouryTable = () => {
       <StatouryForm />
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listLeave"
+        endpoint="getStatutoryDetails"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="statuortySearchFilter"

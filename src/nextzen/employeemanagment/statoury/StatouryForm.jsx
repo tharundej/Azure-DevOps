@@ -18,41 +18,49 @@ export const StatouryForm=(currentUser)=>{
 
 const [open, setOpen] = useState(false);
 const handleOpen = () => setOpen(true);
-const handleClose = () => setOpen(false);
+const handleClose = () => {
+  setOpen(false);
+  reset()
+}
 
 const NewUserSchema = Yup.object().shape({
-  employee_id: Yup.string().required('Employee ID is Required'),
-  employee_name: Yup.string().required(' Employee Name is Required'),
-  state: Yup.string().required('State is Required'),
-  aadhar_no: Yup.number().required('Aadhar Number is Required'),
-  pan_no:Yup.number().required('Pan Number is required'),
-  accountholder_name: Yup.string().required('Account holder name is Required'),
-  bank_name: Yup.string().required('Bank Name is Required'),
-  bank_branch: Yup.string().required('Bank Branch is Required'),
-  account_no: Yup.number().required('Account Number is Required'),
-  ifsc_code: Yup.number().required('IFSC Code is Required'),
-  pf_no: Yup.number().required('PF Number is Required'),
-  esic_no: Yup.number().required('ESIC Number is Required'),
-  PT: Yup.number().required(' PT% is Required'),
-  lwf: Yup.number().required('LWF% is Required'),
+ 
+  aadharNumber: Yup.string(),
+  panNumber:Yup.string(),
+  passportNumber:Yup.string(),
+
+  accountholderName: Yup.string(),
+  bankAccountNumber: Yup.string(),
+  bankName: Yup.string(),
+  bankBranch: Yup.string(),
+  ifscCode: Yup.string(),
+
+  uan:Yup.number(),
+  pfNumber: Yup.number(),
+  esicNumber: Yup.number(),
+  ptNumber: Yup.number(),
+  lwfNumber: Yup.string(),
 });
 
 const defaultValues = useMemo(
   () => ({
-    employee_id: currentUser?.employee_id || '',
-    employee_name: currentUser?.employee_name || '',
-    state: currentUser?.state || '',
-    aadhar_no: currentUser?.aadhar_no || null,
-    pan_no: currentUser?.pan_no || null,
-    accountholder_name:currentUser?.accountholder_name || '',
-    bank_name: currentUser?.bank_name || '',
-    bank_branch:currentUser?.bank_branch || '',
-    account_no:currentUser?.account_no || null,
-    ifsc_code: currentUser?.ifsc_code || null,
-    pf_no: currentUser?.pf_no || null,
-    esic_no: currentUser?.esic_no || null,
-    PT: currentUser?.PT || null,
-    lwf: currentUser?.lwf || null,
+    
+    aadharNumber: currentUser?.aadharNumber || null,
+    panNumber: currentUser?.panNumber || null,
+    passportNumber: currentUser?.passportNumber || null,
+
+
+    accountholderName:currentUser?.accountholderName || '',
+    bankName: currentUser?.bankName || '',
+    bankBranch:currentUser?.bankBranch || '',
+    bankAccountNumber:currentUser?.bankAccountNumber || null,
+    ifscCode: currentUser?.ifscCode || null,
+
+    pfNumber: currentUser?.pfNumber || null,
+    esicNumber: currentUser?.esicNumber || null,
+    ptNumber: currentUser?.ptNumber || null,
+    lwfNumber: currentUser?.lwfNumber || null,
+    uan: currentUser?.uan || null,
   }),
   [currentUser]
 );
@@ -68,29 +76,44 @@ const {
   setValue,
   handleSubmit,
   formState: { isSubmitting },
+  reset
 } = methods;
 
 //   const values = watch();
 
-const onSubmit = handleSubmit(async (data) => {
-  console.log('uyfgv');
-
+const onSubmit = handleSubmit(async (data1) => {
+  // console.log(data,'uyfgv');
+  data1.employeeID="wipr1";
+  data1.companyID="COMP3"
   try {
-    const response = await axios.post('http://localhost:8081/onboarding', data).then(
-      (successData) => {
-        console.log('sucess', successData);
+   
+    
+    
+     
+    
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.0.236:3001/erp/addStatutoryDetails',
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
       },
-      (error) => {
-        console.log('lllll', error);
-      }
-    );
-
-    // await new Promise((resolve) => setTimeout(resolve, 500));
-    // reset();
-    // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-    // router.push(paths.dashboard.user.list);
-    // console.info('DATA', data);
-  } catch (error) {
+      data : data1
+    };
+    
+     
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  } 
+  
+  catch (error) {
     console.error(error);
   }
 });
@@ -138,27 +161,33 @@ return (
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="employee_id" label="Employee ID " />
-            <RHFTextField
-              name="employee_name"
-              label="Employee Name"
-            />
+
+
+
+            <RHFTextField name="aadharNumber" label="Aadhar Number" />
+             <RHFTextField name="panNumber" label="Pan Number" />
+             <RHFTextField name="passportNumber" label="Passport Number" />
+             
+
+
+              <RHFTextField name="accountholderName" label="Account Holder Name" />
+              <RHFTextField name="bankAccountNumber" label="Account Number" />
+            <RHFTextField name="bankName" label="Bank Name" />
+            <RHFTextField name="bankBranch" label="Bank Branch" />   
+            <RHFTextField name="ifscCode" label="IFSC Code" />
+         
+           
             <RHFAutocomplete
-              name="state"
-              label="State"
+              name="pfType"
+              label="PF Type"
               options={payTypes.map((payType) => payType.type)}
             />
-            <RHFTextField name="aadhar_no" label="Aadhar Number" />
-            <RHFTextField name="pan_no" label="Pan Number" />
-            <RHFTextField name="accountholder_name" label="Account Holder Name" />
-            <RHFTextField name="bank_name" label="Bank Name" />
-            <RHFTextField name="bank_branch" label="Bank Branch" />
-            <RHFTextField name="account_no" label="Account Number" />
-            <RHFTextField name="ifsc_code" label="IFSC Code" />
-            <RHFTextField name="pf_no" label="PF Number" />
-            <RHFTextField name="esic_no" label="ESIC Number" />
-            <RHFTextField name="PT" label="PT%" />
-            <RHFTextField name="lwf" label="LWF%" />
+            
+            <RHFTextField name="uan" label="UAN Number" />
+            <RHFTextField name="pfNumber" label="PF Number" />
+            <RHFTextField name="esicNumber" label="ESIC Number" />
+            <RHFTextField name="ptNumber" label="PT%" />
+            <RHFTextField name="lwfNumber" label="LWF%" />
           </Box>
         </DialogContent>
 
