@@ -38,7 +38,6 @@ console.log(events,"eventsssss")
       eventsEmpty: !isLoading && !data?.length,
     };
   }, [data, error, isLoading, isValidating]);
-console.log(memoizedValue,"memoizedvalue")
   return memoizedValue;
 }
 
@@ -50,8 +49,13 @@ export async function createEvent(eventData) {
    * Work on server
    */
   // const data = { eventData };
+  try {
   await axios.post(ApplyLeave, eventData);
-
+  mutate([URL,options]); 
+  }
+  catch(error){
+     console.log(error)
+  }
   /**
    * Work in local
    */

@@ -19,14 +19,20 @@ import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect } from 'src/components/hook-form';
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
   const [listLeave,setListLeave] = useState();
+  const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
     leave_type_id:Yup.number(),
     company_id:Yup.string(),
@@ -58,8 +64,13 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
   const values = watch();
 
-  const dateError = values.from_date && values.to_date ? values.from_date > values.to_date : false;
-
+  
+  const [datesUsed, setDatesUsed] = useState({
+    fromDate: dayjs(new Date()),
+    toDate: dayjs(new Date()),
+    
+  });
+  const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate > datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
 
     const selectedValue = data?.day_span;
@@ -77,8 +88,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
       employee_id:"E1",
       comments: data?.comments,
       apply_date: "",
-      from_date:data?.from_date,
-      to_date:data?.to_date,
+      from_date: formatDateToYYYYMMDD(datesUsed?.fromDate),
+      to_date: formatDateToYYYYMMDD(datesUsed?.toDate),
       status:data?.status,
       fullday:fulldayValue,
       firsthalf:firsthalfValue,
@@ -86,15 +97,27 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
       attachment: attachmentString,
       status_date:""
     };
-    console.log(eventData, "dataaaaaaaaaaaaaaaa");
+    console.log(eventData, "payload dataaaa");
     try {
       if (!dateError) {
-        if (currentEvent?.id) {
+        if (currentEvent?.leave_id) {
           await updateEvent(eventData);
           enqueueSnackbar('Update success!');
-        } else {
-          await createEvent(eventData);
-          enqueueSnackbar('Create success!');
+        } 
+        else {
+          try {
+            await createEvent(eventData);
+            // enqueueSnackbar('Create success!', { variant: 'success' });
+          }
+           catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+              // Display the error message from the response
+              enqueueSnackbar(error.response.data.message, { variant: 'error' });
+            } else {
+              // Display a generic error message
+              enqueueSnackbar('An error occurred while creating the event.', { variant: 'error' });
+            }
+          }
         }
         onClose();
         reset();
@@ -106,13 +129,13 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
   const onDelete = useCallback(async () => {
     try {
-      await deleteEvent(`${currentEvent?.id}`);
+      await deleteEvent(`${currentEvent?.leave_id}`);
       enqueueSnackbar('Delete success!');
       onClose();
     } catch (error) {
       console.error(error);
     }
-  }, [currentEvent?.id, enqueueSnackbar, onClose]);
+  }, [currentEvent?.leave_id, enqueueSnackbar, onClose]);
 
   
   function getBase64(file) {
@@ -147,12 +170,12 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 }
 
 useEffect(()=>{
+  AvailableLeaves();
   getLeaveList();
 },[])
 
 
 const getLeaveList = () => {
- 
   const payload = {
       company_id: "C1"
   }
@@ -173,9 +196,39 @@ const getLeaveList = () => {
       console.log(error);
     });
 }
-console.log(listLeave,"leaveee")
+
+const AvailableLeaves = () => {
+  const payload = {
+      company_id: "C1",
+      employee_id:"E1"
+  }
+ 
+  const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
+    data:  payload
+  };
+
+  axios.request(config).then((response) => {
+    console.log(response,"responsssee",response?.data)
+    setAvailableLeaves(response?.data)
+  })
+
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
+<div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
+<Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
+  {availableLeaves?.balances.map((itm)=> (
+    <Typography>{itm?.leave_type_name} : {itm?.leave_balance}</Typography>
+  ))}
+</Stack>
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leave_type_id" label="Leave Type">
               {listLeave?.map((status) => (
@@ -185,53 +238,40 @@ console.log(listLeave,"leaveee")
               ))}
             </RHFSelect> 
      <RHFTextField name="comments" label="Comments" multiline rows={3} />
-     <Controller
-          name="from_date"
-          control={control}
-          render={({ field }) => (
-            <MobileDateTimePicker
-              {...field}
-              value={new Date(field.value)}
-              onChange={(newValue) => {
-                if (newValue) {
-                  field.onChange(fTimestamp(newValue));
-                }
-              }}
-              label="Start date"
-              format="dd/MM/yyyy hh:mm a"
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                },
-              }}
-            />
-          )}
-        />
-
-        <Controller
-          name="to_date"
-          control={control}
-          render={({ field }) => (
-            <MobileDateTimePicker
-              {...field}
-              value={new Date(field.value)}
-              onChange={(newValue) => {
-                if (newValue) {
-                  field.onChange(fTimestamp(newValue));
-                }
-              }}
-              label="End date"
-              format="dd/MM/yyyy hh:mm a"
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  error: dateError,
-                  helperText: dateError && 'End date must be later than start date',
-                },
-              }}
-            />
-          )}
-        />
+     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                sx={{ width: '100%', paddingLeft: '3px' }}
+                label="From"
+                value={datesUsed?.fromDate}
+                defaultValue={dayjs(new Date())}
+                onChange={(newValue) => {
+                  setDatesUsed((prev) => ({
+                    ...prev,
+                    fromDate: newValue,
+                  }));
+                }}
+                
+              />
+              </DemoContainer>
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+        
+            <DatePicker
+            sx={{ width: '100%', paddingLeft: '3px' }}
+            label="To"
+            value={datesUsed?.toDate}
+            defaultValue={dayjs(new Date())}
+            onChange={(newValue) => {
+              setDatesUsed((prev) => ({
+                ...prev,
+                toDate: newValue,
+              }));
+            }}
+          />
+     </DemoContainer>
+     </LocalizationProvider>
          <RHFRadioGroup
               row
               name="day_span"
@@ -267,7 +307,7 @@ console.log(listLeave,"leaveee")
       </Stack>
 
       <DialogActions>
-        {!!currentEvent?.id && (
+        {!!currentEvent?.leave_id && (
           <Tooltip title="Delete Event">
             <IconButton onClick={onDelete}>
               <Iconify icon="solar:trash-bin-trash-bold" />
