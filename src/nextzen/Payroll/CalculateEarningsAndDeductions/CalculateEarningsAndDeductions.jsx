@@ -299,7 +299,7 @@ export default function CalculateEarningsAndDeductions() {
                     <Typography style={{ color: '#7D7878' }}>Post-Tax Deductions</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography style={{ color: '#000000' }}>14,353</Typography>
+                    <Typography style={{ color: '##7D7878' }}>14,353</Typography>
                   </Grid>
                 </Grid>
               </Grid>
