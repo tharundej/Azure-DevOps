@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
 import TextField from '@mui/material/TextField';
 
 import Chip from '@mui/material/Chip';
@@ -35,10 +33,11 @@ import axios from 'axios';
 import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 export default function AddTimeProject({ currentUser }) {
-  
+  const[commaSeparatedString,setCommaSepaatedString]=useState("")
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
@@ -46,9 +45,11 @@ export default function AddTimeProject({ currentUser }) {
     // activity_name:[]
   });
   const [activity_name, setSelectedActivity] = useState([]);
-
+ 
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
+      ;
+     setCommaSepaatedString(values.join(','))
   };
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -82,7 +83,7 @@ export default function AddTimeProject({ currentUser }) {
     defaultValues,
   });
 
-  const m2 = useForm();
+
 
   const {
     reset, 
@@ -108,8 +109,8 @@ const [sendData, setSendData] = useState({
       data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
       data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.activity_name = activity_name;
-      data.company_id = "0001";
+      data.activity_name = commaSeparatedString;
+      data.company_id = "COMP2";
       data.delete =   0;
 
       console.log(data, 'data111ugsghghh');
@@ -245,10 +246,11 @@ const [sendData, setSendData] = useState({
 
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton onClick={onSubmit} type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
+              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'save Project'}
                 </LoadingButton>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
               </Stack>
               <Button onClick={onSubmit}>hii</Button>
             </Card>

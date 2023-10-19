@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState } from 'react';
+import { useCallback, useState,useEffect } from 'react';
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem} from '@mui/material';
 
 // utils
 import uuidv4 from 'src/utils/uuidv4';
@@ -17,21 +18,29 @@ import { createEvent, updateEvent, deleteEvent } from 'src/api/calendar';
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFTextField, RHFSwitch,RHFRadioGroup } from 'src/components/hook-form';
+import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect } from 'src/components/hook-form';
+import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
-
+  const [attachmentString,setAttachmentString] = useState("");
+  const [listLeave,setListLeave] = useState();
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000, 'Description must be at most 5000 characters'),
-    // not required
-    color: Yup.string(),
-    allDay: Yup.boolean(),
-    start: Yup.mixed(),
-    end: Yup.mixed(),
+    leave_type_id:Yup.number(),
+    company_id:Yup.string(),
+    employee_id:Yup.string(),
+    from_date: Yup.string(),
+    to_date: Yup.string(),
+    comments: Yup.string(),
+    apply_date:Yup.mixed(),
+    status:Yup.string(),
+    fullday:Yup.string(),
+    firsthalf:Yup.string(),
+    secondhalf:Yup.string(),
+    attachment:Yup.string(),
+    status_date:Yup.string()
   });
 
   const methods = useForm({
@@ -49,19 +58,35 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
   const values = watch();
 
-  const dateError = values.start && values.end ? values.start > values.end : false;
+  const dateError = values.from_date && values.to_date ? values.from_date > values.to_date : false;
 
   const onSubmit = handleSubmit(async (data) => {
-    const eventData = {
-      id: currentEvent?.id ? currentEvent?.id : uuidv4(),
-      color: data?.color,
-      leave_type: data?.leave_type,
-      allDay: data?.allDay,
-      comments: data?.comments,
-      end: data?.end,
-      start: data?.start,
-    };
 
+    const selectedValue = data?.day_span;
+
+    const fulldayValue = selectedValue === "full_day" ? "1" : "0";
+    const firsthalfValue = selectedValue === "first_half" ? "1" : "0";
+    const secondhalfValue = selectedValue === "second_half" ? "1" : "0";
+    
+    
+  console.log(data, "dataaaaaaaaaaaaaaaa");
+
+    const eventData = {
+      leave_type_id:data?.leave_type_id,
+      company_id: "C1",
+      employee_id:"E1",
+      comments: data?.comments,
+      apply_date: "",
+      from_date:data?.from_date,
+      to_date:data?.to_date,
+      status:data?.status,
+      fullday:fulldayValue,
+      firsthalf:firsthalfValue,
+      secondhalf:secondhalfValue,
+      attachment: attachmentString,
+      status_date:""
+    };
+    console.log(eventData, "dataaaaaaaaaaaaaaaa");
     try {
       if (!dateError) {
         if (currentEvent?.id) {
@@ -89,7 +114,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     }
   }, [currentEvent?.id, enqueueSnackbar, onClose]);
 
-  const [attachmentString,setAttachmentString] = useState("");
+  
   function getBase64(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -110,8 +135,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
     reader.onload = function (e) {
       const base64String = e.target.result;
-      console.log('Base64 string:', base64String);
-      setAttachmentString(base64String)
+      console.log('Base64 string:', base64String.split(',')[1]);
+      setAttachmentString(base64String.split(',')[1]);
       // setImage( [base64String]);
       // setViewImage(true);
       // Here, you can send the `base64String` to your server or perform other actions.
@@ -121,17 +146,47 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   }
 }
 
+useEffect(()=>{
+  getLeaveList();
+},[])
+
+
+const getLeaveList = () => {
+ 
+  const payload = {
+      company_id: "C1"
+  }
+ 
+  const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+    data:  payload
+  };
+
+  axios.request(config).then((response) => {
+    console.log(response,"responsssee",response?.list)
+    setListLeave(response?.data?.list)
+  })
+
+    .catch((error) => {
+      console.log(error);
+    });
+}
+console.log(listLeave,"leaveee")
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3 }}>
-        <RHFTextField name="leave_type" label="Leave Type" />
-
-        <RHFTextField name="Comments" label="Comments" multiline rows={3} />
-
-        {/* <RHFSwitch name="allDay" label="All day" /> */}
-       
-        <Controller
-          name="start"
+     <RHFSelect name="leave_type_id" label="Leave Type">
+              {listLeave?.map((status) => (
+                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
+                  {status.leave_Type_Name}
+                </MenuItem>
+              ))}
+            </RHFSelect> 
+     <RHFTextField name="comments" label="Comments" multiline rows={3} />
+     <Controller
+          name="from_date"
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
@@ -154,7 +209,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
         />
 
         <Controller
-          name="end"
+          name="to_date"
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
@@ -182,7 +237,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
               name="day_span"
               label="Day Span"
               spacing={4}
-              options={[
+              options={
+                [
                 { value: 'full_day', label: 'Full Day' },
                 { value: 'first_half', label:'First Half' },
                 { value: 'second_half', label: 'Second Half' },

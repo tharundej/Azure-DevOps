@@ -43,23 +43,54 @@ export default function TimeSheetTable() {
     
         },
     
-        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
+        { id: "Project_id", label: "Project Id", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
+        { id: "project_name", label: "Project Name", width: 220, type: "text" },
     
-        { id: "Date", label: "Date", width: 180, type: "text" },
+        { id: "date_of_activity", label: "date_of_activity", width: 180, type: "text" },
     
-        { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
+        { id: "activity_name", label: "activity_name", width: 100, type: "text" },
+        { id: "working_time", label: "Working Time", width: 100, type: "text" },
+        { id: "Total_working_time", label: "TotalWorking Time", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
       ];
+ 
     
      
-    
+    const defaultPayload={
+      "employee_id":"ibm2",
+
+      "Page":0,
+  
+      "Count":30,
+  
+      "search":"",
+  
+      "externalfilter":{
+  
+               "project_name":"testing51",
+  
+               "activity_name":"",
+  
+               "Status":"",
+  
+               "from_date":"2023-10-10",
+  
+               "to_date":"2023-12-10"
+  
+      },
+  
+      "sort":{
+  
+          "key":1,
+  
+          "orderBy":"pa.activity_name"
+  
+      }
+    }
       const actions = [
     
         { name: "approve", icon: "hh", path: "jjj" },
@@ -76,17 +107,17 @@ export default function TimeSheetTable() {
     
           SL_NO: "1",
     
-          Project_Id: "Aswin!23",
+          Project_id: "Aswin!23",
     
-          Project_Name: "BellErp",
+          project_name: "BellErp",
     
-          Date: "12/12/2023",
+          date_of_activity_name: "12/12/2023",
     
-          Activity: "Coding",
+          activity_name: "Coding",
     
-          Working_Time: "2hour 40minutes",
+          working_time: "2hour 40minutes",
 
-          TotalWorking_Time: "122hour 40minutes",
+          Total_working_time: "122hour 40minutes",
 
           status: "Approved",
           aswin: "Approved",
@@ -124,15 +155,12 @@ export default function TimeSheetTable() {
 <Button className="button" >Filter</Button>
 <Button className="button" >Report</Button>
 </Container>
-    <BasicTable
-
-headdata={TABLE_HEAD}
-
-bodydata={bodyContent}
-
-rowActions={actions}
-
-/>  
+ <BasicTable
+ defaultPayload={defaultPayload}
+ headerData={TABLE_HEAD}
+ endpoint='Mytimesheets'
+ bodyData='response'
+ />
     </>
   );
 }

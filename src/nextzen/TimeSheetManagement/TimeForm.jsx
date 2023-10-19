@@ -171,10 +171,11 @@ export default function TimeForm({ currentUser }) {
              
               </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Save Changes'}
+                  {!currentUser ? 'Create User' : 'Add  Timeline'}
                 </LoadingButton>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
               </Stack>
             </Card>
           </Grid>

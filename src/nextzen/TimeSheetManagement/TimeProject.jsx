@@ -31,7 +31,7 @@ export default function TimeProject() {
 
         {
     
-          id: "project_id",
+          id: "",
     
           label: " SL_NO",
     
@@ -45,16 +45,16 @@ export default function TimeProject() {
     
         },
     
-        { id: "Project_Id", label: "Project Id", width: 180, type: "text" },
+        { id: "project_id", label: "Project Id", width: 180, type: "text" },
     
-        { id: "Project_Name", label: "Project Name", width: 220, type: "text" },
+        { id: "project_name", label: "Project Name", width: 220, type: "text" },
     
-        { id: "Date", label: "Date", width: 180, type: "text" },
+        { id: "start_date", label: "start_date", width: 180, type: "text" },
     
-        { id: "Activity", label: "Activity", width: 100, type: "text" },
-        { id: "Working_Time", label: "Working Time", width: 100, type: "text" },
-        { id: "TotalWorking_Time", label: "TotalWorking Time", width: 100, type: "text" },
+        { id: "end_date", label: "end_date", width: 100, type: "text" },
+        { id: "due_date", label: "due date", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
+        { id: "activity_name", label: "activity_name", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -78,20 +78,20 @@ export default function TimeProject() {
     
           SL_NO: "1",
     
-          Project_Id: "Aswin!23",
+          project_id: "Aswin!23",
     
-          Project_Name: "BellErp",
+          project_name: "BellErp",
     
-          Date: "12/12/2023",
+          start_date: "12/12/2023",
     
-          Activity: "Coding",
+          end_date: "Coding",
     
-          Working_Time: "2hour 40minutes",
+          due_date: "2hour 40minutes",
 
-          TotalWorking_Time: "122hour 40minutes",
+          activity_name: "122hour 40minutes",
 
           status: "Approved",
-          aswin: "Approved",
+         
     
         },
     
@@ -108,9 +108,33 @@ export default function TimeProject() {
       console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    'Page':parseInt(1,10),
+    "page": 1,
 
-    'Count':parseInt(5,10)
+    "count": 10,
+
+    "search": "testing",
+
+    "externalFilters": {
+
+        "start_start_date": "",
+
+        "end_start_date": "",
+
+        "project_name": "",
+
+        "status": "",
+
+        "end_date_name": ""
+
+    },
+
+    "sort": {
+
+        "key": 0,
+
+        "orderBy": "project_id"
+
+    }
   }
       
   return (
@@ -142,7 +166,7 @@ headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
 endpoint='listProject'
-
+bodyData='data'
 rowActions={actions}
 
 />  
