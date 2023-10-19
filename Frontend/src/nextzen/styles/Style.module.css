@@ -1,0 +1,17 @@
+.textlightcolor{
+    margin: 0;
+    line-height: 1.5714285714285714;
+    font-size: 0.875rem;
+    font-family: Public Sans,sans-serif;
+    font-weight: 400;
+    color: #919EAB;
+    display: block;
+}
+
+@media (min-width: 600px) {
+
+    .MuiContainerRoot{
+        padding: 0% !important;
+        max-width: 99% !important;
+    }
+}
