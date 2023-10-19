@@ -18,8 +18,10 @@ export const StatouryForm=(currentUser)=>{
 
 const [open, setOpen] = useState(false);
 const handleOpen = () => setOpen(true);
-const handleClose = () => setOpen(false);
-
+const handleClose = () => 
+{reset();
+  setOpen(false);
+}
 const NewUserSchema = Yup.object().shape({
   employee_id: Yup.string().required('Employee ID is Required'),
   employee_name: Yup.string().required(' Employee Name is Required'),
@@ -68,6 +70,7 @@ const {
   setValue,
   handleSubmit,
   formState: { isSubmitting },
+  reset
 } = methods;
 
 //   const values = watch();
@@ -79,6 +82,7 @@ const onSubmit = handleSubmit(async (data) => {
     const response = await axios.post('http://localhost:8081/onboarding', data).then(
       (successData) => {
         console.log('sucess', successData);
+        reset();
       },
       (error) => {
         console.log('lllll', error);

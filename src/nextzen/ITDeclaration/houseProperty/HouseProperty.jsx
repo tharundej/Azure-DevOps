@@ -460,7 +460,7 @@ export default function HouseProperty() {
         </Grid>
       </Grid>
 
-      {/* <TableContainer component={Paper}>
+      <TableContainer component={Paper}>
       <Table>
         <TableHead >
           <TableRow>
@@ -498,7 +498,7 @@ export default function HouseProperty() {
         </TableBody>
       </Table>
     </TableContainer>
-   */}
+  
     </div>
   );
 }

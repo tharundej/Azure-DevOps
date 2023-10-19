@@ -137,24 +137,24 @@ export function AuthProvider({ children }) {
     date: dayjs(new Date()),
   });
   // REGISTER
-  const register = useCallback(async (cin, company_name, company_registration_no,company_ceo_name,company_type,email_id,phone_no,first_name,middle_name,last_name,security_q1,security_a1,security_q2,security_a2) => {
+  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
     console.log('hiiii')
     const data = {
       cin, 
-      company_name, 
-      company_registration_no, 
-      date_of_incorporation:formatDateToYYYYMMDD(datesUsed?.date),
-      company_ceo_name,
-      company_type,
-      email_id,
-      phone_no,
-      first_name,
-      middle_name,
-      last_name,
-      security_q1,
-      security_a1,
-      security_q2,
-      security_a2
+      companyName, 
+      companyRegistrationNo, 
+      companyDateOfIncorporation:formatDateToYYYYMMDD(datesUsed?.date),
+      companyCeoName,
+      companyType,
+      emailId,
+      phoneNo,
+      firstName,
+      middleName,
+      lastName,
+      securityQ1,
+      securityA1,
+      securityQ2,
+      securityA2
     };
       console.log(data, 'data ......');
    

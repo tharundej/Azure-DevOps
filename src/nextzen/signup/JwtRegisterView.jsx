@@ -72,7 +72,7 @@ export default function JwtRegisterView() {
     email_id: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
-    // date_of_incorporation:Yup.string().required('Date of corporation is required'),
+    // company_date_of_incorporation:Yup.string().required('Date of corporation is required'),
     phone_no: Yup.number().required('Phone No is required'),
     first_name: Yup.string().required('First name required'),
     middle_name: Yup.string(),

@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 // @mui
 import dayjs from 'dayjs';
 // import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -75,8 +77,9 @@ export default function GeneralForminfo({ currentUser }) {
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-  const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
+  const payscheduleTypes = [{ type: '52-Once a week' }, { type: '26-Once in a two weeks'},{type:'24- Twice a month'},{type:'12-Once a month'}];
   //   const m2 = useForm();
+  const employeepayTypes=[{type:'Permanent'},{type:'Contract'}]
   const payTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
   const {
     setValue,
@@ -123,6 +126,37 @@ export default function GeneralForminfo({ currentUser }) {
     },
     [setValue]
   );
+  
+  const handleDropdownChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedOption(selectedValue);
+
+    // Check if the selected option should show the text field
+    if (selectedValue === 'showTextFieldOption') {
+      setTextFieldVisible(true);
+    } else {
+      setTextFieldVisible(false);
+    }
+  };
+  const [selectedOption, setSelectedOption] = useState(''); // State to manage the selected option in Autocomplete
+  const [isTextFieldVisible, setTextFieldVisible] = useState(false); // State to manage the visibility of the text field
+
+  const handleAutocompleteChange = (event, newValue) => {
+    const selectedValue = newValue;
+    setSelectedOption(selectedValue);
+    console.log(selectedValue,'select')
+
+    // Check if the selected option should show the text field
+    if (selectedValue === 'showTextFieldOption') {
+      setTextFieldVisible(true);
+    } else {
+      setTextFieldVisible(false);
+    }
+  };
+  // const HandleChange=(params)=>{
+  //   console.log(params,'paramsssss')
+    
+  // }
   return (
     <>
       <Button onClick={handleOpen} sx={{}}>Add PayRoll</Button>
@@ -150,16 +184,25 @@ export default function GeneralForminfo({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="employee_type" label="Employee Type " />
+              <RHFAutocomplete
+                name="employee_type"
+                label="Employee Type"
+                options={employeepayTypes.map((employeepayType) => employeepayType.type)}
+              />
+              <Autocomplete
+              disablePortal
+              name='employee_type'
+              id="combo-box-demo"
+              options={employeepayTypes.map((employeepayType) => employeepayType.type)}
+              value={selectedOption}
+              onChange={handleAutocompleteChange}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params}label="Employee Type" />}
+            />
               <RHFAutocomplete
                 name="payschedule_type"
                 label="Pay Schedule Type"
                 options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
-              />
-              <RHFAutocomplete
-                name="pay_type"
-                label="Pay Type"
-                options={payTypes.map((payType) => payType.type)}
               />
               <RHFTextField name="basic_pay" label="Basic Pay %" />
               <RHFTextField name="hra" label="HRA %" />
