@@ -121,10 +121,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const getTableData = (payload) => {
 
-    let initialDefaultPayloadCopy =initialDefaultPayload;
-    if(payload){
-      initialDefaultPayloadCopy = payload;
-    }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
@@ -133,11 +133,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
-      url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      url: `http://192.168.0.236:3001/erp/${endpoint}`,
+      // erp/getStatutoryDetails
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
-      data:  initialDefaultPayloadCopy
+      data:  initialDefaultPayload
 
     };
 
@@ -252,18 +254,24 @@ const [filterHeaders, setFilterHeaders]=useState([])
     const payload = initialDefaultPayload;
     payload.page = data;
     setInitialDefaultPayload(payload)
-    getTableData(payload)
+    // getTableData(payload)
 
     
     
   }
+
+  useEffect(()=>{
+    getTableData(initialDefaultPayload);
+
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
     payload.count = event.target.value;
     payload.page = 0;
     setInitialDefaultPayload(payload)
-    getTableData(payload)
+   //  getTableData(payload)
   }
 
   // Search functionality
@@ -275,7 +283,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // Filter_Headers:
      
     }));
-    getTableData(payload)
+   // getTableData(payload)
   }
 
 
@@ -306,25 +314,54 @@ const [filterHeaders, setFilterHeaders]=useState([])
     : '';
 
   
-const [test, setTest]= useState();
+
   const handleFIlterOptions=(data)=>{
-    setTest(data)
+   
     console.log(data,"filtered data")
+
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
       // Search: searchTerm,
-      Filter_Headers:data
+      externalFilters:data
      
     }));
-    getTableData(payload)
+    // getTableData(payload)
 
-    console.log(payload,"after filter effected")
+   
     
 
   }
 
-  console.log(test,"filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr data")
+  const handleFilterSearch = (searchTerm) => {
+
+ 
+
+    console.log(searchTerm,"searched dataaaaaaaaaaa")
+  
+   
+  
+   
+  
+      const payload = initialDefaultPayload;
+  
+      setInitialDefaultPayload(prevPayload => ({
+  
+        ...prevPayload,
+  
+        search: searchTerm,
+  
+        // Filter_Headers:
+  
+       
+  
+      }));
+  
+      getTableData(payload)
+  
+    }
+
+ 
   
 
   
@@ -335,7 +372,7 @@ const [test, setTest]= useState();
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
       
-       {filterName === "statuortySearchFilter" && <SearchFilter  filterData={handleFIlterOptions} />}
+       {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
     
         <Card>
