@@ -66,6 +66,9 @@ import Style from "../styles/Style.module.css";
 
 
 import SearchFilter from '../filterSearch/FilterSearch';
+import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+
+
 
 
 
@@ -78,7 +81,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
   const popover = usePopover();
   
 
@@ -107,6 +110,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // console.log(endpointdata,"endpoint urlll")
   // console.log(defaultPayloaddata,"endpoint urlll")
 
+
+  // const bodyData = 'appliedLeave';
+
   useEffect(() => {
     // onclickActions();
     getTableData();
@@ -126,9 +132,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
       headers: {
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
       data:  initialDefaultPayloadCopy
 
@@ -138,15 +145,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
-      setTableData(response?.data?.appliedLeave || []);
-      // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
-      // console.log(response?.data?.data?.bodyContent);
-      // setTableData(response?.data?.data?.bodyContent || []);
-      // setTABLE_HEAD(response?.data?.data?.headerContent || []);
-      // setRowActions(response?.data?.actions || []);
+      // setTableData(response?.data?.[bodyData]|| []);
+      setTableData(response?.data?.data|| []);
+      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalEntry || 0)
-      console.log(response?.data?.Total_entry,"total no of records-->")
+      console.log(response?.data?.data,"total no of records-->")
 
       // leave list api
       console.log("leave list api integration")
@@ -190,7 +194,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const dataFiltered = applyFilter({
     inputData: tableData,
     // console.log(inputData,"inputData checkingggggggggggg"),
-    comparator: getComparator(table.order, table.orderBy),
+    comparator: getComparator(table?.order, table?.orderBy),
     filters,
   });
 
@@ -217,8 +221,18 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
 
 
-  const handleEditRow = (rowData) => {
-    // console.log(rowData, eventData)
+  const handleEditRow = (rowData,eventData) => {
+    console.log(rowData, eventData)
+    if (eventData?.type === "serviceCall"){
+      console.log("servce call will called ")
+    }
+    else if (eventData?.type === "edit"){
+
+      console.log("servce call will called for path navigation")
+    }
+    else{
+      console.log("servce call will called for path navigation")
+    }
 
 
     
@@ -292,9 +306,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
     : '';
 
   
-
+const [test, setTest]= useState();
   const handleFIlterOptions=(data)=>{
-    console.log(data)
+    setTest(data)
+    console.log(data,"filtered data")
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
@@ -308,22 +323,24 @@ const [filterHeaders, setFilterHeaders]=useState([])
     
 
   }
+
+  console.log(test,"filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr data")
   
 
   
   return (
     <>
       
-      <Container 
+     
+      <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
       
-      maxWidth={settings.themeStretch ? false : 'lg'}
+       {filterName === "statuortySearchFilter" && <SearchFilter  filterData={handleFIlterOptions} />}
       
-      >
-      <SearchFilter />
     
         <Card>
        
-          <TableContainer   sx={{ position: "relative", overflow: "unset"  }}>
+          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table?.selected?.length}
@@ -476,11 +493,14 @@ BasicTable.propTypes = {
   headerData: PropTypes.any,
 };
 
-// BasicTable.propTypes = {
-//   onclickActions: PropTypes.func,
-// };
+BasicTable.propTypes = {
+  bodyData: PropTypes.func,
+};
 BasicTable.propTypes = {
    rowActions: PropTypes.func
+};
+BasicTable.propTypes = {
+  filterName: PropTypes.any
 };
 
 

@@ -5,33 +5,70 @@ import { StatouryForm } from './StatouryForm';
 export const StatouryTable = () => {
   const [TABLE_HEAD, setTableHead] = React.useState([
     {
-      id: 'employee_id',
+      id: 'employeeID',
       label: ' Employee id',
       type: 'text',
       containesAvatar: true,
 
       secondaryText: 'name',
+     minWidth:'150px'
     },
-    { id: 'state', label: 'State', width: 250, type: 'text' },
-    { id: 'employee_name', label: 'Employee name', width: 220, type: 'text' },
-    { id: 'aadhar_number', label: 'Aadhar Number', width: 300, type: 'text' },
-    { id: 'pan_number', label: 'Pan Number', width: 100, type: 'text' },
+   
+    { id: 'employeeName', label: 'Employee name',  type: 'text', minWidth:'180px' },
+    { id: 'aadharNumber', label: 'Aadhar Number',  type: 'text', minWidth:'150px' },
+    { id: 'panNumber', label: 'Pan Number', type: 'text', minWidth:'150px' },
+    { id: 'uan', label: 'Uan Number', type: 'text', minWidth:'150px' },
 
-    { id: 'accountholder_name', label: 'Account holder Name', width: 280, type: 'text' },
-    { id: 'bank_name', label: 'Bank Name', width: 220, type: 'text' },
-    { id: 'account_number', label: 'Account Number', width: 180, type: 'text' },
-    { id: 'bank_branch', label: 'Bank Branch', width: 180, type: 'text' },
-    { id: 'ifsc_code', label: 'IFSC Code', width: 180, type: 'text' },
-    { id: 'pf_no', label: 'PF Number', width: 180, type: 'text' },
-    { id: 'esic_number', label: 'ESIC Number', width: 180, type: 'text' },
-    { id: 'pt', label: 'PT', width: 180, type: 'text' },
-    { id: 'LWF', label: 'UAN Number', width: 180, type: 'text' },
+    { id: 'accountHolderName', label: 'Account holder Name',  type: 'text' },
+    { id: 'passportNo', label: 'Passport Number',  type: 'text' },
+    { id: 'bankName', label: 'Bank Name',  type: 'text' },
+    { id: 'accountNumber', label: 'Account Number',  type: 'text' },
+    { id: 'bankBranch', label: 'Bank Branch',  type: 'text' },
+    { id: 'ifscCode', label: 'IFSC Code', type: 'text' },
+    { id: 'pfNumber', label: 'PF Number', type: 'text' },
+    { id: 'esicNumber', label: 'ESIC Number', type: 'text' },
+    { id: 'ptNumber', label: 'PT Number', type: 'text' },
+    { id: 'lwfNumber', label: 'LWF', type: 'text' },
   ]);
-  const defaultPayload = {
-    Page: 1,
+  const defaultPayload ={
 
-    Count: 5,
-  };
+    "count": 5,
+  
+    "page": 0,
+  
+    "search": "",
+  
+      "externalFilters": {
+  
+      "employeeId": "",
+  
+      "employeeName": "",
+  
+      
+  
+      "pfType":"",
+  
+     
+  
+      "accountHolderName": "",
+  
+      "bankName": "",
+  
+      "ifscCode": "",
+  
+      "bankBranch": ""
+  
+    },
+  
+     "sort": {
+  
+     "key": 0,
+  
+     "orderBy": "employee_id"
+  
+    }
+  
+  }
   const actions = [
     { name: 'Approve', icon: 'hh', id: 'approve', type: 'serviceCall', endpoint: '/accept' },
 
@@ -49,6 +86,7 @@ export const StatouryTable = () => {
         endpoint="/listLeave"
         defaultPayload={defaultPayload}
         rowActions={actions}
+        filterName="statuortySearchFilter"
       />
     </>
   );
