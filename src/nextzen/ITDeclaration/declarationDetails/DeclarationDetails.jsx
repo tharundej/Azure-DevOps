@@ -347,7 +347,7 @@ import axios from 'axios';
 
 const DeclarationDetails = () => {
   const [data, setData] = useState();
-  const [reloading ,setReloading] = useState(false)
+  const [reloading, setReloading] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -369,12 +369,12 @@ const DeclarationDetails = () => {
   };
 
   const handleAgeChange = (config_id) => (event) => {
-    console.log("i am called ")
+    console.log('i am called ');
     const newData = data?.map((item) =>
       item.config_id === config_id ? { ...item, declared: event.target.value } : item
     );
-  setData(newData)
-  console.log(data , " datadataaaaaaa")
+    setData(newData);
+    console.log(data, ' datadataaaaaaa');
   };
 
   const getDeclarationsList = async () => {
@@ -385,15 +385,15 @@ const DeclarationDetails = () => {
 
       financial_year: 2019,
 
-      rows_per_page: 8,
+      rows_per_page: 6,
 
       page_num: 1,
 
       filter_by: [],
 
-      sort_order: ["asc"],
+      sort_order: ['asc'],
 
-    order_by: ["config_id"],
+      order_by: ['config_id'],
 
       search: '',
     };
@@ -432,23 +432,21 @@ const DeclarationDetails = () => {
   }, [reloading]);
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({
-      "config_id": item.config_id,
-      "declared":parseInt(item.declared, 10)
+      config_id: item.config_id,
+      declared: parseInt(item.declared, 10),
     }));
-    console.log(newArray ,"newarray");
+    console.log(newArray, 'newarray');
     const payload = {
+      employee_id: 'Info1',
 
-      "employee_id": "Info1",
-  
-      "company_id": "comp1",
-  
-      "financial_year": 2019,
-  
-      "records": newArray
-  
-  }
-  
-   const config = {
+      company_id: 'comp1',
+
+      financial_year: 2019,
+
+      records: newArray,
+    };
+
+    const config = {
       method: 'put',
       maxBodyLength: Infinity,
       url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateDeclarations',
@@ -463,18 +461,15 @@ const DeclarationDetails = () => {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
-          setReloading(!reloading)
+          setReloading(!reloading);
           console.log(JSON.stringify(response.data));
-        
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  
-  }
+  };
 
- 
   return (
     <div>
       <Grid
@@ -548,31 +543,45 @@ const DeclarationDetails = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    
-      <Grid container spacing={2} alignItems="center" xs={12}  direction="row"style={{marginBottom:"1rem"}}> 
-          <Grid  item container xs={12} spacing={2} alignItems="center"  justifyContent="flex-Start" direction="row"style={{marginBottom:"1rem"}}>
-        
-        
+
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        xs={12}
+        direction="row"
+        style={{ marginBottom: '1rem' }}
+      >
+        <Grid
+          item
+          container
+          xs={12}
+          spacing={2}
+          alignItems="center"
+          justifyContent="flex-Start"
+          direction="row"
+          style={{ marginBottom: '1rem' }}
+        >
           <Grid item xs={4} sm={2}>
-            <Button className="button" onClick={updateDeclarationsList}>Save</Button>
+            <Button className="button" onClick={updateDeclarationsList}>
+              Save
+            </Button>
           </Grid>
           <Grid item xs={8} sm={10}>
-          <TablePagination
-        rowsPerPageOptions={[5, 10 , 50]}
-        component="div"
-        count={data?.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={data?.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Grid>
         </Grid>
-      
-          </Grid>
+      </Grid>
     </div>
   );
 };
-
 
 export default DeclarationDetails;

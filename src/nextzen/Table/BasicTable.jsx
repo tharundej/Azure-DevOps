@@ -66,8 +66,7 @@ import Style from "../styles/Style.module.css";
 
 
 import SearchFilter from '../filterSearch/FilterSearch';
-import ClaimSearchFilter from '../claims/ClaimSearchFilter';
-
+// import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 
 
@@ -375,7 +374,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
      
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
-      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
+      {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
