@@ -184,6 +184,7 @@ export default function CreatePayRun({ moveToPageFunction }) {
                   direction="column"
                   spacing={0}
                   alignItems="center"
+                  
                   style={{ paddingTop: '0px !important' }}
                 >
                   <Grid item>
@@ -230,7 +231,7 @@ export default function CreatePayRun({ moveToPageFunction }) {
               width: '200px',
             }}
           >
-            <Grid container spacing={2} alignItems="center" justifyContent="center">
+            <Grid container spacing={2} alignItems="center" justifyContent="center" >
               {/* Typography components */}
               <Grid item xs={12}>
                 <Typography align="center" style={{ color: '#7D7878', fontWeight: 'bold' }}>

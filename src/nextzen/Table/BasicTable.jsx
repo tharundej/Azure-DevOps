@@ -107,9 +107,7 @@ import {
   emptyRows,
 
   TableNoData,
-
-  TableEmptyRows,
-
+  // TableEmptyRows,
   TableHeadCustom,
 
   TableSelectedAction,
@@ -133,15 +131,8 @@ import Style from "../styles/Style.module.css";
  
 
 import SearchFilter from '../filterSearch/FilterSearch';
-
-import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
-
- 
-
- 
-
- 
+// import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
  
 
@@ -242,16 +233,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const getTableData = (payload) => {
 
- 
-
     // let initialDefaultPayloadCopy =initialDefaultPayload;
-
     // if(payload){
-
     //   initialDefaultPayloadCopy = payload;
-
     // }
-
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
 
     //   initialDefaultPayloadCopy.Page = data;
@@ -277,10 +266,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
 
       },
-
       data:  initialDefaultPayload
-
- 
 
     };
 
@@ -507,6 +493,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     payload.page = data;
 
     setInitialDefaultPayload(payload)
+    getTableData(payload)
 
     // getTableData(payload)
 
@@ -518,14 +505,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   }
 
- 
-
   useEffect(()=>{
-
     getTableData(initialDefaultPayload);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[initialDefaultPayload])
 
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
     console.log(event)
@@ -537,9 +521,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     payload.page = 0;
 
     setInitialDefaultPayload(payload)
-
    //  getTableData(payload)
-
   }
 
  
@@ -561,9 +543,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
      
 
     }));
-
    // getTableData(payload)
-
   }
 
  
@@ -620,6 +600,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     : '';
 
+  
+
  
 
  
@@ -627,12 +609,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
 
   const handleFIlterOptions=(data)=>{
-
    
-
     console.log(data,"filtered data")
-
- 
 
     const payload = initialDefaultPayload;
 
@@ -641,91 +619,48 @@ const [filterHeaders, setFilterHeaders]=useState([])
       ...prevPayload,
 
       // Search: searchTerm,
-
       externalFilters:data
-
      
-
     }));
-
-    getTableData(payload)
-
- 
-
-    console.log(payload,"after filter effected")
+    // getTableData(payload)
 
    
-
- 
+    
 
   }
-
- 
 
   const handleFilterSearch = (searchTerm) => {
 
  
 
- 
-
- 
-
     console.log(searchTerm,"searched dataaaaaaaaaaa")
-
- 
-
+  
    
-
- 
-
+  
    
-
- 
-
+  
       const payload = initialDefaultPayload;
-
- 
-
+  
       setInitialDefaultPayload(prevPayload => ({
-
- 
-
+  
         ...prevPayload,
-
- 
-
+  
         search: searchTerm,
-
- 
-
+  
         // Filter_Headers:
-
- 
-
+  
        
-
- 
-
+  
       }));
-
- 
-
+  
       getTableData(payload)
-
- 
-
+  
     }
 
  
+  
 
- 
-
- 
-
- 
-
- 
-
+  
   return (
 
     <>
@@ -735,19 +670,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
      
 
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
-
-      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
-
-     
-
+      {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
+      
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-
-       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterData={handleFIlterOptions} />}
-
-     
-
-   
-
+       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      
+    
         <Card>
 
        

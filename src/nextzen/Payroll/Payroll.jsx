@@ -141,7 +141,6 @@ export default function BasicCard(currentUser) {
   const NewUserSchema = Yup.object().shape({
     employee_type: Yup.string().required('Employee Type is Required'),
     payschedule_type: Yup.string().required('Payschedule Type is Required'),
-    pay_type: Yup.string().required('Pay Type is Required'),
     basic_pay: Yup.number().required('Basic Pay is Required'),
     hra: Yup.number().required('HRA is Required'),
     da: Yup.number().required('DA is Required'),
@@ -153,7 +152,6 @@ export default function BasicCard(currentUser) {
     () => ({
       employee_type: currentUser?.employee_type || '',
       payschedule_type: currentUser?.payschedule_type || '',
-      pay_type: currentUser?.pay_type || '',
       basic_pay: currentUser?.basic_pay || null,
       hra: currentUser?.hra || null,
       da: currentUser?.da || null,

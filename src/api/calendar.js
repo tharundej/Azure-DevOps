@@ -12,13 +12,11 @@ const ApplyLeave = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave";
 const URL = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList";
 
 
-
-
 const options = {
-    company_id:"c1",
-    employee_id:"E1"
-};
+  company_id: "COMP1",
+   employee_id:"info1"
 
+}
 
 
 export function useGetEvents() {
@@ -38,7 +36,6 @@ console.log(events,"eventsssss")
       eventsEmpty: !isLoading && !data?.length,
     };
   }, [data, error, isLoading, isValidating]);
-console.log(memoizedValue,"memoizedvalue")
   return memoizedValue;
 }
 
@@ -50,8 +47,26 @@ export async function createEvent(eventData) {
    * Work on server
    */
   // const data = { eventData };
-  await axios.post(ApplyLeave, eventData);
-
+  // try {
+  // await axios.post(ApplyLeave, eventData);
+  // mutate([URL,options]); 
+  // }
+  // catch(error){
+  //    console.log(error.response.data)
+  // }
+  try {
+    const response = await axios.post(ApplyLeave, eventData);
+    // Check the response for errors and throw an error if needed.
+    if (response.data.success === false) {
+      throw new Error(response.data.message);
+    }
+    // If successful, return any necessary data.
+    mutate([URL,options]); 
+    return response.data;
+  } 
+  catch (error) {
+    throw error; // Re-throw the error to propagate it up.
+  }
   /**
    * Work in local
    */
