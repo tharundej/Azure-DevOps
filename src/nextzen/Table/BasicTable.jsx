@@ -36,9 +36,9 @@ import Pagination from '@mui/material/Pagination';
 import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-// datarange
+// datarange 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
- 
+
 // import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 // import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 // components
@@ -63,28 +63,28 @@ import {
 import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 import Style from "../styles/Style.module.css";
- 
- 
+
+
 import SearchFilter from '../filterSearch/FilterSearch';
 import ClaimSearchFilter from '../claims/ClaimSearchFilter';
-import LeaveFilter from '../LeaveManagement/LeaveFilter';
- 
- 
- 
- 
+
+
+
+
+
 const defaultFilters = {
   name: '',
   role: [],
   status: 'all',
 };
- 
- 
+
+
 // ----------------------------------------------------------------------
- 
+
 const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
   const popover = usePopover();
- 
- 
+  
+
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
  console.log(initialDefaultPayload,"initialDefaultPayload====================")
 //  console.log(actions,"actions==......")
@@ -96,31 +96,31 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,
 const [filterHeaders, setFilterHeaders]=useState([])
   const pageSize = 1;
   const [page, setPage] = useState(1);
- 
+
   const [totalRecordsCount, setTotalRecordsCount] = useState(0)
   // const defaultPayloaddata =defaultPayload;
   //   const endpointdata =endpoint;
   // const [TABLE_HEAD, setTABLE_HEAD] = useState();
- 
+
    const TABLE_HEAD = headerData;
   // const[_userList, set_userList] = useState(bodydata);
   const [tableData, setTableData] = useState([]);
- 
+
   // const [rowActions, setRowActions] = useState(actions);
   // console.log(endpointdata,"endpoint urlll")
   // console.log(defaultPayloaddata,"endpoint urlll")
- 
- 
+
+
   // const bodyData = 'appliedLeave';
- 
+
   useEffect(() => {
     // onclickActions();
     getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
- 
+
   const getTableData = (payload) => {
- 
+
     // let initialDefaultPayloadCopy =initialDefaultPayload;
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
@@ -132,63 +132,65 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `http://192.168.1.87:3001/erp${endpoint}`,
+      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      url: `http://192.168.0.236:3001/erp/${endpoint}`,
+      // erp/getStatutoryDetails
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
       data:  initialDefaultPayload
- 
+
     };
- 
- 
- 
+
+
+
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
       // setTableData(response?.data?.[bodyData]|| []);
-      setTableData(response?.data?.[bodyData] || []);
-     
+      setTableData(response?.data?.data|| []);
+      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalEntry || 0)
       console.log(response?.data?.data,"total no of records-->")
- 
+
       // leave list api
       console.log("leave list api integration")
       console.log(response)
- 
+
       // if(actionType === 'pageChange'){
-      //   // let initialDefaultPayloadCopy =
+      //   // let initialDefaultPayloadCopy = 
       //   setInitialDefaultPayload((prevData)=>({
       //     ...prevData, Page:data
       //   }))
       // }
- 
+
     })
- 
+
       .catch((error) => {
- 
+
         console.log(error);
- 
+
       });
   }
- 
- 
+
+
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   // const currentPageRecords = tableData.slice(startIndex, endIndex);
   const handleChange = (event, value) => {
     setPage(value);
   };
- 
+
   const table = useTable();
- 
+
   const settings = useSettingsContext();
- 
+
   const router = useRouter();
- 
+
   const confirm = useBoolean();
- 
- 
+
+
   const [filters, setFilters] = useState(defaultFilters);
   // const dataFiltered = tableData.slice(startIndex, endIndex);
   const dataFiltered = applyFilter({
@@ -197,13 +199,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
     comparator: getComparator(table?.order, table?.orderBy),
     filters,
   });
- 
+
   const denseHeight = table.dense ? 52 : 72;
- 
+
   const canReset = !isEqual(defaultFilters, filters);
- 
+
   const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
- 
+
   const handleFilters = useCallback(
     (name, value) => {
       table?.onResetPage();
@@ -214,53 +216,53 @@ const [filterHeaders, setFilterHeaders]=useState([])
     },
     [table]
   );
- 
+
   const handleDeleteRow = (event) => {
     console.log(event)
   }
- 
- 
- 
+
+
+
   const handleEditRow = (rowData,eventData) => {
     console.log(rowData, eventData)
     if (eventData?.type === "serviceCall"){
       console.log("servce call will called ")
     }
     else if (eventData?.type === "edit"){
- 
+
       console.log("servce call will called for path navigation")
     }
     else{
       console.log("servce call will called for path navigation")
     }
- 
- 
-   
- 
+
+
+    
+
   }
- 
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
     },
     [handleFilters]
   );
- 
- 
+
+
   const onPageChangeHandeler = (event, data) =>{
- 
+
     const payload = initialDefaultPayload;
     payload.page = data;
     setInitialDefaultPayload(payload)
     // getTableData(payload)
- 
-   
-   
+
+    
+    
   }
- 
+
   useEffect(()=>{
     getTableData(initialDefaultPayload);
- 
+
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
@@ -271,7 +273,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     setInitialDefaultPayload(payload)
    //  getTableData(payload)
   }
- 
+
   // Search functionality
   const handleSearch = (searchTerm) => {
     const payload = initialDefaultPayload;
@@ -283,40 +285,40 @@ const [filterHeaders, setFilterHeaders]=useState([])
     }));
    // getTableData(payload)
   }
- 
- 
- 
- 
+
+
+  
+
   // daterange picker
   const [isOpen, setIsOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
- 
+
   const handleOpen = () => {
     setIsOpen(true);
   };
- 
+
   const handleClose = () => {
     setIsOpen(false);
   };
- 
+
   const handleDateChange = (newValue) => {
     console.log("newValue", newValue);
     setSelectedRange(newValue);
     // handleClose();
   };
- 
+
   const isValidDate = (date) => date instanceof Date && !Number.isNaN(date);
- 
+
   const displayValue = selectedRange && isValidDate(selectedRange[0]) && isValidDate(selectedRange[1])
     ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
     : '';
- 
- 
- 
+
+  
+
   const handleFIlterOptions=(data)=>{
    
     console.log(data,"filtered data")
- 
+
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
@@ -324,56 +326,55 @@ const [filterHeaders, setFilterHeaders]=useState([])
       externalFilters:data
      
     }));
-   // getTableData(payload)
- 
-    console.log(payload,"after filter effected")
+    // getTableData(payload)
+
    
- 
+    
+
   }
- 
+
   const handleFilterSearch = (searchTerm) => {
+
  
- 
- 
+
     console.log(searchTerm,"searched dataaaaaaaaaaa")
- 
+  
    
- 
+  
    
- 
+  
       const payload = initialDefaultPayload;
- 
+  
       setInitialDefaultPayload(prevPayload => ({
- 
+  
         ...prevPayload,
- 
+  
         search: searchTerm,
- 
+  
         // Filter_Headers:
- 
+  
        
- 
+  
       }));
- 
+  
       getTableData(payload)
- 
+  
     }
+
  
- 
- 
- 
- 
+  
+
+  
   return (
     <>
-     
+      
      
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
-     
+      
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-     
-       {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
-   
+       
+    
         <Card>
        
           <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
@@ -395,7 +396,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
                 </Tooltip>
               }
             />
- 
+
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
                 {TABLE_HEAD && <TableHeadCustom
@@ -413,13 +414,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
                   }
                   rowActions={rowActions || []}
                 />}
- 
-             
- 
+
+              
+
                   <TableBody>
                  
-                         
-       
+                          
+        
                     {console.log(tableData)}
                     {tableData && tableData.length > 0 && tableData
                      
@@ -436,24 +437,24 @@ const [filterHeaders, setFilterHeaders]=useState([])
                           rowActions={rowActions || []}
                         />
                        
- 
- 
+
+
                         </>
                       ))}
-       
- 
- 
+        
+
+
                     <TableNoData notFound={notFound} />
                   </TableBody>
-             
+              
               </Table>
             </Scrollbar>
           </TableContainer>
- 
+
           <TablePaginationCustom
             count={totalRecordsCount}
             // count={countValue}
-           
+            
             page={initialDefaultPayload?.page}
             rowsPerPage={initialDefaultPayload?.count}
             // rowsPerPage={25}
@@ -468,67 +469,67 @@ const [filterHeaders, setFilterHeaders]=useState([])
                    
             </Grid >
             <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
-            <Pagination
-            count={Math.ceil(tableData.length / pageSize)}
+            <Pagination 
+            count={Math.ceil(tableData.length / pageSize)} 
             // count={10}
             page={page}
             onChange={handleChange}
             shape="rounded"
             />
- 
+
             </Grid>
            
             </Grid> */}
         </Card>
       </Container>
- 
+
      
     </>
   );
 };
- 
+
 function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, "inputData checkingggggggggggg")
   const { name, status, role } = filters;
- 
+
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
- 
+
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
- 
+
   inputData = stabilizedThis?.map((el) => el[0]);
- 
+
   if (name) {
     inputData = inputData?.filter(
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
- 
+
   if (status !== 'all') {
     inputData = inputData?.filter((user) => user?.status === status);
   }
- 
+
   if (role.length) {
     inputData = inputData?.filter((user) => role?.includes(user.role));
   }
- 
+
   return inputData;
 }
- 
+
 BasicTable.propTypes = {
   endpoint: PropTypes.string,
 };
- 
+
 BasicTable.propTypes = {
   defaultPayload: PropTypes.object,
 };
 BasicTable.propTypes = {
   headerData: PropTypes.any,
 };
- 
+
 BasicTable.propTypes = {
   bodyData: PropTypes.func,
 };
@@ -538,8 +539,8 @@ BasicTable.propTypes = {
 BasicTable.propTypes = {
   filterName: PropTypes.any
 };
- 
- 
- 
- 
+
+
+
+
 export { BasicTable };
