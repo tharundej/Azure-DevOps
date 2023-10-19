@@ -146,7 +146,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
       // setTableData(response?.data?.[bodyData]|| []);
-      setTableData(response?.data?.data|| []);
+      setTableData(response?.data?.[bodyData] || []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalEntry || 0)
