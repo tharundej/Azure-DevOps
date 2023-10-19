@@ -126,6 +126,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
     // }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
