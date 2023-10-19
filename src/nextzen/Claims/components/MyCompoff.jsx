@@ -105,6 +105,7 @@ export default function MyCompoff() {
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
          rowActions={actions}
+         bodyData = 'appliedLeave'
         //  onclickActions={onclickActions}
       />
     </>

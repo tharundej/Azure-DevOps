@@ -66,6 +66,9 @@ import Style from "../styles/Style.module.css";
 
 
 import SearchFilter from '../filterSearch/FilterSearch';
+import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+
+
 
 
 
@@ -78,7 +81,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
   const popover = usePopover();
   
 
@@ -107,6 +110,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // console.log(endpointdata,"endpoint urlll")
   // console.log(defaultPayloaddata,"endpoint urlll")
 
+
+  // const bodyData = 'appliedLeave';
+
   useEffect(() => {
     // onclickActions();
     getTableData();
@@ -115,10 +121,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const getTableData = (payload) => {
 
-    let initialDefaultPayloadCopy =initialDefaultPayload;
-    if(payload){
-      initialDefaultPayloadCopy = payload;
-    }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
@@ -126,11 +132,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      url: `http://192.168.0.236:3001/erp/${endpoint}`,
+      // erp/getStatutoryDetails
       headers: {
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
-      data:  initialDefaultPayloadCopy
+      data:  initialDefaultPayload
 
     };
 
@@ -138,15 +147,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     axios.request(config).then((response) => {
       // // console.log(response?.data?.bodyContent);
-      setTableData(response?.data?.appliedLeave || []);
-      // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
-      // console.log(response?.data?.data?.bodyContent);
-      // setTableData(response?.data?.data?.bodyContent || []);
-      // setTABLE_HEAD(response?.data?.data?.headerContent || []);
-      // setRowActions(response?.data?.actions || []);
+      // setTableData(response?.data?.[bodyData]|| []);
+      setTableData(response?.data?.data|| []);
+      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalEntry || 0)
-      console.log(response?.data?.Total_entry,"total no of records-->")
+      console.log(response?.data?.data,"total no of records-->")
 
       // leave list api
       console.log("leave list api integration")
@@ -190,7 +196,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const dataFiltered = applyFilter({
     inputData: tableData,
     // console.log(inputData,"inputData checkingggggggggggg"),
-    comparator: getComparator(table.order, table.orderBy),
+    comparator: getComparator(table?.order, table?.orderBy),
     filters,
   });
 
@@ -217,8 +223,18 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
 
 
-  const handleEditRow = (rowData) => {
-    // console.log(rowData, eventData)
+  const handleEditRow = (rowData,eventData) => {
+    console.log(rowData, eventData)
+    if (eventData?.type === "serviceCall"){
+      console.log("servce call will called ")
+    }
+    else if (eventData?.type === "edit"){
+
+      console.log("servce call will called for path navigation")
+    }
+    else{
+      console.log("servce call will called for path navigation")
+    }
 
 
     
@@ -238,18 +254,24 @@ const [filterHeaders, setFilterHeaders]=useState([])
     const payload = initialDefaultPayload;
     payload.page = data;
     setInitialDefaultPayload(payload)
-    getTableData(payload)
+    // getTableData(payload)
 
     
     
   }
+
+  useEffect(()=>{
+    getTableData(initialDefaultPayload);
+
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
     payload.count = event.target.value;
     payload.page = 0;
     setInitialDefaultPayload(payload)
-    getTableData(payload)
+   //  getTableData(payload)
   }
 
   // Search functionality
@@ -261,7 +283,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // Filter_Headers:
      
     }));
-    getTableData(payload)
+   // getTableData(payload)
   }
 
 
@@ -294,32 +316,68 @@ const [filterHeaders, setFilterHeaders]=useState([])
   
 
   const handleFIlterOptions=(data)=>{
-    console.log(data)
+   
+    console.log(data,"filtered data")
+
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
       // Search: searchTerm,
-      Filter_Headers:data
+      externalFilters:data
      
     }));
-    getTableData(payload)
+    // getTableData(payload)
 
-    console.log(payload,"after filter effected")
+   
     
 
   }
+
+  const handleFilterSearch = (searchTerm) => {
+
+ 
+
+    console.log(searchTerm,"searched dataaaaaaaaaaa")
+  
+   
+  
+   
+  
+      const payload = initialDefaultPayload;
+  
+      setInitialDefaultPayload(prevPayload => ({
+  
+        ...prevPayload,
+  
+        search: searchTerm,
+  
+        // Filter_Headers:
+  
+       
+  
+      }));
+  
+      getTableData(payload)
+  
+    }
+
+ 
   
 
   
   return (
     <>
       
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <SearchFilter />
+     
+      <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
+      
+       {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      
     
         <Card>
        
-          <TableContainer   sx={{ position: "relative", overflow: "unset"  }}>
+          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table?.selected?.length}
@@ -472,11 +530,14 @@ BasicTable.propTypes = {
   headerData: PropTypes.any,
 };
 
-// BasicTable.propTypes = {
-//   onclickActions: PropTypes.func,
-// };
+BasicTable.propTypes = {
+  bodyData: PropTypes.func,
+};
 BasicTable.propTypes = {
    rowActions: PropTypes.func
+};
+BasicTable.propTypes = {
+  filterName: PropTypes.any
 };
 
 
