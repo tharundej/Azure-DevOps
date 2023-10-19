@@ -63,23 +63,23 @@ export default function TimeSheetTable() {
     const defaultPayload={
       "employee_id":"ibm2",
 
-      "Page":0,
+      "page":0,
   
-      "Count":30,
+      "count":30,
   
       "search":"",
   
-      "externalfilter":{
+      "externalFilters":{
   
-               "project_name":"testing51",
+               "project_name":"",
   
                "activity_name":"",
   
                "Status":"",
   
-               "from_date":"2023-10-10",
+               "from_date":"",
   
-               "to_date":"2023-12-10"
+               "to_date":""
   
       },
   
@@ -101,30 +101,7 @@ export default function TimeSheetTable() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          Project_id: "Aswin!23",
-    
-          project_name: "BellErp",
-    
-          date_of_activity_name: "12/12/2023",
-    
-          activity_name: "Coding",
-    
-          working_time: "2hour 40minutes",
-
-          Total_working_time: "122hour 40minutes",
-
-          status: "Approved",
-          aswin: "Approved",
-    
-        },
-    
-      ];
+   
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -160,6 +137,7 @@ export default function TimeSheetTable() {
  headerData={TABLE_HEAD}
  endpoint='Mytimesheets'
  bodyData='response'
+ filterName="TimeSearchFilter"
  />
     </>
   );

@@ -7,3 +7,11 @@
     color: #919EAB;
     display: block;
 }
+
+@media (min-width: 600px) {
+
+    .MuiContainerRoot{
+        padding: 0% !important;
+        max-width: 99% !important;
+    }
+}

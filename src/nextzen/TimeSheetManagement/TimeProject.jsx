@@ -116,15 +116,15 @@ export default function TimeProject() {
 
     "externalFilters": {
 
-        "start_start_date": "",
+        "start_date": "",
 
-        "end_start_date": "",
+        "end_date": "",
 
         "project_name": "",
 
         "status": "",
 
-        "end_date_name": ""
+        "activity_name": ""
 
     },
 

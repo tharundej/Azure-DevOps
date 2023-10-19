@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SearchFilter({handleFilters,filterOptions}){
+export default function TimeSearchFilter({filterData,filterOptions}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -105,19 +105,17 @@ export default function SearchFilter({handleFilters,filterOptions}){
 
   const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
+  const [dropdownProjectName,setDropdownProjectName]=useState([])
+  const [dropdownActivity,setdropdownActivity]=useState([])
 
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'joining_date',
-        from:'joining_date_from',
-        to:'joining_date_to'
+        field:'date_activity',
+        from:'from_date',
+        to:'to_date'
       },
-      {
-        field:'offer_date',
-        from:'offer_date_from',
-        to:'offer_date_to'
-      }
+    
     ]
   )
 
@@ -128,21 +126,24 @@ export default function SearchFilter({handleFilters,filterOptions}){
         options:[]
       },
       {
-        field:'employment_type',
+        field:'activity_name',
+        options:[]
+      },
+      {
+        field:'project_name',
         options:[]
       }
     ]
   )
 
 
-  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
+  const [datesSavedArray,setDatesSavedArray]=useState(["from_date","to_date","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joining_date_from:null,
-    joining_date_to:null,
-    offer_date_from:null,
-    offer_date_to:null
+    from_date:null,
+    to_date:null,
+ 
   })
 
   function formDateDataStructure(){
@@ -154,24 +155,18 @@ export default function SearchFilter({handleFilters,filterOptions}){
        datesFiledArray.forEach((item,index)=>{  
          
         arr1[item.field]={
-          from:dates[item?.from],
-          to:dates[item?.to]
+          from:formatDateToYYYYMMDD(dates[item?.from]),
+          to:formatDateToYYYYMMDD(dates[item?.to])
         }
-
         //  const obj={
         //    filed_name:item?.field,
         //    from:dates[item?.from],
         //    to:dates[item?.to]
-        //  }
-        
-         
+        //  }  
         //  arr1.push(obj);
-       
-         
         })
         setDatesData(arr1);
-        resolve(arr1)
-        
+        resolve(arr1)   
     })
     
 
@@ -227,14 +222,20 @@ export default function SearchFilter({handleFilters,filterOptions}){
         target: { value },
       } = event;
       
-      if(field==="employment_type"){
-        setDropdownEmployemtType(value)
+      if(field==="project_name"){
+        setDropdownProjectName(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
       else if(field==="status"){
         setDropdownStatus(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="activity_name"){
+        setdropdownActivity(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
@@ -248,13 +249,16 @@ export default function SearchFilter({handleFilters,filterOptions}){
      // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
-    const handleApply=async()=>{
+    const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
-      const data1=await formWithDropdown(data);
-      console.log(data,';;;')
-      // call parent function and pass it
       
+      const data1=await formWithDropdown(data);
+      filterData(data);
+      console.log(data,';;;')
+  
+    //   filterData(data);
+    handleClickClose()
       
     }
     
@@ -267,19 +271,23 @@ export default function SearchFilter({handleFilters,filterOptions}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch}
+            // onChange={handleSeacrch} 
 
             />
             </Grid>
 
             <Grid md={4} xs={4} item>
-
-        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+                
+                <Grid >
+                <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
       </Button>
 
       </Stack>
+                </Grid>
+
+ 
       </Grid>
          </Grid>
      
@@ -301,7 +309,7 @@ export default function SearchFilter({handleFilters,filterOptions}){
           <Grid>
 
                 <Grid>
-            <Typography>Joining Date</Typography>
+            <Typography> Date Activity</Typography>
      
 
             <Grid container flexDirection="row">
@@ -311,12 +319,12 @@ export default function SearchFilter({handleFilters,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.joining_date_from}
+                      value={dates?.from_date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_from: newValue,
+                          from_date: newValue,
                         }));
                       }}
                     />
@@ -329,12 +337,12 @@ export default function SearchFilter({handleFilters,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.joining_date_to}
+                      value={dates?.to_date}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_to: newValue,
+                          to_date: newValue,
                         }));
                       }}
                     />
@@ -343,54 +351,65 @@ export default function SearchFilter({handleFilters,filterOptions}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid marginTop={2}>
-            <Typography>Offer Date</Typography>
-     
+                <Grid container marginTop={2}>
+  {/* <Typography>Offer Date</Typography> */}
+  <Grid container spacing={2}>
+    <Grid item xs={6}>
+      <FormControl fullWidth>
+        <InputLabel id="status">Project Name</InputLabel>
+        <Select
+          labelId="demo-multiple-name-status_1"
+          id="demo-multiple-status_1"
+          multiple
+          value={dropdownProjectName}
+          onChange={(e) => handleChangeDropDown(e, 'project_name')}
+          input={<OutlinedInput label="Project Name" />}
+          MenuProps={MenuProps}
+        >
+          {names.map((name) => (
+            <MenuItem
+              key={name}
+              value={name}
+              style={getStyles(name, personName, theme)}
+            >
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
+    <Grid item xs={6}>
+      <FormControl fullWidth>
+        <InputLabel id="status">Activity Name</InputLabel>
+        <Select
+          labelId="demo-multiple-name-status_2"
+          id="demo-multiple-status_2"
+          multiple
+          value={dropdownActivity}
+          onChange={(e) => handleChangeDropDown(e, 'activity_name')}
+          input={<OutlinedInput label="Activity Name" />}
+          MenuProps={MenuProps}
+        >
+          {names.map((name) => (
+            <MenuItem
+              key={name}
+              value={name}
+              style={getStyles(name, personName, theme)}
+            >
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
+  </Grid>
+</Grid>
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.offer_date_from}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_from: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.offer_date_to}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_to: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
 
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="Status">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
@@ -399,32 +418,6 @@ export default function SearchFilter({handleFilters,filterOptions}){
                   value={dropdownstatus}
                   onChange={(e)=>handleChangeDropDown(e,'status')}
                   input={<OutlinedInput label="Status" />}
-                  MenuProps={MenuProps}
-                >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
-                  multiple
-                  value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
-                  input={<OutlinedInput label="Employemt Type" />}
                   MenuProps={MenuProps}
                 >
                   {names.map((name) => (
@@ -453,11 +446,14 @@ export default function SearchFilter({handleFilters,filterOptions}){
     
 }
 
-SearchFilter.propTypes={
-    handleFilters: PropTypes.any,
+// TimeSearchFilter.propTypes={
+//     handleFilters: PropTypes.any,
+// }
+TimeSearchFilter.propTypes={
+    filterData: PropTypes.func,
 }
 
-SearchFilter.propTypes={
+TimeSearchFilter.propTypes={
     filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           fieldName: PropTypes.string,

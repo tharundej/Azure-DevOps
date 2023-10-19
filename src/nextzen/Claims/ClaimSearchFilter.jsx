@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SearchFilter({handleFilters,filterOptions}){
+export default function ClaimSearchFilter({filterData,filterOptions}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -248,13 +248,14 @@ export default function SearchFilter({handleFilters,filterOptions}){
      // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
-    const handleApply=async()=>{
+    const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
+      filterData(data);
       console.log(data,';;;')
-      // call parent function and pass it
-      
+
+    //   filterData(data);
       
     }
     
@@ -453,11 +454,14 @@ export default function SearchFilter({handleFilters,filterOptions}){
     
 }
 
-SearchFilter.propTypes={
-    handleFilters: PropTypes.any,
+// ClaimSearchFilter.propTypes={
+//     handleFilters: PropTypes.any,
+// }
+ClaimSearchFilter.propTypes={
+    filterData: PropTypes.func,
 }
 
-SearchFilter.propTypes={
+ClaimSearchFilter.propTypes={
     filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           fieldName: PropTypes.string,

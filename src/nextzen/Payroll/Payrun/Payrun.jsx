@@ -36,7 +36,7 @@ function Payrun( {handleCreatePayrun} ) {
         <Grid container spacing={2} alignItems="center">
           {/* Heading Text */}
           <Grid item xs={4} >
-            <Typography style={{ color: '#000000', fontWeight: 700, fontSize: '1.3rem' }}>
+            <Typography style={{ color: '#000000', fontWeight: 700, fontSize: '1.2rem' }}>
               Process Pay Run For Monthly
             </Typography>
           </Grid>
@@ -79,21 +79,10 @@ function Payrun( {handleCreatePayrun} ) {
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
-                <Typography style={{ color: '#7D7878' }}>EMPLOYEE`S NET PAY</Typography>
+                <Typography style={{ color: '#7D7878' , fontSize: '1rem' }}>EMPLOYEE`S NET PAY</Typography>
               </Grid>
               <Grid item>
-                <Typography style={{ color: '#000000' }}>YET TO PROCESS</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={3}>
-            <Grid container direction="column" spacing={2}>
-              {/* Heading Text */}
-              <Grid item>
-                <Typography style={{ color: '#7D7878' }}>PAYMENT DATE</Typography>
-              </Grid>
-              <Grid item>
-                <Typography style={{ color: '#000000' }}>03 NOV 2022</Typography>
+                <Typography style={{ color: '#000000', fontSize: '1rem' }}>YET TO PROCESS</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -101,10 +90,21 @@ function Payrun( {handleCreatePayrun} ) {
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
-                <Typography style={{ color: '#7D7878' }}>NO.OF EMPLOYEES</Typography>
+                <Typography style={{ color: '#7D7878', fontSize: '1rem' }}>PAYMENT DATE</Typography>
               </Grid>
               <Grid item>
-                <Typography style={{ color: '#000000' }}>501</Typography>
+                <Typography style={{ color: '#000000' , fontSize: '1rem'}}>03 NOV 2022</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={3}>
+            <Grid container direction="column" spacing={2}>
+              {/* Heading Text */}
+              <Grid item>
+                <Typography style={{ color: '#7D7878', fontSize: '1rem' }}>NO.OF EMPLOYEES</Typography>
+              </Grid>
+              <Grid item>
+                <Typography style={{ color: '#000000', fontSize: '1rem' }}>501</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -122,7 +122,7 @@ function Payrun( {handleCreatePayrun} ) {
       </CardContent>
       <CardContent style={{ display: 'flex' }}>
         <InfoIcon style={{ color: '#7D7878', marginRight: '7px' }} />
-        <Typography style={{ color: '#7D7878' }}>
+        <Typography style={{ color: '#7D7878' , fontSize: '1rem' }}>
           You haven&apos;t processed this pay run and it&apos;s past the pay day
         </Typography>
       </CardContent>
