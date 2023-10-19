@@ -74,7 +74,7 @@ export default function MyClaims({ currentUser }) {
     },
     { id: "apply_date", label: "Claim Amount", width: 200, type: "text" },
     { id: "employee_id", label: "Claim Type", width: 200, type: "text" },
-    { id: "from_date", label: "Claim Date", width: 180, type: "text" },
+    { id: "from_date", label: "Claim Date", width: 200, type: "text" },
     { id: "leave_type", label: "Expense Date", width: 100, type: "badge" },
     // { id: "leave_type", label: "Approval Amount", width: 100, type: "badge" },
     // { id: "leave_type", label: "Approval Date", width: 100, type: "badge" },
@@ -456,7 +456,7 @@ const handleClick=()=>{
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
-      
+      bodyData = 'appliedLeave'
        
       />
     </>
