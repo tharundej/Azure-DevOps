@@ -72,6 +72,7 @@ import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 
 
+
 const defaultFilters = {
   name: '',
   role: [],
