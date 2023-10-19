@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useReducer, useCallback, useMemo,useState } from 'react';
 // utils
 import axios, { endpoints } from 'src/utils/axios';
+import dayjs from 'dayjs';
 //
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
@@ -131,15 +133,18 @@ export function AuthProvider({ children }) {
       },
     });
   }, []);
-
+  const [datesUsed, setDatesUsed] = useState({
+    date: dayjs(new Date()),
+  });
   // REGISTER
-  const register = useCallback(async (cin, company_name, company_registration_no, company_ceo_name,company_type,email_id,phone_no,first_name,middle_name,last_name,security_q1,security_a1,security_q2,security_a2) => {
+  const register = useCallback(async (cin, company_name, company_registration_no,company_ceo_name,company_type,email_id,phone_no,first_name,middle_name,last_name,security_q1,security_a1,security_q2,security_a2) => {
+    console.log('hiiii')
     const data = {
       cin, 
       company_name, 
       company_registration_no, 
+      date_of_incorporation:formatDateToYYYYMMDD(datesUsed?.date),
       company_ceo_name,
-      company_date_of_incorporation:'2023-09-12',
       company_type,
       email_id,
       phone_no,
@@ -153,15 +158,16 @@ export function AuthProvider({ children }) {
     };
       console.log(data, 'data ......');
    
-     const response = await axios.post('http://localhost:3001/register', data);
+     const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/signup', data);
     // const response = await axios.post(endpoints.auth.register, data);
 
     console.log(response)
-    if(!response?.data?.jwt){
+    if(!response?.data?.data?.jwt){
       console.log('failed')
       return
     }
-    const  accessToken  = response.data.jwt;
+    const  accessToken  = response?.data?.data?.jwt;
+    console.log(accessToken,'accessssss')
     localStorage.setItem('jwt_access_token',accessToken);
     // sessionStorage.setItem(STORAGE_KEY, accessToken);
     // dispatch({
@@ -173,6 +179,7 @@ export function AuthProvider({ children }) {
     //     },
     //   },
     // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

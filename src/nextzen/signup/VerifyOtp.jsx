@@ -80,7 +80,7 @@ export default function VerifyOtp() {
             "jwt_token_string" : localStorage.getItem('jwt_access_token'),
             "otp":data.code
         }
-        const response = await axios.post('http://localhost:3001/verify_register_otp', payload);
+        const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/verifyRegisterOtp', payload);
         console.log(response?.status)
         if(response?.status===200){
             console.log('sucess')

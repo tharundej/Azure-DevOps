@@ -49,6 +49,9 @@ export default function GeneralForminfo({ currentUser }) {
     da: Yup.number().required('DA is Required'),
     employee_pf: Yup.number().required('Employee PF is Required'),
     employer_pf: Yup.number().required('Employer PF is Required'),
+    lta: Yup.number().required('LTA is Required'),
+    esic: Yup.number().required('esic is Required'),
+    tds: Yup.number().required('TDS is Required'),
   });
 
   const defaultValues = useMemo(
@@ -61,6 +64,9 @@ export default function GeneralForminfo({ currentUser }) {
       da: currentUser?.da || null,
       employee_pf: currentUser?.employee_pf || null,
       employer_pf: currentUser?.employer_pf || null,
+      lta:currentUser?.lta || null,
+      esic:currentUser?.esic || null,
+      tds:currentUser?.tds || null
     }),
     [currentUser]
   );
@@ -160,6 +166,9 @@ export default function GeneralForminfo({ currentUser }) {
               <RHFTextField name="da" label="DA %" />
               <RHFTextField name="employee_pf" label="Employee PF %" />
               <RHFTextField name="employer_pf" label="Employer PF %" />
+              <RHFTextField name="lta" label="LTA %"/>
+              <RHFTextField name="esic" label="ESIC %"/>
+              <RHFTextField name="Tds" label="TDS %" />
             </Box>
           </DialogContent>
 

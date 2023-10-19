@@ -77,9 +77,11 @@ export default function AmplifyNewPasswordView() {
     try {
 
       const payload ={
-        "password":data.password
+        "password":data.password,
+        "jwt_token_string":localStorage.getItem('jwt_access_token')
+        
     }
-    const response = await axios.post('http://localhost:3001/newpassword', payload);
+    const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
     if(response?.status===200){
         console.log('sucess')
