@@ -24,11 +24,11 @@ const VIEW_OPTIONS = [
   },
   { value: 'timeGridWeek', label: 'Week', icon: 'mingcute:calendar-week-line' },
   { value: 'timeGridDay', label: 'Day', icon: 'mingcute:calendar-day-line' },
-  {
-    value: 'listWeek',
-    label: 'Agenda',
-    icon: 'fluent:calendar-agenda-24-regular',
-  },
+  // {
+  //   value: 'listWeek',
+  //   label: 'Agenda',
+  //   icon: 'fluent:calendar-agenda-24-regular',
+  // },
 ];
 
 // ----------------------------------------------------------------------
