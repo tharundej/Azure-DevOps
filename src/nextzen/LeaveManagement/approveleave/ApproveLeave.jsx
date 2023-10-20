@@ -64,7 +64,7 @@ export default function Approveleave(){
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
-  endpoint="/listLeave"  
+  endpoint="listLeave"  
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'
