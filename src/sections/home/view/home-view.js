@@ -58,7 +58,7 @@ export default function HomeView() {
       >
         <HomeMinimal />
 
-        <HomeHugePackElements />
+        {/* <HomeHugePackElements /> */}
 
         {/* <Box sx={{ position: 'relative' }}>
           <StyledPolygon />
@@ -76,7 +76,7 @@ export default function HomeView() {
 
         <HomeLookingFor /> */}
 
-        <HomeAdvertisement />
+        {/* <HomeAdvertisement /> */}
       </Box>
     </>
   );
