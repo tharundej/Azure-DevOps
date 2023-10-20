@@ -64,21 +64,21 @@ export default function MyClaims({ currentUser }) {
   const TABLE_HEAD = [
     {
       // id: "name",
-      id: "employee",
+      id: "employee_name",
       label: " Employee Name",
-      width: 200,
+      
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "apply_date", label: "Claim Amount", width: 200, type: "text" },
-    { id: "employee_id", label: "Claim Type", width: 200, type: "text" },
-    { id: "from_date", label: "Claim Date", width: 200, type: "text" },
-    { id: "leave_type", label: "Expense Date", width: 100, type: "badge" },
-    // { id: "leave_type", label: "Approval Amount", width: 100, type: "badge" },
-    // { id: "leave_type", label: "Approval Date", width: 100, type: "badge" },
-    // { id: "leave_type", label: "Approver Name", width: 100, type: "badge" },
+    { id: "claim_type", label: "Claim Type",  type: "text" },
+    { id: "claim_date", label: "Claim Date",  type: "text" },
+    { id: "claim_amount", label: "Claim Amount",  type: "text" },
+    { id: "expense_date", label: "Expense Date",  type: "text" },
+    { id: "approve_amount", label: "Approval Amount",  type: "text" },
+    { id: "approver_name", label: "Approver Name",  type: "text" },
+    { id: "status", label: "Status",  type: "badge" },
     // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
     // { id: "leave_type", label: "Status", width: 100, type: "badge" },
     // { id: '', width: 88 },
@@ -87,42 +87,29 @@ export default function MyClaims({ currentUser }) {
 
 
   const defaultPayload={
-
-    "count": 5,
-
-    "page": 0,
-
-    "search": "",
-
-    "eid": "E1",
-
-"externalFilters":{
-
-    "fFromDate": "",
-
-    "fToDate": "",
-
-    "fLeaveTypeName": "",
-
-    "fStatus": ""
-
-},
-
-"sort": {
-
-    "key":1,
-
-    "orderBy":"al.apply_date"
-
+    "company_id":"COMP2",
+    "count":5,
+    "page":0,
+    "search":"",
+    "externalFilter":{
+    "claim_type": "",
+    "claim_date": "",
+    "expense_date": "",
+    "status": ""
+} 
 }
-
-}
-  
 const handleClick=()=>{
     console.log("fn passing ")
 }
 
   const actions = [
+
+    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+    { name: "View", icon: "hh", id: 'view' },
+    { name: "Edit", icon: "hh", id: 'edit' },
+    { name: "Delete", icon: "hh", id: 'delete' },
+  ];
+  const searchFilterheader = [
 
     { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
     { name: "View", icon: "hh", id: 'view' },
@@ -452,11 +439,13 @@ const handleClick=()=>{
 
       <BasicTable
 
-      endpoint="/listLeave"
+      endpoint="getAllClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
-      bodyData = 'appliedLeave'
+      bodyData = 'Data'
+      filterName="claimSearchFilter"
+      // searchFilterheader={searchFilterheader}
        
       />
     </>

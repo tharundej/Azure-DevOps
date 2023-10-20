@@ -132,7 +132,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // http://192.168.1.26:3001/erp/getAllClaims
+      url: `http://192.168.1.26:3001/erp/${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       },
@@ -269,7 +270,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
 
   // Search functionality
-  const handleSearch = (searchTerm) => {
+  const handleFilterSearch = (searchTerm) => {
+
+  console.log(searchTerm,"searched dataaaaaaaaaaa")
+
+
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
@@ -277,7 +282,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // Filter_Headers:
      
     }));
-    getTableData(payload)
+    // getTableData(payload)
   }
 
 
@@ -308,9 +313,16 @@ const [filterHeaders, setFilterHeaders]=useState([])
     : '';
 
   
-const [test, setTest]= useState();
-  const handleFIlterOptions=(data)=>{
-    setTest(data)
+
+
+    // useEffect(()=>{
+    //      getTableData(initialDefaultPayload)
+    //      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[initialDefaultPayload])
+
+
+  const handleFilterOptions=(data)=>{
+    
     console.log(data,"filtered data")
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
@@ -319,22 +331,19 @@ const [test, setTest]= useState();
       Filter_Headers:data
      
     }));
-    getTableData(payload)
+    
 
     console.log(payload,"after filter effected")
     
 
   }
 
-  console.log(test,"filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr data")
-  
-
   
   return (
     <>
       {false && <SearchFilter/>}
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
-      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />}
+      {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFilterOptions} searchData={handleFilterSearch}  />}
     
         <Card>
        
@@ -501,6 +510,9 @@ BasicTable.propTypes = {
   filterName: PropTypes.any
 };
 
+// BasicTable.propTypes = {
+//   searchFilterheader: PropTypes.any
+// };
 
 
 

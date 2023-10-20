@@ -1,7 +1,5 @@
 import PropTypes, { element } from 'prop-types';
-
 import React,{ useEffect, useState,useCallback } from 'react';
-
 import { styled } from '@mui/system';
 
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
@@ -80,7 +78,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ClaimSearchFilter({filterData,filterOptions}){
+export default function ClaimSearchFilter({filterData,searchData,filterOptions}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -258,6 +256,10 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
     //   filterData(data);
       
     }
+
+    const handleSearch = (searchTerm) => {
+        searchData(searchTerm)
+        };
     
 
   
@@ -269,6 +271,7 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
+            onChange={(e) => handleSearch(e.target.value)}
 
             />
             </Grid>
@@ -278,6 +281,7 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
+           Filters
       </Button>
 
       </Stack>
@@ -292,7 +296,7 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
       >
         
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/> </Button>
         </DialogTitle>
 
         <DialogContent sx={{mt:0,paddingBottom:0}}>
@@ -457,6 +461,14 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
 // ClaimSearchFilter.propTypes={
 //     handleFilters: PropTypes.any,
 // }
+
+// ClaimSearchFilter.propTypes={
+//   searchFilterComponent: PropTypes.any,
+// }
+
+ClaimSearchFilter.propTypes={
+   searchData: PropTypes.any,
+}
 ClaimSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
