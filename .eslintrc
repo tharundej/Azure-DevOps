@@ -54,7 +54,8 @@
     "jsx-a11y/control-has-associated-label": 0,
 
     "import/resolver": [
-      {"eslint-import-resolver-case-sensitive": {}}
+      1,
+      {"eslint-import-resolver-case-sensitive": false}
     ],
     "import/no-unresolved": [
       2, 

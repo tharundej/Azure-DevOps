@@ -222,9 +222,37 @@ const   CurrentWork=forwardRef((props,ref)=> {
                   );
                 }}
               />
-                <RHFTextField name="first_name" label="First Name " />
+                <RHFTextField name="first_name" label="First Name" type="number" />
                
+                <RHFAutocomplete
+                name="desgination"
+                label="Desgination"
+                options={countries.map((country) => country.label)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(propss, option) => {
+                  const { code, label, phone } = countries.filter(
+                    (country) => country.label === option
+                  )[0];
 
+                  if (!label) {
+                    return null;
+                  }
+
+                  return (
+                    <li {...propss} key={label}>
+                      <Iconify
+                        key={label}
+                        icon={`circle-flags:${code.toLowerCase()}`}
+                        width={28}
+                        sx={{ mr: 1 }}
+                      />
+                      {label} ({code}) +{phone}
+                    </li>
+                  );
+                }}
+              />
+              <RHFTextField name="first_name" label="First Name" type="number" />
                
               </Box>
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>

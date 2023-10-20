@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
   TextField,
   Button,
@@ -22,39 +22,105 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import PhotoCamera from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
+
+import axios from 'axios';
+
 import { Stack } from '@mui/system';
 
-export default function PreviousWorkDetails({ currentUser }) {
+
+// const EducationInformation=forwardRef((props,ref)=>{
+const PreviousWorkDetails=forwardRef((props,ref)=>{
+
+
+  const ApiHitExperience=(dataExperience)=>{
+    const data1 =dataExperience ;
+
+    // data1.from=formatDateToYYYYMMDD(dataExperience?.from);
+    // data1.to=formatDateToYYYYMMDD(dataExperience.to);
+
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'text/plain'
+      },
+      data : data1
+    };
+
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      props.nextStep();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  useImperativeHandle(ref,()=>({
+    childFunctionExperience(){
+     handleSubmit();
+      
+    }
+  }))
+
+  const formatDate=(dateFormatObj)=>{
+    dateFormatObj.experience.forEach((item,index)=>{
+
+        console.log(item?.from,'item?.from')
+      dateFormatObj.experience[index].startDate=formatDateToYYYYMMDD(item?.startDate)
+      dateFormatObj.experience[index].endDate=formatDateToYYYYMMDD(item?.endDate)
+
+    })
+
+    ApiHitExperience(dateFormatObj);
+  }
+
+  const handleSubmit = () => {
+    const obj1={
+      companyId: "COMP5",
+  
+      employeeId: localStorage.getItem("employeeId"),
+  
+      experience:defaultValues
+      }
+      console.log(obj1,'education hit');
+      formatDate(obj1);
+      
+  };
   const [value, setValue] = React.useState(dayjs(new Date()));
   const [attachmentString,setAttachmentString]=useState("");
   const [defaultValues, setDefaultValues] = useState([
     {
-      previous_company: '',
-      desgination: '',
-      from: dayjs(new Date()),
-      to: dayjs(new Date()),
-      employement_type: '',
-      primary_skills: [],
-      releving_letter: '',
+      previousCompanyName: '',
+      startDate: dayjs(new Date()),
+      endDate: dayjs(new Date()),
+      employementType: '',
+      primarySkills: [],
+      relevingLetter: '',
+      designation:''
     },
   ]);
 
   const obj = {
-    previuos_company: '',
-    desgination: '',
-    from: dayjs(new Date()),
-    to: dayjs(new Date()),
+    previousCompanyName: '',
+    designation: '',
+    startDate: dayjs(new Date()),
+    endDate: dayjs(new Date()),
     employement_type: '',
-    primary_skills: [],
-    releving_letter: '',
+    primarySkills: [],
+    relevingLetter: '',
   };
   function formatDateToYYYYMMDD(newValue) {
+   console.log(newValue)
     const date = new Date(newValue.$d);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
 
-    return `${year}/${month}/${day}`;
+    return `${year}-${month}-${day}`;
   }
 
   const handleAdd = () => {
@@ -71,11 +137,11 @@ export default function PreviousWorkDetails({ currentUser }) {
     const newObj = defaultValues;
     newObj[index][name] = new Date(newValue);
     setDefaultValues(newObj);
+   console.log( newValue,'new Date(newValue)');
+    
   };
 
-  const handleSubmit = () => {
-    console.log(defaultValues);
-  };
+ 
   const handleChangeMultiple = (event, values, index, name) => {
     const newObj = defaultValues;
     newObj[index][name] = values;
@@ -153,10 +219,10 @@ export default function PreviousWorkDetails({ currentUser }) {
                     fullWidth
                     type="text"
                     name="previous_company"
-                    label="Previous_Company"
+                    label="Previous Company Name"
                     variant="outlined"
                     onChange={(e) => {
-                      handleChange(e, index, 'previous_company');
+                      handleChange(e, index, 'previousCompanyName');
                     }}
                   />
                 </Grid>
@@ -167,7 +233,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                     name="desgination"
                     label="Desgination"
                     onChange={(e) => {
-                      handleChange(e, index, 'desgination');
+                      handleChange(e, index, 'designation');
                     }}
                     variant="outlined"
                   />
@@ -179,11 +245,11 @@ export default function PreviousWorkDetails({ currentUser }) {
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="From"
+                        label="start date"
                         onChange={(newValue) => {
-                          handleChangeDate(newValue, index, 'from');
+                          handleChangeDate(newValue, index, 'startDate');
                         }}
-                        value={item?.from}
+                        value={item?.startDate}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -194,9 +260,9 @@ export default function PreviousWorkDetails({ currentUser }) {
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
                         label="To"
-                        value={item?.to}
+                        value={item?.endDate}
                         onChange={(newValue) => {
-                          handleChangeDate(newValue, index, 'to');
+                          handleChangeDate(newValue, index, 'endDate');
                         }}
                       />
                     </DemoContainer>
@@ -217,7 +283,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                         handleChange(e, index, 'employmen_type');
                       }}
                     >
-                      <MenuItem value={1}>Primary1</MenuItem>
+                      <MenuItem value={1}>Primary</MenuItem>
                       <MenuItem value={2}>Contract</MenuItem>
                     </Select>
                   </FormControl>
@@ -229,7 +295,7 @@ export default function PreviousWorkDetails({ currentUser }) {
                     options={top100Films.map((option) => option.title)}
                     freeSolo
                     onChange={(e, values) => {
-                      handleChangeMultiple(e, values, index, 'primary_skills');
+                      handleChangeMultiple(e, values, index, 'primarySkills');
                     }}
                     renderTags={(value1, getTagProps) =>
                       value1.map((option, index1) => (
@@ -310,9 +376,10 @@ export default function PreviousWorkDetails({ currentUser }) {
       </form>
     </Stack>
   );
-}
+})
 PreviousWorkDetails.propTypes = {
   currentUser: PropTypes.object,
+  nextStep:PropTypes.any
 };
 
 const top100Films = [
@@ -329,3 +396,5 @@ const top100Films = [
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
 ];
+
+export default PreviousWorkDetails;

@@ -9,6 +9,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -79,36 +80,37 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    company_id: Yup.string(),
-    company_name: Yup.string(),
-    image_name: Yup.string(),
-    image_data: Yup.string(),
-    first_name: Yup.string().required('First Name is Required'),
-    middle_name: Yup.string(),
-    last_name: Yup.string('Last Name is Required'),
-    email_id: Yup.string().email().required('Email is Required'),
-    contact_number: Yup.number(),
-    emergency_contact_number: Yup.number(),
-    date_of_birth: Yup.string(),
-    father_name: Yup.string(),
-    mother_name: Yup.string(),
-    marital_status: Yup.string(),
+
+    companyID: Yup.string(),
+    companyName: Yup.string(),
+  
+    firstName: Yup.string(),
+    middleName: Yup.string(),
+    lastName: Yup.string(),
+    email: Yup.string(),
+    contactNumber: Yup.number(),
+    emergencyContactNumber: Yup.number(),
+    dateOfBirth: Yup.string(),
+    fatherName: Yup.string(),
+    motherName: Yup.string(),
+    maritalStatus: Yup.string(),
     nationality: Yup.string(),
     religion: Yup.string(),
-    blood_group: Yup.string(),
-    offer_date: Yup.string(),
-    joining_date: Yup.string(),
-    p_address_line1: Yup.string().required('Address is Required'),
-    p_address_line2: Yup.string(),
-    p_city: Yup.string().required('City is Required'),
-    p_state: Yup.string().required('State is Required'),
-    p_pincode: Yup.number().required('Pin Code is Required'),
-    r_address_line1: Yup.string(),
-    r_address_line2: Yup.string(),
-    r_city: Yup.string(),
-    r_state: Yup.string(),
-    r_pincode: Yup.number(),
-
+    bloodGroup: Yup.string(),
+    offerDate: Yup.string(),
+    joiningDate: Yup.string(),
+    pAddressLine1: Yup.string(),
+    pAddressLine2: Yup.string(),
+    pCity: Yup.string(),
+    pState: Yup.string(),
+    pPincode: Yup.number(),
+    rAddressLine1: Yup.string(),
+    rAddressLine2: Yup.string(),
+    rCity: Yup.string(),
+    rState: Yup.string(),
+    rPincode: Yup.number(),
+    
+    toggle: Yup.bool()
     // first_name: Yup.string().required('First Name is required'),
 
     // middle_name: Yup.string().required('Middle Name is required'),
@@ -132,35 +134,37 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const defaultValues = useMemo(
     
     () => ({
-      // company_id: currentUser?.company_id || '',
-      // company_name: currentUser?.company_name || '',
-      // image_name: currentUser?.image_name || '',
-      // image_data: currentUser?.image_data || '',
-      first_name: currentUser?.first_name || '',
-      middle_name: currentUser?.middle_name || '',
-      last_name: currentUser?.last_name || '',
-      email_id: currentUser?.email_id || '',
-      contact_number: currentUser?.contact_number || undefined,
-      emergency_contact_number: currentUser?.emergency_contact_number || undefined,
-      date_of_birth: currentUser?.date_of_birth || '',
-      father_name: currentUser?.father_name || '',
-      mother_name: currentUser?.mother_name || '',
-      marital_status: currentUser?.marital_status || '',
-      nationality: currentUser?.nationality || '',
-      religion: currentUser?.religion || '',
-      blood_group: currentUser?.blood_group || '',
-      offer_date: currentUser?.offer_date || '',
-      joining_date: currentUser?.joining_date || '',
-      p_address_line1: currentUser?.p_address_line1 || '',
-      p_address_line2: currentUser?.p_address_line2 || '',
-      p_city: currentUser?.p_city || '',
-      p_state: currentUser?.p_state || '',
-      p_pincode: currentUser?.p_pincode || undefined,
-      r_address_line1: currentUser?.r_address_line1 || '',
-      r_address_line2: currentUser?.r_address_line2 || '',
-      r_city: currentUser?.r_city || '',
-      r_state: currentUser?.r_state || '',
-      r_pincode: currentUser?.r_pincode || undefined,
+   
+    companyID: currentUser?.companyID ||'',
+    companyName: currentUser?.companyName ||'',
+    
+    firstName: currentUser?.firstName ||'',
+    middleName: currentUser?.middleName ||'',
+    lastName: currentUser?.lastName ||'',
+    email: currentUser?.email ||'',
+    contactNumber: currentUser?.contactNumber ||undefined,
+    emergencyContactNumber: currentUser?.emergencyContactNumber || undefined,
+    dateOfBirth: currentUser?.dateOfBirth ||'',
+    fatherName: currentUser?.fatherName ||'',
+    motherName: currentUser?.motherName ||'',
+    maritalStatus: currentUser?.maritalStatus ||'',
+    nationality: currentUser?.nationality ||'',
+    religion: currentUser?.religion ||'',
+    bloodGroup: currentUser?.bloodGroup ||'',
+    offerDate: currentUser?.offerDate ||'',
+    joiningDate: currentUser?.joiningDate ||'',
+    pAddressLine1: currentUser?.pAddressLine1 ||'',
+    pAddressLine2: currentUser?.pAddressLine2 ||'',
+    pCity: currentUser?.pCity ||'',
+    pState: currentUser?.pState ||'',
+    pPincode: currentUser?.pPincode || undefined,
+    rAddressLine1: currentUser?.rAddressLine1 ||'',
+    rAddressLine2: currentUser?.rAddressLine2 ||'',
+    rCity: currentUser?.rCity ||'',
+    rState: currentUser?.rState ||'',
+    rPincode: currentUser?.rPincode || undefined,
+    
+    toggle: currentUser?.toggle || false,
     }),
     [currentUser]
   );
@@ -189,9 +193,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://192.168.0.193:3001/erp/onBoarding',
+          url: 'http://192.168.0.236:3001/erp/onBoarding',
           headers: { 
-            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc', 
+            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
             'Content-Type': 'text/plain'
           },
           data : data1
@@ -203,6 +207,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           setopenSnackBar(true);
           setseveritySnackbar("success");
           setmessageSnackbar("Onboarded Sucessfully")
+          console.log(response.data.empID,'nithinnn')
+          localStorage.setItem("employeeId",response.data?.empID)
           
           props.nextStep();
         })
@@ -219,12 +225,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     console.log(data,'general information');
 
     try {
-      data.company_id = 'comp1';
-      data.company_name = 'DXC';
+      data.companyID = 'COMP1';
+      data.companyName = 'infobell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      data.offerDate = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      data.joiningDate = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      data.dateOfBirth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
       
        ApiHitGeneralInformation(data);
@@ -376,12 +382,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="first_name" label="First Name " />
-                <RHFTextField name="middle_name" label="Middle Name " />
-                <RHFTextField name="last_name" label="Last Name " />
-                <RHFTextField name="email_id" label="Email Id " />
-                <RHFTextField name="contact_number" label="Contact Number " />
-                <RHFTextField name="emergency_contact_number" label="Emergency Contact Number " />
+                <RHFTextField name="firstName" label="First Name " />
+                <RHFTextField name="middleName" label="Middle Name " />
+                <RHFTextField name="lastName" label="Last Name " />
+                <RHFTextField name="email" label="Email Id " />
+                <RHFTextField name="contactNumber" label="Contact Number " />
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -398,12 +404,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                <RHFTextField name="father_name" label="Father Name " />
-                <RHFTextField name="mother_name" label="Mother Name " />
-                <RHFTextField name="marital_status" label="Martial Status " />
+                <RHFTextField name="fatherName" label="Father Name " />
+                <RHFTextField name="motherName" label="Mother Name " />
+                <RHFTextField name="maritalStatus" label="Martial Status " />
                 <RHFTextField name="nationality" label="Nationality " />
                 <RHFTextField name="religion" label="Religion " />
-                <RHFTextField name="blood_group" label="Blood Group " />
+                <RHFTextField name="bloodGroup" label="Blood Group " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -428,6 +434,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                       value={datesUsed?.date_of_birth}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
+                        console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,
                           joining_date: newValue,
@@ -437,16 +444,16 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   </DemoContainer>
                 </LocalizationProvider>
                 
-                <RHFTextField name="p_address_line1" label="Permanent Address Line1 " />
-                <RHFTextField name="p_address_line2" label="Permanent Address Line2 " />
-                <RHFTextField name="p_city" label="City " />
-                <RHFTextField name="p_state" label="State " />
-                <RHFTextField name="p_pincode" label="Pincode " />
-                <RHFTextField name="r_address_line1" label="Resendial Address Line1" />
-                <RHFTextField name="r_address_line2" label="Resendial Address Line2" />
-                <RHFTextField name="r_city" label="Resendial City " />
-                <RHFTextField name="r_state" label="Resendial State " />
-                <RHFTextField name="r_pincode" label="Resendial Pincode" />
+                <RHFTextField name="pAddressLine1" label="Permanent Address Line1 " />
+                <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />
+                <RHFTextField name="pCity" label="City " />
+                <RHFTextField name="pState" label="State " />
+                <RHFTextField name="pPincode" label="Pincode " />
+                <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
+                <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
+                <RHFTextField name="rCity" label="Resendial City " />
+                <RHFTextField name="rState" label="Resendial State " />
+                <RHFTextField name="rPincode" label="Resendial Pincode" />
            
 
                 {/* <RHFTextField name="name" label="Full Name" />
