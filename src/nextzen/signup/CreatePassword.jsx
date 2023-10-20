@@ -78,12 +78,12 @@ export default function AmplifyNewPasswordView() {
 
       const payload ={
         "password":data.password,
-        "jwt_token_string":localStorage.getItem('jwt_access_token')
+        "jwtTokenString":localStorage.getItem('jwt_access_token')
         
     }
     const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
-    if(response?.status===200){
+    if(response?.data.code===201){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
       }
@@ -157,24 +157,6 @@ export default function AmplifyNewPasswordView() {
       >
         Create Password
       </LoadingButton>
-
-      <Typography variant="body2">
-        {`Don’t have a code? `}
-        <Link
-          variant="subtitle2"
-          onClick={handleResendCode}
-          sx={{
-            cursor: 'pointer',
-            ...(counting && {
-              color: 'text.disabled',
-              pointerEvents: 'none',
-            }),
-          }}
-        >
-          Resend code {counting && `(${countdown}s)`}
-        </Link>
-      </Typography>
-
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}

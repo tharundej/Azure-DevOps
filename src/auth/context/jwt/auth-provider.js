@@ -113,12 +113,10 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-    //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    const response = await axios.post(endpoints.auth.login, data);
+      // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser', data);
+     const response = await axios.post(endpoints.auth.login, data);
 
-    // //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    // const response = await axios.post(endpoints.auth.login, data);
-  
+   
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
@@ -137,7 +135,7 @@ export function AuthProvider({ children }) {
     date: dayjs(new Date()),
   });
   // REGISTER
-  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
+  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyDateOfIncorporation,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
     console.log('hiiii')
     const data = {
       cin, 

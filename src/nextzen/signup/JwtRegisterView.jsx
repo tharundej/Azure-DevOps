@@ -64,41 +64,41 @@ export default function JwtRegisterView() {
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
-    cin: Yup.number().required('CIN is required'),
-    company_name: Yup.string().required('Compnay name required'),
-    company_registration_no: Yup.number().required('Company Registration Number is required'),
-    company_ceo_name: Yup.string().required('CEO name required'),
-    company_type: Yup.string().required('Compnay type required'),
-    email_id: Yup.string()
+    cin: Yup.string().required('CIN is required'),
+    companyName: Yup.string().required('Compnay name required'),
+    companyRegistrationNo: Yup.number().required('Company Registration Number is required'),
+    companyCeoName: Yup.string().required('CEO name required'),
+    companyType: Yup.string().required('Compnay type required'),
+    emailId: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
     // company_date_of_incorporation:Yup.string().required('Date of corporation is required'),
-    phone_no: Yup.number().required('Phone No is required'),
-    first_name: Yup.string().required('First name required'),
-    middle_name: Yup.string(),
-    last_name: Yup.string().required('Last name required'),
-    security_q1: Yup.string().required('Security Question required'),
-    security_a1: Yup.string().required('Answer required'),
-    security_q2: Yup.string().required('Security Question required'),
-    security_a2: Yup.string().required('Answer required'),
+    phoneNo: Yup.number().required('Phone No is required'),
+    firstName: Yup.string().required('First name required'),
+    middleName: Yup.string(),
+    lastName: Yup.string().required('Last name required'),
+    securityQ1: Yup.string().required('Security Question required'),
+    securityA1: Yup.string().required('Answer required'),
+    securityQ2: Yup.string().required('Security Question required'),
+    securityA2: Yup.string().required('Answer required'),
   });
 
   const defaultValues = {
-    cin: null,
-    company_name: '',
-    company_registration_no: null,
-    company_ceo_name: '',
-    date_of_incorporation: '',
-    company_type: '',
-    email_id: '',
-    phone_no: null,
-    first_name: '',
-    middle_name: '',
-    last_name: '',
-    security_q1: '',
-    security_a1: '',
-    security_q2: '',
-    security_a2: '',
+    cin: '',
+    companyName: '',
+    companyRegistrationNo: null,
+    companyCeoName: '',
+    companyDateOfIncorporation: '',
+    companyType: '',
+    emailId: '',
+    phoneNo: null,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    securityQ1: '',
+    securityA1: '',
+    securityQ2: '',
+    securityA2: '',
   };
 
   const methods = useForm({
@@ -118,20 +118,20 @@ export default function JwtRegisterView() {
 
       await register?.(
         data.cin,
-        data.company_name,
-        data.company_registration_no,
-        data.company_ceo_name,
-        data.date_of_incorporation,
-        data.company_type,
-        data.email_id,
-        data.phone_no,
-        data.first_name,
-        data.middle_name,
-        data.last_name,
-        data.security_q1,
-        data.security_a1,
-        data.security_q2,
-        data.security_a2
+        data.companyName,
+        data.companyRegistrationNo,
+        data.companyCeoName,
+        data.companyDateOfIncorporation,
+        data.companyType,
+        data.emailId,
+        data.phoneNo,
+        data.firstName,
+        data.middleName,
+        data.lastName,
+        data.securityQ1,
+        data.securityA1,
+        data.securityQ2,
+        data.securityA2
       );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
@@ -209,17 +209,17 @@ export default function JwtRegisterView() {
                   <RHFTextField name="cin" label="CIN" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="company_name" label="Company Name" />
+                  <RHFTextField name="companyName" label="Company Name" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="company_registration_no" label="Company Registration No" />
+                  <RHFTextField name="companyRegistrationNo" label="Company Registration No" />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="Date Of Incorporation"
+                        label="companyDateOfIncorporation"
                         // value={datesUsed?.date_of_birth}
                         defaultValue={dayjs(new Date())}
                         onChange={(newValue) => {
@@ -232,51 +232,51 @@ export default function JwtRegisterView() {
                   </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="company_ceo_name" label="Company Ceo Name" />
+                  <RHFTextField name="companyCeoName" label="Company Ceo Name" />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <RHFAutocomplete
-                    name="company_type"
+                    name="companyType"
                     label="Company Type"
                     options={companyTypes.map((companyType) => companyType.type)}
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="email_id" label="Email" />
+                  <RHFTextField name="emailId" label="Email" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="phone_no" label="Phone No" />
+                  <RHFTextField name="phoneNo" label="Phone No" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="first_name" label="first Name" />
+                  <RHFTextField name="firstName" label="first Name" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="middle_name" label="Middle Name" />
+                  <RHFTextField name="middleName" label="Middle Name" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="last_name" label="Last Name" />
+                  <RHFTextField name="lastName" label="Last Name" />
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <RHFAutocomplete
-                    name="security_q1"
+                    name="securityQ1"
                     label="Security Question-1"
                     options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
                 
                     />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <RHFTextField name="security_a1" label="Security answer" />
+                  <RHFTextField name="securityA1" label="Security answer" />
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <RHFAutocomplete
-                    name="security_q2"
+                    name="securityQ2"
                     label="Security Question-2"
                     options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
                     
                   />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <RHFTextField name="security_a2" label="Security answer" />
+                  <RHFTextField name="securityA2" label="Security answer" />
                 </Grid>
               </Grid>
             </CardContent>

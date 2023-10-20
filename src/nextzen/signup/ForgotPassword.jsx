@@ -49,27 +49,48 @@ export default function AmplifyForgotPasswordView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const payload = {
-        email_id: data.email,
+        email: data.email,
       };
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp/checkUserExists',
+        headers: {
+          Authorization:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+          'Content-Type': 'text/plain',
+        },
+        data: payload,
+      };
+      axios
+        .request(config)
+        .then((response) => {
+          if (response?.data.code === 200) {
+            console.log('sucess');
+        router.push(paths.auth.jwt.otpverification);
+          }
+        })
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  
+      
 
-      const response = await axios.post('http://localhost:3001/checkUserExists', payload);
+      // const response = await axios.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/checkUserExists', payload);
       // await forgotPassword?.(data.email);
 
       // const searchParams = new URLSearchParams({
       //   email: data.email,
       // }).toString();
-      console.log(response?.status);
-      if (response?.status === 200) {
-        console.log('sucess');
-        router.push(paths.auth.jwt.otpverification);
-      }
+      // console.log(response?.data.code);
+      // if (response?.data.code === 200) {
+      //   console.log('sucess');
+      //   router.push(paths.auth.jwt.otpverification);
+      // }
       // const href = `${paths.auth.jwt.otpverification}?${searchParams}`;
       // router.push(href);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
+   
   const renderForm = (
     <Stack spacing={3} alignItems="center" sx={{maxWidth: '400px',
     mx: 'auto', // Center horizontally
