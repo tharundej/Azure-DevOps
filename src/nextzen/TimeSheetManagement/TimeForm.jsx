@@ -55,13 +55,13 @@ export default function TimeForm({ currentUser }) {
     Employe_Name: Yup.string(),
     Project_Name: Yup.string(),
     Activity_Name: Yup.string(),
-    Monday: Yup.string().required('First Name is Required'),
-    Tuesday: Yup.string(),
-    Wednesday: Yup.string('Last Name is Required'),
-    Thursday: Yup.string().email().required('Email is Required'),
-    Friday: Yup.string(),
-    Saturday : Yup.string(),
-    Sunday: Yup.string(),
+    monday: Yup.string().required('First Name is Required'),
+    tuesday: Yup.string(),
+    wednseday: Yup.string('Last Name is Required'),
+    thursday: Yup.string().email().required('Email is Required'),
+    friday: Yup.string(),
+    saturday : Yup.string(),
+    sunday: Yup.string(),
     Total_hours: Yup.string(),
     Comment: Yup.string(),
    
@@ -74,13 +74,13 @@ export default function TimeForm({ currentUser }) {
       Employe_Name: currentUser?.Employe_Name || '',
       Project_Name: currentUser?.Project_Name || '',
       Activity_Name: currentUser?.Activity_Name || '',
-      Monday: currentUser?.Monday || '',
-      Tuesday: currentUser?.Tuesday || '',
-      Wednesday: currentUser?.Wednesday || '',
-      Thursday: currentUser?.Thursday || '',
-      Friday: currentUser?.Friday || '',
-      Saturday: currentUser?.Saturday || '',
-      Sunday: currentUser?.Sunday || '',
+      monday: currentUser?.monday || '',
+      tuesday: currentUser?.tuesday || '',
+      wednseday: currentUser?.wednseday || '',
+      thursday: currentUser?.thursday || '',
+      friday: currentUser?.friday || '',
+      saturday: currentUser?.saturday || '',
+      sunday: currentUser?.sunday || '',
       Total_hours: currentUser?.Total_hours || '',
       Comment: currentUser?.Comment || '',
    
@@ -110,16 +110,20 @@ export default function TimeForm({ currentUser }) {
     console.log('uyfgv');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      data.company_id = 'COMP2';
+      data.activity_id = '1';
+      data.project_id = '9';
+      data.date_of_activity = '2023-11-11';
+      data.start_time = '2023-10-17 11:50:02.023';
+      data.end_time = '2023-10-17 11:50:02.023';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post('https://898vmqzh-5001.inc1.devtunnels.ms/erp/addmytimesheet', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -159,13 +163,13 @@ export default function TimeForm({ currentUser }) {
                 <RHFTextField name="Employe_Name" label=" Employe Name " />
                 <RHFTextField name="Project_Name" label="Project Name  " />
                 <RHFTextField name="Activity_Name" label="Activity Name " />
-                <RHFTextField name="Monday" label="Monday" />
-                <RHFTextField name="Tuesday" label="Tuesday" />
-                <RHFTextField name="Wednesday" label="Wednesday" />
-                <RHFTextField name="Thursday" label="Thursday" />
-                <RHFTextField name="Friday" label="Friday" />
-                <RHFTextField name="Saturday" label="Saturday " />
-                <RHFTextField name="Sunday" label="Sunday " />
+                <RHFTextField name="monday" label="monday" />
+                <RHFTextField name="tuesday" label="tuesday" />
+                <RHFTextField name="wednseday" label="wednseday" />
+                <RHFTextField name="thursday" label="thursday" />
+                <RHFTextField name="friday" label="friday" />
+                <RHFTextField name="saturday" label="saturday " />
+                <RHFTextField name="sunday" label="sunday " />
                 <RHFTextField name="Total_hours" label="Total hours" />
                 <RHFTextField name="Comment" label="Comment" />
              

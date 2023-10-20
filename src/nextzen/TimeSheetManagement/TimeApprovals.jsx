@@ -67,29 +67,36 @@ export default function TimeApprovals() {
       ];
     
      const defaultPayload={
-      
-    "employee_id": "E1",      // Replace with the actual employee ID
 
-    "page": "1",
-
-    "limit": "2",
-
-    "sort_by": "employee_name",  // Replace with the desired sorting field
-
-    "sort_order": "asc",         // Replace with "asc" or "desc"
-
- 
-
-    "search": "",            // Replace with the search term
-
-    "filter_employee_name": "",  // Replace with the desired filter values
-
-    "filter_project_name": "",
-
-    "filter_activity_name": "",
-
-    "filter_status": ""
-     }
+      "count": 2,
+    
+      "page": 1,
+    
+      "search": "",
+    
+      "employee_id": "ibm1",
+    
+      "externalFilters": {
+    
+        "employee_name": "",
+    
+        "project_name": "",
+    
+        "activity_name": "",
+    
+        "status": ""
+    
+      },
+    
+      "sort": {
+    
+        "key": 1,
+    
+        "orderBy": "employee_name"
+    
+      }
+    
+    }
     
       const actions = [
     
@@ -149,10 +156,11 @@ export default function TimeApprovals() {
     <BasicTable
 
 headerData={TABLE_HEAD}
-
+filterName='ApprovalSearchFilter'
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
 endpoint='timeSheetApprovals'
+bodyData="timesheets"
 
 rowActions={actions}
 

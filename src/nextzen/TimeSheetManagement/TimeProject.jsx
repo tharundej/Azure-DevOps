@@ -164,7 +164,7 @@ export default function TimeProject() {
 
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
-
+filterName="TimeProjectFilter"
 endpoint='listProject'
 bodyData='data'
 rowActions={actions}

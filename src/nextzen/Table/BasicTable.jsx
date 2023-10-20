@@ -132,6 +132,8 @@ import Style from "../styles/Style.module.css";
 
 import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
+import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
+import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
  
@@ -258,7 +260,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
 
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
-      url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      // url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/${endpoint}`,
 
 
       headers: {
@@ -674,6 +677,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
     
         <Card>
