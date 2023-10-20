@@ -67,6 +67,7 @@ import Style from "../styles/Style.module.css";
 
 import SearchFilter from '../filterSearch/FilterSearch';
 import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import LeaveFilter from '../LeaveManagement/LeaveFilter';
 
 
 
@@ -138,7 +139,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `http://localhost:4001${endpoint}`,
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
-      url: `http://192.168.0.236:3001/erp/${endpoint}`,
+      url: `http://192.168.1.17:3001/erp/${endpoint}`,
       // erp/getStatutoryDetails
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -378,7 +379,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
-    
+       {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
         <Card>
        
           <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>

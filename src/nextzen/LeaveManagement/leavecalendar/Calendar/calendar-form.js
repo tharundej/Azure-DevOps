@@ -97,8 +97,10 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     };
     try {
       const result = await createEvent(eventData);
-      // Handle the successful result if needed.
-      // Close the form and reset it.
+      if (result && result.data && result.data.success) {
+        // Display the success message from the result.
+        enqueueSnackbar(result.data.message, { variant: 'success' });
+      }
       onClose();
       reset();
     } catch (error) {
