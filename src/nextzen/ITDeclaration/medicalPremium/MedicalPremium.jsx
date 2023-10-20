@@ -98,9 +98,7 @@ export default function MedicalPremium() {
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
-  const benak = () => {
-    console.log('testing ');
-  };
+ 
   const methods = useForm();
 
   const handleChange = (event) => {
