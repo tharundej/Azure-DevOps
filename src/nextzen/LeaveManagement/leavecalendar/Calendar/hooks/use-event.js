@@ -23,6 +23,7 @@ console.log(selectEventId,"selevctedatata",selectedRange,"hgdasd",events)
       comments: "",
       from_date: selectedRange ? selectedRange.start : new Date().getTime(),
       to_date: selectedRange ? selectedRange.end : new Date().getTime(),
+      color:"#ffffff"
     }),
     [selectedRange]
   );
