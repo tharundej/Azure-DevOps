@@ -37,14 +37,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
   const [attachmentString,setAttachmentString]=useState([]);
   const [defaultValues, setDefaultValues] = useState([
     {
-      name_of_the_degree: currentUser?.name_of_the_degree || '',
+      nameOfTheDegree: currentUser?.name_of_the_degree || '',
       stream: currentUser?.stream || '',
       university:currentUser?.stream ||  '',
-      year_of_passing:currentUser?.year_of_passing || null,
-      document_name: "sample.pdf",
-      grade_type:'CGPA',
+      yearOfPassing:currentUser?.year_of_passing || null,
+      documentName: "sample.pdf",
+      gradeType:'CGPA',
       grade:8.34,
-      document_data:""
+      documentData:""
 
       
      
@@ -59,7 +59,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
         maxBodyLength: Infinity,
         url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addEducation',
         headers: { 
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc', 
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'text/plain'
         },
         data : data1
@@ -68,6 +68,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        props.nextStep();
       })
       .catch((error) => {
         console.log(error);
@@ -101,7 +102,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
   };
   const handleChange = (e, index, field) => {
     const newObj = defaultValues;
-    if(field==="year_of_passing"){
+    if(field==="yearOfPassing"){
       newObj[index][field] = parseInt(e?.target?.value || null,10);
     }
     else{
@@ -124,9 +125,9 @@ const   EducationInformation=forwardRef((props,ref)=> {
    
     // call api here
     const obj1={
-    company_id: "comp1",
+    companyId: "COMP5",
 
-    employee_id: "Info1",
+    employeeId: localStorage.getItem("employeeId"),
 
     education:defaultValues
     }
@@ -221,7 +222,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
                     id="name_of_the_degree"
                     // value={item?.name_of_the_degree}
                     onChange={(e) => {
-                      handleChange(e, index, 'name_of_the_degree');
+                      handleChange(e, index, 'nameOfTheDegree');
                     }}
                   />
                 </Grid>
@@ -262,9 +263,10 @@ const   EducationInformation=forwardRef((props,ref)=> {
                     name="year_of_passing"
                     label="Year of Passing"
                     id="year_of_passing"
+                   
                     // value={item?.year_of_passing}
                     onChange={(e) => {
-                      handleChange(e, index, 'year_of_passing');
+                      handleChange(e, index, 'yearOfPassing');
                     }}
                     variant="outlined"
                   />
