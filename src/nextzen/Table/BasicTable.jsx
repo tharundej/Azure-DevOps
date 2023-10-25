@@ -158,6 +158,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
+import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
  
 
 const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
@@ -682,6 +683,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
        {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
+       {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
         <Card>
 
        

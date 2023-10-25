@@ -109,7 +109,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rCity: Yup.string(),
     rState: Yup.string(),
     rPincode: Yup.number(),
-    
+   
     toggle: Yup.bool()
     // first_name: Yup.string().required('First Name is required'),
 
@@ -193,7 +193,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://192.168.0.236:3001/erp/onBoarding',
+          url: 'http://192.168.1.160:3001/erp/onBoarding',
           headers: { 
             'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
             'Content-Type': 'text/plain'
@@ -280,20 +280,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         <Grid container spacing={3}>
           <Grid xs={12} md={4}>
             <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-              {currentUser && (
-                <Label
-                  color={
-
-                    
-                    (values.status === 'active' && 'success') ||
-                    (values.status === 'banned' && 'error') ||
-                    'warning'
-                  }
-                  sx={{ position: 'absolute', top: 24, right: 24 }}
-                >
-                  {values.status}
-                </Label>
-              )}
+             
 
               <Box sx={{ mb: 5 }}>
                 <RHFUploadAvatar
@@ -323,14 +310,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   labelPlacement="start"
                   control={
                     <Controller
-                      name="status"
+                      name="toggle"
                       control={control}
                       render={({ field }) => (
                         <Switch
                           {...field}
-                          checked={field.value !== 'active'}
+                          checked={field.value ===true}
                           onChange={(event) =>
-                            field.onChange(event.target.checked ? 'banned' : 'active')
+                            field.onChange(event.target.checked ? true : false)
                           }
                         />
                       )}
@@ -339,10 +326,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   label={
                     <>
                       <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                        Banned
+                        Credentials
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Apply disable account
+                        Create Credentials
                       </Typography>
                     </>
                   }
