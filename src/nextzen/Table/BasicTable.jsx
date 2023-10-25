@@ -48,6 +48,14 @@ import IconButton from '@mui/material/IconButton';
 
 import TableContainer from '@mui/material/TableContainer';
 
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+
+import MenuItem from '@mui/material/MenuItem';
+
+import TableRow from '@mui/material/TableRow';
+
+import TableCell from '@mui/material/TableCell';
+
 // routes
 
 import { paths } from 'src/routes/paths';
@@ -70,11 +78,11 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+ 
 
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+// import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+// import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
 // components
 
@@ -88,6 +96,8 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { useSettingsContext } from 'src/components/settings';
 
+import Paper from '@mui/material/Paper';
+
 import {
 
   useTable,
@@ -97,9 +107,7 @@ import {
   emptyRows,
 
   TableNoData,
-
-  TableEmptyRows,
-
+  // TableEmptyRows,
   TableHeadCustom,
 
   TableSelectedAction,
@@ -110,7 +118,7 @@ import {
 
 //
 
-import { DateRangePicker } from 'rsuite';
+// import { DateRangePicker } from 'rsuite';
 
 import axios from 'axios';
 
@@ -118,9 +126,13 @@ import UserTableRow from './components/UserTableRow';
 
 import Style from "../styles/Style.module.css";
 
-import SearchFilter from '../filterSearch/FilterSearch';
+ 
 
  
+
+import SearchFilter from '../filterSearch/FilterSearch';
+import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
+// import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
  
 
@@ -144,21 +156,31 @@ const defaultFilters = {
 
  
 
-const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
+
+  const popover = usePopover();
+
+ 
 
  
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
 
+ console.log(initialDefaultPayload,"initialDefaultPayload====================")
+
+//  console.log(actions,"actions==......")
+
+//  console.log(onclickActions(),"onclickActions  function --->")
+
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
 
   console.log(initialDefaultPayload?.Page,"page value")
 
-  const countValue = initialDefaultPayload.Count;
+  const countValue = initialDefaultPayload?.Count;
 
-  console.log(countValue,"initialDefaultPayload------")
+  console.log(countValue,"initialDefaultPayload count value------")
 
- 
+const [filterHeaders, setFilterHeaders]=useState([])
 
   const pageSize = 1;
 
@@ -184,7 +206,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
  
 
-  const [rowActions, setRowActions] = useState()
+  // const [rowActions, setRowActions] = useState(actions);
 
   // console.log(endpointdata,"endpoint urlll")
 
@@ -192,28 +214,33 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
  
 
+ 
+
+  // const bodyData = 'appliedLeave';
+
+ 
+
   useEffect(() => {
 
+
+    // onclickActions();
+
     getTableData();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
  
 
   const getTableData = (payload) => {
 
- 
-
-    let initialDefaultPayloadCopy =initialDefaultPayload;
-
-    if(payload){
-
-      initialDefaultPayloadCopy = payload;
-
-    }
-
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
     // if(actionType === 'pageChange'){
 
     //   initialDefaultPayloadCopy.Page = data;
@@ -228,17 +255,18 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
       // url: `http://localhost:4001${endpoint}`,
 
-      url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
+
+      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+
 
       headers: {
 
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
 
       },
-
-      data:  initialDefaultPayloadCopy
-
- 
+      data:  initialDefaultPayload
 
     };
 
@@ -252,21 +280,17 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
       // // console.log(response?.data?.bodyContent);
 
-      setTableData(response?.data?.Applied_Leave || []);
+      // setTableData(response?.data?.[bodyData]|| []);
 
-      // console.log(response?.data?.Applied_Leave,"table body dataa----------->")
+      setTableData(response?.data[bodyData]|| []);
 
-      // console.log(response?.data?.data?.bodyContent);
+     
 
-      // setTableData(response?.data?.data?.bodyContent || []);
+      setFilterHeaders(response?.data?.filterHeaders || []);
 
-      // setTABLE_HEAD(response?.data?.data?.headerContent || []);
+      setTotalRecordsCount(response?.data?.totalEntry || 0)
 
-      setRowActions(response?.data?.actions || []);
-
-      setTotalRecordsCount(response?.data?.Total_entry || 0)
-
-      console.log(response?.data?.Total_entry,"total no of records-->")
+      console.log(response?.data?.data,"total no of records-->")
 
  
 
@@ -354,7 +378,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
     // console.log(inputData,"inputData checkingggggggggggg"),
 
-    comparator: getComparator(table.order, table.orderBy),
+    comparator: getComparator(table?.order, table?.orderBy),
 
     filters,
 
@@ -370,7 +394,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
  
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
  
 
@@ -378,7 +402,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
     (name, value) => {
 
-      table.onResetPage();
+      table?.onResetPage();
 
       setFilters((prevState) => ({
 
@@ -408,9 +432,35 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
  
 
-  const handleEditRow = (rowData, eventData) => {
+  const handleEditRow = (rowData,eventData) => {
 
     console.log(rowData, eventData)
+
+    if (eventData?.type === "serviceCall"){
+
+      console.log("servce call will called ")
+
+    }
+
+    else if (eventData?.type === "edit"){
+
+ 
+
+      console.log("servce call will called for path navigation")
+
+    }
+
+    else{
+
+      console.log("servce call will called for path navigation")
+
+    }
+
+ 
+
+ 
+
+   
 
  
 
@@ -440,11 +490,12 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
     const payload = initialDefaultPayload;
 
-    payload.Page = data;
+    payload.page = data;
 
     setInitialDefaultPayload(payload)
-
     getTableData(payload)
+
+    // getTableData(payload)
 
  
 
@@ -454,45 +505,47 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData}) => {
 
   }
 
+  useEffect(()=>{
+    getTableData(initialDefaultPayload);
+
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
     console.log(event)
 
     const payload = initialDefaultPayload;
 
-    payload.Count = event.target.value;
+    payload.count = event.target.value;
 
-    payload.Page = 0;
+    payload.page = 0;
 
     setInitialDefaultPayload(payload)
-
-    getTableData(payload)
-
+   //  getTableData(payload)
   }
 
  
 
   // Search functionality
 
-// Search functionality
+  const handleSearch = (searchTerm) => {
 
-const handleSearch = (searchTerm) => {
+    const payload = initialDefaultPayload;
 
-  const payload = initialDefaultPayload;
+    setInitialDefaultPayload(prevPayload => ({
 
-  setInitialDefaultPayload(prevPayload => ({
+      ...prevPayload,
 
-    ...prevPayload,
+      search: searchTerm,
 
-    Search: searchTerm,
+      // Filter_Headers:
 
-    from_date:"2023-10-16",
+     
 
-  }));
+    }));
+   // getTableData(payload)
+  }
 
-  getTableData(payload)
-
-}
  
 
  
@@ -547,13 +600,7 @@ const handleSearch = (searchTerm) => {
 
     : '';
 
- 
-
-  // const displayValue = selectedRange && selectedRange.length === 2
-
-  //   ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}`
-
-  //   : '';
+  
 
  
 
@@ -561,215 +608,87 @@ const handleSearch = (searchTerm) => {
 
  
 
+  const handleFIlterOptions=(data)=>{
+   
+    console.log(data,"filtered data")
+
+    const payload = initialDefaultPayload;
+
+    setInitialDefaultPayload(prevPayload => ({
+
+      ...prevPayload,
+
+      // Search: searchTerm,
+      externalFilters:data
+     
+    }));
+    // getTableData(payload)
+
+   
+    
+
+  }
+
+  const handleFilterSearch = (searchTerm) => {
+
  
 
+    console.log(searchTerm,"searched dataaaaaaaaaaa")
+  
+   
+  
+   
+  
+      const payload = initialDefaultPayload;
+  
+      setInitialDefaultPayload(prevPayload => ({
+  
+        ...prevPayload,
+  
+        search: searchTerm,
+  
+        // Filter_Headers:
+  
+       
+  
+      }));
+  
+      getTableData(payload)
+  
+    }
+
+ 
+  
+
+  
   return (
 
     <>
 
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-
-        <Card>
-
-          {/* <CardContent> */}
-
-          <SearchFilter />
-
-          <Grid container spacing={1} >
-
-            <Grid item xs={12} md={5} >
-
-              {/* <TextField sx={{ margin: "0.4em",}} fullWidth placeholder="Search" >o</TextField> */}
-
-              <TextField
-
-              sx={{ margin: "0.4rem", }}
-
-              fullWidth
-
-              // label="Search"
-              
-              placeholder='search'
-
-           
-
-              onChange={(e) => handleSearch(e.target.value)}
-
-              id="filled-hidden-label-small"
-
-              defaultValue="Small"
-
-              variant="outlined"
-
-               size="small"
-
-            />
-
-            </Grid>
-
-            <Grid item xs={12} md={7} container flex justifyContent="flex-end" >
-
-            {/* <DateRangePicker /> */}
-
-            <TextField
-
-              sx={{ margin: "0.4rem", }}
-
-              fullWidth
-
-              // label="Search"
-
-              onClick={handleOpen}
-
-              value={displayValue}
-
-              // value={selectedRange ? `${selectedRange[0]?.toLocaleDateString()} - ${selectedRange[1]?.toLocaleDateString()}` : ""}
-
-             
-
-              placeholder='select date range'
-
-              id="filled-hidden-label-small"
-
-              defaultValue="Select date range"
-
-              variant="outlined"
-
-               size="small"
-
-            />
-
-             <Popover
-
-        open={isOpen}
-
-        onClose={handleClose}
-
-        anchorOrigin={{
-
-          vertical: 'bottom',
-
-          horizontal: 'left',
-
-        }}
-
-        transformOrigin={{
-
-          vertical: 'top',
-
-          horizontal: 'left',
-
-        }}
-
-      >
-
-        <Button onClose={handleClose}>close</Button>
-
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-          <DateRangeCalendar
-
-            onChange={handleDateChange}
-
-          />
-
-        </LocalizationProvider>
-
-      </Popover>
-
-         
+     
 
      
 
-{/* <Popover
+      <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+      {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
+      
+       {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      
+    
+        <Card>
 
-        open={isOpen}
+       
 
-        onClose={handleClose}
-
-        anchorOrigin={{
-
-          vertical: 'bottom',
-
-          horizontal: 'left',
-
-        }}
-
-        transformOrigin={{
-
-          vertical: 'top',
-
-          horizontal: 'left',
-
-        }}
-
-      >
-
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-          <DateRangeCalendar
-
-            onChange={handleDateChange}
-
-          />
-
-        </LocalizationProvider>
-
-      </Popover> */}
-
- 
-
- 
-
- 
-
-           
-
- 
-
- 
-
-              {/* <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Open modal</Button>
-
-              <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Filter</Button>
-
-              <Button sx={{ alignSelf: "center", m: 1 }} variant="contained" >Exports</Button> */}
-
- 
-
- 
-
- 
-
-              {/* <Grid item >
-
-          <Button variant="contained" >Filter</Button>
-
-        </Grid>
-
-        <Grid item >
-
-          <Button variant="contained" sx={{ borderWidth: "2px", Color: "green" }}>Exports</Button>
-
-        </Grid> */}
-
-            </Grid>
-
- 
-
-          </Grid>
-
-          {/* </CardContent> */}
-
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
 
             <TableSelectedAction
 
               dense={table.dense}
 
-              numSelected={table.selected.length}
+              numSelected={table?.selected?.length}
 
-              rowCount={tableData.length}
+              rowCount={tableData?.length}
 
               onSelectAllRows={(checked) =>
 
@@ -777,7 +696,7 @@ const handleSearch = (searchTerm) => {
 
                   checked,
 
-                  tableData.map((row) => row.id)
+                  tableData?.map((row) => row.id)
 
                 )
 
@@ -803,7 +722,7 @@ const handleSearch = (searchTerm) => {
 
             <Scrollbar>
 
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
 
                 {TABLE_HEAD && <TableHeadCustom
 
@@ -813,9 +732,9 @@ const handleSearch = (searchTerm) => {
 
                   headLabel={TABLE_HEAD}
 
-                  rowCount={tableData.length}
+                  rowCount={tableData?.length}
 
-                  numSelected={table.selected.length}
+                  numSelected={table?.selected?.length}
 
                   onSort={table.onSort}
 
@@ -825,7 +744,7 @@ const handleSearch = (searchTerm) => {
 
                       checked,
 
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
 
                     )
 
@@ -843,6 +762,12 @@ const handleSearch = (searchTerm) => {
 
                   <TableBody>
 
+                 
+
+                         
+
+       
+
                     {console.log(tableData)}
 
                     {tableData && tableData.length > 0 && tableData
@@ -850,6 +775,8 @@ const handleSearch = (searchTerm) => {
                      
 
                       .map((row) => (
+
+                        <>
 
                         <UserTableRow
 
@@ -871,7 +798,17 @@ const handleSearch = (searchTerm) => {
 
                         />
 
+                       
+
+ 
+
+ 
+
+                        </>
+
                       ))}
+
+       
 
  
 
@@ -899,17 +836,19 @@ const handleSearch = (searchTerm) => {
 
            
 
-            page={initialDefaultPayload.Page}
+            page={initialDefaultPayload?.page}
 
-            rowsPerPage={initialDefaultPayload.Count}
+            rowsPerPage={initialDefaultPayload?.count}
+
+            // rowsPerPage={25}
 
             onPageChange={onPageChangeHandeler}
 
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
 
-          // dense={table.dense}
+          dense={table.dense}
 
-          // onChangeDense={table.onChangeDense}
+          onChangeDense={table.onChangeDense}
 
           />
 
@@ -971,11 +910,11 @@ function applyFilter({ inputData, comparator, filters }) {
 
  
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
  
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
 
     const order = comparator(a[0], b[0]);
 
@@ -987,13 +926,13 @@ function applyFilter({ inputData, comparator, filters }) {
 
  
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis?.map((el) => el[0]);
 
  
 
   if (name) {
 
-    inputData = inputData.filter(
+    inputData = inputData?.filter(
 
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
 
@@ -1005,7 +944,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (status !== 'all') {
 
-    inputData = inputData.filter((user) => user.status === status);
+    inputData = inputData?.filter((user) => user?.status === status);
 
   }
 
@@ -1013,7 +952,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (role.length) {
 
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData?.filter((user) => role?.includes(user.role));
 
   }
 
@@ -1023,26 +962,54 @@ function applyFilter({ inputData, comparator, filters }) {
 
 }
 
-
- 
-
  
 
 BasicTable.propTypes = {
+
   endpoint: PropTypes.string,
+
 };
 
+ 
+
 BasicTable.propTypes = {
+
   defaultPayload: PropTypes.object,
+
 };
+
 BasicTable.propTypes = {
+
   headerData: PropTypes.any,
+
 };
-// BasicTable.propTypes = {
-//   handleClickEvent: PropTypes.func
-// };
 
+ 
 
+BasicTable.propTypes = {
 
+  bodyData: PropTypes.func,
+
+};
+
+BasicTable.propTypes = {
+
+   rowActions: PropTypes.func
+
+};
+
+BasicTable.propTypes = {
+
+  filterName: PropTypes.any
+
+};
+
+ 
+
+ 
+
+ 
+
+ 
 
 export { BasicTable };

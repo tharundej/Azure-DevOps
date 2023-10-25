@@ -6,6 +6,9 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
+import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
+import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
+import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 
 // ----------------------------------------------------------------------
 
@@ -80,9 +83,9 @@ const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
 const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
 
 // claims------------------------
-const Claims = lazy(() => import('src/nextzen/claims/Claims'));
-const CompoffApprove = lazy(() => import('src/nextzen/claims/components/CompoffApprove'));
-const MyCompoff = lazy(() => import('src/nextzen/claims/components/MyCompoff'));
+const Claims = lazy(() => import('src/nextzen/Claims/Claims'));
+const CompoffApprove = lazy(() => import('src/nextzen/Claims/components/CompoffApprove'));
+const MyCompoff = lazy(() => import('src/nextzen/Claims/components/MyCompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -183,6 +186,33 @@ export const dashboardRoutes = [
         path: 'timesheet',
         children: [
           { element: <TimeSheet />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+        
+          
+        ],
+      },
+      {
+        path: 'shift',
+        children: [
+          { element: <Shift />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+        
+          
+        ],
+      },
+      {
+        path: 'timeapprovals',
+        children: [
+          { element: <TimeApprovals />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+        
+          
+        ],
+      },
+      {
+        path: 'timeproject',
+        children: [
+          { element: <TimeProject />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
         
           

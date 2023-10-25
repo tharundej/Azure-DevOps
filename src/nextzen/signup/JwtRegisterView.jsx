@@ -1,8 +1,9 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
@@ -38,9 +39,19 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
+const StyledContainer = styled('div')({
+  background: 'url("/assets/background/overlay_3.jpg")',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  minHeight: '100vh',
+});
 
 export default function JwtRegisterView() {
   const { register } = useAuthContext();
+
+  const [datesUsed, setDatesUsed] = useState({
+    date_of_incorporation: dayjs(new Date()),
+  });
 
   const router = useRouter();
 
@@ -61,6 +72,7 @@ export default function JwtRegisterView() {
     email_id: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
+    // company_date_of_incorporation:Yup.string().required('Date of corporation is required'),
     phone_no: Yup.number().required('Phone No is required'),
     first_name: Yup.string().required('First name required'),
     middle_name: Yup.string(),
@@ -76,6 +88,7 @@ export default function JwtRegisterView() {
     company_name: '',
     company_registration_no: null,
     company_ceo_name: '',
+    date_of_incorporation: '',
     company_type: '',
     email_id: '',
     phone_no: null,
@@ -108,6 +121,7 @@ export default function JwtRegisterView() {
         data.company_name,
         data.company_registration_no,
         data.company_ceo_name,
+        data.date_of_incorporation,
         data.company_type,
         data.email_id,
         data.phone_no,
@@ -133,11 +147,11 @@ export default function JwtRegisterView() {
     <Stack spacing={2} sx={{ mb: 5, position: 'relative', alignItems: 'center' }}>
       <Typography variant="h4">Register</Typography>
 
-      <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2"> Already have an account? </Typography>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+        <Typography variant="h4"> Already have an account? </Typography>
 
-        <Link href={paths.auth.jwt.login} component={RouterLink} variant="subtitle2">
-          Sign in
+        <Link href={paths.auth.jwt.login} component={RouterLink} variant="h4">
+          Sign In
         </Link>
       </Stack>
     </Stack>
@@ -165,29 +179,30 @@ export default function JwtRegisterView() {
     </Typography>
   );
 
-  // const Item = styled(Paper)(({ theme }) => ({
-  //   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  //   ...theme.typography.body2,
-  //   padding: theme.spacing(1),
-  //   textAlign: 'center',
-  //   color: theme.palette.text.secondary,
-  // }));
   const companyTypes = [{ type: 'Public' }, { type: 'Private' }];
-  const securityQuestions = [
-    { question: 'What is your mother maiden name' },
+
+  const securityQuestions1 = [
+    { question: 'What is your mother maiden name?' },
     { question: 'What is your favorite childhood pet name?' },
     { question: 'What is your favorite book or author?' },
     { question: 'In what city were you born?' },
     { question: 'What is your favorite food or dish?' },
   ];
-
+  const securityQuestions2 = [
+    { question: 'What is your mother maiden name?' },
+    { question: 'What is your favorite childhood pet name?' },
+    { question: 'What is your favorite book or author?' },
+    { question: 'In what city were you born?' },
+    { question: 'What is your favorite food or dish?' },
+  ];
+  
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack style={{ padding: '10px' }} spacing={3.5}>
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
         <Box sx={{ flexGrow: 1 }}>
-          <Card sx={{ minWidth: 275 }}>
+          <Card sx={{ minWidth: 275, background: '#ffffffc9' }}>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
@@ -202,7 +217,17 @@ export default function JwtRegisterView() {
                 <Grid item xs={12} md={4}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Company date of ncorporation" />
+                      <DatePicker
+                        sx={{ width: '100%', paddingLeft: '3px' }}
+                        label="Date Of Incorporation"
+                        // value={datesUsed?.date_of_birth}
+                        defaultValue={dayjs(new Date())}
+                        onChange={(newValue) => {
+                          setDatesUsed((prev) => ({
+                            date_of_incorporation: newValue,
+                          }));
+                        }}
+                      />
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
@@ -235,8 +260,9 @@ export default function JwtRegisterView() {
                   <RHFAutocomplete
                     name="security_q1"
                     label="Security Question-1"
-                    options={securityQuestions.map((securityQuestion) => securityQuestion.question)}
-                  />
+                    options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
+                
+                    />
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <RHFTextField name="security_a1" label="Security answer" />
@@ -245,7 +271,8 @@ export default function JwtRegisterView() {
                   <RHFAutocomplete
                     name="security_q2"
                     label="Security Question-2"
-                    options={securityQuestions.map((securityQuestion) => securityQuestion.question)}
+                    options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
+                    
                   />
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -268,43 +295,19 @@ export default function JwtRegisterView() {
             </CardActions>
           </Card>
         </Box>
-
-        {/* <RHFTextField
-            name="password"
-          label="Password"
-          type={password.value ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={password.onToggle} edge="end">
-                  <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        /> */}
-
-        {/* <LoadingButton
-          fullWidth
-          color="inherit"
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
-          Create account
-        </LoadingButton> */}
       </Stack>
     </FormProvider>
   );
 
   return (
-    <>
-      {renderHead}
+    <StyledContainer>
+      <div style={{ backgroundColor: '#ffffffba', height: '100%' }}>
+        {renderHead}
 
-      {renderForm}
+        {renderForm}
 
-      {renderTerms}
-    </>
+        {renderTerms}
+      </div>
+    </StyledContainer>
   );
 }
