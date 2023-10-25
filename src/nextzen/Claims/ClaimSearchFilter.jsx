@@ -1,4 +1,4 @@
-import PropTypes, { element } from 'prop-types';
+import PropTypes from 'prop-types';
 import React,{ useEffect, useState,useCallback } from 'react';
 import { styled } from '@mui/system';
 
@@ -19,6 +19,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs from 'dayjs';
 
+
 import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
@@ -37,6 +38,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
+// import { ButtonGroup } from 'rsuite';
 
 
 
@@ -78,7 +80,11 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ClaimSearchFilter({filterData,searchData,filterOptions}){
+export default function ClaimSearchFilter({filterData,searchData,}){
+
+  // dialogConfig,filterOptions,addButton,buttonFunction
+  // const { title, fields } = dialogConfig;
+
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -211,12 +217,20 @@ export default function ClaimSearchFilter({filterData,searchData,filterOptions})
   
 
     const [open,setOpen]=useState(false);
+    const [openButton,setOpenButton]=useState(false);
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
     }
     const handleClickClose=()=>{
       setOpen(false)
+    }
+
+    const handleClickOpenButton=()=>{
+      setOpenButton(true);
+    }
+    const handleClickCloseButton=()=>{
+      setOpenButton(false)
     }
 
 
@@ -260,8 +274,64 @@ export default function ClaimSearchFilter({filterData,searchData,filterOptions})
     const handleSearch = (searchTerm) => {
         searchData(searchTerm)
         };
-    
+    // dynamic dialog checking 
+    //  const [open, setOpen] = useState(true);
 
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const  externalFilter = {
+    claim:{
+      claimStartDate:"",
+      claimEndDate:"",
+
+    },
+    expense:{
+      expensestartdate:"",
+      expenseenddate:"",
+
+    },
+  }
+  const [selectedDate, setSelectedDate] = useState(externalFilter);
+  
+  const handleDateChange = (category, field, date) => {
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    setSelectedDate(prevDates => ({
+      ...prevDates,
+      [category]: {
+        ...prevDates[category],
+        [field]: formattedDate,
+      },
+    }));
+  
+    console.log(selectedDate,"SelectedDate------>")
+  };
+  // const handleDateChange = (fieldName, date) => {
+  //   setSelectedDate(prevDates => ({
+  //     ...prevDates,
+  //     [fieldName]: date,
+  //   }));
+  //      console.log(selectedDate,"SelectedDate------>")
+  // };
+  console.log(selectedDate,"SelectedDate1234------>")
+
+
+  const [selectedValue, setSelectedValue] = useState({});
+
+const handleSelectChange = (fieldName, value) => {
+  setSelectedValue(prevValues => ({
+    ...prevValues,
+    [fieldName]: value,
+  }));
+};
+
+const handleMultiSelectChange = (fieldName, newValue) => {
+  setSelectedValue(prevValues => ({
+    ...prevValues,
+    [fieldName]: newValue,
+  }));
+};
   
     return (
         <>
@@ -275,8 +345,13 @@ export default function ClaimSearchFilter({filterData,searchData,filterOptions})
 
             />
             </Grid>
+            <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
+              {/* {addButton && <Button variant='contained'  onClick={buttonFunction}>{addButton}</Button>} */}
+              
 
-            <Grid md={4} xs={4} item>
+            </Grid>
+
+            <Grid md={2} xs={2} item>
 
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
@@ -288,178 +363,92 @@ export default function ClaimSearchFilter({filterData,searchData,filterOptions})
       </Grid>
          </Grid>
      
-      <BootstrapDialog
-        onClose={handleClickClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
 
-      >
-        
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/> </Button>
-        </DialogTitle>
+    {/* <Dialog open={openButton} onClose={handleClickCloseButton}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+       
+        <Button>apply</Button>
+      </DialogContent>
+    </Dialog> */}
 
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
 
-          
 
-          <Grid>
 
-                <Grid>
-            <Typography>Joining Date</Typography>
-     
-
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.joining_date_from}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          joining_date_from: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.joining_date_to}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          joining_date_to: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
-                <Grid marginTop={2}>
-            <Typography>Offer Date</Typography>
-     
-
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.offer_date_from}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_from: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.offer_date_to}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          offer_date_to: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
-
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+     {/* <Dialog open={open} onClose={onClose}  maxWidth="900px" >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+      
+        {fields.map((field, index) => {
+          if (field.type === 'datePicker') {
+            return (
+              <Grid xs={6} margin={3}>
+              <div key={index}>
+                <DatePicker
+                  label={field.label}
+                  value={field.value}
+                  onChange={(date) => handleDateChange(field.category,field.name, date)}
+                  renderInput={(params) => <TextField {...params} variant="outlined" />}
+                />
+              </div>
+              </Grid>
+            );
+          }
+          // if (field.type === 'Select') {
+          //   return <>
+          //   <FormControl fullWidth>
+          //    <Select  fullWidth key={index} label={field.label} options={field.options} />
+          //    </FormControl>
+          //   </>
+          // }
+          if (field.type === 'Select') {
+            return (
+              <FormControl fullWidth key={index}>
+                 <InputLabel>{field.label}</InputLabel>
                 <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
-                  multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="Status" />}
-                  MenuProps={MenuProps}
+                  label={field.label}
+                  placeholder="sure"
+                  value={selectedValue[field.name] || ''}
+                  onChange={(e) => handleSelectChange(field.name, e.target.value)}
+                  variant="outlined"
                 >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
+                  {field.options.map((option) => (
+                    <MenuItem key={index} value={option}>
+                      {option}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-                   </Grid>
+            );
+          }
 
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
+          if (field.type === 'multiSelect') {
+            return (
+              <Grid xs={6} margin={3}>
+                <Autocomplete
                   multiple
-                  value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
-                  input={<OutlinedInput label="Employemt Type" />}
-                  MenuProps={MenuProps}
-                >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-                </Grid>
-               </Grid>
-
-
-           
-         </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
-   
-    </BootstrapDialog>
+                  id={field.name}
+                  options={field.options}
+                  value={selectedValue[field.name] || []}
+                  onChange={(event, newValue) => handleMultiSelectChange(field.name, newValue)}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  renderInput={(params) => <TextField {...params} variant="outlined" label={field.label} />}
+                />
+              </Grid>
+            );
+          }
+          return null;
+        })}
+      
+      </DialogContent>
+    </Dialog> */}
     </>
     )
     
 }
 
 // ClaimSearchFilter.propTypes={
-//     handleFilters: PropTypes.any,
+//     dialogConfig: PropTypes.any,
 // }
 
 // ClaimSearchFilter.propTypes={
@@ -473,11 +462,18 @@ ClaimSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 
-ClaimSearchFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
-}
+// ClaimSearchFilter.propTypes={
+//   buttonFunction: PropTypes.func,
+// }
+// ClaimSearchFilter.propTypes={
+//   addButton: PropTypes.any,
+// }
+
+// ClaimSearchFilter.propTypes={
+//     filterOptions: PropTypes.arrayOf(
+//         PropTypes.shape({
+//           fieldName: PropTypes.string,
+//           options: PropTypes.arrayOf(PropTypes.string)
+//         })
+//       ),
+// }

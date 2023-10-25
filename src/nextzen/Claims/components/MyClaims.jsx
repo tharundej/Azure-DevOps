@@ -55,48 +55,65 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 
-export default function MyClaims({ currentUser }) {
+export default function MyClaims({ currentUser ,}) {
 
   // const defaultPayload = {
   //   "count":5,
   //   "page":0
   // }
+  // const TABLE_HEAD = [
+  //   {
+  //     // id: "name",
+  //     id: "employee_name",
+  //     label: " Employee Name",
+      
+  //     type: "text",
+  //     containesAvatar: false,
+
+  //     secondaryText: "email",
+  //   },
+  //   { id: "claim_type", label: "Claim Type",  type: "text" },
+  //   { id: "claim_date", label: "Claim Date",  type: "text" },
+  //   { id: "claim_amount", label: "Claim Amount",  type: "text" },
+  //   { id: "expense_date", label: "Expense Date",  type: "text" },
+  //   { id: "approve_amount", label: "Approval Amount",  type: "text" },
+  //   { id: "approver_name", label: "Approver Name",  type: "text" },
+  //   { id: "status", label: "Status",  type: "badge" },
+  //   // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
+  //   // { id: "leave_type", label: "Status", width: 100, type: "badge" },
+  //   // { id: '', width: 88 },
+  // ]
   const TABLE_HEAD = [
     {
-      // id: "name",
-      id: "employee_name",
+      id: "employeename",
       label: " Employee Name",
-      
+      width: 180,
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "claim_type", label: "Claim Type",  type: "text" },
-    { id: "claim_date", label: "Claim Date",  type: "text" },
-    { id: "claim_amount", label: "Claim Amount",  type: "text" },
-    { id: "expense_date", label: "Expense Date",  type: "text" },
-    { id: "approve_amount", label: "Approval Amount",  type: "text" },
-    { id: "approver_name", label: "Approver Name",  type: "text" },
-    { id: "status", label: "Status",  type: "badge" },
-    // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
-    // { id: "leave_type", label: "Status", width: 100, type: "badge" },
+    { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
+    { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
+    { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
+    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
+    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "status", label: "Status", width: 100, type: "badge" },
+
+
     // { id: '', width: 88 },
   ]
 
 
 
   const defaultPayload={
-    "company_id":"COMP2",
-    "count":5,
-    "page":0,
-    "search":"",
-    "externalFilter":{
-    "claim_type": "",
-    "claim_date": "",
-    "expense_date": "",
-    "status": ""
-} 
+
+  
+      "employee_id":"ibm3",
+      "page":0,
+      "search":"",
+      "count":5
+   
 }
 const handleClick=()=>{
     console.log("fn passing ")
@@ -116,6 +133,20 @@ const handleClick=()=>{
     { name: "Edit", icon: "hh", id: 'edit' },
     { name: "Delete", icon: "hh", id: 'delete' },
   ];
+
+
+   const dialogConfig={
+    title: 'Dynamic Dialog Example',
+    fields: [
+
+      { type: 'datePicker', label: 'Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'End Date', name: 'expenseenddate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim", value: new Date() },
+      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
+      { type: 'Select', label: 'Select Options', options: ['Option 1', 'Option 2', 'Option 3'] },
+      { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
+    ],
+  } 
   const bodyContent = [
     {
       name: "Surendra",
@@ -128,7 +159,9 @@ const handleClick=()=>{
   ];
   // mui modal related
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+  }
   const handleClose = () => setOpen(false);
 
   const style = {
@@ -252,7 +285,7 @@ const handleClick=()=>{
         <title> Dashboard: myclaims</title>
       </Helmet>
 
-      <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button>
+      {/* <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button> */}
       {/* <Grid container spacing={1}>
         <Grid item xs={6}>
           <TextField fullWidth label="Search">o</TextField>
@@ -439,12 +472,17 @@ const handleClick=()=>{
 
       <BasicTable
 
-      endpoint="getAllClaims"
+      endpoint="/getAllClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
-      bodyData = 'Data'
+      bodyData = 'data'
       filterName="claimSearchFilter"
+
+
+      // button="Apply Claim"
+      // buttonFunction={handleOpen}
+      // filterContent={dialogConfig}
       // searchFilterheader={searchFilterheader}
        
       />

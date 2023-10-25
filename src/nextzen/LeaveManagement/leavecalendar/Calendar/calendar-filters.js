@@ -158,12 +158,10 @@ export default function CalendarFilters({
                   component="div"
                   sx={{ fontSize: 11, color: 'text.disabled' }}
                 >
-                  {/* {event.allDay ? (
-                    fDateTime(event.from_date_unix, 'dd MMM yy')
-                  ) : ( */}
+             
                     <>
-                      {`${fDateTime(event.from_date_unix, 'dd MMM yy p')} - ${fDateTime(
-                        event.to_date_unix,
+                      {`${fDateTime(event.from_date, 'dd MMM yy p')} - ${fDateTime(
+                        event.to_date,
                         'dd MMM yy p'
                       )}`}
                     </>

@@ -11,40 +11,15 @@ import { useState } from 'react';
 import {Typography,CardContent,Grid,Card,TextField,InputAdornment} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
+import LeaveFilter from '../LeaveFilter';
  
 export default function Approveleave(){
    const theme = useTheme();
-
-   const cardStyle = {
-      display: 'flex',
-      // justifyContent: 'space-between', // Align cards horizontally
-      marginBottom: '16px', // Add margin at the bottom
-    };
-    const cardHeaderStyle = {
-      backgroundColor: '#3B82F6',
-      color: '#fff',
-      padding: '16px',
-      textAlign: 'center',
-      fontWeight: 'bold',
-    };
-    const cardContentStyle = {
-      padding: '16px', 
-      // fontWeight: 'bold', 
-      fontSize: '18px', 
-      backgroundColor: '#DFEBFE', // Change the background color
-      display: 'flex',
-     flexDirection: 'column',
-     justifyContent: 'center',
-      alignItems: 'center',
-      color: 'black', // Change the text color
-      
-    };
-
     const defaultPayload={
         "count": 5,
         "page": 0,
         "search": "",
-        "eid": "E2",
+        "eid": "info1",
     "externalFilters":{
         "fFromDate": "",
         "fToDate": "",
@@ -61,9 +36,10 @@ export default function Approveleave(){
         {
               id: "employee_id",
               label: "Employee Id",
+              width:"10px",
               type: "text"
             },
-            { id: "employee", label: "Employee Name", type: "text"},
+            { id: "employee", label: "Employee Name",minWidth:"10pc", type: "text"},
             { id: "apply_date", label: "Apply Date", type: "text" },
             {id : "net_leave_balance",label:"Leave Balance",type:"text"},
             { id: "leave_type", label: "Leave Type", type: "text" },
@@ -85,9 +61,14 @@ export default function Approveleave(){
 
   
  return (
-    <Card sx={{marginTop:"5px"}}>
-     <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} rowActions={actions}/>
-        <br/>
-    </Card>
+  <>
+  <BasicTable 
+  headerData={TABLE_HEAD} 
+  endpoint="/listLeave"  
+  defaultPayload={defaultPayload} 
+  rowActions={actions} 
+  bodyData = 'appliedLeave'
+  filterName="LeavelistFilter"/>
+  </>
  )
 }
