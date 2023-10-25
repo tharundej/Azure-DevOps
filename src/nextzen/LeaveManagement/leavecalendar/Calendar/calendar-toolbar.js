@@ -54,10 +54,10 @@ export default function CalendarToolbar({
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="center"
         sx={{ p: 2.5, pr: 2, position: 'relative' }}
       >
-        {smUp && (
+        {/* {smUp && (
           <Button
             size="small"
             color="inherit"
@@ -67,9 +67,9 @@ export default function CalendarToolbar({
           >
             {selectedItem.label}
           </Button>
-        )}
+        )} */}
 
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
           <IconButton onClick={onPrevDate}>
             <Iconify icon="eva:arrow-ios-back-fill" />
           </IconButton>
@@ -80,16 +80,16 @@ export default function CalendarToolbar({
             <Iconify icon="eva:arrow-ios-forward-fill" />
           </IconButton>
         </Stack>
-
+{/* 
         <Stack direction="row" alignItems="center" spacing={1}>
           <Button size="small" color="error" variant="contained" onClick={onToday}>
             Today
           </Button>
 
-          {/* <IconButton onClick={onOpenFilters}>
+          <IconButton onClick={onOpenFilters}>
             <Iconify icon="ic:round-filter-list" />
-          </IconButton> */}
-        </Stack>
+          </IconButton>
+        </Stack> */}
 
         {loading && (
           <LinearProgress
