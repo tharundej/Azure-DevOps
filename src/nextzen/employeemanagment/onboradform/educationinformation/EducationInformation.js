@@ -286,11 +286,11 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                   id="attachment"
 
-                  // onChange={(e)=>{
+                  onChange={(e)=>{
 
-                  //   handleFileSelect(e,index,"document_data")
+                    handleFileSelect(e,index,"document_data")
 
-                  // }}
+                  }}
 
                   />
                 </Grid>

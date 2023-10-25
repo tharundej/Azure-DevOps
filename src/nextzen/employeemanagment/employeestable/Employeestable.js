@@ -191,22 +191,7 @@ export default function EmployeeTable() {
         <title> Dashboard: Employees</title>
       </Helmet>
 
-      <Grid>
-        {/* <Grid md={8}>
-
-        </Grid> */}
-        <Grid  >
-      <Button
-        component={RouterLink}
-        href={paths.dashboard.employee.onboardform}
-        variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}
-      >
-        Add New Employee
-      </Button>
-      </Grid>
-      </Grid>
+     
       {/* endpoint="/listLeave"
 
       defaultPayload={defaultPayload}
@@ -215,7 +200,7 @@ export default function EmployeeTable() {
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions}
+rowActions={actions} filterName="EmployeeListFilter"
  />
     </>
   );
