@@ -67,6 +67,7 @@ import Style from "../styles/Style.module.css";
  
 import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
+import LeaveFilter from '../LeaveManagement/LeaveFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -365,7 +366,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-      
+       {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
     
         <Card>
        

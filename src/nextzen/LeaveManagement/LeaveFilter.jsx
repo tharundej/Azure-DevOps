@@ -95,10 +95,10 @@ export default function LeaveFilter({filterData,filterOptions}){
   }
 
   const leaves = [
-    'Sick Leave',
-    'Paid Leave',
-    'Vacation Leave',
-    'Annual Leave'
+    {name:'Sick Leave',value: "sick_leave"},
+    {name:'Paid Leave',value:"paid_leave"},
+    {name:'Vacation Leave',value:"vacation_leave"},
+    {name:'Annual Leave',value:"annual_leave"}
   ]
 
   const [dropdown,setDropdown]=useState({
@@ -141,8 +141,10 @@ export default function LeaveFilter({filterData,filterOptions}){
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    fFromDate:null,
-    fToDate:null
+    fFromDate:"",
+    fToDate:"",
+    fStatus: "",         // Add default value for "fStatus"
+    fLeaveTypeName: "",  // Add default value for "fLeaveTypeName"
   })
 
   function formDateDataStructure(){
@@ -155,7 +157,11 @@ export default function LeaveFilter({filterData,filterOptions}){
     return new Promise((resolve) => {
      
 
-      const arr1={};
+      const arr1 = {
+        fStatus: "",
+        fLeaveTypeName: "",
+      };
+  
        dropdownFiledArray.forEach((item,index)=>{  
          
         if(dropdown[item.field]?.length>0){
@@ -165,6 +171,9 @@ export default function LeaveFilter({filterData,filterOptions}){
         }
          
         })
+        arr1.fStatus = data.fStatus;
+        arr1.fLeaveTypeName = data.fLeaveTypeName;
+
 
         resolve(arr1)
         
@@ -264,12 +273,12 @@ export default function LeaveFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.fFromDate}
+                      value={dates?.fFromDate ? dayjs(dates.fFromDate) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fFromDate: formatDateToYYYYMMDD(newValue),
+                          fFromDate:newValue? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -282,12 +291,12 @@ export default function LeaveFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.fToDate}
+                      value={dates?.fToDate ? dayjs(dates.fToDate) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fToDate: formatDateToYYYYMMDD(newValue),
+                          fToDate: newValue ? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -334,10 +343,10 @@ export default function LeaveFilter({filterData,filterOptions}){
                 >
                   {leaves.map((leave) => (
                     <MenuItem
-                      key={leave}
-                      value={leave}
+                      // key={leave}
+                      value={leave?.value}
                     >
-                      {leave}
+                      {leave.name}
                     </MenuItem>
                   ))}
                 </Select>
