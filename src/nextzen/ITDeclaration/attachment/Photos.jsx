@@ -9,11 +9,11 @@ import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import List from '@mui/material/List';
-import Iconify from 'src/components/iconify/iconify';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
+import Iconify from 'src/components/iconify/iconify';
 import { Card,CardContent, Grid } from '@mui/material';
 
 
@@ -197,7 +197,7 @@ export default function Photos({ photos, setPhotos, batch }) {
    
   setImages([])
   setReload(!reload);
-  alert("Photo Uploaded Successfully..")
+  alert("Document Uploaded Successfully..")
   })
   .catch((error) => {
     // console.log('error', error)
