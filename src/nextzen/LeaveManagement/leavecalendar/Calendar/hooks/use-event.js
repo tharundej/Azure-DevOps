@@ -7,7 +7,6 @@ import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 
 export default function useEvent(events, selectEventId, selectedRange, openForm) {
   const currentEvent = events.find((event) => event.leave_id === selectEventId);
-console.log(selectEventId,"selevctedatata",selectedRange,"hgdasd",events)
   const defaultValues = useMemo(
     () => ({
       leave_type_id:0,

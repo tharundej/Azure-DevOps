@@ -36,10 +36,10 @@ export default function Approveleave(){
         {
               id: "employee_id",
               label: "Employee Id",
-              width:"10px",
+              minWidth:"8px",
               type: "text"
             },
-            { id: "employee", label: "Employee Name",minWidth:"10pc", type: "text"},
+            { id: "employee", label: "Employee Name",minWidth:"10px", type: "text"},
             { id: "apply_date", label: "Apply Date", type: "text" },
             {id : "net_leave_balance",label:"Leave Balance",type:"text"},
             { id: "leave_type", label: "Leave Type", type: "text" },
@@ -64,7 +64,7 @@ export default function Approveleave(){
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
-  endpoint="/listLeave"  
+  endpoint="listLeave"  
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'

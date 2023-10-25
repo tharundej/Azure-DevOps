@@ -1,24 +1,15 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import { Paper } from '@mui/material';
+
+import {Box,FormControl,Button,Typography,Grid,Paper,Stack,InputLabel,MenuItem,ListItemText,Select,InputAdornment,TextField,IconButton} from '@mui/material';
+
 import './createPayRun.css';
+
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { TextFields } from '@mui/icons-material';
+
 import { Icon } from '@iconify/react';
+
 import Iconify from 'src/components/iconify/iconify';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+
 import PropTypes from 'prop-types';
 
 const bull = (
@@ -165,176 +156,184 @@ export default function CreatePayRun({ moveToPageFunction }) {
   };
   return (
     <Box>
-      <Grid container spacing={3}>
-        <Grid item>
-          <Paper
-            elevation={0}
-            style={{ padding: '20px', width: '426px', backgroundColor: '#D9D9D9', height: '160px' }}
-          >
-            <Typography>
-              <span style={{ color: '#7D7878', fontWeight: 'bold', fontSize: '1rem' }}>
-                Period:
-              </span>{' '}
-              <span style={{ color: '#000000', fontSize: '1rem' }}> 01/08/2023 To 31/08/2023</span>
-            </Typography>
-            <Grid container spacing={2} style={{ marginTop: '23px', marginBottom: '36px' }}>
-              <Grid item xs={4} alignItems="flex-start">
-                <Grid
-                  container
-                  direction="column"
-                  spacing={0}
-                  alignItems="center"
-                  
-                  style={{ paddingTop: '0px !important' }}
-                >
-                  <Grid item>
-                    <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>
-                      11,34,023.09
-                    </Typography>
-                  </Grid>
-                  <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography
-                      style={{ color: '#7D7878', fontWeight: 'bold', fontSize: '0.9rem' }}
-                    >
-                      PAYROLL COST
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+     <Grid container spacing={3}>
+     <Grid xs={12} md={6} lg={4}>
+  <Stack
+    direction="column"
+    // alignItems="center"
+    // justifyContent="center"
+    sx={{
+      p: 3,
+      px: 3,ml:3,mt:3,
+      borderRadius: 2,
+      overflow: 'hidden',
+      position: 'relative',
+      color: 'common.white',
+      bgcolor: `primary.dark`,
+      minHeight:"16vh"
+    }}
+  >
+   {/* Heading */}
+      <Typography
+      variant="subtitle2"
+      sx={{
+        color: 'inherit',
+        textAlign:"left !important",
+        marginBottom:"16px",
+         opacity:"0.64"
+      }}
+    >
+      Period : 01/08/2023 to 31/08/2023
+    </Typography>
 
-              <Grid item xs={8} justifyContent="flex-start">
-                <Grid container direction="column" spacing={2} alignItems="center">
-                  <Grid item>
-                    <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>
-                      11,34,023.99
-                    </Typography>
-                  </Grid>
-                  <Grid item style={{ paddingTop: 0 }} className="override-grid-padding">
-                    <Typography
-                      style={{ color: '#7D7878', fontWeight: 'bold', fontSize: '0.9rem' }}
-                    >
-                      EMPLOYEE’S GROSS PAY
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper
-            elevation={0}
-            style={{
-              padding: '20px',
-              border: '2px solid #D9D9D9',
-              height: '162px',
-              width: '200px',
-            }}
-          >
-            <Grid container spacing={2} alignItems="center" justifyContent="center" >
-              {/* Typography components */}
-              <Grid item xs={12}>
-                <Typography align="center" style={{ color: '#7D7878', fontWeight: 'bold' }}>
-                  PAY DAY
-                </Typography>
-              </Grid>
-              <Grid item xs={12} style={{ paddingTop: 0 }} className="override-grid-padding">
-                <Typography variant="h6" align="center">
-                  31
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ paddingTop: 0, color: '#7D7878' }}
-                className="override-grid-padding"
-              >
-                <Typography align="center">AUG, 2023</Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ paddingTop: 0, color: '#7D7878' }}
-                className="override-grid-padding"
-              >
-                <Typography align="center">200 Employees</Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+      <div>
+        <ListItemText 
+          primary="11,22093802"
+          secondary="Payroll Cost"
+          primaryTypographyProps={{
+            typography: 'subtitle2',
+            component: 'span',
+            sx: { textAlign: 'center' },
+          }}
+          secondaryTypographyProps={{
+            color: 'inherit',
+            component: 'span',
+            sx: { opacity: 0.64 },
+            typography: 'h6',
+          }}
+        />
+      </div>
 
-        <Grid item>
-          <Paper elevation={0} style={{ width: '351px', height: '70px' }}>
-            <Grid container spacing={2} style={{ marginTop: '5px', marginBottom: '36px' }}>
-              <Grid item xs={12} alignItems="flex-start">
-                <Grid container direction="row" spacing={2} alignItems="center">
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#000000', fontWeight: 'bold' }}>
-                      Tax & Deductions
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+      <div>
+        <ListItemText
+          sx={{ ml: 3 }}
+          primary="2,500"
+          secondary="Employee's Gross Pay"
+          primaryTypographyProps={{
+            typography: 'subtitle2',
+            component: 'span',
+            sx: { textAlign: 'center' },
+          }}
+          secondaryTypographyProps={{
+            color: 'inherit',
+            component: 'span',
+            sx: { opacity: 0.64 },
+            typography: 'h6',
+          }}
+        />
+      </div>
 
-              <Grid item xs={12}>
-                <Grid
-                  container
-                  direction="row"
-                  spacing={2}
-                  alignItems="center"
-                  justifyContent="flex-end"
-                >
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#7D7878' }}>Taxes</Typography>
-                  </Grid>
 
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#000000' }}>11,34,023.09</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+      <Iconify
+        icon="raphael:dollar"
+        sx={{
+          width: 112,
+          right: -32,
+          height: 112,
+          opacity: 0.08,
+          position: 'absolute',
+        }}
+      />
+    </div>
+     
+  </Stack>
+</Grid>
+    <Grid xs={12} md={6} lg={4}>
+  <Stack
+    direction="column"
+    sx={{
+      p: 3,
+      px: 3,ml:3,mt:3,
+      borderRadius: 2,
+      overflow: 'hidden',
+      position: 'relative',
+      color: 'common.white',
+      bgcolor: `primary.dark`,
+      minHeight:"16vh"
+    }}
+  >
+   {/* Heading */}
+      <Typography
+      variant="subtitle2"
+      sx={{
+        color: 'inherit',
+        textAlign:"left !important",
+        opacity:"0.64"
+      }}
+    >
+     Tax Deductions
+    </Typography>
 
-              <Grid item xs={12} alignItems="flex-start">
-                <Grid
-                  container
-                  direction="row"
-                  spacing={2}
-                  alignItems="center"
-                  style={{ paddingTop: 0 }}
-                  className="override-grid-padding"
-                >
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#7D7878' }}>Prs-Tax Deductions</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#000000' }}>14,023.49</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+ 
+ 
+ <Typography
+    variant="subtitle2"
+    
+  >
+    Taxes
+  </Typography>
+  <Typography
+    variant="subtitle2"
+    color="inherit"
+  
+  >
+    Prs-Tax Deductions
+  </Typography>
+  <Typography
+    variant="subtitle2"
+    color="inherit"
+    
+  >
+    Post-Tax Deductions
+  </Typography>
 
-              <Grid item xs={12} alignItems="flex-start">
-                <Grid
-                  container
-                  direction="row"
-                  spacing={2}
-                  alignItems="center"
-                  style={{ paddingTop: 0 }}
-                  className="override-grid-padding"
-                >
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#7D7878' }}>Post-Tax Deductions</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography style={{ color: '#000000' }}>34,023.00</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+  </div>
+
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: "3px" }}>
+    <Typography
+    variant="subtitle2"
+    
+  >
+    11,34,023.09
+  </Typography>
+  <Typography
+    variant="subtitle2"
+    color="inherit"
+   
+  >
+   14,023.49
+  </Typography>
+  <Typography
+    variant="subtitle2"
+    color="inherit"
+    
+  >
+   34,023.00
+  </Typography>
+
+  </div>
+
+
+      <Iconify
+        icon="raphael:dollar"
+        sx={{
+          width: 112,
+          right: -32,
+          height: 112,
+          opacity: 0.08,
+          position: 'absolute',
+        }}
+      />
+    </div>
+     
+  </Stack>
+</Grid>
       </Grid>
       {/* from ai  */}
-      <Grid container spacing={2} style={{ marginTop: '12vh' }}>
+      <Grid container spacing={2}>
         {/* Main Grid 1 */}
         <Grid item xs={6} alignItems="center">
           <Grid container spacing={2} alignItems="center">
