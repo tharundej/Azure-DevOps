@@ -25,8 +25,9 @@ import {
   import Snackbar from '@mui/material/Snackbar';
   import Iconify from 'src/components/iconify/iconify'
  import '../declarationDetails/DeclarationDetails.css';
+ import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
-import MuiAlert from '@mui/material/Alert';
+
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />

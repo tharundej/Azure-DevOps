@@ -1,35 +1,24 @@
+import { height } from '@mui/system';
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
+import ReusableTabs from '../tabs/ReusableTabs';
+import Deduction from './Deduction';
+import Loans from './loans';
+import SalaryAdvace from './SalaryAdvace';
 
-export default function BasicCard() {
+
+
+export default function Month() {
+      const tabLabels = ["Salary Advance" , "Loans " , "My Deductions"]
+      const tabContents = [
+        <div><SalaryAdvace/> </div>,
+        <div> <Loans/> </div>,
+        <div><Deduction/>  </div>
+      ]
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Month deductions 
-          
-        </Typography>
-       
-      
-       
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+    <>
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
+    </>
   );
 }

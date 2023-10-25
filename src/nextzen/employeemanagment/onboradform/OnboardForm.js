@@ -44,6 +44,7 @@ export default function OnBoardForm() {
   const handleNext = () => {
 
     let returnResponse;
+    console.log('manoj0')
     if(activeStep+1===1){
       console.log('11')
       childref.current.childFunctionGeneral();
@@ -55,6 +56,23 @@ export default function OnBoardForm() {
     else if(activeStep+1===2){
       childref.current.childFunctionEducation()
     }
+    else if(activeStep+1===3){
+     
+      childref.current.childFunctionExperience()
+
+    }
+    else if(activeStep+1===4){
+     
+      childref.current.childFunctionExperience()
+
+    }
+
+    else if(activeStep+1===5){
+     
+      childref.current.childFunctionExperience()
+
+    }
+
 
     
  
@@ -122,16 +140,16 @@ export default function OnBoardForm() {
               <GeneralInformation style={{ paddingTop: '20px' }} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}  ref={childref}/>
+              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}  nextStep={handleNextIncrement} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
+              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]} />
+              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
-              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]} />
+              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
