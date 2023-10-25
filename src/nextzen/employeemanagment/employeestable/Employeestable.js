@@ -156,6 +156,19 @@ export default function EmployeeTable() {
       label: 'project_id',
       type: 'text',
       containesAvatar: true,
+const TABLE_HEAD = [
+
+  {
+
+    id: "employee",
+
+    label: " Employee Name",
+
+    width: 180,
+
+    type: "text",
+
+    containesAvatar: false,
 
       secondaryText: 'name',
     },

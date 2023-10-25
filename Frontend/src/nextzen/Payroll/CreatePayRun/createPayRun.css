@@ -1,0 +1,4 @@
+.override-grid-padding > .MuiGrid-item {
+    padding-top: 0 !important;  
+  }
+  
