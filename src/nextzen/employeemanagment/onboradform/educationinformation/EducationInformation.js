@@ -323,8 +323,13 @@ const   EducationInformation=forwardRef((props,ref)=> {
   );
 })
 EducationInformation.propTypes = {
+<<<<<<< HEAD
   currentUser: PropTypes.object,
   nextStep : PropTypes.any,
+=======
+  currentUser: PropTypes.object,  
+  nextStep : PropTypes.any
+>>>>>>> 6b87da1cc34b437f68c185aac5823b75097f161d
 };
 
 const top100Films = [

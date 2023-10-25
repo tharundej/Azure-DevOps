@@ -53,10 +53,7 @@
     "react/function-component-definition": 0,
     "jsx-a11y/control-has-associated-label": 0,
 
-    "import/resolver": [
-      1,
-      {"eslint-import-resolver-case-sensitive": false}
-    ],
+  
     "import/no-unresolved": [
       2, 
       { "caseSensitive": false }
