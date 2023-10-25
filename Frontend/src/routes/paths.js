@@ -165,6 +165,10 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/timesheet`,
      
     },
+    Shift:{
+      root: `${ROOTS.DASHBOARD}/Shift`,
+     
+    },
 
 
 

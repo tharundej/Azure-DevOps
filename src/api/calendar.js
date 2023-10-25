@@ -8,8 +8,8 @@ import { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-const ApplyLeave = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave";
-const URL = "https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList";
+const ApplyLeave = "http://192.168.1.17:3001/erp/applyLeave";
+const URL = "http://192.168.1.17:3001/erp/appliedLeaveList";
 
 
 const options = {

@@ -131,6 +131,10 @@ import Style from "../styles/Style.module.css";
  
 
 import SearchFilter from '../filterSearch/FilterSearch';
+import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import LeaveFilter from '../LeaveManagement/LeaveFilter';
+
+
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
@@ -154,6 +158,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
+import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
  
 
 const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
@@ -258,7 +263,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
 
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
-      url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      url: `http://192.168.1.17:3001/erp/${endpoint}`,
+      // erp/getStatutoryDetails
+      // url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
 
 
       headers: {
@@ -675,7 +682,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
-    
+       {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
+       {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
         <Card>
 
        

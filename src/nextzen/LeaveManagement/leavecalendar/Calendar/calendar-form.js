@@ -97,8 +97,10 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     };
     try {
       const result = await createEvent(eventData);
-      // Handle the successful result if needed.
-      // Close the form and reset it.
+      if (result && result.data && result.data.success) {
+        // Display the success message from the result.
+        enqueueSnackbar(result.data.message, { variant: 'success' });
+      }
       onClose();
       reset();
     } catch (error) {
@@ -146,7 +148,6 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
     reader.onload = function (e) {
       const base64String = e.target.result;
-      console.log('Base64 string:', base64String.split(',')[1]);
       setAttachmentString(base64String.split(',')[1]);
       // setImage( [base64String]);
       // setViewImage(true);
@@ -172,12 +173,11 @@ const getLeaveList = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+    url: `http://192.168.1.17:3001/erp/getLeaveType`,
     data:  payload
   };
 
   axios.request(config).then((response) => {
-    console.log(response,"responsssee",response?.list)
     setListLeave(response?.data?.list)
   })
 
@@ -196,12 +196,11 @@ const AvailableLeaves = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
+    url: `http://192.168.1.17:3001/erp/availableLeave`,
     data:  payload
   };
 
   axios.request(config).then((response) => {
-    console.log(response,"responsssee",response?.data)
     setAvailableLeaves(response?.data)
   })
 

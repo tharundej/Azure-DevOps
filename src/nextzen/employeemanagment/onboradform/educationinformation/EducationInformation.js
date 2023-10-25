@@ -286,11 +286,11 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                   id="attachment"
 
-                  // onChange={(e)=>{
+                  onChange={(e)=>{
 
-                  //   handleFileSelect(e,index,"document_data")
+                    handleFileSelect(e,index,"document_data")
 
-                  // }}
+                  }}
 
                   />
                 </Grid>
@@ -323,8 +323,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
   );
 })
 EducationInformation.propTypes = {
-  currentUser: PropTypes.object,  
-  nextStep : PropTypes.any
+  currentUser: PropTypes.object,
+  nextStep : PropTypes.any,
 };
 
 const top100Films = [

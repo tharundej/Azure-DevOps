@@ -53,11 +53,7 @@
     "react/function-component-definition": 0,
     "jsx-a11y/control-has-associated-label": 0,
     
-      "import/resolver": {
-        "node": {
-          "extensions": [".js", ".jsx", ".ts", ".tsx"]
-        }
-      },
+     
       
 
   

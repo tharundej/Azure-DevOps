@@ -92,6 +92,12 @@ export function useNavData() {
             
           },
           {
+            title: t('Shift Management'),
+            path: paths.dashboard.Shift.root,
+            icon: ICONS.user,
+            
+          },
+          {
             title: t('Claims'),
             path: paths.dashboard.claims.root,
             icon: ICONS.user,
