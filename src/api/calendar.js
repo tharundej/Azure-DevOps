@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { useMemo, useState,useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
 

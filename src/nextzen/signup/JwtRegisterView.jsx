@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import dayjs from 'dayjs';
@@ -8,6 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { Snackbar, Alert as MuiAlert } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -37,7 +38,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-
+import formatDateToYYYYMMDD from '../global/GetDateFormat'
 // ----------------------------------------------------------------------
 const StyledContainer = styled('div')({
   background: 'url("/assets/background/overlay_3.jpg")',
@@ -50,7 +51,7 @@ export default function JwtRegisterView() {
   const { register } = useAuthContext();
 
   const [datesUsed, setDatesUsed] = useState({
-    date_of_incorporation: dayjs(new Date()),
+    companyDateOfIncorporation: dayjs(new Date()),
   });
 
   const router = useRouter();
@@ -72,11 +73,18 @@ export default function JwtRegisterView() {
     emailId: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
-    // company_date_of_incorporation:Yup.string().required('Date of corporation is required'),
-    phoneNo: Yup.number().required('Phone No is required'),
-    firstName: Yup.string().required('First name required'),
+    // companyDateOfIncorporation: Yup.string().required('Date of corporation is required'),
+    phoneNo: Yup.string()
+      .required('Phone No is required')
+      .length(10, 'Phone No must be exactly 10 digits')
+      .matches(/^[0-9]+$/, 'Phone No should only contain numbers'),
+    firstName: Yup.string()
+      .required('First name is required')
+      .matches(/^[A-Za-z\s]+$/, 'First name must contain only letters and spaces'),
     middleName: Yup.string(),
-    lastName: Yup.string().required('Last name required'),
+    lastName: Yup.string()
+      .required('Last name is required')
+      .matches(/^[A-Za-z\s]+$/, 'Last name must contain only letters and spaces'),
     securityQ1: Yup.string().required('Security Question required'),
     securityA1: Yup.string().required('Answer required'),
     securityQ2: Yup.string().required('Security Question required'),
@@ -112,19 +120,30 @@ export default function JwtRegisterView() {
     formState: { isSubmitting },
   } = methods;
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       // console.log(data, 'rammmm');
-
+      console.log(data)
       await register?.(
         data.cin,
         data.companyName,
         data.companyRegistrationNo,
+      
+        
+        formatDateToYYYYMMDD(
+          datesUsed.companyDateOfIncorporation
+        )
+        ,
         data.companyCeoName,
-        data.companyDateOfIncorporation,
         data.companyType,
         data.emailId,
-        data.phoneNo,
+        parseInt(data.phoneNo, 10),
         data.firstName,
         data.middleName,
         data.lastName,
@@ -135,11 +154,12 @@ export default function JwtRegisterView() {
       );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
-      router.push(returnTo || PATH_FOR_VERIFY);
+       router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
+      setSnackbarOpen(true);
     }
   });
 
@@ -195,12 +215,12 @@ export default function JwtRegisterView() {
     { question: 'In what city were you born?' },
     { question: 'What is your favorite food or dish?' },
   ];
-  
+
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack style={{ padding: '10px' }} spacing={3.5}>
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
-
+        
         <Box sx={{ flexGrow: 1 }}>
           <Card sx={{ minWidth: 275, background: '#ffffffc9' }}>
             <CardContent>
@@ -220,11 +240,12 @@ export default function JwtRegisterView() {
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
                         label="companyDateOfIncorporation"
-                        // value={datesUsed?.date_of_birth}
+                        // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                         defaultValue={dayjs(new Date())}
                         onChange={(newValue) => {
+                          console.log(newValue)
                           setDatesUsed((prev) => ({
-                            date_of_incorporation: newValue,
+                            companyDateOfIncorporation: newValue,
                           }));
                         }}
                       />
@@ -260,9 +281,10 @@ export default function JwtRegisterView() {
                   <RHFAutocomplete
                     name="securityQ1"
                     label="Security Question-1"
-                    options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
-                
-                    />
+                    options={securityQuestions1.map(
+                      (securityQuestion1) => securityQuestion1.question
+                    )}
+                  />
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <RHFTextField name="securityA1" label="Security answer" />
@@ -271,8 +293,9 @@ export default function JwtRegisterView() {
                   <RHFAutocomplete
                     name="securityQ2"
                     label="Security Question-2"
-                    options={securityQuestions1.map((securityQuestion1)=>securityQuestion1.question)}
-                    
+                    options={securityQuestions1.map(
+                      (securityQuestion1) => securityQuestion1.question
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -307,6 +330,19 @@ export default function JwtRegisterView() {
         {renderForm}
 
         {renderTerms}
+        <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000} // Adjust the duration as needed
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error">
+          {errorMsg}
+        </MuiAlert>
+        </Snackbar>
       </div>
     </StyledContainer>
   );

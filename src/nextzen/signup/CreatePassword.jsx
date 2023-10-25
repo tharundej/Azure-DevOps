@@ -28,7 +28,8 @@ import { CardContent } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export default function AmplifyNewPasswordView() {
+// eslint-disable-next-line react/prop-types
+export default function AmplifyNewPasswordView({emailId}) {
   const { newPassword, forgotPassword } = useAuthContext();
 
   const router = useRouter();
@@ -83,6 +84,7 @@ export default function AmplifyNewPasswordView() {
     }
     const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
+    console.log(payload,'createpassword')
     if(response?.data.code===201){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
@@ -199,3 +201,4 @@ export default function AmplifyNewPasswordView() {
     </CardContent>
   );
 }
+
