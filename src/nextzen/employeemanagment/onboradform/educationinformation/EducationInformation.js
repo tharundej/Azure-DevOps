@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-
 import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
   TextField,
@@ -14,7 +13,6 @@ import {
   Chip,
   Typography,
 } from '@mui/material';
-
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,7 +22,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import IconButton from '@mui/material/IconButton';
 import { Stack } from '@mui/system';
 import axios from 'axios';
-
 const   EducationInformation=forwardRef((props,ref)=> {
   useImperativeHandle(ref,()=>({
     childFunctionEducation(){
@@ -45,7 +42,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
       gradeType:'CGPA',
       grade:8.34,
       documentData:""
-
       
      
     },
@@ -53,7 +49,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
   const ApiHitEducation=(dataEducation)=>{
     console.log("api called")
       const data1 = dataEducation;
-
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -64,7 +59,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
         },
         data : data1
       };
-
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
@@ -73,9 +67,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
       .catch((error) => {
         console.log(error);
       });
-
   }
-
   const obj =  {
     name_of_the_degree:  '',
       stream:  '',
@@ -93,10 +85,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-
     return `${year}/${month}/${day}`;
   }
-
   const handleAdd = () => {
     setDefaultValues((prev) => [...prev, obj]);
   };
@@ -109,26 +99,20 @@ const   EducationInformation=forwardRef((props,ref)=> {
       newObj[index][field]=e?.target?.value || '';
     }
     
-
     console.log(newObj,'newObjj')
-
     setDefaultValues(newObj);
   };
-
   const handleChangeDate = (newValue, index, name) => {
     const newObj = defaultValues;
     newObj[index][name] = new Date(newValue);
     setDefaultValues(newObj);
   };
-
   const handleSubmit = () => {
    
     // call api here
     const obj1={
     companyId: "COMP5",
-
     employeeId: localStorage.getItem("employeeId"),
-
     education:defaultValues
     }
     console.log(obj1,'education hit');
@@ -140,70 +124,39 @@ const   EducationInformation=forwardRef((props,ref)=> {
     newObj[index][name] = values;
     setDefaultValues(newObj);
   };
-
   function getBase64(file) {
-
     const reader = new FileReader();
-
     reader.readAsDataURL(file);
-
     reader.onload = function () {
-
       console.log(reader.result);
-
     };
-
     reader.onerror = function (error) {
-
       console.log('Error: ', error);
-
     };
-
  }
 
-
-
  function handleFileSelect(event,index,name) {
-
   const fileInput = event.target;
-
   const file = fileInput.files[0];
 
-
-
   if (file) {
-
     const reader = new FileReader();
 
-
-
     reader.onload = function (e) {
-
       const base64String = e.target.result;
-
       console.log('Base64 string:', base64String);
-
       setAttachmentString(base64String)
-
       const newObj = defaultValues;
       newObj[index][name] = base64String;
     setDefaultValues(newObj);
 
-
       // setImage( [base64String]);
-
       // setViewImage(true);
-
       // Here, you can send the `base64String` to your server or perform other actions.
-
     };
 
-
-
     reader.readAsDataURL(file);
-
   }
-
 }
   return (
     <Stack sx={{paddingTop:'20px'}}>
@@ -279,19 +232,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
                 <Grid md={6} xs={12} item>
                   <Typography>Documents</Typography>
                 <input
-
                   type="file"
-
                   accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-
                   id="attachment"
-
                   // onChange={(e)=>{
-
                   //   handleFileSelect(e,index,"document_data")
-
                   // }}
-
                   />
                 </Grid>
               </Grid>
@@ -323,10 +269,9 @@ const   EducationInformation=forwardRef((props,ref)=> {
   );
 })
 EducationInformation.propTypes = {
-  currentUser: PropTypes.object,  
-  nextStep : PropTypes.any
+  currentUser: PropTypes.object,
+  nextStep : PropTypes.any,
 };
-
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
@@ -341,5 +286,4 @@ const top100Films = [
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
 ];
-
 export default EducationInformation;
