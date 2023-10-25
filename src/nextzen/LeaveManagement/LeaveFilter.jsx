@@ -86,7 +86,6 @@ export default function LeaveFilter({filterData,filterOptions}){
     };
   
     axios.request(config).then((response) => {
-      console.log(response,"responsssee",response?.list)
       SetLeaveType(response?.data?.list)
     })
   
@@ -203,8 +202,6 @@ export default function LeaveFilter({filterData,filterOptions}){
         obj[field]=value;
         setDropdown(obj);
       }
-  
-        console.log(value);
     };
 
     const handleApply = async()=>{
@@ -212,8 +209,6 @@ export default function LeaveFilter({filterData,filterOptions}){
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
       filterData(data);
-      console.log(data,'anillll')
-      
     }
     
 

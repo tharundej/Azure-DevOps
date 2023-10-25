@@ -86,7 +86,6 @@ export default function useCalendar() {
     (arg) => {
       if (calendarEl) {
         const calendarApi = calendarEl.getApi();
-           console.log(calendarApi,"calendarapi",arg)
         calendarApi.unselect();
       }
      
@@ -106,7 +105,6 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
-console.log(arg,"eventttt")
       onOpenForm();
       setSelectEventId(event.leave_id);
     },
