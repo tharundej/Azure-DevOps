@@ -36,19 +36,19 @@ const Alert = React.forwardRef((props, ref) => (
 export default function RentDetails() {
 
   const [data, setData] = useState([
-    { month: 'March', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'April', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'May', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'June', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'July', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'August', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'September', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'October', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'November', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'December', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'January', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'February', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'March', role: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'May', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'June', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'July', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'August', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'September', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'October', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'November', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
     // Add more months as needed
   ]);
 const [landLardName , setLandLardName] = useState("")
@@ -114,7 +114,7 @@ const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
 
   const handleRoleChange = (index) => (event) => {
     const newData = [...data];
-    newData[index].role = event.target.value;
+    newData[index].city_type = event.target.value;
     setData(newData);
   };
 
@@ -326,7 +326,7 @@ useEffect(() => {
   console.log(data ,"datadatadata")
     return (
         <div>
-                    <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
+          {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
            <Grid item>
              <TextField
               sx={{ width: '20vw' }}
@@ -349,7 +349,7 @@ useEffect(() => {
           <Grid item>
             <Button className="button">Report</Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid item container xs={12} spacing={2} style={{marginBottom:"0.9rem"}}>
         <Grid item xs={6}>
       
@@ -390,7 +390,8 @@ useEffect(() => {
                     <Select
                       labelId={`role-label-${index}`}
                       id={`role-select-${index}`}
-                      value={row.role}
+                      label="Slectt"
+                      value={row.city_type}
                       onChange={handleRoleChange(index)}
                     >
                       <MenuItem value="Metro">Metro</MenuItem>
