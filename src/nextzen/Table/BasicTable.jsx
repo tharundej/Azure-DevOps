@@ -69,7 +69,8 @@ import SearchFilter from '../filterSearch/FilterSearch';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
-
+// import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
+ 
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
