@@ -42,6 +42,9 @@ import SnackBar from 'src/nextzen/global/SnackBar';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
