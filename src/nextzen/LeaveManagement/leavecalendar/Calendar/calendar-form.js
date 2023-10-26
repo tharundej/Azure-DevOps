@@ -26,6 +26,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
@@ -173,7 +174,7 @@ const getLeaveList = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87.3001/erp/getLeaveType`,
+    url: baseUrl + `getLeaveType`,
     data:  payload
   };
 
@@ -196,7 +197,7 @@ const AvailableLeaves = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87.3001/erp/availableLeave`,
+    url: baseUrl + `availableLeave`,
     data:  payload
   };
 

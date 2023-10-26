@@ -17,7 +17,7 @@ export default axiosInstance;
 
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-  console.log(url,"urlll",args);
+  console.log(url,"urlll",config);
   const res = await axiosInstance.post(url, { ...config });
 console.log(res.data.data,"resdataa")
   return res.data.data;

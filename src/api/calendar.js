@@ -3,14 +3,15 @@ import { useMemo, useState,useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
 
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // utils
 import { fetcher, endpoints } from 'src/utils/axios';
 
 
 // ----------------------------------------------------------------------
 
-const ApplyLeave = "http://192.168.1.87.3001/erp/applyLeave";
-const URL = "http://192.168.1.87.3001/erp/appliedLeaveList";
+const ApplyLeave = baseUrl + 'applyLeave';
+const URL = baseUrl+'appliedLeaveList';
 
 
 const options = {
