@@ -681,7 +681,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {/* {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />} */}
       
        {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}

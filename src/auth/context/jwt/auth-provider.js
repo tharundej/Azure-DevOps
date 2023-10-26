@@ -6,10 +6,10 @@ import dayjs from 'dayjs';
 //
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
+import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
-
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
@@ -113,12 +113,10 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-    //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    const response = await axios.post(endpoints.auth.login, data);
+      const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser', data);
+    //  const response = await axios.post(endpoints.auth.login, data);
 
-    // //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    // const response = await axios.post(endpoints.auth.login, data);
-  
+   
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
@@ -137,13 +135,13 @@ export function AuthProvider({ children }) {
     date: dayjs(new Date()),
   });
   // REGISTER
-  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
+  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyDateOfIncorporation,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
     console.log('hiiii')
     const data = {
       cin, 
       companyName, 
       companyRegistrationNo, 
-      companyDateOfIncorporation:formatDateToYYYYMMDD(datesUsed?.date),
+      companyDateOfIncorporation,
       companyCeoName,
       companyType,
       emailId,
@@ -157,7 +155,6 @@ export function AuthProvider({ children }) {
       securityA2
     };
       console.log(data, 'data ......');
-   
      const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/signup', data);
     // const response = await axios.post(endpoints.auth.register, data);
 
@@ -180,6 +177,7 @@ export function AuthProvider({ children }) {
     //   },
     // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    <AmplifyNewPasswordView emailId={data.emailId}/>
   }, []);
 
 
