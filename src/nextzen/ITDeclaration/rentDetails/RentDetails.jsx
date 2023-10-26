@@ -19,6 +19,7 @@ import {
     RadioGroup,
     Typography,
     FormControlLabel,
+    Autocomplete,
   } from '@mui/material';
   import InputAdornment from '@mui/material/InputAdornment';
   import { Icon } from '@iconify/react';
@@ -36,19 +37,19 @@ const Alert = React.forwardRef((props, ref) => (
 export default function RentDetails() {
 
   const [data, setData] = useState([
-    { month: 'March', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'April', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'May', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'June', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'July', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'August', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'September', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'October', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'November', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'December', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'January', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'February', role: '', rentAmount: '', submittedAmount: '' },
-    { month: 'March', role: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'May', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'June', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'July', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'August', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'September', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'October', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'November', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
     // Add more months as needed
   ]);
 const [landLardName , setLandLardName] = useState("")
@@ -69,11 +70,11 @@ const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
- const handlePanNumberChange = (index) => (event) => {
-   const newPanNumbers = [...panNumbers];
-   newPanNumbers[index] = event.target.value;
-   setPanNumbers(newPanNumbers.slice(0, index + 1)); // Trim the array to include only the filled fields
- };
+  const handlePanNumberChange = (index) => (event) => {
+    const newPanNumbers = [...panNumbers];
+    newPanNumbers[index] = event.target.value;
+    setPanNumbers(newPanNumbers);
+  };
 
 
   const handleChange = (event) => {
@@ -112,10 +113,12 @@ const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
     setPage(0);
   };
 
-  const handleRoleChange = (index) => (event) => {
+  const handleRoleChange = (index, newValue) => {
+     
     const newData = [...data];
-    newData[index].role = event.target.value;
+    newData[index].city_type = newValue;
     setData(newData);
+    console.log(newData)
   };
 
   const handleRentAmountChange = (index) => (event) => {
@@ -180,7 +183,7 @@ setSnackbarOpen(false)
     // ],
     "data": data ,
     "pan_of_the_landlord": isPanValueThere,
-    "pan_number": ["ABCPN1234X", "DEFPN5678Y"],
+    "pan_number": panNumbers,
     "declaration_received_from_landlord": false,
     "file_name": ["sample.pdf", "aparna.pdf"],
     "file_content" :[],
@@ -383,20 +386,14 @@ useEffect(() => {
               >
                 <TableCell style={{ padding: '4px !important' }}>{row.month}</TableCell>
                 <TableCell style={{ width: '150px' }}>
-                  <FormControl style={{ width: '100%' }}>
-                    <InputLabel id={`role-label-${index}`} style={{ width: '100%' }}>
-                      Select
-                    </InputLabel>
-                    <Select
-                      labelId={`role-label-${index}`}
-                      id={`role-select-${index}`}
-                      value={row.role}
-                      onChange={handleRoleChange(index)}
-                    >
-                      <MenuItem value="Metro">Metro</MenuItem>
-                      <MenuItem value="Non-Metro">Non-Metro</MenuItem>
-                    </Select>
-                  </FormControl>
+                <Autocomplete
+          value={row.city_type}
+          onChange={(event, newValue) => handleRoleChange(index, newValue)}
+          options={['Metro', 'Non-Metro']}
+          renderInput={(params) => (
+            <TextField {...params} label="Select" />
+          )}
+        />
                 </TableCell>
                 <TableCell>
                   <TextField
@@ -426,9 +423,13 @@ useEffect(() => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-         <Grid container spacing={2} alignItems="center" direction="row" style={{ marginBottom: "1rem" }}>
-      <Grid item container xs={4} spacing={2} alignItems="center" justifyContent="space-evenly" direction="row" style={{ marginBottom: "1rem", height: "60px" }}>
-        {isShowUpload ? <Grid item><Button className="button">Attachment</Button></Grid> : null}
+         <Grid container spacing={2}
+          // alignItems="center" 
+          direction="row" style={{ marginBottom: "1rem" }}>
+      <Grid item container xs={4} spacing={2} 
+      alignItems="center"
+       justifyContent="space-evenly" direction="row" style={{ marginBottom: "1rem", height: "60px" }}>
+        <Grid item><Button className="button">Attachment</Button></Grid> 
         <Grid item alignItems="center">
           <Button className="button" onClick={saveRentDetails}>Save</Button>
         </Grid>
@@ -437,7 +438,7 @@ useEffect(() => {
       <Grid container spacing={2} xs={8} alignItems="center" justifyContent="flex-end" direction="column" style={{ marginBottom: "1rem" }}>
         {/* Text and Radio Buttons in a single line */}
         <Grid item container direction="row" alignItems="center">
-          <Typography component="span" marginLeft='10px'>
+          <Typography component="span" marginLeft='10px' style={{color: '#7D7878', fontSize: '0.9rem'}}>
             Whether PAN Of The Landlord Available  &nbsp;: &nbsp;
           </Typography>
           <RadioGroup
@@ -462,21 +463,22 @@ useEffect(() => {
 
         {isShowPannumber ?
           <Grid item container direction="column" alignItems="center" spacing={2}>
-            {panNumbers.map((value, index) => (
-              <TextField
-                key={index}
-                label={`If Yes PAN ${index + 1} Number`}
-                variant="outlined"
-                onChange={handlePanNumberChange(index)}
-                value={value}
-                style={{ marginBottom: "10px" }}
-              />
-            ))}
+                {panNumbers.map((value, index) => (
+      <TextField
+        key={index}
+        label={`If Yes PAN ${index + 1} Number`}
+        variant="outlined"
+        onChange={handlePanNumberChange(index)}
+        value={value}
+        style={{ marginBottom: "10px" }}
+      />
+    ))}
+           
           </Grid>
           : null}
         {isShowDeclaration ?
-          <Grid item container direction="row" alignItems="center">
-            <Typography component="span" marginLeft='10px'>
+         <> <Grid item container direction="row" alignItems="center">
+            <Typography component="span" marginLeft='10px'style={{color: '#7D7878',  fontSize: '0.9rem'}}>
               If No, Whether Whether Declaration Received From Landlord  &nbsp;: &nbsp;
             </Typography>
             <RadioGroup
@@ -498,6 +500,7 @@ useEffect(() => {
               />
             </RadioGroup>
           </Grid>
+           {isShowUpload ? <Grid item><Button className="button">Declaration Attachment</Button></Grid> : null}</>
           : null}
 
       </Grid>
