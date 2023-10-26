@@ -66,7 +66,7 @@ import Style from "../styles/Style.module.css";
  
  
 import SearchFilter from '../filterSearch/FilterSearch';
-import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+// import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
