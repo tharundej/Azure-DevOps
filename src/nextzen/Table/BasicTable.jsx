@@ -68,6 +68,7 @@ import Style from "../styles/Style.module.css";
 import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
+import { LoadingScreen } from 'src/components/loading-screen';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -95,7 +96,7 @@ const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,
 const [filterHeaders, setFilterHeaders]=useState([])
   const pageSize = 1;
   const [page, setPage] = useState(1);
- 
+  const [loading, setLoading] = useState(true);
   const [totalRecordsCount, setTotalRecordsCount] = useState(0)
   // const defaultPayloaddata =defaultPayload;
   //   const endpointdata =endpoint;
@@ -146,9 +147,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
  
     axios.request(config).then((response) => {
+      setLoading(false);
       // // console.log(response?.data?.bodyContent);
       // setTableData(response?.data?.[bodyData]|| []);
-      setTableData(response?.data[bodyData]|| []);
+      setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalEntry || 0)
@@ -169,6 +171,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
       .catch((error) => {
  
+        setLoading(false);
         console.log(error);
  
       });
@@ -361,14 +364,15 @@ const [filterHeaders, setFilterHeaders]=useState([])
     <>
      
      
+     {loading?<LoadingScreen sx={{display:"flex",justifyContent:"center",alignItems:'center'}}/>:  
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
+       {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
     
-        <Card>
+       <Card>
        
           <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction
@@ -391,6 +395,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
             />
  
             <Scrollbar>
+            
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
                 {TABLE_HEAD && <TableHeadCustom
                   order={table.order}
@@ -474,7 +479,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
            
             </Grid> */}
         </Card>
-      </Container>
+      </Container>}
  
      
     </>

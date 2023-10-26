@@ -69,7 +69,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 
 
-export default function LeaveFilter({filterData,filterOptions}){
+export default function LeaveFilter({filterSearch,filterData}){
   const theme = useTheme();
   const [leaveType,SetLeaveType]= useState();
 
@@ -220,7 +220,10 @@ export default function LeaveFilter({filterData,filterOptions}){
       filterData(data);
     }
     
-
+    const handleSearch=(e)=>{
+      filterSearch(e?.target?.value)
+    }
+    
   
     return (
         <>
@@ -229,7 +232,7 @@ export default function LeaveFilter({filterData,filterOptions}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch}
+            onChange={e=>{handleSearch(e)}}
 
             />
             </Grid>
@@ -358,7 +361,7 @@ export default function LeaveFilter({filterData,filterOptions}){
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right'}} onClick={()=>{handleApply()}}>Apply</Button>
    
     </BootstrapDialog>
     </>
@@ -366,18 +369,7 @@ export default function LeaveFilter({filterData,filterOptions}){
     
 }
 
-// ClaimSearchFilter.propTypes={
-//     handleFilters: PropTypes.any,
-// }
 LeaveFilter.propTypes={
-    filterData: PropTypes.func,
-}
-
-LeaveFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
+    filterSearch:PropTypes.any,
+    filterData: PropTypes.any,
 }
