@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
+import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle,useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import { Autocomplete,TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 import { fData } from 'src/utils/format-number';
@@ -49,9 +50,44 @@ import {
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
-const   CurrentWork=forwardRef((props,ref)=> {
+const CurrentWork=forwardRef((props,ref)=> {
 
   const currentUser=props.currentUser;
+
+  const [currentWorkData,setCurrentWorkData]=useState({
+    "companyID": "COMP1",
+    reportingManagerID:currentUser?.reportingManagerID|| undefined,
+
+  "employeeID":localStorage.getItem("employeeId"),
+
+  "employmentType":currentUser?.employmentType|| "Contract",
+
+  "locationID":currentUser?.locationID || undefined,
+
+  "departmentID": currentUser?.departmentID || undefined,
+
+  "designationID": currentUser?.designationID || undefined,
+
+  "designationGradeID": currentUser?.designationGradeID || undefined,
+
+  "ctc":currentUser?.ctc || undefined,
+
+
+  "roleID":currentUser?.roleID || undefined
+  })
+
+  const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
+   "Contract","Permanent"
+
+])
+
+const [locationOptions,setLocationOptions]=useState([])
+const [departmentOptions,setDepartmentOptions]=useState([])
+const [desginationOptions,setDesginationptions]=useState([])
+const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
+const [rolesOptions,setrolesOptions]=useState([])
+const [assignManagerOptions,setassignManagerOptions]=useState([])
+
 
   useImperativeHandle(ref,()=>({
     childFunctionGeneral(){
@@ -71,6 +107,288 @@ const   CurrentWork=forwardRef((props,ref)=> {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const ApiHitCurrentWork=(obj)=>{
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/ctcSalaryStructure',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+    
+      data : obj
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      console.log(JSON.stringify(response.data));
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+  const ApiHitLocations=()=>{
+    const data1 = JSON.stringify({
+
+      "companyID": "COMP1"
+    
+    });
+    
+     
+    
+    const config = {
+    
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+    
+      data : data1
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      console.log(JSON.stringify(response.data));
+      setLocationOptions(response?.data?.data ||[])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+  
+  const ApiHitDepartment=(obj)=>{
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+    
+      data : obj
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      // console.log(JSON.stringify(response?.data));
+      setDepartmentOptions(response?.data?.data|| [])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+
+  const ApiHitDesgniation=(obj)=>{
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+    
+      data : obj
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      // console.log(JSON.stringify(response?.data));
+      setDesginationptions(response?.data?.data|| [])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+
+  const ApiHitDesgniationGrade=(obj)=>{
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignationGrade',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+    
+      data : obj
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      // console.log(JSON.stringify(response?.data));
+      setDesginationGradeOptions(response?.data?.data|| [])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+
+  const ApiHitRoles=()=>{
+    const data1 = JSON.stringify({
+
+      "companyID": "COMP1"
+    
+    });
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingRole',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+      data:data1
+    
+     
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      // console.log(JSON.stringify(response?.data));
+      setrolesOptions(response?.data?.data|| [])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+
+  const ApiHitManager=()=>{
+    const data1 = JSON.stringify({
+
+      "companyID": "COMP1"
+    
+    });
+    const config = {
+
+      method: 'post',
+    
+      maxBodyLength: Infinity,
+    
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingReportingManager',
+    
+      headers: {
+    
+        'Content-Type': 'application/json'
+    
+      },
+      data:data1
+    
+     
+    
+    };
+    
+     
+    
+    axios.request(config)
+    
+    .then((response) => {
+    
+      // console.log(JSON.stringify(response?.data));
+      setassignManagerOptions(response?.data?.data|| [])
+    
+    })
+    
+    .catch((error) => {
+    
+      console.log(error);
+    
+    });
+  }
+    useEffect(()=>{
+       ApiHitLocations()
+       ApiHitRoles()
+       ApiHitManager()
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
   const NewUserSchema = Yup.object().shape({
    department_name:Yup.string(),
    desgination:Yup.string()
@@ -166,100 +484,253 @@ const   CurrentWork=forwardRef((props,ref)=> {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-            <RHFAutocomplete
-                name="department_name"
-                label="Departement Name"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(propss, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
+           
+           <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={employeeTypeOptons}
+            value={currentWorkData?.employmentType}
+            getOptionLabel={(option) => option}
+            onChange={(e,newvalue)=>{
+              
+             
+              setCurrentWorkData(prev=>({
+                ...prev,
+                employmentType:newvalue
+              }))
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Employement Type" />}
+          />
 
-                  if (!label) {
-                    return null;
-                  }
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={locationOptions}
+            value={currentWorkData?.locationID}
+            getOptionLabel={(option) => option.locationName}
+            onChange={(e,newvalue)=>{
+              
+             
+              setCurrentWorkData(prev=>({
+                ...prev,
+                locationID:newvalue
+              }))
+              const obj={
+                companyID:'COMP1',
+                locationID:newvalue?.locationID
+              }
 
-                  return (
-                    <li {...propss} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              />
-               <RHFAutocomplete
-                name="desgination"
-                label="Desgination"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(propss, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
+              ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Location" />}
+          />
+            <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={departmentOptions}
+            value={currentWorkData?.departmentID}
+            getOptionLabel={(option) => option?.departmentName}
+            onChange={(e,newvalue)=>{
+              
+             
+              setCurrentWorkData(prev=>({
+                ...prev,
+                departmentID:newvalue
+              }))
+              const obj={
+                companyID:'COMP1',
+                departmentID:newvalue?.departmentID
+              }
 
-                  if (!label) {
-                    return null;
-                  }
+               ApiHitDesgniation(obj)
 
-                  return (
-                    <li {...propss} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              />
-                <RHFTextField name="first_name" label="First Name" type="number" />
+             
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Department" />}
+          />
+              <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={desginationOptions}
+            value={currentWorkData?.designationID}
+            getOptionLabel={(option) => option?.designationName}
+            onChange={(e,newvalue)=>{
+              
+             
+              setCurrentWorkData(prev=>({
+                ...prev,
+                designationID:newvalue
+              }))
+
+              const obj={
+                companyID:'COMP1',
+                designationID:newvalue?.designationID
+                
+              }
+
+               ApiHitDesgniationGrade(obj)
+
+             
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Desgniation" />}
+          />
+
+
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={desginationGradeOptions}
+              value={currentWorkData?.designationGradeID}
+              getOptionLabel={(option) => option?.designationGradeName}
+              onChange={(e,newvalue)=>{
+                
+              
+                setCurrentWorkData(prev=>({
+                  ...prev,
+                  designationGradeID:newvalue
+                }))
+
+              
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Desgination Grade" />}
+          />
+
+              <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={rolesOptions}
+              value={currentWorkData?.roleID}
+              getOptionLabel={(option) => option?.roleName}
+              onChange={(e,newvalue)=>{
+                
+              
+                setCurrentWorkData(prev=>({
+                  ...prev,
+                  roleID:newvalue
+                }))
+
+              
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Select Role" />}
+          />
+
+              <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={assignManagerOptions}
+              value={currentWorkData?.reportingManagerID}
+              getOptionLabel={(option) => option?.managerName}
+              onChange={(e,newvalue)=>{
+                
+              
+                setCurrentWorkData(prev=>({
+                  ...prev,
+                  reportingManagerID:newvalue
+                }))
+
+              
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Assign Manager" />}
+          />
+
+
+
+          <TextField label="CTC"  
+          id="ctc"
+          value={currentWorkData?.ctc}
+          type='number'
+          onChange={(e)=>{
+              
+            setCurrentWorkData(prev=>({
+              ...prev,
+              ctc:e?.target?.value
+            }))
+          }}
+          />
                
-                <RHFAutocomplete
-                name="desgination"
-                label="Desgination"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(propss, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
-
-                  if (!label) {
-                    return null;
-                  }
-
-                  return (
-                    <li {...propss} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              />
-              <RHFTextField name="first_name" label="First Name" type="number" />
                
               </Box>
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            
+              <Button
+              alignItems="flex-end" sx={{ mt: 3 }}
+              onClick={()=>{
+                console.log(currentWorkData?.reportingManagerID,'currentWorkData')
+
+                const obj=
+                {
+
+                  ctc:parseInt(currentWorkData?.ctc,10),
+                  companyID:currentWorkData?.companyID,
+                  employeeID:currentWorkData?.employeeID,
+                  employmentType:currentWorkData?.employmentType,
+                  departmentID:currentWorkData?.departmentID?.departmentID,
+                  designationGradeID:currentWorkData?.designationGradeID?.designationGradeID,
+                  designationID:currentWorkData?.designationID?.designationID,
+                  locationID:currentWorkData?.locationID?.locationID,
+                  reportingManagerID:currentWorkData?.reportingManagerID?.managerID,
+                  roleID:currentWorkData?.roleID?.roleID
+
+                }
+                 ApiHitCurrentWork(obj)
+              }}>
                 Submit
-              </LoadingButton>
-            </Stack>
+              </Button>
+           
 
              
             </Card>

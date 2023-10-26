@@ -66,6 +66,11 @@ import Style from "../styles/Style.module.css";
  
  
 import SearchFilter from '../filterSearch/FilterSearch';
+import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import LeaveFilter from '../LeaveManagement/LeaveFilter';
+
+import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
+
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -367,12 +372,13 @@ const [filterHeaders, setFilterHeaders]=useState([])
      {loading?<LoadingScreen sx={{display:"flex",justifyContent:"center",alignItems:'center'}}/>:  
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
-      
-       {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
     
-       <Card>
+       {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+     
+        <Card>
+
        
           <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction

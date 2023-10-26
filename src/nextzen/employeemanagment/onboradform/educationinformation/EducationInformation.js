@@ -235,9 +235,13 @@ const   EducationInformation=forwardRef((props,ref)=> {
                   type="file"
                   accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   id="attachment"
-                  // onChange={(e)=>{
-                  //   handleFileSelect(e,index,"document_data")
-                  // }}
+
+                  onChange={(e)=>{
+
+                    handleFileSelect(e,index,"document_data")
+
+                  }}
+
                   />
                 </Grid>
               </Grid>

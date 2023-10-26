@@ -150,7 +150,7 @@ export const dashboardRoutes = [
           { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OnBoardForm /> },
+          { path: 'onboardform', element: <OnBoardForm />},
           //  { path: ':id/edit', element: <Edits /> },
           // { path: 'reusetable', element: <ReuseTable /> },
           //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
