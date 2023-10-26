@@ -40,10 +40,13 @@ export default function GeneralForminfo({ currentUser }) {
   //   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    reset()
+  }
 
   const NewUserSchema = Yup.object().shape({
-    employee_type: Yup.string().required('Employee Type is Required'),
+    // employee_type: Yup.string().required('Employee Type is Required'),
     payschedule_type: Yup.string().required('Payschedule Type is Required'),
     pay_type: Yup.string().required('Pay Type is Required'),
     basic_pay: Yup.number().required('Basic Pay is Required'),
@@ -53,12 +56,12 @@ export default function GeneralForminfo({ currentUser }) {
     employer_pf: Yup.number().required('Employer PF is Required'),
     lta: Yup.number().required('LTA is Required'),
     esic: Yup.number().required('esic is Required'),
-    tds: Yup.number().required('TDS is Required'),
+    tds: Yup.number().required('TDS is Required'), 
   });
 
   const defaultValues = useMemo(
     () => ({
-      employee_type: currentUser?.employee_type || '',
+     //  employee_type: currentUser?.employee_type,
       payschedule_type: currentUser?.payschedule_type || '',
       pay_type: currentUser?.pay_type || '',
       basic_pay: currentUser?.basic_pay || null,
@@ -66,9 +69,9 @@ export default function GeneralForminfo({ currentUser }) {
       da: currentUser?.da || null,
       employee_pf: currentUser?.employee_pf || null,
       employer_pf: currentUser?.employer_pf || null,
-      lta:currentUser?.lta || null,
-      esic:currentUser?.esic || null,
-      tds:currentUser?.tds || null
+      lta: currentUser?.lta || null,
+      esic: currentUser?.esic || null,
+      tds: currentUser?.tds || null,
     }),
     [currentUser]
   );
@@ -77,40 +80,45 @@ export default function GeneralForminfo({ currentUser }) {
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-  const payscheduleTypes = [{ type: '52-Once a week' }, { type: '26-Once in a two weeks'},{type:'24- Twice a month'},{type:'12-Once a month'}];
+  const payscheduleTypes = [
+    { type: '52-Once a week' },
+    { type: '26-Once in a two weeks' },
+    { type: '24- Twice a month' },
+    { type: '12-Once a month' },
+  ];
   //   const m2 = useForm();
-  const employeepayTypes=[{type:'Permanent'},{type:'Contract'}]
+  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' }];
   const payTypes = [{ type: 'Weekly' }, { type: 'Monthly' }];
   const {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    reset
   } = methods;
 
   //   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log('submitted dataaa',data);
 
     try {
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
+      const response = await axios.post('http://localhost:8081/onboarding', data)
+          console.log('sucess',);
+    }
+        catch(error){
           console.log('lllll', error);
         }
-      );
+});
 
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
       // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -126,7 +134,7 @@ export default function GeneralForminfo({ currentUser }) {
     },
     [setValue]
   );
-  
+
   const handleDropdownChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedOption(selectedValue);
@@ -138,28 +146,32 @@ export default function GeneralForminfo({ currentUser }) {
       setTextFieldVisible(false);
     }
   };
-  const [selectedOption, setSelectedOption] = useState(''); // State to manage the selected option in Autocomplete
+  const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
   const [isTextFieldVisible, setTextFieldVisible] = useState(false); // State to manage the visibility of the text field
 
   const handleAutocompleteChange = (event, newValue) => {
-    const selectedValue = newValue;
-    setSelectedOption(selectedValue);
-    console.log(selectedValue,'select')
+    setSelectedOption(newValue);
+
 
     // Check if the selected option should show the text field
-    if (selectedValue === 'showTextFieldOption') {
+    if (newValue && newValue.type === 'Permanent') {
       setTextFieldVisible(true);
     } else {
       setTextFieldVisible(false);
     }
   };
+
+  const getOptionLabel = (employeepayType) => employeepayType.type;
   // const HandleChange=(params)=>{
   //   console.log(params,'paramsssss')
-    
+
   // }
+  
   return (
     <>
-      <Button onClick={handleOpen} sx={{}}>Add PayRoll</Button>
+      <Button onClick={handleOpen}>
+        Add PayRoll
+      </Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -168,7 +180,8 @@ export default function GeneralForminfo({ currentUser }) {
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
-      >
+      > 
+   
         <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
           <DialogTitle>Add PayRoll</DialogTitle>
@@ -184,34 +197,46 @@ export default function GeneralForminfo({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFAutocomplete
-                name="employee_type"
-                label="Employee Type"
-                options={employeepayTypes.map((employeepayType) => employeepayType.type)}
-              />
-              <Autocomplete
+            <Autocomplete
               disablePortal
-              name='employee_type'
+              name="employee_type"
               id="combo-box-demo"
-              options={employeepayTypes.map((employeepayType) => employeepayType.type)}
-              value={selectedOption}
+              options={employeepayTypes}
+              getOptionLabel={getOptionLabel}
+               value={selectedOption} // Use selectedOption or an empty string
               onChange={handleAutocompleteChange}
               sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params}label="Employee Type" />}
+              renderInput={(params) => <TextField {...params} label="Employee Type" />}
             />
-              <RHFAutocomplete
-                name="payschedule_type"
-                label="Pay Schedule Type"
-                options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
-              />
-              <RHFTextField name="basic_pay" label="Basic Pay %" />
-              <RHFTextField name="hra" label="HRA %" />
-              <RHFTextField name="da" label="DA %" />
-              <RHFTextField name="employee_pf" label="Employee PF %" />
-              <RHFTextField name="employer_pf" label="Employer PF %" />
-              <RHFTextField name="lta" label="LTA %"/>
-              <RHFTextField name="esic" label="ESIC %"/>
-              <RHFTextField name="Tds" label="TDS %" />
+
+              {isTextFieldVisible && (
+                <>
+                  <RHFAutocomplete
+                    name="payschedule_type"
+                    label="Pay Schedule Type"
+                    options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
+                    
+                  />
+
+                  {/* <RHFTextField name="pay_type" label="Pay Type" /> */}
+                  <RHFTextField name="pay_type" label="Pay Type" />
+                  <RHFTextField name="basic_pay" label="Basic Pay %" />
+
+                  <RHFTextField name="hra" label="HRA %" />
+                  <RHFTextField name="da" label="DA %" />
+                  <RHFTextField name="employee_pf" label="Employee PF %" />
+                  <RHFTextField name="employer_pf" label="Employer PF %" />
+                  <RHFTextField name="lta" label="LTA %" />
+                  <RHFTextField name="esic" label="ESIC %" />
+                  <RHFTextField name="tds" label="TDS %" />
+                </>
+              )}
+
+              {!isTextFieldVisible && (
+                <div>
+                  <RHFTextField name="Tds" label="TDS %" />
+                </div>
+              )}
             </Box>
           </DialogContent>
 
@@ -219,8 +244,7 @@ export default function GeneralForminfo({ currentUser }) {
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" onClick={onSubmit} loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>

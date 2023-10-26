@@ -63,14 +63,14 @@ export function AuthProvider({ children }) {
   const router = useRouter();
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      const accessToken = localStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken ) {
         setSession(accessToken);
 
-        const response = await axios.get(endpoints.auth.me);
+        // const response = await axios.get(endpoints.auth.me);
 
-        const { user } = response.data;
+        const { user } = {}
 
         dispatch({
           type: 'INITIAL',
@@ -119,7 +119,7 @@ export function AuthProvider({ children }) {
    
     const { accessToken, user } = response.data;
 
-    setSession(accessToken);
+    setSession("1");
 
     dispatch({
       type: 'LOGIN',
