@@ -20,18 +20,6 @@
       "presets": ["@babel/preset-react"]
     }
   },
-<<<<<<< HEAD
-=======
-  // "settings": {
-  //   "import/resolver": {
-  //     "alias": {
-  //       "map": [["src", "./src"]],
-  //       "extensions": [".js", ".jsx", ".json"]
-  //     },
-  //     "caseSensitive": false
-  //   }
-  // },
->>>>>>> 32f8cfca1ca7428ddb56a4904dcaebd987a799c2
   "rules": {
     "no-alert": 0,
     "camelcase": 0,
