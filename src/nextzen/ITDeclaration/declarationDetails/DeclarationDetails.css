@@ -5,9 +5,9 @@
 .button {
   /* padding: 10px 20px; */
 
-  border: 2px solid #007bff; /* Blue border color */
+  border: 2px solid #0c0d0e; /* Blue border color */
 
-  background-color: #007bff; /* Blue background color */
+  background-color: black; /* Blue background color */
 
   color: white; /* Text color */
 
@@ -19,9 +19,9 @@ font-size: 0.9rem;
 }
 
 .button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #5a5c5f; /* Darker blue on hover */
 
-  border-color: #0056b3;
+  border-color: #606366;
 }
 
 hr.custom-hr {

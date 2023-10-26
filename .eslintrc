@@ -5,7 +5,7 @@
     "es2021": true
   },
   
-  "plugins": ["unused-imports", "prettier"],
+  "plugins": ["unused-imports",  "prettier"],
   "extends": ["airbnb", "airbnb/hooks", "prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
@@ -20,6 +20,8 @@
       "presets": ["@babel/preset-react"]
     }
   },
+<<<<<<< HEAD
+=======
   // "settings": {
   //   "import/resolver": {
   //     "alias": {
@@ -29,6 +31,7 @@
   //     "caseSensitive": false
   //   }
   // },
+>>>>>>> 32f8cfca1ca7428ddb56a4904dcaebd987a799c2
   "rules": {
     "no-alert": 0,
     "camelcase": 0,

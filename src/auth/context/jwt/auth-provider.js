@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
 
         // const response = await axios.get(endpoints.auth.me);
 
-        const { user } = {}
+        const { user } = {};
 
         dispatch({
           type: 'INITIAL',

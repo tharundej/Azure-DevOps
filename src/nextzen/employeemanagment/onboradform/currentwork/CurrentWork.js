@@ -49,6 +49,7 @@ import {
   } from 'src/_mock';
 
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
 
@@ -114,7 +115,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/ctcSalaryStructure',
+      url: `${baseUrl}ctcSalaryStructure`,
     
       headers: {
     
@@ -157,7 +158,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: `${baseUrl}locationOnboardingDepartment`,
     
       headers: {
     
