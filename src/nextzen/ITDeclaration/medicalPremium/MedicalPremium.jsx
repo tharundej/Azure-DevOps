@@ -63,6 +63,7 @@ export default function MedicalPremium() {
   const policyCItizenshipType = [{ type: 'Normal' }, { type: 'Senior Citizen' }];
   const payMode = [{ type: 'Cahs ' }, { type: 'Other Than Cash' }];
   const [medicalTableData, setMedicalTableData] = useState([]);
+  const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
   const [formData, setFormData] = useState({
     companyID: '',
     employeeID: '',
@@ -246,6 +247,37 @@ export default function MedicalPremium() {
     //  console.log(result, 'resultsreults');
   };
 
+  const getMedicalPremumDetailsDocs = async () => {
+    const payload = { employeeId: 'info2' };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.1.160:3001/erp/getMedicalInsuranceDocuments',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          setMedicalTableDataDoc(rowsData);
+          console.log(JSON.stringify(response?.data), 'setMedicalTableDataDoc');
+
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -257,6 +289,7 @@ export default function MedicalPremium() {
   useEffect(() => {
     const fetchData = async () => {
       await getMedicalPremumDetails();
+      getMedicalPremumDetailsDocs()
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

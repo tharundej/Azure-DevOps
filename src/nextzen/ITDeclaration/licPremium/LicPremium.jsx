@@ -29,7 +29,7 @@ import Snackbar from '@mui/material/Snackbar';
 import '../declarationDetails/DeclarationDetails.css';
 import MuiAlert from '@mui/material/Alert';
 import './LicPReimum.css';
-import { baseUrl } from 'src/nextzen/global/CaseUrl';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
