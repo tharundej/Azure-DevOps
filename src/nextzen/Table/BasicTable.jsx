@@ -67,7 +67,6 @@ import Style from "../styles/Style.module.css";
  
 import SearchFilter from '../filterSearch/FilterSearch';
 import ClaimSearchFilter from '../claims/ClaimSearchFilter';
-import LeaveFilter from '../LeaveManagement/LeaveFilter';
 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
@@ -374,7 +373,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
-    
+       {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
      
         <Card>
