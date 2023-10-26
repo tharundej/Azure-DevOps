@@ -15,7 +15,7 @@ export default function MyCompoff() {
 
   const TABLE_HEAD = [
     {
-      id: "employee",
+      id: "employeename",
       label: " Employee Name",
       width: 180,
       type: "text",
@@ -23,7 +23,7 @@ export default function MyCompoff() {
 
       secondaryText: "email",
     },
-    { id: "apply_date", label: "Apply Date", width: 180, type: "text" },
+    { id: "claim_type", label: "Apply Date", width: 180, type: "text" },
     { id: "employee_id", label: "Employee Id", width: 220, type: "text" },
     { id: "from_date", label: "From Date", width: 180, type: "text" },
     { id: "leave_type", label: "Leave Type", width: 100, type: "badge" },
@@ -34,34 +34,12 @@ export default function MyCompoff() {
 
   const defaultPayload={
 
-    "count": 5,
-
-    "page": 0,
-
-    "search": "",
-
-    "eid": "E2",
-
-"externalFilters":{
-
-    "fFromDate": "",
-
-    "fToDate": "",
-
-    "fLeaveTypeName": "",
-
-    "fStatus": ""
-
-},
-
-"sort": {
-
-    "key":1,
-
-    "orderBy":"al.apply_date"
-
-}
-
+  
+      "employee_id":"ibm3",
+      "page":0,
+      "search":"",
+      "count":5
+   
 }
   
 
@@ -105,7 +83,8 @@ export default function MyCompoff() {
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
          rowActions={actions}
-         bodyData = 'appliedLeave'
+         bodyData = 'data'
+         filterName="claimSearchFilter"
         //  onclickActions={onclickActions}
       />
     </>

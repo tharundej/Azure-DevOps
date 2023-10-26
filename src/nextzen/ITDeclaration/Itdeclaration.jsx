@@ -12,6 +12,7 @@ import RentDetails from './rentDetails/RentDetails';
 import LicPremium from './licPremium/LicPremium';
 import HouseProperty from './houseProperty/HouseProperty';
 import MedicalPremium from './medicalPremium/MedicalPremium';
+import Photos from './attachment/Photos';
 
 const bull = (
   <Box
@@ -23,7 +24,7 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Prooerty','Medical Insurance Premium','Master Deatils'];
+  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Prooerty','Medical Insurance Premium','Master Deatils','photos'];
   const tabContents = [
     <div>
       <DeclarationDetails/>
@@ -42,6 +43,9 @@ export default function BasicCard() {
     </div>,
     <div>
       <MasterDetails/>
+    </div>,
+    <div>
+      <Photos/>
     </div>
   ]
   return (

@@ -135,6 +135,7 @@ import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
+import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
  
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
@@ -157,9 +158,10 @@ const defaultFilters = {
 
  
 
-// ----------------------------------------------------------------------
 
 
+
+ 
 
 const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
 
@@ -680,7 +682,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {/* {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />} */}
       
        {filterName === "LeavelistFilter" && <LeaveFilter filterData={handleFIlterOptions}/>}
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}

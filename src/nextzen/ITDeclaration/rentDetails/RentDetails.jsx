@@ -329,7 +329,7 @@ useEffect(() => {
   console.log(data ,"datadatadata")
     return (
         <div>
-                    <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
+          {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
            <Grid item>
              <TextField
               sx={{ width: '20vw' }}
@@ -352,7 +352,7 @@ useEffect(() => {
           <Grid item>
             <Button className="button">Report</Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid item container xs={12} spacing={2} style={{marginBottom:"0.9rem"}}>
         <Grid item xs={6}>
       
