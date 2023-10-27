@@ -277,6 +277,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     getTableData(initialDefaultPayload);
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[initialDefaultPayload])
+
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
@@ -368,6 +369,37 @@ const [filterHeaders, setFilterHeaders]=useState([])
   
     }
  
+     // sort
+ 
+const [sortColumn, setSortColumn]=useState("")
+ 
+ 
+const handleSort = (field,order) => {
+ console.log(order,"orderrrrrrrrrrrrr")
+// console.log(field,"for sorting .....")
+
+const payload = initialDefaultPayload;
+
+  setSortColumn(field);
+  setInitialDefaultPayload(prevPayload => ({
+
+    ...prevPayload,
+
+    sort: {
+      key: order === "asc"? 1:0,
+      orderBy: sortColumn
+    }
+
+   
+  }));
+  console.log(payload,field,"sortinglllllllllll")
+ 
+
+
+
+table.onSort(field);
+getTableData(payload)
+};
   
   
   return (
@@ -415,7 +447,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
                   numSelected={table?.selected?.length}
-                  onSort={table.onSort}
+                  onSort={handleSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
