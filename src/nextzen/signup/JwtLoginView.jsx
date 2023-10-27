@@ -102,6 +102,9 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
+      <Typography variant="body2">email:rameshagowdav@gmail.com</Typography>
+      <Typography variant="body2">password:1234</Typography>
+      
     </Stack>
   );
 
@@ -114,12 +117,12 @@ export default function JwtLoginView() {
       <RHFTextField
         name="password"
         label="Password"
-        type={password.value ? 'text' : 'password'}
+        type={password?.value ? 'text' : 'password'}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              <IconButton onClick={password?.onToggle} edge="end">
+                <Iconify icon={password?.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
               </IconButton>
             </InputAdornment>
           ),
