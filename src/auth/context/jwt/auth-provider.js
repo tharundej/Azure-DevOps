@@ -10,6 +10,7 @@ import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
@@ -113,7 +114,7 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-      const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser', data);
+      const response = await axios.post(baseUrl +'loginUser', data);
     //  const response = await axios.post(endpoints.auth.login, data);
 
    

@@ -26,6 +26,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -187,7 +188,7 @@ export default function MedicalPremium() {
     const config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.236:3001/erp/updateMedicalInsuranceDetails',
+      url: baseUrl +'updateMedicalInsuranceDetails',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
@@ -222,7 +223,7 @@ export default function MedicalPremium() {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://192.168.1.160:3001/erp/getMedicalInsuranceDetails',
+      url: baseUrl+'getMedicalInsuranceDetails',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',
@@ -244,16 +245,16 @@ export default function MedicalPremium() {
       .catch((error) => {
         console.log(error);
       });
-    //  console.log(result, 'resultsreults');
+      console.log(result, 'resultsreults');
   };
-
+  console.log(medicalTableData, 'resultsreults');
   const getMedicalPremumDetailsDocs = async () => {
     const payload = { employeeId: 'info2' };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://192.168.1.160:3001/erp/getMedicalInsuranceDocuments',
+      url: baseUrl +'getMedicalInsuranceDocuments',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',

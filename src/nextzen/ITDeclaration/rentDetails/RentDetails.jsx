@@ -69,7 +69,7 @@ const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
-
+const [rentDetailsData , setRendDetailsData] = useState([])
   const handlePanNumberChange = (index) => (event) => {
     const newPanNumbers = [...panNumbers];
     newPanNumbers[index] = event.target.value;
@@ -101,9 +101,7 @@ const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
     }
 
   }
-  // const handlePanNumberChange = (event)=>{
-  //   setIsPanValueNumber(event.target.value)
-  // }
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -161,26 +159,7 @@ setSnackbarOpen(false)
     "financial_year": "2023-03-01",
     "name_of_landlord": landLardName,
     "address_of_landlord": landLardAddress,
-    // "data": [
-    //   {
-    //     "month": "January",
-    //     "city_type": "Urban",
-    //     "rent_amount": 1500.00,
-    //     "submitted_amount": 1400.00
-    //   },
-    //   {
-    //     "month": "Feb",
-    //     "city_type": "Urban",
-    //     "rent_amount": 1500.00,
-    //     "submitted_amount": 1400.00
-    //   },
-    //   {
-    //     "month": "March",
-    //     "city_type": "Urban",
-    //     "rent_amount": 1500.00,
-    //     "submitted_amount": 1400.00
-    //   }
-    // ],
+   
     "data": data ,
     "pan_of_the_landlord": isPanValueThere,
     "pan_number": panNumbers,
@@ -215,7 +194,7 @@ setSnackbarOpen(false)
 
     })
     .catch((error) => {
-      ErrorMessage()
+     
       setOpen(true);
       setSnackbarSeverity('error');
       setSnackbarMessage('Error saving rent details. Please try again.');
@@ -227,18 +206,7 @@ ErrorMessage()
 };
 
 
-const ErrorMessage  = ()=>{
-  <>
- { console.log("called me error ")}
 
-    <Snackbar open={open} autoHideDuration={6000} onClose={snackBarAlertHandleClose}    anchorOrigin={{   vertical: 'top',
-horizontal: 'center', }}>
-<Alert onClose={snackBarAlertHandleClose} severity="success" sx={{ width: '100%' }}>
-  This is a success message!
-</Alert>
-</Snackbar>
-</>
-}
 const editRentDetails = async () => {
   const payload = 
    {
@@ -315,9 +283,59 @@ const editRentDetails = async () => {
  
  };
 
+ const getRentDetails = async () => {
+  const payload = { "employeeID" : "ibm2" };
+
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    // url: baseUrl +'getSingleLicPremium',
+    url : "https://xql1qfwp-3001.inc1.devtunnels.ms/erp/rentDeclarationDocs",
+    headers: {
+      Authorization:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+      'Content-Type': 'text/plain',
+    },
+    data: payload,
+  };
+  const result = await axios
+    .request(config)
+    .then((response) => {
+      if (response.status === 200) {
+        const rowsData = response?.data?.data;
+        setRendDetailsData(rowsData);
+        setData(prevData => {
+          return prevData.map(existingMonth => {
+            const matchingMonth = rowsData?.data?.find(apiMonth => apiMonth.month === existingMonth.month);
+      
+            if (matchingMonth) {
+              // If the month exists in the API response, update the data
+              return {
+                ...existingMonth,
+                city_type: matchingMonth.cityType,
+                rentAmount: matchingMonth.rentAmount,
+                submittedAmount: matchingMonth.submittedAmount
+              };
+            }
+      
+            // If the month doesn't exist in the API response, keep the existing data
+            return existingMonth;
+          });
+        });
+        console.log(JSON.stringify(response?.data?.data), 'result');
+
+        console.log(response);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  //  console.log(result, 'resultsreults');
+};
+ console.log(data, 'resultsreults');
 useEffect(() => {
   const fetchData = async () => {
-    // await getDeclarationsList();
+    getRentDetails();
   };
   fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
