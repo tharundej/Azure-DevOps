@@ -25,6 +25,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
 import { CardContent } from '@mui/material';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -46,8 +47,11 @@ export default function AmplifyNewPasswordView({emailId}) {
     // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/,
+      'Password must meet the requirements.'
+    )
+    .required('Password is required'),
     confirmPassword: Yup.string()
       .required('Confirm password is required')
       .oneOf([Yup.ref('password')], 'Passwords must match'),
@@ -82,7 +86,7 @@ export default function AmplifyNewPasswordView({emailId}) {
         "jwtTokenString":localStorage.getItem('jwt_access_token')
         
     }
-    const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/createPassword', payload);
+    const response = await axios.post(baseUrl+'createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
     console.log(payload,'createpassword')
     if(response?.data.code===201){

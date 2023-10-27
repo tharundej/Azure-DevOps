@@ -23,6 +23,7 @@ import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
 import { Grid } from '@mui/material';
 import { column } from 'stylis';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +84,7 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
-       const response = await axios.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/resendOtpToUser');
+       const response = await axios.post(baseUrl+'resendOtpToUser');
         
     } catch (error) {
       console.error(error);

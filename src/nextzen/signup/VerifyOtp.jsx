@@ -38,6 +38,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
 import { CardContent } from '@mui/material';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -100,7 +101,7 @@ export default function VerifyOtp() {
       await resendCodeRegister?.(values.email);
       const payload= {
        jwtTokenString: localStorage.getItem('jwt_access_token')}
-      const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/resendOtp',payload)
+      const response = await axios.post(baseUrl+'resendOtp',payload)
     } catch (error) {
       console.error(error);
     }
