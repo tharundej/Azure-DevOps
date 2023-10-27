@@ -77,7 +77,6 @@ export function useNavData() {
             title: t('Employee Management'),
             path: paths.dashboard.employee.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Leave Management'),

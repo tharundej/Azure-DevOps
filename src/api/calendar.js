@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { useMemo, useState,useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
 
@@ -8,8 +9,8 @@ import { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-const ApplyLeave = "http://192.168.1.17:3001/erp/applyLeave";
-const URL = "http://192.168.1.17:3001/erp/appliedLeaveList";
+const ApplyLeave = "http://192.168.1.87.3001/erp/applyLeave";
+const URL = "http://192.168.1.87.3001/erp/appliedLeaveList";
 
 
 const options = {

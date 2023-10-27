@@ -77,12 +77,11 @@ export default function AmplifyNewPasswordView() {
     try {
 
       const payload ={
-        "jwt_token_string" : localStorage.getItem('jwt_access_token'),
         "password":data.password
     }
-    const response = await axios.post('http://localhost:3001/', payload);
-    console.log(response?.status)
-    if(response?.status===200){
+    const response = await axios.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/newPassword', payload);
+    console.log(response?.data.code)
+    if(response?.data.code===200){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
       }
@@ -94,14 +93,14 @@ export default function AmplifyNewPasswordView() {
     }
   });
 
-  const handleResendCode = useCallback(async () => {
-    try {
-      startCountdown();
-      await forgotPassword?.(values.email);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [forgotPassword, startCountdown, values.email]);
+  // const handleResendCode = useCallback(async () => {
+  //   try {
+  //     startCountdown();
+  //     await forgotPassword?.(values.email);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
     <Stack spacing={3} alignItems="center" sx={{
@@ -156,24 +155,6 @@ export default function AmplifyNewPasswordView() {
       >
         Update Password
       </LoadingButton>
-
-      <Typography variant="body2">
-        {`Don’t have a code? `}
-        <Link
-          variant="subtitle2"
-          onClick={handleResendCode}
-          sx={{
-            cursor: 'pointer',
-            ...(counting && {
-              color: 'text.disabled',
-              pointerEvents: 'none',
-            }),
-          }}
-        >
-          Resend code {counting && `(${countdown}s)`}
-        </Link>
-      </Typography>
-
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}
