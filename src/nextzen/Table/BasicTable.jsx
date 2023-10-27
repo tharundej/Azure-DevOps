@@ -69,6 +69,7 @@ import SearchFilter from '../filterSearch/FilterSearch';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
+import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFilterSearch';
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
  
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
@@ -142,7 +143,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `http://localhost:4001${endpoint}`,
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
-      url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      // https://xql1qfwp-3001.inc1.devtunnels.ms/
+      // url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      
+      url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
@@ -158,7 +163,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
-      setTotalRecordsCount(response?.data?.totalEntry || 0)
+      setTotalRecordsCount(response?.data?.totalRecords || 0)
       console.log(response?.data?.data,"total no of records-->")
  
       // leave list api
@@ -272,13 +277,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
     getTableData(initialDefaultPayload);
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[initialDefaultPayload])
+
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
     payload.count = event.target.value;
     payload.page = 0;
     setInitialDefaultPayload(payload)
-   //  getTableData(payload)
+   getTableData(payload)
   }
  
   // Search functionality
@@ -363,6 +369,37 @@ const [filterHeaders, setFilterHeaders]=useState([])
   
     }
  
+     // sort
+ 
+const [sortColumn, setSortColumn]=useState("")
+ 
+ 
+const handleSort = (field,order) => {
+ console.log(order,"orderrrrrrrrrrrrr")
+// console.log(field,"for sorting .....")
+
+const payload = initialDefaultPayload;
+
+  setSortColumn(field);
+  setInitialDefaultPayload(prevPayload => ({
+
+    ...prevPayload,
+
+    sort: {
+      key: order === "asc"? 1:0,
+      orderBy: sortColumn
+    }
+
+   
+  }));
+  console.log(payload,field,"sortinglllllllllll")
+ 
+
+
+
+table.onSort(field);
+getTableData(payload)
+};
   
   
   return (
@@ -376,7 +413,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
        {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-     
+       {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+
         <Card>
 
        
@@ -409,7 +447,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
                   numSelected={table?.selected?.length}
-                  onSort={table.onSort}
+                  onSort={handleSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,

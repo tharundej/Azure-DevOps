@@ -197,7 +197,16 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/appraisal`,
      
     },
-
+    
+      // configaration:{
+      //   root:`${ROOTS.DASHBOARD}/configaration`,
+      //   LeaveConfiguration: `${ROOTS.DASHBOARD}/leaveconfiguration`,
+      // list: `${ROOTS.DASHBOARD}/user/list`,
+      // cards: `${ROOTS.DASHBOARD}/user/cards`,
+      // profile: `${ROOTS.DASHBOARD}/user/profile`,
+      // account: `${ROOTS.DASHBOARD}/user/account`,
+      // },
+    
 
 
 

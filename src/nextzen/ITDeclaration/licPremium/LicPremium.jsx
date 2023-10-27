@@ -208,7 +208,8 @@ export default function LicPremium() {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +'getSingleLicPremium',
+      // url: baseUrl +'getSingleLicPremium',
+      url : "http://192.168.1.102:3001/erp/getSingleLicPremium",
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
