@@ -11,7 +11,7 @@ import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
