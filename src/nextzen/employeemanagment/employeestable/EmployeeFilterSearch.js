@@ -1,9 +1,6 @@
-/* eslint-disable import/no-unresolved */
 import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
-
-import axios from 'axios';
 
 import { styled } from '@mui/system';
 
@@ -38,7 +35,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+
+// import formatDateToYYYYMMDD from '../global/GetDateFormat';
+
+// import CustomDateRangePicker from '../global/CustomDateRangePicker';
+
+
 
 
 const defaultFilters = {
@@ -68,39 +70,23 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
   };
 
+  
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
-
-export default function LeaveFilter({filterSearch,filterData}){
+export default function EmployeeFilterSearch({filterSearch,filterData}){
   const theme = useTheme();
-  const [leaveType,SetLeaveType]= useState();
-
-  const getLeaveType = () => {
-    const payload = {
-        company_id: "C1"
-    }
-   
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: `http://192.168.0.236:3001/erp/getLeaveType`,
-      data:  payload
-    };
-  
-    axios.request(config).then((response) => {
-      SetLeaveType(response?.data?.list)
-    })
-  
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const leaves = [
-    {name:'Sick Leave',value: "sick_leave"},
-    {name:'Paid Leave',value:"paid_leave"},
-    {name:'Vacation Leave',value:"vacation_leave"},
-    {name:'Annual Leave',value:"annual_leave"}
-  ]
+  const pfTypenames = [
+    'TypeA',
+    'TypeH'
+    
+  ];
 
   const [dropdown,setDropdown]=useState({
 
@@ -110,47 +96,78 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
 
-  const [dropdownLeaveType,setDropdownLeaveType]=useState([])
+  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
 
-  // const [datesFiledArray,setDatesFiledArray]=useState(
-  //   [
-  //     {
-  //       field:'fFromDate',
-  //       from:'fFromDate',
-  //     },
-  //     {
-  //       field:'fToDate',
-  //       to:'offer_date_to'
-  //     }
-  //   ]
-  // )
+  const [datesFiledArray,setDatesFiledArray]=useState(
+    [
+      {
+        field:'joining_date',
+        from:'joining_date_from',
+        to:'joining_date_to'
+      },
+      {
+        field:'offer_date',
+        from:'offer_date_from',
+        to:'offer_date_to'
+      }
+    ]
+  )
 
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'fStatus',
+        field:'pfType',
         options:[]
       },
       {
-        field:'fLeaveTypeName',
+        field:'employment_type',
         options:[]
       }
     ]
   )
 
+
+  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    fFromDate:"",
-    fToDate:"",
-    fStatus: "",         // Add default value for "fStatus"
-    fLeaveTypeName: "",  // Add default value for "fLeaveTypeName"
+    joining_date_from:null,
+    joining_date_to:null,
+    offer_date_from:null,
+    offer_date_to:null
   })
 
   function formDateDataStructure(){
 
-      return dates;
+    return new Promise((resolve) => {
+     
+
+      const arr1={};
+       datesFiledArray.forEach((item,index)=>{  
+         
+        arr1[item.field]={
+          from:dates[item?.from],
+          to:dates[item?.to]
+        }
+
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        
+         
+        //  arr1.push(obj);
+       
+         
+        })
+        setDatesData(arr1);
+        resolve(arr1)
+        
+    })
+    
+
   }
 
   function formWithDropdown(data){
@@ -158,11 +175,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     return new Promise((resolve) => {
      
 
-      const arr1 = {
-        fStatus: "",
-        fLeaveTypeName: "",
-      };
-  
+      const arr1={};
        dropdownFiledArray.forEach((item,index)=>{  
          
         if(dropdown[item.field]?.length>0){
@@ -170,12 +183,20 @@ export default function LeaveFilter({filterSearch,filterData}){
           const commaSeparatedString = arrayOfStrings.join(', ');
           data[item.field]=commaSeparatedString;
         }
+        
+
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        
+         
+        //  arr1.push(obj);
+       
          
         })
-        arr1.fStatus = data.fStatus;
-        arr1.fLeaveTypeName = data.fLeaveTypeName;
-
-
+        // setDatesData(arr1);
         resolve(arr1)
         
     })
@@ -188,7 +209,6 @@ export default function LeaveFilter({filterSearch,filterData}){
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
-      getLeaveType();
     }
     const handleClickClose=()=>{
       setOpen(false)
@@ -200,31 +220,44 @@ export default function LeaveFilter({filterSearch,filterData}){
         target: { value },
       } = event;
       
-      if(field==="fLeaveTypeName"){
-        setDropdownLeaveType(value)
+      if(field==="employment_type"){
+        setDropdownEmployemtType(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="fStatus"){
+      else if(field==="pfType"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
+    
+
+        // On autofill we get a stringified value.
+        
+      
+        console.log(value);
+     // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
-    const handleApply = async()=>{
+    const handleApply=async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
+      console.log(data,';;;')
+
       filterData(data);
+      // call parent function and pass it
+      
+      
     }
-    
+
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
     }
     
+
   
     return (
         <>
@@ -233,7 +266,7 @@ export default function LeaveFilter({filterSearch,filterData}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+             onChange={e=>{handleSearch(e)}}
 
             />
             </Grid>
@@ -266,8 +299,8 @@ export default function LeaveFilter({filterSearch,filterData}){
 
           <Grid>
 
-                <Grid>
-            <Typography>Leave Duration</Typography>
+                {/* <Grid>
+            <Typography>Joining Date</Typography>
      
 
             <Grid container flexDirection="row">
@@ -277,12 +310,12 @@ export default function LeaveFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.fFromDate ? dayjs(dates.fFromDate) : null}
+                      value={dates?.joining_date_from}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fFromDate:newValue? formatDateToYYYYMMDD(newValue):"",
+                          joining_date_from: newValue,
                         }));
                       }}
                     />
@@ -295,12 +328,12 @@ export default function LeaveFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.fToDate ? dayjs(dates.fToDate) : null}
+                      value={dates?.joining_date_to}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fToDate: newValue ? formatDateToYYYYMMDD(newValue):"",
+                          joining_date_to: newValue,
                         }));
                       }}
                     />
@@ -309,60 +342,109 @@ export default function LeaveFilter({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
+                <Grid marginTop={2}>
+            <Typography>Offer Date</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.offer_date_from}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          offer_date_from: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.offer_date_to}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          offer_date_to: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+                </Grid> */}
+
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="fStatus">status</InputLabel>
+                <InputLabel fullWidth id="status">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'fStatus')}
-                  input={<OutlinedInput label="Status" />}
+                  onChange={(e)=>handleChangeDropDown(e,'pfType')}
+                  input={<OutlinedInput label="PF Type" />}
                   MenuProps={MenuProps}
                 >
-                 
-                    <MenuItem value="pending">Pending</MenuItem>
-                    <MenuItem value="approve">Approved</MenuItem>
-                    <MenuItem value="reject">Rejected</MenuItem>
-                  
-                </Select>
-              </FormControl>
-                   </Grid>
-
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="fLeaveTypeName">Leave Type</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
-                  multiple
-                  value={dropdownLeaveType}
-                  onChange={(e)=>handleChangeDropDown(e,'fLeaveTypeName')}
-                  input={<OutlinedInput label="Leave Type" />}
-                  MenuProps={MenuProps}
-                >
-                  {leaves.map((leave) => (
+                  {pfTypenames.map((name) => (
                     <MenuItem
-                      // key={leave}
-                      value={leave?.value}
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
                     >
-                      {leave.name}
+                      {name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
                    </Grid>
+
+                   {/* <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_2"
+                  id="demo-multiple-status_2"
+                  multiple
+                  value={dropdownEmployemtType}
+                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
+                  input={<OutlinedInput label="Employemt Type" />}
+                  MenuProps={MenuProps}
+                >
+                  {names.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid> */}
                 </Grid>
                </Grid>
 
 
            
          </DialogContent>
-         <Button sx={{float:'right'}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button onClick={()=>{handleApply()}}>Apply</Button>
    
     </BootstrapDialog>
     </>
@@ -370,7 +452,17 @@ export default function LeaveFilter({filterSearch,filterData}){
     
 }
 
-LeaveFilter.propTypes={
-    filterSearch:PropTypes.any,
-    filterData: PropTypes.any,
+EmployeeFilterSearch.propTypes={
+  filterSearch: PropTypes.any,
+  filterData:PropTypes.any
+    
 }
+
+// SearchFilter.propTypes={
+//     filterOptions: PropTypes.arrayOf(
+//         PropTypes.shape({
+//           fieldName: PropTypes.string,
+//           options: PropTypes.arrayOf(PropTypes.string)
+//         })
+//       ),
+// }

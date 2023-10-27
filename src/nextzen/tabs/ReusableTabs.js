@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import {Tabs,Tab,Box} from '@mui/material';
 import { styled } from '@mui/system'; // Import styled from @mui/system
-
 const CustomTab = styled(Tab)(({ theme }) => ({
   '&.MuiTab-root.Mui-selected': {
        backgroundColor: "#3B82F6",
@@ -47,80 +44,47 @@ const CustomTab = styled(Tab)(({ theme }) => ({
      minHeight: "2rem",
      
    }));
-
 function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
-
   const [value, setValue] = useState(0);
-
  
-
   const handleChange = (event, newValue) => {
-
     setValue(newValue);
-
     if(typeof changeOfTab === 'function'){
-
       changeOfTab(newValue)
-
     }
-
     // handleCreatePayrun()
-
   };
-
  
-
   return (
-
     <div>
-      <Tabs
+        <Box sx={{marginBottom:"0 !important", borderBottom:"3px solid #3b82f6 !important"}}>
+        <Tabs
         value={value}
-
         onChange={handleChange}
-
         variant="scrollable"
-
         scrollButtons="auto"
         TabIndicatorProps={{ style: { display: 'none' } }} 
       >
-
         {tabLabels?.map((label, index) => (
-
           <CustomTab
-
             label={label}
-
             key={index}
-
           />
-
         ))}
-
       </Tabs>
+      </Box>
       {tabContents?.map((content, index) => (
         <div style={{padding:"0.25rem"}} key={index} hidden={value !== index}>
           {value === index && content}
-
         </div>
-
       ))}
-
     </div>
-
   );
-
 }
-
  
-
 ReusableTabs.propTypes = {
-
   tabLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
-
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
-
   changeOfTab: PropTypes.any
-
 };
-
 export default ReusableTabs;
