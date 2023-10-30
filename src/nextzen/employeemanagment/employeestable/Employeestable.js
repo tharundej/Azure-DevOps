@@ -95,6 +95,7 @@ export default function EmployeeTable() {
     "page": 0,
      
     "search": "",
+    "fcompanyID": "COMP1",
      
     "externalFilters": {
     "fMaritalStatus":"",
