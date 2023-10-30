@@ -17,6 +17,7 @@ export default function useTable(props) {
 
   const onSort = useCallback(
     (id) => {
+      
       const isAsc = orderBy === id && order === 'asc';
       if (id !== '') {
         setOrder(isAsc ? 'desc' : 'asc');

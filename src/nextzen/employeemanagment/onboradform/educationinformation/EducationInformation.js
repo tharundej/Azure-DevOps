@@ -63,6 +63,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         props.nextStep();
+        props.handleCallSnackbar(response.data.message,"success")
       })
       .catch((error) => {
         console.log(error);
@@ -159,7 +160,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
   }
 }
   return (
-    <Stack sx={{paddingTop:'20px'}}>
+    <Card sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -269,7 +270,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
           Submit
         </Button> */}
       </form>
-    </Stack>
+    </Card>
   );
 })
 EducationInformation.propTypes = {

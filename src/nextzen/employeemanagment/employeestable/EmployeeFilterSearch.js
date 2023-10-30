@@ -36,11 +36,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-// import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import { paths } from 'src/routes/paths';
 
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
-
+import { useRouter } from 'src/routes/hooks';
 
 
 const defaultFilters = {
@@ -81,11 +82,20 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+
+  const router=useRouter();
   const theme = useTheme();
-  const pfTypenames = [
-    'TypeA',
-    'TypeH'
-    
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
   ];
 
   const [dropdown,setDropdown]=useState({
@@ -102,14 +112,19 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'joining_date',
-        from:'joining_date_from',
-        to:'joining_date_to'
+        field:'fjoiningDate',
+        from:'fjoiningDateFrom',
+        to:'fjoiningDateTo'
       },
       {
-        field:'offer_date',
-        from:'offer_date_from',
-        to:'offer_date_to'
+        field:'fDOB',
+        from:'fDOBDateFrom',
+        to:'fDOBDateTo'
+      },
+      {
+        field:'fofferDate',
+        from:'fofferDateFrom',
+        to:'fofferDateTo'
       }
     ]
   )
@@ -117,7 +132,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'pfType',
+        field:'status',
         options:[]
       },
       {
@@ -128,14 +143,16 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   )
 
 
-  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
+  // const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joining_date_from:null,
-    joining_date_to:null,
-    offer_date_from:null,
-    offer_date_to:null
+    joiningDateFrom:undefined,
+    joiningDateTo:undefined,
+    offerDateFrom:undefined,
+    offerDateTo:undefined,
+    fofferDateFrom:undefined,
+    fofferDateTo:undefined
   })
 
   function formDateDataStructure(){
@@ -145,11 +162,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
-         
+         if(dates[item?.from]!==null){
         arr1[item.field]={
-          from:dates[item?.from],
-          to:dates[item?.to]
+          from:formatDateToYYYYMMDD(dates[item?.from]),
+          to:formatDateToYYYYMMDD(dates[item?.to])
         }
+      }
 
         //  const obj={
         //    filed_name:item?.field,
@@ -215,7 +233,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
     }
 
 
-    const handleChangeDropDown = (event,field) => {
+    const handleChangeDropDown = (event,field) => { 
       const {
         target: { value },
       } = event;
@@ -226,7 +244,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="pfType"){
+      else if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
@@ -245,8 +263,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      console.log(data,';;;')
-
+      //console.log(data,';;;')
       filterData(data);
       // call parent function and pass it
       
@@ -255,6 +272,10 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
+    }
+
+    const handlicClickOnboardform=()=>{
+      router.push(paths.dashboard.employee.onboardform)
     }
     
 
@@ -272,13 +293,26 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
             </Grid>
 
             <Grid md={4} xs={4} item>
+          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+           
+      <Grid item>
+      <Button  variant="contained" onClick={()=>{handlicClickOnboardform()}}
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{margin:'20px'}}>Add Employee</Button>
 
-        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+
+      </Grid>
+      <Grid item>
+        <Stack  >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
+           
       </Button>
 
+
       </Stack>
+             </Grid>
+      </Grid>
       </Grid>
          </Grid>
      
@@ -299,7 +333,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
           <Grid>
 
-                {/* <Grid>
+               <Grid>
             <Typography>Joining Date</Typography>
      
 
@@ -310,12 +344,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.joining_date_from}
+                      value={dates?.fjoiningDateFrom}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_from: newValue,
+                          fjoiningDateFrom: newValue,
                         }));
                       }}
                     />
@@ -328,12 +362,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.joining_date_to}
+                      value={dates?.fjoiningDateTo}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_to: newValue,
+                          fjoiningDateTo: newValue,
                         }));
                       }}
                     />
@@ -342,7 +376,56 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid marginTop={2}>
+
+
+           <Grid marginTop={2}>
+              
+            <Typography>DOB</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fDOBDateFrom}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateFrom: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fDOBDateTo}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateTo: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+
+             
+             </Grid>
+             <Grid marginTop={2}>
+              
             <Typography>Offer Date</Typography>
      
 
@@ -353,12 +436,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.offer_date_from}
+                      value={dates?.fofferDateFrom}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          offer_date_from: newValue,
+                          fofferDateFrom: newValue,
                         }));
                       }}
                     />
@@ -371,12 +454,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.offer_date_to}
+                      value={dates?.fofferDateTo}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          offer_date_to: newValue,
+                          fofferDateTo: newValue,
                         }));
                       }}
                     />
@@ -384,9 +467,20 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                 </LocalizationProvider>
                 </Grid>
                 </Grid>
-                </Grid> */}
+
+             
+             </Grid>
+            
+
+
+                 {/* drop down options */}
+                <Grid>
+
+
+              
 
                 <Grid>
+                  
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">status</InputLabel>
@@ -396,11 +490,11 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'pfType')}
-                  input={<OutlinedInput label="PF Type" />}
+                  onChange={(e)=>handleChangeDropDown(e,'status')}
+                  input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
-                  {pfTypenames.map((name) => (
+                  {names.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
@@ -413,7 +507,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
               </FormControl>
                    </Grid>
 
-                   {/* <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
@@ -437,12 +531,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                   ))}
                 </Select>
               </FormControl>
-                   </Grid> */}
+                   </Grid>
                 </Grid>
                </Grid>
 
 
-           
+           </Grid>
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    

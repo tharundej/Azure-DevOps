@@ -84,7 +84,7 @@ export default function MyCompoff() {
          headerData={TABLE_HEAD}
          rowActions={actions}
          bodyData = 'data'
-         filterName="claimSearchFilter"
+        //  filterName="claimSearchFilter"
         //  onclickActions={onclickActions}
       />
     </>
