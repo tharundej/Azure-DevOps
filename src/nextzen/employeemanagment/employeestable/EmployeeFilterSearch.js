@@ -37,10 +37,11 @@ import Select from '@mui/material/Select';
 
 
 import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import { paths } from 'src/routes/paths';
 
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
-
+import { useRouter } from 'src/routes/hooks';
 
 
 const defaultFilters = {
@@ -81,6 +82,8 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+
+  const router=useRouter();
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -270,6 +273,10 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
     }
+
+    const handlicClickOnboardform=()=>{
+      router.push(paths.dashboard.employee.onboardform)
+    }
     
 
   
@@ -286,13 +293,26 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
             </Grid>
 
             <Grid md={4} xs={4} item>
+          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+           
+      <Grid item>
+      <Button  variant="contained" onClick={()=>{handlicClickOnboardform()}}
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{margin:'20px'}}>Add Employee</Button>
 
-        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+
+      </Grid>
+      <Grid item>
+        <Stack  >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
+           
       </Button>
 
+
       </Stack>
+             </Grid>
+      </Grid>
       </Grid>
          </Grid>
      

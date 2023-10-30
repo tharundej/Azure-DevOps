@@ -141,58 +141,6 @@ export default function EmployeeTable() {
     }
     }
 
-//   const defaultPayload={
-
- 
-
-//     "Count": 5,
-
- 
-
-//     "Page": 0,
-
- 
-
-//     "Search": "",
-
- 
-
-//     "Eid": "E1",
-
- 
-
-//     "fFromDate": "",
-
- 
-
-//     "fToDate": "",
-
- 
-
-//     "fLeaveTypeName": "",
-
- 
-
-//     "fStatus": "",
-
- 
-
-//     "order":1,
-
- 
-
-//     "orderBy":"al.apply_date"
-
- 
-
-// }
-  
-
-
-
-
-
-
 
   const [TABLE_HEAD,setTableHead] =useState( [
     {
@@ -262,7 +210,7 @@ export default function EmployeeTable() {
 
       headerData={TABLE_HEAD} */}
 
-      <BasicTable headerData={TABLE_HEAD} endpoint="/searchEmployeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
+      <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
 rowActions={actions} filterName="EmployeeFilterSearch"
  />
