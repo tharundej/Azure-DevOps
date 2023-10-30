@@ -80,140 +80,19 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ClaimSearchFilter({filterData,searchData,}){
+export default function ClaimSearchFilter({filterData,searchData,dialogConfig,filterOptions,addButton,buttonFunction,dialogPayload}){
 
   // dialogConfig,filterOptions,addButton,buttonFunction
-  // const { title, fields } = dialogConfig;
+  const { title, fields } = dialogConfig;
 
   const theme = useTheme();
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
+  
 
-  const [dropdown,setDropdown]=useState({
+  
+ 
+  
 
-  })
-
-  const [dateError,setDataError]=useState("")
-  const [filters,setFilters]=useState(defaultFilters)
-  const [personName, setPersonName] = React.useState([]);
-
-  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
-  const [dropdownstatus,setDropdownStatus]=useState([])
-
-  const [datesFiledArray,setDatesFiledArray]=useState(
-    [
-      {
-        field:'joining_date',
-        from:'joining_date_from',
-        to:'joining_date_to'
-      },
-      {
-        field:'offer_date',
-        from:'offer_date_from',
-        to:'offer_date_to'
-      }
-    ]
-  )
-
-  const [dropdownFiledArray,setDropdownFiledArray]=useState(
-    [
-      {
-        field:'status',
-        options:[]
-      },
-      {
-        field:'employment_type',
-        options:[]
-      }
-    ]
-  )
-
-
-  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
-  const [datesData,setDatesData]=useState([])
-
-  const [dates,setDates]=useState({
-    joining_date_from:null,
-    joining_date_to:null,
-    offer_date_from:null,
-    offer_date_to:null
-  })
-
-  function formDateDataStructure(){
-
-    return new Promise((resolve) => {
-     
-
-      const arr1={};
-       datesFiledArray.forEach((item,index)=>{  
-         
-        arr1[item.field]={
-          from:dates[item?.from],
-          to:dates[item?.to]
-        }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
-         
-        })
-        setDatesData(arr1);
-        resolve(arr1)
-        
-    })
-    
-
-  }
-
-  function formWithDropdown(data){
-
-    return new Promise((resolve) => {
-     
-
-      const arr1={};
-       dropdownFiledArray.forEach((item,index)=>{  
-         
-        if(dropdown[item.field]?.length>0){
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
-          data[item.field]=commaSeparatedString;
-        }
-        
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
-         
-        })
-        // setDatesData(arr1);
-        resolve(arr1)
-        
-    })
-    
-
-  }
+  
   
 
     const [open,setOpen]=useState(false);
@@ -234,45 +113,15 @@ export default function ClaimSearchFilter({filterData,searchData,}){
     }
 
 
-    const handleChangeDropDown = (event,field) => {
-      const {
-        target: { value },
-      } = event;
-      
-      if(field==="employment_type"){
-        setDropdownEmployemtType(value)
-        const obj=dropdown;
-        obj[field]=value;
-        setDropdown(obj);
-      }
-      else if(field==="status"){
-        setDropdownStatus(value)
-        const obj=dropdown;
-        obj[field]=value;
-        setDropdown(obj);
-      }
+   
+
     
-
-        // On autofill we get a stringified value.
-        
-      
-        console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
-    };
-
-    const handleApply = async()=>{
-      setDatesData([]);
-      const data = await formDateDataStructure();
-      const data1=await formWithDropdown(data);
-      filterData(data);
-      console.log(data,';;;')
-
-    //   filterData(data);
-      
-    }
+const [search, setSearch]=useState("");
 
     const handleSearch = (searchTerm) => {
-        searchData(searchTerm)
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
         };
     // dynamic dialog checking 
     //  const [open, setOpen] = useState(true);
@@ -282,57 +131,113 @@ export default function ClaimSearchFilter({filterData,searchData,}){
   };
 
   const  externalFilter = {
-    claim:{
+    
       claimStartDate:"",
       claimEndDate:"",
 
-    },
-    expense:{
+ 
+    
       expensestartdate:"",
       expenseenddate:"",
 
-    },
+   
+   
+      status:"",
+      paymentstatus:""
+    
+    
   }
   const [selectedDate, setSelectedDate] = useState(externalFilter);
   
-  const handleDateChange = (category, field, date) => {
-    const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  const handleDateChange = ( field, date) => {
+    // const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
     setSelectedDate(prevDates => ({
       ...prevDates,
-      [category]: {
-        ...prevDates[category],
-        [field]: formattedDate,
-      },
+     
+       
+        [field]: date,
+     
     }));
-  
-    console.log(selectedDate,"SelectedDate------>")
+
+    
+   
   };
-  // const handleDateChange = (fieldName, date) => {
-  //   setSelectedDate(prevDates => ({
-  //     ...prevDates,
-  //     [fieldName]: date,
-  //   }));
-  //      console.log(selectedDate,"SelectedDate------>")
-  // };
+  
   console.log(selectedDate,"SelectedDate1234------>")
 
 
-  const [selectedValue, setSelectedValue] = useState({});
+  // const [selectedValue, setSelectedValue] = useState(externalFilter);
 
-const handleSelectChange = (fieldName, value) => {
-  setSelectedValue(prevValues => ({
-    ...prevValues,
-    [fieldName]: value,
-  }));
+const handleSelectChange = (field, value) => {
+  // setSelectedValue(prevValues => ({
+  //   ...prevValues,
+  //   [fieldName]: value,
+  // }));
+  // console.log(value,"value......")
+
+  setSelectedDate(prevFilter => ({
+    ...prevFilter,
+    [field]: value,}))
+
+  // if (fieldName === 'status') {
+  //   setSelectedDate(prevFilter => ({
+  //     ...prevFilter,
+  //     status: value,
+  //   }));
+  // }
 };
 
-const handleMultiSelectChange = (fieldName, newValue) => {
-  setSelectedValue(prevValues => ({
-    ...prevValues,
-    [fieldName]: newValue,
+// const handleMultiSelectChange = (fieldName, newValue) => {
+//   setSelectedValue(prevValues => ({
+//     ...prevValues,
+//     [fieldName]: newValue,
+//   }));
+// };
+// const handleFieldChange = (type, category, field, value) => {
+//   if (type === 'datePicker') {
+//     const formattedDate = `${String(value.getDate()).padStart(2, '0')}/${String(value.getMonth() + 1).padStart(2, '0')}/${value.getFullYear()}`;
+//     setSelectedDate(prevDates => ({
+//       ...prevDates,
+//       [category]: {
+//         ...prevDates[category],
+//         [field]: formattedDate,
+//       },
+//     }));
+//   } else if (type === 'Select') {
+//     setSelectedValue(prevValues => ({
+//       ...prevValues,
+//       [field]: value,
+//     }));
+//   } else if (type === 'multiSelect') {
+//     setSelectedValue(prevValues => ({
+//       ...prevValues,
+//       [field]: value,
+//     }));
+//   }
+// };
+
+
+
+// trial 2 method
+const [selectedFields, setSelectedFields] = useState(dialogPayload);
+
+const handleFieldChange = (field, value) => {
+  setSelectedFields(prevFields => ({
+    ...prevFields,
+    [field]: value
   }));
+  filterData(selectedFields)
 };
-  
+
+// const fields = [
+//   { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate' },
+//   { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate' },
+//   { type: 'datePicker', label: 'Expense Start Date', name: 'expenseStartDate' },
+//   { type: 'datePicker', label: 'Expense End Date', name: 'expenseEndDate' },
+//   { type: 'Select', label: 'Status', name: 'status', options: ['Option 1', 'Option 2', 'Option 3'] },
+//   { type: 'Select', label: 'Payment Status', name: 'paymentStatus', options: ['Option A', 'Option B', 'Option C'] },
+// ];
+console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
           <Grid container alignItems="center" paddingBottom="10px">
@@ -346,7 +251,7 @@ const handleMultiSelectChange = (fieldName, newValue) => {
             />
             </Grid>
             <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
-              {/* {addButton && <Button variant='contained'  onClick={buttonFunction}>{addButton}</Button>} */}
+              {addButton && <Button variant='contained'  onClick={buttonFunction}>{addButton}</Button>}
               
 
             </Grid>
@@ -364,30 +269,30 @@ const handleMultiSelectChange = (fieldName, newValue) => {
          </Grid>
      
 
-    {/* <Dialog open={openButton} onClose={handleClickCloseButton}>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog open={openButton} onClose={handleClickCloseButton}>
+      {/* <DialogTitle>{title}</DialogTitle> */}
       <DialogContent>
        
         <Button>apply</Button>
       </DialogContent>
-    </Dialog> */}
+    </Dialog>
 
 
 
 
-     {/* <Dialog open={open} onClose={onClose}  maxWidth="900px" >
-      <DialogTitle>{title}</DialogTitle>
+     <Dialog open={open} onClose={onClose}  maxWidth="900px" >
+      {/* <DialogTitle>{title}</DialogTitle> */}
       <DialogContent>
       
-        {fields.map((field, index) => {
+        {/* {fields.map((field, index) => {
           if (field.type === 'datePicker') {
             return (
               <Grid xs={6} margin={3}>
               <div key={index}>
                 <DatePicker
                   label={field.label}
-                  value={field.value}
-                  onChange={(date) => handleDateChange(field.category,field.name, date)}
+              value={selectedFields[field.name]}
+              onChange={(date) => handleFieldChange(field.name, date)}
                   renderInput={(params) => <TextField {...params} variant="outlined" />}
                 />
               </div>
@@ -407,8 +312,11 @@ const handleMultiSelectChange = (fieldName, newValue) => {
                  <InputLabel>{field.label}</InputLabel>
                 <Select
                   label={field.label}
-                  placeholder="sure"
-                  value={selectedValue[field.name] || ''}
+                  // placeholder="sure"
+                  // value={selectedDate[field.name] || ''}
+                  // onChange={(e) => handleDateChange( field.name, e.target.value)}
+                  value={selectedDate[field.name] || ''}
+               
                   onChange={(e) => handleSelectChange(field.name, e.target.value)}
                   variant="outlined"
                 >
@@ -422,34 +330,66 @@ const handleMultiSelectChange = (fieldName, newValue) => {
             );
           }
 
-          if (field.type === 'multiSelect') {
-            return (
-              <Grid xs={6} margin={3}>
-                <Autocomplete
-                  multiple
-                  id={field.name}
-                  options={field.options}
-                  value={selectedValue[field.name] || []}
-                  onChange={(event, newValue) => handleMultiSelectChange(field.name, newValue)}
-                  isOptionEqualToValue={(option, value) => option === value}
-                  renderInput={(params) => <TextField {...params} variant="outlined" label={field.label} />}
-                />
-              </Grid>
-            );
-          }
+          // if (field.type === 'multiSelect') {
+          //   return (
+          //     <Grid xs={6} margin={3}>
+          //       <Autocomplete
+          //         multiple
+          //         id={field.name}
+          //         options={field.options}
+          //         value={selectedValue[field.name] || []}
+          //         onChange={(event, newValue) => handleMultiSelectChange(field.name, newValue)}
+          //         isOptionEqualToValue={(option, value) => option === value}
+          //         renderInput={(params) => <TextField {...params} variant="outlined" label={field.label} />}
+          //       />
+          //     </Grid>
+          //   );
+          // }
           return null;
-        })}
+        })} */}
+
+
+      {fields.map((field, index) => (
+        <Grid key={index} xs={6} margin={3}>
+          {field.type === 'datePicker' && (
+            <DatePicker
+              label={field.label}
+              value={selectedFields[field.name]}
+              onChange={(date) => handleFieldChange(field.name, date)}
+              renderInput={(params) => <TextField {...params} variant="outlined" />}
+            />
+          )}
+          {field.type === 'Select' && (
+            <FormControl fullWidth>
+              <InputLabel>{field.label}</InputLabel>
+              <Select
+                label={field.label}
+                value={selectedFields[field.name] || ""}
+                onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                variant="outlined"
+              >
+                {field.options.map((option, optionIndex) => (
+                  <MenuItem key={optionIndex} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </Grid>
+      ))}
+    
       
       </DialogContent>
-    </Dialog> */}
+    </Dialog>
     </>
     )
     
 }
 
-// ClaimSearchFilter.propTypes={
-//     dialogConfig: PropTypes.any,
-// }
+ClaimSearchFilter.propTypes={
+    dialogConfig: PropTypes.any,
+}
 
 // ClaimSearchFilter.propTypes={
 //   searchFilterComponent: PropTypes.any,
@@ -462,18 +402,21 @@ ClaimSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 
-// ClaimSearchFilter.propTypes={
-//   buttonFunction: PropTypes.func,
-// }
-// ClaimSearchFilter.propTypes={
-//   addButton: PropTypes.any,
-// }
+ClaimSearchFilter.propTypes={
+  buttonFunction: PropTypes.func,
+}
+ClaimSearchFilter.propTypes={
+  addButton: PropTypes.any,
+}
+ClaimSearchFilter.propTypes={
+  dialogPayload: PropTypes.any,
+}
 
-// ClaimSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+ClaimSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

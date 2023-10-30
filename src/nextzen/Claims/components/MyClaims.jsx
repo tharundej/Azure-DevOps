@@ -7,6 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // sections
 import { BasicTable } from "src/nextzen/Table/BasicTable";
+import { SurendraBasicTable } from 'src/nextzen/Table/SurendraBasicTable';
 import Button from '@mui/material/Button';
 // ----------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+
 
 
 
@@ -108,24 +110,29 @@ export default function MyClaims({ currentUser ,}) {
 
   const defaultPayload={
 
-  
-      "employee_id":"ibm3",
-      "page":0,
-      "search":"",
-      "count":5
+    "employee_id":"ibm3",
+    "page":0,
+    "count":5,
+    "search":"",
+    "externalFilters":{
+      "claim_start_date":"",
+      "claim_end_date":"",
+      "status":"",
+      "claim_type":""
+    },
+    "sort":{
+       "key":1,
+       "orderBy":""
+
+  }
+    
    
 }
 const handleClick=()=>{
     console.log("fn passing ")
 }
 
-  const actions = [
-
-    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
-    { name: "View", icon: "hh", id: 'view' },
-    { name: "Edit", icon: "hh", id: 'edit' },
-    { name: "Delete", icon: "hh", id: 'delete' },
-  ];
+  
   const searchFilterheader = [
 
     { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
@@ -134,17 +141,25 @@ const handleClick=()=>{
     { name: "Delete", icon: "hh", id: 'delete' },
   ];
 
-
+  const externalFilter = {
+    claimStartDate: "",
+    claimEndDate: "",
+    expenseStartDate: "",
+    expenseEndDate: "",
+    status: "",
+    paymentStatus: ""
+  }
    const dialogConfig={
     title: 'Dynamic Dialog Example',
     fields: [
 
-      { type: 'datePicker', label: 'Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim", value: new Date() },
+      { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
       { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-      { type: 'Select', label: 'Select Options', options: ['Option 1', 'Option 2', 'Option 3'] },
-      { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
+      // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
+      { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+      // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   } 
   const bodyContent = [
@@ -164,6 +179,14 @@ const handleClick=()=>{
   }
   const handleClose = () => setOpen(false);
 
+
+  const actions = [
+
+    // { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+    // { name: "View", icon: "hh", id: 'view', type: "edit", function: {handleOpen }},
+    { name: "Edit", icon: "hh", id: 'edit',type: "edit", },
+    // { name: "Delete", icon: "hh", id: 'delete' },
+  ];
   const style = {
     position: 'absolute',
     top: '50%',
@@ -279,6 +302,7 @@ const handleClick=()=>{
   const serviceCall = (endpoint, payload) => {
 
   }
+
   return (
     <>
       <Helmet>
@@ -470,9 +494,9 @@ const handleClick=()=>{
         </FormProvider>
       </Dialog>
 
-      <BasicTable
+      <SurendraBasicTable
 
-      endpoint="/getAllClaims"
+      endpoint="GetMyClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
@@ -480,9 +504,11 @@ const handleClick=()=>{
       filterName="claimSearchFilter"
 
 
-      // button="Apply Claim"
-      // buttonFunction={handleOpen}
-      // filterContent={dialogConfig}
+      button="Apply Claim"
+      buttonFunction={handleOpen}
+      filterContent={dialogConfig}
+      dialogPayload={externalFilter}
+
       // searchFilterheader={searchFilterheader}
        
       />

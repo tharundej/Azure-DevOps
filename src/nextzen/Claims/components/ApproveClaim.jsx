@@ -7,6 +7,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // sections
 import { BasicTable } from "src/nextzen/Table/BasicTable";
+import { SurendraBasicTable } from 'src/nextzen/Table/SurendraBasicTable';
+
 import Button from '@mui/material/Button';
 // ----------------------------------------------------------------------
 
@@ -119,8 +121,17 @@ const handleClick=()=>{
     console.log("fn passing ")
 }
 
+const externalFilter = {
+  claimStartDate: "",
+  claimEndDate: "",
+  // expenseStartDate: "",
+  // expenseEndDate: "",
+  // status: "",
+  paymentStatus: ""
+}
 
-const dialogConfig={
+
+const dialogConfig ={
     title: 'Dynamic Dialog Example',
     fields: [
 
@@ -129,7 +140,7 @@ const dialogConfig={
     //   { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim", value: new Date() },
       { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
       { type: 'Select', label: 'Select Options', options: ['Option 1', 'Option 2', 'Option 3'] },
-      { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
+      // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
     ],
   } 
   const actions = [
@@ -296,7 +307,7 @@ const dialogConfig={
       </Grid> */}
 
       
-      <BasicTable
+      <SurendraBasicTable
 
       endpoint="/getAllClaims"
       defaultPayload={defaultPayload}
@@ -305,6 +316,7 @@ const dialogConfig={
       bodyData = 'data'
       filterName="claimSearchFilter"
       filterContent={dialogConfig}
+      dialogPayload={externalFilter}
       // searchFilterheader={searchFilterheader}
        
       />
