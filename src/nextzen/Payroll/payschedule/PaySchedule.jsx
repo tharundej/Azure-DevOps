@@ -58,11 +58,19 @@ export default function BasicCard() {
     },
   ];
   const defaultPayload = 
-    {
-      "companyId": "COMP1",
-      "count": 5,
-      "page": 0,
-      
+  {
+    "count": 3,
+    "page": 1,
+    "search": "",
+    "companyId": "COMP1",
+    "externalFilters": {
+      "payscheduleType": "",
+      "employmentType": ""
+    },
+    "sort": {
+      "key": 1,
+      "orderBy": ""
+    }
   };
   // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
   // const tabContents = [
