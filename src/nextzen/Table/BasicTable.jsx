@@ -126,6 +126,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }, [])
  
   const getTableData = (payload) => {
+    setLoading(false);
     // let initialDefaultPayloadCopy =initialDefaultPayload;
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
