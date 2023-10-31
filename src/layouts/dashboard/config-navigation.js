@@ -133,18 +133,19 @@ export function useNavData() {
             icon: ICONS.user,
             
           },
-          // {
-          //   title:t('configaration'),
-          //   path:paths.dashboard.configaration.root,
-          //   icon:ICONS.user,
-          //   children: [
-          //     { title: t('leaveconfiguration'), path: paths.dashboard.configaration.LeaveConfiguration },
-          //     { title: t('cards'), path: paths.dashboard.configaration.cards },
-          //     { title: t('list'), path: paths.dashboard.configaration.list },
-          //     { title: t('create'), path: paths.dashboard.configaration.new },
-          //     { title: t('account'), path: paths.dashboard.configaration.account },
-          //   ],
-          // },
+          {
+            title:t('configaration'),
+            path:paths.dashboard.configaration.root,
+            icon:ICONS.user,
+            children: [
+              { title: t('Leave Configuration'), path: paths.dashboard.configaration.leaveconfiguration },
+              { title: t('Compoff Configuration'), path: paths.dashboard.configaration.compoffconfiguration },
+               { title: t('Mail Configuration'), path: paths.dashboard.configaration.mailconfiguration },
+               { title: t('Appraisal Configuration'), path: paths.dashboard.configaration.appraisalconfiguration },
+               { title: t('Expense Claim Configuration'), path: paths.dashboard.configaration.expenseclaimconfiguration },
+               { title: t('Shift Configuration'), path: paths.dashboard.configaration.shiftconfiguration },
+            ],
+          },
           // {
           //   title: t('Configuration'),
           //   path: paths.dashboard.employee.root,

@@ -2,32 +2,21 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function LeavePeriod() {
+export default function LeaveType() {
     const TABLE_HEAD = [
       { id: 'slNo', label: 'SL NO', type: 'text' },
-      { id: 'Name', label: 'Name', type: 'text' },
-      { id: 'Expense Type ', label: 'Expense Type ', type: 'text' },
-      { id: 'Limitation Amount', label: 'Limitation Amount', type: 'text' },
-      { id: 'Applicable ', label: 'Applicable ', type: 'text' },
-      {id:'Status',label:'Status',type:'text'},
+      { id: 'leaveTypeId', label: 'Leave Type ID', type: 'text' },
+      { id: 'leaveName', label: 'Leave Name', type: 'text' },
+      { id: 'startDate', label: 'Start Date', type: 'text' },
+      { id: 'totalNumberOfLeaves', label: 'Total Number Of Leaves', type: 'text' },
+      { id: 'termType', label: 'Term Type', type: 'text' },
+      { id: 'elUpperCapLimit', label: 'EL Upper Cap Limit', type: 'text' },
+      { id: 'elTakenRange', label: 'EL Taken Range', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
-    // const bodyContent = [
-    //   {
-    //     employeeType: 'Permanent',
-    //     payscheduleType: 'Weekly',
-    //     payType: 'CTC',
-    //     basicPay: '40',
-    //     hra: '20',
-    //     da: '8',
-    //     employeePf: '6',
-    //     employerPf: '6',
-    //     tds: '20',
-    //   },
-    // ];
     const defaultPayload = 
     {
       "count": 5,
@@ -79,7 +68,6 @@ export default function LeavePeriod() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
-          filterName="ExpensiveClaimFilterSearch"
         />
       
     );

@@ -126,7 +126,7 @@ export default function GeneralForminfo({ currentUser }) {
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      const response = await axios.post('http://192.168.1.87:3001/erp/addPaySchedule', data);
       console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
@@ -141,7 +141,7 @@ export default function GeneralForminfo({ currentUser }) {
     
 
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      const response = await axios.post('http://192.168.1.87:3001/erp/addPaySchedule', data);
       console.log('sucess',response);
     } catch (error) {
       console.log('error', error);

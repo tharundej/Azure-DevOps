@@ -188,15 +188,13 @@ export default function BasicCard(currentUser) {
   };
 
   return (
-    <>
-      
+  
       <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
         handleCreatePayrun={handleCreatePayrun}
         changeOfTab={changeOfTabHandeler}
       />
-    </>
   );
 }
 BasicCard.prototype = {

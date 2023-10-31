@@ -75,6 +75,7 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
+import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -145,7 +146,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-       url: `http://192.168.1.87:3001/erp${endpoint}`,
+       url: `http://192.168.1.87:3001/erp/${endpoint}`,
     
       // url: `http://192.168.1.87:3001/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -415,6 +416,7 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 
