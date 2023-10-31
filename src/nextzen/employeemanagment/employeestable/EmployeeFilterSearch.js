@@ -36,11 +36,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-// import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import { paths } from 'src/routes/paths';
 
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
-
+import { useRouter } from 'src/routes/hooks';
 
 
 const defaultFilters = {
@@ -81,12 +82,51 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+
+  const router=useRouter();
   const theme = useTheme();
-  const pfTypenames = [
-    'TypeA',
-    'TypeH'
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+  ];
+  const MaritalOptions = [
+    'Marriaed',
+    'Un Marriaed'
+
     
   ];
+  const BloodGroupOptions = [
+    'B+',
+    'B-',
+    "A",
+    "O"
+
+    
+  ];
+  const EmployementTypeOptions = [
+   "Permanent",
+   "Contract"
+
+    
+  ];
+ 
+
+
+
+
+const [departmentNameOptions,setDepartmentNameOptions]=useState([])
+const [designationOptions,setDesignationOptions]=useState([])
+const [designationGradeOptions,setDesignationGradeOptions]=useState([])
+const [stateOptions,setOptions]=useState([])
+  const [WorkingLocationOptions,setWorkingLocationOptions]=useState([])
 
   const [dropdown,setDropdown]=useState({
 
@@ -96,46 +136,87 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
 
+      
   const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
+  
+  const [dropdownmartial,setDropdownmartial]=useState([])
+  const [bloodgroup,setDropdownbloodgroup]=useState([])
+
+  const [departmentName,setDropdownDepartmentName]=useState([])
+  const [designation,setDropdownDesignation]=useState([])
+  
+  const [designationGrade,setDropdownDesignationGrade]=useState([])
+
+  const [state,setDropdownState]=useState([])
+  
+  const [workingLocation,setDropdownWorkingLocation]=useState([])
 
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'joining_date',
-        from:'joining_date_from',
-        to:'joining_date_to'
+        field:'fjoiningDate',
+        from:'fjoiningDateFrom',
+        to:'fjoiningDateTo'
       },
       {
-        field:'offer_date',
-        from:'offer_date_from',
-        to:'offer_date_to'
+        field:'fDOB',
+        from:'fDOBDateFrom',
+        to:'fDOBDateTo'
+      },
+      {
+        field:'fofferDate',
+        from:'fofferDateFrom',
+        to:'fofferDateTo'
       }
     ]
   )
 
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
+     
       {
-        field:'pfType',
+        field:'fMaritalStatus',
         options:[]
       },
       {
-        field:'employment_type',
+        field:'fPState',
+        options:[]
+      },
+      {
+        field:'fPEmployementType',
+        options:[]
+      },
+      {
+        field:'fPdepartmentName',
+        options:[]
+      },
+      {
+        field:'fPDesignation',
+        options:[]
+      },
+      {
+        field:'fPDesignationGrade',
+        options:[]
+      },
+      {
+        field:'fWorkingLocation',
         options:[]
       }
     ]
   )
 
 
-  const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
+  // const [datesSavedArray,setDatesSavedArray]=useState(["joining_date_from","joining_date_to","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joining_date_from:null,
-    joining_date_to:null,
-    offer_date_from:null,
-    offer_date_to:null
+    joiningDateFrom:undefined,
+    joiningDateTo:undefined,
+    offerDateFrom:undefined,
+    offerDateTo:undefined,
+    fofferDateFrom:undefined,
+    fofferDateTo:undefined
   })
 
   function formDateDataStructure(){
@@ -145,11 +226,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
-         
+         if(dates[item?.from]!==null){
         arr1[item.field]={
-          from:dates[item?.from],
-          to:dates[item?.to]
+          from:formatDateToYYYYMMDD(dates[item?.from]),
+          to:formatDateToYYYYMMDD(dates[item?.to])
         }
+      }
 
         //  const obj={
         //    filed_name:item?.field,
@@ -183,6 +265,9 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
           const commaSeparatedString = arrayOfStrings.join(', ');
           data[item.field]=commaSeparatedString;
         }
+        else{
+          data[item.field]='';
+        }
         
 
         //  const obj={
@@ -215,38 +300,78 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
     }
 
 
-    const handleChangeDropDown = (event,field) => {
+    const handleChangeDropDown = (event,field) => { 
       const {
         target: { value },
       } = event;
       
-      if(field==="employment_type"){
+      if(field==="fPEmployementType"){
         setDropdownEmployemtType(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="pfType"){
+      else if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-    
-
-        // On autofill we get a stringified value.
-        
       
-        console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
+      else if(field==="fMaritalStatus"){
+        setDropdownmartial(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fBloodGroup"){
+        setDropdownbloodgroup(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPState"){
+        setDropdownState(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPdepartmentName"){
+        setDropdownDepartmentName(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPDesignation"){
+        setDropdownDesignation(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPDesignationGrade"){
+        setDropdownDesignationGrade(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fWorkingLocation"){
+        setDropdownWorkingLocation(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      
+  
+
+      
+    
     };
 
     const handleApply=async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      console.log(data,';;;')
-
+      //console.log(data,';;;')
       filterData(data);
       // call parent function and pass it
       
@@ -255,6 +380,10 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
+    }
+
+    const handlicClickOnboardform=()=>{
+      router.push(paths.dashboard.employee.onboardform)
     }
     
 
@@ -272,13 +401,26 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
             </Grid>
 
             <Grid md={4} xs={4} item>
+          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+           
+      <Grid item>
+      <Button  variant="contained" onClick={()=>{handlicClickOnboardform()}}
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{margin:'20px'}}>Add Employee</Button>
 
-        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+
+      </Grid>
+      <Grid item>
+        <Stack  >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
+           
       </Button>
 
+
       </Stack>
+             </Grid>
+      </Grid>
       </Grid>
          </Grid>
      
@@ -299,7 +441,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
           <Grid>
 
-                {/* <Grid>
+               <Grid>
             <Typography>Joining Date</Typography>
      
 
@@ -310,12 +452,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.joining_date_from}
+                      value={dates?.fjoiningDateFrom}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_from: newValue,
+                          fjoiningDateFrom: newValue,
                         }));
                       }}
                     />
@@ -328,12 +470,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.joining_date_to}
+                      value={dates?.fjoiningDateTo}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          joining_date_to: newValue,
+                          fjoiningDateTo: newValue,
                         }));
                       }}
                     />
@@ -342,7 +484,56 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid marginTop={2}>
+
+
+           <Grid marginTop={2}>
+              
+            <Typography>DOB</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fDOBDateFrom}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateFrom: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fDOBDateTo}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateTo: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+
+             
+             </Grid>
+             <Grid marginTop={2}>
+              
             <Typography>Offer Date</Typography>
      
 
@@ -353,12 +544,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.offer_date_from}
+                      value={dates?.fofferDateFrom}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          offer_date_from: newValue,
+                          fofferDateFrom: newValue,
                         }));
                       }}
                     />
@@ -371,12 +562,12 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.offer_date_to}
+                      value={dates?.fofferDateTo}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          offer_date_to: newValue,
+                          fofferDateTo: newValue,
                         }));
                       }}
                     />
@@ -384,23 +575,34 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                 </LocalizationProvider>
                 </Grid>
                 </Grid>
-                </Grid> */}
+
+             
+             </Grid>
+            
+
+
+                 {/* drop down options */}
+                <Grid>
+
+
+              
 
                 <Grid>
+                  
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
                   multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'pfType')}
-                  input={<OutlinedInput label="PF Type" />}
+                  value={state}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
                   MenuProps={MenuProps}
                 >
-                  {pfTypenames.map((name) => (
+                  {stateOptions.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
@@ -413,20 +615,20 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
               </FormControl>
                    </Grid>
 
-                   {/* <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
+                  labelId="demo-multiple-name-fPEmployementType"
+                  id="demo-multiple-fPEmployementType"
                   multiple
                   value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
+                  onChange={(e)=>handleChangeDropDown(e,'fPEmployementType')}
                   input={<OutlinedInput label="Employemt Type" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
+                  {EmployementTypeOptions.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
@@ -437,12 +639,202 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                   ))}
                 </Select>
               </FormControl>
-                   </Grid> */}
+                   </Grid>
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Marital Status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownmartial}
+                  onChange={(e)=>handleChangeDropDown(e,'fMaritalStatus')}
+                  input={<OutlinedInput label="Marital Status" />}
+                  MenuProps={MenuProps}
+                >
+                  {MaritalOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* Blood Group */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Blood Group</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fBloodGroup"
+                  id="demo-multiple-fBloodGroup"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fBloodGroup')}
+                  input={<OutlinedInput label="Blood Group" />}
+                  MenuProps={MenuProps}
+                >
+                  {BloodGroupOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                   {/* State */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">State</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
+                  MenuProps={MenuProps}
+                >
+                  {stateOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* departmentName */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Department Name</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-departmentName"
+                  id="demo-multiple-departmentName"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPdepartmentName')}
+                  input={<OutlinedInput label="Department Name" />}
+                  MenuProps={MenuProps}
+                >
+                  {departmentNameOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* fPDesignation */}
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPDesignation"
+                  id="demo-multiple-fPDesignation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignation')}
+                  input={<OutlinedInput label="Designation" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fPDesignationGrade */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation Grade</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPDesignationGrade"
+                  id="demo-multiple-fPDesignationGrade"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignationGrade')}
+                  input={<OutlinedInput label="Designation Grade" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationGradeOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fWorkingLocation */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Working Location</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fWorkingLocation"
+                  id="demo-multiple-fWorkingLocation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fWorkingLocation')}
+                  input={<OutlinedInput label="Working Location" />}
+                  MenuProps={MenuProps}
+                >
+                  {WorkingLocationOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
                 </Grid>
                </Grid>
 
 
-           
+           </Grid>
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
