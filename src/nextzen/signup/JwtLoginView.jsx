@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Snackbar, Alert as MuiAlert } from '@mui/material';
+import { Snackbar, Alert as MuiAlert, Card, CardContent } from '@mui/material';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -102,9 +102,12 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
-      <Typography variant="body2">email:rameshagowdav@gmail.com</Typography>
-      <Typography variant="body2">password:1234</Typography>
-      
+      <Card sx={{backgroundColor:'#cce9f0'}}>
+        <CardContent>
+      <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
+      <Typography variant="body2">Password: 1234</Typography>
+      </CardContent>
+      </Card>
     </Stack>
   );
 

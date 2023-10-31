@@ -97,6 +97,36 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
     'Virginia Andrews',
     'Kelly Snyder',
   ];
+  const MaritalOptions = [
+    'Marriaed',
+    'Un Marriaed'
+
+    
+  ];
+  const BloodGroupOptions = [
+    'B+',
+    'B-',
+    "A",
+    "O"
+
+    
+  ];
+  const EmployementTypeOptions = [
+   "Permanent",
+   "Contract"
+
+    
+  ];
+ 
+
+
+
+
+const [departmentNameOptions,setDepartmentNameOptions]=useState([])
+const [designationOptions,setDesignationOptions]=useState([])
+const [designationGradeOptions,setDesignationGradeOptions]=useState([])
+const [stateOptions,setOptions]=useState([])
+  const [WorkingLocationOptions,setWorkingLocationOptions]=useState([])
 
   const [dropdown,setDropdown]=useState({
 
@@ -106,8 +136,21 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
 
+      
   const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
+  
+  const [dropdownmartial,setDropdownmartial]=useState([])
+  const [bloodgroup,setDropdownbloodgroup]=useState([])
+
+  const [departmentName,setDropdownDepartmentName]=useState([])
+  const [designation,setDropdownDesignation]=useState([])
+  
+  const [designationGrade,setDropdownDesignationGrade]=useState([])
+
+  const [state,setDropdownState]=useState([])
+  
+  const [workingLocation,setDropdownWorkingLocation]=useState([])
 
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
@@ -131,12 +174,33 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
+     
       {
-        field:'status',
+        field:'fMaritalStatus',
         options:[]
       },
       {
-        field:'employment_type',
+        field:'fPState',
+        options:[]
+      },
+      {
+        field:'fPEmployementType',
+        options:[]
+      },
+      {
+        field:'fPdepartmentName',
+        options:[]
+      },
+      {
+        field:'fPDesignation',
+        options:[]
+      },
+      {
+        field:'fPDesignationGrade',
+        options:[]
+      },
+      {
+        field:'fWorkingLocation',
         options:[]
       }
     ]
@@ -162,12 +226,23 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
 
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
-         if(dates[item?.from]!==null){
-        arr1[item.field]={
-          from:formatDateToYYYYMMDD(dates[item?.from]),
-          to:formatDateToYYYYMMDD(dates[item?.to])
-        }
-      }
+         if(dates[item?.from]!==undefined){
+                arr1[item.field]={
+                from:formatDateToYYYYMMDD(dates[item?.from]),
+              to:formatDateToYYYYMMDD(dates[item?.to])
+              }
+       
+           }
+
+           else{
+
+
+            arr1[item.field]={
+              from:"",
+            to:""
+            }
+           }
+         
 
         //  const obj={
         //    filed_name:item?.field,
@@ -200,6 +275,9 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
           const arrayOfStrings = dropdown[item.field];
           const commaSeparatedString = arrayOfStrings.join(', ');
           data[item.field]=commaSeparatedString;
+        }
+        else{
+          data[item.field]='';
         }
         
 
@@ -238,7 +316,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
         target: { value },
       } = event;
       
-      if(field==="employment_type"){
+      if(field==="fPEmployementType"){
         setDropdownEmployemtType(value)
         const obj=dropdown;
         obj[field]=value;
@@ -250,13 +328,54 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
         obj[field]=value;
         setDropdown(obj);
       }
-    
-
-        // On autofill we get a stringified value.
-        
       
-        console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
+      else if(field==="fMaritalStatus"){
+        setDropdownmartial(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fBloodGroup"){
+        setDropdownbloodgroup(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPState"){
+        setDropdownState(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPdepartmentName"){
+        setDropdownDepartmentName(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPDesignation"){
+        setDropdownDesignation(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fPDesignationGrade"){
+        setDropdownDesignationGrade(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="fWorkingLocation"){
+        setDropdownWorkingLocation(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      
+  
+
+      
+    
     };
 
     const handleApply=async()=>{
@@ -483,18 +602,18 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                   
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
                   multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="Status" />}
+                  value={state}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
+                  {stateOptions.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
@@ -512,15 +631,205 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
+                  labelId="demo-multiple-name-fPEmployementType"
+                  id="demo-multiple-fPEmployementType"
                   multiple
                   value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'employment_type')}
+                  onChange={(e)=>handleChangeDropDown(e,'fPEmployementType')}
                   input={<OutlinedInput label="Employemt Type" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
+                  {EmployementTypeOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Marital Status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownmartial}
+                  onChange={(e)=>handleChangeDropDown(e,'fMaritalStatus')}
+                  input={<OutlinedInput label="Marital Status" />}
+                  MenuProps={MenuProps}
+                >
+                  {MaritalOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* Blood Group */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Blood Group</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fBloodGroup"
+                  id="demo-multiple-fBloodGroup"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fBloodGroup')}
+                  input={<OutlinedInput label="Blood Group" />}
+                  MenuProps={MenuProps}
+                >
+                  {BloodGroupOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                   {/* State */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">State</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
+                  MenuProps={MenuProps}
+                >
+                  {stateOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* departmentName */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Department Name</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-departmentName"
+                  id="demo-multiple-departmentName"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPdepartmentName')}
+                  input={<OutlinedInput label="Department Name" />}
+                  MenuProps={MenuProps}
+                >
+                  {departmentNameOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* fPDesignation */}
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPDesignation"
+                  id="demo-multiple-fPDesignation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignation')}
+                  input={<OutlinedInput label="Designation" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fPDesignationGrade */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation Grade</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPDesignationGrade"
+                  id="demo-multiple-fPDesignationGrade"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignationGrade')}
+                  input={<OutlinedInput label="Designation Grade" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationGradeOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fWorkingLocation */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Working Location</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fWorkingLocation"
+                  id="demo-multiple-fWorkingLocation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fWorkingLocation')}
+                  input={<OutlinedInput label="Working Location" />}
+                  MenuProps={MenuProps}
+                >
+                  {WorkingLocationOptions.map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
