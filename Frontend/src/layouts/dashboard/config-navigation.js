@@ -67,11 +67,11 @@ export function useNavData() {
           //   path: paths.dashboard.general.signup,
           //   icon: ICONS.ecommerce,
           // },
-          {
-            title: t('table'),
-            path: paths.dashboard.table.root,
-            icon: ICONS.dashboard,
-          },
+          // {
+          //   title: t('table'),
+          //   path: paths.dashboard.table.root,
+          //   icon: ICONS.dashboard,
+          // },
 
           {
             title: t('Employee Management'),
