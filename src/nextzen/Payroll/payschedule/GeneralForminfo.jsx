@@ -126,8 +126,8 @@ export default function GeneralForminfo({ currentUser }) {
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('http://localhost:8081/onboarding', data);
-      console.log('sucess');
+      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
@@ -135,13 +135,14 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employeepayType=selectedOption?.type
+    data.companyId="COMP1"
     console.log('submitted data2222', data);
 
     
 
     try {
-      const response = await axios.post('http://localhost:8081/onboarding', data);
-      console.log('sucess');
+      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
