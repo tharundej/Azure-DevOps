@@ -103,7 +103,7 @@ export default function UserListPage() {
         headerData={TABLE_HEAD}
         rowActions={actions}
         bodyData = 'appliedLeave'
-        filterName="claimSearchFilter"
+        // filterName="claimSearchFilter"
         //  onclickActions={onclickActions}
       />
     </>
