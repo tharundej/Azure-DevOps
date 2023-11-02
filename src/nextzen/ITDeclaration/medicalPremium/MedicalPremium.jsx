@@ -648,19 +648,19 @@ export default function MedicalPremium() {
     </div>
   );
 
-//   const formFields = [
-//     { id: 'firstName', label: 'First Name', type: 'text' },
-//     { id: 'lastName', label: 'Last Name', type: 'text' },
-//     { id: 'city', label: 'City', type: 'autocomplete', options: [{ label: 'New York' }, { label: 'London' }] },
-//     { id: 'birthDate', label: 'Birth Date', type: 'date' },
-//     // Add more form fields as needed
-//   ];
+  // const formFields = [
+  //   { id: 'firstName', label: 'First Name', type: 'text' },
+  //   { id: 'lastName', label: 'Last Name', type: 'text' },
+  //   { id: 'city', label: 'City', type: 'autocomplete', options: [{ label: 'New York' }, { label: 'London' }] },
+  //   { id: 'birthDate', label: 'Birth Date', type: 'date' },
+  //   // Add more form fields as needed
+  // ];
 
-//   return (
-//     <div>
-//       <h1>Reusable Form Example</h1>
-//       <ReusableForm apiEndpoint="your-api-endpoint" fields={formFields} />
-//     </div>
-//   );
+  // return (
+  //   <div>
+  //     <h1>Reusable Form Example</h1>
+  //     <ReusableForm apiEndpoint="your-api-endpoint" fields={formFields} />
+  //   </div>
+  // );
 };
 

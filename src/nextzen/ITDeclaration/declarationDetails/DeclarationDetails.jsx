@@ -147,7 +147,7 @@ const DeclarationDetails = () => {
   return (
     <div>
      
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
             <TableRow>

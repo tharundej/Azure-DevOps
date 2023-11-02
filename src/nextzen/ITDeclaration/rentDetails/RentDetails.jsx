@@ -317,6 +317,7 @@ const editRentDetails = async () => {
         setLandLardAddress(response?.data?.data?.addressOfLandlord)
         setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
+        setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
         response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
         setPanNumbers( response?.data?.data?.pan_number) 
 
