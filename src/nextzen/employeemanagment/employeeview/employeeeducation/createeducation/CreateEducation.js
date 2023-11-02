@@ -50,7 +50,7 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
         grade:undefined,
         documents:[
           {
-            filetype:'',
+            fileType:'',
             fileName:'',
             fileContent:''
         }
@@ -128,7 +128,7 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
       };
            
     
-      const [selectedFile, setSelectedFile] = useState(null);
+     
       const [selectedCategory, setSelectedCategory] = useState('');
     
       const handleCategoryChange = (e,index,index1) => {
@@ -140,11 +140,39 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
 
         newArray[index].documents[index1] = {
           ... newArray[index].documents[index1],
-          filetype: value
+          fileType: value
         };
-    
+        console.log(index)
+        
         setDefaultValues(newArray);
       };
+
+      const handleAddDocument=(index)=>{
+        const newArray = [...defaultValues];
+        const obj={
+          fileType:'',
+          fileName:'',
+          fileContent:''
+      }
+        newArray[index].documents = [
+          ... newArray[index].documents,
+          obj,
+        ];
+    
+        setDefaultValues(newArray);
+      }
+
+      const handleDeleteDocument=(index,index1)=>{
+        const updatedItems = defaultValues[index].documents.filter((item,index3) => index3 !== index1);
+
+        const newArray = [...defaultValues];
+       
+        newArray[index].documents =updatedItems
+       
+        console.log(updatedItems,'updatedItems')
+    
+       setDefaultValues(newArray);
+      }
 
        
             // const changeObj=newArray[index];
@@ -160,10 +188,23 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
           //newObj[index].doxuments.filetype=e?.target?.value ;
         
     
-      const handleFileUpload = (event) => {
-        console.log(event,'event')
+      const handleFileUpload = (event,index,index1) => {
+        
         const file = event.target.files[0];
-        setSelectedFile(file);
+        // const { value, id } = e.target;
+        // const newObj = defaultValues;
+        
+
+        const newArray = [...defaultValues];
+
+        newArray[index].documents[index1] = {
+          ... newArray[index].documents[index1],
+          fileName: file.name
+        };
+        console.log(index,'newArraynewArraynewArray')
+        setDefaultValues(newArray);
+
+        //setSelectedFile(file);
       };
       
      
@@ -240,13 +281,13 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
                 <TextField
                     fullWidth
                     // type="number"
-                    name="university"
-                    label="University "
+                    name="gradeType"
+                    label="Grade Type "
                     id="university"
                    
                      value={item?.university}
                     onChange={(e) => {
-                      handleChange(e, index, 'university');
+                      handleChange(e, index, 'gradeType');
                     }}
                     variant="outlined"
                   />
@@ -254,11 +295,42 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
                 <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
-                    // type="number"
-                    name="yearOfPassing"
-                    label="Year of Passing"
+                     type="number"
+                    name="grade"
+                    label="grade"
                     id="yearOfPassing"
                    
+                     value={item?.yearOfPassing}
+                    onChange={(e) => {
+                      handleChange(e, index, 'grade');
+                    }}
+                    variant="outlined"
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="universityName"
+                    label="University Name"
+                    variant="outlined"
+                    id="universityName"
+                     value={item?.universityName}
+                    onChange={(e) => {
+                      handleChange(e, index, 'universityName');
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="yearOfPassing"
+                    label="Year Of Passing"
+                    id="stream"
                      value={item?.yearOfPassing}
                     onChange={(e) => {
                       handleChange(e, index, 'yearOfPassing');
@@ -267,7 +339,7 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
                   />
                 </Grid>
               </Grid>
-
+                  
               {item.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
@@ -278,7 +350,7 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
                 <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
                     <Select
                         label="Select a doc Type"
-                        value={file?.filetype}
+                        value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                         name="Select a doc Type"
                     >
@@ -291,25 +363,68 @@ const CreateEducation = ({employeeData,open,onhandleClose}) => {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                
-                <input
+                <Grid>
+
+                  <Grid item>
+                  {console.log(index,'opopop')}
+                  <input
+                   id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={handleFileUpload}
+                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
                     style={{ display: 'none' }}
-                    id="file-upload-input"
+                   
                 />
-                <label htmlFor="file-upload-input">
-                    <Button variant="outlined" component="span">
+                <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+                    <Button variant="outlined" component="h6">
                     Choose File
                     </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
+                  </Grid>
+                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                  { index1===0 &&
+                   
+                      <Button 
+                      onClick={()=>{
+                        handleAddDocument(index)
+                      }
+                       
+                        
+                       
+                        
+
+                      }
+                      >Add</Button>
+                   
+
+                  }
+                   { index1!==0 &&
+                    
+                      <Button 
+                      onClick={()=>{
+                        handleDeleteDocument(index,index1)
+                      }
+                       
+                        
+                       
+                        
+
+                      }
+                      >Delete</Button>
+                    
+
+                  }
+                  </Grid>
+                  
+                  
                 </Grid>
                
-                   { console.log(file,'file.filessName')}
+                </Grid>
+               
+                   
 
               </Grid>
               ))}
