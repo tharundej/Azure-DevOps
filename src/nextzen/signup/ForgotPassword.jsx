@@ -20,6 +20,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import axios from 'axios';
 import { CardContent } from '@mui/material';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +55,7 @@ export default function AmplifyForgotPasswordView() {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp/checkUserExists',
+        url: baseUrl +'checkUserExists',
         headers: {
           Authorization:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',

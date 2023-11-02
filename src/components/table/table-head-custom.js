@@ -33,8 +33,11 @@ export default function TableHeadCustom({
   onSelectAllRows,
   sx,
   rowActions=[]
-}) {
+}) 
+{
   const empty_space = '  ';
+
+  console.log(order,'oooooooo')
   return (
     <TableHead sx={sx}>
       <TableRow>
@@ -60,7 +63,7 @@ export default function TableHeadCustom({
                 hideSortIcon
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={() => onSort(headCell.id)}
+                onClick={() => onSort(headCell.id, order)}
               >
                 {headCell.label}
 

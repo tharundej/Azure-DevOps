@@ -89,84 +89,96 @@ export default function EmployeeTable() {
   },[])
 
   const defaultPayload={
-
  
-
-    "Page":1,
-    
+    "count": 5,
      
-    
-    "Count":5
-    
+    "page": 0,
      
-    
+    "search": "",
+    "fcompanyID": "COMP1",
+     
+    "externalFilters": {
+    "fMaritalStatus":"",
+    "fBloodGroup":"",
+    "fPState":"",
+    "fPEmployementType":"",
+    "fPdepartmentName":"",
+    "fPDesignation":"",
+    "fPDesignationGrade":"",
+    "fWorkingLocation":"",
+     
+    "fjoiningDate": {
+     
+    "from": "",
+     
+    "to": ""
+     
+    },
+     
+    "fDOB": {
+     
+    "from": "",
+     
+    "to": ""
+     
+    },
+     
+    "fofferDate": {
+     
+    "from": "",
+     
+    "to": ""
+     
     }
-
-//   const defaultPayload={
-
- 
-
-//     "Count": 5,
-
- 
-
-//     "Page": 0,
-
- 
-
-//     "Search": "",
-
- 
-
-//     "Eid": "E1",
-
- 
-
-//     "fFromDate": "",
-
- 
-
-//     "fToDate": "",
-
- 
-
-//     "fLeaveTypeName": "",
-
- 
-
-//     "fStatus": "",
-
- 
-
-//     "order":1,
-
- 
-
-//     "orderBy":"al.apply_date"
-
- 
-
-// }
-  
+    },
+     
+    "sort": {
+     
+    "key": 1,
+     
+    "orderBy": "employee_id"
+     
+    }
+    }
 
 
   const [TABLE_HEAD,setTableHead] =useState( [
     {
-      id: 'project_id',
-      label: 'project_id',
+      id: 'employeeId',
+      label: 'Employee ID',
       type: 'text',
       containesAvatar: true,
-
+      minWidth:'180px',
       secondaryText: 'name',
     },
-    { id: 'first_name', label: 'First Name', width: 250, type: 'text' },
-    { id: 'last_name', label: 'Last name', width: 220, type: 'text' },
-    { id: 'contact_number', label: 'Contact Number', width: 300, type: 'text' },
-    { id: 'employment_type', label: 'Employment Type', width: 100 ,  type: 'text'},
+    { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
+    { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
+    { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
+    { id: 'emailID', label: 'Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
+    { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
+    { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
+    { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
+    { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
+    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
+    { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
+    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
+
+
+    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
+    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
+    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
+    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
+    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
+    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
+    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
+    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
+    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
+    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
+    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
+
+    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
    
-    { id: 'department_name', label: 'Department Name', width: 280, type: 'text' },
-    { id: 'working_location', label: 'Working Location', width: 220, type: 'text' },
-    { id: 'reporting_manager_name', label: 'Reporting Manager Name', width: 180, type: 'text' }
     
   ]);
 
@@ -198,9 +210,9 @@ export default function EmployeeTable() {
 
       headerData={TABLE_HEAD} */}
 
-      <BasicTable headerData={TABLE_HEAD} endpoint="/listLeave"  defaultPayload={defaultPayload} filterOptions={filterOptions}
+      <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions} filterName="EmployeeListFilter"
+rowActions={actions} filterName="EmployeeFilterSearch"
  />
     </>
   );

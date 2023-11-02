@@ -134,9 +134,9 @@ const handleDrop = useCallback(
 );
 return (
   <>
-    <Button onClick={handleOpen}  variant="contained"
+    {/* <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Statoury</Button>
+        sx={{margin:'20px'}}>Add Statoury</Button> */}
     <Dialog
       fullWidth
       maxWidth={false}

@@ -195,7 +195,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
+      url: `${baseUrl}onboardingDepartment`,
     
       headers: {
     
@@ -232,7 +232,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
+      url: `${baseUrl}onboardingDesignation`,
     
       headers: {
     
@@ -269,7 +269,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignationGrade',
+      url: `${baseUrl}onboardingDesignationGrade`,
     
       headers: {
     
@@ -311,7 +311,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingRole',
+      url: `${baseUrl}onboardingRole`,
     
       headers: {
     
@@ -354,7 +354,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingReportingManager',
+      url: `${baseUrl}onboardingReportingManager`,
     
       headers: {
     

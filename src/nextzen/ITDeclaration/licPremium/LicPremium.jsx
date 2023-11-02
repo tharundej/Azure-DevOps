@@ -30,6 +30,7 @@ import '../declarationDetails/DeclarationDetails.css';
 import MuiAlert from '@mui/material/Alert';
 import './LicPReimum.css';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -50,23 +51,7 @@ const headings = [
   'Premium Considered For Deduction',
   'Action',
 ];
-const demo = {
-  licPremiumId: 124603,
-  companyId: 'COMP2',
-  employeeId: 'ibm1',
-  employeeName: 'naveen',
-  financialYear: '2022-03-02',
-  policyNumber: '',
-  dateOfCommencementOfPolicy: '2022-02-10',
-  insuredPersonName: 'abc',
-  sumOfAssured: 0.7,
-  relationship: 'mother',
-  premiumAmountForWhichProofAttachedNow: 0.8,
-  premiumAmountFallInDue: 0.9,
-  premiumConsiderForDeduction: 0.6,
-  treatmentForSpecifiedDiseas: 'covid1',
-  doesTheInjuredPersonhavedisability: 'no',
-};
+
 
 export default function LicPremium() {
   const [policyData, setPolicyData] = useState([]);
@@ -98,77 +83,66 @@ export default function LicPremium() {
     // Add more sample rows as needed
   ];
 
-  const [formData, setFormData] = useState({
-    companyId: 'COMP3',
-    companyName: 'wipro',
-    employeeId: 'wipr1',
-    employeeName: 'nithya1',
-    financialYear: '2027-08-07',
-    policyNumber: 'abcdefghi',
-    dateOfCommencementOfPolicy: '2021-01-11',
-    insuredPersonName: 'kkk',
-    sumOfAssured: 0.7,
-    relationship: 'mother',
-    premiumAmountForWhichProofAttachedNow: 0.8,
-    premiumAmountFallInDue: 0.9,
-    premiumConsiderForDeduction: 0.6,
-    treatmentForSpecifiedDiseas: 'covid',
-    doesTheInjuredPersonHaveDisability: 'no',
-    fileName: [],
-    fileContent: [],
-  });
+ 
 
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
+  const [formData, setFormData] = useState({
+    companyId: 'COMP3',
+    companyName: 'wipro',
+    employeeId: 'wipr1',
+    employeeName: 'rameshav',
+    financialYear: '2022-11-11',
+    policyNumber: '',
+    dateOfCommencementOfPolicy: '2022-11-11',
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForWhichProofAttachedNow: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseas: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
+  });
+  var [attachedDocumment ,setAttachedDocument] = useState([])
+var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
+  const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
   const benak = () => {
     console.log('testing ');
   };
   const methods = useForm();
 
-  // const handleFileChange = async (event) => {
-  //   const selectedFiles = event.target.files;
+  const attchementHandler = () =>{
+    setOpenAttchementDilog(true)
+  }
+  const closeAttchementDilod = () =>{
+    setOpenAttchementDilog(false)
+  }
 
-  //   if (!selectedFiles) {
-  //     return;
-  //   }
-    // Convert selected files to base64
-    // const base64Promises = Array.from(selectedFiles).map((file) => {
-    //   return new Promise((resolve, reject) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = () => resolve(reader.result.split(',')[1]);
-    //     reader.onerror = (error) => reject(error);
-    //   });
-    // });
-
-  //   try {
-  //     const base64Results = await Promise.all(base64Promises);
-  //     setBase64Strings(base64Results);
-  //   } catch (error) {
-  //     console.error('Error converting files to base64:', error);
-  //   }
-
-  //   // Update the list of selected files
-  //   setFiles(Array.from(selectedFiles));
-  // };
-
-  const handleDelete = (index) => {
-    // Remove the file and its corresponding base64 string
-    const updatedFiles = [...files];
-    updatedFiles.splice(index, 1);
-
-    const updatedBase64Strings = [...base64Strings];
-    updatedBase64Strings.splice(index, 1);
-
-    setFiles(updatedFiles);
-    setBase64Strings(updatedBase64Strings);
-  };
-
- 
-  
-
+  const handleUploadattchment =(data)=>{
+    attachedDocumment = data
+   setAttachedDocument(attachedDocumment)
+  //  setFormData({ ...formData, [fileContent] :  attachedDocumment});
+   setFormData((prevFormData) => ({
+    ...prevFormData,
+    fileContent: attachedDocumment,
+  }));
+   console.log(attachedDocumment ,data)
+ }
+ const handleUploadattchmentFileName =(data)=>{
+   attachedDocummentFileName = data
+   setAttachedDocumentFileName(attachedDocummentFileName)
+   setFormData((prevFormData) => ({
+    ...prevFormData,
+    fileName: attachedDocummentFileName,
+  }));
+   console.log(attachedDocummentFileName ,data)
+   setOpenAttchementDilog(false)
+ }
 
 
 
@@ -180,8 +154,9 @@ export default function LicPremium() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
 
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: integerValue });
     console.log(formData);
   };
 
@@ -198,7 +173,7 @@ export default function LicPremium() {
 
     setFormData({ ...formData, [name]: mappedValue });
 
-    console.log('selected value ', selectedValue);
+    console.log('selected value ',name , mappedValue ,  selectedValue);
   };
   console.log(formData, 'formdata');
 
@@ -209,6 +184,7 @@ export default function LicPremium() {
       method: 'post',
       maxBodyLength: Infinity,
       url: baseUrl +'getSingleLicPremium',
+     
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -234,26 +210,8 @@ export default function LicPremium() {
   };
 
   const saveLicDetals = async () => {
-    const payload = {
-      companyId: 'COMP3',
-      companyName: 'wipro',
-      employeeId: 'wipr1',
-      employeeName: 'nithya1',
-      financialYear: '2027-08-07',
-      policyNumber: 'abcdefghi',
-      dateOfCommencementOfPolicy: '2021-01-11',
-      insuredPersonName: 'kkk',
-      sumOfAssured: 0.7,
-      relationship: 'mother',
-      premiumAmountForWhichProofAttachedNow: 0.8,
-      premiumAmountFallInDue: 0.9,
-      premiumConsiderForDeduction: 0.6,
-      treatmentForSpecifiedDiseas: 'covid',
-      doesTheInjuredPersonHaveDisability: 'no',
-      fileName: [],
-
-      fileContent: [],
-    };
+    console.log(attachedDocumment ,attachedDocummentFileName, "saceasveasave")
+   
 
     const config = {
       method: 'post',
@@ -266,6 +224,8 @@ export default function LicPremium() {
       },
       data: formData,
     };
+
+    console.log(formData)
     const result = await axios
       .request(config)
       .then((response) => {
@@ -390,6 +350,7 @@ export default function LicPremium() {
                 label="Sum Of Assured"
                 variant="outlined"
                 fullWidth
+                type='number'
                 name="sumOfAssured"
                 value={formData.sumOfAssured}
                 onChange={handleChange}
@@ -443,12 +404,17 @@ export default function LicPremium() {
             <Grid item xs={4}>
               <Autocomplete
                 disablePortal
-                name="treatement_type"
+                name="treatmentForSpecifiedDiseas"
                 id="combo-box-demo"
                 options={treatmentTypes.map((employeepayType) => employeepayType.type)}
-                value={formData.treatement_type}
+                value={formData?.treatmentForSpecifiedDiseas === 1
+                  ? 'Yes'
+                  : formData.treatmentForSpecifiedDiseas === 0
+                  ? 'No'
+                  : formData.treatmentForSpecifiedDiseas
+            }
                 onChange={(event, newValue) =>
-                  handleAutocompleteChange('treatement_type', newValue)
+                  handleAutocompleteChange('treatmentForSpecifiedDiseas', newValue)
                 }
                 // sx={{ width: 300 }}
                 renderInput={(params) => (
@@ -465,7 +431,12 @@ export default function LicPremium() {
                 name="doesTheInjuredPersonHaveDisability"
                 id="combo-box-demo"
                 options={pinjuredPersonDisability.map((employeepayType) => employeepayType.type)}
-                value={formData.doesTheInjuredPersonHaveDisability}
+                value={formData?.doesTheInjuredPersonHaveDisability === 1
+                  ? 'Yes'
+                  : formData.doesTheInjuredPersonHaveDisability === 0
+                  ? 'No'
+                  : formData.doesTheInjuredPersonHaveDisability
+            }
                 onChange={(event, newValue) =>
                   handleAutocompleteChange('doesTheInjuredPersonHaveDisability', newValue)
                 }
@@ -494,7 +465,7 @@ export default function LicPremium() {
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                <Button className="button">Attchement</Button>
+                <Button className="button" onClick={attchementHandler}>Attchement</Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={saveLicDetals}>
@@ -586,6 +557,9 @@ export default function LicPremium() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      
+{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleUploadattchment}/> : null}
+
 {/* {true?
       <div>
       <input type="file" multiple onChange={handleFileChange} />

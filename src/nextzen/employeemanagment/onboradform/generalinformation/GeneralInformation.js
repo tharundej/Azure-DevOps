@@ -84,14 +84,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   const NewUserSchema = Yup.object().shape({
 
-    companyID: Yup.string(),
-    companyName: Yup.string(),
+    // companyID: Yup.string(),
+    // companyName: Yup.string(),
   
-    firstName: Yup.string(),
+    firstName: Yup.string().required("first name is required"),
     middleName: Yup.string(),
-    lastName: Yup.string(),
-    email: Yup.string(),
-    contactNumber: Yup.number(),
+    lastName: Yup.string().required("Last name is required"),
+    email: Yup.string().required("Email is required"),
+    contactNumber: Yup.number().required("Contact Number is required"),
     emergencyContactNumber: Yup.number(),
     dateOfBirth: Yup.string(),
     fatherName: Yup.string(),
@@ -194,9 +194,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const data1 = dataGeneral;
         let emp_id;
         const config = {
-          method: 'post',
+          method: 'POST',
           maxBodyLength: Infinity,
-          url: 'http://192.168.1.160:3001/erp/onBoarding',
+          url: `${baseUrl}onBoarding`,
           headers: { 
             'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
             'Content-Type': 'text/plain'
@@ -207,13 +207,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         axios.request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
-          setopenSnackBar(true);
-          setseveritySnackbar("success");
-          setmessageSnackbar("Onboarded Sucessfully")
+         
           console.log(response.data.empID,'nithinnn')
           localStorage.setItem("employeeId",response.data?.empID)
           
           props.nextStep();
+          props.handleCallSnackbar(response.data.message,"success")
+          console.log(response.data.message,'response.data.message')
         })
         .catch((error) => {
           console.log(error);

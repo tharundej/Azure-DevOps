@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Snackbar, Alert as MuiAlert } from '@mui/material';
+import { Snackbar, Alert as MuiAlert, Card, CardContent } from '@mui/material';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -82,7 +82,7 @@ export default function JwtLoginView() {
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
-      reset();
+      // reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
       setSnackbarOpen(true);
     }
@@ -102,6 +102,12 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
+      <Card sx={{backgroundColor:'#cce9f0'}}>
+        <CardContent>
+      <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
+      <Typography variant="body2">Password: 1234</Typography>
+      </CardContent>
+      </Card>
     </Stack>
   );
 
@@ -114,12 +120,12 @@ export default function JwtLoginView() {
       <RHFTextField
         name="password"
         label="Password"
-        type={password.value ? 'text' : 'password'}
+        type={password?.value ? 'text' : 'password'}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              <IconButton onClick={password?.onToggle} edge="end">
+                <Iconify icon={password?.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
               </IconButton>
             </InputAdornment>
           ),
@@ -155,19 +161,7 @@ export default function JwtLoginView() {
       
      
       {renderForm}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000} 
-        onClose={handleSnackbarClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <MuiAlert onClose={handleSnackbarClose} severity="error">
-          {errorMsg}
-        </MuiAlert>
-        </Snackbar>
+
     </FormProvider>
     
   );
