@@ -239,7 +239,7 @@ export default function JwtRegisterView() {
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="companyDateOfIncorporation"
+                        label="Company Date of Incorporation"
                         // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                         defaultValue={dayjs(new Date())}
                         onChange={(newValue) => {

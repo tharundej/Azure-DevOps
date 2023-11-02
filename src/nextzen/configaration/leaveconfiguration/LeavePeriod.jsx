@@ -5,11 +5,10 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 export default function LeavePeriod() {
     const TABLE_HEAD = [
       { id: 'slNo', label: 'SL NO', type: 'text' },
-      { id: 'Name', label: 'Name', type: 'text' },
-      { id: 'Expense Type ', label: 'Expense Type ', type: 'text' },
-      { id: 'Limitation Amount', label: 'Limitation Amount', type: 'text' },
-      { id: 'Applicable ', label: 'Applicable ', type: 'text' },
-      {id:'Status',label:'Status',type:'text'},
+      { id: 'leavePeriodId', label: 'Leave Period ID', type: 'text' },
+      { id: 'leavePeriodName', label: 'Leave Period Name', type: 'text' },
+      { id: 'startDate', label: 'Start Date', type: 'text' },
+      { id: 'endDate', label: 'End date', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -79,7 +78,6 @@ export default function LeavePeriod() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
-          filterName="ExpensiveClaimFilterSearch"
         />
       
     );

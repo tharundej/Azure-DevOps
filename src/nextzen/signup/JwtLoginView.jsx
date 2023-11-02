@@ -82,7 +82,7 @@ export default function JwtLoginView() {
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
-      reset();
+      // reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
       setSnackbarOpen(true);
     }
@@ -161,19 +161,7 @@ export default function JwtLoginView() {
       
      
       {renderForm}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000} 
-        onClose={handleSnackbarClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <MuiAlert onClose={handleSnackbarClose} severity="error">
-          {errorMsg}
-        </MuiAlert>
-        </Snackbar>
+
     </FormProvider>
     
   );

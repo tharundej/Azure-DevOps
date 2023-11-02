@@ -75,6 +75,7 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
+import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -415,6 +416,7 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 
