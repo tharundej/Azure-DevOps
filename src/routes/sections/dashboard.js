@@ -110,19 +110,19 @@ const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
 
-// const Configaration = lazy(()=> import('src/nextzen/configaration/Configaration'));
+const Configaration = lazy(()=> import('../../nextzen/configaration/Configaration'));
 
-// const LeaveConfiguration=lazy(()=>import('src/nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
+const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
 
-// const CompoffConfiguration = lazy(()=> import('src/nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
+const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
 
-// const MailConfiguration = lazy(()=> import('src/nextzen/configaration/mailconfiguration/MailConfiguration'));
+const MailConfiguration = lazy(()=> import('../../nextzen/configaration/mailconfiguration/MailConfiguration'));
 
-// const AppraisalConfiguration = lazy(()=> import('src/nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
+const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
 
-// const ExpensClaimConfiguration = lazy(()=> import('src/nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
 
-// const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -284,15 +284,20 @@ export const dashboardRoutes = [
           
         ],
       },
-      // {
-      //   path:'configaration',
-      //   children:[
-      //     {
-      //       element: <Configaration/>,index:true
-      //     },
-      //     {path:'leaveconfiguration',element:<LeaveConfiguration/>}
-      //   ],
-      // },
+      {
+        path:'configaration',
+        children:[
+          {
+            element: <Configaration/>,index:true
+          },
+          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
+          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+          {path:'mailconfiguration',element:<MailConfiguration/>},
+          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
+          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
+          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+        ],
+      },
       {
         path: 'product',
         children: [

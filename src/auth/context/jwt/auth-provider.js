@@ -118,7 +118,8 @@ export function AuthProvider({ children }) {
      const response = await axios.post( baseUrl + "loginUser" , data);
     // const response = await axios.post(endpoints.auth.login, data);
 
-   
+   const companyID = localStorage.setItem('companyID',response?.data?.companyID);
+   const employeeID = localStorage.setItem('employeeID',response?.data?.employeeID);
     const { accessToken, user } = response.data;
 
     setSession("1");
