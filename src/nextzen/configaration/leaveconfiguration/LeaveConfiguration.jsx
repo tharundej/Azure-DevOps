@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ReusableTabs from '../../tabs/ReusableTabs';
 import LeavePeriod from './LeavePeriod';
-import LeaveType from './LeaveType';
+import LeaveType from './leaveperiod/LeaveType';
 import Holidays from './Holidays';
 import WorkWeek from './WorkWeek';
 

@@ -64,7 +64,7 @@ export default function BasicCard() {
     "search": "",
     "companyId": "COMP1",
     "externalFilters": {
-      "payscheduleType": "weekly7",
+      "payscheduleType": "",
       "employmentType": "",
       "basicPayPercentage":"",
       "hraPercentage":"",
@@ -73,7 +73,7 @@ export default function BasicCard() {
       "employerPfPercentage":"",
       "employeePfPercentage":"",
       "esicPercentage":"",
-      "tdsPercentage":"10"
+      "tdsPercentage":""
     },
     "sort": {
       "key": 1,

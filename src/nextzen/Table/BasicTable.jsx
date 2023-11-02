@@ -143,13 +143,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+      // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-       url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      //  url: `http://192.168.1.87:3001/erp/${endpoint}`,
     
-      // url: `http://192.168.1.87:3001/erp${endpoint}`,
-      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
+      //  url: `http://192.168.0.184:3001/erp/${endpoint}`,
+      url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp/${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },

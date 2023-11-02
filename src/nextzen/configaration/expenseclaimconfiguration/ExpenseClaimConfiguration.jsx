@@ -76,7 +76,7 @@ export default function LeavePeriod() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint=""
+          endpoint="getExpenseConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName="ExpensiveClaimFilterSearch"
