@@ -4,11 +4,11 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function LeavePeriod() {
     const TABLE_HEAD = [
-      { id: 'employee_id', label: 'Employee ID', type: 'text' },
-      {id:'expense_name',label:'Expense Name',type:'text'},
-      { id: 'department_name', label: 'Department Name', type: 'text' },
-      { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text' },
-      { id: 'designation_name', label: 'Designation Name', type: 'text' },
+      { id: 'slNo', label: 'SL NO', type: 'text' },
+      { id: 'leavePeriodId', label: 'Leave Period ID', type: 'text' },
+      { id: 'leavePeriodName', label: 'Leave Period Name', type: 'text' },
+      { id: 'startDate', label: 'Start Date', type: 'text' },
+      { id: 'endDate', label: 'End date', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -29,23 +29,27 @@ export default function LeavePeriod() {
     // ];
     const defaultPayload = 
     {
-      "company_id":"COMP2",
-      "employee_id":"ibm1",
-      "page":0,
-      "count":6,
-      "Search":"",
-      "externalFilters":{
-      "department_name": "",
-      "designation_name": "",
-      "designation_grade_name":""
-  } ,
+      "count": 5,
+      "page": 1,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+        "payscheduleType": "weekly7",
+        "employmentType": "",
+        "basicPayPercentage":"",
+        "hraPercentage":"",
+        "daPercentage":"",
+        "ltaPercentage":"",
+        "employerPfPercentage":"",
+        "employeePfPercentage":"",
+        "esicPercentage":"",
+        "tdsPercentage":"10"
+      },
       "sort": {
-      "orderby": "expense_name",
-      "key": 0
-  } 
-   
-  }
-   
+        "key": 1,
+        "orderBy": ""
+      }
+    };
      
      
     // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
@@ -71,11 +75,9 @@ export default function LeavePeriod() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="getExpenseConfig"
+          endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
-          filterName="ExpensiveClaimFilterSearch"
-
         />
       
     );

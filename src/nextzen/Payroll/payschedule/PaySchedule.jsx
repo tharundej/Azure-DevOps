@@ -10,6 +10,7 @@ import { _userList } from 'src/_mock';
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 import Iconify from 'src/components/iconify/iconify';
+
 import {
   TextField,
   InputAdornment,
@@ -42,7 +43,7 @@ export default function BasicCard() {
   ];
   const actions = [
     { name: 'View', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
+    { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/', type:"edit"},
   ];
   const bodyContent = [
     {
@@ -58,12 +59,30 @@ export default function BasicCard() {
     },
   ];
   const defaultPayload = 
-    {
-      "companyId": "COMP1",
-      "count": 5,
-      "page": 0,
-      
+  {
+    "count": 5,
+    "page": 1,
+    "search": "",
+    "companyId": "COMP1",
+    "externalFilters": {
+      "payscheduleType": "",
+      "employmentType": "",
+      "basicPayPercentage":"",
+      "hraPercentage":"",
+      "daPercentage":"",
+      "ltaPercentage":"",
+      "employerPfPercentage":"",
+      "employeePfPercentage":"",
+      "esicPercentage":"",
+      "tdsPercentage":""
+    },
+    "sort": {
+      "key": 1,
+      "orderBy": ""
+    }
   };
+   
+   
   // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
   // const tabContents = [
   //   <div>Tab 1 Content</div>,
@@ -83,6 +102,11 @@ export default function BasicCard() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // const handleOpen=(data)=>{
+  //   console.log(data,"data00000000")
+  //   console.log("hii opened")
+  // }
   return (
     <>
       <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
@@ -91,6 +115,8 @@ export default function BasicCard() {
         endpoint="getallPaySchedule"
         defaultPayload={defaultPayload}
         rowActions={actions}
+        filterName="PayScheduleFilterSearch"
+        // buttonFunction={}
       />
     </>
   );

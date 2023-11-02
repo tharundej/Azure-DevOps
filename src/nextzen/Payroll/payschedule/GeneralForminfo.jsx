@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function GeneralForminfo({ currentUser }) {
+export default function GeneralForminfo({ currentUser}) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -40,7 +40,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   //   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset1();
@@ -123,11 +123,12 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employeepayType=selectedOption?.type
+    data.companyId=localStorage.getItem('companyID')
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('http://localhost:8081/onboarding', data);
-      console.log('sucess');
+      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
@@ -135,13 +136,14 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employeepayType=selectedOption?.type
+    data.companyId=localStorage.getItem('companyID')
     console.log('submitted data2222', data);
 
     
 
     try {
-      const response = await axios.post('http://localhost:8081/onboarding', data);
-      console.log('sucess');
+      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
