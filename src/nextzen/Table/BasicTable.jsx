@@ -145,7 +145,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-       url: `http://192.168.1.87:3001/erp${endpoint}`,
+       url: `http://192.168.0.184:3001/erp${endpoint}`,
     
       // url: `http://192.168.1.87:3001/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,

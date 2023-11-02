@@ -11,7 +11,7 @@ import { StyledArrow } from './styles';
 export default function CustomPopover({
   open,
   children,
-  arrow = 'top-right',
+  arrow = 'right-center',
   hiddenArrow,
   sx,
   ...other
