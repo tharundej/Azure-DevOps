@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
   TextField,
@@ -22,6 +24,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import IconButton from '@mui/material/IconButton';
 import { Stack } from '@mui/system';
 import axios from 'axios';
+import { RHFAutocomplete } from 'src/components/hook-form';
 
 const   WorkWeek=forwardRef((props,ref)=> {
   useImperativeHandle(ref,()=>({
@@ -31,8 +34,18 @@ const   WorkWeek=forwardRef((props,ref)=> {
     }
   }))
   const currentUser=props.currentUser;
-  const [value, setValue] = React.useState(dayjs(new Date()));
+  // const [value, setValue] = React.useState(dayjs(new Date()));
   const [attachmentString,setAttachmentString]=useState([]);
+  const NewUserSchema = Yup.object().shape({
+ 
+    country: Yup.string(),
+    monday:Yup.string(),
+    tuesday:Yup.string(),
+  
+    wednesday: Yup.string(),
+    thursday: Yup.string(),
+    friday: Yup.string(),
+  });
   const [defaultValues, setDefaultValues] = useState([
     {
       country: currentUser?.country || '',
@@ -40,15 +53,41 @@ const   WorkWeek=forwardRef((props,ref)=> {
       tuesday:currentUser?.tuesday ||  '',
       wednesday:currentUser?.wednesday || '',
       thursday:currentUser?.thursday || '',
+      friday:currentUser?.friday || '',
 
-      documentName: "sample.pdf",
-      gradeType:'CGPA',
-      grade:8.34,
-      documentData:""
-      
-     
     },
   ]);
+  const countryTypes = [
+    { type: '52-Once a week' },
+    { type: '26-Once in a two weeks' },
+    { type: '24- Twice a month' },
+    { type: '12-Once a month' },
+  ];
+  const mondayTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
+  const tuesdaytTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
+  const wednesdayTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
+  const thursdayTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
+  const fridayTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
   const ApiHitEducation=(dataEducation)=>{
     console.log("api called")
       const data1 = dataEducation;
@@ -171,7 +210,7 @@ const   WorkWeek=forwardRef((props,ref)=> {
             <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <RHFAutocomplete
                     fullWidth
                     type="text"
                     name="country"
@@ -182,10 +221,16 @@ const   WorkWeek=forwardRef((props,ref)=> {
                     onChange={(e) => {
                       handleChange(e, index, 'country');
                     }}
-                  />
+                  /> */}
+                  <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <RHFAutocomplete
                     fullWidth
                     type="text"
                     name="monday"
@@ -196,12 +241,18 @@ const   WorkWeek=forwardRef((props,ref)=> {
                       handleChange(e, index, 'monday');
                     }}
                     variant="outlined"
-                  />
+                  /> */}
+                  <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <TextField
                     fullWidth
                     type="text"
                     name="tuesday"
@@ -212,10 +263,16 @@ const   WorkWeek=forwardRef((props,ref)=> {
                     onChange={(e) => {
                       handleChange(e, index, 'tuesday');
                     }}
-                  />
+                  /> */}
+                   <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <TextField
                     fullWidth
                     type="number"
                     name="wednesday"
@@ -227,12 +284,18 @@ const   WorkWeek=forwardRef((props,ref)=> {
                       handleChange(e, index, 'wednesday');
                     }}
                     variant="outlined"
-                  />
+                  /> */}
+                   <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <RHFAutocomplete
                     fullWidth
                     type="text"
                     name="thursday"
@@ -243,41 +306,39 @@ const   WorkWeek=forwardRef((props,ref)=> {
                     onChange={(e) => {
                       handleChange(e, index, 'thursday');
                     }}
-                  />
+                  /> */}
+                  <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="friday"
-                    label="friday"
-                    id="friday"
-                   
-                    // value={item?.friday}
-                    onChange={(e) => {
-                      handleChange(e, index, 'friday');
-                    }}
-                    variant="outlined"
-                  />
+                <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
+                   {/* <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                /> */}
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="text"
-                    name="saturday"
-                    label="saturday"
-                    variant="outlined"
-                    id="saturday"
-                    // value={item?.saturday}
-                    onChange={(e) => {
-                      handleChange(e, index, 'saturday');
-                    }}
-                  />
+                <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <TextField
+                  {/* <RHFAutocomplete
                     fullWidth
                     type="number"
                     name="sunday"
@@ -289,7 +350,13 @@ const   WorkWeek=forwardRef((props,ref)=> {
                       handleChange(e, index, 'sunday');
                     }}
                     variant="outlined"
-                  />
+                  /> */}
+                   <Autocomplete
+                  name="country"
+                  label="Country"
+                  options={countryTypes.map((countryType) => countryType.type)}
+                  renderInput={(params) => <TextField {...params} label="country" />}
+                />
                 </Grid>
               </Grid>
             </Grid>

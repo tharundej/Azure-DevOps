@@ -87,7 +87,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ExpenseClaimFilters({ filterData, filterOptions }) {
+export default function PayScheduleFilters({ filterData, filterOptions }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -234,7 +234,13 @@ export default function ExpenseClaimFilters({ filterData, filterOptions }) {
     console.log(value);
     // console.log( typeof value === 'string' ? value.split(',') : value,)
   };
+  const [search, setSearch]=useState("");
 
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
   const handleApply = async () => {
     setDatesData([]);
 
@@ -253,7 +259,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions }) {
           <TextField
             placeholder="Search...."
             fullWidth
-            // onChange={handleSeacrch}
+             onChange={handleSearch}
           />
         </Grid>
 
@@ -281,17 +287,8 @@ export default function ExpenseClaimFilters({ filterData, filterOptions }) {
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
-        >
-          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
+        <DialogContent  sx={{minWidth:"500px"}}>
+         
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
@@ -382,14 +379,14 @@ export default function ExpenseClaimFilters({ filterData, filterOptions }) {
   );
 }
 
-// ExpenseClaimFilters.propTypes={
+// PayScheduleFilters.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-ExpenseClaimFilters.propTypes = {
+PayScheduleFilters.propTypes = {
   filterData: PropTypes.func,
 };
 
-ExpenseClaimFilters.propTypes = {
+PayScheduleFilters.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,
