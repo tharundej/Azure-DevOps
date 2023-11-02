@@ -226,12 +226,23 @@ const [stateOptions,setOptions]=useState([])
 
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
-         if(dates[item?.from]!==null){
-        arr1[item.field]={
-          from:formatDateToYYYYMMDD(dates[item?.from]),
-          to:formatDateToYYYYMMDD(dates[item?.to])
-        }
-      }
+         if(dates[item?.from]!==undefined){
+                arr1[item.field]={
+                from:formatDateToYYYYMMDD(dates[item?.from]),
+              to:formatDateToYYYYMMDD(dates[item?.to])
+              }
+       
+           }
+
+           else{
+
+
+            arr1[item.field]={
+              from:"",
+            to:""
+            }
+           }
+         
 
         //  const obj={
         //    filed_name:item?.field,
@@ -782,7 +793,8 @@ const [stateOptions,setOptions]=useState([])
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Designation Grade</InputLabel>
                 <Select
-                fullWidth
+                  
+                  fullWidth
                   labelId="demo-multiple-name-fPDesignationGrade"
                   id="demo-multiple-fPDesignationGrade"
                   multiple

@@ -70,7 +70,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
       });
   }
   const obj =  {
-    name_of_the_degree:  '',
+      name_of_the_degree:  '',
       stream:  '',
       university:  '',
       year_of_passing: null,

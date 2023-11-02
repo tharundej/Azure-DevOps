@@ -194,7 +194,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const data1 = dataGeneral;
         let emp_id;
         const config = {
-          method: 'post',
+          method: 'POST',
           maxBodyLength: Infinity,
           url: `${baseUrl}onBoarding`,
           headers: { 

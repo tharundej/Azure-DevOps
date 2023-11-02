@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-     const response = await axios.post( baseUrl+"loginUser" , data);
+     const response = await axios.post( baseUrl + "loginUser" , data);
     // const response = await axios.post(endpoints.auth.login, data);
 
    const companyID = localStorage.setItem('companyID',response?.data?.companyID);

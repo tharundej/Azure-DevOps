@@ -15,6 +15,7 @@ import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 // employee Management
 
 const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
+const EmployeeView = lazy(() => import('../../nextzen/employeemanagment/employeeview/EmployeeView'));
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -163,6 +164,8 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: 'onboardform', element: <OnBoardForm />},
+          
+          { path: 'employeeview', element: <EmployeeView />},
           //  { path: ':id/edit', element: <Edits /> },
           // { path: 'reusetable', element: <ReuseTable /> },
           //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
