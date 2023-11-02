@@ -15,6 +15,8 @@ import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 import DocumentsUpload from './documentsupoad/DocumentsUpload';
 import CurrentWork from './currentwork/CurrentWork'
 
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+
 
 const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
@@ -22,6 +24,9 @@ export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
   const [employeeId,setemployeeId]=useState("");
+  const [openSnackbar,setOpenSnackbar]=useState(false);
+  const [snacbarMessage,setSnacbarMessage]=useState("");
+  const [severity,setSeverity]=useState("")
 
   const childref=useRef(null);
 
@@ -44,6 +49,7 @@ export default function OnBoardForm() {
   const handleNext = () => {
 
     let returnResponse;
+    console.log('manoj0')
     if(activeStep+1===1){
       console.log('11')
       childref.current.childFunctionGeneral();
@@ -55,6 +61,23 @@ export default function OnBoardForm() {
     else if(activeStep+1===2){
       childref.current.childFunctionEducation()
     }
+    else if(activeStep+1===3){
+     
+      childref.current.childFunctionExperience()
+
+    }
+    else if(activeStep+1===4){
+     
+      childref.current.childFunctionExperience()
+
+    }
+
+    else if(activeStep+1===5){
+     
+      childref.current.childFunctionExperience()
+
+    }
+
 
     
  
@@ -93,9 +116,19 @@ export default function OnBoardForm() {
      childref.current.childFunctionGeneral();
     // childref.current.childFunction1();
   }
+ 
+const handleCallSnackbar=(message,severity)=>{
+  setOpenSnackbar(true);
+  setSnacbarMessage(message);
+  setSeverity(severity);
+}
+  const HandleCloseSnackbar=()=>{
+    setOpenSnackbar(false);
+  }
 
   return (
     <Box sx={{ width: '100%' }} >
+      <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -119,19 +152,19 @@ export default function OnBoardForm() {
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+              <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}  ref={childref}/>
+              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]} />
+              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]} />
+              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
-              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]} />
+              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>

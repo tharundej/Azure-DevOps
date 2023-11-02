@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Snackbar, Alert as MuiAlert } from '@mui/material';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -53,13 +54,13 @@ export default function JwtLoginView() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
-    defaultValues,
+     defaultValues,
   });
 
   const {
@@ -68,7 +69,14 @@ export default function JwtLoginView() {
     formState: { isSubmitting },
   } = methods;
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
+    
     try {
       await login?.(data.email, data.password);
       router.push(returnTo || PATH_AFTER_LOGIN);
@@ -76,6 +84,7 @@ export default function JwtLoginView() {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
+      setSnackbarOpen(true);
     }
   });
 
@@ -93,6 +102,9 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
+      <Typography variant="body2">email:rameshagowdav@gmail.com</Typography>
+      <Typography variant="body2">password:1234</Typography>
+      
     </Stack>
   );
 
@@ -105,12 +117,12 @@ export default function JwtLoginView() {
       <RHFTextField
         name="password"
         label="Password"
-        type={password.value ? 'text' : 'password'}
+        type={password?.value ? 'text' : 'password'}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              <IconButton onClick={password?.onToggle} edge="end">
+                <Iconify icon={password?.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
               </IconButton>
             </InputAdornment>
           ),
@@ -135,14 +147,31 @@ export default function JwtLoginView() {
   );
 
   return (
+    
     <FormProvider methods={methods} onSubmit={onSubmit}>
+       
       {renderHead}
 
       {/* <Alert severity="info" sx={{ mb: 3 }}>
         Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
       </Alert> */}
-
+      
+     
       {renderForm}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000} 
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error">
+          {errorMsg}
+        </MuiAlert>
+        </Snackbar>
     </FormProvider>
+    
   );
 }

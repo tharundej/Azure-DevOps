@@ -24,6 +24,7 @@ import dayjs from 'dayjs';
 import Divider from '@mui/material/Divider';
 import './houseProperty.css';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 // const useStyles = makeStyles({
 //   tableHeader: {
@@ -142,7 +143,7 @@ export default function HouseProperty() {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/housingProperty',
+      url: baseUrl + 'housingProperty',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',

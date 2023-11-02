@@ -29,16 +29,16 @@ const bull = (
 
 export default function BasicCard() {
   const TABLE_HEAD = [
-    { id: 'employeeType', label: 'Employee Type', type: 'text' },
-    { id: 'payscheduleType', label: 'Pay Schedule Type', type: 'text' },
-    { id: 'basicPay', label: 'Basic Pay %', type: 'text' },
-    { id: 'hra', label: 'HRA %', type: 'text' },
-    { id: 'da', label: 'DA %', type: 'text' },
-    {id: 'lta',label:'LTA %',type:'text'},
-    { id: 'employeePf', label: 'Employee PF %', type: 'text' },
-    { id: 'employerPf', label: 'Employer PF %', type: 'text' },
-    {id: 'esic', label: 'ESIC %', type: 'text' },
-    { id: 'tds', label: 'TDS %', type: 'text' },
+    { id: 'employementType', label: 'Employee Type', type: 'text' },
+    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text' },
+    { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text' },
+    { id: 'hraPercentage', label: 'HRA %', type: 'text' },
+    { id: 'daPercentage', label: 'DA %', type: 'text' },
+    {id: 'ltaPercentage',label:'LTA %',type:'text'},
+    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text' },
+    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text' },
+    {id: 'esicPercentage', label: 'ESIC %', type: 'text' },
+    { id: 'tdsPercentage', label: 'TDS %', type: 'text' },
   ];
   const actions = [
     { name: 'View', icon: 'hh', path: 'jjj' },
@@ -60,12 +60,9 @@ export default function BasicCard() {
   const defaultPayload = 
     {
       "companyId": "COMP1",
-      "rowsPerPage": 10,
-      "pageNum": 1,
-      "filterBy": [],
-      "sortOrder": ["asc"],
-      "orderBy": ["pay_schedule_id"],
-      "search": ""
+      "count": 5,
+      "page": 0,
+      
   };
   // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
   // const tabContents = [
@@ -91,7 +88,7 @@ export default function BasicCard() {
       <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="getPaySchedule"
+        endpoint="getallPaySchedule"
         defaultPayload={defaultPayload}
         rowActions={actions}
       />

@@ -38,6 +38,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
 import { CardContent } from '@mui/material';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -77,12 +78,12 @@ export default function VerifyOtp() {
   const onSubmit = handleSubmit(async (data) => {
     try {
         const payload ={
-            "jwt_token_string" : localStorage.getItem('jwt_access_token'),
+            "jwtTokenString" : localStorage.getItem('jwt_access_token'),
             "otp":data.code
         }
         const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/verifyRegisterOtp', payload);
-        console.log(response?.status)
-        if(response?.status===200){
+        console.log(response?.data.code)
+        if(response?.data.code===200){
             console.log('sucess')
             router.push(paths.auth.jwt.createpassword);
           }
@@ -98,6 +99,10 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
+      const payload= {
+       jwtTokenString: localStorage.getItem('jwt_access_token')}
+      const response = await axios.post(baseUrl+'resendOtp',payload)
+      
     } catch (error) {
       console.error(error);
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import { BasicTable } from '../../Table/BasicTable'
 import { StatouryForm } from './StatouryForm';
 
 export const StatouryTable = () => {
@@ -84,7 +84,7 @@ export const StatouryTable = () => {
       <StatouryForm />
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="getStatutoryDetails"
+        endpoint="/getStatutoryDetails"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="statuortySearchFilter"

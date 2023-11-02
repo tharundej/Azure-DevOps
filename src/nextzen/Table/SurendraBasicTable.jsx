@@ -47,7 +47,7 @@ import IconButton from '@mui/material/IconButton';
 
 import TableContainer from '@mui/material/TableContainer';
 
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+// import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import MenuItem from '@mui/material/MenuItem';
 
@@ -153,7 +153,7 @@ const defaultFilters = {
 
 const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
-  const popover = usePopover();
+  // const popover = usePopover();
 
  
 
@@ -200,7 +200,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const [tableData, setTableData] = useState([]);
 
  
-
   // const [rowActions, setRowActions] = useState(actions);
 
   // console.log(endpointdata,"endpoint urlll")
@@ -228,19 +227,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const getTableData = (payload) => {
 
-    // let initialDefaultPayloadCopy =initialDefaultPayload;
-    // if(payload){
-    //   initialDefaultPayloadCopy = payload;
-    // }
-    // let initialDefaultPayloadCopy =initialDefaultPayload;
-    // if(payload){
-    //   initialDefaultPayloadCopy = payload;
-    // }
-    // if(actionType === 'pageChange'){
-
-    //   initialDefaultPayloadCopy.Page = data;
-
-    // }
+    
 
     const config = {
 
@@ -248,9 +235,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       maxBodyLength: Infinity,
 
-      // url:`http://192.168.1.79:8080/appTest/GetMyClaims`,
+      url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims
-      url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -292,18 +279,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
       console.log(response)
 
  
-
-      // if(actionType === 'pageChange'){
-
-      //   // let initialDefaultPayloadCopy =
-
-      //   setInitialDefaultPayload((prevData)=>({
-
-      //     ...prevData, Page:data
-
-      //   }))
-
-      // }
 
  
 
@@ -553,7 +528,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(searchTerm, "searched data");
 
     if (timer) {
-      clearTimeout(timer); // Clear previous timer
+      clearTimeout(timer); 
     }
 
     const newTimer = setTimeout(() => {
@@ -563,7 +538,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
         search: searchTerm,
       }));
       getTableData(payload);
-    }, 300); // Adjust the delay as needed (300 milliseconds in this example)
+    }, 300); 
 
     setTimer(newTimer);
   };
@@ -632,7 +607,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   const handleFilterOptions=(data)=>{
     
-    console.log(data,"filtered data")
+    console.log(data,"filtered data  from claim search")
+    
 
     const payload = initialDefaultPayload;
 
@@ -640,12 +616,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       ...prevPayload,
 
-      // Search: searchTerm,
+      
       externalFilters:data
      
     }));
     
-
+    getTableData(payload);
     console.log(payload,"after filter effected")
     
 
@@ -707,7 +683,7 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
+          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' , height: 400, width: '100%' }}>
 
             <TableSelectedAction
 
@@ -753,6 +729,8 @@ const [sortColumn, setSortColumn]=useState("")
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
+                component={Paper}
+                style={{ height: 400, width: '100%', position:"sticky"}}
 
                   order={table.order}
 

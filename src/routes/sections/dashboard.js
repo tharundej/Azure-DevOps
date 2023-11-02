@@ -109,7 +109,19 @@ const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
 
+// const Configaration = lazy(()=> import('src/nextzen/configaration/Configaration'));
 
+// const LeaveConfiguration=lazy(()=>import('src/nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
+
+// const CompoffConfiguration = lazy(()=> import('src/nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
+
+// const MailConfiguration = lazy(()=> import('src/nextzen/configaration/mailconfiguration/MailConfiguration'));
+
+// const AppraisalConfiguration = lazy(()=> import('src/nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
+
+// const ExpensClaimConfiguration = lazy(()=> import('src/nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+
+// const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -150,7 +162,7 @@ export const dashboardRoutes = [
           { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OnBoardForm /> },
+          { path: 'onboardform', element: <OnBoardForm />},
           //  { path: ':id/edit', element: <Edits /> },
           // { path: 'reusetable', element: <ReuseTable /> },
           //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
@@ -269,6 +281,15 @@ export const dashboardRoutes = [
           
         ],
       },
+      // {
+      //   path:'configaration',
+      //   children:[
+      //     {
+      //       element: <Configaration/>,index:true
+      //     },
+      //     {path:'leaveconfiguration',element:<LeaveConfiguration/>}
+      //   ],
+      // },
       {
         path: 'product',
         children: [
