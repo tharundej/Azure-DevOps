@@ -66,7 +66,7 @@ const EmployeeEducation = () => {
       }
      
      const employeeData=[ {
-      nameOfTheDegree:  'aa',
+      nameOfTheDegree:  '',
         stream:  '',
         university:  '',
         yearOfPassing: undefined,
@@ -75,41 +75,17 @@ const EmployeeEducation = () => {
         grade:undefined,
         documents:[
           {
-            filetype:'marks-memo',
-            fileName:'m1.js',
+            fileType:'',
+            fileName:'',
             fileContent:''
         },
       ]
        
       
      
-    },
+    }
   
-    {
-      nameOfTheDegree:  'anil',
-        stream:  '',
-        university:  '',
-        yearOfPassing: 2021,
-        documentData:'',
-        grade_type:'',
-        grade:undefined,
-        documents:[
-          {
-            filetype:'marks-memo',
-            fileName:'m1.js',
-            fileContent:''
-        },
-        {
-            filetype:'degree',
-            fileName:'m2.js',
-            fileContent:''
-        }
-      ]
-      
-       
-      
-     
-    }]
+   ]
 
    
   return (
