@@ -79,6 +79,8 @@ import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/Expe
 import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
 import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
+import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
+import HolidaysFilters from '../configaration/leaveconfiguration/holidays/HolidaysFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -428,6 +430,8 @@ getTableData(payload)
        {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 

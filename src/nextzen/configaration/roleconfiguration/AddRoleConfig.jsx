@@ -510,6 +510,8 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
 
             <Grid item xs={2}>
               <Button onClick={AddDesignation}>Add</Button>
+              <Button className="button">Filter</Button>
+              <Button className="button">Report</Button>
             </Grid>
           </Grid>
 

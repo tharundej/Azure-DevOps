@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import { Dialog,Grid,TextField,InputAdornment} from '@mui/material';
 import { Container } from '@mui/system';
 import { BasicTable } from '../../../Table/BasicTable';
-import LeaveTypeForm from './LeaveTypeForm';
 import Iconify from 'src/components/iconify/iconify';
 
 export default function LeaveType() {
