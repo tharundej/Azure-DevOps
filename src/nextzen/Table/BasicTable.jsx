@@ -77,6 +77,8 @@ import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
 import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
+import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -89,7 +91,7 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
  
  
@@ -129,10 +131,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   const getTableData = (payload) => {
     setLoading(false);
-    // let initialDefaultPayloadCopy =initialDefaultPayload;
-    // if(payload){
-    //   initialDefaultPayloadCopy = payload;
-    // }
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
     // let initialDefaultPayloadCopy =initialDefaultPayload;
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
@@ -144,9 +146,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-         url: `http://192.168.0.123:3001/erp/${endpoint}`,
+          url: `http://192.168.0.123:3001/erp/${endpoint}`,
     
         // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       headers: {
@@ -247,6 +249,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
       console.log("servce call will called for edit")
     }
+    else if (eventData?.type === "delete"){
+      deleteFunction(rowData);
+ 
+      console.log("servce call will called for delete")
+    }
     else{
       console.log("servce call error")
     }
@@ -298,7 +305,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // Filter_Headers:
      
     }));
-   // getTableData(payload)
+   getTableData(payload)
   }
  
  
@@ -417,8 +424,10 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
        {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 
@@ -590,6 +599,10 @@ BasicTable.propTypes = {
  
 BasicTable.propTypes = {
   buttonFunction: PropTypes.any
+};
+
+BasicTable.propTypes ={
+  deleteFunction:PropTypes.any
 };
  
  

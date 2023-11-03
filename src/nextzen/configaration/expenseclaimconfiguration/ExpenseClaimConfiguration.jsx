@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function LeavePeriod() {
+export default function ExpenseClaimConfiguration() {
     const TABLE_HEAD = [
       { id: 'employee_id', label: 'Employee ID', type: 'text' },
       {id:'expense_name',label:'Expense Name',type:'text'},
@@ -11,7 +11,7 @@ export default function LeavePeriod() {
       { id: 'designation_name', label: 'Designation Name', type: 'text' },
     ];
     const actions = [
-      { name: 'View', icon: 'hh', path: 'jjj' },
+      { name: 'Delete', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
     // const bodyContent = [
@@ -33,7 +33,7 @@ export default function LeavePeriod() {
       "employee_id":"ibm1",
       "page":0,
       "count":6,
-      "Search":"",
+      "search":"",
       "externalFilters":{
       "department_name": "",
       "designation_name": "",
@@ -54,9 +54,9 @@ export default function LeavePeriod() {
     //   <div>Tab 2 Content</div>,
     //   <div>Tab 3 Content</div>,
     // ];
-    const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
+    const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
   
-    React.useEffect(() => {
+    useEffect(() => {
       const handleResize = () => {
         setIsLargeDevice(window.innerWidth > 530);
       };

@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function ShiftConfigurationForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -154,6 +154,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+ShiftConfigurationForm.propTypes = {
   currentUser: PropTypes.object,
 };

@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function LeavePeriodForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,21 +33,19 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    ShiftName: Yup.number().required('Employee PF is Required'),
-    StartTime: Yup.number().required('Employer PF is Required'),
-    EndTime: Yup.number().required('LTA is Required'),
-    ShiftTerm: Yup.number().required('esic is Required'),
-    LocationId: Yup.number().required('TDS is Required'),
+    leavePeriodId: Yup.number().required('Leave Period Id is Required'),
+    leavePeriodName: Yup.number().required('leave Period Name is Required'),
+    startDate: Yup.number().required('Start Date is Required'),
+    endDate: Yup.number().required('End Date is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      ShiftName: currentUser?.ShiftName || null,
-      StartTime: currentUser?.StartTime || null,
-      EndTime: currentUser?.EndTime || null,
-      ShiftTerm: currentUser?.ShiftTerm || null,
-      LocationId: currentUser?.LocationId || null,
+      leavePeriodId: currentUser?.leavePeriodId || null,
+      leavePeriodName: currentUser?.leavePeriodName || null,
+      startDate: currentUser?.startDate || null,
+      endDate: currentUser?.endDate || null,
     }),
     [currentUser]
   );
@@ -81,28 +79,12 @@ export default function LeaveTypeForm({ currentUser}) {
     }
   });
 
-
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add ShiftConfig</Button>
+        sx={{margin:'20px'}}>Add Leave Period</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -114,7 +96,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add ShiftConfig</DialogTitle>
+            <DialogTitle>Add Leave Period</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -126,11 +108,10 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="ShiftName" label="Shift Name" />
-                <RHFTextField name="StartTime" label="Start Time" />
-                <RHFTextField name="EndTime" label="End Time" />
-                <RHFTextField name="ShiftTerm" label="Shift Term" />
-                <RHFTextField name="LocationId" label="Location Id" />
+                <RHFTextField name="leavePeriodId" label="leave Period Id" />
+                <RHFTextField name="leavePeriodName" label="leave Period Name" />
+                <RHFTextField name="startDate" label="Start Date" />
+                <RHFTextField name="endDate" label="End Date" />
               </Box>
             </DialogContent>
 
@@ -154,6 +135,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+LeavePeriodForm.propTypes = {
   currentUser: PropTypes.object,
 };

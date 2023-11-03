@@ -14,19 +14,7 @@ export default function LeavePeriod() {
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
-    // const bodyContent = [
-    //   {
-    //     employeeType: 'Permanent',
-    //     payscheduleType: 'Weekly',
-    //     payType: 'CTC',
-    //     basicPay: '40',
-    //     hra: '20',
-    //     da: '8',
-    //     employeePf: '6',
-    //     employerPf: '6',
-    //     tds: '20',
-    //   },
-    // ];
+
     const defaultPayload = 
     {
       "count": 5,
@@ -78,6 +66,7 @@ export default function LeavePeriod() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
+          filterName='LeavePeriodFilterSearch'
         />
       
     );

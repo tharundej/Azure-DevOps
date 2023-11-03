@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function ExpenseClaimForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,21 +33,21 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    ShiftName: Yup.number().required('Employee PF is Required'),
-    StartTime: Yup.number().required('Employer PF is Required'),
-    EndTime: Yup.number().required('LTA is Required'),
-    ShiftTerm: Yup.number().required('esic is Required'),
-    LocationId: Yup.number().required('TDS is Required'),
+    expense_name: Yup.number().required('Expense Name is Required'),
+    department_name: Yup.number().required('Department Name is Required'),
+    designation_name: Yup.number().required('Designation Name is Required'),
+    designation_grade_name: Yup.number().required('Designation Grade Name is Required'),
+    employee_id: Yup.number().required('Employee ID is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      ShiftName: currentUser?.ShiftName || null,
-      StartTime: currentUser?.StartTime || null,
-      EndTime: currentUser?.EndTime || null,
-      ShiftTerm: currentUser?.ShiftTerm || null,
-      LocationId: currentUser?.LocationId || null,
+      expense_name: currentUser?.expense_name || null,
+      department_name: currentUser?.department_name || null,
+      designation_name: currentUser?.designation_name || null,
+      designation_grade_name: currentUser?.designation_grade_name || null,
+      employee_id: currentUser?.employee_id || null,
     }),
     [currentUser]
   );
@@ -102,7 +102,7 @@ export default function LeaveTypeForm({ currentUser}) {
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add ShiftConfig</Button>
+        sx={{margin:'20px'}}>Add ExpensiveConfig</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -114,7 +114,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add ShiftConfig</DialogTitle>
+            <DialogTitle>Add ExpensiveConfig</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -126,11 +126,11 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="ShiftName" label="Shift Name" />
-                <RHFTextField name="StartTime" label="Start Time" />
-                <RHFTextField name="EndTime" label="End Time" />
-                <RHFTextField name="ShiftTerm" label="Shift Term" />
-                <RHFTextField name="LocationId" label="Location Id" />
+                <RHFTextField name="expense_name" label="Expense Name" />
+                <RHFTextField name="department_name" label="Department Name" />
+                <RHFTextField name="designation_name" label="Designation Name" />
+                <RHFTextField name="designation_grade_name" label="Designation Grade Name" />
+                <RHFTextField name="employee_id" label="Employee ID" />
               </Box>
             </DialogContent>
 
@@ -154,6 +154,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+ExpenseClaimForm.propTypes = {
   currentUser: PropTypes.object,
 };
