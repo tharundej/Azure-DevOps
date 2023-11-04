@@ -1,19 +1,19 @@
 import React,{useEffect, useState} from 'react'
 import {Card,CardContent,Typography,IconButton,Button,Grid} from '@mui/material'
 import Iconify from 'src/components/iconify';
-import FilesGrid from '../files/FilesGrid';
-import CreateEducation from './createeducation/CreateEducation';
-
 import axios from 'axios';
+import FilesGrid from '../files/FilesGrid';
+import CreateEducation from '../employeeeducation/createeducation/CreateEducation';
+import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
+
+
 
 const employeeData=[ {
-  nameOfTheDegree:  '',
-    stream:  '',
-    university:  '',
-    yearOfPassing: undefined,
-    documentData:'',
-    grade_type:'',
-    grade:undefined,
+  "previousCompanyName": "Tesla",
+  "designation": "CEO",
+  "startDate": "2020-12-02",
+  "presentlyWorking": true,
+  "endDate": "",
     documents:[
       {
         fileType:'',
@@ -28,13 +28,22 @@ const employeeData=[ {
 
 ]
 
-const EmployeeEducation = () => {
+const PreviousWork = () => {
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
 
   const [open,setOpen]=useState(false);
   const handleAddEducation = (data,endpoint) => {
     setEndpoint(endpoint)
+    // if(data?.documents.length===0){
+    //   data.documets=[
+    //     {
+    //       fileType:'',
+    //       fileName:'',
+    //       fileContent:''
+    //   },
+    // ]
+    // }
     setEmployeeDataToEditOrCreate(prev=>(data));
   };
   
@@ -64,7 +73,22 @@ const EmployeeEducation = () => {
 
         }
     ]
-    const [employeeEducation,setEmployeeEducation] =useState( [])
+    const [employeeEducation,setEmployeeEducation] =useState([{
+      "companyName": "Newcomp22",
+      "employeeId": "NEWC19",
+      "previousCompanyName": "Tesla",
+      "designation": "CEO",
+      "startDate": "2020-12-02",
+      "presentlyWorking": true,
+      "endDate": null,
+      "documents":[
+        {
+          fileType:'',
+          fileName:'',
+          fileContent:''
+      }
+    ]
+    }])
     const [expanded, setExpanded] = useState(Array(employeeEducation?.length).fill(false));
     const tabIndex=1;
 
@@ -77,12 +101,12 @@ const EmployeeEducation = () => {
   
 
    const ApiHit=()=>{
-    let data = JSON.stringify({
+    const data = JSON.stringify({
       "companyId": "COMP5",
       "employeeId": "NEWC19"
     });
      
-    let config = {
+    const config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getEducationDetails',
@@ -100,19 +124,28 @@ const EmployeeEducation = () => {
     })
     .catch((error) => {
       console.log(error);
+      setEmployeeEducation([{
+        "companyName": "Newcomp22",
+        "employeeId": "NEWC19",
+        "previousCompanyName": "Tesla",
+        "designation": "CEO",
+        "startDate": "2020-12-02",
+        "presentlyWorking": true,
+        "endDate": null,
+      }])
     });
    }
 
    useEffect(()=>{
 
-    ApiHit();
+   //  ApiHit();
      // eslint-disable-next-line react-hooks/exhaustive-deps
    },[])
 
    
   return (
     <>
-      <CreateEducation open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+      <CreatePreviousWork open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
@@ -131,18 +164,18 @@ const EmployeeEducation = () => {
                           
                { (!expanded[index])?  <>
                <Typography>
-                <span style={{fontWeight:700}}>Name Of The Degree : </span> {itm?.nameOfTheDegree}  
+                <span style={{fontWeight:700}}>Company Name : </span> {itm?.previousCompanyName}  
                 <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
              
               </Typography>
-                <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing}
+                <Typography><span style={{fontWeight:600}}>Designation :  </span>  {itm?.designation}</Typography>
+                <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate}
                 
                 </Typography>
                   </>
                  :<>
                                 <Typography>
-                            <span style={{fontWeight:700}}>Name Of The Degree : </span> {itm?.nameOfTheDegree}  
+                            <span style={{fontWeight:700}}> Company Name : </span> {itm?.previousCompanyName}  
 
                             <Grid>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
@@ -150,12 +183,14 @@ const EmployeeEducation = () => {
                            </Grid>
                             </Typography>
                           
-                            <Typography><span style={{fontWeight:600}}>Stream :  </span>  {itm?.stream}</Typography>
-
-                            <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                            <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing} </Typography>
-                          <Typography><span style={{fontWeight:600}}>Grade Type : </span> {itm?.gradeType}</Typography>
-                          <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
+                            <Typography><span style={{fontWeight:600}}>Designation :  </span>  {itm?.designation}</Typography>
+                            <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate}
+                            
+                            </Typography>
+                            <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate}
+                            
+                            </Typography>
+                           
 
                         <FilesGrid dataFiltered={itm?.documents} />
 
@@ -171,4 +206,4 @@ const EmployeeEducation = () => {
   )
 }
 
-export default EmployeeEducation
+export default PreviousWork
