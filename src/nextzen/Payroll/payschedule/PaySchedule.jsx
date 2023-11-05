@@ -20,6 +20,7 @@ import {
   useTheme,
 } from '@mui/material';
 import GeneralForminfo from './GeneralForminfo';
+import PayScheduleform from './PayScheduleform';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -109,7 +110,8 @@ export default function BasicCard() {
   // }
   return (
     <>
-      <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
+      {/* <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} /> */}
+     
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="getallPaySchedule"
@@ -117,6 +119,7 @@ export default function BasicCard() {
         rowActions={actions}
         filterName="PayScheduleFilterSearch"
         // buttonFunction={}
+       
       />
     </>
   );

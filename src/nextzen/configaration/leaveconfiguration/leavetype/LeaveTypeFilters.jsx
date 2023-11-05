@@ -50,8 +50,8 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-import ExpenseClaimConfiguration from './ExpenseClaimConfiguration';
-import ExpenseClaimForm from './ExpensiveClaimForm';
+
+import LeaveTypeForm from './LeaveTypeForm';
 
 const defaultFilters = {
   name: '',
@@ -89,7 +89,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ExpenseClaimFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function LeaveTypeFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
   const departmentName = [
     'HR',
@@ -271,7 +271,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
           
         </Grid>
         <Grid item>
-       <ExpenseClaimForm/>
+       <LeaveTypeForm/>
        </Grid>
         <Grid item>
         <Grid>
@@ -403,15 +403,15 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
   );
 }
 
-// ExpenseClaimFilters.propTypes={
+// LeaveTypeFilters.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-ExpenseClaimFilters.propTypes = {
+LeaveTypeFilters.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
 };
 
-ExpenseClaimFilters.propTypes = {
+LeaveTypeFilters.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,

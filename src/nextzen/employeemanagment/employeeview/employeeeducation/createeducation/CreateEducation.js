@@ -517,7 +517,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
           Submit
         </Button> */}
       </form>
-    </Card>
+             </Card>
 
 
 

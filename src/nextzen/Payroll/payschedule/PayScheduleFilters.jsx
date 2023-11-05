@@ -50,6 +50,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
+import PayScheduleform from './PayScheduleform';
 
 const defaultFilters = {
   name: '',
@@ -254,18 +255,29 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
 
   return (
     <>
-      <Grid container alignItems="center" paddingBottom="10px">
-        <Grid md={8} xs={8} item>
-          <TextField
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="flex-end"
+        direction="row"
+        style={{ marginBottom: '1rem' }}
+      >
+        <Grid item>
+        <TextField
             placeholder="Search...."
-            fullWidth
+             fullWidth
              onChange={handleSearch}
           />
+          
         </Grid>
-
-        <Grid md={4} xs={4} item>
-          <Grid>
+        <Grid item>
+        <PayScheduleform/>
+        </Grid>
+        <Grid item>
+        <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
