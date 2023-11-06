@@ -14,8 +14,12 @@ import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 
 // employee Management
 
-const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
-const EmployeeView = lazy(() => import('../../nextzen/employeemanagment/employeeview/EmployeeView'));
+const EmployeeManagementHome = lazy(() =>
+  import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome')
+);
+const EmployeeView = lazy(() =>
+  import('../../nextzen/employeemanagment/employeeview/EmployeeView')
+);
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -100,9 +104,9 @@ const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
 
-const PaySchedule = lazy(()=> import('src/nextzen/Payroll/payschedule/PaySchedule'))
+const PaySchedule = lazy(() => import('src/nextzen/Payroll/payschedule/PaySchedule'));
 
-const PayScheduleform = lazy(()=> import('src/nextzen/Payroll/payschedule/PayScheduleform'));
+const PayScheduleform = lazy(() => import('src/nextzen/Payroll/payschedule/PayScheduleform'));
 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
@@ -123,6 +127,8 @@ const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal')
 // const ExpensClaimConfiguration = lazy(()=> import('src/nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
 
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+// factory
+const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -163,9 +169,9 @@ export const dashboardRoutes = [
           { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OnBoardForm />},
-          
-          { path: 'employeeview', element: <EmployeeView />},
+          { path: 'onboardform', element: <OnBoardForm /> },
+
+          { path: 'employeeview', element: <EmployeeView /> },
           //  { path: ':id/edit', element: <Edits /> },
           // { path: 'reusetable', element: <ReuseTable /> },
           //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
@@ -193,8 +199,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Leave />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -202,8 +206,6 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeSheet />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -211,8 +213,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Shift />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -220,8 +220,6 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeApprovals />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -229,11 +227,8 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeProject />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
-
 
       {
         path: 'claims',
@@ -241,8 +236,6 @@ export const dashboardRoutes = [
           { element: <Claims />, index: true },
           { path: 'compoffapprove', element: <CompoffApprove /> },
           { path: 'mycompoff', element: <MyCompoff /> },
-          
-          
         ],
       },
 
@@ -251,9 +244,8 @@ export const dashboardRoutes = [
         children: [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-          {path: 'payschedule',element:<PaySchedule/>},
-          {path:':id/payscheduleform',element:<PayScheduleform/>}
-          
+          { path: 'payschedule', element: <PaySchedule /> },
+          { path: ':id/payscheduleform', element: <PayScheduleform /> },
         ],
       },
       {
@@ -261,8 +253,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Itdeclaration />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -270,8 +260,6 @@ export const dashboardRoutes = [
         children: [
           { element: <MonthlyDeductions />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
 
@@ -280,8 +268,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Appraisal />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       // {
@@ -358,6 +344,15 @@ export const dashboardRoutes = [
       { path: 'kanban', element: <KanbanPage /> },
       { path: 'permission', element: <PermissionDeniedPage /> },
       { path: 'blank', element: <BlankPage /> },
+      {
+        path: 'factory',
+        children: [
+          {
+            element: <FactoryIndex />,
+            index: true,
+          },
+        ],
+      },
     ],
   },
 ];

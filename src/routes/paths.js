@@ -269,5 +269,8 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
+    factory:{
+      factory:`${ROOTS.DASHBOARD}/factory`,
+    }
   },
 };
