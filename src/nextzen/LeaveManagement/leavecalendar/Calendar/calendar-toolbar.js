@@ -55,7 +55,7 @@ export default function CalendarToolbar({
         direction="row"
         alignItems="center"
         justifyContent="center"
-        sx={{ p: 2.5, pr: 2, position: 'relative' }}
+        sx={{  pr: 2, position: 'relative' }}
       >
         {/* {smUp && (
           <Button
