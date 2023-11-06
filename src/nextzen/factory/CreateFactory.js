@@ -41,9 +41,14 @@ export default function CreateFactory({ currentUser, handleClose }) {
   });
 
   const {
+    reset,
+    watch,
+    control,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const values = watch();
 
   const statusOptions = ['Active', 'Inactive'];
   const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
@@ -54,7 +59,7 @@ export default function CreateFactory({ currentUser, handleClose }) {
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
-
+    data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
 
