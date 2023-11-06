@@ -22,7 +22,9 @@ import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from '../employeeabout/EmployeeAboutEdit';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import StatouryForm  from '../../statoury/StatouryForm';
 
 
 
@@ -30,48 +32,68 @@ import EmployeeAboutEdit from '../employeeabout/EmployeeAboutEdit';
 
 export default function Statoury({  delivery, shippingAddress, payment }) {
 
+  const [statouryCreateOpen,setStatouryCreateOpen]=useState(false);
+  const [employeeStatouryData,setEmployeeStatouryData]=useState({})
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
-        setOpen(true);
+      setStatouryCreateOpen(true);
     }
     const handleEditClose=()=>{
         setOpen(false);
+        
     }
+    const handleStatouryCreateClose=()=>{
+      setStatouryCreateOpen(false);
+      
+  }
+
+  const getEmployeeStattuory=()=>{
+  
+        let data1 = JSON.stringify({
+        "EmployeeID": "INFO1"
+        });
+
+        let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${baseUrl}getStatutoryDetailsEmployee`,
+        headers: { 
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+          'Content-Type': 'application/json'
+        },
+        data : data1
+        };
+
+        axios.request(config)
+        .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setEmployeeStatouryData(response.data.data)
+        })
+        .catch((error) => {
+        console.log(error);
+        });
+
+  }
     const currentEmployee={
-        "employeeID": "ibm1",
-        "firstName": "ram",
-        "middleName": null,
-        "lastName": "r",
-        "emailID": "anilraina0310@gmail.com",
-        "contactNumber": 8908765334,
-        "emergencyContactNumber": null,
-        "dateOfBirth": "2023-02-11",
-        "fatherName": "nithya",
-        "motherName": "abc",
-        "maritalStatus": "unmarried",
-        "nationality": "indian",
-        "religion": "hindu",
-        "bloodGroup": "A+",
-        "offerDate": "2022-03-03",
-        "joiningDate": "2022-03-03",
-        "pAddressLine1": "robersonpet",
-        "pAddressLine2": "bpet",
-        "pCity": "blore",
-        "pState": "kolar",
-        "pPincode": 64286,
-        "rAddressLine1": "2,304,d",
-        "rAddressLine2": "bbb",
-        "rCity": "canada",
-        "rState": "kolar",
-        "rPincode": 84686,
-        "employmentType": null,
-        "departmentName": null,
-        "Designation": null,
-        "gradeName": null,
-        "ctc": null,
-        "workingLocation": null,
-        "reportingManagerName": null
-    }
+      "companyID": "COMP1",
+      "employeeID": "info1",
+      "employeeName": "nikitha v",
+      "uan": 123456789,
+      "pfType": "Kerela",
+      "pfNumber": 98765,
+      "esicNumber": 1234567890,
+      "ptNumber": 54321,
+      "lwfNumber": "LWF123",
+      "panNumber": "ABCDE1234F",
+      "aadharNumber": "123456789012",
+      "passportNumber": "AB123456",
+      "accountNumber": 9876543210,
+      "accountHolderName": "John Doe",
+      "bankName": "Example Bank",
+      "ifscCode": "EXMP1234567",
+      "bankBranch": "Main Branch"
+  }
+
   const { logout } = useAuthContext();
   const popover = usePopover();
   const[bunkData,setBunkData]=useState({})
@@ -107,14 +129,16 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   },[])
 
   const handleChange=(e,field)=>{
-    
-
-    
-  
+ 
 }
+
+ const handleAddStatuory=()=>{
+  setStatouryCreateOpen(true)
+ }
  
   const renderCustomer = (
     <>
+   
     <Grid padding="5px" container flexDirection="row" alignItems="center" justifyContent="space-between"> 
       <Grid item>
         <Grid container flexDirection="row" spacing={1} alignItems="center"  >
@@ -259,12 +283,28 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
     </>
   );
 
+
+ 
+
+  
+
+
+  
+  
+  
+ 
+  
+
+  
+
+  
+  
   const renderAbout = (
     <>
-    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose}/>
+    
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
-        <Typography variant='h5' component="body">General Information</Typography>
+        <Typography variant='h5' component="body">Statoury Information</Typography>
 
         </Grid>
         <Grid item>
@@ -285,102 +325,55 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-            First Name
+          Aadhar Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.firstName}
+          {currentEmployee?.aadharNumber}
           </Box>
                
          
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Middle Name
+          Pan Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.middleName}
+          {currentEmployee?.panNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          last Name
+          Passport Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.lastName}
+          {currentEmployee?.passportNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Personal emailID
+          Accountholder Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.emailID}
+          {currentEmployee?.accountholderName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Contact Number
+          Bank Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.contactNumber}
+          {currentEmployee?.bankName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Emergency ContactNumber
+          Bank Branch
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.emergencyContactNumber}
           </Box>
         </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Date Of Birth
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.dateOfBirth}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Father Name
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.fatherName}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Mother Name
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.motherName}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Marital Status
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.maritalStatus}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Nationality
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.nationality}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          religion
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.religion}
-          </Box>
-        </Stack>
+        
         {/* <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
             Tracking No.
@@ -397,85 +390,60 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
        
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Blood Group
+          Bank Account Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.bloodGroup}
+          {currentEmployee?.bankAccountNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Offer Date
+          IFSC Code
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.offerDate}
+          {currentEmployee?.ifscCode}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Joining Date
+          PF Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.joiningDate}
+          {currentEmployee?.pfNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Employment Type
+          ESIC Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.employmentType}
+          {currentEmployee?.esicNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Department Name
+          PT Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.departmentName}
+          {currentEmployee?.ptNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Designation
+          lwf Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.Designation}
+          {currentEmployee?.lwfNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Grade Name
+          UAN
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.gradeName}
+          {currentEmployee?.uan}
           </Box>
         </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Working Location
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.workingLocation}
-          </Box>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Reporting Manager Name
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.reportingManagerName}
-          </Box>
-        </Stack>
-       
-        {/* <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-            Tracking No.
-          </Box>
-          <Link underline="always" color="inherit">
-            {delivery?.trackingNumber}
-          </Link>
-        </Stack> */}
       </Stack>
 
 
@@ -495,6 +463,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         //   </IconButton>
         // }
       />
+      
        <Grid container spacing={20}>
 
                     <Grid item>
@@ -621,6 +590,21 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   );
 
   return (
+    <>
+    {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
+    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={employeeStatouryData}/>
+
+    {!employeeStatouryData && 
+    
+        <Grid container alignItems="center" justifyContent="flex-end" >
+          <Grid alignSelf='flex-end' item>
+          <Button 
+           onClick={handleAddStatuory}
+          >+Add Statoury</Button>
+          </Grid>
+        </Grid>
+        }
+        
     <Card sx={{ marginTop: '30px' }}>
       {/* {renderCustomer} */}
 
@@ -630,12 +614,13 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {renderShipping}
+      {/* {renderShipping}
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
       {/* {renderPayment} */}
     </Card>
+    </>
   );
 }
 

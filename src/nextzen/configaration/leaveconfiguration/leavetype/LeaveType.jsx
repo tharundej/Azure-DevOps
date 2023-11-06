@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import Button from '@mui/material/Button';
+import { Dialog,Grid,TextField,InputAdornment} from '@mui/material';
+import { Container } from '@mui/system';
+import { BasicTable } from '../../../Table/BasicTable';
+import LeaveTypeForm from './LeaveTypeForm';
+import Iconify from 'src/components/iconify/iconify';
 
 export default function LeaveType() {
     const TABLE_HEAD = [
@@ -24,7 +29,7 @@ export default function LeaveType() {
       "search": "",
       "companyId": "COMP1",
       "externalFilters": {
-        "payscheduleType": "weekly7",
+        "payscheduleType": "",
         "employmentType": "",
         "basicPayPercentage":"",
         "hraPercentage":"",
@@ -33,7 +38,7 @@ export default function LeaveType() {
         "employerPfPercentage":"",
         "employeePfPercentage":"",
         "esicPercentage":"",
-        "tdsPercentage":"10"
+        "tdsPercentage":""
       },
       "sort": {
         "key": 1,
@@ -61,6 +66,7 @@ export default function LeaveType() {
         window.removeEventListener('resize', handleResize);
       };
     }, []);
+    
     return (
       
         <BasicTable
@@ -68,7 +74,7 @@ export default function LeaveType() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
+          filterName="LeaveTypeFilterSearch"
         />
-      
     );
   }

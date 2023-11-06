@@ -59,6 +59,14 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 export default function MyClaims({ currentUser ,}) {
 
+  const claim_type = [
+    { code: '', label: '', phone: '' },
+    { code: 'AD', label: 'Travel', phone: '376' },
+    { code: 'AD', label: 'Medical', phone: '376' },
+    { code: 'AD', label: 'Hotel', phone: '376' },
+
+  ]
+
   // const defaultPayload = {
   //   "count":5,
   //   "page":0
@@ -142,23 +150,23 @@ const handleClick=()=>{
   ];
 
   const externalFilter = {
-    claimStartDate: "",
-    claimEndDate: "",
-    expenseStartDate: "",
-    expenseEndDate: "",
+    
+    claim_start_date: "",
+    claim_end_date: "",
     status: "",
-    paymentStatus: ""
+    claim_type: ""
+
   }
    const dialogConfig={
-    title: 'Dynamic Dialog Example',
+    title: 'Claim Filters',
     fields: [
 
-      { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-      // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
-      { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+      // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
+      // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'Claim Start Date', name: 'claim_start_date',category:"claim",  },
+      { type: 'datePicker', label: 'Claim End Date', name: 'claim_end_date',category:"claim",  },
+      { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
+      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   } 
@@ -226,11 +234,14 @@ const handleClick=()=>{
 
   const defaultValues = useMemo(
     () => ({
-      claim_amount: currentUser?.claim_amount || '',
-      comments: currentUser?.comments || '',
-      // image_name: currentUser?.image_name || '',
-      // image_data: currentUser?.image_data || '',
+      amount: currentUser?.amount || null ,
+      comment: currentUser?.comment || '',
+      type_oc_claim: currentUser?.type_oc_claim|| '',
+      // currency:currentUser?.currency|| '',
 
+      // company_id:currentUser?.company_id|| '',
+      // employee_id:currentUser?.employee_id|| '',
+      // expense_config_id:currentUser?.expense_config_id|| '',
 
     }),
     [currentUser]
@@ -251,21 +262,22 @@ const handleClick=()=>{
   } = methods;
 
   const values = watch();
-
+console.log(defaultValues,"defaultValues")
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
+    console.log(data,"defaultValues111")
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      // data.company_id = '0001';
+      // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post('http://192.168.0.184:3001/erp/q', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -361,34 +373,34 @@ const handleClick=()=>{
 
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
               <RHFAutocomplete
-                name="country"
+                name="type_oc_claim"
                 label="Type Of Claim"
-                options={countries.map((country) => country.label)}
+                options={claim_type.map((claimtype) => claimtype.label)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
+                // renderOption={(props, option) => {
+                //   const { code, label, phone } = countries.filter(
+                //     (country) => country.label === option
+                //   )[0];
 
-                  if (!label) {
-                    return null;
-                  }
+                //   if (!label) {
+                //     return null;
+                //   }
 
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
+                //   return (
+                //     <li {...props} key={label}>
+                //       <Iconify
+                //         key={label}
+                //         icon={`circle-flags:${code.toLowerCase()}`}
+                //         width={28}
+                //         sx={{ mr: 1 }}
+                //       />
+                //       {label} ({code}) +{phone}
+                //     </li>
+                //   );
+                // }}
               />
-              <RHFAutocomplete
+              {/* <RHFAutocomplete
                 name="country"
                 label=" Currency for Reimbursement"
                 options={countries.map((country) => country.label)}
@@ -415,10 +427,10 @@ const handleClick=()=>{
                     </li>
                   );
                 }}
-              />
+              /> */}
 
 
-              <RHFTextField name="claim_amount" label="Claim Amount" />
+              <RHFTextField name="amount" label="Claim Amount" />
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
@@ -433,7 +445,7 @@ const handleClick=()=>{
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comments" label="comments" />
+              <RHFTextField name="comment" label="comments" />
               {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
               <Grid sx={{ alignSelf: "flex-end" }}>
 
