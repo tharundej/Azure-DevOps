@@ -221,13 +221,23 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     getTableData(initialDefaultPayload);
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [initialDefaultPayload])
 
  
 
   const getTableData = (payload) => {
 
-    
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
+    // if(actionType === 'pageChange'){
+    //   initialDefaultPayloadCopy.Page = data;
+    // }
 
     const config = {
 
@@ -683,7 +693,7 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' , height: 400, width: '100%' }}>
+          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' ,  width: '100%' }}>
 
             <TableSelectedAction
 
@@ -729,8 +739,8 @@ const [sortColumn, setSortColumn]=useState("")
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
-                component={Paper}
-                style={{ height: 400, width: '100%', position:"sticky"}}
+                // component={Paper}
+                // style={{ height: 400, width: '100%', position:"sticky"}}
 
                   order={table.order}
 
