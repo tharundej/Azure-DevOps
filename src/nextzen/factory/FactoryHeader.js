@@ -67,7 +67,7 @@ const FactoryHead = ({ filterSearch, filterData }) => {
               <Button
                 variant="outlined"
                 onClick=""
-                startIcon={<Iconify icon="mingcute:add-line" />}
+                startIcon={<Iconify icon="formkit:downloadcloud" />}
                 sx={{ margin: '20px' }}
               >
                 Export
