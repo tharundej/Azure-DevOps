@@ -20,15 +20,23 @@
       "presets": ["@babel/preset-react"]
     }
   },
-  // "settings": {
-  //   "import/resolver": {
-  //     "alias": {
-  //       "map": [["src", "./src"]],
-  //       "extensions": [".js", ".jsx", ".json"]
-  //     },
-  //     "caseSensitive": false
-  //   }
-  // },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [["src", "./src"]],
+        "extensions": [".js", ".jsx", ".json"]
+      },
+      "caseSensitive": false
+    }
+  },
+  
+    // "settings": {
+    //   "import/resolver": {
+    //     "node": {
+    //       "extensions": [".js", ".jsx", ".ts", ".tsx"]
+    //     }
+    //   }
+    // },
   "rules": {
     "no-alert": 0,
     "camelcase": 0,

@@ -402,11 +402,10 @@ export function useNavData() {
       //     },
       //   ],
       // },
-      //factory
+      // factory
       {
         subheader: 'factory',
         items: [
-         
           {
             title: t('factory'),
             path: paths.dashboard.factory.factory,

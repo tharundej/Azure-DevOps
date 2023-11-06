@@ -10,20 +10,18 @@ import { BasicTable } from '../Table/BasicTable';
 
 const FactoryTable = () => {
   const actions = [
-    { name: 'Approve', icon: 'hh', id: 'approve', type: 'serviceCall', endpoint: '/accept' },
-    { name: 'View', icon: 'hh', id: 'view' },
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
   ];
   const [filterOptions, setFilterOptions] = useState({
     dates: [
       {
-        display: 'Joining Date',
-        field_name: 'joining_date',
+        display: 'Established Date',
+        field_name: 'EstablishedDate',
       },
       {
-        display: 'Offer Date',
-        field_name: 'offer_date',
+        display: 'Operational Date',
+        field_name: 'OperationalDate',
       },
     ],
     dropdowns: [
@@ -32,11 +30,7 @@ const FactoryTable = () => {
         options: ['active', 'inactive'],
         field_name: 'status',
       },
-      {
-        display: 'Employement Type',
-        options: ['Permanent', 'Contract'],
-        field_name: 'employement_type',
-      },
+      
     ],
   });
   const [bodyContent, setBodyContent] = useState([]);
@@ -104,45 +98,20 @@ const FactoryTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    {
-      id: 'employeeId',
-      label: 'Employee ID',
-      type: 'text',
-      containesAvatar: true,
-      minWidth: '180px',
-      secondaryText: 'name',
-    },
-    { id: 'firstName', label: 'First name', type: 'text', minWidth: '180px' },
-    { id: 'middleName', label: 'Middle Name ', type: 'text', minWidth: '180px' },
-    { id: 'lastName', label: 'Last Name', type: 'text', minWidth: '180px' },
-    { id: 'emailID', label: 'Email ID', type: 'text', minWidth: '180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth', type: 'text', minWidth: '180px' },
-    { id: 'fatherName', label: 'Father Name ', type: 'text', minWidth: '180px' },
-    { id: 'motherName', label: 'Mother Name', type: 'text', minWidth: '180px' },
-    { id: 'maritalStatus', label: 'Marital Status', type: 'text', minWidth: '180px' },
-    { id: 'nationality', label: 'Nationality', type: 'text', minWidth: '180px' },
-    { id: 'religion', label: 'religion', type: 'text', minWidth: '180px' },
-    { id: 'bloodGroup', label: 'Blood Group', type: 'text', minWidth: '180px' },
-    { id: 'offerDate', label: 'Offer Date', type: 'text', minWidth: '180px' },
-
-    { id: 'joiningDate', label: 'Joining Date', type: 'text', minWidth: '180px' },
-    { id: 'pAddressLine1', label: 'pAddressLine1', type: 'text', minWidth: '180px' },
-    { id: 'pAddressLine2', label: 'pAddressLine2', type: 'text', minWidth: '180px' },
-    { id: 'pCity', label: 'p City', type: 'text', minWidth: '180px' },
-    { id: 'pState', label: 'p State ', type: 'text', minWidth: '180px' },
-    { id: 'pPincode', label: 'p Pincode', type: 'text', minWidth: '180px' },
-    { id: 'employmentType', label: 'EmploymentType', type: 'text', minWidth: '180px' },
-    { id: 'departmentId', label: 'DepartmentId', type: 'text', minWidth: '180px' },
-    { id: 'designationName', label: 'Designation Name', type: 'text', minWidth: '180px' },
-    { id: 'designationGrade', label: 'Designatio Grade', type: 'text', minWidth: '180px' },
-    { id: 'workingLocation', label: 'Working Location', type: 'text', minWidth: '180px' },
-
-    { id: 'roleName', label: 'roleName', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'FactoryName', label: 'Factory Name', type: 'text', minWidth: '180px' },
+    { id: 'Incharge EmailID', label: 'Incharge  Email ID', type: 'text', minWidth: '180px' },
+    { id: 'PhoneNo', label: 'Phone No', type: 'text', minWidth: '180px' },
+    { id: 'Address', label: 'Address', type: 'text', minWidth: '180px' },
+    { id: 'EstablishedDate ', label: 'Established Date', type: 'text', minWidth: '180px' },
+    { id: 'OperationalDate ', label: 'Operational Date', type: 'text', minWidth: '180px' },
+    { id: 'CloseDate', label: 'Close Date', type: 'text', minWidth: '180px' },
+    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
       <Helmet>
-        <title> Dashboard: Employees</title>
+        <title> Dashboard: Factory</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
@@ -150,7 +119,7 @@ const FactoryTable = () => {
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="EmployeeFilterSearch"
+        filterName="FactoryHead"
       />
     </>
   );
