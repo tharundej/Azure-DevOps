@@ -15,16 +15,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 export default function CreateFactory({ currentUser, handleClose }) {
   const NewUserSchema = Yup.object().shape({
-    project_name: Yup.string(),
+    name: Yup.string(),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      project_name: currentUser?.project_name || '',
-      start_date: currentUser?.start_date || '',
-      end_date: currentUser?.end_date || '',
-      due_date: currentUser?.due_date || '',
+      name: currentUser?.name || '',
+      emailID: currentUser?.emailID || '',
+      phoneNo: currentUser?.phoneNo || '',
+      address: currentUser?.address || '',
+      bankName: currentUser?.bankName || '',
+      nameAsPerBank: currentUser?.nameAsPerBank || '',
+      accountNo: currentUser?.accountNo || '',
+      ifscCode: currentUser?.ifscCode || '',
+      bankBranchName: currentUser?.bankBranchName || '',
       status: currentUser?.status || '',
     }),
     [currentUser]
@@ -36,17 +41,15 @@ export default function CreateFactory({ currentUser, handleClose }) {
   });
 
   const {
-    reset,
-    watch,
-    control,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
-
   const statusOptions = ['Active', 'Inactive'];
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const handleStatusChange = (event, newValue) => {
+    setSelectedStatus(newValue);
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
@@ -83,24 +86,25 @@ export default function CreateFactory({ currentUser, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="Name" label="Name" />
-            <RHFTextField name="Email ID" label="Email ID" />
-            <RHFTextField name="Phone No" label="Phone No" />
-            <RHFTextField name="Address" label="Address" />
-            <RHFTextField name=" Bank Name" label=" Bank Name" />
-            <RHFTextField name="Name As Per Bank" label="Name As Per Bank" />
-            <RHFTextField name="Account No" label="Account No" />
-            <RHFTextField name="IFSC Code" label="IFSC Code" />
-            <RHFTextField name="Bank Branch Name" label="Bank Branch Name" />
-            <RHFTextField name="status" label="status" />
-            {/* <RHFAutocomplete
+            <RHFTextField name="name" label="Name" />
+            <RHFTextField name="emailID" label="Email ID" />
+            <RHFTextField name="phoneNo" label="Phone No" />
+            <RHFTextField name="address" label="Address" />
+            <RHFTextField name="bankName" label=" Bank Name" />
+            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
+            <RHFTextField name="accountNo" label="Account No" />
+            <RHFTextField name="ifscCode" label="IFSC Code" />
+            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFAutocomplete
+              name="status"
               id="status-autocomplete"
-              options={statusOptions}
-              value=""
+              options={statusOptions || []}
+              value={selectedStatus}
+              onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
                 <TextField {...params} label="Select Status" variant="outlined" />
               )}
-            /> */}
+            />
           </Box>
         </DialogContent>
         <DialogActions>
