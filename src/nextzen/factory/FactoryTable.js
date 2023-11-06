@@ -115,7 +115,7 @@ const FactoryTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/employeeDetails"
+        endpoint="/factoryDetails"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}

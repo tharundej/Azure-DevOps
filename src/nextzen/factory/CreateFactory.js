@@ -63,7 +63,7 @@ export default function CreateFactory({ currentUser, handleClose }) {
     try {
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addProject', data).then(
+      const response = await instance.post('addFactory', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
