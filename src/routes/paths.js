@@ -128,7 +128,7 @@ export const paths = {
     employee:{
       root: `${ROOTS.DASHBOARD}/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-      onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
+       onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
       
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
@@ -186,7 +186,7 @@ export const paths = {
       // demo: {
       //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       // },
-      payscheduleform:`${ROOTS.DASHBOARD}/payroll/payschedule/payscheduleform`,
+
     },
     monthlydeductions:{
       root: `${ROOTS.DASHBOARD}/monthlydeductions`,
@@ -197,7 +197,18 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/appraisal`,
      
     },
-
+    
+      configaration:{
+        root:`${ROOTS.DASHBOARD}/configaration`,
+        leaveconfiguration: `${ROOTS.DASHBOARD}/configaration/leaveconfiguration`,
+        compoffconfiguration: `${ROOTS.DASHBOARD}/configaration/compoffconfiguration`,
+        mailconfiguration: `${ROOTS.DASHBOARD}/configaration/mailconfiguration`,
+        appraisalconfiguration: `${ROOTS.DASHBOARD}/configaration/appraisalconfiguration`,
+      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configaration/expenseclaimconfiguration`,
+      shiftconfiguration: `${ROOTS.DASHBOARD}/configaration/shiftconfiguration`,
+      roleconfiguration: `${ROOTS.DASHBOARD}/configaration/roleconfiguration`,
+      },
+    
 
 
 

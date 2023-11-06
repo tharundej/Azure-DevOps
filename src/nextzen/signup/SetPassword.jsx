@@ -25,6 +25,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
 import { CardContent } from '@mui/material';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +46,11 @@ export default function AmplifyNewPasswordView() {
     // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/,
+      'Password must meet the requirements.'
+    )
+    .required('Password is required'),
     confirmPassword: Yup.string()
       .required('Confirm password is required')
       .oneOf([Yup.ref('password')], 'Passwords must match'),
@@ -77,12 +81,11 @@ export default function AmplifyNewPasswordView() {
     try {
 
       const payload ={
-        "jwt_token_string" : localStorage.getItem('jwt_access_token'),
         "password":data.password
     }
-    const response = await axios.post('http://localhost:3001/', payload);
-    console.log(response?.status)
-    if(response?.status===200){
+    const response = await axios.post(baseUrl+'newPassword', payload);
+    console.log(response?.data.code)
+    if(response?.data.code===200){
         console.log('sucess')
         router.push(paths.auth.jwt.login);
       }
@@ -94,14 +97,14 @@ export default function AmplifyNewPasswordView() {
     }
   });
 
-  const handleResendCode = useCallback(async () => {
-    try {
-      startCountdown();
-      await forgotPassword?.(values.email);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [forgotPassword, startCountdown, values.email]);
+  // const handleResendCode = useCallback(async () => {
+  //   try {
+  //     startCountdown();
+  //     await forgotPassword?.(values.email);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [forgotPassword, startCountdown, values.email]);
 
   const renderForm = (
     <Stack spacing={3} alignItems="center" sx={{
@@ -156,24 +159,6 @@ export default function AmplifyNewPasswordView() {
       >
         Update Password
       </LoadingButton>
-
-      <Typography variant="body2">
-        {`Don’t have a code? `}
-        <Link
-          variant="subtitle2"
-          onClick={handleResendCode}
-          sx={{
-            cursor: 'pointer',
-            ...(counting && {
-              color: 'text.disabled',
-              pointerEvents: 'none',
-            }),
-          }}
-        >
-          Resend code {counting && `(${countdown}s)`}
-        </Link>
-      </Typography>
-
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}

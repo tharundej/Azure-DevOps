@@ -67,17 +67,16 @@ export function useNavData() {
           //   path: paths.dashboard.general.signup,
           //   icon: ICONS.ecommerce,
           // },
-          {
-            title: t('table'),
-            path: paths.dashboard.table.root,
-            icon: ICONS.dashboard,
-          },
+          // {
+          //   title: t('table'),
+          //   path: paths.dashboard.table.root,
+          //   icon: ICONS.dashboard,
+          // },
 
           {
             title: t('Employee Management'),
             path: paths.dashboard.employee.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Leave Management'),
@@ -133,6 +132,21 @@ export function useNavData() {
             path: paths.dashboard.appraisal.root,
             icon: ICONS.user,
             
+          },
+          {
+            title:t('configaration'),
+            path:paths.dashboard.configaration.root,
+            icon:ICONS.user,
+            children: [
+              { title: t('Leave Configuration'), path: paths.dashboard.configaration.leaveconfiguration },
+              { title: t('Compoff Configuration'), path: paths.dashboard.configaration.compoffconfiguration },
+               { title: t('Mail Configuration'), path: paths.dashboard.configaration.mailconfiguration },
+               { title: t('Appraisal Configuration'), path: paths.dashboard.configaration.appraisalconfiguration },
+               { title: t('Expense Claim Configuration'), path: paths.dashboard.configaration.expenseclaimconfiguration },
+               { title: t('Shift Configuration'), path: paths.dashboard.configaration.shiftconfiguration },
+               { title: t('Role Configuration'), path: paths.dashboard.configaration.roleconfiguration },
+
+            ],
           },
           // {
           //   title: t('Configuration'),

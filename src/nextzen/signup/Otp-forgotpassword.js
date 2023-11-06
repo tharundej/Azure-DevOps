@@ -23,6 +23,7 @@ import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
 import { Grid } from '@mui/material';
 import { column } from 'stylis';
+import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -61,14 +62,15 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const apiUrl='http://localhost:3001/verifyotp';
-        const otp=data.code;
-        const Url=`${apiUrl}?otp=${otp}`
-        const response = await axios.get(Url);
-        console.log(response?.status)
-        if(response?.status===200){
+        const apiUrl='https://xql1qfwp-3001.inc1.devtunnels.ms/erp/verifyOtp';
+        const payload={
+          otp:parseInt(data.code, 10)
+        }
+        const response = await axios.post(apiUrl,payload);
+        console.log(response?.data.code)
+        if(response?.data.code===200){
             console.log('sucess')
-            router.push(paths.auth.jwt.createpassword);
+            router.push(paths.auth.jwt.setpassword);
           }
         
     //   await confirmRegister?.(data.email, data.code);
@@ -82,6 +84,8 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
+       const response = await axios.post(baseUrl+'resendOtpToUser');
+        
     } catch (error) {
       console.error(error);
     }

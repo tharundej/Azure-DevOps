@@ -9,12 +9,12 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
-
 // ----------------------------------------------------------------------
 
 // employee Management
 
 const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
+const EmployeeView = lazy(() => import('../../nextzen/employeemanagment/employeeview/EmployeeView'));
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -109,6 +109,21 @@ const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
 
+const Configaration = lazy(()=> import('../../nextzen/configaration/Configaration'));
+
+const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
+
+const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
+
+const MailConfiguration = lazy(()=> import('../../nextzen/configaration/mailconfiguration/MailConfiguration'));
+
+const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
+
+const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+
+const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+
+const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfiguration'));
 
 export const dashboardRoutes = [
   {
@@ -150,7 +165,9 @@ export const dashboardRoutes = [
           { element: <EmployeeManagementHome />, index: true },
           { path: ':id/edit', element: <Edits /> },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OnBoardForm /> },
+          { path: 'onboardform', element: <OnBoardForm />},
+          
+          { path: 'employeeview', element: <EmployeeView />},
           //  { path: ':id/edit', element: <Edits /> },
           // { path: 'reusetable', element: <ReuseTable /> },
           //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
@@ -267,6 +284,21 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         
           
+        ],
+      },
+      {
+        path:'configaration',
+        children:[
+          {
+            element: <Configaration/>,index:true
+          },
+          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
+          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+          {path:'mailconfiguration',element:<MailConfiguration/>},
+          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
+          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
+          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+          {path:'roleconfiguration',element:<RoleConfiguration/>},
         ],
       },
       {

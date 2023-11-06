@@ -5,7 +5,7 @@
     "es2021": true
   },
   
-  "plugins": ["unused-imports", "prettier"],
+  "plugins": ["unused-imports",  "prettier"],
   "extends": ["airbnb", "airbnb/hooks", "prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
@@ -20,15 +20,15 @@
       "presets": ["@babel/preset-react"]
     }
   },
-  "settings": {
-    "import/resolver": {
-      "alias": {
-        "map": [["src", "./src"]],
-        "extensions": [".js", ".jsx", ".json"]
-      },
-      "caseSensitive": false
-    }
-  },
+  // "settings": {
+  //   "import/resolver": {
+  //     "alias": {
+  //       "map": [["src", "./src"]],
+  //       "extensions": [".js", ".jsx", ".json"]
+  //     },
+  //     "caseSensitive": false
+  //   }
+  // },
   "rules": {
     "no-alert": 0,
     "camelcase": 0,
@@ -52,6 +52,9 @@
     "import/prefer-default-export": 0,
     "react/function-component-definition": 0,
     "jsx-a11y/control-has-associated-label": 0,
+    
+     
+      
 
   
     "import/no-unresolved": [

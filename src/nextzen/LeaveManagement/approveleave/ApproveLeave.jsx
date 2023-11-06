@@ -36,17 +36,17 @@ export default function Approveleave(){
         {
               id: "employee_id",
               label: "Employee Id",
-              width:"10px",
+              minWidth:"8pc",
               type: "text"
             },
-            { id: "employee", label: "Employee Name",minWidth:"10pc", type: "text"},
-            { id: "apply_date", label: "Apply Date", type: "text" },
-            {id : "net_leave_balance",label:"Leave Balance",type:"text"},
-            { id: "leave_type", label: "Leave Type", type: "text" },
-            { id: "from_date", label: "Start Date", type: "text" },
-            {id: "to_date",label:"End Date",type:"text"},
-            {id: "requested_duration",label:"Requested Duration",type:'text'},
-            {id: 'status',label:'Status',type:'text'}
+            { id: "employee", label: "Employee Name",minWidth:"10pc",type: "text"},
+            { id: "apply_date", label: "Apply Date",minWidth:"8pc", type: "text" },
+            {id : "net_leave_balance",label:"Leave Balance",minWidth:"7pc",type:"text"},
+            { id: "leave_type", label: "Leave Type",minWidth:"8pc", type: "text" },
+            { id: "from_date", label: "Start Date",minWidth:"7pc", type: "text" },
+            {id: "to_date",label:"End Date",minWidth:"7pc",type:"text"},
+            {id: "requested_duration",label:"Requested Duration",minWidth:"7pc",type:'text'},
+            {id: 'status',label:'Status',minWidth:"8pc",type:'text'}
             // { id: '', width: 88 },
 
        ]);
@@ -64,7 +64,7 @@ export default function Approveleave(){
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
-  endpoint="/listLeave"  
+  endpoint="listLeave"  
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'

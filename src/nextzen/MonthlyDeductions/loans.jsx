@@ -103,7 +103,7 @@ export default function Loans() {
    
   },
    
-      "employeeName": "",
+  
       "status": "",
       "requestAmount":"",
       "paidAmount":"",
@@ -129,7 +129,7 @@ export default function Loans() {
  }}
  className="custom-dialog"  
 >
- <ApplyLoan currentUser={{}} />
+ <ApplyLoan currentUser={{}} handleClose={handleClose} />
       </Dialog>
     )}
 <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>

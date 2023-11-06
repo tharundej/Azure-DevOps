@@ -96,12 +96,15 @@ export default function AddEmployeShift({ currentUser }) {
     console.log('uyfgv');
 
     try {
-      data.shiftConfigurationId = '3';
+      data.shiftConfigurationId = 3;
       data.supervisorId = 'ibm4';
+      data.ShiftTerm = 'weekly';
+      data.supervisorId = 'ibm4';
+      data.departmentId = '';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
       console.log(data, 'data111ugsghghh');
 

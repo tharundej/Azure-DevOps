@@ -4,8 +4,10 @@ import { useEffect, useReducer, useCallback, useMemo,useState } from 'react';
 import axios, { endpoints } from 'src/utils/axios';
 import dayjs from 'dayjs';
 //
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
+import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
@@ -63,14 +65,14 @@ export function AuthProvider({ children }) {
   const router = useRouter();
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      const accessToken = localStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken ) {
         setSession(accessToken);
 
-        const response = await axios.get(endpoints.auth.me);
+        // const response = await axios.get(endpoints.auth.me);
 
-        const { user } = response.data;
+        const { user } = {};
 
         dispatch({
           type: 'INITIAL',
@@ -113,15 +115,14 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-    //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    const response = await axios.post(endpoints.auth.login, data);
-
-    // //  const response = await axios.post('http://localhost:3001/loginuser', data);
-    // const response = await axios.post(endpoints.auth.login, data);
-  
+    //  const response = await axios.post( baseUrl + "loginUser" , data);
+    //  const response = await axios.post(endpoints.auth.login, data);
+    const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
+   const companyID = localStorage.setItem('companyID',response?.data?.companyID);
+   const employeeID = localStorage.setItem('employeeID',response?.data?.employeeID);
     const { accessToken, user } = response.data;
 
-    setSession(accessToken);
+    setSession("1");
 
     dispatch({
       type: 'LOGIN',
@@ -137,13 +138,13 @@ export function AuthProvider({ children }) {
     date: dayjs(new Date()),
   });
   // REGISTER
-  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
+  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyDateOfIncorporation,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
     console.log('hiiii')
     const data = {
       cin, 
       companyName, 
       companyRegistrationNo, 
-      companyDateOfIncorporation:formatDateToYYYYMMDD(datesUsed?.date),
+      companyDateOfIncorporation,
       companyCeoName,
       companyType,
       emailId,
@@ -157,8 +158,7 @@ export function AuthProvider({ children }) {
       securityA2
     };
       console.log(data, 'data ......');
-   
-     const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/signup', data);
+     const response = await axios.post(baseUrl+'signup', data);
     // const response = await axios.post(endpoints.auth.register, data);
 
     console.log(response)
@@ -180,6 +180,7 @@ export function AuthProvider({ children }) {
     //   },
     // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    <AmplifyNewPasswordView emailId={data.emailId}/>
   }, []);
 
 

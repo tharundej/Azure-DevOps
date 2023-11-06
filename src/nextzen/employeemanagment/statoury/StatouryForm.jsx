@@ -13,13 +13,16 @@ import { useForm } from 'react-hook-form';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import Iconify from 'src/components/iconify/iconify';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-export const StatouryForm=(currentUser)=>{
+ const StatouryForm=({currentUser,open,onHandleClose})=>{
 
-const [open, setOpen] = useState(false);
-const handleOpen = () => setOpen(true);
+// const [open, setOpen] = useState(false);
+// const handleOpen = () => setOpen(true);
+
+
 const handleClose = () => {
-  setOpen(false);
+  onHandleClose();
   reset()
 }
 
@@ -40,6 +43,7 @@ const NewUserSchema = Yup.object().shape({
   esicNumber: Yup.number(),
   ptNumber: Yup.number(),
   lwfNumber: Yup.string(),
+  pfType:Yup.string()
 });
 
 const defaultValues = useMemo(
@@ -61,6 +65,8 @@ const defaultValues = useMemo(
     ptNumber: currentUser?.ptNumber || null,
     lwfNumber: currentUser?.lwfNumber || null,
     uan: currentUser?.uan || null,
+
+    pfType:currentUser?.pfType || '',
   }),
   [currentUser]
 );
@@ -82,9 +88,9 @@ const {
 //   const values = watch();
 
 const onSubmit = handleSubmit(async (data1) => {
-  // console.log(data,'uyfgv');
-  data1.employeeID="wipr1";
-  data1.companyID="COMP3"
+   console.log(data1,'uyfgv');
+  data1.employeeID=localStorage.getItem("companyID");
+  data1.companyID=localStorage.getItem("employeeID");
   try {
    
     
@@ -94,7 +100,7 @@ const onSubmit = handleSubmit(async (data1) => {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.236:3001/erp/addStatutoryDetails',
+      url: `${baseUrl}addStatutoryDetails`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -134,9 +140,9 @@ const handleDrop = useCallback(
 );
 return (
   <>
-    <Button onClick={handleOpen}  variant="contained"
+    {/* <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Statoury</Button>
+        sx={{margin:'20px'}}>Add Statoury</Button> */}
     <Dialog
       fullWidth
       maxWidth={false}
@@ -178,10 +184,33 @@ return (
          
            
             <RHFAutocomplete
-              name="pfType"
-              label="PF Type"
-              options={payTypes.map((payType) => payType.type)}
-            />
+                name="pfType"
+                
+                label="PFType"
+                options={payTypes.map((country) => country.type)}
+                getOptionLabel={(option) => option}
+                
+                isOptionEqualToValue={(option, value) =>{ 
+                  
+                 
+                  return option === value}}
+                renderOption={(propss, option) => {
+                  const { type } = payTypes.filter(
+                    (country) => country.type === option
+                  )[0];
+
+                  if (!type) {
+                    return null;
+                  }
+
+                  return (
+                    <li {...propss} key={type}>
+                      
+                      {type} 
+                    </li>
+                  );
+                }}
+              />
             
             <RHFTextField name="uan" label="UAN Number" />
             <RHFTextField name="pfNumber" label="PF Number" />
@@ -205,6 +234,11 @@ return (
   </>
 );
 }
-// StatouryForm.propTypes = {
-//     currentUser: PropTypes.object,
-//   };
+
+export default StatouryForm;
+
+StatouryForm.propTypes = {
+    currentUser: PropTypes.object,
+    open:PropTypes.string,
+    onHandleClose:PropTypes.func
+  };

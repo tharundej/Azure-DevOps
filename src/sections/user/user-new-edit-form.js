@@ -240,7 +240,11 @@ export default function UserNewEditForm({ currentUser }) {
                 label="Country"
                 options={countries.map((country) => country.label)}
                 getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
+                
+                isOptionEqualToValue={(option, value) =>{ 
+                  
+                 
+                  return option === value}}
                 renderOption={(propss, option) => {
                   const { code, label, phone } = countries.filter(
                     (country) => country.label === option

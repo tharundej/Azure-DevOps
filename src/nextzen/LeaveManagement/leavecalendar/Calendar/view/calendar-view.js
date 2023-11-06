@@ -147,11 +147,10 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
+    url: `http://192.168.1.87.3001/erp/holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {
-    console.log(response,"holidayslistt",response?.data)
     setListOfHolidays(response?.data?.data)
   })
     .catch((error) => {
@@ -193,8 +192,7 @@ useEffect(()=>{
     type:"leave",
     color:event.color
   }));
-  
-  console.log(updatedEvents,"eventsssss")
+ 
   const HolidayEvents = listOfHolidays?
   listOfHolidays?.map((event)=>({
     title : event.holiday_name,
@@ -269,7 +267,6 @@ useEffect(()=>{
     data:  payload
     }
   axios.request(config).then((response) => {
-    console.log(response,"responsssee",response?.data)
     updateCounts(response?.data)
     setListData(response?.data)
     setLoading(false);

@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function LoanSearchFilter({filterData,filterOptions}){
+export default function SalarySearchFilter({filterData,filterOptions}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -136,6 +136,14 @@ export default function LoanSearchFilter({filterData,filterOptions}){
       },
       {
         field:'requestAmount',
+        options:[]
+      },
+      {
+        field:'approverID',
+        options:[]
+      },
+      {
+        field:'interestRate',
         options:[]
       }
     ]
@@ -247,6 +255,18 @@ export default function LoanSearchFilter({filterData,filterOptions}){
         obj[field]=value;
         setDropdown(obj);
       }
+      else if(field==="interestRate"){
+        setdropdownActivity(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="approverID"){
+        setdropdownActivity(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
     
 
         // On autofill we get a stringified value.
@@ -315,9 +335,8 @@ export default function LoanSearchFilter({filterData,filterOptions}){
 
           <Grid>
 
-                <Grid>
             <Typography> Request Date </Typography>
-     
+                <Grid>
 
             <Grid container flexDirection="row">
               <Grid item>
@@ -459,15 +478,43 @@ export default function LoanSearchFilter({filterData,filterOptions}){
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="Status">status</InputLabel>
+                <InputLabel fullWidth id="interestRate">interestRate</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="Status" />}
+                  onChange={(e)=>handleChangeDropDown(e,'interestRate')}
+                  input={<OutlinedInput label="interestRate" />}
+                  MenuProps={MenuProps}
+                >
+                  {names.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
+                
+                <Grid>
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="approverID">approverID</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownstatus}
+                  onChange={(e)=>handleChangeDropDown(e,'approverID')}
+                  input={<OutlinedInput label="approverID" />}
                   MenuProps={MenuProps}
                 >
                   {names.map((name) => (
@@ -496,14 +543,14 @@ export default function LoanSearchFilter({filterData,filterOptions}){
     
 }
 
-// LoanSearchFilter.propTypes={
+// SalarySearchFilter.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-LoanSearchFilter.propTypes={
+SalarySearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 
-LoanSearchFilter.propTypes={
+SalarySearchFilter.propTypes={
     filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           fieldName: PropTypes.string,
