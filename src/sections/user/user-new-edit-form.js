@@ -122,7 +122,7 @@ export default function UserNewEditForm({ currentUser }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      Nithin
+      
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>

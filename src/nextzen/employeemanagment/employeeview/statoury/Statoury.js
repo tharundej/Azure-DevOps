@@ -50,13 +50,13 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   const getEmployeeStattuory=()=>{
   
         let data1 = JSON.stringify({
-        "EmployeeID": "INFO1"
+        "employeeID": "info7"
         });
 
         let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${baseUrl}getStatutoryDetailsEmployee`,
+        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getStatutoryDetailsEmployee',
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
@@ -74,25 +74,25 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         });
 
   }
-    const currentEmployee={
-      "companyID": "COMP1",
-      "employeeID": "info1",
-      "employeeName": "nikitha v",
-      "uan": 123456789,
-      "pfType": "Kerela",
-      "pfNumber": 98765,
-      "esicNumber": 1234567890,
-      "ptNumber": 54321,
-      "lwfNumber": "LWF123",
-      "panNumber": "ABCDE1234F",
-      "aadharNumber": "123456789012",
-      "passportNumber": "AB123456",
-      "accountNumber": 9876543210,
-      "accountHolderName": "John Doe",
-      "bankName": "Example Bank",
-      "ifscCode": "EXMP1234567",
-      "bankBranch": "Main Branch"
-  }
+  //   const employeeStatouryData={
+  //     "companyID": "COMP1",
+  //     "employeeID": "info1",
+  //     "employeeName": "nikitha v",
+  //     "uan": 123456789,
+  //     "pfType": "Kerela",
+  //     "pfNumber": 98765,
+  //     "esicNumber": 1234567890,
+  //     "ptNumber": 54321,
+  //     "lwfNumber": "LWF123",
+  //     "panNumber": "ABCDE1234F",
+  //     "aadharNumber": "123456789012",
+  //     "passportNumber": "AB123456",
+  //     "accountNumber": 9876543210,
+  //     "accountHolderName": "John Doe",
+  //     "bankName": "Example Bank",
+  //     "ifscCode": "EXMP1234567",
+  //     "bankBranch": "Main Branch"
+  // }
 
   const { logout } = useAuthContext();
   const popover = usePopover();
@@ -123,7 +123,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   useEffect(()=>{
 
    
-  
+    getEmployeeStattuory()
    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
@@ -328,7 +328,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Aadhar Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.aadharNumber}
+          {employeeStatouryData?.aadharNumber}
           </Box>
                
          
@@ -338,7 +338,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Pan Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.panNumber}
+          {employeeStatouryData?.panNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -346,7 +346,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Passport Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.passportNumber}
+          {employeeStatouryData?.passportNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -354,7 +354,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Accountholder Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.accountholderName}
+          {employeeStatouryData?.accountholderName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -362,7 +362,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Bank Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.bankName}
+          {employeeStatouryData?.bankName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -370,7 +370,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Bank Branch
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.emergencyContactNumber}
+          {employeeStatouryData?.bankBranch}
           </Box>
         </Stack>
         
@@ -393,7 +393,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           Bank Account Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.bankAccountNumber}
+          {employeeStatouryData?.accountNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -401,7 +401,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           IFSC Code
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.ifscCode}
+          {employeeStatouryData?.ifscCode}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -409,7 +409,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           PF Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.pfNumber}
+          {employeeStatouryData?.pfNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -417,7 +417,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           ESIC Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.esicNumber}
+          {employeeStatouryData?.esicNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -425,7 +425,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           PT Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.ptNumber}
+          {employeeStatouryData?.ptNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -433,7 +433,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           lwf Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.lwfNumber}
+          {employeeStatouryData?.lwfNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -441,7 +441,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
           UAN
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.uan}
+          {employeeStatouryData?.uan}
           </Box>
         </Stack>
       </Stack>
@@ -473,7 +473,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Permanent Address Line1
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pAddressLine1}
+                    {employeeStatouryData?.pAddressLine1}
                     </Box>
                         
                     
@@ -483,7 +483,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Permanent Address Line2
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pAddressLine2}
+                    {employeeStatouryData?.pAddressLine2}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -491,7 +491,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Permanent City
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pCity}
+                    {employeeStatouryData?.pCity}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -499,7 +499,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Permanent State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pState}
+                    {employeeStatouryData?.pState}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -507,7 +507,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Permanent Pincode
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.Permanent}
+                    {employeeStatouryData?.Permanent}
                     </Box>
                     </Stack>
                    
@@ -522,7 +522,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Residential Address Line1
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rAddressLine1}
+                    {employeeStatouryData?.rAddressLine1}
                     </Box>
                         
                     
@@ -532,7 +532,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Residential Address Line2
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rAddressLine2}
+                    {employeeStatouryData?.rAddressLine2}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -540,7 +540,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Residential City
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rCity}
+                    {employeeStatouryData?.rCity}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -548,7 +548,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Residential State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rState}
+                    {employeeStatouryData?.rState}
                     </Box>
                     </Stack>
                     <Stack direction="row" alignItems="center">
@@ -556,7 +556,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
                     Residential Pincode
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rPincode}
+                    {employeeStatouryData?.rPincode}
                     </Box>
                     </Stack>
                    
@@ -592,9 +592,9 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={employeeStatouryData}/>
+    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={employeeStatouryData} employeeIDToCreate="info7" />
 
-    {!employeeStatouryData && 
+    {employeeStatouryData.accountHolderName==="" && 
     
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>

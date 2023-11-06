@@ -15,10 +15,12 @@ import Iconify from 'src/components/iconify/iconify';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
- const StatouryForm=({currentUser,open,onHandleClose})=>{
+ const StatouryForm=({currentUser,open,onHandleClose,employeeIDToCreate})=>{
 
 // const [open, setOpen] = useState(false);
 // const handleOpen = () => setOpen(true);
+
+// console.log(currentUser,'currentUser');
 
 
 const handleClose = () => {
@@ -33,7 +35,7 @@ const NewUserSchema = Yup.object().shape({
   passportNumber:Yup.string(),
 
   accountholderName: Yup.string(),
-  bankAccountNumber: Yup.string(),
+  bankAccountNumber: Yup.number(),
   bankName: Yup.string(),
   bankBranch: Yup.string(),
   ifscCode: Yup.string(),
@@ -49,48 +51,52 @@ const NewUserSchema = Yup.object().shape({
 const defaultValues = useMemo(
   () => ({
     
-    aadharNumber: currentUser?.aadharNumber || null,
-    panNumber: currentUser?.panNumber || null,
-    passportNumber: currentUser?.passportNumber || null,
+    aadharNumber: currentUser?.aadharNumber || "",
+    panNumber: currentUser?.panNumber || "",
+    passportNumber: currentUser?.passportNumber || "",
 
 
     accountholderName:currentUser?.accountholderName || '',
     bankName: currentUser?.bankName || '',
     bankBranch:currentUser?.bankBranch || '',
-    bankAccountNumber:currentUser?.bankAccountNumber || null,
-    ifscCode: currentUser?.ifscCode || null,
+    bankAccountNumber:currentUser?.bankAccountNumber || undefined,
+    ifscCode: currentUser?.ifscCode || "",
 
-    pfNumber: currentUser?.pfNumber || null,
-    esicNumber: currentUser?.esicNumber || null,
-    ptNumber: currentUser?.ptNumber || null,
-    lwfNumber: currentUser?.lwfNumber || null,
-    uan: currentUser?.uan || null,
+    pfNumber: currentUser?.pfNumber || undefined,
+    esicNumber: currentUser?.esicNumber || undefined,
+    ptNumber: currentUser?.ptNumber || undefined,
+    lwfNumber: currentUser?.lwfNumber || "",
+    uan: currentUser?.uan || undefined,
 
     pfType:currentUser?.pfType || '',
   }),
   [currentUser]
 );
 
+
+const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
+
+const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
 const methods = useForm({
   resolver: yupResolver(NewUserSchema),
   defaultValues,
 });
-const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
-//   const m2 = useForm();
-const payTypes = [{ type: 'Karnataka' }, { type: 'Kerala' }];
+
 const {
+  reset,
+  watch,
+  control,
   setValue,
   handleSubmit,
   formState: { isSubmitting },
-  reset
 } = methods;
 
-//   const values = watch();
+const values = watch();
 
 const onSubmit = handleSubmit(async (data1) => {
    console.log(data1,'uyfgv');
-  data1.employeeID=localStorage.getItem("companyID");
-  data1.companyID=localStorage.getItem("employeeID");
+  data1.employeeID=employeeIDToCreate
+  data1.companyID='COMP5'
   try {
    
     
@@ -100,7 +106,8 @@ const onSubmit = handleSubmit(async (data1) => {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${baseUrl}addStatutoryDetails`,
+      //url: `${baseUrl}addStatutoryDetails`,
+      url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addStatutoryDetails',
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -177,7 +184,7 @@ return (
 
 
               <RHFTextField name="accountholderName" label="Account Holder Name" />
-              <RHFTextField name="bankAccountNumber" label="Account Number" />
+              <RHFTextField name="bankAccountNumber" label="Account Number" type="number" />
             <RHFTextField name="bankName" label="Bank Name" />
             <RHFTextField name="bankBranch" label="Bank Branch" />   
             <RHFTextField name="ifscCode" label="IFSC Code" />
@@ -212,10 +219,10 @@ return (
                 }}
               />
             
-            <RHFTextField name="uan" label="UAN Number" />
-            <RHFTextField name="pfNumber" label="PF Number" />
-            <RHFTextField name="esicNumber" label="ESIC Number" />
-            <RHFTextField name="ptNumber" label="PT%" />
+            <RHFTextField name="uan" label="UAN Number" type="number" />
+            <RHFTextField name="pfNumber" label="PF Number" type="number" />
+            <RHFTextField name="esicNumber" label="ESIC Number"  type="number"/>
+            <RHFTextField name="ptNumber" label="PT%" type="number" />
             <RHFTextField name="lwfNumber" label="LWF%" />
           </Box>
         </DialogContent>
