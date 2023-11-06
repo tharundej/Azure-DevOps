@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 // sections
 import { BasicTable } from "src/nextzen/Table/BasicTable";
 import Button from '@mui/material/Button';
+
 // ----------------------------------------------------------------------
 import { _userList } from "src/_mock";
 import { paths } from 'src/routes/paths';
@@ -10,6 +11,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
+import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
+
 
 export default function MyCompoff() {
 
@@ -35,10 +38,22 @@ export default function MyCompoff() {
   const defaultPayload={
 
   
-      "employee_id":"ibm3",
-      "page":0,
-      "search":"",
-      "count":5
+    "employee_id":"",
+    "company_id":"COMP2",
+    "page":0,
+    "search":"",
+    "count":5,
+    "externalFilters":{
+      "start_date":"",
+      "end_date":"",
+      "status":"",
+      "compensantory_policies":"",
+      "utilisation":""
+    },
+    "sort":{
+      "key":1,
+      "orderBy":""
+    }
    
 }
   
@@ -78,12 +93,17 @@ export default function MyCompoff() {
       </Helmet>
       
 
-      <BasicTable
+      <SurendraBasicTable
          endpoint="/listLeave"
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
          rowActions={actions}
          bodyData = 'data'
+
+      //    button="Apply Claim"
+      // buttonFunction={handleOpen}
+      // filterContent={dialogConfig}
+      // dialogPayload={externalFilter}
         //  filterName="claimSearchFilter"
         //  onclickActions={onclickActions}
       />

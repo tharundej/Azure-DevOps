@@ -793,7 +793,8 @@ const [stateOptions,setOptions]=useState([])
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Designation Grade</InputLabel>
                 <Select
-                fullWidth
+                  
+                  fullWidth
                   labelId="demo-multiple-name-fPDesignationGrade"
                   id="demo-multiple-fPDesignationGrade"
                   multiple

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BasicTable } from '../../Table/BasicTable'
-import { StatouryForm } from './StatouryForm';
+// import { StatouryForm } from './StatouryForm';
 
 export const StatouryTable = () => {
   const [TABLE_HEAD, setTableHead] = React.useState([
@@ -81,7 +81,7 @@ export const StatouryTable = () => {
   ];
   return (
     <>
-      <StatouryForm />
+      {/* <StatouryForm /> */}
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/getStatutoryDetails"

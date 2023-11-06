@@ -198,14 +198,16 @@ export const paths = {
      
     },
     
-      // configaration:{
-      //   root:`${ROOTS.DASHBOARD}/configaration`,
-      //   LeaveConfiguration: `${ROOTS.DASHBOARD}/leaveconfiguration`,
-      // list: `${ROOTS.DASHBOARD}/user/list`,
-      // cards: `${ROOTS.DASHBOARD}/user/cards`,
-      // profile: `${ROOTS.DASHBOARD}/user/profile`,
-      // account: `${ROOTS.DASHBOARD}/user/account`,
-      // },
+      configaration:{
+        root:`${ROOTS.DASHBOARD}/configaration`,
+        leaveconfiguration: `${ROOTS.DASHBOARD}/configaration/leaveconfiguration`,
+        compoffconfiguration: `${ROOTS.DASHBOARD}/configaration/compoffconfiguration`,
+        mailconfiguration: `${ROOTS.DASHBOARD}/configaration/mailconfiguration`,
+        appraisalconfiguration: `${ROOTS.DASHBOARD}/configaration/appraisalconfiguration`,
+      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configaration/expenseclaimconfiguration`,
+      shiftconfiguration: `${ROOTS.DASHBOARD}/configaration/shiftconfiguration`,
+      roleconfiguration: `${ROOTS.DASHBOARD}/configaration/roleconfiguration`,
+      },
     
 
 
