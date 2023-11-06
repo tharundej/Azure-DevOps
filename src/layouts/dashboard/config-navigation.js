@@ -406,11 +406,7 @@ export function useNavData() {
       {
         subheader: 'factory',
         items: [
-          {
-            title: t('dashboard'),
-            path: paths.dashboard.factory.root,
-            icon: ICONS.dashboard,
-          },
+         
           {
             title: t('factory'),
             path: paths.dashboard.factory.factory,
