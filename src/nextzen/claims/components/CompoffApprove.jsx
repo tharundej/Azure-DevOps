@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from "react-helmet-async";
 // sections
 import { BasicTable } from "src/nextzen/Table/BasicTable";
@@ -119,9 +119,9 @@ const externalFilter = {
 }
 
   const actions = [
-    { name: "approve", icon: "hh", path: "jjj" },
-    { name: "view", icon: "hh", path: "jjj" },
-    { name: "eerr", icon: "hh", path: "jjj" },
+    { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
+    { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+    // { name: "eerr", icon: "hh", path: "jjj" },
   ];
   const bodyContent = [
     {
@@ -133,20 +133,56 @@ const externalFilter = {
       status: "active",
     },
   ];
+  
 
-  const onclickActions = (event) => {
-    console.log( "my claims from to basic table")
-    console.log(event)
-    if (event && event?.eventData) {
-      if (event?.eventData?.type === 'serviceCall') {
-        // serviceCall(event.eventData.endpoint,event.rowData)
+  // useEffect=(()=>{
+  //   onclickActions()
+  // },[approve])
+
+  const [approve, setApprove]= React.useState({
+
+    compensatoryRequestId:"1",
+        status: "",
+        utilisation: "1"
+
+  })
+  // console.log(approve,"approve data11111111")
+  const onclickActions = (rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+      if (eventData?.type === 'status') {
+        // handle(approve);
+           if (eventData?.name === 'Approve'){
+            setApprove(prevState => ({
+              ...prevState,
+              status: "Approve"
+          }));
+          handle(approve);
+          console.log(approve,"approve api")
+
+           }
+          
         
-      } else {
-          // navigate[event.eventData.route]
-      }
+       else{
+        setApprove(prevState => ({
+          ...prevState,
+          status: "Reject"
+      }));
+      
+
+    }
     }
   }
+    
+    else {
+          // navigate[event.eventData.route]
 
+      }
+    }
+   
+   
+  
+console.log(approve,"outside approve")
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -229,6 +265,38 @@ console.log(defaultValues,"defaultValues")
       console.error(error);
     }
   });
+
+
+  const  handle =(async (approve) => {
+    
+    console.log(approve,"approve defaultValues111")
+   
+
+    try {
+     
+      // console.log(data, 'formdata api in check');
+
+      const response = await axios.post('http://192.168.0.123:3001/erp/UpdateMycompoffdetails', approve).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  });
+
   return (
     <>
       <Helmet>
@@ -421,7 +489,7 @@ console.log(defaultValues,"defaultValues")
         dialogPayload={externalFilter}
            filterName="claimSearchFilter"
         // filterName="claimSearchFilter"
-        //  onclickActions={onclickActions}
+         onclickActions={onclickActions}
       />
     </>
   );

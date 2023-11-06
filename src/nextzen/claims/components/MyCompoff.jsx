@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from "react-helmet-async";
 // sections
 import { BasicTable } from "src/nextzen/Table/BasicTable";
@@ -44,11 +45,11 @@ import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 
 
 export default function MyCompoff({ currentUser ,}) {
-  const claim_type = [
+  const compoff_type = [
     { code: '', label: '', phone: '' },
-    { code: 'AD', label: 'Travel', phone: '376' },
-    { code: 'AD', label: 'Medical', phone: '376' },
-    { code: 'AD', label: 'Hotel', phone: '376' },
+    { code: 'AD', label: 'Encash Amount', phone: '376' },
+    { code: 'AD', label: 'Encash leave', phone: '376' },
+   
 
   ]
   const externalFilter = {
@@ -122,9 +123,9 @@ export default function MyCompoff({ currentUser ,}) {
 
 
   const actions = [
-    { name: "approve", icon: "hh", path: "jjj" },
-    { name: "view", icon: "hh", path: "jjj" },
-    { name: "eerr", icon: "hh", path: "jjj" },
+    // { name: "approve", icon: "hh", path: "jjj" },
+    { name: "Edit", icon: "hh", path: "jjj"  , type:"edit" },
+    { name: "Delete", icon: "hh", path: "jjj" , type:"delete"},
   ];
   const bodyContent = [
     {
@@ -137,18 +138,69 @@ export default function MyCompoff({ currentUser ,}) {
     },
   ];
 
-  const onclickActions = (event) => {
-    console.log( "my claims from to basic table")
-    console.log(event)
-    if (event && event?.eventData) {
-      if (event?.eventData?.type === 'serviceCall') {
-        // serviceCall(event.eventData.endpoint,event.rowData)
+  // const onclickActions = (event) => {
+  //   console.log( "my claims from to basic table")
+  //   console.log(event)
+  //   if (event && event?.eventData) {
+  //     if (event?.eventData?.type === 'serviceCall') {
+  //       // serviceCall(event.eventData.endpoint,event.rowData)
         
-      } else {
+  //     } else {
+  //         // navigate[event.eventData.route]
+  //     }
+  //   }
+  // }
+
+  // const [delete,  SetDelete] = React.useState({
+
+  //   compensatoryRequestId:"1"
+      
+
+  // });
+
+  const [del, setDel]= React.useState({
+
+    compensatoryRequestId:"",
+       
+
+  })
+
+  
+  const onclickActions = (rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+      if (eventData?.type === 'edit') {
+        console.log("kl")
+      
+      }
+      else if(eventData?.type === 'delete'){
+        console.log("delete")
+        setDel(prevState => ({
+              ...prevState,
+              compensatoryRequestId:"3",
+          }));
+
+          handle(del);
+
+      }
+          
+        
+       else{
+      //   SetApprove(prevState => ({
+      //     ...prevState,
+      //     status: "Reject"
+      // }));
+      
+
+    }
+    }
+ 
+    
+    else {
           // navigate[event.eventData.route]
+
       }
     }
-  }
 
 
   const [open, setOpen] = React.useState(false);
@@ -161,13 +213,17 @@ export default function MyCompoff({ currentUser ,}) {
   // modal 
   
   const NewUserSchema = Yup.object().shape({
-    claim_amount: Yup.string().required('Claim Amount is Required'),
-    comment: Yup.string(),
-    file_name: Yup.string(),
+    
+   
     company_id: Yup.string(),
     employee_id: Yup.string(),
-    currency: Yup.string(),
+    compensantory_configuration_id: Yup.number(),
     // file_format: Yup.string(),
+   
+    start_date: Yup.string(),
+    end_date: Yup.string(),
+    approver_id: Yup.string(),
+    reason: Yup.string(),
 
     
 
@@ -178,14 +234,35 @@ export default function MyCompoff({ currentUser ,}) {
 
   const defaultValues = useMemo(
     () => ({
-      claim_amount: currentUser?.claim_amount || null ,
-      comment: currentUser?.comment || '',
+      // claim_amount: currentUser?.claim_amount || null ,
+      
       // type_oc_claim: currentUser?.type_oc_claim|| '',
-      currency:currentUser?.currency|| '',
+      // currency:currentUser?.currency|| '',
 
-      company_id:currentUser?.company_id| 'COMP2',
-      employee_id:currentUser?.employee_id|| 'ibm3',
-      expense_config_id:currentUser?.expense_config_id|| '',
+      company_id:currentUser?.company_id|| 'COMP2',
+      employee_id:currentUser?.employee_id|| 'ibm2',
+      compensantory_configuration_id:currentUser?.compensantory_configuration_id|| 11,
+      start_date:currentUser?.start_date|| '2023-11-10',
+      end_date:currentUser?.end_date|| '2023-11-10',
+      approver_id: currentUser?.approver_id || 'ibm6',
+      reason: currentUser?.reason || '',
+
+
+
+
+  //  "employee_id":"ibm2",
+
+  // "company_id":"COMP2",
+
+  // "compensantory_configuration_id":11,
+
+  // "start_date":"2023-11-10",
+
+  // "end_date":"2023-11-10",
+
+  // "approver_id":"ibm6",
+
+  // "reason":""
 
     }),
     [currentUser]
@@ -206,34 +283,20 @@ export default function MyCompoff({ currentUser ,}) {
   } = methods;
 
   // formdata and not json
-const formData= new FormData();
+// const formData= new FormData();
 
   const values = watch();
-console.log(defaultValues,"defaultValues")
+ console.log(defaultValues,"defaultValues")
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    
     console.log(data,"defaultValues111")
-    formData.append("file", null );
-    formData.append("claim_amount", 1234 );
-    formData.append("company_id", "COMP2" );
-    formData.append("employee_id", "ibm3" );
-    formData.append("currency", "$");
-    formData.append("expense_config_id", 2);
-    formData.append("expense_date", "2023-11-12");
+   
 
     try {
-      // data.company_id = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+     
+      console.log(data, 'formdata api in check');
 
-
-
-      console.log(formData, 'formdata api in check');
-
-      const response = await axios.post('http://192.168.1.115:3000/erp/applyClaim', formData).then(
+      const response = await axios.post('http://192.168.1.79:8080/appTest/AddMycompoffdetails', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -248,6 +311,38 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  });
+
+  const  handle =(async (del) => {
+    
+    console.log(del,"del defaultValues111")
+   
+
+    try {
+     
+      // console.log(data, 'formdata api in check');
+
+      const response = await axios.post('http://192.168.1.135:3001/erp/deleteMyCompoffDetails', del).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
+    } catch (error) {
+
+      alert("api hit not done")
       console.error(error);
     }
   });
@@ -299,31 +394,12 @@ console.log(defaultValues,"defaultValues")
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
               <RHFAutocomplete
                 name="type_oc_claim"
-                label="Type Of Claim"
-                options={claim_type.map((claimtype) => claimtype.label)}
+                label="Select Compoff Type"
+                options={compoff_type.map((claimtype) => claimtype.label)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
-                // renderOption={(props, option) => {
-                //   const { code, label, phone } = countries.filter(
-                //     (country) => country.label === option
-                //   )[0];
-
-                //   if (!label) {
-                //     return null;
-                //   }
-
-                //   return (
-                //     <li {...props} key={label}>
-                //       <Iconify
-                //         key={label}
-                //         icon={`circle-flags:${code.toLowerCase()}`}
-                //         width={28}
-                //         sx={{ mr: 1 }}
-                //       />
-                //       {label} ({code}) +{phone}
-                //     </li>
-                //   );
-                // }}
+                
+               
               />
               {/* <RHFAutocomplete
                 name="country"
@@ -355,13 +431,13 @@ console.log(defaultValues,"defaultValues")
               /> */}
 
 
-              <RHFTextField name="claim_amount" label="Claim Amount" />
+              {/* <RHFTextField name="claim_amount" label="Claim Amount" /> */}
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="To"
+                    label="Start Date"
                     // value={item?.to}
                     onChange={(newValue) => {
                       handleChangeDate(newValue, 'to');
@@ -370,46 +446,23 @@ console.log(defaultValues,"defaultValues")
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="End Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                      handleChangeDate(newValue, 'End');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
               <RHFTextField name="comment" label="comments" />
               {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
-              <Grid sx={{ alignSelf: "flex-end" }}>
-
-                <Controller
-                  name="file"
-                  control={control}
-                  defaultValue={null}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type="file"
-                      accept=".doc, .pdf"
-                    />
-                  )}
-                />
-              </Grid>
-              <TextField
-                fullWidth
-                variant="outlined"
-                InputLabelProps={{ htmlFor: 'contained-button-file' }}
-                label="Upload Document"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <input
-                        accept=".doc,.pdf"
-                        style={{ display: 'none' }}
-                        id="contained-button-file"
-                        multiple
-                        type="file"
-                      />
-                      <label htmlFor="contained-button-file">
-                        {/* <CloudUploadIcon /> */}
-                        <CloudUploadIcon />
-                      </label>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+             
 
 
 
@@ -444,7 +497,7 @@ console.log(defaultValues,"defaultValues")
       filterContent={dialogConfig}
       dialogPayload={externalFilter}
          filterName="claimSearchFilter"
-        //  onclickActions={onclickActions}
+         onclickActions={onclickActions}
       />
     </>
   );

@@ -151,7 +151,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
   // const popover = usePopover();
 
@@ -409,6 +409,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
 
   const handleEditRow = (rowData,eventData) => {
+    onclickActions(rowData,eventData)
    
     console.log(rowData, eventData)
 
@@ -420,7 +421,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     else if (eventData?.type === "edit"){
    
-      buttonFunction();
+      // buttonFunction();
       
       
       // eventData?.handleOpen()
@@ -435,7 +436,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     }
 
     else{
-
+      console.log(eventData,"eventData----")
       console.log("else part..")
 
     }
@@ -1042,6 +1043,12 @@ SurendraBasicTable.propTypes = {
 SurendraBasicTable.propTypes = {
 
   dialogPayload: PropTypes.any
+
+};
+
+SurendraBasicTable.propTypes = {
+
+  onclickActions: PropTypes.any
 
 };
 
