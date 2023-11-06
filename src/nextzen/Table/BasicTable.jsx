@@ -82,6 +82,7 @@ import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
 import HolidaysFilters from '../configaration/leaveconfiguration/holidays/HolidaysFilters';
 import SalaryStructureFilters from '../employeemanagment/salarystructure/SalaryStructureFilters';
+import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWeekFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -149,10 +150,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-        // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+         url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-              //  url: `http://192.168.0.123:3001/erp/${endpoint}`,
-             url:`http://192.168.1.115:3000/erp/${endpoint}`,
+                // url: `http://192.168.0.123:3001/erp/${endpoint}`,
+            //  url:`http://192.168.1.115:3000/erp/${endpoint}`,
           //  vishal
         // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       headers: {
@@ -435,7 +436,7 @@ getTableData(payload)
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-
+       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
         <Card>
 
        
