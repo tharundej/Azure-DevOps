@@ -64,7 +64,12 @@ export default function ShiftConfigurationForm({ currentUser}) {
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
   } = methods1;
-
+  const ShiftNames=[
+    'General',
+    'Morging',
+    'AfterNoon',
+    'Night'
+  ]
 
 
   //   const values = watch();
