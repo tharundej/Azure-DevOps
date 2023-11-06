@@ -50,8 +50,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-import ExpenseClaimConfiguration from './ExpenseClaimConfiguration';
-import ExpenseClaimForm from './ExpensiveClaimForm';
+import ShiftConfigurationForm from './ShiftConfigurationForm';
 
 const defaultFilters = {
   name: '',
@@ -89,19 +88,20 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ExpenseClaimFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function ShiftConfigurationFilters({ filterData, filterOptions }) {
   const theme = useTheme();
-  const departmentName = [
-    'HR',
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
   ];
-  const designationName = [
-    'executive'
-  ]
-
-  const designationGradeName = [
-    'senior',
-    'junior'
-  ]
 
   const [dropdown, setDropdown] = useState({});
 
@@ -235,16 +235,6 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
     console.log(value);
     // console.log( typeof value === 'string' ? value.split(',') : value,)
   };
-
-  const handleApply = async () => {
-    setDatesData([]);
-    const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
-
-    //   filterData(data);
-    handleClickClose();
-  };
   const [search, setSearch]=useState("");
 
     const handleSearch = (searchTerm) => {
@@ -252,9 +242,20 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
         searchData(search)
         console.log(searchTerm,"search ........")
         };
+  const handleApply = async () => {
+    setDatesData([]);
+
+    const data1 = await formWithDropdown();
+    filterData(data1);
+    console.log(data1, ';;;');
+
+    //   filterData(data);
+    handleClickClose();
+  };
+
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
@@ -271,8 +272,8 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
           
         </Grid>
         <Grid item>
-       <ExpenseClaimForm/>
-       </Grid>
+       <ShiftConfigurationForm/>
+        </Grid>
         <Grid item>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -298,18 +299,9 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
-        >
-          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
+        <DialogContent  sx={{minWidth:"500px"}}>
+         
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel id="department_name">Department Name</InputLabel>
@@ -324,7 +316,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {departmentName.map((name) => (
+                    {names.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -346,7 +338,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {designationName.map((name) => (
+                      {names.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -360,7 +352,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
                 </Grid>
                 <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
+                <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
@@ -368,11 +360,11 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
                     multiple
                     value={dropdownDesignationGradeName}
                     onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
+                    input={<OutlinedInput label="Pay Pchedule Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {designationGradeName.map((name) => (
+                    {names.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -387,31 +379,26 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Button
           onClick={() => {
             handleApply();
           }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
         >
           Apply
         </Button>
-        </div>
       </BootstrapDialog>
     </>
   );
 }
 
-// ExpenseClaimFilters.propTypes={
+// ShiftConfigurationFilters.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-ExpenseClaimFilters.propTypes = {
+ShiftConfigurationFilters.propTypes = {
   filterData: PropTypes.func,
-  searchData: PropTypes.any,
 };
 
-ExpenseClaimFilters.propTypes = {
+ShiftConfigurationFilters.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,

@@ -9,7 +9,6 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
-
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -123,6 +122,9 @@ const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/app
 const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
 
 const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+
+const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfiguration'));
+
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -296,6 +298,7 @@ export const dashboardRoutes = [
           {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
           {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
           {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+          {path:'roleconfiguration',element:<RoleConfiguration/>},
         ],
       },
       {

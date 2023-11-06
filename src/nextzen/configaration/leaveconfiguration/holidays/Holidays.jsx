@@ -2,13 +2,15 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function LeavePeriod() {
+export default function Holidays() {
     const TABLE_HEAD = [
       { id: 'slNo', label: 'SL NO', type: 'text' },
-      { id: 'leavePeriodId', label: 'Leave Period ID', type: 'text' },
-      { id: 'leavePeriodName', label: 'Leave Period Name', type: 'text' },
-      { id: 'startDate', label: 'Start Date', type: 'text' },
-      { id: 'endDate', label: 'End date', type: 'text' },
+      { id: 'Name', label: 'Name', type: 'text' },
+      { id: 'Date', label: 'Date', type: 'text' },
+      { id: 'Full Day/Half Day', label: 'Full Day/Half Day', type: 'text' },
+      { id: 'Repeats Anually', label: 'Repeats Anually', type: 'text' },
+      { id: 'Country', label: 'Country', type: 'text' },
+      { id: 'Locations', label: 'Locations', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -78,6 +80,7 @@ export default function LeavePeriod() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
+          filterName="holidaysFilterSearch"
         />
       
     );

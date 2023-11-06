@@ -2,6 +2,11 @@ import React ,{useEffect, useState} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import {
     TextField,
@@ -25,7 +30,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,18 +39,20 @@ import * as Yup from 'yup';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
+const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
   
-  console.log(employeeData);
+
     const onSave=()=>{
+  console.log(defaultValues);
+
      const obj={
       companyId: "COMP5",
       employeeId: "NEWC19",
       education:defaultValues
      }
       
-      let config = {
+      const config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
@@ -138,20 +145,33 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
 
            
       const handleChange = (e, index, field) => {
-        const { value, id } = e.target;
-        const newObj = defaultValues;
-        const newArray = [...defaultValues];
-
+        
+        const newArray=defaultValues
        if(field==='grade' || field==="yearOfPassing"){
+        
 
         newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: parseInt(value,10)
       }
+    }
 
+      else if(field==="endDate"  || field==="startDate"){
+       // const { value, id } = e.target;
+        const newObj = defaultValues;
+       // newObj[index][field]=e;
+        newArray[index] = {
+          ...newArray[index],
+          [field]: e
+      }
 
-       }else{
+    }
+    
+    else{
+        const { value, id } = e.target;
+        const newObj = defaultValues;
+      
 
         newObj[index][field]=e?.target?.value ;
         newArray[index] = {
@@ -198,14 +218,14 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
 
       const handleAddDocument=(index)=>{
         const newArray = [...defaultValues];
-        const obj={
+        const obj1={
           fileType:'',
           fileName:'',
           fileContent:''
       }
         newArray[index].documents = [
           ... newArray[index].documents,
-          obj,
+          obj1,
         ];
     
         setDefaultValues(newArray);
@@ -234,7 +254,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
            
 
             
-          //newObj[index].doxuments.filetype=e?.target?.value ;
+          // newObj[index].doxuments.filetype=e?.target?.value ;
         
     
       const handleFileUpload = (event,index,index1) => {
@@ -243,7 +263,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
         // const { value, id } = e.target;
         // const newObj = defaultValues;
 
-          let base64String=1;
+          const base64String=1;
         const reader = new FileReader();
 
         reader.onload = function(event) {
@@ -314,13 +334,13 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
                   <TextField
                     fullWidth
                 
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
+                    name="previousCompanyName"
+                    label="Company Name"
                     variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
+                    id="previousCompanyName"
+                     value={item?.previousCompanyName}
                     onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
+                      handleChange(e, index, 'previousCompanyName');
                     }}
                   />
                 </Grid>
@@ -328,80 +348,51 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
                   <TextField
                     fullWidth
                     
-                    name="Stream"
-                    label="Stream"
-                    id="stream"
-                     value={item?.stream}
+                    name="designation"
+                    label="Designation"
+                    id="designation"
+                     value={item?.designation}
                     onChange={(e) => {
-                      handleChange(e, index, 'stream');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-              </Grid>
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                <TextField
-                    fullWidth
-                    // type="number"
-                    name="gradeType"
-                    label="Grade Type "
-                    id="university"
-                   
-                     value={item?.gradeType}
-                    onChange={(e) => {
-                      handleChange(e, index, 'gradeType');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                     type="number"
-                    name="grade"
-                    label="grade"
-                    id="yearOfPassing"
-                   
-                     value={item?.grade}
-                    onChange={(e) => {
-                      handleChange(e, index, 'grade');
+                      handleChange(e, index, 'designation');
                     }}
                     variant="outlined"
                   />
                 </Grid>
               </Grid>
 
+
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="universityName"
-                    label="University Name"
-                    variant="outlined"
-                    id="universityName"
-                     value={item?.universityName}
-                    onChange={(e) => {
-                      handleChange(e, index, 'universityName');
-                    }}
-                  />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker', 'DatePicker']}>
+                    
+                    <DatePicker
+                      label="Start Date"
+                      value={dayjs(item?.startDate)}
+                      onChange={(newval) => {
+                        handleChange(newval, index, 'startDate');
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 </Grid>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker', 'DatePicker']}>
+                    
+                    <DatePicker
+                      label="End Date"
+                      value={dayjs(item?.endDate) || ""}
+                      onChange={(newval) => {
+                        handleChange(newval, index, 'endDate');
+                      }}
+                      required={false}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 </Grid>
               </Grid>
+             
                   
               {item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -517,7 +508,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
           Submit
         </Button> */}
       </form>
-             </Card>
+    </Card>
 
 
 
@@ -537,9 +528,10 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
   )
 }
 
-export default CreateEducation
-CreateEducation.propTypes = {
+export default PreviousWork
+PreviousWork.propTypes = {
     open: PropTypes.string,
     onhandleClose:PropTypes.func,
-    employeeData:PropTypes.array
+    employeeData:PropTypes.array,
+    endpoint:PropTypes.string
   };

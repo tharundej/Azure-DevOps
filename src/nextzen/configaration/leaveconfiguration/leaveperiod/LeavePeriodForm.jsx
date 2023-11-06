@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function LeavePeriodForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,26 +33,19 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    leavePeriodId: Yup.number().required('Leave Period Id is Required'),
+    leavePeriodName: Yup.number().required('leave Period Name is Required'),
+    startDate: Yup.number().required('Start Date is Required'),
+    endDate: Yup.number().required('End Date is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
-      LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
-
+      leavePeriodId: currentUser?.leavePeriodId || null,
+      leavePeriodName: currentUser?.leavePeriodName || null,
+      startDate: currentUser?.startDate || null,
+      endDate: currentUser?.endDate || null,
     }),
     [currentUser]
   );
@@ -86,28 +79,12 @@ export default function LeaveTypeForm({ currentUser}) {
     }
   });
 
-
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px'}}>Add Leave Period</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -119,7 +96,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add Leave Period</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -131,12 +108,10 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFTextField name="leavePeriodId" label="leave Period Id" />
+                <RHFTextField name="leavePeriodName" label="leave Period Name" />
+                <RHFTextField name="startDate" label="Start Date" />
+                <RHFTextField name="endDate" label="End Date" />
               </Box>
             </DialogContent>
 
@@ -160,6 +135,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+LeavePeriodForm.propTypes = {
   currentUser: PropTypes.object,
 };
