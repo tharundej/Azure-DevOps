@@ -52,6 +52,7 @@ import CalendarFilters from '../calendar-filters';
 
 import CalendarFiltersResult from '../calendar-filters-result';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
@@ -138,6 +139,7 @@ useEffect(()=>{
 
 
   const holidayslist = (e) => {
+    console.log("holidaysss")
     const payload = {
       company_id: "COMP1",
        employee_id:"info1"
@@ -147,7 +149,7 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87.3001/erp/holidayList`,
+    url:baseUrl + `holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -263,7 +265,7 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87:3001/erp/pendingapproved`,
+    url: baseUrl + `pendingapproved`,
     data:  payload
     }
   axios.request(config).then((response) => {
