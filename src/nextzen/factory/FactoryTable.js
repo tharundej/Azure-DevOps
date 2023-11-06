@@ -43,7 +43,7 @@ const FactoryTable = () => {
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/employeeDetails',
+      url: 'http://192.168.0.222:3001/erp/factoryDetails',
       // headers: {
       //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       // },
@@ -94,7 +94,7 @@ const FactoryTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: 'employee_id',
+      orderBy: 'FactoryName',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
