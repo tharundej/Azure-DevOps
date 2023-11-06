@@ -28,6 +28,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
+import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -359,7 +360,8 @@ export default function MedicalPremium() {
       </Snackbar>
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-          <Grid
+          {/* search and filter  */}
+          {/* <Grid
             container
             spacing={2}
             alignItems="center"
@@ -389,7 +391,7 @@ export default function MedicalPremium() {
             <Grid item>
               <Button className="button">Report</Button>
             </Grid>
-          </Grid>
+          </Grid> */}
           {/* Row 1 */}
           <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
@@ -565,17 +567,17 @@ export default function MedicalPremium() {
                 medicalTableData?.map((row, rowIndex) => (
                   <TableRow key={rowIndex}>
                     {/* <TableCell>{rowIndex + 1}</TableCell> */}
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.policyNumber}</TableCell>
-                    <TableCell>{row.dateOfCommencementOfPolicy}</TableCell>
-                    <TableCell>{row.insuredPersonName}</TableCell>
-                    <TableCell>{row.relationshipType}</TableCell>
-                    <TableCell>{row.payMode}</TableCell>
-                    <TableCell>{row.policyCitizenshipType}</TableCell>
-                    <TableCell>{row.amountOfPremium}</TableCell>
-                    <TableCell>{row.eligibleDeduction}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.type}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.dateOfCommencementOfPolicy}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.relationshipType}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.payMode}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.policyCitizenshipType}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.amountOfPremium}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.eligibleDeduction}</TableCell>
 
-                    <TableCell>{row.action}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}} >{row.action}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -645,4 +647,20 @@ export default function MedicalPremium() {
 
     </div>
   );
-}
+
+  // const formFields = [
+  //   { id: 'firstName', label: 'First Name', type: 'text' },
+  //   { id: 'lastName', label: 'Last Name', type: 'text' },
+  //   { id: 'city', label: 'City', type: 'autocomplete', options: [{ label: 'New York' }, { label: 'London' }] },
+  //   { id: 'birthDate', label: 'Birth Date', type: 'date' },
+  //   // Add more form fields as needed
+  // ];
+
+  // return (
+  //   <div>
+  //     <h1>Reusable Form Example</h1>
+  //     <ReusableForm apiEndpoint="your-api-endpoint" fields={formFields} />
+  //   </div>
+  // );
+};
+

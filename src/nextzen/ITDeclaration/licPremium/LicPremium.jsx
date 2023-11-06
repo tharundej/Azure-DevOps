@@ -267,7 +267,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
     <div>
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-          <Grid
+          {/* search and filter  */}
+          {/* <Grid
             container
             spacing={2}
             alignItems="center"
@@ -297,7 +298,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
             <Grid item>
               <Button className="button">Report</Button>
             </Grid>
-          </Grid>
+          </Grid> */}
           {/* Row 1 */}
 
           <Grid item container xs={12} spacing={2}>
@@ -520,20 +521,20 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
               {policyData.length > 0 &&
                 policyData?.map((row, rowIndex) => (
                   <TableRow key={rowIndex}>
-                    <TableCell>{rowIndex + 1}</TableCell>
-                    <TableCell>{row.policyNumber}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{rowIndex + 1}</TableCell>
                     <TableCell>{row.dateOfCommencementOfPolicy}</TableCell>
-                    <TableCell>{row.employeeName}</TableCell>
-                    <TableCell>{row.relationship}</TableCell>
-                    <TableCell>{row.insuredPersonName}</TableCell>
-                    <TableCell>{row.treatmentForSpecifiedDiseas}</TableCell>
-                    <TableCell>{row.doesTheInjuredPersonhavedisability}</TableCell>
-                    <TableCell>{row.sumOfAssured}</TableCell>
-                    <TableCell>{row.premiumAmountForWhichProofAttachedNow}</TableCell>
-                    <TableCell>{row.premiumAmountFallInDue}</TableCell>
-                    <TableCell>{row.annualPremium}</TableCell>
-                    <TableCell>{row.premiumConsiderForDeduction}</TableCell>
-                    <TableCell>{row.action}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.employeeName}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.relationship}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.treatmentForSpecifiedDiseas}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.doesTheInjuredPersonhavedisability}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.sumOfAssured}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountForWhichProofAttachedNow}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.annualPremium}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumConsiderForDeduction}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.action}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

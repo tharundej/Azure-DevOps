@@ -248,15 +248,15 @@ const editRentDetails = async () => {
      "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
      "pan_number": rentDetailsData?.companyId,
      "declaration_received_from_landlord": rentDetailsData?.companyId,
-     
+     "file_name": attachedDocummentFileName ? attachedDocummentFileName :rentDetailsData?.file_name ,
      "file_content" :attachedDocumment ?attachedDocumment : rentDetailsData?.rentDocs,
-   
-   "landlord_file_content" :landlord_file_content? landlord_file_content : rentDetailsData?.landLordDocs
+     "landlord_file_name" :landlord_file_name ? landlord_file_name : rentDetailsData?.landlord_file_name,
+     "landlord_file_content" :landlord_file_content? landlord_file_content : rentDetailsData?.landLordDocs
    }
    
  
    const config = {
-  method: 'post',
+  method: 'put',
      maxBodyLength: Infinity,
      url: baseUrl + 'updateRentDeclarationDetails ',
      headers: {
@@ -317,6 +317,7 @@ const editRentDetails = async () => {
         setLandLardAddress(response?.data?.data?.addressOfLandlord)
         setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
+        setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
         response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
         setPanNumbers( response?.data?.data?.pan_number) 
 
