@@ -82,56 +82,47 @@ export function useNavData() {
             title: t('Leave Management'),
             path: paths.dashboard.leave.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Time Sheet Management'),
             path: paths.dashboard.timesheet.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Shift Management'),
             path: paths.dashboard.Shift.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Claims'),
             path: paths.dashboard.claims.root,
             icon: ICONS.user,
             // children: [
-            //   { 
-            //     title: t('profile'), 
+            //   {
+            //     title: t('profile'),
             //   path: paths.dashboard.claims.compoffapprove },
-              
-              
+
             // ],
-            
           },
           {
             title: t('Payroll'),
             path: paths.dashboard.payroll.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('IT Declaration'),
             path: paths.dashboard.itdeclaration.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Monthly Additional Deductions'),
             path: paths.dashboard.monthlydeductions.root,
             icon: ICONS.user,
-            
           },
           {
             title: t('Appraisal Management'),
             path: paths.dashboard.appraisal.root,
             icon: ICONS.user,
-            
           },
           // {
           //   title:t('configaration'),
@@ -153,12 +144,11 @@ export function useNavData() {
           //     { title: t('profile'), path: paths.dashboard.user.root },
           //     { title: t('cards'), path: paths.dashboard.user.cards },
           //     { title: t('list'), path: paths.dashboard.user.list },
-              
+
           //   ],
-            
+
           // },
-          
-          
+
           // {
           //   title: t('ecommerce'),
           //   path: paths.dashboard.general.ecommerce,
@@ -232,8 +222,6 @@ export function useNavData() {
           //     { title: t('edit'), path: paths.dashboard.product.demo.edit },
           //   ],
           // },
-
-         
 
           // INVOICE
           // {
@@ -414,6 +402,17 @@ export function useNavData() {
       //     },
       //   ],
       // },
+      // factory
+      {
+        subheader: 'factory',
+        items: [
+          {
+            title: t('factory'),
+            path: paths.dashboard.factory.factory,
+            icon: ICONS.dashboard,
+          },
+        ],
+      },
     ],
     [t]
   );
