@@ -589,10 +589,31 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
     </>
   );
 
+  const dataa= {
+    "companyID": "COMP5",
+    "employeeID": "info7",
+    "employeeName": "yukthi H",
+    "uan": 1,
+    "pfType": "TypeA",
+    "pfNumber": 1,
+    "esicNumber": 1,
+    "ptNumber": 1,
+    "lwfNumber": "1",
+    "panNumber": "1",
+    "aadharNumber": "1",
+    "passportNumber": "1",
+    "accountNumber": 0,
+    "accountHolderName": "1",
+    "bankName": "1",
+    "ifscCode": "11",
+    "bankBranch": "1"
+}
+
+
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={employeeStatouryData} employeeIDToCreate="info7" />
+    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={dataa} />
 
     {employeeStatouryData.accountHolderName==="" && 
     

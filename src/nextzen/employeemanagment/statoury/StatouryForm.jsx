@@ -1,165 +1,168 @@
+import React, { useState, useMemo } from 'react';
+import dayjs from 'dayjs';
+
+import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import { useForm, Controller,useFormContext } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
-import { useCallback, useMemo, useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-import Iconify from 'src/components/iconify/iconify';
-import axios from 'axios';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
- const StatouryForm=({currentUser,open,onHandleClose,employeeIDToCreate})=>{
+import { Button,Box,Autocomplete,TextField } from '@mui/material';
 
-// const [open, setOpen] = useState(false);
-// const handleOpen = () => setOpen(true);
+import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-// console.log(currentUser,'currentUser');
+// @mui
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
-const handleClose = () => {
-  onHandleClose();
-  reset()
-}
+const employmentTypeOptions=[
+  {label:"Permanent",id:'1'},
+  {label:"Contract",id:'2'},
 
-const NewUserSchema = Yup.object().shape({
- 
-  aadharNumber: Yup.string(),
-  panNumber:Yup.string(),
-  passportNumber:Yup.string(),
+]
 
-  accountholderName: Yup.string(),
-  bankAccountNumber: Yup.number(),
-  bankName: Yup.string(),
-  bankBranch: Yup.string(),
-  ifscCode: Yup.string(),
-
-  uan:Yup.number(),
-  pfNumber: Yup.number(),
-  esicNumber: Yup.number(),
-  ptNumber: Yup.number(),
-  lwfNumber: Yup.string(),
-  pfType:Yup.string()
-});
-
-const defaultValues = useMemo(
-  () => ({
-    
-    aadharNumber: currentUser?.aadharNumber || "",
-    panNumber: currentUser?.panNumber || "",
-    passportNumber: currentUser?.passportNumber || "",
+const StatouryForm = ({open,onHandleClose,currentUser}) => {
+  const [type,setType]=useState({label:"Permanent",id:'1'})
 
 
-    accountholderName:currentUser?.accountholderName || '',
-    bankName: currentUser?.bankName || '',
-    bankBranch:currentUser?.bankBranch || '',
-    bankAccountNumber:currentUser?.bankAccountNumber || undefined,
-    ifscCode: currentUser?.ifscCode || "",
-
-    pfNumber: currentUser?.pfNumber || undefined,
-    esicNumber: currentUser?.esicNumber || undefined,
-    ptNumber: currentUser?.ptNumber || undefined,
-    lwfNumber: currentUser?.lwfNumber || "",
-    uan: currentUser?.uan || undefined,
-
-    pfType:currentUser?.pfType || '',
-  }),
-  [currentUser]
-);
-
-
-const payscheduleTypes = [{ type: 'Permanent' }, { type: 'Temporary' }];
-
-const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
-const methods = useForm({
-  resolver: yupResolver(NewUserSchema),
-  defaultValues,
-});
-
-const {
-  reset,
-  watch,
-  control,
-  setValue,
-  handleSubmit,
-  formState: { isSubmitting },
-} = methods;
-
-const values = watch();
-
-const onSubmit = handleSubmit(async (data1) => {
-   console.log(data1,'uyfgv');
-  data1.employeeID=employeeIDToCreate
-  data1.companyID='COMP5'
-  try {
-   
-    
-    
-     
-    
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      //url: `${baseUrl}addStatutoryDetails`,
-      url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addStatutoryDetails',
-      headers: { 
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
-        'Content-Type': 'application/json'
-      },
-      data : data1
-    };
-    
-     
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  } 
   
-  catch (error) {
-    console.error(error);
-  }
-});
+const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
+    // const currentUser=
+    //   {
+    //       "employeeID": "ibm1",
+    //       "firstName": "ram",
+    //       "middleName": null,
+    //       "lastName": "r",
+    //       "emailID": "anilraina0310@gmail.com",
+    //       "contactNumber": 8908765334,
+    //       "emergencyContactNumber": null,
+    //       "dateOfBirth": "2023-02-11",
+    //       "fatherName": "nithya",
+    //       "motherName": "abc",
+    //       "maritalStatus": "unmarried",
+    //       "nationality": "indian",
+    //       "religion": "hindu",
+    //       "bloodGroup": "A+",
+    //       "offerDate": "2022-03-03",
+    //       "joiningDate": "2022-03-03",
+    //       "pAddressLine1": "robersonpet",
+    //       "pAddressLine2": "bpet",
+    //       "pCity": "blore",
+    //       "pState": "kolar",
+    //       "pPincode": 64286,
+    //       "rAddressLine1": "2,304,d",
+    //       "rAddressLine2": "bbb",
+    //       "rCity": "canada",
+    //       "rState": "kolar",
+    //       "rPincode": 84686,
+    //       "employmentType": null,
+    //       "departmentName": null,
+    //       "Designation": null,
+    //       "gradeName": null,
+    //       "ctc": null,
+    //       "workingLocation": null,
+    //       "reportingManagerName": null
+    //   }
 
-const handleDrop = useCallback(
-  (acceptedFiles) => {
-    const file = acceptedFiles[0];
 
-    const newFile = Object.assign(file, {
-      preview: URL.createObjectURL(file),
+    const NewUserSchema = Yup.object().shape({
+ 
+      aadharNumber: Yup.string(),
+      panNumber:Yup.string(),
+      passportNumber:Yup.string(),
+    
+      accountholderName: Yup.string(),
+      bankAccountNumber: Yup.number(),
+      bankName: Yup.string(),
+      bankBranch: Yup.string(),
+      ifscCode: Yup.string(),
+    
+      uan:Yup.number(),
+      pfNumber: Yup.number(),
+      esicNumber: Yup.number(),
+      ptNumber: Yup.number(),
+      lwfNumber: Yup.string(),
+      pfType:Yup.string()
     });
+    
+    const defaultValues = useMemo(
+      () => ({
+        
+        aadharNumber: currentUser?.aadharNumber || "",
+        panNumber: currentUser?.panNumber || "",
+        passportNumber: currentUser?.passportNumber || "",
+    
+    
+        accountholderName:currentUser?.accountholderName || '',
+        bankName: currentUser?.bankName || '',
+        bankBranch:currentUser?.bankBranch || '',
+        bankAccountNumber:currentUser?.bankAccountNumber || undefined,
+        ifscCode: currentUser?.ifscCode || "",
+    
+        pfNumber: currentUser?.pfNumber || undefined,
+        esicNumber: currentUser?.esicNumber || undefined,
+        ptNumber: currentUser?.ptNumber || undefined,
+        lwfNumber: currentUser?.lwfNumber || "",
+        uan: currentUser?.uan || undefined,
+    
+        pfType:currentUser?.pfType || '',
+      }),
+      [currentUser]
+    );
+    
+    
+      const methods = useForm({
+        resolver: yupResolver(NewUserSchema),
+        defaultValues,
+      });
+    
+      const {
+        reset,
+        watch,
+        control,
+        setValue,
+        handleSubmit,
+        formState: { isSubmitting },
+      } = methods;
+    
+      const values = watch();
+    
+      const onSubmit = handleSubmit(async (data) => {
+        console.log(data,'uyfgv');
+    
+        try {
+         
+            console.log('aa')
+         
+        } catch (error) {
+          console.error(error);
+        }
+      });
+  return (
+    <>
 
-    if (file) {
-      setValue('avatarUrl', newFile, { shouldValidate: true });
-    }
-  },
-  [setValue]
-);
-return (
-  <>
-    {/* <Button onClick={handleOpen}  variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Statoury</Button> */}
-    <Dialog
-      fullWidth
-      maxWidth={false}
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        sx: { maxWidth: 720 },
-      }}
-    >
-      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <Helmet>
+        <title> Dashboard: myclaims</title>
+      </Helmet>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+           <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* methods={methods} onSubmit={onSubmit} */}
         <DialogTitle>Add Statoury</DialogTitle>
 
@@ -228,7 +231,7 @@ return (
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={handleClose}>
+          <Button variant="outlined" onClick={()=>{onHandleClose()}}>
             Cancel
           </Button>
 
@@ -237,15 +240,27 @@ return (
           </LoadingButton>
         </DialogActions>
       </FormProvider>
-    </Dialog>
-  </>
-);
+        
+        
+
+        <DialogActions>
+            <Button variant="outlined" onClick={onHandleClose}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
+    </>
+  )
 }
 
-export default StatouryForm;
+export default StatouryForm
 
 StatouryForm.propTypes = {
-    currentUser: PropTypes.object,
-    open:PropTypes.string,
-    onHandleClose:PropTypes.func
+    open: PropTypes.string,
+    onHandleClose:PropTypes.func,
+    currentUser:PropTypes.object
   };
