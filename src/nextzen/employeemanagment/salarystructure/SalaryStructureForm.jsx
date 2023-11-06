@@ -4,12 +4,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
 import { useCallback, useMemo, useState } from 'react';
@@ -18,7 +12,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 // @mui
-
+import dayjs from 'dayjs';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -27,27 +25,27 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function ShiftConfigurationForm({ currentUser}) {
+export default function SalaryStructureForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset1();
   };
-  const [startTime, setStartTime] = useState(dayjs("2022-04-17T15:30")); // State for Start Time
-  const [endTime, setEndTime] = useState(dayjs("2022-04-17T15:30"));
   const NewUserSchema1 = Yup.object().shape({
-    ShiftName: Yup.string().required('Shift Name is Required'),
-    ShiftTerm: Yup.string().required('Shift Term is Required'),
-    LocationId: Yup.number().required('Location Id is Required'),
+    marketRate: Yup.number().required('Market Rate is Required'),
+    minimum: Yup.number().required('Minimum is Required'),
+    midpoint: Yup.number().required('Midpoint is Required'),
+    maximum: Yup.number().required('Maximum is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      ShiftName: currentUser?.ShiftName || null,
-      ShiftTerm: currentUser?.ShiftTerm || null,
-      LocationId: currentUser?.LocationId || null,
+      marketRate: currentUser?.marketRate || null,
+      minimum: currentUser?.minimum || null,
+      midpoint: currentUser?.midpoint || null,
+      maximum: currentUser?.maximum || null,
     }),
     [currentUser]
   );
@@ -71,65 +69,51 @@ export default function ShiftConfigurationForm({ currentUser}) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId=localStorage.getItem('companyID')
-    data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
-    data.endTime = endTime.format('HH:mm:ss'); // Append End Time
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('http://192.168.1.115:3000/erp/addShiftConfig', data);
+      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
       console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
   });
 
+
+ 
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add ShiftConfig</Button>
+        sx={{margin:'20px'}}>Add SalaryStructure</Button>
       <Dialog
-        // fullWidth
+        fullWidth
         maxWidth={false}
         open={open}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 600 },
+          sx: { maxWidth: 720 },
         }}
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add ShiftConfig</DialogTitle>
+            <DialogTitle>Add SalaryStructure</DialogTitle>
             <DialogContent>
-            <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} marginTop="10px" >
-          <RHFTextField  label="Shift Name" name="ShiftName" />
-        </Grid>
-        <Grid item xs={12} sm={3}marginTop="10px">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileTimePicker
-              label="Start Time"
-              defaultValue={dayjs("2022-04-17T15:60")}
-              onChange={(newValue) => setStartTime(newValue)}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={3} marginTop="10px">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileTimePicker
-              label="End Time"
-              defaultValue={dayjs("2022-04-17T15:30")}
-              onChange={(newValue) => setEndTime(newValue)}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <RHFTextField  label="Shift Term" name="ShiftTerm" />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <RHFTextField  label="Location Id" name="LocationId" />
-        </Grid>
-      </Grid>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                marginTop={2}
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                <RHFTextField name="marketRate" label="Market Rate" />
+                <RHFTextField name="minimum" label="Minimum" />
+                <RHFTextField name="midpoint" label="Midpoint" />
+                <RHFTextField name="maximum" label="Maximum" />
+              </Box>
             </DialogContent>
 
             <DialogActions>
@@ -146,11 +130,12 @@ export default function ShiftConfigurationForm({ currentUser}) {
               </LoadingButton>
             </DialogActions>
           </FormProvider>
+        )}
       </Dialog>
     </>
   );
 }
 
-ShiftConfigurationForm.propTypes = {
+SalaryStructureForm.propTypes = {
   currentUser: PropTypes.object,
 };

@@ -62,6 +62,7 @@ const CompoffConfiguration = forwardRef((props, ref) => {
                   value={item.selectCompensatory}
                   onChange={(event, newValue) => handleSelectCompensatoryChange(newValue, index)}
                   renderInput={(params) => <TextField {...params} label="Select Compensatory" />}
+                  sx={{ width: '80%' }}a
                 />
               </Grid>
               {item.selectCompensatory === 'Leave' && (
@@ -72,6 +73,7 @@ const CompoffConfiguration = forwardRef((props, ref) => {
                     value={expiryday}
                     type='number'
                     onChange={(e) => setExpiryday(e.target.value)}
+                    sx={{ width: '80%' }}
                   />
                 </Grid> 
               )}
@@ -83,6 +85,7 @@ const CompoffConfiguration = forwardRef((props, ref) => {
                     value={amount}
                     type='number'
                     onChange={(e) => setAmount(e.target.value)}
+                    sx={{ width: '80%' }}
                   />
                 </Grid>
               )}

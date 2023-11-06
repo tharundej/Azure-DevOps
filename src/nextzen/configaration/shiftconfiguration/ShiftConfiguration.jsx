@@ -4,60 +4,37 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function ShiftConfiguration() {
     const TABLE_HEAD = [
-      { id: 'ShiftName', label: 'Shift Name', type: 'text' },
-      { id: 'StartTime', label: 'Start Time', type: 'text' },
-      { id: 'EndTime', label: 'End Time', type: 'text' },
-      { id: 'ShiftTerm', label: 'Shift Term', type: 'text' },
-      { id: 'LocationId', label: 'Location Id', type: 'text' },
+      { id: 'shiftName', label: 'Shift Name', type: 'text' },
+      { id: 'startTime', label: 'Start Time', type: 'text' },
+      { id: 'endTime', label: 'End Time', type: 'text' },
+      { id: 'shiftTerm', label: 'Shift Term', type: 'text' },
+      { id: 'locationId', label: 'Location Id', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
-    // const bodyContent = [
-    //   {
-    //     employeeType: 'Permanent',
-    //     payscheduleType: 'Weekly',
-    //     payType: 'CTC',
-    //     basicPay: '40',
-    //     hra: '20',
-    //     da: '8',
-    //     employeePf: '6',
-    //     employerPf: '6',
-    //     tds: '20',
-    //   },
-    // ];
+
     const defaultPayload = 
     {
-      "count": 5,
+      "companyId":"COMP2",
+      "locationId":32,
+      "search":"",
       "page": 1,
-      "search": "",
-      "companyId": "COMP1",
-      "externalFilters": {
-        "payscheduleType": "weekly7",
-        "employmentType": "",
-        "basicPayPercentage":"",
-        "hraPercentage":"",
-        "daPercentage":"",
-        "ltaPercentage":"",
-        "employerPfPercentage":"",
-        "employeePfPercentage":"",
-        "esicPercentage":"",
-        "tdsPercentage":"10"
+      "limit": 5,
+      "externalFilter": {
+          "shiftTerm": "",
+          "shiftName": "",
+          "startTime": "",
+          "endTime":""
       },
       "sort": {
-        "key": 1,
-        "orderBy": ""
+          "key": 0,
+          "orderBy": "start_time"
       }
-    };
+      
+  };
      
-     
-    // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
-    // const tabContents = [
-    //   <div>Tab 1 Content</div>,
-    //   <div>Tab 2 Content</div>,
-    //   <div>Tab 3 Content</div>,
-    // ];
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
   
     React.useEffect(() => {
@@ -75,7 +52,7 @@ export default function ShiftConfiguration() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint=""
+          endpoint="getALLShiftConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='ShiftConfigurationFilterSearch'

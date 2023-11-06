@@ -13,10 +13,6 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 // @mui
 import dayjs from 'dayjs';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -81,22 +77,6 @@ export default function ExpenseClaimForm({ currentUser}) {
     }
   });
 
-
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
@@ -148,7 +128,6 @@ export default function ExpenseClaimForm({ currentUser}) {
               </LoadingButton>
             </DialogActions>
           </FormProvider>
-        )}
       </Dialog>
     </>
   );
