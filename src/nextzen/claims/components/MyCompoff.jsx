@@ -177,7 +177,7 @@ export default function MyCompoff({ currentUser ,}) {
         console.log("delete")
         setDel(prevState => ({
               ...prevState,
-              compensatoryRequestId:"3",
+              compensatoryRequestId:"1",
           }));
 
           handle(del);
