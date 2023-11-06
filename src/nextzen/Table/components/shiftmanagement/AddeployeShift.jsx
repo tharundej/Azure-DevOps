@@ -100,7 +100,8 @@ export default function AddEmployeShift({ currentUser }) {
       data.supervisorId = 'ibm4';
       data.ShiftTerm = 'weekly';
       data.supervisorId = 'ibm4';
-      data.departmentId = '';
+      // data.departmentId = '';
+      // data.departmentId = '';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
       // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
@@ -174,7 +175,7 @@ export default function AddEmployeShift({ currentUser }) {
   </RHFSelect>
 
 
-<RHFSelect name="Select_Department" label="Select Department">
+<RHFSelect name="departmentId" label="Select Department">
 
 <option value="full_day" >Full Day</option>
 
@@ -183,7 +184,7 @@ export default function AddEmployeShift({ currentUser }) {
 <option value="second_half" >Second Half</option>
 
 </RHFSelect>
-<RHFSelect name="Select_Designation" label="Select Designation">
+<RHFSelect name="designationId" label="Select Designation">
 
 <option value="full_day" >HR</option>
 
@@ -192,7 +193,7 @@ export default function AddEmployeShift({ currentUser }) {
 <option value="second_half" >Developer</option>
 
 </RHFSelect>
-<RHFSelect name="Select_grade" label="Select Grade">
+<RHFSelect name="DesignationGradeId" label="Select Grade">
 
 <option value="full_day" >HR</option>
 

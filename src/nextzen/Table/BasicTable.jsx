@@ -158,9 +158,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
       // url: `http://192.168.1.87:3001/erp/${endpoint}`,
       
-      // url: `https://kz7mdxrb-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      url: `http://192.168.1.79:8080/appTest/${endpoint}`,
       
-      url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp/${endpoint}`,
+      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp/${endpoint}`,
 
       headers: {
 

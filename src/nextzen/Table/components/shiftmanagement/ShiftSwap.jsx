@@ -75,33 +75,7 @@ export default function ShiftSwap() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-          Employe_Name:"Aight",
-    
-          FromShift_name: "Aswin!23",
-    
-          FromShiftgroup_Name: "BellErp",
-
-          Swap_Date: "12/12/2023",
-    
-          ToShift_Name: "night",
-    
-          ToShiftGroup_Name: "Coding",
-    
-          Status: "Swaped",
-
-        //   End_Date: "122hour 40minutes",
-
-        //   Sift_term: "Weakly",
-          
-    
-        },
-    
-      ];
+     
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -134,9 +108,11 @@ export default function ShiftSwap() {
 </Container>
     <BasicTable
 
-headdata={TABLE_HEAD}
+headerData={TABLE_HEAD}
+endpoint="SwapShift"
+bodyData=''
 
-bodydata={bodyContent}
+
 
 rowActions={actions}
 
