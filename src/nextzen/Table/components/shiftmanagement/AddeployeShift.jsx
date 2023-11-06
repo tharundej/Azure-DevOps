@@ -50,7 +50,7 @@ export default function AddEmployeShift({ currentUser }) {
 
   const NewUserSchema = Yup.object().shape({
     Select_Shift: Yup.string(),
-    ShiftGroup_Name: Yup.string(),
+    shiftGroupName: Yup.string(),
     Select_Department: Yup.string(),
     Select_Designation: Yup.string(),
     Select_grade: Yup.string().required('First Name is Required'),
@@ -63,7 +63,7 @@ export default function AddEmployeShift({ currentUser }) {
     () => ({
    
         Select_Shift: currentUser?.Select_Shift || '',
-        ShiftGroup_Name: currentUser?.ShiftGroup_Name || '',
+        shiftGroupName: currentUser?.shiftGroupName || '',
         Select_Department: currentUser?.Select_Department || '',
         Select_Designation: currentUser?.Select_Designation || '',
         Select_grade: currentUser?.Select_grade || '',
@@ -96,8 +96,8 @@ export default function AddEmployeShift({ currentUser }) {
     console.log('uyfgv');
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
+      data.shiftConfigurationId = '3';
+      data.supervisorId = 'ibm4';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
       data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
@@ -150,7 +150,7 @@ export default function AddEmployeShift({ currentUser }) {
               >
                
 
-  <RHFSelect name="ShiftGroup_Name" label="Shift Group Name ">
+  <RHFSelect name="shiftGroupName" label="Shift Group Name ">
 
 <option value="full_day" >Full Day</option>
 
@@ -198,13 +198,7 @@ export default function AddEmployeShift({ currentUser }) {
 <option value="second_half" >Developer</option>
 
 </RHFSelect>
-<br/>
-<Stack>
-    <Typography>
-        Select Employe And Assign To Shift Here ...
-    </Typography>
-</Stack>
-<br/>
+
 <Autocomplete
 
   multiple

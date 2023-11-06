@@ -39,7 +39,7 @@ export default function TimeApprovals() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -67,35 +67,20 @@ export default function TimeApprovals() {
       ];
     
      const defaultPayload={
-
       "count": 2,
-    
       "page": 1,
-    
       "search": "",
-    
-      "employee_id": "ibm1",
-    
+      "employee_id": "E1",
       "externalFilters": {
-    
         "employee_name": "",
-    
         "project_name": "",
-    
         "activity_name": "",
-    
         "status": ""
-    
       },
-    
       "sort": {
-    
         "key": 1,
-    
-        "orderBy": "employee_name"
-    
+        "orderBy": "project_name"
       }
-    
     }
     
       const actions = [
@@ -108,33 +93,7 @@ export default function TimeApprovals() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          Project_Id: "Aswin!23",
-
-          employee_id: 'Aswi!23',
-          
-          employee_name: "Aswin",
-
-          project_name: "BellErp",
-
-    
-          activity_name: "Coding",
-    
-          duration: "2hour 40minutes",
-
-          hours_worked: "122hour 40minutes",
-
-          status: "Approved",
-          
-    
-        },
-    
-      ];
+  
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{

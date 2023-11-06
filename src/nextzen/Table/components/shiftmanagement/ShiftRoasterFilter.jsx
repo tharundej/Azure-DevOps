@@ -34,11 +34,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import './approvalsearchfilter.css'
+import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
-import CustomDateRangePicker from '../global/CustomDateRangePicker';
+import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 
 
@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ApprovalSearchFilter({filterData,filterOptions}){
+export default function ShiftRoasterFilter({filterData,filterOptions}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -105,7 +105,7 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
     const [personName, setPersonName] = React.useState([]);
   
     const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
-    const [dropdownstatus,setDropdownStatus]=useState([])
+    const [dropdownshift_name,setDropdownStatus]=useState([])
     const [dropdownProjectName,setDropdownProjectName]=useState([])
     const [dropdownActivity,setdropdownActivity]=useState([])
     const [dropdownEmployeename,setdropdownEmployeename]=useState([])
@@ -124,19 +124,19 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
     const [dropdownFiledArray,setDropdownFiledArray]=useState(
       [
         {
-          field:'status',
+          field:'shift_name',
           options:[]
         },
         {
-          field:'activity_name',
+          field:'shift_term',
           options:[]
         },
         {
-          field:'project_name',
+          field:'shift_group',
           options:[]
         },
         {
-          field:'employee_name',
+          field:'supervisor_name',
           options:[]
         }
       ]
@@ -228,25 +228,25 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
           target: { value },
         } = event;
         
-        if(field==="project_name"){
+        if(field==="shift_group"){
           setDropdownProjectName(value)
           const obj=dropdown;
           obj[field]=value;
           setDropdown(obj);
         }
-        else if(field==="status"){
+        else if(field==="shift_name"){
           setDropdownStatus(value)
           const obj=dropdown;
           obj[field]=value;
           setDropdown(obj);
         }
-        else if(field==="activity_name"){
+        else if(field==="shift_term"){
           setdropdownActivity(value)
           const obj=dropdown;
           obj[field]=value;
           setDropdown(obj);
         }
-        else if(field==="employee_name"){
+        else if(field==="supervisor_name"){
             setdropdownEmployeename(value)
           const obj=dropdown;
           obj[field]=value;
@@ -326,13 +326,13 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
             <Grid container  spacing={2} >
               <Grid item xs={6}>
               <FormControl fullWidth>
-        <InputLabel id="employee_name">employe Name</InputLabel>
+        <InputLabel id="supervisor_name">Supervisor Name</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
+          labelId="demo-multiple-name-shift_name_1"
+          id="demo-multiple-shift_name_1"
           multiple
           value={dropdownEmployeename}
-          onChange={(e) => handleChangeDropDown(e, 'employee_name')}
+          onChange={(e) => handleChangeDropDown(e, 'supervisor_name')}
           input={<OutlinedInput label="Employee Name" />}
           MenuProps={MenuProps}
         >
@@ -350,13 +350,13 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
                 </Grid>
                 <Grid item xs={6}>
                 <FormControl fullWidth>
-        <InputLabel id="project_name">Project Name</InputLabel>
+        <InputLabel id="shift_group">Shift Group</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
+          labelId="demo-multiple-name-shift_name_1"
+          id="demo-multiple-shift_name_1"
           multiple
           value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'project_name')}
+          onChange={(e) => handleChangeDropDown(e, 'shift_group')}
           input={<OutlinedInput label="Project Name" />}
           MenuProps={MenuProps}
         >
@@ -379,13 +379,13 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
   <Grid container spacing={2}>
     <Grid item xs={6}>
       <FormControl fullWidth>
-        <InputLabel id="activity_name">Activity Name</InputLabel>
+        <InputLabel id="shift_term">Shift Term</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
+          labelId="demo-multiple-name-shift_name_1"
+          id="demo-multiple-shift_name_1"
           multiple
           value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'activity_name')}
+          onChange={(e) => handleChangeDropDown(e, 'shift_term')}
           input={<OutlinedInput label="Activity Name" />}
           MenuProps={MenuProps}
         >
@@ -403,13 +403,13 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
     </Grid>
     <Grid item xs={6}>
       <FormControl fullWidth>
-        <InputLabel id="status">Status</InputLabel>
+        <InputLabel id="shift_name">Shift Name</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_2"
-          id="demo-multiple-status_2"
+          labelId="demo-multiple-name-shift_name_2"
+          id="demo-multiple-shift_name_2"
           multiple
-          value={dropdownstatus}
-          onChange={(e) => handleChangeDropDown(e, 'status')}
+          value={dropdownshift_name}
+          onChange={(e) => handleChangeDropDown(e, 'shift_name')}
           input={<OutlinedInput label="Status" />}
           MenuProps={MenuProps}
         >
@@ -432,15 +432,15 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
                 {/* <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="shift_name">shift_name</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
                   multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="status" />}
+                  value={dropdownshift_name}
+                  onChange={(e)=>handleChangeDropDown(e,'shift_name')}
+                  input={<OutlinedInput label="shift_name" />}
                   MenuProps={MenuProps}
                 >
                   {names.map((name) => (
@@ -469,14 +469,14 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
     
 }
 
-// ApprovalSearchFilter.propTypes={
+// ShiftRoasterFilter.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-ApprovalSearchFilter.propTypes={
+ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
 }
 
-ApprovalSearchFilter.propTypes={
+ShiftRoasterFilter.propTypes={
     filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           fieldName: PropTypes.string,

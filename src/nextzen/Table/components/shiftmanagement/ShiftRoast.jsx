@@ -30,7 +30,7 @@ export default function ShiftRoast() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -45,25 +45,42 @@ export default function ShiftRoast() {
         },
     
         
-        { id: "Employe_id", label: "Employe Id", width: 180, type: "text" },
+        { id: "employee_id", label: "Employe Id", width: 180, type: "text" },
         
-        { id: "Employe_Name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
         
-        { id: "Shift_name", label: "Shift Name", width: 180, type: "text" },
+        { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "Start_Time", label: "Start Time", width: 180, type: "text" },
+        { id: "start_time", label: "Start Time", width: 180, type: "text" },
         
-        { id: "End_time", label: "End time", width: 100, type: "text" },
-        { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
-        { id: "Shift_group", label: "Shift group", width: 220, type: "text" },
-        { id: "Superior_Name", label: "Superior Name", width: 100, type: "text" },
-    
+        { id: "end_time", label: "End time", width: 100, type: "text" },
+        { id: "shift_term", label: "Sift_term", width: 100, type: "text" },
+        { id: "shift_group", label: "Shift group", width: 220, type: "text" },
+        { id: "supervisor_name", label: "Superior Name", width: 100, type: "text" },
+        
+        { id: "start_date", label: " Start Date", width: 100, type: "text" },
+        { id: "end_date", label: "End Date", width: 100, type: "text" },
         // { id: '', width: 88 },
     
       ];
     
-     
+      const defaultPayload={
+        "company_id":"COMP2",
+        "page":0,
+        "search":"ram",
+        "externalFilters":{
+          "shift_name":"",
+          "shift_term":"",
+          "shift_group":"",
+          "supervisor_name":""
+        },
+        "count":6,
+       "sort":{
+          "key":0,
+          "orderBy":""
+        }
+      }
     
       const actions = [
     
@@ -75,32 +92,7 @@ export default function ShiftRoast() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-          
-          Employe_id: "As1223",
-          
-          Employe_Name: "Aswin",
-
-          Shift_name: "Aswin!23",
-    
-          Shift_group: "BellErp",
-    
-          Start_Time: "12/12/2023",
-    
-          End_time: "12/12/2023",
-    
-          Superior_Name:"bindu",
-
-          Sift_term: "Approved",
-          
-    
-        },
-    
-      ];
+ 
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -128,15 +120,14 @@ export default function ShiftRoast() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   <Button className="button" onClick={handleTimeForm}> Add Employe To Shift</Button>
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
 </Container>
     <BasicTable
 
-headdata={TABLE_HEAD}
-
-bodydata={bodyContent}
-
+headerData={TABLE_HEAD}
+defaultPayload={defaultPayload}
+filterName="ShiftRoastFilter"
+bodyData='data'
+endpoint='ShiftRoaster'
 rowActions={actions}
 
 />  

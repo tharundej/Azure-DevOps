@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -20,12 +21,14 @@ import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 import { fData } from 'src/utils/format-number';
+import instance from 'src/api/BaseURL';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // assets
 import { countries } from 'src/assets/data';
 // components
+import { Autocomplete, TextField } from '@mui/material';
 import Label from 'src/components/label';
 
 import Iconify from 'src/components/iconify';
@@ -40,55 +43,64 @@ import axios from 'axios';
 
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function TimeForm({ currentUser }) {
+export default function TimeForm({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    start_date: dayjs(new Date()),
+    end_date: dayjs(new Date()),
+    due_date: dayjs(new Date()),
+    // activity_name:[]
   });
-  const router = useRouter();
+  const [selectedActivity, setSelectedActivity] = useState([]);
 
+  const handleSelectChange = (event, values) => {
+    setSelectedActivity(values);
+  };
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
     employee_id: Yup.string(),
-    Employe_Name: Yup.string(),
-    Project_Name: Yup.string(),
-    Activity_Name: Yup.string(),
-    monday: Yup.string().required('First Name is Required'),
+    monday: Yup.string(),
     tuesday: Yup.string(),
-    wednseday: Yup.string('Last Name is Required'),
-    thursday: Yup.string().email().required('Email is Required'),
+    wednseday: Yup.string(),
+    thursday: Yup.string(),
     friday: Yup.string(),
-    saturday : Yup.string(),
+    saturday: Yup.string(),
     sunday: Yup.string(),
-    Total_hours: Yup.string(),
-    Comment: Yup.string(),
+    comments: Yup.string(),
+    // start_date: Yup.string(),
+    // end_date: Yup.string(),
+    // due_date: Yup.string().required('First Name is Required'),
+    // commentStatus: Yup.string(),
+   
    
   });
+
+  useEffect(() => {
+   getProjectName();
+   getActivityName()
+  }, []);
+  
 
   const defaultValues = useMemo(
     () => ({
    
-      employee_id: currentUser?.employee_id || '',
-      Employe_Name: currentUser?.Employe_Name || '',
-      Project_Name: currentUser?.Project_Name || '',
-      Activity_Name: currentUser?.Activity_Name || '',
-      monday: currentUser?.monday || '',
-      tuesday: currentUser?.tuesday || '',
-      wednseday: currentUser?.wednseday || '',
-      thursday: currentUser?.thursday || '',
-      friday: currentUser?.friday || '',
-      saturday: currentUser?.saturday || '',
-      sunday: currentUser?.sunday || '',
-      Total_hours: currentUser?.Total_hours || '',
-      Comment: currentUser?.Comment || '',
+        employee_id: currentUser?.employee_id || '',
+        monday: currentUser?.monday || '',
+        tuesday: currentUser?.tuesday || '',
+        wednseday: currentUser?.wednseday || '',
+        thursday: currentUser?.thursday || '',
+        friday: currentUser?.friday || '',
+        saturday: currentUser?.saturday || '',
+        sunday: currentUser?.sunday || '',
+        comments: currentUser?.comments || '',
+  
    
     }),
     [currentUser]
   );
 
-  const methods = useForm({
+  const   methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
@@ -105,32 +117,98 @@ export default function TimeForm({ currentUser }) {
   } = methods;
 
   const values = watch();
+const [projectDetails ,setProjectDetails] = useState([])
+const [activityData ,SetActivityData] = useState([])
+console.log("🚀 ~ file: TimeForm.jsx:122 ~ TimeForm ~ activityData:", activityData)
+// const [projectId ,SetProjectId]= useState(currentProjectData.project_id)
+console.log("🚀 ~ file: TimeForm.jsx:121 ~ TimeForm ~ activityData:", activityData)
+const [currentProjectData ,setCurrentProjectData] = useState({})
+const [currentActivitytData ,setCurrentActivitytData] = useState({})
+console.log("🚀 ~ file: TimeForm.jsx:119 ~ TimeForm ~ projectDetails:", projectDetails)
+
+const PrName = projectDetails.map((item) => item.project_name);
+console.log("🚀 ~ file: TimeForm.jsx:123 ~ TimeForm ~ PrName:", PrName)
+
+const getProjectName = async ()=>{
+  try {
+  
+    const data = {
+      manager_id: 'info7',
+      // Other data properties as needed
+    };
+
+
+    const response = await instance.post('listmanagersproject', data);
+
+    // Handle the response (e.g., check for success, update state, etc.)
+    console.log('Response:', response.data.projectDetails);
+
+    // Return or handle the response data as needed
+    setProjectDetails(response.data.Eployee_list)
+    return response.data;
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+
+const getActivityName = async ()=>{
+  try {
+  
+    const data = {
+      project_id: 4,
+      // Other data properties as needed
+    };
+
+
+    const response = await instance.post('listactivityname', data);
+
+    // Handle the response (e.g., check for success, update state, etc.)
+    console.log('Response:', );
+
+    // Return or handle the response data as needed
+    SetActivityData(response.data["Activity Names"])
+    return response.data;
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log("🚀 ~ file: SalaryAdvanceForm.jsx:93 ~ onSubmit ~ data:", data)
     console.log('uyfgv');
 
     try {
       data.company_id = 'COMP2';
-      data.activity_id = '1';
-      data.project_id = '9';
-      data.date_of_activity = '2023-11-11';
+      data.activity_id =String( currentActivitytData.activity_id);;
+      data.project_id =String( currentProjectData.project_id);
+      data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
       data.start_time = '2023-10-17 11:50:02.023';
       data.end_time = '2023-10-17 11:50:02.023';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
+      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
+      // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
+      // data.selectedActivity = selectedActivity;
+      // data.companyID = "COMP1";
+      // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('https://898vmqzh-5001.inc1.devtunnels.ms/erp/addmytimesheet', data).then(
+      const response = await instance.post('addmytimesheet', data).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
         }
       );
+
     } catch (error) {
       console.error(error);
     }
@@ -160,9 +238,63 @@ export default function TimeForm({ currentUser }) {
                 }}
               >
                 <RHFTextField name="employee_id" label="Employe id  " />
-                <RHFTextField name="Employe_Name" label=" Employe Name " />
-                <RHFTextField name="Project_Name" label="Project Name  " />
-                <RHFTextField name="Activity_Name" label="Activity Name " />
+                <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={projectDetails}
+            value={currentProjectData}
+            getOptionLabel={(option) => option.project_name}
+            onChange={(e,newvalue)=>{
+             
+             
+              setCurrentProjectData(newvalue
+              )
+              // const obj={
+              //   // companyID:'COMP1',
+              //   project_id:newvalue?.project_id
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Project Name" />}
+          />
+                <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={activityData}
+            value={currentActivitytData}
+            getOptionLabel={(option) => option.activity_name}
+            onChange={(e,newvalue)=>{
+             
+             
+              setCurrentActivitytData(newvalue
+              )
+              // const obj={
+              //   // companyID:'COMP1',
+              //   project_id:newvalue?.project_id
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            }}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Activity Name" />}
+          />
+                {/* <RHFTextField name="Employe_Name" label=" Employe Name " /> */}
+                {/* <RHFTextField name="Project_Name" label="Project Name  " /> */}
+                {/* <RHFTextField name="Activity_Name" label="Activity Name " /> */}
                 <RHFTextField name="monday" label="monday" />
                 <RHFTextField name="tuesday" label="tuesday" />
                 <RHFTextField name="wednseday" label="wednseday" />
@@ -170,8 +302,8 @@ export default function TimeForm({ currentUser }) {
                 <RHFTextField name="friday" label="friday" />
                 <RHFTextField name="saturday" label="saturday " />
                 <RHFTextField name="sunday" label="sunday " />
-                <RHFTextField name="Total_hours" label="Total hours" />
-                <RHFTextField name="Comment" label="Comment" />
+                {/* <RHFTextField name="Total_hours" label="Total hours" /> */}
+                <RHFTextField name="comments" label="comments" />
              
               </Box>
 
@@ -179,7 +311,7 @@ export default function TimeForm({ currentUser }) {
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Add  Timeline'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
             </Card>
           </Grid>
@@ -191,4 +323,5 @@ export default function TimeForm({ currentUser }) {
 
 TimeForm.propTypes = {
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

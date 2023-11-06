@@ -30,7 +30,7 @@ export default function AssignShiftComponent() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -44,16 +44,16 @@ export default function AssignShiftComponent() {
     
         },
     
-        { id: "Shift_name", label: "Shift Name", width: 180, type: "text" },
+        { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
-        { id: "Shiftgroup_Name", label: "Shift Group Name", width: 220, type: "text" },
+        { id: "shift_group_name", label: "Shift Group Name", width: 220, type: "text" },
     
-        { id: "Start_Time", label: "Start Time", width: 180, type: "text" },
+        { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "End_time", label: "End time", width: 100, type: "text" },
-        { id: "Start_Date", label: "Start Date", width: 100, type: "text" },
-        { id: "End_Date", label: "End Date", width: 100, type: "text" },
-        { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
+        { id: "end_time", label: "End time", width: 100, type: "text" },
+        { id: "start_date", label: "Start Date", width: 100, type: "text" },
+        { id: "end_date", label: "End Date", width: 100, type: "text" },
+        { id: "shift_term", label: "Sift_term", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -71,30 +71,22 @@ export default function AssignShiftComponent() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          Shift_name: "Aswin!23",
-    
-          Shiftgroup_Name: "BellErp",
-    
-          Start_Time: "12/12/2023",
-    
-          End_time: "Coding",
-    
-          Start_Date: "2hour 40minutes",
-
-          End_Date: "122hour 40minutes",
-
-          Sift_term: "Approved",
-          
-    
+      const defaultPayload ={
+        "cid": "COMP2",
+        "search": "",
+        "page": 1,
+        "limit": 10,
+        "externalFilters": {
+            "shift_term": "",
+            "start_date": "",
+            "end_date": "",
+            "shift_name": ""
         },
-    
-      ];
+        "sort": {
+            "key": 1,
+            "orderBy": "start_date"
+        }
+    }
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -127,10 +119,12 @@ export default function AssignShiftComponent() {
 </Container>
     <BasicTable
 
-headdata={TABLE_HEAD}
+headerData={TABLE_HEAD}
+endpoint="getAssignShifts"
+bodyData='data'
+defaultPayload={defaultPayload}
 
-bodydata={bodyContent}
-
+filterName='AssignShiftFilter'
 rowActions={actions}
 
 />  

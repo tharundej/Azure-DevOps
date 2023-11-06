@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -36,20 +36,57 @@ import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function AddTimeProject({ currentUser }) {
+export default function AddTimeProject({ currentUser,handleClose }) {
   const[commaSeparatedString,setCommaSepaatedString]=useState("")
+  const[commaSepaatedEmployeString,setCommaSepaatedEmployeString]=useState("")
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+
+
+useEffect(() => {
+  getEmployeReport()
+  // if (Array.isArray(currentReportingData) && currentReportingData.length > 0) {
+  //   const firstEmployeeId = currentReportingData[0].employee_id;
+  //   if (firstEmployeeId !== 0) {
+  //     getEmployeList();
+  //   }
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
+
+
   const [activity_name, setSelectedActivity] = useState([]);
- 
+  const [project_manager, setProject_manager] = useState([]);
+  const [currentReportingData, setCurrentReportingData] = useState([]);
+  const [currentEmployeData, setCurrentEmployeData] = useState([]);
+  const [employesListData,setEmployesListData]= useState([])
+  const [EmployeList,setemployeeList]= useState([])
+  console.log("🚀 ~ file: AddTimeProject.jsx:66 ~ AddTimeProject ~ employesListData:", employesListData)
+  console.log("🚀 ~ file: AddTimeProject.jsx:56 ~ AddTimeProject ~ currentReportingData:", currentReportingData[0]?.employee_id)
+  // const ReportingManager = currentReportingData.map()
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
-      ;
-     setCommaSepaatedString(values.join(','))
+      console.log("🚀 ~ file: AddTimeProject.jsx:72 ~ handleSelectChange ~ values:", values)
+      
+     setCommaSepaatedString(activity_name.join(','))
+  };
+  const handleSelectEmployeChange = (event, values) => {
+    setCurrentEmployeData(values);
+     console.log("🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
+    //  setemployeeList ( currentEmployeData[0]?.employee_id);
+      
+    // setCommaSepaatedEmployeString(EmployeList.join(','))
+  };
+
+  const handleSelectRepoChange = async (event, values) => {
+    setCurrentReportingData(values);
+    await getEmployeList(values[0].employee_id)
+      
+    // SetCommaSeparatedRepoString (values.join(','))
   };
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -98,6 +135,58 @@ export default function AddTimeProject({ currentUser }) {
 const [sendData, setSendData] = useState({
   projectId : '',  
 })
+const [reportingManager,setReportingManagerData]= useState([])
+console.log("🚀 ~ file: AddTimeProject.jsx:102 ~ AddTimeProject ~ reportingManager:", reportingManager)
+
+
+const getEmployeReport = async ()=>{
+  try{
+  const  data= {
+      company_id:'COMP1',
+     
+    };
+    const response = await instance.post('getReportingmanager',data);
+    setReportingManagerData(response.data.list)
+    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+  }catch(error){
+console.error("Error", error);
+throw error;
+  }
+}
+let getEmployeList = async (props)=>{
+  try{
+  const  data= {
+      company_id:'COMP1',
+      reporting_manager_id:currentReportingData[0]?.employee_id,
+    };
+    data.reporting_manager_id =props;
+    console.log("🚀 ~ file: AddTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
+    const response = await instance.post('employeereporting',data);
+    setEmployesListData(response.data.list)
+    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+  }catch(error){
+console.error("Error", error);
+throw error;
+  }
+}
+
+const join=()=>{
+  const arr=[];
+  for(let i=0;i<currentEmployeData.length;i+=1){
+    arr.push(currentEmployeData[i].employee_id);
+  }
+  
+  
+  // ["empl1","emp2","emp3"];
+  
+  console.log("🚀 ~ file: AddTimeProject.jsx:176 ~ join ~ commaSepaatedEmployeString:", commaSepaatedEmployeString)
+  console.log("🚀 ~ file: AddTimeProject.jsx:183 ~ join ~ arr:", arr)
+  return arr;
+
+  // ["anil","aswin"]
+  // ["aswin,"]
+}
+
   const onSubmit = handleSubmit(async (data) => {
     console.log("🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:", data)
     console.log('uyfgv');
@@ -109,15 +198,19 @@ const [sendData, setSendData] = useState({
       data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
       data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.activity_name = commaSeparatedString;
+      data.activity_name = [commaSeparatedString];
+      data.project_manager =currentReportingData[0]?.employee_id;
       data.company_id = "COMP2";
+      data.employee_id =join();
       data.delete =   0;
+      
 
       console.log(data, 'data111ugsghghh');
 
       const response = await instance.post('addProject', data).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
@@ -159,11 +252,7 @@ const [sendData, setSendData] = useState({
                 }}
               >
                 <RHFTextField name="project_name" label=" Project Name  " />
-                <span>
-                    <Typography sx={{marginLeft:'5px'}}>
-                        Previous Project id was 2 next is 3
-                    </Typography>
-                </span>
+
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -214,10 +303,6 @@ const [sendData, setSendData] = useState({
                 </LocalizationProvider>
                 
                 <RHFTextField name="status" label="status" />
-     <Typography sx={{marginLeft:'5px'}}>
-        Add Project Activities Here Based on Project Nature ...
-     </Typography>
-     <br/>
      <Grid md={10} xs={12} item>
 
      <Autocomplete
@@ -243,6 +328,75 @@ const [sendData, setSendData] = useState({
       />
 
 </Grid>
+<Grid md={10} xs={12} item>
+<Autocomplete
+            multiple
+            disablePortal
+            id="combo-box-demo"
+            options={reportingManager}
+            value={currentReportingData}
+            getOptionLabel={(option) => option.first_name}
+            // onChange={(e,newvalue)=>{
+             
+             
+            //   setCurrentReportingData(newvalue
+                
+            //   );
+              
+             
+              // const obj={
+              //   company_id:'COMP1',
+              //   reporting_manager_id:newvalue?.employee_id
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            // }}
+            onChange={handleSelectRepoChange}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Project Manager" />}
+          />
+</Grid>
+
+<Grid md={10} xs={12} item>
+<Autocomplete
+            multiple
+            disablePortal
+            id="hfh"
+            options={employesListData}
+            value={currentEmployeData}
+            getOptionLabel={(option) => option.first_name}
+            // onChange={(e,newvalue)=>{
+             
+             
+            //   setCurrentEmployeData(newvalue
+                
+            //   );
+              
+             
+              // const obj={
+              //   company_id:'COMP1',
+              //   reporting_manager_id:newvalue?.employee_id
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            // }}
+            onChange={handleSelectEmployeChange}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label=" Select employee" />}
+          />
+</Grid>
 
               </Box>
 
@@ -250,9 +404,9 @@ const [sendData, setSendData] = useState({
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'save Project'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
-              <Button onClick={onSubmit}>hii</Button>
+             
             </Card>
           </Grid>
         </Grid>
@@ -263,4 +417,5 @@ const [sendData, setSendData] = useState({
 
 AddTimeProject.propTypes = {
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

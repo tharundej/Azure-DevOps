@@ -134,6 +134,11 @@ import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
 import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
+import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
+import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
+import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
+import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
+import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
  
@@ -255,18 +260,16 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       maxBodyLength: Infinity,
 
-      // url: `http://localhost:4001${endpoint}`,
-
-      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
-
-      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
-      // url: `https://898vmqzh-5001.inc1.devtunnels.ms/erp/${endpoint}`,
-      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/${endpoint}`,
-
+      
+      // url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      
+      // url: `https://kz7mdxrb-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      
+      url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp/${endpoint}`,
 
       headers: {
 
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
+        // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
 
       },
       data:  initialDefaultPayload
@@ -679,6 +682,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
        {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "MyShiftFilter" && <MyShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "AssignShiftFilter" && <AssignShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "SalaryFilter" && <SalarySearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LoanSearchFilter" && <LoanSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
       
     
         <Card>
