@@ -24,7 +24,7 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Prooerty','Medical Insurance Premium','Master Deatils','photos'];
+  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Property','Medical Insurance Premium','Master Deatils'];
   const tabContents = [
     <div>
       <DeclarationDetails/>
@@ -44,9 +44,7 @@ export default function BasicCard() {
     <div>
       <MasterDetails/>
     </div>,
-    <div>
-      <Photos/>
-    </div>
+    
   ]
   return (
     <ReusableTabs

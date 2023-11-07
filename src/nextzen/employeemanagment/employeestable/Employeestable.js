@@ -84,7 +84,7 @@ export default function EmployeeTable() {
 
   useEffect(()=>{
    ApiHit();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   },[])
 
   const defaultPayload={
