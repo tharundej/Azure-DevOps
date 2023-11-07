@@ -103,7 +103,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
    
   
    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   },[])
 
   const handleChange=(e,field)=>{

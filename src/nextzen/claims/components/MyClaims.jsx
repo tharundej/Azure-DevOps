@@ -61,11 +61,30 @@ export default function MyClaims({ currentUser ,}) {
 
   const claim_type = [
     { code: '', label: '', phone: '' },
-    { code: 'AD', label: 'Travel', phone: '376' },
-    { code: 'AD', label: 'Medical', phone: '376' },
-    { code: 'AD', label: 'Hotel', phone: '376' },
+    { code: 'AD', label: 'Travel', value:0, phone: '376' },
+    { code: 'AD', label: 'Medical',value:1, phone: '376' },
+    { code: 'AD', label: 'Hotel', value:2, phone: '376' },
 
   ]
+
+  const currency = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
 
   // const defaultPayload = {
   //   "count":5,
@@ -225,7 +244,17 @@ const handleClick=()=>{
 
   const NewUserSchema = Yup.object().shape({
     claim_amount: Yup.string().required('Claim Amount is Required'),
-    comments: Yup.string(),
+    comment: Yup.string(),
+    file_name: Yup.string(),
+    company_id: Yup.string(),
+    employee_id: Yup.string(),
+    currency: Yup.string(),
+    expense_date:Yup.string(),
+    file_format: Yup.string(),
+    file: Yup.mixed(),
+    expense_config_id:Yup.number(),
+
+    
 
 
 
@@ -234,18 +263,24 @@ const handleClick=()=>{
 
   const defaultValues = useMemo(
     () => ({
-      amount: currentUser?.amount || null ,
+      claim_amount: currentUser?.claim_amount || null ,
       comment: currentUser?.comment || '',
-      type_oc_claim: currentUser?.type_oc_claim|| '',
-      // currency:currentUser?.currency|| '',
+      // type_oc_claim: currentUser?.type_oc_claim|| '',
+      currency:currentUser?.currency|| '$',
 
-      // company_id:currentUser?.company_id|| '',
-      // employee_id:currentUser?.employee_id|| '',
-      // expense_config_id:currentUser?.expense_config_id|| '',
+      company_id:currentUser?.company_id || 'COMP2',
+      employee_id:currentUser?.employee_id || 'ibm3',
+      expense_config_id:currentUser?.expense_config_id|| 2,
+      expense_date:currentUser?.expense_date|| "2023-11-12",
+
+      file_format:currentUser?.file_format|| "pdf",
+      file:currentUser?.file,
+      // formData.append("expense_date", "2023-11-12"); file_format:jpg
 
     }),
     [currentUser]
   );
+
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -261,40 +296,60 @@ const handleClick=()=>{
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  
+
+ // formdata and not json
+const formData= new FormData();
+
+const values = watch();
 console.log(defaultValues,"defaultValues")
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
-    console.log(data,"defaultValues111")
+const onSubmit = handleSubmit(async (data) => {
+  console.log('uyfgv');
+  console.log(data,"defaultValues111")
+  // formData.append("file", null );
+  // formData.append("claim_amount", 1234 );
+  // formData.append("company_id", "COMP2" );
+  // formData.append("employee_id", "ibm3" );
+  // formData.append("currency", "$");
+  // formData.append("expense_config_id", 2);
+  // formData.append("expense_date", "2023-11-12");
 
-    try {
-      // data.company_id = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+  const formDataForRequest = new FormData();
+  for (const key in data) {
+    formDataForRequest.append(key, data[key]);
+  }
 
-      console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://192.168.0.184:3001/erp/q', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+  try {
+    // data.company_id = '0001';
+    // data.company_name = 'infbell';
+    // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+    // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+    // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+    // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+
+
+    console.log(formData, 'formdata api in check');
+
+    const response = await axios.post('http://192.168.1.115:3000/erp/applyClaim', formDataForRequest).then(
+      (successData) => {
+        console.log('sucess', successData);
+      },
+      (error) => {
+        console.log('lllll', error);
+      }
+    );
+
+    // await new Promise((resolve) => setTimeout(resolve, 500));
+    // reset();
+    // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+    // router.push(paths.dashboard.user.list);
+    // console.info('DATA', data);
+  } catch (error) {
+    console.error(error);
+  }
+});
   // for upload docmunt
 
   const onclickActions = (event) => {
@@ -334,7 +389,7 @@ console.log(defaultValues,"defaultValues")
        
       </Grid> */}
 
-      <Dialog
+<Dialog
         fullWidth
         maxWidth={false}
         open={open}
@@ -372,34 +427,29 @@ console.log(defaultValues,"defaultValues")
             </RHFSelect> */}
 
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+
               <RHFAutocomplete
                 name="type_oc_claim"
                 label="Type Of Claim"
-                options={claim_type.map((claimtype) => claimtype.label)}
+                options={claim_type.map((claimtype) =>claimtype.label)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
-                // renderOption={(props, option) => {
-                //   const { code, label, phone } = countries.filter(
-                //     (country) => country.label === option
-                //   )[0];
-
-                //   if (!label) {
-                //     return null;
-                //   }
-
-                //   return (
-                //     <li {...props} key={label}>
-                //       <Iconify
-                //         key={label}
-                //         icon={`circle-flags:${code.toLowerCase()}`}
-                //         width={28}
-                //         sx={{ mr: 1 }}
-                //       />
-                //       {label} ({code}) +{phone}
-                //     </li>
-                //   );
-                // }}
+             
               />
+
+
+
+              <RHFAutocomplete
+                name="currency"
+                label="currency"
+                options={currency.map((claimtype) => claimtype.label)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+            
+              />
+
+
+              
               {/* <RHFAutocomplete
                 name="country"
                 label=" Currency for Reimbursement"
@@ -430,7 +480,7 @@ console.log(defaultValues,"defaultValues")
               /> */}
 
 
-              <RHFTextField name="amount" label="Claim Amount" />
+              <RHFTextField name="claim_amount" label="Claim Amount" />
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
@@ -505,6 +555,7 @@ console.log(defaultValues,"defaultValues")
           </DialogActions>
         </FormProvider>
       </Dialog>
+
 
       <SurendraBasicTable
 

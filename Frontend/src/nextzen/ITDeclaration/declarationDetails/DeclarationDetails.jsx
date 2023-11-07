@@ -428,7 +428,7 @@ const DeclarationDetails = () => {
       await getDeclarationsList();
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   }, [reloading]);
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({

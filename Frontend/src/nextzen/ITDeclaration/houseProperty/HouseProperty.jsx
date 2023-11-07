@@ -167,7 +167,7 @@ export default function HouseProperty() {
       await addHousingProperity();
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   }, []);
 
   return (

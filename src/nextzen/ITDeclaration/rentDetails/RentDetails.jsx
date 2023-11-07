@@ -369,7 +369,7 @@ useEffect(() => {
     getRentDetails();
   };
   fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  react-hooks/exhaustive-deps
 }, []);
 
 
