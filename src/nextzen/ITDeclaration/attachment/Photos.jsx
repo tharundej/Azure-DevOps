@@ -65,7 +65,7 @@ export default function Photos({ photos, setPhotos, batch }) {
     React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-       // eslint-disable-next-line react-hooks/exhaustive-deps
+       react-hooks/exhaustive-deps
     }, [])
     const handleClickOpen = () => {
       setPhotos(true)

@@ -226,7 +226,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     react-hooks/exhaustive-deps
   }, [])
 
  
@@ -508,7 +508,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   useEffect(()=>{
     getTableData(initialDefaultPayload);
 
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     react-hooks/exhaustive-deps
   },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 

@@ -179,8 +179,8 @@ export function AuthProvider({ children }) {
     //     },
     //   },
     // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    <AmplifyNewPasswordView emailId={data.emailId}/>
+    react-hooks/exhaustive-deps
+    // <AmplifyNewPasswordView emailId={data?.emailId}/>
   }, []);
 
 

@@ -23,7 +23,7 @@ export default function useMessagesScroll(messages) {
     () => {
       scrollMessagesToBottom();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
     [messages]
   );
 

@@ -220,7 +220,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData(initialDefaultPayload);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     react-hooks/exhaustive-deps
   }, [initialDefaultPayload])
 
  
@@ -493,7 +493,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // useEffect(()=>{
   //   getTableData(initialDefaultPayload);
 
-  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  //    react-hooks/exhaustive-deps
   // },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
@@ -612,7 +612,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     // useEffect(()=>{
     //      getTableData(initialDefaultPayload)
-    //      // eslint-disable-next-line react-hooks/exhaustive-deps
+    //      react-hooks/exhaustive-deps
     // },[initialDefaultPayload])
 
 

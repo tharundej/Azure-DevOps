@@ -259,7 +259,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       await getLicPremium();
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   }, [isreloading]);
 
   const userId  =  5

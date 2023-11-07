@@ -1,3 +1,4 @@
+import react from "react";
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useEffect, useMemo, useCallback, useState } from 'react';
@@ -23,7 +24,7 @@ export function SettingsProvider({ children, defaultSettings }) {
     if (isArabic) {
       onChangeDirectionByLang('ar');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   }, [isArabic]);
 
   // Direction by lang

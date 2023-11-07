@@ -125,7 +125,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
    
     getEmployeeStattuory()
    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    react-hooks/exhaustive-deps
   },[])
 
   const handleChange=(e,field)=>{
