@@ -10,15 +10,15 @@ import DownloadButton from './download-button';
 
 export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx, imgSx }) {
   
-  const { name = '', path = '', preview = '' } = fileData(file);
+  const { fileName = '', fileContent = '', fileType = '' } = fileData(file);
 
-  const format = fileFormat(path || preview);
+  const format = fileFormat(fileContent || fileType);
 
   const renderContent =
     format === 'image' && imageView ? (
       <Box
         component="img"
-        src={preview}
+       // src={preview}
         sx={{
           width: 1,
           height: 1,
@@ -42,7 +42,7 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
 
   if (tooltip) {
     return (
-      <Tooltip title={name}>
+      <Tooltip title={fileName}>
         <Stack
           flexShrink={0}
           component="span"

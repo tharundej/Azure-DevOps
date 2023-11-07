@@ -249,7 +249,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
 
     const handleSearch = (searchTerm) => {
       setSearch(searchTerm)
-        searchData(search)
+        // searchData(search)
         console.log(searchTerm,"search ........")
         };
   const handleApply = async () => {

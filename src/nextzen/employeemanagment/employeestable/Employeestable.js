@@ -23,10 +23,9 @@ export default function EmployeeTable() {
 
   const actions = [
 
-    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
-    { name: "View", icon: "hh", id: 'view' },
-    { name: "Edit", icon: "hh", id: 'edit' },
-    { name: "Delete", icon: "hh", id: 'delete' },
+    
+    { name: "View", icon: "hh", id: 'view' }
+    
   ];
 
   const [filterOptions,setFilterOptions]=useState({
@@ -85,7 +84,7 @@ export default function EmployeeTable() {
 
   useEffect(()=>{
    ApiHit();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   },[])
 
   const defaultPayload={

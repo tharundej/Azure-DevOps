@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
@@ -39,6 +38,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { baseUrl } from '../global/BaseUrl';
 
 
 const defaultFilters = {
@@ -82,7 +82,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:3001/erp/getLeaveType`,
+      url: baseUrl + `getLeaveType`,
       data:  payload
     };
   

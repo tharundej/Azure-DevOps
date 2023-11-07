@@ -10,6 +10,8 @@ import EmployeeAbout from './employeeabout/EmployeeAbout';
 import EmployeeEducation from './employeeeducation/EmployeeEducation';
 import Statoury from './statoury/Statoury';
 
+import PreviousWork from './previouswork/PreviousWork';
+
 const TABS = [
     {
       value: 'About',
@@ -22,8 +24,8 @@ const TABS = [
       icon: <Iconify icon="mdi:education-outline" width={24} />,
     },
     {
-      value: 'friends',
-      label: 'Friends',
+      value: 'Experience',
+      label: 'Experience',
       icon: <Iconify icon="solar:users-group-rounded-bold" width={24} />,
     },
     {
@@ -107,6 +109,7 @@ const EmployeeView = () => {
       {currentTab === 'About' && <EmployeeAbout  />}
 
       {currentTab === 'Education' && <EmployeeEducation  />}
+      {currentTab==='Experience' && <PreviousWork />}
     
       {/* // {currentTab === 'friends' && (
       //   <ProfileFriends

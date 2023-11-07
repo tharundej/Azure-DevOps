@@ -27,16 +27,18 @@ const FilesGrid = ({dataFiltered}) => {
             gap={3}
           >
             {dataFiltered
-              .filter((i) => i?.type !== 'folder')
-              .map((file) => (
+              ?.filter((i) => i?.type !== 'folder')
+              ?.map((file) => (
+                file.typeName &&(
                 <FileBox
-                  key={file.id}
+                  key={file?.id}
                   file={file}
                   
-                  onSelect={() => onSelectItem(file.id)}
-                  onDelete={() => onDeleteItem(file.id)}
+                  onSelect={() => onSelectItem(file?.id)}
+                  onDelete={() => onDeleteItem(file?.id)}
                   sx={{ maxWidth: 'auto' }}
-                />
+                />)
+                
               ))}
           </Box>
   )
@@ -45,5 +47,5 @@ const FilesGrid = ({dataFiltered}) => {
 export default FilesGrid
 
 FilesGrid.PropTypes={
-    dataFiltered: PropTypes.array,
+    dataFiltered: PropTypes.any,
 }
