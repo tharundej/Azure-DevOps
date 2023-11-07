@@ -45,15 +45,16 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   
 
     const onSave=()=>{
-  console.log(defaultValues);
+    console.log(defaultValues);
 
      const obj={
       companyId: "COMP5",
       employeeId: "NEWC19",
-      education:defaultValues
+      experience:defaultValues
      }
       
       const config = {
+
         method: 'post',
         maxBodyLength: Infinity,
         url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
@@ -407,9 +408,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                        <MenuItem value="marks-memo">Marks Memo</MenuItem>
-                        <MenuItem value="degree">Degree</MenuItem>
+                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
+                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        
                         {/* Add more categories here */}
                     </Select>
                     </FormControl>
@@ -494,7 +495,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
             handleAdd();
           }}
         >
-          Add Education
+          Add Work
         </Button>
         </Grid>
         {/* <Button
