@@ -1,18 +1,17 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function LeavePeriod() {
+export default function ExpenseClaimConfiguration() {
     const TABLE_HEAD = [
-      { id: 'slNo', label: 'SL NO', type: 'text' },
-      { id: 'Name', label: 'Name', type: 'text' },
-      { id: 'Expense Type ', label: 'Expense Type ', type: 'text' },
-      { id: 'Limitation Amount', label: 'Limitation Amount', type: 'text' },
-      { id: 'Applicable ', label: 'Applicable ', type: 'text' },
-      {id:'Status',label:'Status',type:'text'},
+      { id: 'employee_id', label: 'Employee ID', type: 'text' },
+      {id:'expense_name',label:'Expense Name',type:'text'},
+      { id: 'department_name', label: 'Department Name', type: 'text' },
+      { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text' },
+      { id: 'designation_name', label: 'Designation Name', type: 'text' },
     ];
     const actions = [
-      { name: 'View', icon: 'hh', path: 'jjj' },
+      { name: 'Delete', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
     // const bodyContent = [
@@ -30,27 +29,23 @@ export default function LeavePeriod() {
     // ];
     const defaultPayload = 
     {
-      "count": 5,
-      "page": 1,
-      "search": "",
-      "companyId": "COMP1",
-      "externalFilters": {
-        "payscheduleType": "weekly7",
-        "employmentType": "",
-        "basicPayPercentage":"",
-        "hraPercentage":"",
-        "daPercentage":"",
-        "ltaPercentage":"",
-        "employerPfPercentage":"",
-        "employeePfPercentage":"",
-        "esicPercentage":"",
-        "tdsPercentage":"10"
-      },
+      "company_id":"COMP2",
+      "employee_id":"ibm1",
+      "page":0,
+      "count":6,
+      "search":"",
+      "externalFilters":{
+      "department_name": "",
+      "designation_name": "",
+      "designation_grade_name":""
+  } ,
       "sort": {
-        "key": 1,
-        "orderBy": ""
-      }
-    };
+      "orderby": "expense_name",
+      "key": 0
+  } 
+   
+  }
+   
      
      
     // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
@@ -59,9 +54,9 @@ export default function LeavePeriod() {
     //   <div>Tab 2 Content</div>,
     //   <div>Tab 3 Content</div>,
     // ];
-    const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
+    const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
   
-    React.useEffect(() => {
+    useEffect(() => {
       const handleResize = () => {
         setIsLargeDevice(window.innerWidth > 530);
       };
@@ -76,10 +71,11 @@ export default function LeavePeriod() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint=""
+          endpoint="getExpenseConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName="ExpensiveClaimFilterSearch"
+
         />
       
     );

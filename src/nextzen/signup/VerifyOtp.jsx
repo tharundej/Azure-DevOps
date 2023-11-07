@@ -102,6 +102,7 @@ export default function VerifyOtp() {
       const payload= {
        jwtTokenString: localStorage.getItem('jwt_access_token')}
       const response = await axios.post(baseUrl+'resendOtp',payload)
+      
     } catch (error) {
       console.error(error);
     }

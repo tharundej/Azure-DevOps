@@ -80,6 +80,7 @@ export default function Holidays() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
+          filterName="holidaysFilterSearch"
         />
       
     );

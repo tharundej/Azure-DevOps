@@ -55,7 +55,7 @@ export function useNavData() {
       // OVERVIEW
       // ----------------------------------------------------------------------
       {
-        subheader: t('overview'),
+        subheader: t('HRMS'),
         items: [
           {
             title: t('app'),
@@ -144,6 +144,8 @@ export function useNavData() {
                { title: t('Appraisal Configuration'), path: paths.dashboard.configaration.appraisalconfiguration },
                { title: t('Expense Claim Configuration'), path: paths.dashboard.configaration.expenseclaimconfiguration },
                { title: t('Shift Configuration'), path: paths.dashboard.configaration.shiftconfiguration },
+               { title: t('Role Configuration'), path: paths.dashboard.configaration.roleconfiguration },
+
             ],
           },
           // {

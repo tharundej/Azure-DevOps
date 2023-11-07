@@ -13,23 +13,31 @@ const FileBox = ({file,onDelete,onSelect,sx}) => {
      (
         <Grid sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                     <Grid item>
-                 <FileThumbnail file={file.type} sx={{ width: 36, height: 36 }} />
+                 <FileThumbnail file={file?.type || " "} sx={{ width: 36, height: 36 }} />
                 </Grid>
-                <Grid  item>
+                {/* <Grid  item>
                     123
-                </Grid>
+                </Grid> */}
       </Grid>
     );
 
     const renderText = (
         <>
+         <Typography
+            // persistent
+            variant="subtitle2"
+            // onClick={details.onTrue}
+            sx={{ width: 1, mt: 2, mb: 0.5 }}
+          >
+            {file?.fileType}
+          </Typography>
           <Typography
             // persistent
             variant="subtitle2"
             // onClick={details.onTrue}
             sx={{ width: 1, mt: 2, mb: 0.5 }}
           >
-            {file?.name}
+            {file?.fileName}
           </Typography>
     
          

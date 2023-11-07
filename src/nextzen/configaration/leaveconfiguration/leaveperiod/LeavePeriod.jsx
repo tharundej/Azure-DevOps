@@ -2,21 +2,19 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function LeaveType() {
+export default function LeavePeriod() {
     const TABLE_HEAD = [
       { id: 'slNo', label: 'SL NO', type: 'text' },
-      { id: 'leaveTypeId', label: 'Leave Type ID', type: 'text' },
-      { id: 'leaveName', label: 'Leave Name', type: 'text' },
+      { id: 'leavePeriodId', label: 'Leave Period ID', type: 'text' },
+      { id: 'leavePeriodName', label: 'Leave Period Name', type: 'text' },
       { id: 'startDate', label: 'Start Date', type: 'text' },
-      { id: 'totalNumberOfLeaves', label: 'Total Number Of Leaves', type: 'text' },
-      { id: 'termType', label: 'Term Type', type: 'text' },
-      { id: 'elUpperCapLimit', label: 'EL Upper Cap Limit', type: 'text' },
-      { id: 'elTakenRange', label: 'EL Taken Range', type: 'text' },
+      { id: 'endDate', label: 'End date', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
+
     const defaultPayload = 
     {
       "count": 5,
@@ -68,6 +66,7 @@ export default function LeaveType() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
+          filterName='LeavePeriodFilterSearch'
         />
       
     );

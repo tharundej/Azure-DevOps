@@ -87,7 +87,7 @@ export default function ApproveClaim({ currentUser }) {
   // ]
   const TABLE_HEAD = [
     {
-      id: "employeename",
+      id: "employee name",
       label: " Employee Name",
       width: 180,
       type: "text",
@@ -95,11 +95,11 @@ export default function ApproveClaim({ currentUser }) {
 
       secondaryText: "email",
     },
-    { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
-    { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
-    { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "claim type", label: "Claim Type", width: 180, type: "text" },
+    { id: "claim date", label: "Claim Date", width: 220, type: "text" },
+    { id: "claim amount", label: "Claim Amount", width: 180, type: "text" },
+    { id: "expense date", label: "Expense Date", width: 100, type: "text" },
+    { id: "approver name", label: "Approver Name", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -110,11 +110,22 @@ export default function ApproveClaim({ currentUser }) {
 
   const defaultPayload={
 
-  
-      "employee_id":"ibm3",
-      "page":0,
-      "search":"",
-      "count":5
+    "employee_id":"",
+    "company_id":"COMP2",
+    "page":0,
+    "search":"",
+    "count":5,
+    "externalFilters":{
+      "start_date":"",
+      "end_date":"",
+      "status":"",
+      "compensantory_policies":"",
+      "utilisation":""
+    },
+    "sort":{
+      "key":1,
+      "orderBy":""
+    }
    
 }
 const handleClick=()=>{
@@ -122,27 +133,28 @@ const handleClick=()=>{
 }
 
 const externalFilter = {
-  claimStartDate: "",
-  claimEndDate: "",
-  // expenseStartDate: "",
-  // expenseEndDate: "",
+  // claimStartDate: "",
+  // claimEndDate: "",
+  expenseStartDate: "",
+  expenseEndDate: "",
   // status: "",
-  paymentStatus: ""
+  paymentstatus: ""
 }
 
 
-const dialogConfig ={
-    title: 'Dynamic Dialog Example',
-    fields: [
+const dialogConfig={
+  title: 'Approve Claim Filters',
+  fields: [
 
-      { type: 'datePicker', label: 'Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
-    //   { type: 'datePicker', label: 'End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-    //   { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim", value: new Date() },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-      { type: 'Select', label: 'Select Options', options: ['Option 1', 'Option 2', 'Option 3'] },
-      // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
-    ],
-  } 
+    { type: 'datePicker', label: 'Expense Start Date', name: 'expenseStartDate',category:"expense", value: new Date() },
+    { type: 'datePicker', label: 'Expense End Date', name: 'expenseEndDate',category:"expense", value: new Date() },
+    // { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
+    // { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
+    // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
+    { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+    // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
+  ],
+} 
   const actions = [
 
     { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
@@ -309,11 +321,11 @@ const dialogConfig ={
       
       <SurendraBasicTable
 
-      endpoint="/getAllClaims"
+      endpoint="getAllClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
-      bodyData = 'data'
+      bodyData = 'Data'
       filterName="claimSearchFilter"
       filterContent={dialogConfig}
       dialogPayload={externalFilter}

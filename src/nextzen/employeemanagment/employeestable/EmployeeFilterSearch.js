@@ -415,9 +415,12 @@ const [stateOptions,setOptions]=useState([])
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            
       <Grid item>
-      <Button  variant="contained" onClick={()=>{handlicClickOnboardform()}}
+      <Button 
+      
+        variant="contained" 
+      onClick={()=>{handlicClickOnboardform()}}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Employee</Button>
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
 
 
       </Grid>

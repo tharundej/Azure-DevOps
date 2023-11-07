@@ -10,6 +10,7 @@ import { _userList } from 'src/_mock';
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 import Iconify from 'src/components/iconify/iconify';
+
 import {
   TextField,
   InputAdornment,
@@ -19,6 +20,7 @@ import {
   useTheme,
 } from '@mui/material';
 import GeneralForminfo from './GeneralForminfo';
+import PayScheduleform from './PayScheduleform';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -42,7 +44,7 @@ export default function BasicCard() {
   ];
   const actions = [
     { name: 'View', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
+    { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/', type:"edit"},
   ];
   const bodyContent = [
     {
@@ -64,7 +66,7 @@ export default function BasicCard() {
     "search": "",
     "companyId": "COMP1",
     "externalFilters": {
-      "payscheduleType": "weekly7",
+      "payscheduleType": "",
       "employmentType": "",
       "basicPayPercentage":"",
       "hraPercentage":"",
@@ -73,7 +75,7 @@ export default function BasicCard() {
       "employerPfPercentage":"",
       "employeePfPercentage":"",
       "esicPercentage":"",
-      "tdsPercentage":"10"
+      "tdsPercentage":""
     },
     "sort": {
       "key": 1,
@@ -101,14 +103,23 @@ export default function BasicCard() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // const handleOpen=(data)=>{
+  //   console.log(data,"data00000000")
+  //   console.log("hii opened")
+  // }
   return (
     <>
-      <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
+      {/* <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} /> */}
+     
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="getallPaySchedule"
         defaultPayload={defaultPayload}
         rowActions={actions}
+        filterName="PayScheduleFilterSearch"
+        // buttonFunction={}
+       
       />
     </>
   );

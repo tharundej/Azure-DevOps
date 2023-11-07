@@ -76,6 +76,11 @@ import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
+import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
+import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
+import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
+import HolidaysFilters from '../configaration/leaveconfiguration/holidays/HolidaysFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -88,7 +93,7 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
  
  
@@ -128,10 +133,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   const getTableData = (payload) => {
     setLoading(false);
-    // let initialDefaultPayloadCopy =initialDefaultPayload;
-    // if(payload){
-    //   initialDefaultPayloadCopy = payload;
-    // }
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
     // let initialDefaultPayloadCopy =initialDefaultPayload;
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
@@ -143,12 +148,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-      // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`http://192.168.0.236:3001/erp/searchStatutoryDetails`,
+        // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-       url: `http://192.168.0.184:3001/erp${endpoint}`,
-    
-      // url: `http://192.168.1.87:3001/erp${endpoint}`,
+      // url: `http://192.168.0.184:3001/erp/${endpoint}`,
+      url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      
+      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -244,11 +249,17 @@ const [filterHeaders, setFilterHeaders]=useState([])
       console.log("servce call will called ")
     }
     else if (eventData?.type === "edit"){
+      buttonFunction(rowData);
  
-      console.log("servce call will called for path navigation")
+      console.log("servce call will called for edit")
+    }
+    else if (eventData?.type === "delete"){
+      deleteFunction(rowData);
+ 
+      console.log("servce call will called for delete")
     }
     else{
-      console.log("servce call will called for path navigation")
+      console.log("servce call error")
     }
  
  
@@ -298,7 +309,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // Filter_Headers:
      
     }));
-   // getTableData(payload)
+   getTableData(payload)
   }
  
  
@@ -341,6 +352,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       externalFilters:data
      
     }));
+    console.log(payload,"updated payload data")
      getTableData(payload)
    
     
@@ -416,7 +428,12 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
+       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 
@@ -584,8 +601,15 @@ BasicTable.propTypes = {
 BasicTable.propTypes = {
   filterName: PropTypes.any
 };
+// buttonFunction
  
- 
+BasicTable.propTypes = {
+  buttonFunction: PropTypes.any
+};
+
+BasicTable.propTypes ={
+  deleteFunction:PropTypes.any
+};
  
  
 export { BasicTable };
