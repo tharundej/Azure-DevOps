@@ -5,6 +5,7 @@ import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
+import {SalaryStructure} from '../../employeemanagment/'
 
 
 function EmployeeManagementHome  () {

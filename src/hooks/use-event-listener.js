@@ -25,7 +25,7 @@ export function useEventListener(eventName, handler, element, options) {
     targetElement.addEventListener(eventName, eventListener, options);
 
     // Remove event listener on cleanup
-   
+    
     return () => {
       targetElement.removeEventListener(eventName, eventListener);
     };

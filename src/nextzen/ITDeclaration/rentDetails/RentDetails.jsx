@@ -21,15 +21,12 @@ import {
     FormControlLabel,
     Autocomplete,
   } from '@mui/material';
-  import InputAdornment from '@mui/material/InputAdornment';
-  import { Icon } from '@iconify/react';
   import Snackbar from '@mui/material/Snackbar';
-  import Iconify from 'src/components/iconify/iconify'
  import '../declarationDetails/DeclarationDetails.css';
  import MuiAlert from '@mui/material/Alert';
  import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import axios from 'axios';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+// import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -38,6 +35,8 @@ const Alert = React.forwardRef((props, ref) => (
 
 export default function RentDetails() {
 
+
+  const baseUrl = "https://xql1qfwp-3002.inc1.devtunnels.ms/erp/"
   const [data, setData] = useState([
     { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
@@ -51,16 +50,20 @@ export default function RentDetails() {
     { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
+  
+   
     // Add more months as needed
   ]);
+
+  const [isPreviousData , setIsPreviousData ] =useState(false)
+  const [reload , setReload] = useState(false)
 var [landLardName , setLandLardName] = useState("")
 var [landLardAddress , setLandLardAddress] = useState("")
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedValue, setSelectedValue] = useState('');
 var [isShowPannumber , setIsShowPanNumber] = useState(false)
-const [isPanValueThere  , setIsPanValueThere] = useState('')
+const [isPanValueThere  , setIsPanValueThere] = useState(false)
 const [isPanValueNumber  , setIsPanValueNumber] = useState('')
 const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
  var [isShowDeclaration , setIsShowDeclaration] = useState(false)
@@ -107,17 +110,18 @@ const handleUploadattchmentFileNameForLandloard =(data)=>{
   setOpenAttchementDilogForLandLoard(false)
 }
   const handleChange = (event) => {
-   
-    setSelectedValue(event.target.value);
+  setSelectedValue(event.target.value);
     if(event.target.value === "Yes"){
       setIsShowPanNumber(true)
-      setIsPanValueThere("Yes")
+      setIsPanValueThere(true)
       setIsShowDeclaration(false)
     }else if(event.target.value === "No"){
-      setIsPanValueThere("No")
+      setIsPanValueThere(false)
       setIsShowPanNumber(false)
       setIsShowDeclaration(true)
     }
+    console.log( isShowPannumber , panNumbers , "handle pan change")
+   
     console.log(event.target.value)
   };
 
@@ -179,23 +183,37 @@ setSnackbarOpen(false)
   setOpen(false);
 };
 
+const correctedData = data
+  .filter((entry) => entry.city_type !== '' && entry.rentAmount !== '' && entry.submittedAmount !== '')
+  .map((entry) => ({
+    month: entry.month,
+    cityType: entry.city_type,
+    rentAmount: parseFloat(entry.rentAmount),
+    submittedAmount: parseFloat(entry.submittedAmount),
+  }));
 
+  const updatedData = data?.map((entry) => ({
+    month: entry.month,
+    city_type: entry.city_type,
+    rentAmount: entry.rentAmount !== '' ? parseInt(entry.rentAmount, 10) : null,
+    submittedAmount: entry.submittedAmount !== '' ? parseInt(entry.submittedAmount, 10) : null,
+  }));
  const saveRentDetails = async () => {
  const payload = 
   {
-    "company_id": "comp1",
-    "employee_id": "info5",
-    "financial_year": "2023-03-01",
-    "name_of_landlord": landLardName,
-    "address_of_landlord": landLardAddress,
-    "data": data ,
-    "pan_of_the_landlord": isPanValueThere,
-    "pan_number": panNumbers,
-    "declaration_received_from_landlord": false,
-    "file_name": attachedDocummentFileName,
-    "file_content" :attachedDocumment,
-    "landlord_file_name" :landlord_file_name,
-    "landlord_file_content" : landlord_file_content
+    "companyId": "COMP1",
+    "employeeId": "ibm3",
+    "financialYear": "2023-2024",
+    "nameOfLandlord": landLardName,
+    "addressOfLandlord": landLardAddress,
+    "data": updatedData ,
+    "panOfTheLandlord": isPanValueThere,
+    "panNumber": panNumbers,
+    "declarationReceivedFromLandlord": false,
+    "fileName": attachedDocummentFileName,
+    "fileContent" :attachedDocumment,
+    "landlordFileName" :landlord_file_name,
+    "landlordileContent" : landlord_file_content
   }
   
 
@@ -217,6 +235,7 @@ setSnackbarOpen(false)
         setSnackbarSeverity('success');
         setSnackbarMessage('Rent details saved successfully!');
         setSnackbarOpen(true);
+        setReload(!reload)
         console.log("success")
       }
 
@@ -238,25 +257,28 @@ setSnackbarOpen(false)
 const editRentDetails = async () => {
   const payload = 
    {
-     "company_id": rentDetailsData?.companyId,
-     "employee_id": rentDetailsData?.employeeId,
-     "financial_year": rentDetailsData?.financialYear,
-     "name_of_landlord": rentDetailsData?.nameOfLandlord,
-     "address_of_landlord": rentDetailsData?.addressOfLandlord,
-     "data": data ,
-     "pan_of_the_landlord": rentDetailsData?.panOfTheLandlord,
-     "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
-     "pan_number": rentDetailsData?.companyId,
-     "declaration_received_from_landlord": rentDetailsData?.companyId,
-     
-     "file_content" :attachedDocumment ?attachedDocumment : rentDetailsData?.rentDocs,
-   
-   "landlord_file_content" :landlord_file_content? landlord_file_content : rentDetailsData?.landLordDocs
+    //  "company_id": rentDetailsData?.companyId,
+    //  "employee_id": rentDetailsData?.employeeId,
+    "companyId": "COMP1",
+    "employeeId" :"ibm3",
+     "financialYear": rentDetailsData?.financialYear,
+     "nameOfLandlord": rentDetailsData?.nameOfLandlord,
+     "addressOfLandlord": rentDetailsData?.addressOfLandlord,
+     "data": updatedData ,
+     "panOfTheLandlord": rentDetailsData?.panOfTheLandlord,
+    //  "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
+    "declarationReceivedFromLandlord": false,
+    "panNumber": panNumbers,
+    //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
+     "fileName": attachedDocummentFileName ? attachedDocummentFileName :rentDetailsData?.file_name ,
+     "fileContent" :attachedDocumment ?attachedDocumment : rentDetailsData?.rentDocs,
+     "landlordFileName" :landlord_file_name ? landlord_file_name : rentDetailsData?.landlord_file_name,
+     "landlordFileContent" :landlord_file_content? landlord_file_content : rentDetailsData?.landLordDocs
    }
    
  
    const config = {
-  method: 'post',
+  method: 'put',
      maxBodyLength: Infinity,
      url: baseUrl + 'updateRentDeclarationDetails ',
      headers: {
@@ -274,8 +296,10 @@ const editRentDetails = async () => {
          // console.log(JSON.stringify(response.data));
          // setData(rowsData);
          setOpen(true);
+         
          <Snackbar open={open} autoHideDuration={6000} />
          console.log("success")
+         setReload(!reload)
        }
  
      })
@@ -293,7 +317,8 @@ const editRentDetails = async () => {
  };
 
  const getRentDetails = async () => {
-  const payload = { "employeeID" : "ibm2" };
+  const payload = {  
+  "employeeId" :"ibm3" };
 
   const config = {
     method: 'post',
@@ -312,15 +337,21 @@ const editRentDetails = async () => {
     .then((response) => {
       if (response.status === 200) {
         const rowsData = response?.data?.data;
+        if(rowsData !== null || undefined){
+          setIsPreviousData(true)
+          
+        }
+        console.log(rowsData)
         setRendDetailsData(rowsData);
         setLandLardName(response?.data?.data?.nameOfLandlord)
         setLandLardAddress(response?.data?.data?.addressOfLandlord)
         setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
-        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
-        setPanNumbers( response?.data?.data?.pan_number) 
+        setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
+        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : ""
+        setPanNumbers( response?.data?.data?.pan_number == undefined || null ?['', '', ''] :response?.data?.data?.pan_number  ) 
 
-        console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers  )
+        console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers ,response?.data?.data?.pan_number )
 
         setData(prevData => {
           return prevData.map(existingMonth => {
@@ -350,7 +381,7 @@ const editRentDetails = async () => {
     });
   //  console.log(result, 'resultsreults');
 };
-console.log(rentDetailsData , "rentDetailsDatarentDetailsData")
+console.log(rentDetailsData , "rentDetailsDatarentDetailsData" , isPreviousData ,"previousData" ,panNumbers)
 const attchementHandler = () =>{
   setOpenAttchementDilog(true)
 }
@@ -369,12 +400,17 @@ useEffect(() => {
     getRentDetails();
   };
   fetchData();
-  react-hooks/exhaustive-deps
-}, []);
+  
+}, [reload]);
 
 
-
-    
+const handleEditOrsave = ()=>{
+  // console.log(rentDetailsData?.addressOfLandlord ,"rentDetailsData?.length")
+  // console.log(" i am calling fine ")
+  (rentDetailsData?.addressOfLandlord !== undefined  )?editRentDetails() :  saveRentDetails()
+ 
+}
+console.log(rentDetailsData?.addressOfLandlord ,"rentDetailsData?.length")
   console.log(data ,"datadatadata")
     return (
         <div>
@@ -480,7 +516,7 @@ useEffect(() => {
        justifyContent="space-evenly" direction="row" style={{ marginBottom: "1rem", height: "60px" }}>
         <Grid item><Button className="button" onClick={attchementHandler}>Attachment</Button></Grid> 
         <Grid item alignItems="center">
-          <Button className="button" onClick={rentDetailsData? editRentDetails  : saveRentDetails}>Save</Button>
+          <Button className="button" onClick={handleEditOrsave}>Save</Button>
         </Grid>
       </Grid>
 

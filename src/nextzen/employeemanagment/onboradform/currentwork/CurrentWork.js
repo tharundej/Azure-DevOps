@@ -388,7 +388,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
-       react-hooks/exhaustive-deps
+       
     },[])
   const NewUserSchema = Yup.object().shape({
    department_name:Yup.string(),

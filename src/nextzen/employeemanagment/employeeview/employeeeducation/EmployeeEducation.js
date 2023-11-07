@@ -106,7 +106,7 @@ const EmployeeEducation = () => {
    useEffect(()=>{
 
     ApiHit();
-     react-hooks/exhaustive-deps
+     
    },[])
 
    

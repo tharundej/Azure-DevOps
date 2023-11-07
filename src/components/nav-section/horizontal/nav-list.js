@@ -27,7 +27,7 @@ export default function NavList({ data, depth, hasChild, config }) {
     if (open) {
       handleClose();
     }
-    react-hooks/exhaustive-deps
+    
   }, [pathname]);
 
   useEffect(() => {

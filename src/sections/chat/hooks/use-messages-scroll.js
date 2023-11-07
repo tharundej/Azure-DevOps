@@ -23,7 +23,7 @@ export default function useMessagesScroll(messages) {
     () => {
       scrollMessagesToBottom();
     },
-    react-hooks/exhaustive-deps
+   
     [messages]
   );
 

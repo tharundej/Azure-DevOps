@@ -179,8 +179,8 @@ export function AuthProvider({ children }) {
     //     },
     //   },
     // });
-    react-hooks/exhaustive-deps
-    // <AmplifyNewPasswordView emailId={data?.emailId}/>
+    
+    <AmplifyNewPasswordView emailId={data.emailId}/>
   }, []);
 
 

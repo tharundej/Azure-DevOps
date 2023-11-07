@@ -3,10 +3,21 @@ import { styled, alpha } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 export const StyledCalendar = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  // height: '100%',
   width: 'calc(100% + 2px)',
   marginLeft: -1,
+  marginRight:-1,
   marginBottom: -1,
-
+  // maxHeight: 'calc(100vh - 200px)',
+  // paddingTop:'10px',
+  overflowY: 'auto',
+  scrollbarWidth: "none",
+  '& .fc.fc-main' : {
+    width:"100% !important" ,
+    height:"100% !important" 
+  },
   '& .fc': {
     '--fc-border-color': alpha(theme.palette.grey[500], 0.16),
     '--fc-now-indicator-color': theme.palette.error.main,

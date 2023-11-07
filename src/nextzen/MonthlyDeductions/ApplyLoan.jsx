@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -37,7 +37,7 @@ import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function ApplyLoan({ currentUser }) {
+export default function ApplyLoan({ currentUser,handleClose }) {
   
   const [datesUsed, setDatesUsed] = useState({
     No_instalment: dayjs(new Date()),
@@ -67,9 +67,9 @@ export default function ApplyLoan({ currentUser }) {
     () => ({
    
         Amount: currentUser?.Amount || '',
-        No_instalment: currentUser?.No_instalment || '',
-        end_date: currentUser?.end_date || '',
-        due_date: currentUser?.due_date || '',
+        // No_instalment: currentUser?.No_instalment || '',
+        // end_date: currentUser?.end_date || '',
+        // due_date: currentUser?.due_date || '',
         Comment: currentUser?.Comment || '',
   
    
@@ -105,17 +105,19 @@ const [sendData, setSendData] = useState({
       // data.company_id = '0001';
       // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      data.No_instalment = formatDateToYYYYMMDD(datesUsed?.No_instalment);
+      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
+      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
+      // data.No_instalment = formatDateToYYYYMMDD(datesUsed?.No_instalment);
       data.selectedActivity = selectedActivity;
-      data.company_id = "0001";
+      data.companyID = "COMP1";
+      data.employeeID = "info7";
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addProject', data).then(
+      const response = await instance.post('addLoanDetails', data).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
@@ -137,7 +139,7 @@ const [sendData, setSendData] = useState({
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                Enter Your Amount to Request Salary In Advace 
+                Enter Your Amount to Request Loans
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
@@ -150,8 +152,8 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="Amount" label=" Enter Amount" />
-                <RHFTextField name="No_instalment" label=" No Of Instalment" />
+                <RHFTextField name="Amount" type={number} label=" Enter Amount" />
+                {/* <RHFTextField name="No_instalment" label=" No Of Instalment" /> */}
                 <RHFTextField name="Comment" label="Comment" />
               </Box>
 
@@ -159,7 +161,7 @@ const [sendData, setSendData] = useState({
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Apply Loan'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
            
             </Card>
@@ -172,4 +174,5 @@ const [sendData, setSendData] = useState({
 
 ApplyLoan.propTypes = {
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

@@ -20,6 +20,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
+    Stack
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -44,15 +45,16 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   
 
     const onSave=()=>{
-  console.log(defaultValues);
+    console.log(defaultValues);
 
      const obj={
       companyId: "COMP5",
       employeeId: "NEWC19",
-      education:defaultValues
+      experience:defaultValues
      }
       
       const config = {
+
         method: 'post',
         maxBodyLength: Infinity,
         url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
@@ -99,9 +101,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
         }
         
       ]
-       
       
-     
     };
     const handleAdd = () => {
         setDefaultValues((prev) => [...prev, obj]);
@@ -145,33 +145,21 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
            
       const handleChange = (e, index, field) => {
-        
-        const newArray=defaultValues
+
+        const { value, id } = e.target;
+        const newObj = defaultValues;
+        const newArray = [...defaultValues];
+
        if(field==='grade' || field==="yearOfPassing"){
-        
 
         newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: parseInt(value,10)
       }
-    }
 
-      else if(field==="endDate"  || field==="startDate"){
-       // const { value, id } = e.target;
-        const newObj = defaultValues;
-       // newObj[index][field]=e;
-        newArray[index] = {
-          ...newArray[index],
-          [field]: e
-      }
 
-    }
-    
-    else{
-        const { value, id } = e.target;
-        const newObj = defaultValues;
-      
+       }else{
 
         newObj[index][field]=e?.target?.value ;
         newArray[index] = {
@@ -296,7 +284,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   return (
     <>
     <Helmet>
-    <title> Dashboard: Add Education</title>
+    <title> Dashboard: Add Work</title>
   </Helmet>
 
   <Dialog
@@ -310,8 +298,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   >
 
             <DialogContent>
+              <Typography>Add Previous Work</Typography>
 
-            <Card sx={{paddingTop:'20px'}}>
+            <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -337,7 +326,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     name="previousCompanyName"
                     label="Company Name"
                     variant="outlined"
-                    id="previousCompanyName"
+                    id={`previousCompanyName${index}`}
                      value={item?.previousCompanyName}
                     onChange={(e) => {
                       handleChange(e, index, 'previousCompanyName');
@@ -363,15 +352,17 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <LocalizationProvider fullWidth dateAdapter={AdapterDayjs}>
+                  <DemoContainer fullWidth components={['DatePicker', 'DatePicker']}>
                     
                     <DatePicker
+                    
                       label="Start Date"
-                      value={dayjs(item?.startDate)}
+                      value={dayjs(item?.startDate===""?dayjs() :item?.startDate)}
                       onChange={(newval) => {
                         handleChange(newval, index, 'startDate');
                       }}
+                      style={{ width: '100%' }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -382,7 +373,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     
                     <DatePicker
                       label="End Date"
-                      value={dayjs(item?.endDate) || ""}
+                      value={dayjs(item?.endDate===""?dayjs() :item?.endDate)}
                       onChange={(newval) => {
                         handleChange(newval, index, 'endDate');
                       }}
@@ -408,9 +399,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                        <MenuItem value="marks-memo">Marks Memo</MenuItem>
-                        <MenuItem value="degree">Degree</MenuItem>
+                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
+                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        
                         {/* Add more categories here */}
                     </Select>
                     </FormControl>
@@ -495,7 +486,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
             handleAdd();
           }}
         >
-          Add Education
+          Add Work
         </Button>
         </Grid>
         {/* <Button
@@ -508,18 +499,19 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
           Submit
         </Button> */}
       </form>
-    </Card>
+            </Stack>
 
 
 
             </DialogContent>
 
             <DialogActions>
-            <Button variant="outlined" onClick={()=>{setDefaultValues(employeeData);onhandleClose()}}>
+            <Button variant="outlined" onClick={()=>{setDefaultValues([]);onhandleClose()}}>
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}>
+            <LoadingButton type="submit" variant="contained" onClick={onSave}
+            sx={{backgroundColor:'#3B82F6',color:'white'}}>
               Save
             </LoadingButton>
           </DialogActions>

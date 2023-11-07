@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import { styled } from '@mui/system';
 
-import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete } from '../../../components/hook-form';
 
 import {
   Card,
@@ -408,7 +408,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
 // }
 ExpenseClaimFilters.propTypes = {
   filterData: PropTypes.func,
-  searchData: PropTypes.any,
+  searchData: PropTypes.func,
 };
 
 ExpenseClaimFilters.propTypes = {

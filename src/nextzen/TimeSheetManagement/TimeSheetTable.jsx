@@ -122,7 +122,7 @@ export default function TimeSheetTable() {
  }}
  className="custom-dialog"  
 >
- <TimeForm currentUser={{}} />
+ <TimeForm currentUser={{}} handleClose={handleClose}/>
       </Dialog>
     )}
    

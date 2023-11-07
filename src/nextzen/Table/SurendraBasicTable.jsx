@@ -220,7 +220,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData(initialDefaultPayload);
-     react-hooks/exhaustive-deps
+    
   }, [initialDefaultPayload])
 
  
@@ -245,9 +245,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       maxBodyLength: Infinity,
 
-      url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims
-      // url: `http://192.168.0.184:3001/erp/${endpoint}`,
+      url: `http://192.168.1.199:3001/erp/${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -370,7 +370,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  // const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
+  const notFound = (!tableData?.length && canReset) || !tableData?.length;
 
  
 
@@ -493,7 +493,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // useEffect(()=>{
   //   getTableData(initialDefaultPayload);
 
-  //    react-hooks/exhaustive-deps
+  //    
   // },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
@@ -612,7 +612,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     // useEffect(()=>{
     //      getTableData(initialDefaultPayload)
-    //      react-hooks/exhaustive-deps
+    //      
     // },[initialDefaultPayload])
 
 
@@ -835,7 +835,7 @@ const [sortColumn, setSortColumn]=useState("")
 
  
 
-                    {/* <TableNoData notFound={notFound} /> */}
+                    <TableNoData notFound={notFound} />
 
                   </TableBody>
 
@@ -1009,7 +1009,7 @@ SurendraBasicTable.propTypes = {
 
 SurendraBasicTable.propTypes = {
 
-  bodyData: PropTypes.func,
+  bodyData: PropTypes.any,
 
 };
 

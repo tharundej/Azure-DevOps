@@ -30,7 +30,7 @@ export default function NavList({ item, offsetTop }) {
     if (nav.value) {
       nav.onFalse();
     }
-    react-hooks/exhaustive-deps
+    
   }, [pathname]);
 
   const handleOpenMenu = () => {

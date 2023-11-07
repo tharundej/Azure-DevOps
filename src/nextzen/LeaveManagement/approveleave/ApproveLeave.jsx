@@ -20,12 +20,25 @@ export default function Approveleave(){
         "page": 0,
         "search": "",
         "eid": "info1",
-    "externalFilters":{
-        "fFromDate": "",
-        "fToDate": "",
-        "fLeaveTypeName": "",
-        "fStatus": ""
-    },
+        "externalFilters": {
+          "fApplyDate": "",
+          "fFromDate": "",
+          "fToDate": "",
+          "applyDate": {
+              "from": "",
+              "to": ""
+          },
+          "fromDate": {
+              "from": "",
+              "to": ""
+          },
+          "toDate": {
+              "from": "",
+              "to": ""
+          },
+          "fLeaveTypeName": "",
+          "fStatus": ""
+      },
     "sort": {
         "key":1,
         "orderBy":"al.apply_date"
@@ -34,18 +47,18 @@ export default function Approveleave(){
 
       const [TABLE_HEAD,setTableHead] =useState( [
         {
-              id: "employee_id",
+              id: "employeeId",
               label: "Employee Id",
               minWidth:"8pc",
               type: "text"
             },
             { id: "employee", label: "Employee Name",minWidth:"10pc",type: "text"},
-            { id: "apply_date", label: "Apply Date",minWidth:"8pc", type: "text" },
-            {id : "net_leave_balance",label:"Leave Balance",minWidth:"7pc",type:"text"},
-            { id: "leave_type", label: "Leave Type",minWidth:"8pc", type: "text" },
-            { id: "from_date", label: "Start Date",minWidth:"7pc", type: "text" },
-            {id: "to_date",label:"End Date",minWidth:"7pc",type:"text"},
-            {id: "requested_duration",label:"Requested Duration",minWidth:"7pc",type:'text'},
+            { id: "applyDate", label: "Apply Date",minWidth:"8pc", type: "text" },
+            {id : "netLeaveBalance",label:"Leave Balance",minWidth:"7pc",type:"text"},
+            { id: "leaveType", label: "Leave Type",minWidth:"8pc", type: "text" },
+            { id: "fromDate", label: "Start Date",minWidth:"7pc", type: "text" },
+            {id: "toDate",label:"End Date",minWidth:"7pc",type:"text"},
+            {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
             {id: 'status',label:'Status',minWidth:"8pc",type:'text'}
             // { id: '', width: 88 },
 
@@ -53,9 +66,9 @@ export default function Approveleave(){
     
     
       const actions = [
-        { name: "Approve", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+        { name: "Approve", id: "1", type: "serviceCall", endpoint: '/approveLeave' },
 
-        { name: "Reject", id: 'reject', type: "serviceCall", endpoint: '/reject' },
+        { name: "Reject", id:"2", type: "serviceCall", endpoint: '/approveLeave' },
     
       ];
 
@@ -64,7 +77,7 @@ export default function Approveleave(){
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
-  endpoint="listLeave"  
+  endpoint="/listLeave"  
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'

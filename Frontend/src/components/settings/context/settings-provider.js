@@ -24,7 +24,7 @@ export function SettingsProvider({ children, defaultSettings }) {
     if (isArabic) {
       onChangeDirectionByLang('ar');
     }
-    react-hooks/exhaustive-deps
+    //
   }, [isArabic]);
 
   // Direction by lang

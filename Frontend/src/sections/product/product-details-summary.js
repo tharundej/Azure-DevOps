@@ -82,7 +82,7 @@ export default function ProductDetailsSummary({
     if (product) {
       reset(defaultValues);
     }
-    react-hooks/exhaustive-deps
+    
   }, [product]);
 
   const onSubmit = handleSubmit(async (data) => {

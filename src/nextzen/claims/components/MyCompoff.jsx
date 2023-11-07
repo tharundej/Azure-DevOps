@@ -160,7 +160,11 @@ export default function MyCompoff({ currentUser ,}) {
 
   const [del, setDel]= React.useState({
 
-    compensatoryRequestId:0 ,
+    
+     employeeId:"ibm4",
+      companyId:"COMP2",
+      compensantoryRequestId:0
+  
        
 
   })
@@ -177,7 +181,7 @@ export default function MyCompoff({ currentUser ,}) {
         console.log("delete")
         setDel(prevState => ({
               ...prevState,
-              compensatoryRequestId:1,
+              compensantoryRequestId:3,
           }));
 
           handle(del);
@@ -440,7 +444,7 @@ export default function MyCompoff({ currentUser ,}) {
                     label="Start Date"
                     // value={item?.to}
                     onChange={(newValue) => {
-                      handleChangeDate(newValue, 'to');
+                      // handleChangeDate(newValue, 'to');
                     }}
                   />
                   {/* </DemoContainer> */}
@@ -454,7 +458,7 @@ export default function MyCompoff({ currentUser ,}) {
                     label="End Date"
                     // value={item?.to}
                     onChange={(newValue) => {
-                      handleChangeDate(newValue, 'End');
+                     // handleChangeDate(newValue, 'End');
                     }}
                   />
                   {/* </DemoContainer> */}

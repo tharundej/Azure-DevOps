@@ -317,7 +317,7 @@ useEffect(() => {
     // await getDeclarationsList();
   };
   fetchData();
-  react-hooks/exhaustive-deps
+  
 }, []);
 
 

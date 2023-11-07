@@ -14,7 +14,8 @@ export default function MasterDetails(){
   };
   return (
     <div>
-    <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
+      {/* search and filter  */}
+    {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
     <Grid item>
       <TextField
        sx={{ width: '20vw' }}
@@ -37,7 +38,7 @@ export default function MasterDetails(){
    <Grid item>
      <Button className="button">Report</Button>
    </Grid>
- </Grid>
+ </Grid> */}
     <Grid container >
     <Typography style={{ color: '#000000',fontWeight:'bold' , fontSize: '1rem' }}>Tax Section</Typography>
     <Grid item sx={{padding:'20px'}}>
