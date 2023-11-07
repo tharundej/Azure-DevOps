@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import axios from 'axios';
@@ -79,7 +79,7 @@ export default function FileUploader({
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
   const handleClickOpen = () => {
     // setPhotos(true)

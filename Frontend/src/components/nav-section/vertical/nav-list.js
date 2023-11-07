@@ -7,11 +7,11 @@ import { usePathname } from 'src/routes/hooks';
 import { useActiveLink } from 'src/routes/hooks/use-active-link';
 //
 import NavItem from './nav-item';
-
+ 
 // ----------------------------------------------------------------------
 
+const pathname = usePathname();
 export default function NavList({ data, depth, hasChild, config }) {
-  const pathname = usePathname();
 
   const active = useActiveLink(data.path, hasChild);
 
@@ -22,8 +22,7 @@ export default function NavList({ data, depth, hasChild, config }) {
   useEffect(() => {
     if (!active) {
       handleClose();
-    }
-    
+    }   
   }, [pathname]);
 
   const handleToggle = useCallback(() => {
