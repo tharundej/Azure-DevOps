@@ -52,9 +52,6 @@ export default function CreateAssets({ currentUser, handleClose }) {
 
   const statusOptions = ['Active', 'Inactive'];
   const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
-  const handleStatusChange = (event, newValue) => {
-    setSelectedStatus(newValue);
-  };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
