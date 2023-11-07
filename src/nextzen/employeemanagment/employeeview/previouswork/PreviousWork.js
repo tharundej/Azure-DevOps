@@ -148,7 +148,7 @@ const PreviousWork = () => {
       <CreatePreviousWork open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
+          <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Work</Button>
           </Grid>
         </Grid>
 

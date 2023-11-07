@@ -20,6 +20,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
+    Stack
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -145,12 +146,12 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
            
       const handleChange = (e, index, field) => {
-        
+        const { value, id } = e.target;
         const newArray=defaultValues
        if(field==='grade' || field==="yearOfPassing"){
         
 
-        newObj[index][field]=e?.target?.value ;
+       
         newArray[index] = {
           ...newArray[index],
           [field]: parseInt(value,10)
@@ -158,8 +159,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
     }
 
       else if(field==="endDate"  || field==="startDate"){
-       // const { value, id } = e.target;
-        const newObj = defaultValues;
+        
+        
        // newObj[index][field]=e;
         newArray[index] = {
           ...newArray[index],
@@ -170,10 +171,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
     
     else{
         const { value, id } = e.target;
-        const newObj = defaultValues;
-      
-
-        newObj[index][field]=e?.target?.value ;
+        
         newArray[index] = {
           ...newArray[index],
           [field]: value
@@ -296,7 +294,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   return (
     <>
     <Helmet>
-    <title> Dashboard: Add Education</title>
+    <title> Dashboard: Add Work</title>
   </Helmet>
 
   <Dialog
@@ -310,8 +308,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
   >
 
             <DialogContent>
+              <Typography>Add Previous Work</Typography>
 
-            <Card sx={{paddingTop:'20px'}}>
+            <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -363,15 +362,17 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <LocalizationProvider fullWidth dateAdapter={AdapterDayjs}>
+                  <DemoContainer fullWidth components={['DatePicker', 'DatePicker']}>
                     
                     <DatePicker
+                    
                       label="Start Date"
-                      value={dayjs(item?.startDate)}
+                      value={dayjs(item?.startDate===""?dayjs() :item?.startDate)}
                       onChange={(newval) => {
                         handleChange(newval, index, 'startDate');
                       }}
+                      style={{ width: '100%' }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -382,7 +383,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     
                     <DatePicker
                       label="End Date"
-                      value={dayjs(item?.endDate) || ""}
+                      value={dayjs(item?.endDate===""?dayjs() :item?.endDate)}
                       onChange={(newval) => {
                         handleChange(newval, index, 'endDate');
                       }}
@@ -508,7 +509,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
           Submit
         </Button> */}
       </form>
-    </Card>
+            </Stack>
 
 
 
@@ -519,7 +520,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}>
+            <LoadingButton type="submit" variant="contained" onClick={onSave}
+            sx={{backgroundColor:'#3B82F6',color:'white'}}>
               Save
             </LoadingButton>
           </DialogActions>

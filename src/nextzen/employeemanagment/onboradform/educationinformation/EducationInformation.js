@@ -89,7 +89,10 @@ const   EducationInformation=forwardRef((props,ref)=> {
      axios.request(config)
      .then((response) => {
        console.log(JSON.stringify(response.data));
-       onhandleClose()
+       //props.onhandleClose()
+       props.nextStep();
+       props.handleCallSnackbar(response.data.message,"success")
+       console.log(response.data.message,'response.data.message')
      })
      .catch((error) => {
        console.log(error);
@@ -446,7 +449,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
                 <Grid>
 
                   <Grid item>
-                  {console.log(index,'opopop')}
+                  
                   <input
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
@@ -477,7 +480,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
                         
 
                       }
-                      >Add</Button>
+                      >Add Files</Button>
                    
 
                   }
