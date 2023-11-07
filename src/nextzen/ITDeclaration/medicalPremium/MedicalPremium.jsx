@@ -335,7 +335,7 @@ export default function MedicalPremium() {
       getMedicalPremumDetailsDocs()
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, [isreloading]);
   console.log(medicalTableData?.MedicalDocs , "medicalDATA", medicalTableData?.MedicalDocs?.length)
   return (

@@ -74,12 +74,12 @@ export default function FileUploader({
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-    react-hooks/exhaustive-deps
+   
   }, [reload]);
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-    react-hooks/exhaustive-deps
+   
   }, []);
   const handleClickOpen = () => {
     // setPhotos(true)

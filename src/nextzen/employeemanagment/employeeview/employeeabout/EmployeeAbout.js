@@ -103,7 +103,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
    
   
    
-    react-hooks/exhaustive-deps
+   
   },[])
 
   const handleChange=(e,field)=>{

@@ -226,7 +226,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData();
-     react-hooks/exhaustive-deps
+    
   }, [])
 
  
@@ -508,7 +508,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   useEffect(()=>{
     getTableData(initialDefaultPayload);
 
-     react-hooks/exhaustive-deps
+    
   },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 

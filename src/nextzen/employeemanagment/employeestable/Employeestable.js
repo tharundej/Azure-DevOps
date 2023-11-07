@@ -84,7 +84,7 @@ export default function EmployeeTable() {
 
   useEffect(()=>{
    ApiHit();
-   react-hooks/exhaustive-deps
+  
   },[])
 
   const defaultPayload={

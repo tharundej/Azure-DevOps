@@ -259,7 +259,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       await getLicPremium();
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, [isreloading]);
 
   const userId  =  5

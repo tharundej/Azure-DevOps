@@ -139,7 +139,7 @@ const PreviousWork = () => {
    useEffect(()=>{
 
    //  ApiHit();
-     react-hooks/exhaustive-deps
+    
    },[])
 
    

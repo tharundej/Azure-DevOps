@@ -125,7 +125,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
    
     getEmployeeStattuory()
    
-    react-hooks/exhaustive-deps
+   
   },[])
 
   const handleChange=(e,field)=>{

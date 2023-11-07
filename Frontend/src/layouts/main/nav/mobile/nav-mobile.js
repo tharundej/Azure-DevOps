@@ -26,7 +26,7 @@ export default function NavMobile({ offsetTop, data }) {
     if (nav.value) {
       nav.onFalse();
     }
-    react-hooks/exhaustive-deps
+   
   }, [pathname]);
 
   return (

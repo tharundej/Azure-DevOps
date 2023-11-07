@@ -384,7 +384,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       getLocation();
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, []);
 
   useEffect(() => {
@@ -393,7 +393,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       getDesignation()
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, [hitGetDepartment]);
 
 

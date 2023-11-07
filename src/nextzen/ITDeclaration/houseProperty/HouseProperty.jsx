@@ -168,7 +168,7 @@ export default function HouseProperty() {
       await addHousingProperity();
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, []);
 
   return (

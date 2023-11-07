@@ -369,7 +369,7 @@ useEffect(() => {
     getRentDetails();
   };
   fetchData();
-  react-hooks/exhaustive-deps
+ 
 }, []);
 
 

@@ -89,7 +89,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     if (amount) {
       handleAutoWidth();
     }
-    react-hooks/exhaustive-deps
+   
   }, [amount]);
 
   const handleAutoWidth = useCallback(() => {

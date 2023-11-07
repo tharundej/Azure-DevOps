@@ -102,7 +102,7 @@ const DeclarationDetails = () => {
       await getDeclarationsList();
     };
     fetchData();
-    react-hooks/exhaustive-deps
+   
   }, [reloading]);
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({
