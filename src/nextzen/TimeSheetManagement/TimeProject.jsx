@@ -150,7 +150,7 @@ export default function TimeProject() {
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}} />
+ <AddTimeProject currentUser={{}}handleClose={handleClose} />
       </Dialog>
     )}
 <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
@@ -164,7 +164,7 @@ export default function TimeProject() {
 
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
-
+filterName="TimeProjectFilter"
 endpoint='listProject'
 bodyData='data'
 rowActions={actions}
