@@ -246,7 +246,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
  
   const approveLeave = (rowdata,event)=>{
-    console.log(rowdata,"approveleavee",event)
     var payload ={
         "leave_id": rowdata?.leaveId,
         "emp_id": rowdata?.employeeId,
