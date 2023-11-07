@@ -37,7 +37,7 @@ import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function SalaryAdvanceForm({ currentUser }) {
+export default function SalaryAdvanceForm({ currentUser,handleClose }) {
   
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
@@ -54,11 +54,11 @@ export default function SalaryAdvanceForm({ currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Amount: Yup.string(),
+    requestAmount: Yup.string(),
     // start_date: Yup.string(),
     // end_date: Yup.string(),
     // due_date: Yup.string().required('First Name is Required'),
-    Comment: Yup.string(),
+    commentStatus: Yup.string(),
    
    
   });
@@ -66,11 +66,11 @@ export default function SalaryAdvanceForm({ currentUser }) {
   const defaultValues = useMemo(
     () => ({
    
-        Amount: currentUser?.Amount || '',
+        requestAmount: currentUser?.requestAmount || '',
         start_date: currentUser?.start_date || '',
         end_date: currentUser?.end_date || '',
         due_date: currentUser?.due_date || '',
-        Comment: currentUser?.Comment || '',
+        commentStatus: currentUser?.commentStatus || '',
   
    
     }),
@@ -105,15 +105,16 @@ const [sendData, setSendData] = useState({
       // data.company_id = '0001';
       // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.selectedActivity = selectedActivity;
-      data.company_id = "0001";
+      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
+      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
+      // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
+      // data.selectedActivity = selectedActivity;
+      data.companyID = "COMP1";
+      data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addProject', data).then(
+      const response = await instance.post('addSalaryAdvance', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -137,7 +138,7 @@ const [sendData, setSendData] = useState({
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                Enter Your Amount to Request Salary In Advace 
+                Enter Your requestAmount to Request Salary In Advace 
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
@@ -150,16 +151,16 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="Amount" label=" Enter Amount" />
+                <RHFTextField name="requestAmount" label=" Enter Amount" />
    
-                <RHFTextField name="Comment" label="Comment" />
+                <RHFTextField name="commentStatus" label="Commen" />
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Apply Salary Advance'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}>Cancel</Button>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
            
             </Card>
@@ -171,5 +172,7 @@ const [sendData, setSendData] = useState({
 }
 
 SalaryAdvanceForm.propTypes = {
+
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

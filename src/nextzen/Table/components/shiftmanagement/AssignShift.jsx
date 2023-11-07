@@ -148,7 +148,7 @@ export default function AssignShift({ currentUser }) {
               >
                
 
-<RHFSelect name="Select_Shift" label="Select Shift">
+{/* <RHFSelect name="Select_Shift" label="Select Shift">
 
   <option value="full_day" >Full Day</option>
 
@@ -156,7 +156,7 @@ export default function AssignShift({ currentUser }) {
 
   <option value="second_half" >Second Half</option>
 
-  </RHFSelect>
+  </RHFSelect> */}
 
   <RHFSelect name="ShiftGroup_Name" label="Shift Group Name ">
 
@@ -168,7 +168,7 @@ export default function AssignShift({ currentUser }) {
 
 </RHFSelect>
 
-<RHFSelect name="SelectShift_Terms" label="Select Shift Terms">
+{/* <RHFSelect name="SelectShift_Terms" label="Select Shift Terms">
 
 <option value="full_day" >Full Day</option>
 
@@ -176,7 +176,7 @@ export default function AssignShift({ currentUser }) {
 
 <option value="second_half" >Second Half</option>
 
-</RHFSelect>
+</RHFSelect> */}
 
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
@@ -214,7 +214,44 @@ export default function AssignShift({ currentUser }) {
                 
 
 
+                <Autocomplete
 
+multiple
+
+id="Primary Skills"
+
+options={top100Films.map((option) => option.title)}
+
+freeSolo
+
+
+renderTags={(value1, getTagProps) =>
+
+  value1.map((option, index1) => (
+
+    <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
+
+  ))
+
+}
+
+renderInput={(params) => (
+
+  <TextField
+
+    {...params}
+
+    variant="filled"
+
+    label="Select Employe"
+
+    placeholder="Favorites"
+
+  />
+
+)}
+
+/>
 
               </Box>
 

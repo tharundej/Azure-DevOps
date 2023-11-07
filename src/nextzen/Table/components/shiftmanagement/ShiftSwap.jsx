@@ -31,9 +31,9 @@ export default function ShiftSwap() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
-          label: " SL_NO",
+          label: " SL NO",
     
           type: "text",
     
@@ -45,17 +45,18 @@ export default function ShiftSwap() {
     
         },
     
-        { id: "Employe_Name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
 
-        { id: "FromShift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "From_shift_name", label: "From Shift Name", width: 180, type: "text" },
     
-        { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
-        { id: "Swap_Date", label: "Swap Date", width: 220, type: "text" },
+        // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "swap_date", label: "Swap Date", width: 220, type: "text" },
+        { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
-        { id: "ToShift_Name", label: "To Shift Name", width: 180, type: "text" },
+        // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     
-        { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
-        { id: "Status", label: "Status ", width: 100, type: "text" },
+        // { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
+        { id: "status", label: "Status ", width: 100, type: "text" },
         // { id: "End_Date", label: "End Date", width: 100, type: "text" },
         // { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
     
@@ -63,7 +64,21 @@ export default function ShiftSwap() {
     
       ];
     
-     
+     const defaultPayload = {
+      "company_id":"COMP2",
+      "page":0,
+      "search":"",
+      "count": 5,
+      "externalFilters":{
+      "status": "",
+      "swap_date": ""
+  } , 
+      "sort": {
+      "orderby": "employee_name",
+      "key": 0
+  } 
+   
+  }
     
       const actions = [
     
@@ -75,33 +90,7 @@ export default function ShiftSwap() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-          Employe_Name:"Aight",
-    
-          FromShift_name: "Aswin!23",
-    
-          FromShiftgroup_Name: "BellErp",
-
-          Swap_Date: "12/12/2023",
-    
-          ToShift_Name: "night",
-    
-          ToShiftGroup_Name: "Coding",
-    
-          Status: "Swaped",
-
-        //   End_Date: "122hour 40minutes",
-
-        //   Sift_term: "Weakly",
-          
-    
-        },
-    
-      ];
+     
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -134,10 +123,11 @@ export default function ShiftSwap() {
 </Container>
     <BasicTable
 
-headdata={TABLE_HEAD}
-
-bodydata={bodyContent}
-
+headerData={TABLE_HEAD}
+endpoint="MyShiftSwap"
+bodyData='data'
+defaultPayload={defaultPayload}
+filterName="SwapSearchFilter"
 rowActions={actions}
 
 />  

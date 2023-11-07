@@ -146,32 +146,22 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
            
       const handleChange = (e, index, field) => {
 
-        const newArray=defaultValues
-       if(field==='grade' || field==="yearOfPassing"){
         const { value, id } = e.target;
+        const newObj = defaultValues;
+        const newArray = [...defaultValues];
 
-       
+       if(field==='grade' || field==="yearOfPassing"){
+
+        newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: parseInt(value,10)
       }
-    }
 
-      else if(field==="endDate"  || field==="startDate"){
-        
-        
-       // newObj[index][field]=e;
-        newArray[index] = {
-          ...newArray[index],
-          [field]:e
-      }
 
-    }
-    
-    else{
-      const { value, id } = e.target;
-        
-        
+       }else{
+
+        newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: value
@@ -336,7 +326,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     name="previousCompanyName"
                     label="Company Name"
                     variant="outlined"
-                    id="previousCompanyName"
+                    id={`previousCompanyName${index}`}
                      value={item?.previousCompanyName}
                     onChange={(e) => {
                       handleChange(e, index, 'previousCompanyName');
@@ -516,7 +506,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
             </DialogContent>
 
             <DialogActions>
-            <Button variant="outlined" onClick={()=>{setDefaultValues(employeeData);onhandleClose()}}>
+            <Button variant="outlined" onClick={()=>{setDefaultValues([]);onhandleClose()}}>
               Cancel
             </Button>
 

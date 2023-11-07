@@ -29,7 +29,7 @@ export default function SalaryAdvace() {
 
         {
     
-          id: "Employe_name",
+          id: "",
     
           label: " SL_NO",
     
@@ -43,18 +43,18 @@ export default function SalaryAdvace() {
     
         },
     
-        { id: "Employe_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employeeName", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "Request_date", label: "request Date", width: 220, type: "text" },
+        { id: "requestDate", label: "request Date", width: 220, type: "text" },
     
-        { id: "Request_amount", label: "Request Amount", width: 180, type: "text" },
+        { id: "requestAmount", label: "Request Amount", width: 180, type: "text" },
     
-        { id: "Paid_date", label: "Paid Date", width: 100, type: "text" },
-        { id: "Paid_amount", label: "paid Amount", width: 100, type: "text" },
-        { id: "Aprover_name", label: "Approver Name", width: 100, type: "text" },
-        { id: "Comments", label: "Comments", width: 100, type: "text" },
+        { id: "paidDate", label: "Paid Date", width: 100, type: "text" },
+        { id: "PaidAmount", label: "paid Amount", width: 100, type: "text" },
+        { id: "approverName", label: "Approver Name", width: 100, type: "text" },
+        { id: "commentStatus", label: "Comments", width: 100, type: "text" },
         { id: "status", label: "status", width: 100, type: "text" },
-        { id: "Payment_status", label: "Payment Status", width: 100, type: "text" },
+        { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -64,40 +64,14 @@ export default function SalaryAdvace() {
     
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "approve",  icon: "hh", path: "jjj" },
     
         { name: "view", icon: "hh", path: "jjj" },
     
         { name: "eerr", icon: "hh", path: "jjj" },
     
       ];
-    
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          Employe_name: "Aswin!23",
-    
-          Request_date: "BellErp",
-    
-          Request_amount: "12/12/2023",
-    
-          Paid_date: "Coding",
-    
-          Working_Time: "2hour 40minutes",
 
-          Aprover_name: "122hour 40minutes",
-
-          Comments: "Comments",
-          status: "Approved",
-          Payment_status: "Approved",
-          aswin: "Approved",
-    
-        },
-    
-      ];
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -110,9 +84,34 @@ export default function SalaryAdvace() {
       console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    'Page':parseInt(1,10),
-
-    'Count':parseInt(5,10)
+    "count": 10,
+    "page": 1,
+    "search": "COMP1",
+    "companyID": "COMP1",
+    "externalFilters": {
+  "requestDate": {
+   
+  "RequestDateStart": "",
+   
+  "RequestDateEnd": ""
+   
+  },
+   
+  "paidDate": {
+   
+  "PaidDateFrom": "",
+   
+  "PaidDateTo": ""
+   
+  },
+      "status": "",
+      "requestAmount":"",
+      "paidAmount":""
+    },
+    "sort": {
+      "key": 1,
+      "orderBy": ""
+    }
   }
       
   return (
@@ -128,7 +127,7 @@ export default function SalaryAdvace() {
  }}
  className="custom-dialog"  
 >
- <SalaryAdvanceForm currentUser={{}} />
+ <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
       </Dialog>
     )}
 <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
@@ -143,9 +142,10 @@ export default function SalaryAdvace() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='listProject'
-
+endpoint='searchSalaryAdvance'
+filterName='SalaryFilter'
 rowActions={actions}
+bodyData="data"
 
 />  
     </>
