@@ -8,7 +8,7 @@ import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
 
-const FactoryTable = () => {
+const MaterialsTable = () => {
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -24,7 +24,7 @@ const FactoryTable = () => {
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/factoryDetails',
+      url: 'http://192.168.0.222:3001/erp/MaterialsDetails',
       // headers: {
       //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       // },
@@ -75,16 +75,15 @@ const FactoryTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: 'FactoryName',
+      orderBy: 'MaterialsName',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'FactoryName', label: 'Factory Name', type: 'text', minWidth: '180px' },
-    { id: 'Incharge EmailID', label: 'Incharge  Email ID', type: 'text', minWidth: '180px' },
-    { id: 'PhoneNo', label: 'Phone No', type: 'text', minWidth: '180px' },
-    { id: 'Address', label: 'Address', type: 'text', minWidth: '180px' },
-    { id: 'EstablishedDate ', label: 'Established Date', type: 'text', minWidth: '180px' },
+    { id: 'Vendor Name', label: 'Vendor Name', type: 'text', minWidth: '180px' },
+    { id: 'HSN ID', label: 'HSN ID', type: 'text', minWidth: '180px' },
+    { id: 'Material Name', label: 'Material Name', type: 'text', minWidth: '180px' },
+    { id: 'Material Category', label: 'Material Category', type: 'text', minWidth: '180px' },
     { id: 'OperationalDate ', label: 'Operational Date', type: 'text', minWidth: '180px' },
     { id: 'CloseDate', label: 'Close Date', type: 'text', minWidth: '180px' },
     { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
@@ -92,17 +91,17 @@ const FactoryTable = () => {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Factory</title>
+        <title> Dashboard: Materials</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/factoryDetails"
+        endpoint="/MaterialsDetails"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="FactoryHead"
+        filterName="MaterialsHead"
       />
     </>
   );
 };
-export default FactoryTable;
+export default MaterialsTable;

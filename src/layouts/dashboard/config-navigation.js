@@ -416,6 +416,11 @@ export function useNavData() {
             path: paths.dashboard.vendor.vendor,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('materials'),
+            path: paths.dashboard.materials.materials,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],

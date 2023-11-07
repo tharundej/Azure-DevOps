@@ -274,6 +274,9 @@ export const paths = {
     },
     vendor:{
       vendor:`${ROOTS.DASHBOARD}/vendor`,
+    },
+    materials:{
+      materials:`${ROOTS.DASHBOARD}/materials`,
     }
   },
 };
