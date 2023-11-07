@@ -20,12 +20,25 @@ export default function Approveleave(){
         "page": 0,
         "search": "",
         "eid": "info1",
-    "externalFilters":{
-        "fFromDate": "",
-        "fToDate": "",
-        "fLeaveTypeName": "",
-        "fStatus": ""
-    },
+        "externalFilters": {
+          "fApplyDate": "",
+          "fFromDate": "",
+          "fToDate": "",
+          "applyDate": {
+              "from": "",
+              "to": ""
+          },
+          "fromDate": {
+              "from": "",
+              "to": ""
+          },
+          "toDate": {
+              "from": "",
+              "to": ""
+          },
+          "fLeaveTypeName": "",
+          "fStatus": ""
+      },
     "sort": {
         "key":1,
         "orderBy":"al.apply_date"
