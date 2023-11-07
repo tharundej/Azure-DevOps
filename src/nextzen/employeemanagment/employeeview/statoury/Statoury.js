@@ -125,7 +125,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
    
     getEmployeeStattuory()
    
-   
+    
   },[])
 
   const handleChange=(e,field)=>{

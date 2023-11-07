@@ -23,7 +23,7 @@ export function SettingsProvider({ children, defaultSettings }) {
     if (isArabic) {
       onChangeDirectionByLang('ar');
     }
-   
+    
   }, [isArabic]);
 
   // Direction by lang

@@ -226,7 +226,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData();
-    
+     
   }, [])
 
  
@@ -508,7 +508,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   useEffect(()=>{
     getTableData(initialDefaultPayload);
 
-    
+     
   },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 

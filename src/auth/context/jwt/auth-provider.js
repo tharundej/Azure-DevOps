@@ -179,8 +179,8 @@ export function AuthProvider({ children }) {
     //     },
     //   },
     // });
-   
-    // <AmplifyNewPasswordView emailId={data?.emailId}/>
+    
+    <AmplifyNewPasswordView emailId={data.emailId}/>
   }, []);
 
 

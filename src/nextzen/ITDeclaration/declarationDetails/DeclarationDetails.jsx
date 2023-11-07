@@ -42,10 +42,10 @@ const DeclarationDetails = () => {
     setData(newData);
   };
 
-  const handleAgeChange = (config_id) => (event) => {
+  const handleAgeChange = (configId) => (event) => {
     console.log('i am called ');
     const newData = data?.map((item) =>
-      item.config_id === config_id ? { ...item, declared: event.target.value } : item
+      item.configId === configId ? { ...item, declared: event.target.value } : item
     );
     setData(newData);
     console.log(data, ' datadataaaaaaa');
@@ -53,21 +53,21 @@ const DeclarationDetails = () => {
 
   const getDeclarationsList = async () => {
     const payload = {
-      employee_id: 'Info1',
+      employeeid: 'Info1',
 
-      company_id: 'comp1',
+      companyid: 'comp1',
 
-      financial_year: 2019,
+      financialyear: 2019,
 
-      rows_per_page: 6,
+      rowsperpage: 6,
 
-      page_num: 1,
+      pagenum: 1,
 
-      filter_by: [],
+      filterby: [],
 
-      sort_order: ['asc'],
+      sortOrder: [],
 
-      order_by: ['config_id'],
+      orderBy: [],
 
       search: '',
     };
@@ -102,11 +102,11 @@ const DeclarationDetails = () => {
       await getDeclarationsList();
     };
     fetchData();
-   
+    
   }, [reloading]);
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({
-      config_id: item.config_id,
+      configId: item.configId,
       declared: parseInt(item.declared, 10),
     }));
     console.log(newArray, 'newarray');
@@ -146,38 +146,8 @@ const DeclarationDetails = () => {
 
   return (
     <div>
-      <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        justifyContent="flex-end"
-        direction="row"
-        style={{ marginBottom: '1rem' }}
-      >
-        <Grid item>
-          <TextField
-            sx={{ width: '20vw' }}
-            // value={filters.name}
-            // onChange={handleFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-              border: 'none',
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <Button className="button">Filter</Button>
-        </Grid>
-        <Grid item>
-          <Button className="button">Report</Button>
-        </Grid>
-      </Grid>
-      <TableContainer component={Paper}>
+     
+      <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -198,18 +168,18 @@ const DeclarationDetails = () => {
                       borderBottom: '1px solid black',
                       backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
                     }}
-                    key={row.config_id}
+                    key={row.configId}
                   >
-                    <TableCell style={{ width: '36rem', padding: '4px !important' }}>
-                      {row.tax_section}
+                    <TableCell style={{ width: '35rem', padding: '4px !important' }}>
+                      {row.taxSection}
                     </TableCell>
-                    <TableCell>{row.tax_scheme}</TableCell>
-                    <TableCell>{row.tax_limit}</TableCell>
+                    <TableCell>{row.taxScheme}</TableCell>
+                    <TableCell>{row.taxLimit}</TableCell>
                     <TableCell>
                       <TextField
                         type="number"
                         value={row.declared}
-                        onChange={handleAgeChange(row.config_id)}
+                        onChange={handleAgeChange(row.configId)}
                       />
                     </TableCell>
                   </TableRow>

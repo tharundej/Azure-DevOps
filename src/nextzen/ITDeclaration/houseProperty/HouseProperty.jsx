@@ -24,14 +24,9 @@ import dayjs from 'dayjs';
 import Divider from '@mui/material/Divider';
 import './houseProperty.css';
 import axios from 'axios';
+import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-// const useStyles = makeStyles({
-//   tableHeader: {
-//     backgroundColor: '#2196f3', // Blue color for the header
-//     color: 'white',
-//   },
-// });
 const headings = [
   'S.No',
   'Policy Number',
@@ -46,11 +41,6 @@ const headings = [
   'Premium Considered For Deduction',
   'Action',
 ];
-
-// const createData = () => {
-//   // You can create your rows of data here if needed
-//   return [];
-// };
 
 export default function HouseProperty() {
   const sampleRows = [
@@ -68,12 +58,41 @@ export default function HouseProperty() {
       premiumConsideredForDeduction: '$200',
       action: 'Edit',
     },
-    // Add more sample rows as needed
   ];
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
+  var [attachedDocumment, setAttachedDocument] = useState([]);
+  var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
+  const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
+
+  const attchementHandler = () => {
+    setOpenAttchementDilog(true);
+  };
+  const closeAttchementDilod = () => {
+    setOpenAttchementDilog(false);
+  };
+  const handleUploadattchment = (data) => {
+    attachedDocumment = data;
+    setAttachedDocument(attachedDocumment);
+    //  setFormData({ ...formData, [fileContent] :  attachedDocumment});
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      fileContent: attachedDocumment,
+    }));
+    console.log(attachedDocumment, data);
+  };
+  const handleUploadattchmentFileName = (data) => {
+    attachedDocummentFileName = data;
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      fileName: attachedDocummentFileName,
+    }));
+    console.log(attachedDocummentFileName, data);
+    setOpenAttchementDilog(false);
+  };
   const benak = () => {
     console.log('testing ');
   };
@@ -123,22 +142,23 @@ export default function HouseProperty() {
 
   const addHousingProperity = useCallback(async () => {
     const payload = {
-      company_id: 'comp1',
-      employee_id: 'Info1',
-      financial_year: 2023,
-      name_of_the_owners:formData.name_of_the_owners,
-      property_reference_sl_no: parseFloat(formData.propertyReference),
-      address_of_property: formData.address,
-      pan_of_the_landers: formData.panOfLenders,
-      amount_of_housingloan_taken_from_the_property: parseFloat(formData.loanAmount),
-      purpose_of_loan: formData.purposeOfLoan,
-      date_of_sanction_of_loan: formData.dateOfSanction,
-      interest_payble_on_year: parseFloat(formData.interestPayable),
-      is_property_self_occupied_or_let_out: formData.propertyOccupied,
-      if_joint_property_then_enter_interest_rate: parseFloat(formData.shareOfInterest),
-      gross_rental_amount: parseFloat(formData.grossRentalIncome),
-      muncipal_tax_paid: formData.municipalTaxesPaid,
+      companyId: 'comp1',
+      employeeId: 'Info1',
+      financialYear: 2023,
+      nameOfTheOwners: formData.name_of_the_owners,
+      propertyReferenceSlNo: parseFloat(formData.propertyReference),
+      addressOfProperty: formData.address,
+      panOfTheLanders: formData.panOfLenders,
+      amountOfHousingloanTakenFromTheProperty: parseFloat(formData.loanAmount),
+      purposeOfLoan: formData.purposeOfLoan,
+      dateOfSanctionOfLoan: formData.dateOfSanction,
+      interestPaybleOnYear: parseFloat(formData.interestPayable),
+      isPropertySelfOccupiedOrLetOut: formData.propertyOccupied,
+      ifJointPropertyThenEnterInterestRate: parseFloat(formData.shareOfInterest),
+      grossRentalAmount: parseFloat(formData.grossRentalIncome),
+      muncipalTaxPaid: formData.municipalTaxesPaid,
     };
+   
 
     const config = {
       method: 'post',
@@ -168,13 +188,14 @@ export default function HouseProperty() {
       await addHousingProperity();
     };
     fetchData();
-   
+    
   }, []);
 
   return (
     <div>
       <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-        <Grid
+        {/* search ad filter  */}
+        {/* <Grid
           container
           spacing={2}
           alignItems="center"
@@ -204,7 +225,7 @@ export default function HouseProperty() {
           <Grid item>
             <Button className="button">Report</Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* Row 1 */}
         <Grid item container xs={12} spacing={2}>
           <Grid item xs={4}>
@@ -430,7 +451,9 @@ export default function HouseProperty() {
             style={{ marginBottom: '1rem' }}
           >
             <Grid item>
-              <Button className="button">Attchement</Button>
+              <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
+                Attchement 
+              </Button>
             </Grid>
             <Grid item>
               <Button className="button" onClick={addHousingProperity}>
@@ -462,44 +485,53 @@ export default function HouseProperty() {
       </Grid>
 
       <TableContainer component={Paper}>
-      <Table>
-        <TableHead >
-          <TableRow>
-            {headings.map((heading, index) => (
-              <TableCell key={index}  style={{
+        <Table>
+          <TableHead>
+            <TableRow>
+              {headings.map((heading, index) => (
+                <TableCell
+                  key={index}
+                  style={{
                     backgroundColor: '#2196f3',
                     color: 'white',
                     whiteSpace: 'nowrap', // Prevent text wrapping
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                  }}>
-                {heading}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-
-        {sampleRows.map((row, rowIndex) => (
+                  }}
+                >
+                  {heading}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sampleRows.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell>{row.sno}</TableCell>
-                <TableCell>{row.policyNumber}</TableCell>
-                <TableCell>{row.commencementDate}</TableCell>
-                <TableCell>{row.nameRelationship}</TableCell>
-                <TableCell>{row.under80U}</TableCell>
-                <TableCell>{row.under80DDB}</TableCell>
-                <TableCell>{row.sumAssured}</TableCell>
-                <TableCell>{row.premiumAmountAttached}</TableCell>
-                <TableCell>{row.premiumAmountFallInDue}</TableCell>
-                <TableCell>{row.annualPremium}</TableCell>
-                <TableCell>{row.premiumConsideredForDeduction}</TableCell>
-                <TableCell>{row.action}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.sno}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.commencementDate}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.nameRelationship}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.under80U}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.under80DDB}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.sumAssured}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountAttached}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.annualPremium}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumConsideredForDeduction}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.action}</TableCell>
               </TableRow>
             ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {openAttachmentDilog ? (
+        <FileUploader
+          showAttachmentDilog={openAttachmentDilog}
+          closeAttchementDilod={closeAttchementDilod}
+          handleUploadattchmentFileName={handleUploadattchmentFileName}
+          handleUploadattchment={handleUploadattchment}
+        />
+      ) : null}
     </div>
   );
 }

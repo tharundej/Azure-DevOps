@@ -167,7 +167,7 @@ export default function HouseProperty() {
       await addHousingProperity();
     };
     fetchData();
-   
+    
   }, []);
 
   return (

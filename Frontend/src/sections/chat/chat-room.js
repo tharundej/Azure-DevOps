@@ -49,7 +49,7 @@ export default function ChatRoom({ participants, conversation }) {
     } else {
       onOpenMobile();
     }
-   
+    
   }, [lgUp]);
 
   const group = participants.length > 1;

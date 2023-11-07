@@ -23,7 +23,7 @@ export default function useMessagesScroll(messages) {
     () => {
       scrollMessagesToBottom();
     },
-   
+    
     [messages]
   );
 

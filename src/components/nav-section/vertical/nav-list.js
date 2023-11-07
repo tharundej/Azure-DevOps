@@ -23,7 +23,7 @@ export default function NavList({ data, depth, hasChild, config }) {
     if (!active) {
       handleClose();
     }
-   
+    
   }, [pathname]);
 
   const handleToggle = useCallback(() => {

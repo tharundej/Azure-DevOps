@@ -37,7 +37,7 @@ export default function ProgressBar() {
     return () => {
       NProgress.done();
     };
-   
+    
   }, [pathname, mounted]);
 
   if (!mounted) {

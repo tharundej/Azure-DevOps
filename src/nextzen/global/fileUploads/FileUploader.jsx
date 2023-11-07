@@ -79,7 +79,7 @@ export default function FileUploader({
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleClickOpen = () => {
     // setPhotos(true)

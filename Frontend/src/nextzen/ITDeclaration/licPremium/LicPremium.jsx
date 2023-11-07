@@ -239,7 +239,7 @@ console.log(policyData ,"policydata")
     await getLicPremium();
   };
   fetchData();
- 
+  
 }, [isreloading]);
   return (
     <div>

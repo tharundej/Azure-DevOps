@@ -428,7 +428,7 @@ const DeclarationDetails = () => {
       await getDeclarationsList();
     };
     fetchData();
-   
+    
   }, [reloading]);
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({

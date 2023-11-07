@@ -65,7 +65,7 @@ export default function Photos({ photos, setPhotos, batch }) {
     React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-      
+       
     }, [])
     const handleClickOpen = () => {
       setPhotos(true)

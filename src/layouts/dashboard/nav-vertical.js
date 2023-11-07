@@ -32,7 +32,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
     if (openNav) {
       onCloseNav();
     }
-   
+    
   }, [pathname]);
 
   const renderContent = (

@@ -29,7 +29,7 @@ const FilesGrid = ({dataFiltered}) => {
             {dataFiltered
               ?.filter((i) => i?.type !== 'folder')
               ?.map((file) => (
-                file.typeName &&(
+                file.fileType &&(
                 <FileBox
                   key={file?.id}
                   file={file}
@@ -47,5 +47,5 @@ const FilesGrid = ({dataFiltered}) => {
 export default FilesGrid
 
 FilesGrid.PropTypes={
-    dataFiltered: PropTypes.array,
+    dataFiltered: PropTypes.any,
 }

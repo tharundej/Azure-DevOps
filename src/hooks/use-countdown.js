@@ -13,7 +13,7 @@ export function useCountdownDate(date) {
   useEffect(() => {
     const interval = setInterval(() => setNewTime(), 1000);
     return () => clearInterval(interval);
-   
+    
   }, []);
 
   const setNewTime = () => {
