@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 
 import { Helmet } from "react-helmet-async";
@@ -23,6 +23,8 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import axios from 'axios';
+
 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
@@ -30,8 +32,20 @@ const employmentTypeOptions=[
 
 ]
 
-const StatouryForm = ({open,onHandleClose,currentUser}) => {
+const StatouryForm = ({open,onHandleClose,currentUser,employeeIDToCreate,endpoint }) => {
   const [type,setType]=useState({label:"Permanent",id:'1'})
+  console.log(currentUser)
+  // const [currentUser,setCurrentUser]=useState({})
+
+ 
+  // useEffect(()=>{
+  //   if(currentUserEOC){
+  //     console.log("oooo")
+  //     setCurrentUser(currentUserEOC);
+  //   }
+  // },[currentUserEOC])
+
+  
 
 
   
@@ -118,6 +132,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       }),
       [currentUser]
     );
+
+    console.log(defaultValues,'defaultValuesdefaultValues')
     
     
       const methods = useForm({
@@ -139,13 +155,35 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       const onSubmit = handleSubmit(async (data) => {
         console.log(data,'uyfgv');
     
-        try {
+        data.employeeID=employeeIDToCreate
+        data.companyID='COMP5'
+      
          
-            console.log('aa')
-         
-        } catch (error) {
-          console.error(error);
-        }
+          
+          
+           
+          
+          const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            //url: `${baseUrl}addStatutoryDetails`,
+            url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+            headers: { 
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+          
+           
+          
+          axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
   return (
     <>
@@ -230,15 +268,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           </Box>
         </DialogContent>
 
-        <DialogActions>
-          <Button variant="outlined" onClick={()=>{onHandleClose()}}>
-            Cancel
-          </Button>
-
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
-          </LoadingButton>
-        </DialogActions>
+        
       </FormProvider>
         
         
@@ -262,5 +292,7 @@ export default StatouryForm
 StatouryForm.propTypes = {
     open: PropTypes.string,
     onHandleClose:PropTypes.func,
-    currentUser:PropTypes.object
+    currentUser:PropTypes.object,
+    employeeIDToCreate:PropTypes.string,
+    endpoint:PropTypes.string
   };

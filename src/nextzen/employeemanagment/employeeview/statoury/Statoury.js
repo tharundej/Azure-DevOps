@@ -31,11 +31,16 @@ import StatouryForm  from '../../statoury/StatouryForm';
 // ----------------------------------------------------------------------
 
 export default function Statoury({  delivery, shippingAddress, payment }) {
-
+  const employeeIDToCreate="info7"
+  const [endpoint,setEndpoint]=useState("")
   const [statouryCreateOpen,setStatouryCreateOpen]=useState(false);
   const [employeeStatouryData,setEmployeeStatouryData]=useState({})
+  const [dataToCreateOrEdit,setDataForCreateOrEdit]=useState({})
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
+      setEndpoint("updateStatutoryDetails");
+      setDataForCreateOrEdit(employeeStatouryData)
+      console.log('0p',dataToCreateOrEdit)
       setStatouryCreateOpen(true);
     }
     const handleEditClose=()=>{
@@ -133,6 +138,9 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 }
 
  const handleAddStatuory=()=>{
+  setDataForCreateOrEdit(dataa)
+  setEndpoint("addStatutoryDetails");
+  
   setStatouryCreateOpen(true)
  }
  
@@ -153,7 +161,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         {!edit && <Iconify 
         sx={{cursor: "pointer",color:'orange'}}
           onClick={()=>{
-            
+            setEndpoint("updateStatutoryDetails");
             setEdit(true);
           }}
         icon="solar:pen-bold" />}
@@ -453,141 +461,9 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
     </>
   );
 
-  const renderShipping = (
-    <>
-      <CardHeader
-        title="Address Details"
-        // action={
-        //   <IconButton>
-        //     <Iconify icon="solar:pen-bold" />
-        //   </IconButton>
-        // }
-      />
-      
-       <Grid container spacing={20}>
+ 
 
-                    <Grid item>
-                    <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line1
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.pAddressLine1}
-                    </Box>
-                        
-                    
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line2
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.pAddressLine2}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent City
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.pCity}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent State
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.pState}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Pincode
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.Permanent}
-                    </Box>
-                    </Stack>
-                   
-                    
-                   
-                    </Stack>
-                    </Grid>
-                    <Grid item>
-                    <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential Address Line1
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.rAddressLine1}
-                    </Box>
-                        
-                    
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential Address Line2
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.rAddressLine2}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential City
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.rCity}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential State
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.rState}
-                    </Box>
-                    </Stack>
-                    <Stack direction="row" alignItems="center">
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential Pincode
-                    </Box>
-                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {employeeStatouryData?.rPincode}
-                    </Box>
-                    </Stack>
-                   
-                    
-                   
-                    </Stack>
-                    </Grid>
-        </Grid>
-    </>
-  );
-
-  const renderPayment = (
-    <>
-      <CardHeader
-        title="Payment"
-        action={
-          <IconButton>
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
-        }
-      />
-      <Stack direction="row" alignItems="center" sx={{ p: 3, typography: 'body2' }}>
-        <Box component="span" sx={{ color: 'text.secondary', flexGrow: 1 }}>
-          Phone number
-        </Box>
-
-        {payment?.cardNumber}
-        <Iconify icon="logos:mastercard" width={24} sx={{ ml: 0.5 }} />
-      </Stack>
-    </>
-  );
+ 
 
   const dataa= {
     "companyID": "COMP5",
@@ -613,7 +489,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={dataa} />
+    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUser={dataa} endpoint={endpoint}/>
 
     {employeeStatouryData.accountHolderName==="" && 
     
