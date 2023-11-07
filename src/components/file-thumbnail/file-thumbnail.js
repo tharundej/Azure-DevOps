@@ -18,7 +18,7 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
     format === 'image' && imageView ? (
       <Box
         component="img"
-        src={preview}
+       // src={preview}
         sx={{
           width: 1,
           height: 1,

@@ -151,7 +151,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
   // const popover = usePopover();
 
@@ -220,14 +220,24 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData(initialDefaultPayload);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    
+  }, [initialDefaultPayload])
 
  
 
   const getTableData = (payload) => {
 
-    
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
+    // let initialDefaultPayloadCopy =initialDefaultPayload;
+    // if(payload){
+    //   initialDefaultPayloadCopy = payload;
+    // }
+    // if(actionType === 'pageChange'){
+    //   initialDefaultPayloadCopy.Page = data;
+    // }
 
     const config = {
 
@@ -235,9 +245,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       maxBodyLength: Infinity,
 
-      url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims
-      // url: `http://192.168.0.184:3001/erp/${endpoint}`,
+      url: `http://192.168.1.199:3001/erp/${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -360,7 +370,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  // const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
+  const notFound = (!tableData?.length && canReset) || !tableData?.length;
 
  
 
@@ -399,6 +409,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
 
   const handleEditRow = (rowData,eventData) => {
+    onclickActions(rowData,eventData)
    
     console.log(rowData, eventData)
 
@@ -410,7 +421,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     else if (eventData?.type === "edit"){
    
-      buttonFunction();
+      // buttonFunction();
       
       
       // eventData?.handleOpen()
@@ -425,7 +436,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     }
 
     else{
-
+      console.log(eventData,"eventData----")
       console.log("else part..")
 
     }
@@ -482,7 +493,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // useEffect(()=>{
   //   getTableData(initialDefaultPayload);
 
-  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  //    
   // },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
@@ -601,7 +612,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     // useEffect(()=>{
     //      getTableData(initialDefaultPayload)
-    //      // eslint-disable-next-line react-hooks/exhaustive-deps
+    //      
     // },[initialDefaultPayload])
 
 
@@ -683,7 +694,7 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' , height: 400, width: '100%' }}>
+          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' ,  width: '100%' }}>
 
             <TableSelectedAction
 
@@ -729,8 +740,8 @@ const [sortColumn, setSortColumn]=useState("")
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
-                component={Paper}
-                style={{ height: 400, width: '100%', position:"sticky"}}
+                // component={Paper}
+                // style={{ height: 400, width: '100%', position:"sticky"}}
 
                   order={table.order}
 
@@ -824,7 +835,7 @@ const [sortColumn, setSortColumn]=useState("")
 
  
 
-                    {/* <TableNoData notFound={notFound} /> */}
+                    <TableNoData notFound={notFound} />
 
                   </TableBody>
 
@@ -998,7 +1009,7 @@ SurendraBasicTable.propTypes = {
 
 SurendraBasicTable.propTypes = {
 
-  bodyData: PropTypes.func,
+  bodyData: PropTypes.any,
 
 };
 
@@ -1032,6 +1043,12 @@ SurendraBasicTable.propTypes = {
 SurendraBasicTable.propTypes = {
 
   dialogPayload: PropTypes.any
+
+};
+
+SurendraBasicTable.propTypes = {
+
+  onclickActions: PropTypes.any
 
 };
 

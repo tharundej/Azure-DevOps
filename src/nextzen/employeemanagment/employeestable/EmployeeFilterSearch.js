@@ -415,9 +415,12 @@ const [stateOptions,setOptions]=useState([])
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            
       <Grid item>
-      <Button  variant="contained" onClick={()=>{handlicClickOnboardform()}}
+      <Button 
+      
+        variant="contained" 
+      onClick={()=>{handlicClickOnboardform()}}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Employee</Button>
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
 
 
       </Grid>
@@ -435,7 +438,7 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -446,153 +449,411 @@ const [stateOptions,setOptions]=useState([])
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
-        <DialogContent sx={{ mt: 0, paddingBottom: 0 }}>
-  <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <Typography>Request Date</Typography>
+        <DialogContent sx={{mt:0,paddingBottom:0}}>
 
-      <Grid container flexDirection="row" sx={{ gap: '16px' }}>
-        <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-              <DatePicker
-                sx={{ width: '100%' }}
-                label="From Date"
-                value={dates?.requestDateStart}
-                defaultValue={dayjs(new Date())}
-                onChange={(newValue) => {
-                  setDates((prev) => ({
-                    ...prev,
-                    requestDateStart: newValue,
-                  }));
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-        <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-              <DatePicker
-                sx={{ width: '100%' }}
-                label="To Date"
-                value={dates?.requestDateEnd}
-                defaultValue={dayjs(new Date())}
-                onChange={(newValue) => {
-                  setDates((prev) => ({
-                    ...prev,
-                    requestDateEnd: newValue,
-                  }));
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-      </Grid>
-    </Grid>
+          
 
-    <Grid item xs={6}>
-      <Typography>Paid Date</Typography>
+          <Grid>
 
-      <Grid container flexDirection="row" sx={{ gap: '16px' }}>
-        <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-              <DatePicker
-                sx={{ width: '100%' }}
-                label="From Date"
-                value={dates?.PaidDateFrom}
-                defaultValue={dayjs(new Date())}
-                onChange={(newValue) => {
-                  setDates((prev) => ({
-                    ...prev,
-                    PaidDateFrom: newValue,
-                  }));
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-        <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-              <DatePicker
-                sx={{ width: '100%' }}
-                label="To Date"
-                value={dates?.PaidDateTo}
-                defaultValue={dayjs(new Date())}
-                onChange={(newValue) => {
-                  setDates((prev) => ({
-                    ...prev,
-                    PaidDateTo: newValue,
-                  }));
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-      </Grid>
-    </Grid>
-  </Grid>
+               <Grid>
+            <Typography>Joining Date</Typography>
+     
 
-  <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Requested Amount</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
-          multiple
-          value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'requestAmount')}
-          input={<OutlinedInput label="Requested Amount" />}
-          MenuProps={MenuProps}
-          sx={{ width: '100%' }}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fjoiningDateFrom}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fjoiningDateFrom: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fjoiningDateTo}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fjoiningDateTo: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+                </Grid>
 
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Paid Amount</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_2"
-          id="demo-multiple-status_2"
-          multiple
-          value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'paidAmount')}
-          input={<OutlinedInput label="Paid Amount" />}
-          MenuProps={MenuProps}
-          sx={{ width: '100%' }}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  </Grid>
-</DialogContent>
 
+           <Grid marginTop={2}>
+              
+            <Typography>DOB</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fDOBDateFrom}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateFrom: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fDOBDateTo}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fDOBDateTo: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+
+             
+             </Grid>
+             <Grid marginTop={2}>
+              
+            <Typography>Offer Date</Typography>
+     
+
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fofferDateFrom}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fofferDateFrom: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fofferDateTo}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fofferDateTo: newValue,
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+
+             
+             </Grid>
+            
+
+
+                 {/* drop down options */}
+                <Grid>
+
+
+              
+
+                <Grid>
+                  
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">State</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
+                  multiple
+                  value={state}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
+                  MenuProps={MenuProps}
+                >
+                  {stateOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPEmployementType"
+                  id="demo-multiple-fPEmployementType"
+                  multiple
+                  value={dropdownEmployemtType}
+                  onChange={(e)=>handleChangeDropDown(e,'fPEmployementType')}
+                  input={<OutlinedInput label="Employemt Type" />}
+                  MenuProps={MenuProps}
+                >
+                  {EmployementTypeOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Marital Status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownmartial}
+                  onChange={(e)=>handleChangeDropDown(e,'fMaritalStatus')}
+                  input={<OutlinedInput label="Marital Status" />}
+                  MenuProps={MenuProps}
+                >
+                  {MaritalOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* Blood Group */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Blood Group</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fBloodGroup"
+                  id="demo-multiple-fBloodGroup"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fBloodGroup')}
+                  input={<OutlinedInput label="Blood Group" />}
+                  MenuProps={MenuProps}
+                >
+                  {BloodGroupOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                   {/* State */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">State</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPState"
+                  id="demo-multiple-fPState"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
+                  input={<OutlinedInput label="State" />}
+                  MenuProps={MenuProps}
+                >
+                  {stateOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* departmentName */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Department Name</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-departmentName"
+                  id="demo-multiple-departmentName"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPdepartmentName')}
+                  input={<OutlinedInput label="Department Name" />}
+                  MenuProps={MenuProps}
+                >
+                  {departmentNameOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+
+                   {/* fPDesignation */}
+
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fPDesignation"
+                  id="demo-multiple-fPDesignation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignation')}
+                  input={<OutlinedInput label="Designation" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fPDesignationGrade */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Designation Grade</InputLabel>
+                <Select
+                  
+                  fullWidth
+                  labelId="demo-multiple-name-fPDesignationGrade"
+                  id="demo-multiple-fPDesignationGrade"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fPDesignationGrade')}
+                  input={<OutlinedInput label="Designation Grade" />}
+                  MenuProps={MenuProps}
+                >
+                  {designationGradeOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+
+                   {/* fWorkingLocation */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Working Location</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-fWorkingLocation"
+                  id="demo-multiple-fWorkingLocation"
+                  multiple
+                  value={bloodgroup}
+                  onChange={(e)=>handleChangeDropDown(e,'fWorkingLocation')}
+                  input={<OutlinedInput label="Working Location" />}
+                  MenuProps={MenuProps}
+                >
+                  {WorkingLocationOptions.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, personName, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
+               </Grid>
+
+
+           </Grid>
+         </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     

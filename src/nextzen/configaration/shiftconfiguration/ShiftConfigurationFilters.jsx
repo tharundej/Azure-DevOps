@@ -88,7 +88,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftConfigurationFilters({ filterData, filterOptions }) {
+export default function ShiftConfigurationFilters({ filterData, filterOptions ,searchData}) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -102,6 +102,16 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
     'Virginia Andrews',
     'Kelly Snyder',
   ];
+  const ShiftName = [
+    'general',
+    'Morning',
+    'Night',
+    'Afternoon'
+  ];
+  const ShiftTerm = [
+    'weekly',
+    'monthly',
+  ]
 
   const [dropdown, setDropdown] = useState({});
 
@@ -111,9 +121,9 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
 
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
-  const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownShiftNameGradeName, setDropdownShiftNameGradeName] = useState([]);
+  const [dropdownShiftName, setdropdownShiftName] = useState([]);
+  const [dropdownShiftTerm, setdropdownShiftTerm] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -129,11 +139,11 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'shiftName',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'shiftTerm',
       options: [],
     },
   ]);
@@ -209,7 +219,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
     } = event;
 
     if (field === 'designation_grade_name') {
-      setDropdownDesignationGradeName(value);
+      setDropdownShiftNameGradeName(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -218,13 +228,13 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
+    } else if (field === 'shiftName') {
+      setdropdownShiftName(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'shiftTerm') {
+      setdropdownShiftTerm(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -239,7 +249,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
 
     const handleSearch = (searchTerm) => {
       setSearch(searchTerm)
-        searchData(search)
+        // searchData(search)
         console.log(searchTerm,"search ........")
         };
   const handleApply = async () => {
@@ -304,15 +314,15 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="shiftTerm">Shift Term</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownShiftTerm}
+                    onChange={(e) => handleChangeDropDown(e, 'shiftTerm')}
+                    input={<OutlinedInput label="Shift Term"/>}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
@@ -326,15 +336,15 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
+                    <InputLabel id="shiftName">Shift Name</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
+                      value={dropdownShiftName}
+                      onChange={(e) => handleChangeDropDown(e, 'shiftName')}
+                      input={<OutlinedInput label="Shift Name" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
@@ -350,28 +360,6 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Pay Pchedule Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl>
-                   </Grid>
             </Grid>
 
            
@@ -396,6 +384,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions })
 // }
 ShiftConfigurationFilters.propTypes = {
   filterData: PropTypes.func,
+  searchData:PropTypes.any,
 };
 
 ShiftConfigurationFilters.propTypes = {

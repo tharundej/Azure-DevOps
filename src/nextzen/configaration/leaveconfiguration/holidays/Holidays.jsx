@@ -4,12 +4,10 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function Holidays() {
     const TABLE_HEAD = [
-      { id: 'slNo', label: 'SL NO', type: 'text' },
       { id: 'Name', label: 'Name', type: 'text' },
       { id: 'Date', label: 'Date', type: 'text' },
       { id: 'Full Day/Half Day', label: 'Full Day/Half Day', type: 'text' },
       { id: 'Repeats Anually', label: 'Repeats Anually', type: 'text' },
-      { id: 'Country', label: 'Country', type: 'text' },
       { id: 'Locations', label: 'Locations', type: 'text' },
     ];
     const actions = [
@@ -52,14 +50,7 @@ export default function Holidays() {
         "orderBy": ""
       }
     };
-     
-     
-    // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
-    // const tabContents = [
-    //   <div>Tab 1 Content</div>,
-    //   <div>Tab 2 Content</div>,
-    //   <div>Tab 3 Content</div>,
-    // ];
+
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
   
     React.useEffect(() => {

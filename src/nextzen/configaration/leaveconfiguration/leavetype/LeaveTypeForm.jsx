@@ -154,7 +154,6 @@ export default function LeaveTypeForm({ currentUser}) {
               </LoadingButton>
             </DialogActions>
           </FormProvider>
-        )}
       </Dialog>
     </>
   );

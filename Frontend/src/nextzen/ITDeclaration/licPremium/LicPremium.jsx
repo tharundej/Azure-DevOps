@@ -239,7 +239,7 @@ console.log(policyData ,"policydata")
     await getLicPremium();
   };
   fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
 }, [isreloading]);
   return (
     <div>
