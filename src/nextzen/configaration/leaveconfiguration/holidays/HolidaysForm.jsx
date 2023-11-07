@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
@@ -36,15 +36,19 @@ export default function HolidaysForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
-  const formattedDate = dayjs().format('YYYY-MM-DD');
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [formData, setFormData] = useState({
 
+  });
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [selectedDates, setSelectedDates] = useState(dayjs());
+  const [locationType, setLocationType] = useState([]);
+  const [datesUsed, setDatesUsed] = useState({
+    date_of_incorporation: dayjs(new Date()),
+  });
   const NewUserSchema1 = Yup.object().shape({
     holidayName: Yup.string().required('holiday Name is Required'),
-    // date: Yup.string().required('leave Period Name is Required'),
     fulldayHalfday: Yup.string().required('Fullday/Halfday is Required'),
     repeatAnnualy: Yup.string().required('Repeat Annualy is Required'),
-    Locations: Yup.string().required('Location is Required'),
   });
 
   const RepeatsAnuallys = [{ type: 'Yes' }, { type: 'No' }];
@@ -53,10 +57,8 @@ export default function HolidaysForm({ currentUser }) {
   const defaultValues1 = useMemo(
     () => ({
       holidayName: currentUser?.holidayName || null,
-      // holidayDate: currentUser?.holidayDate || null,
       fulldayHalfday: currentUser?.fulldayHalfday || null,
       repeatAnnualy: currentUser?.repeatAnnualy || null,
-      Locations: currentUser?.Locations || null,
     }),
     [currentUser]
   );
@@ -74,28 +76,52 @@ export default function HolidaysForm({ currentUser }) {
   } = methods1;
 
   //   const values = watch();
+  const getLocation = async () => {
+    const payload = {
+        "companyID":"COMP1"
+    }
+  
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          setLocationType(rowsData)
+          console.log(JSON.stringify(response?.data?.data), 'result');
+  
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
 
   useEffect(() => {
-    const locationPayload = {
-      companyID: 'COMP1',
+    const fetchData = async () => {
+      getLocation();
     };
-    const response = axios.post(
-      'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
-      locationPayload
-    );
-    console.log(response?.locationID, 'hiiiiiiii');
+    fetchData();
   }, []);
 
-  const Locationss = [
-    {
-      type: 'India',
-    },
-  ];
   
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
-    data.holidayDate = formatDateToYYYYMMDD(selectedDate);
-    data.locationID=34
+    // data.holidayDate = formatDateToYYYYMMDD(selectedDate);
+    data.date_of_incorporation=formatDateToYYYYMMDD(selectedDates);
+    data.locationID=formData?.Location?.locationID
     console.log('submitted data111', data);
 
     try {
@@ -111,6 +137,22 @@ export default function HolidaysForm({ currentUser }) {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const handleDateChanges = (date) => {
+    setSelectedDates(date);
+  };
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+
+    console.log(name  ,  selectedValue , selectedOption)
+    setFormData({
+      ...formData,
+      [name]: selectedValue,
+      locationID: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
+    });
+   
+  };
+
+  console.log( formData ,"formdata for location")
   return (
     <>
       <Button
@@ -146,11 +188,22 @@ export default function HolidaysForm({ currentUser }) {
               <RHFTextField name="holidayName" label="Holiday Name" />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DesktopDatePicker']}>
-                  <DemoItem label="holidayDate">
+                  {/* <DemoItem label="holiday Date"> */}
                     <DesktopDatePicker value={selectedDate} onChange={handleDateChange} />
-                  </DemoItem>
+                  {/* </DemoItem> */}
                 </DemoContainer>
               </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        sx={{ width: '100%', paddingLeft: '3px' }}
+                        label="Date Of Incorporation"
+                          value={selectedDates}
+                        // defaultValue={dayjs(new Date())}
+                        onChange={handleDateChanges}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
               <RHFAutocomplete
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
@@ -161,10 +214,19 @@ export default function HolidaysForm({ currentUser }) {
                 label="Repeats Anually"
                 options={RepeatsAnuallys.map((RepeatsAnually) => RepeatsAnually.type)}
               />
-              <RHFAutocomplete
-                name="Locations"
-                label="Locations"
-                options={Locationss.map((Locations) => Locations.type)}
+               <Autocomplete
+              disablePortal
+              name="Location"
+              id="combo-box-demo"
+              options={locationType?.map((employeepayType) => ({
+                label: employeepayType.locationName,
+                value: employeepayType.locationName,
+                ...employeepayType,
+              }))}
+              onChange={(event, newValue, selectedOption) =>
+                handleAutocompleteChange('Location', newValue, selectedOption)
+              }
+                renderInput={(params) => <TextField {...params} label="Location" />}
               />
             </Box>
           </DialogContent>
