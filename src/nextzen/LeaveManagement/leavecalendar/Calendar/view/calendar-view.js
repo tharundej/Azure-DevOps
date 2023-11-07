@@ -260,7 +260,7 @@ useEffect(()=>{
     method: 'POST',
     maxBodyLength: Infinity,
     url: `https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLeaveHistory`,
-    // url: baseUrl + `pendingapproved`,
+    // url: baseUrl + `getLeaveHistory`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -337,8 +337,8 @@ const handleClickClose=()=>{
   setOpen(false)
 }
 const handleApply = async()=>{
- LeaveHistory()
  setOpen(false)
+ LeaveHistory()
 }
 const [dropdown,setDropdown]=useState({
 })
@@ -367,9 +367,8 @@ const handleCancel = async()=>{
   setDates({
     fFromDate: "",
     fToDate: "",
-    fStatus: "",  
-    fLeaveTypeName: "", 
   });
+  setOpen(false);
 }
 // --------------------------------
   return (
@@ -474,7 +473,50 @@ const handleCancel = async()=>{
            <Iconify icon="mi:filter"/>
       </Button>
       </Stack>
-      <BootstrapDialog
+      
+     {loading ? 
+     <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
+     :(historyData?.list != null ? (
+                  historyData?.list.map((itm,index) => (
+                      <Card sx={{margin:"10px"}}>
+                        <CardContent >
+                          
+               { (!expanded[index])?  <>
+               <Typography>
+                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName}  
+                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
+             
+              </Typography>
+                <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}
+                
+                </Typography>
+                  </>
+                 :<>
+                  <Typography >
+                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName} <br/>
+                            <span >From : {itm?.fromDate} To : {itm?.toDate}</span>
+                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
+               
+                  </Typography>
+                          {/* <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
+                          
+                           </Typography> */}
+                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.leaveDays} Days</Typography>
+                          <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.comments}</Typography>
+                          <Typography><span style={{fontWeight:600}}>Leave Status : </span> {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}</Typography>
+                          </>}
+                        </CardContent>
+                      </Card>
+                    )
+                  )
+     ) :
+     
+     (<div style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}>
+     No Leaves 
+   </div>)
+     )}
+
+<BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -488,7 +530,7 @@ const handleCancel = async()=>{
                 <Grid>
             <Typography>Leave Duration</Typography>
             <Grid container flexDirection="row">
-              <Grid item>
+            <Grid item>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -573,55 +615,10 @@ const handleCancel = async()=>{
                </Grid>
            
          </DialogContent>
-         <div style={{marginBottom:16}}>  <Button sx={{float:'right',backgroundColor:"#3B82F6",color:"white",marginRight:2,"&:hover": {
-        backgroundColor: "#3B82F6", 
-      },}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15,backgroundColor:"#e22929",color:"white","&:hover": {
-        backgroundColor: "#e22929", 
-      },}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </BootstrapDialog>
-     {loading ? 
-     <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
-     :(historyData?.list != null ? (
-                  historyData?.list.map((itm,index) => (
-                      <Card sx={{margin:"10px"}}>
-                        <CardContent >
-                          
-               { (!expanded[index])?  <>
-               <Typography>
-                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName}  
-                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-             
-              </Typography>
-                <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}
-                
-                </Typography>
-                  </>
-                 :<>
-                  <Typography >
-                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName} <br/>
-                            <span >From : {itm?.fromDate} To : {itm?.toDate}</span>
-                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
-               
-                  </Typography>
-                          {/* <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
-                          
-                           </Typography> */}
-                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.leaveDays} Days</Typography>
-                          <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.comments}</Typography>
-                          <Typography><span style={{fontWeight:600}}>Leave Status : </span> {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}</Typography>
-                          </>}
-                        </CardContent>
-                      </Card>
-                    )
-                  )
-     ) :
-     
-     (<div style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}>
-     No Leaves 
-   </div>)
-     )}
       </>
       )}
       {/* Pending Tab Code */}
