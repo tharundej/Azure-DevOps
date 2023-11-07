@@ -13,26 +13,7 @@ const FactoryTable = () => {
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
   ];
-  const [filterOptions, setFilterOptions] = useState({
-    dates: [
-      {
-        display: 'Established Date',
-        field_name: 'EstablishedDate',
-      },
-      {
-        display: 'Operational Date',
-        field_name: 'OperationalDate',
-      },
-    ],
-    dropdowns: [
-      {
-        display: 'Status',
-        options: ['active', 'inactive'],
-        field_name: 'status',
-      },
-      
-    ],
-  });
+  const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
     count: 5,
