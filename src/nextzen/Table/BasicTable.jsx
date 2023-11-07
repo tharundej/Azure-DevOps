@@ -81,6 +81,7 @@ import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import FactoryHead from '../factory/FactoryHeader';
 import VendorHead from '../vendor/VendorHeader';
 import MaterialsHead from '../Materials/MaterialsHeader';
+import AssetsHead from '../assets/AssetsHeader';
 
 const defaultFilters = {
   name: '',
@@ -394,6 +395,9 @@ const BasicTable = ({ endpoint, defaultPayload, headerData, rowActions, bodyData
           )}
           {filterName === 'MaterialsHead' && (
             <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'AssetsHead' && (
+            <AssetsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           <Card>
             <TableContainer

@@ -53,6 +53,9 @@ export default function CreateAssets({ currentUser, handleClose }) {
   const statusOptions = ['Active', 'Inactive'];
   const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
 
+  const asstesTypeOptions = ['Type1', 'Type2'];
+  const [selectedAssetsType, setSelectedAssetsType] = useState(defaultValues.status || '');
+
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
@@ -60,7 +63,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
     try {
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addFactory', data).then(
+      const response = await instance.post('addassets', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -75,7 +78,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Vendor</DialogTitle>
+        <DialogTitle>ADD New Assets</DialogTitle>
 
         <DialogContent>
           <Box
@@ -88,18 +91,26 @@ export default function CreateAssets({ currentUser, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="vendorname" label="Vendor Name" />
-            <RHFTextField name="factoryname" label="Factory Name" />
-            <RHFTextField name="phoneNo" label="Phone No" />
-            <RHFTextField name="emailID" label="Email ID" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="panno" label="PAN No" />
-            <RHFTextField name="gstno" label="GST No" />
-            <RHFTextField name="bankName" label="Bank Name" />
-            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
-            <RHFTextField name="accountNo" label="Account No" />
-            <RHFTextField name="ifscCode" label="IFSC Code" />
-            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFTextField name="assetsname" label="Assets Name" />
+            <RHFTextField name="suppliername" label="Supplier Name" />
+            <RHFAutocomplete
+              name="assettype"
+              id="type-autocomplete"
+              options={asstesTypeOptions || []}
+              value={selectedAssetsType}
+              onChange={(event, newValue) => setSelectedAssetsType(newValue)}
+              renderInput={(params) => (
+                <TextField {...params} label="Assets type" variant="outlined" />
+              )}
+            />
+            <RHFTextField name="invoiceno" label="Invoice No" />
+            <RHFTextField name="expirydate" label="Expiry Date" />
+            <RHFTextField name="invoicedate" label="Invoice Date" />
+            <RHFTextField name="warantydate" label="Warranty Date" />
+            <RHFTextField name="amount" label="Amount" />
+            <RHFTextField name="gstamount" label="GST Amount" />
+            <RHFTextField name="totalamount" label="Total Amount" />
+            <RHFTextField name="assetsstatus" label="Assets Status" />
             <RHFAutocomplete
               name="status"
               id="status-autocomplete"

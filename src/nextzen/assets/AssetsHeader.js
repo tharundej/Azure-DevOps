@@ -43,7 +43,7 @@ const AssetsHead = ({ filterSearch, filterData }) => {
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Vendor Details</Typography>
+          <Typography variant="h4">Assets</Typography>
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
