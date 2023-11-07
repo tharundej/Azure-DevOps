@@ -411,6 +411,7 @@ const BasicTable = ({ endpoint, defaultPayload, headerData, rowActions, bodyData
           )}
           {filterName === 'PurchaseOrderHead' && (
             <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}

@@ -445,12 +445,11 @@ export function useNavData() {
               { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
               { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
             ],
-},
+          },
           {
             title: t('balancesheet'),
             path: paths.dashboard.balancesheet.balancesheet,
             icon: ICONS.dashboard,
-
           },
         ],
       },
