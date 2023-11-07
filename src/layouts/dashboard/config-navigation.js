@@ -412,6 +412,11 @@ export function useNavData() {
             icon: ICONS.dashboard,
           },
           {
+            title: t('assets'),
+            path: paths.dashboard.assets.assets,
+            icon: ICONS.dashboard,
+          },
+          {
             title: t('vendor'),
             path: paths.dashboard.vendor.vendor,
             icon: ICONS.dashboard,
