@@ -287,5 +287,8 @@ export const paths = {
     customers:{
       customers:`${ROOTS.DASHBOARD}/customers`,
     },
+    balancesheet:{
+      balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,
+    },
   },
 };

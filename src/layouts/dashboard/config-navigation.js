@@ -436,6 +436,11 @@ export function useNavData() {
             path: paths.dashboard.customers.customers,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('balancesheet'),
+            path: paths.dashboard.balancesheet.balancesheet,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],
