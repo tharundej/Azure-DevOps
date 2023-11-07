@@ -276,7 +276,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
  
   const handleEditRow = (rowData,eventData) => {
-    console.log(rowData,"rowdataa", eventData)
+    console.log(rowData,"rowdataa", eventData);
     if (eventData?.endpoint === "/approveLeave"){
       approveLeave(rowData,eventData)
     }
