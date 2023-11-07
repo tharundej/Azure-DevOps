@@ -58,8 +58,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      // url: baseUrl + `getLeaveType`,
-      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      url: baseUrl + `getLeaveType`,
+      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -133,16 +133,6 @@ export default function LeaveFilter({filterSearch,filterData}){
           from:dates[item?.from],
           to:dates[item?.to]
         }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
          
         })
         setDatesData(arr1);
@@ -163,7 +153,7 @@ export default function LeaveFilter({filterSearch,filterData}){
          
         if(dropdown[item.field]?.length>0){
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           data[item.field]=commaSeparatedString;
         }
          
@@ -225,7 +215,9 @@ export default function LeaveFilter({filterSearch,filterData}){
     fStatus: "",        
     fLeaveTypeName: "",  
       })
+      setOpen(false);
     }
+
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
     }
@@ -405,8 +397,8 @@ export default function LeaveFilter({filterSearch,filterData}){
                 >
                  
                     <MenuItem value="pending">Pending</MenuItem>
-                    <MenuItem value="approve">Approved</MenuItem>
-                    <MenuItem value="reject">Rejected</MenuItem>
+                    <MenuItem value="approved">Approved</MenuItem>
+                    <MenuItem value="rejected">Rejected</MenuItem>
                   
                 </Select>
               </FormControl>
@@ -426,28 +418,8 @@ export default function LeaveFilter({filterSearch,filterData}){
                 >
                  
  {leaveType?.map((status) => {
-  // let value;
-  // switch (status.leave_Type_ID) {
-  //   case 1:
-  //     value ='sick_leave';
-  //     break;
-  //   case 2:
-  //     value ='paid_leave';
-  //     break;
-  //   case 3:
-  //     value ='vacation_leave';
-  //     break;
-  //   case 4:
-  //     value='personal_leave';
-  //   case 5:
-  //     value='maternity_leave';
-  //   default:
-  //     value="";
-
-  // }
-
   return (
-                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
+                <MenuItem value={status.leave_Type_Name} key={status.leave_Type_ID}>
                   {status.leave_Type_Name}
                 </MenuItem>
   )

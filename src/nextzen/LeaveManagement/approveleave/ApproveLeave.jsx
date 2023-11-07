@@ -66,9 +66,9 @@ export default function Approveleave(){
     
     
       const actions = [
-        { name: "Approve", id: 'approve', type: "serviceCall", endpoint: '/accept' },
+        { name: "Approve", id: "1", type: "serviceCall", endpoint: '/approveLeave' },
 
-        { name: "Reject", id: 'reject', type: "serviceCall", endpoint: '/reject' },
+        { name: "Reject", id:"2", type: "serviceCall", endpoint: '/approveLeave' },
     
       ];
 
