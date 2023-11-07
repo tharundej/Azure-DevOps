@@ -129,6 +129,7 @@ const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal')
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
+const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -349,6 +350,15 @@ export const dashboardRoutes = [
         children: [
           {
             element: <FactoryIndex />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'materials',
+        children: [
+          {
+            element: <Materials />,
             index: true,
           },
         ],

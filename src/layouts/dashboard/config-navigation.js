@@ -411,6 +411,11 @@ export function useNavData() {
             path: paths.dashboard.factory.factory,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('materials'),
+            path: paths.dashboard.materials.materials,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],
