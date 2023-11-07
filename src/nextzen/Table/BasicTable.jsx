@@ -88,6 +88,7 @@ import ShiftConfigurationFilters from '../configaration/shiftconfiguration/Shift
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
 import HolidaysFilters from '../configaration/leaveconfiguration/holidays/HolidaysFilters';
+import SwapSearchFilter from './components/shiftmanagement/SwapSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -158,7 +159,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       
       // url: `http://192.168.1.87:3001/erp/${endpoint}`,
       
-      url: `http://192.168.1.79:8080/appTest/${endpoint}`,
+      url: `http://192.168.1.199:3001/erp/${endpoint}`,
       
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp/${endpoint}`,
 
@@ -449,7 +450,7 @@ getTableData(payload)
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
 
         <Card>
 

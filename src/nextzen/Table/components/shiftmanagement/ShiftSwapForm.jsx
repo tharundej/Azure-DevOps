@@ -261,15 +261,7 @@ const Options = [
             renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
           />
 
-                {/* <RHFSelect name="ToShiftGroup_Name" label="To Shift GroupName">
-
-                  <option value="2" >2</option>
-
-                  <option value="3" >3</option>
-
-                  <option value="4" >4</option>
-
-                </RHFSelect> */}
+ 
                                 <Autocomplete
             // multiple
             disablePortal

@@ -120,7 +120,7 @@ export default function AssignShiftComponent() {
     <BasicTable
 
 headerData={TABLE_HEAD}
-endpoint="getAssignShifts"
+endpoint="getAssignshift"
 bodyData='data'
 defaultPayload={defaultPayload}
 

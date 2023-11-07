@@ -31,9 +31,9 @@ export default function ShiftSwap() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
-          label: " SL_NO",
+          label: " SL NO",
     
           type: "text",
     
@@ -45,17 +45,18 @@ export default function ShiftSwap() {
     
         },
     
-        { id: "Employe_Name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
 
-        { id: "FromShift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "From_shift_name", label: "From Shift Name", width: 180, type: "text" },
     
-        { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
-        { id: "Swap_Date", label: "Swap Date", width: 220, type: "text" },
+        // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "swap_date", label: "Swap Date", width: 220, type: "text" },
+        { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
-        { id: "ToShift_Name", label: "To Shift Name", width: 180, type: "text" },
+        // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     
-        { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
-        { id: "Status", label: "Status ", width: 100, type: "text" },
+        // { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
+        { id: "status", label: "Status ", width: 100, type: "text" },
         // { id: "End_Date", label: "End Date", width: 100, type: "text" },
         // { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
     
@@ -63,7 +64,21 @@ export default function ShiftSwap() {
     
       ];
     
-     
+     const defaultPayload = {
+      "company_id":"COMP2",
+      "page":0,
+      "search":"",
+      "count": 5,
+      "externalFilters":{
+      "status": "",
+      "swap_date": ""
+  } , 
+      "sort": {
+      "orderby": "employee_name",
+      "key": 0
+  } 
+   
+  }
     
       const actions = [
     
@@ -109,11 +124,10 @@ export default function ShiftSwap() {
     <BasicTable
 
 headerData={TABLE_HEAD}
-endpoint="SwapShift"
-bodyData=''
-
-
-
+endpoint="MyShiftSwap"
+bodyData='data'
+defaultPayload={defaultPayload}
+filterName="SwapSearchFilter"
 rowActions={actions}
 
 />  
