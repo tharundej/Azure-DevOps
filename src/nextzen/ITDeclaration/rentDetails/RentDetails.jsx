@@ -339,7 +339,7 @@ const editRentDetails = async () => {
         setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
         setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
-        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
+        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : ""
         setPanNumbers( response?.data?.data?.pan_number) 
 
         console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers  )
@@ -391,7 +391,7 @@ useEffect(() => {
     getRentDetails();
   };
   fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
 }, [reload]);
 
 

@@ -6,7 +6,7 @@ import Iconify from 'src/components/iconify';
 import FileThumbnail from 'src/components/file-thumbnail/file-thumbnail';
 
 const FileBox = ({file,onDelete,onSelect,sx}) => {
-
+    console.log(file,'filefilefile')
     const popover = usePopover();
 
     const renderIcon =

@@ -104,12 +104,12 @@ const PreviousWork = () => {
     const data = JSON.stringify({
       "companyId": "COMP5",
       "employeeId": "NEWC19"
-    });
+  });
      
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getEducationDetails',
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getExperience',
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -138,8 +138,8 @@ const PreviousWork = () => {
 
    useEffect(()=>{
 
-   //  ApiHit();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     ApiHit();
+     
    },[])
 
    

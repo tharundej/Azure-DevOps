@@ -336,7 +336,7 @@ export default function MedicalPremium() {
       getMedicalPremumDetailsDocs()
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [isreloading]);
   console.log(medicalTableData?.MedicalDocs , "medicalDATA", medicalTableData?.MedicalDocs?.length)
   return (

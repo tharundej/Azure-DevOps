@@ -47,5 +47,5 @@ const FilesGrid = ({dataFiltered}) => {
 export default FilesGrid
 
 FilesGrid.PropTypes={
-    dataFiltered: PropTypes.array,
+    dataFiltered: PropTypes.any,
 }

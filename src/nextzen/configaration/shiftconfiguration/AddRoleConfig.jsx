@@ -384,7 +384,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       getLocation();
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   useEffect(() => {
@@ -393,7 +393,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       getDesignation()
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [hitGetDepartment]);
 
 
