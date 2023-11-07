@@ -145,10 +145,10 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
            
       const handleChange = (e, index, field) => {
-        const { value, id } = e.target;
+
         const newArray=defaultValues
        if(field==='grade' || field==="yearOfPassing"){
-        
+        const { value, id } = e.target;
 
        
         newArray[index] = {
@@ -163,13 +163,14 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
        // newObj[index][field]=e;
         newArray[index] = {
           ...newArray[index],
-          [field]: e
+          [field]:e
       }
 
     }
     
     else{
-        const { value, id } = e.target;
+      const { value, id } = e.target;
+        
         
         newArray[index] = {
           ...newArray[index],

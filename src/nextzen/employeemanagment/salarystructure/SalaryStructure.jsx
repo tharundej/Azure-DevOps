@@ -2,31 +2,21 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
-export default function Holidays() {
+export default function SalaryStructure() {
     const TABLE_HEAD = [
-      { id: 'Name', label: 'Name', type: 'text' },
-      { id: 'Date', label: 'Date', type: 'text' },
-      { id: 'Full Day/Half Day', label: 'Full Day/Half Day', type: 'text' },
-      { id: 'Repeats Anually', label: 'Repeats Anually', type: 'text' },
-      { id: 'Locations', label: 'Locations', type: 'text' },
+      { id: 'marketRate', label: 'Market Rate', type: 'text' },
+      { id: 'minimum', label: 'Minimum', type: 'text' },
+      { id: 'midpoint', label: 'Midpoint', type: 'text' },
+      { id: 'maximum', label: 'Maximum', type: 'text' },
+      { id: 'spread', label: 'Spread', type: 'text' },
+      { id: 'range', label: 'Range', type: 'text' },
+
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
-    // const bodyContent = [
-    //   {
-    //     employeeType: 'Permanent',
-    //     payscheduleType: 'Weekly',
-    //     payType: 'CTC',
-    //     basicPay: '40',
-    //     hra: '20',
-    //     da: '8',
-    //     employeePf: '6',
-    //     employerPf: '6',
-    //     tds: '20',
-    //   },
-    // ];
+
     const defaultPayload = 
     {
       "count": 5,
@@ -50,7 +40,14 @@ export default function Holidays() {
         "orderBy": ""
       }
     };
-
+     
+     
+    // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
+    // const tabContents = [
+    //   <div>Tab 1 Content</div>,
+    //   <div>Tab 2 Content</div>,
+    //   <div>Tab 3 Content</div>,
+    // ];
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
   
     React.useEffect(() => {
@@ -71,7 +68,7 @@ export default function Holidays() {
           endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
-          filterName="holidaysFilterSearch"
+          filterName='SalaryStructureFilterSearch'
         />
       
     );
