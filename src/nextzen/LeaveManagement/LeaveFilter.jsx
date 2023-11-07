@@ -1,53 +1,33 @@
 import PropTypes, { element } from 'prop-types';
-
 import React,{ useEffect, useState,useCallback } from 'react';
-
 import axios from 'axios';
-
 import { styled } from '@mui/system';
-
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
-
 import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
-
 import Iconify from 'src/components/iconify/iconify';
-
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import dayjs from 'dayjs';
-
 import Dialog from '@mui/material/Dialog';
-
 import DialogTitle from '@mui/material/DialogTitle';
-
 import { Today } from '@mui/icons-material';
-
-
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
-
-
 const defaultFilters = {
   name: '',
   type: [],
   startDate: null,
   endDate: null,
 };
-
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
@@ -67,13 +47,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-
-
-
 export default function LeaveFilter({filterSearch,filterData}){
   const theme = useTheme();
   const [leaveType,SetLeaveType]= useState();
-
   const getLeaveType = () => {
     const payload = {
         company_id: "C1"
@@ -82,7 +58,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `getLeaveType`,
+      // url: baseUrl + `getLeaveType`,
+      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -94,38 +71,34 @@ export default function LeaveFilter({filterSearch,filterData}){
         console.log(error);
       });
   }
-
-  const leaves = [
-    {name:'Sick Leave',value: "sick_leave"},
-    {name:'Paid Leave',value:"paid_leave"},
-    {name:'Vacation Leave',value:"vacation_leave"},
-    {name:'Annual Leave',value:"annual_leave"}
-  ]
-
+ 
   const [dropdown,setDropdown]=useState({
-
+// 
   })
-
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
-
   const [dropdownLeaveType,setDropdownLeaveType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
-
-  // const [datesFiledArray,setDatesFiledArray]=useState(
-  //   [
-  //     {
-  //       field:'fFromDate',
-  //       from:'fFromDate',
-  //     },
-  //     {
-  //       field:'fToDate',
-  //       to:'offer_date_to'
-  //     }
-  //   ]
-  // )
-
+  const [datesFiledArray,setDatesFiledArray]=useState(
+      [
+        {
+          field:'applyDate',
+          from:'applyDatefrom',
+          to:'applyDateto'
+        },
+        {
+          field:'fromDate',
+          from:'fromDatefrom',
+          to:'fromDateto'
+        },
+        {
+          field:'toDate',
+          from:'toDatefrom',
+          to:'toDateto'
+        }
+      ]
+    )
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
@@ -138,26 +111,49 @@ export default function LeaveFilter({filterSearch,filterData}){
       }
     ]
   )
-
   const [datesData,setDatesData]=useState([])
-
   const [dates,setDates]=useState({
-    fFromDate:"",
-    fToDate:"",
+    applyDatefrom:"",
+    applyDateto:"",
+    fromDatefrom:"",
+    fromDateto:"",
+    toDatefrom:"",
+    toDateto:"",
     fStatus: "",         // Add default value for "fStatus"
     fLeaveTypeName: "",  // Add default value for "fLeaveTypeName"
   })
-
   function formDateDataStructure(){
-
-      return dates;
-  }
-
-  function formWithDropdown(data){
-
     return new Promise((resolve) => {
      
 
+      const arr1={};
+       datesFiledArray.forEach((item,index)=>{  
+         
+        arr1[item.field]={
+          from:dates[item?.from],
+          to:dates[item?.to]
+        }
+
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        
+         
+        //  arr1.push(obj);
+       
+         
+        })
+        setDatesData(arr1);
+        resolve(arr1)
+        
+    })
+    
+  }
+  function formWithDropdown(data){
+    return new Promise((resolve) => {
+     
       const arr1 = {
         fStatus: "",
         fLeaveTypeName: "",
@@ -174,16 +170,12 @@ export default function LeaveFilter({filterSearch,filterData}){
         })
         arr1.fStatus = data.fStatus;
         arr1.fLeaveTypeName = data.fLeaveTypeName;
-
-
         resolve(arr1)
         
     })
     
-
   }
   
-
     const [open,setOpen]=useState(false);
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
@@ -193,8 +185,6 @@ export default function LeaveFilter({filterSearch,filterData}){
     const handleClickClose=()=>{
       setOpen(false)
     }
-
-
     const handleChangeDropDown = (event,field) => {
       const {
         target: { value },
@@ -213,14 +203,29 @@ export default function LeaveFilter({filterSearch,filterData}){
         setDropdown(obj);
       }
     };
-
     const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
+
       filterData(data);
+      setOpen(false);
     }
-    
+
+    const handleCancel = async()=>{
+      setDropdownStatus([]);
+      setDropdownLeaveType([]);
+      setDates({
+    applyDatefrom:"",
+    applyDateto:"",
+    fromDatefrom:"",
+    fromDateto:"",
+    toDatefrom:"",
+    toDateto:"",
+    fStatus: "",        
+    fLeaveTypeName: "",  
+      })
+    }
     const handleSearch=(e)=>{
       filterSearch(e?.target?.value)
     }
@@ -230,21 +235,16 @@ export default function LeaveFilter({filterSearch,filterData}){
         <>
           <Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
-
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}}
-
             />
             </Grid>
-
             <Grid md={4} xs={4} item>
-
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
            <Iconify icon="mi:filter"/>
       </Button>
-
       </Stack>
       </Grid>
          </Grid>
@@ -253,23 +253,17 @@ export default function LeaveFilter({filterSearch,filterData}){
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-
       >
         
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
-
         <DialogContent sx={{mt:0,paddingBottom:0}}>
-
           
-
           <Grid>
-
                 <Grid>
-            <Typography>Leave Duration</Typography>
+            <Typography>Apply Date</Typography>
      
-
             <Grid container flexDirection="row">
               <Grid item>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -277,12 +271,12 @@ export default function LeaveFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.fFromDate ? dayjs(dates.fFromDate) : null}
+                      value={dates?.applyDatefrom ? dayjs(dates.applyDatefrom) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fFromDate:newValue? formatDateToYYYYMMDD(newValue):"",
+                          applyDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -295,12 +289,12 @@ export default function LeaveFilter({filterSearch,filterData}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.fToDate ? dayjs(dates.fToDate) : null}
+                      value={dates?.applyDateto ? dayjs(dates.applyDateto) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fToDate: newValue ? formatDateToYYYYMMDD(newValue):"",
+                          applyDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -309,7 +303,93 @@ export default function LeaveFilter({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid>
+             <Grid sx={{marginTop:2}}>
+
+             <Typography>Start Date</Typography>
+     
+     <Grid container flexDirection="row">
+       <Grid item>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DemoContainer components={['DatePicker']}>
+             <DatePicker
+               sx={{ width: '100%', paddingLeft: '3px' }}
+               label="From Date"
+               value={dates?.fromDatefrom ? dayjs(dates.fromDatefrom) : null}
+               defaultValue={dayjs(new Date())}
+               onChange={(newValue) => {
+                 setDates((prev) => ({
+                   ...prev,
+                   fromDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
+                 }));
+               }}
+             />
+           </DemoContainer>
+         </LocalizationProvider>
+         </Grid>
+         <Grid item>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DemoContainer components={['DatePicker']}>
+             <DatePicker
+               sx={{ width: '100%', paddingLeft: '3px' }}
+               label="To Date"
+               value={dates?.fromDateto ? dayjs(dates.fromDateto) : null}
+               defaultValue={dayjs(new Date())}
+               onChange={(newValue) => {
+                 setDates((prev) => ({
+                   ...prev,
+                   fromDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
+                 }));
+               }}
+             />
+           </DemoContainer>
+         </LocalizationProvider>
+         </Grid>
+         </Grid>
+         </Grid>
+      <Grid sx={{marginTop:2}}>
+
+      <Typography>End Date</Typography>
+     
+     <Grid container flexDirection="row">
+       <Grid item>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DemoContainer components={['DatePicker']}>
+             <DatePicker
+               sx={{ width: '100%', paddingLeft: '3px' }}
+               label="From Date"
+               value={dates?.toDatefrom ? dayjs(dates.toDatefrom) : null}
+               defaultValue={dayjs(new Date())}
+               onChange={(newValue) => {
+                 setDates((prev) => ({
+                   ...prev,
+                   toDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
+                 }));
+               }}
+             />
+           </DemoContainer>
+         </LocalizationProvider>
+         </Grid>
+         <Grid item>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DemoContainer components={['DatePicker']}>
+             <DatePicker
+               sx={{ width: '100%', paddingLeft: '3px' }}
+               label="To Date"
+               value={dates?.toDateto ? dayjs(dates.toDateto) : null}
+               defaultValue={dayjs(new Date())}
+               onChange={(newValue) => {
+                 setDates((prev) => ({
+                   ...prev,
+                   toDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
+                 }));
+               }}
+             />
+           </DemoContainer>
+         </LocalizationProvider>
+         </Grid>
+         </Grid>
+         </Grid>
+      <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="fStatus">status</InputLabel>
@@ -331,7 +411,6 @@ export default function LeaveFilter({filterSearch,filterData}){
                 </Select>
               </FormControl>
                    </Grid>
-
                    <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="fLeaveTypeName">Leave Type</InputLabel>
@@ -345,31 +424,49 @@ export default function LeaveFilter({filterSearch,filterData}){
                   input={<OutlinedInput label="Leave Type" />}
                   MenuProps={MenuProps}
                 >
-                  {leaves.map((leave) => (
-                    <MenuItem
-                      // key={leave}
-                      value={leave?.value}
-                    >
-                      {leave.name}
-                    </MenuItem>
-                  ))}
+                 
+ {leaveType?.map((status) => {
+  // let value;
+  // switch (status.leave_Type_ID) {
+  //   case 1:
+  //     value ='sick_leave';
+  //     break;
+  //   case 2:
+  //     value ='paid_leave';
+  //     break;
+  //   case 3:
+  //     value ='vacation_leave';
+  //     break;
+  //   case 4:
+  //     value='personal_leave';
+  //   case 5:
+  //     value='maternity_leave';
+  //   default:
+  //     value="";
+
+  // }
+
+  return (
+                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
+                  {status.leave_Type_Name}
+                </MenuItem>
+  )
+  })}
+
                 </Select>
               </FormControl>
                    </Grid>
                 </Grid>
                </Grid>
-
-
            
          </DialogContent>
-         <Button sx={{float:'right'}} onClick={()=>{handleApply()}}>Apply</Button>
-   
+       <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
     </BootstrapDialog>
     </>
     )
     
 }
-
 LeaveFilter.propTypes={
     filterSearch:PropTypes.any,
     filterData: PropTypes.any,

@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function SalaryStructureForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,26 +33,19 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    marketRate: Yup.number().required('Market Rate is Required'),
+    minimum: Yup.number().required('Minimum is Required'),
+    midpoint: Yup.number().required('Midpoint is Required'),
+    maximum: Yup.number().required('Maximum is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
-      LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
-
+      marketRate: currentUser?.marketRate || null,
+      minimum: currentUser?.minimum || null,
+      midpoint: currentUser?.midpoint || null,
+      maximum: currentUser?.maximum || null,
     }),
     [currentUser]
   );
@@ -87,27 +80,12 @@ export default function LeaveTypeForm({ currentUser}) {
   });
 
 
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px'}}>Add SalaryStructure</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -119,7 +97,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add SalaryStructure</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -131,12 +109,10 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFTextField name="marketRate" label="Market Rate" />
+                <RHFTextField name="minimum" label="Minimum" />
+                <RHFTextField name="midpoint" label="Midpoint" />
+                <RHFTextField name="maximum" label="Maximum" />
               </Box>
             </DialogContent>
 
@@ -154,11 +130,12 @@ export default function LeaveTypeForm({ currentUser}) {
               </LoadingButton>
             </DialogActions>
           </FormProvider>
+        )}
       </Dialog>
     </>
   );
 }
 
-LeaveTypeForm.propTypes = {
+SalaryStructureForm.propTypes = {
   currentUser: PropTypes.object,
 };

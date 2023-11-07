@@ -9,13 +9,16 @@ import { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-const ApplyLeave = baseUrl + 'applyLeave';
-const URL = baseUrl+'appliedLeaveList';
+// const ApplyLeave = baseUrl + 'applyLeave';
+// const URL = baseUrl+'appliedLeaveList';
+
+const ApplyLeave =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave`;
+const URL =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList`
 
 
 const options = {
-  company_id: "COMP1",
-   employee_id:"info1"
+  company_id: "C1",
+   employee_id:"E1"
 
 }
 
