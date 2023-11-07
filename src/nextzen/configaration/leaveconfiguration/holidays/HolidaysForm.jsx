@@ -13,10 +13,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 // @mui
 import dayjs from 'dayjs';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -39,12 +36,9 @@ export default function HolidaysForm({ currentUser }) {
   const [formData, setFormData] = useState({
 
   });
-  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
-  const [datesUsed, setDatesUsed] = useState({
-    date_of_incorporation: dayjs(new Date()),
-  });
+
   const NewUserSchema1 = Yup.object().shape({
     holidayName: Yup.string().required('holiday Name is Required'),
     fulldayHalfday: Yup.string().required('Fullday/Halfday is Required'),
@@ -119,8 +113,7 @@ export default function HolidaysForm({ currentUser }) {
   
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
-    // data.holidayDate = formatDateToYYYYMMDD(selectedDate);
-    data.date_of_incorporation=formatDateToYYYYMMDD(selectedDates);
+    data.holidayDate=formatDateToYYYYMMDD(selectedDates);
     data.locationID=formData?.Location?.locationID
     console.log('submitted data111', data);
 
@@ -134,9 +127,6 @@ export default function HolidaysForm({ currentUser }) {
       console.log('error', error);
     }
   });
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
   const handleDateChanges = (date) => {
     setSelectedDates(date);
   };
@@ -187,19 +177,11 @@ export default function HolidaysForm({ currentUser }) {
             >
               <RHFTextField name="holidayName" label="Holiday Name" />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DesktopDatePicker']}>
-                  {/* <DemoItem label="holiday Date"> */}
-                    <DesktopDatePicker value={selectedDate} onChange={handleDateChange} />
-                  {/* </DemoItem> */}
-                </DemoContainer>
-              </LocalizationProvider>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="Date Of Incorporation"
+                        label="Holiday Date"
                           value={selectedDates}
-                        // defaultValue={dayjs(new Date())}
                         onChange={handleDateChanges}
                       />
                     </DemoContainer>
