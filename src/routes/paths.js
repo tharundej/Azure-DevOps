@@ -63,12 +63,12 @@ export const paths = {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
       general: `${ROOTS.AUTH}/jwt/general`,
-      verifyotp:`${ROOTS.AUTH}/jwt/verifyotp`,
-      createpassword:`${ROOTS.AUTH}/jwt/createpassword`,
-      forgotpassword:`${ROOTS.AUTH}/jwt/forgotpassword`,
-      setpassword:`${ROOTS.AUTH}/jwt/setpassword`,
+      verifyotp: `${ROOTS.AUTH}/jwt/verifyotp`,
+      createpassword: `${ROOTS.AUTH}/jwt/createpassword`,
+      forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
+      setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
-    },  
+    },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
       verify: `${ROOTS.AUTH}/firebase/verify`,
@@ -115,21 +115,20 @@ export const paths = {
       // signup: `${ROOTS.DASHBOARD}/signup`,
       general: `${ROOTS.DASHBOARD}/general`,
     },
-    table:{
+    table: {
       root: `${ROOTS.DASHBOARD}/table`,
       userneweditform: `${ROOTS.DASHBOARD}/table/userneweditform`,
-      
+
       edit: (id) => `${ROOTS.DASHBOARD}/table/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       },
-
     },
-    employee:{
+    employee: {
       root: `${ROOTS.DASHBOARD}/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-       onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
-      
+      onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
+
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
@@ -149,66 +148,49 @@ export const paths = {
       },
     },
 
-
-    itdeclaration:{
+    itdeclaration: {
       root: `${ROOTS.DASHBOARD}/itdeclaration`,
-     
     },
-    leave:{
+    leave: {
       root: `${ROOTS.DASHBOARD}/leave`,
-     
     },
 
-
-    
-    timesheet:{
+    timesheet: {
       root: `${ROOTS.DASHBOARD}/timesheet`,
-     
     },
-    Shift:{
+    Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
-     
     },
 
-
-
-    claims:{
+    claims: {
       root: `${ROOTS.DASHBOARD}/claims`,
       compoffapprove: `${ROOTS.DASHBOARD}/claims/compoffapprove`,
-      mycompoff:`${ROOTS.DASHBOARD}/claims/ mycompoff`,
-     
+      mycompoff: `${ROOTS.DASHBOARD}/claims/ mycompoff`,
     },
 
-
-    payroll:{
+    payroll: {
       root: `${ROOTS.DASHBOARD}/payroll`,
       // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
       // demo: {
       //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       // },
-
     },
-    monthlydeductions:{
+    monthlydeductions: {
       root: `${ROOTS.DASHBOARD}/monthlydeductions`,
-     
     },
 
-    appraisal:{
+    appraisal: {
       root: `${ROOTS.DASHBOARD}/appraisal`,
-     
     },
-    
-      // configaration:{
-      //   root:`${ROOTS.DASHBOARD}/configaration`,
-      //   LeaveConfiguration: `${ROOTS.DASHBOARD}/leaveconfiguration`,
-      // list: `${ROOTS.DASHBOARD}/user/list`,
-      // cards: `${ROOTS.DASHBOARD}/user/cards`,
-      // profile: `${ROOTS.DASHBOARD}/user/profile`,
-      // account: `${ROOTS.DASHBOARD}/user/account`,
-      // },
-    
 
-
+    // configaration:{
+    //   root:`${ROOTS.DASHBOARD}/configaration`,
+    //   LeaveConfiguration: `${ROOTS.DASHBOARD}/leaveconfiguration`,
+    // list: `${ROOTS.DASHBOARD}/user/list`,
+    // cards: `${ROOTS.DASHBOARD}/user/cards`,
+    // profile: `${ROOTS.DASHBOARD}/user/profile`,
+    // account: `${ROOTS.DASHBOARD}/user/account`,
+    // },
 
     // monthlydeductions
 
@@ -269,23 +251,28 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
-    factory:{
-      factory:`${ROOTS.DASHBOARD}/factory`,
+    factory: {
+      factory: `${ROOTS.DASHBOARD}/factory`,
     },
-    vendor:{
-      vendor:`${ROOTS.DASHBOARD}/vendor`,
+    vendor: {
+      vendor: `${ROOTS.DASHBOARD}/vendor`,
     },
-    materials:{
-      materials:`${ROOTS.DASHBOARD}/materials`,
+    materials: {
+      materials: `${ROOTS.DASHBOARD}/materials`,
     },
-    assets:{
-      assets:`${ROOTS.DASHBOARD}/assets`,
+    assets: {
+      assets: `${ROOTS.DASHBOARD}/assets`,
     },
-    products:{
-      products:`${ROOTS.DASHBOARD}/products`,
+    products: {
+      products: `${ROOTS.DASHBOARD}/products`,
     },
-    customers:{
-      customers:`${ROOTS.DASHBOARD}/customers`,
+    customers: {
+      customers: `${ROOTS.DASHBOARD}/customers`,
+    },
+    purchase: {
+      purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,
+      purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/nvoice`,
+      purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
     },
     balancesheet:{
       balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,

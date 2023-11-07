@@ -437,9 +437,20 @@ export function useNavData() {
             icon: ICONS.dashboard,
           },
           {
+            title: t('purchase'),
+            path: paths.dashboard.purchase.purchaseOrder,
+            icon: ICONS.user,
+            children: [
+              { title: t('purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
+              { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
+              { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
+            ],
+},
+          {
             title: t('balancesheet'),
             path: paths.dashboard.balancesheet.balancesheet,
             icon: ICONS.dashboard,
+
           },
         ],
       },
