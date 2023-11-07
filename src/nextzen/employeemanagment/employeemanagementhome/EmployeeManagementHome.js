@@ -5,10 +5,11 @@ import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
+import SalaryStructure from '../salarystructure/SalaryStructure';
 
 
 function EmployeeManagementHome  () {
-    const tabLabels = ['EmployeeTable', 'Statoury'];
+    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure'];
   const tabContents = [
     <div>
 
@@ -16,6 +17,9 @@ function EmployeeManagementHome  () {
     </div>,
     <div>
      <StatouryTable/>
+    </div>,
+    <div>
+      <SalaryStructure/>
     </div>
   ];
   const [TABLE_HEAD,setTableHead] =React.useState( [

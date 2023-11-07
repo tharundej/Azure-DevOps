@@ -29,7 +29,7 @@ import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line react/prop-types
+
 export default function AmplifyNewPasswordView({emailId}) {
   const { newPassword, forgotPassword } = useAuthContext();
 

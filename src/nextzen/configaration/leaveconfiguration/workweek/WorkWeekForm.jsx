@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function WorkWeekForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,25 +33,25 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    monday: Yup.string().required('Monday is Required'),
+    tuesday: Yup.string().required('Tuesday Required'),
+    wednesday: Yup.string().required('Wednesday Required'),
+    thursday: Yup.string().required('Thursday Required'),
+    friday: Yup.string().required('Friday Required'),
+    saturday: Yup.string().required('Saturday Required'),
+    sunday: Yup.string().required('Sunday Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
-      LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
+      monday: currentUser?.monday || null,
+      tuesday: currentUser?.tuesday || null,
+      wednesday: currentUser?.wednesday || null,
+      thursday: currentUser?.thursday || null,
+      friday: currentUser?.friday || null,
+      saturday: currentUser?.saturday || null,
+      sunday: currentUser?.sunday || null,
 
     }),
     [currentUser]
@@ -85,29 +85,18 @@ export default function LeaveTypeForm({ currentUser}) {
       console.log('error', error);
     }
   });
+  const DayTypes = [
+    {type: "Full Day"},
+    {type: "Half Day"},
+    {type: "Non-Working Day"}
+  ];
 
-
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px'}}>Add Work Week</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -131,12 +120,13 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="monday" label="Monday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="tuesday" label="Tuesday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="wednesday" label="Wednesday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="thursday" label="Thursday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="friday" label="Friday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="saturday" label="Saturday" />
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="sunday" label="Sunday"/>
               </Box>
             </DialogContent>
 
@@ -159,6 +149,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+WorkWeekForm.propTypes = {
   currentUser: PropTypes.object,
 };
