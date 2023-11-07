@@ -79,6 +79,7 @@ import LeaveFilter from '../LeaveManagement/LeaveFilter';
 
 // Factory
 import FactoryHead from '../factory/FactoryHeader';
+import VendorHead from '../vendor/VendorHeader';
 
 const defaultFilters = {
   name: '',
@@ -386,6 +387,9 @@ const BasicTable = ({ endpoint, defaultPayload, headerData, rowActions, bodyData
           )}
           {filterName === 'FactoryHead' && (
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'VendorHead' && (
+            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           <Card>
             <TableContainer

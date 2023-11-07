@@ -20,13 +20,20 @@
       "presets": ["@babel/preset-react"]
     }
   },
+  // "settings": {
+  //   "import/resolver": {
+  //     "alias": {
+  //       "map": [["src", "./src"]],
+  //       "extensions": [".js", ".jsx", ".json"]
+  //     },
+  //     "caseSensitive": false
+  //   }
+  // },
   "settings": {
     "import/resolver": {
-      "alias": {
-        "map": [["src", "./src"]],
-        "extensions": [".js", ".jsx", ".json"]
-      },
-      "caseSensitive": false
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
   },
   "rules": {
