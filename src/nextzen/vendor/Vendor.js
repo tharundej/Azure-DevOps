@@ -1,9 +1,7 @@
 import VendorTable from "./VendorTable";
 
 const VendorDetails = () => (
-  <>
-    <VendorTable />
-  </>
+  <VendorTable />
 );
 
 export default VendorDetails;
