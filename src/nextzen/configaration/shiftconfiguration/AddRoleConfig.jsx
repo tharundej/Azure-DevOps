@@ -405,7 +405,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+        // minHeight: '100vh',
       }}
     >
         <Snackbar
