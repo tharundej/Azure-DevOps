@@ -96,7 +96,7 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
  
@@ -151,10 +151,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-         url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
-      // url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/${endpoint}`,
+      // url: `https://27gq5020-5001.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -245,40 +245,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
   }
  
-  const approveLeave = (rowdata,event)=>{
-    var payload ={
-        "leave_id": rowdata?.leaveId,
-        "emp_id": rowdata?.employeeId,
-        "status": event?.id,           
-        "leave_type_id":rowdata?.leaveTypeId,
-        "duration": rowdata?.requestedDuration 
-    }
-    console.log(payload,"requestedddbodyyy")
-    const config = {
-      method: 'POST',
-      maxBodyLength:Infinity,
-      // url: baseUrl + `approveLeave`,
-      url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
-      data: payload
-    
-    }
-    axios.request(config).then((response) => {
-      console.log(response,"responsedata",response.data)
-      enqueueSnackbar(response.data.message,{variant:'success'})
-      getTableData()
-    })
-      .catch((error) => {
-        enqueueSnackbar(error.message,{variant:'Error'})
-        console.log(error);
-      });
-    
-  }
- 
- 
   const handleEditRow = (rowData,eventData) => {
-    console.log(rowData,"rowdataa", eventData);
-    if (eventData?.endpoint === "/approveLeave"){
-      approveLeave(rowData,eventData)
+    onClickActions(rowData,eventData);
+    if (eventData?.type === "/serviceCall"){
+     console.log("servicecall")
     }
     else if (eventData?.type === "edit"){
       buttonFunction(rowData);
@@ -615,6 +585,10 @@ function applyFilter({ inputData, comparator, filters }) {
 BasicTable.propTypes = {
   endpoint: PropTypes.string,
 };
+
+BasicTable.propTypes = {
+  onClickActions:PropTypes.func,
+}
  
 BasicTable.propTypes = {
   defaultPayload: PropTypes.object,

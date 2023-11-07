@@ -1,7 +1,5 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
-
-
-
+import axios from 'axios';
 import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
@@ -72,16 +70,45 @@ export default function Approveleave(){
     
       ];
 
+const onClickActions=(rowdata,event)=>{
+        var payload ={
+          "leave_id": rowdata?.leaveId,
+          "emp_id": rowdata?.employeeId,
+          "status": event?.id,           
+          "leave_type_id":rowdata?.leaveTypeId,
+          "duration": rowdata?.requestedDuration 
+       }
+      console.log(payload,"requestedddbodyyy")
+      const config = {
+        method: 'POST',
+        maxBodyLength:Infinity,
+        // url: baseUrl + `approveLeave`,
+        url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
+        data: payload
+      
+      }
+      axios.request(config).then((response) => {
+        console.log(response,"responsedata",response.data)
+        enqueueSnackbar(response.data.message,{variant:'success'})
+        getTableData()
+      })
+        .catch((error) => {
+          enqueueSnackbar(error.message,{variant:'Error'})
+          console.log(error);
+        });
+      
+      }
   
  return (
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
-  endpoint="/listLeave"  
+  endpoint="listLeave"  
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'
   filterName="LeavelistFilter"/>
+  onClickActions={onClickActions}
   </>
  )
 }
