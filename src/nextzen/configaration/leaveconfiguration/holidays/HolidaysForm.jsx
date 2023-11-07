@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function HolidaysForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,26 +33,24 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    Name: Yup.number().required('Leave Period Id is Required'),
+    date: Yup.number().required('leave Period Name is Required'),
+    Fullday_halfday: Yup.number().required('Start Date is Required'),
+    RepeatsAnually: Yup.number().required('End Date is Required'),
+    Country: Yup.number().required('End Date is Required'),
+    Locations: Yup.number().required('End Date is Required'),
+
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
-      LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
-
+      Name: currentUser?.Name || null,
+      date: currentUser?.date || null,
+      Fullday_halfday: currentUser?.Fullday_halfday || null,
+      RepeatsAnually: currentUser?.RepeatsAnually || null,
+      Country: currentUser?.Country || null,
+      Locations: currentUser?.Locations || null,
     }),
     [currentUser]
   );
@@ -86,28 +84,12 @@ export default function LeaveTypeForm({ currentUser}) {
     }
   });
 
-
-
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
-
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
-
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
  
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px'}}>Add Holidays</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -119,7 +101,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add Holidays</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -131,12 +113,12 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFTextField name="Name" label="Name" />
+                <RHFTextField name="date" label="Date" />
+                <RHFTextField name="Fullday_halfday" label="Fullday/Halfday" />
+                <RHFTextField name="RepeatsAnually" label="Repeats Anually" />
+                <RHFTextField name="Country" label="Country" />
+                <RHFTextField name="Locations" label="Locations" />
               </Box>
             </DialogContent>
 
@@ -160,6 +142,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+HolidaysForm.propTypes = {
   currentUser: PropTypes.object,
 };

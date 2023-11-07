@@ -6,10 +6,10 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ReusableTabs from '../../tabs/ReusableTabs';
-import LeavePeriod from './LeavePeriod';
+import LeavePeriod from './leaveperiod/LeavePeriod';
 import LeaveType from './leavetype/LeaveType';
-import Holidays from './Holidays';
-import WorkWeek from './WorkWeek';
+import Holidays from './holidays/Holidays';
+import WorkWeek from './workweek/WorkWeek';
 
 const bull = (
   <Box

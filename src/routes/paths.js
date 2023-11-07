@@ -206,6 +206,7 @@ export const paths = {
         appraisalconfiguration: `${ROOTS.DASHBOARD}/configaration/appraisalconfiguration`,
       expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configaration/expenseclaimconfiguration`,
       shiftconfiguration: `${ROOTS.DASHBOARD}/configaration/shiftconfiguration`,
+      roleconfiguration: `${ROOTS.DASHBOARD}/configaration/roleconfiguration`,
       },
     
 

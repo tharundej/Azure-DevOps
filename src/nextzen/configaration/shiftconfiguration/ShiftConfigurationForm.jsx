@@ -25,7 +25,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function LeaveTypeForm({ currentUser}) {
+export default function ShiftConfigurationForm({ currentUser}) {
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,26 +33,21 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    ShiftName: Yup.number().required('Employee PF is Required'),
+    StartTime: Yup.number().required('Employer PF is Required'),
+    EndTime: Yup.number().required('LTA is Required'),
+    ShiftTerm: Yup.number().required('esic is Required'),
+    LocationId: Yup.number().required('TDS is Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
-      LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
-
+      ShiftName: currentUser?.ShiftName || null,
+      StartTime: currentUser?.StartTime || null,
+      EndTime: currentUser?.EndTime || null,
+      ShiftTerm: currentUser?.ShiftTerm || null,
+      LocationId: currentUser?.LocationId || null,
     }),
     [currentUser]
   );
@@ -107,7 +102,7 @@ export default function LeaveTypeForm({ currentUser}) {
     <>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px'}}>Add ShiftConfig</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -119,7 +114,7 @@ export default function LeaveTypeForm({ currentUser}) {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add ShiftConfig</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}
@@ -131,12 +126,11 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFTextField name="ShiftName" label="Shift Name" />
+                <RHFTextField name="StartTime" label="Start Time" />
+                <RHFTextField name="EndTime" label="End Time" />
+                <RHFTextField name="ShiftTerm" label="Shift Term" />
+                <RHFTextField name="LocationId" label="Location Id" />
               </Box>
             </DialogContent>
 
@@ -160,6 +154,6 @@ export default function LeaveTypeForm({ currentUser}) {
   );
 }
 
-LeaveTypeForm.propTypes = {
+ShiftConfigurationForm.propTypes = {
   currentUser: PropTypes.object,
 };
