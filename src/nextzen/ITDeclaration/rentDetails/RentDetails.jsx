@@ -107,8 +107,7 @@ const handleUploadattchmentFileNameForLandloard =(data)=>{
   setOpenAttchementDilogForLandLoard(false)
 }
   const handleChange = (event) => {
-   
-    setSelectedValue(event.target.value);
+  setSelectedValue(event.target.value);
     if(event.target.value === "Yes"){
       setIsShowPanNumber(true)
       setIsPanValueThere(true)
@@ -118,6 +117,8 @@ const handleUploadattchmentFileNameForLandloard =(data)=>{
       setIsShowPanNumber(false)
       setIsShowDeclaration(true)
     }
+    console.log( isShowPannumber , panNumbers , "handle pan change")
+   
     console.log(event.target.value)
   };
 
@@ -313,7 +314,7 @@ const editRentDetails = async () => {
 
  const getRentDetails = async () => {
   const payload = {  
-  "employeeId" :"ibm4" };
+  "employeeId" :"ibm3" };
 
   const config = {
     method: 'post',
@@ -340,9 +341,9 @@ const editRentDetails = async () => {
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
         setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
         response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
-        setPanNumbers( response?.data?.data?.pan_number) 
+        setPanNumbers( (response?.data?.data?.pan_number ===undefined || null )?['', '', ''] : response?.data?.data?.pan_number ) 
 
-        console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers  )
+        console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers ,response?.data?.data?.pan_number )
 
         setData(prevData => {
           return prevData.map(existingMonth => {
@@ -391,7 +392,7 @@ useEffect(() => {
     getRentDetails();
   };
   fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
 }, [reload]);
 
 
