@@ -274,5 +274,8 @@ export const paths = {
       purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/nvoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
     },
+    balancesheet:{
+      balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,
+    },
   },
 };

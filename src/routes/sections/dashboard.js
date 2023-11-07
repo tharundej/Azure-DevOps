@@ -135,6 +135,7 @@ const Assets = lazy(() => import('src/nextzen/assets/Assets'));
 const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
 const PurchaseOrder = lazy(() => import('src/nextzen/Purchase/PurchaseOrder/PurchaseOrder'));
+const Balancesheet =  lazy(() => import('src/nextzen/balancesheet/BalanceSheet'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -411,6 +412,14 @@ export const dashboardRoutes = [
           { path: 'order', element: <PurchaseOrder /> },
           { path: 'invoice', element: <PurchaseOrder /> },
           { path: 'payment', element: <PurchaseOrder /> },
+},
+      {
+        path: 'balancesheet',
+        children: [
+          {
+            element: <Balancesheet />,
+            index: true,
+          },
         ],
       },
     ],
