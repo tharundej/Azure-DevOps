@@ -132,6 +132,7 @@ const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
 const VendorIndex = lazy(() => import('src/nextzen/vendor/Vendor'));
 const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
 const Products = lazy(() => import('src/nextzen/Products/Products'));
+const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -379,6 +380,15 @@ export const dashboardRoutes = [
         children: [
           {
             element: <Products />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'customers',
+        children: [
+          {
+            element: <Customers />,
             index: true,
           },
         ],
