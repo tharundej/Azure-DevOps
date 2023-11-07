@@ -141,7 +141,7 @@ export default function Loans() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='listProject'
+endpoint='/listProject'
 
 rowActions={actions}
 
