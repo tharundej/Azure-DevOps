@@ -144,7 +144,7 @@ export default function Loans() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='getLoanDetailsHr'
+endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actions}

@@ -55,8 +55,8 @@ export default function ShiftRoast() {
         { id: "start_time", label: "Start Time", width: 180, type: "text" },
         
         { id: "end_time", label: "End time", width: 100, type: "text" },
-        { id: "shift_term", label: "Sift_term", width: 100, type: "text" },
-        { id: "shift_group", label: "Shift group", width: 220, type: "text" },
+        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
+        { id: "shift_group", label: "Shift Group", width: 220, type: "text" },
         { id: "supervisor_name", label: "Superior Name", width: 100, type: "text" },
         
         { id: "start_date", label: " Start Date", width: 100, type: "text" },
@@ -122,12 +122,11 @@ export default function ShiftRoast() {
   <Button className="button" onClick={handleTimeForm}> Add Employe To Shift</Button>
 </Container>
     <BasicTable
-
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 filterName="ShiftRoastFilter"
 bodyData='data'
-endpoint='ShiftRoaster'
+endpoint='/ShiftRoaster'
 rowActions={actions}
 
 />  

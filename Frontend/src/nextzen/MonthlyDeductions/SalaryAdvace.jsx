@@ -143,7 +143,7 @@ export default function SalaryAdvace() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='listProject'
+endpoint='/listProject'
 
 rowActions={actions}
 

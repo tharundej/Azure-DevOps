@@ -118,8 +118,8 @@ export default function ShiftSwap() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   <Button className="button" onClick={handleTimeForm    }> Shift Swap</Button>
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
     <BasicTable
 

@@ -56,7 +56,7 @@ export default function MyShiftDetails() {
         { id: "end_time", label: "End time", width: 100, type: "text" },
         { id: "start_date", label: "Start Date", width: 100, type: "text" },
         { id: "end_date ", label: "End Date", width: 100, type: "text" },
-        { id: "shift_term", label: "Sift_term", width: 100, type: "text" },
+        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -120,13 +120,13 @@ export default function MyShiftDetails() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   {/* <Button className="button" onClick={handleTimeForm    }>Assign Shift</Button> */}
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
     <BasicTable
 defaultPayload={defaultPayload}
 headerData={TABLE_HEAD}
-endpoint='Myshiftdetails'
+endpoint='/Myshiftdetails'
 bodyData='data'
 rowActions={actions}
 filterName='MyShiftFilter'

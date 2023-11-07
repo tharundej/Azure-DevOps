@@ -142,7 +142,7 @@ export default function SalaryAdvace() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='searchSalaryAdvance'
+endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
 rowActions={actions}
 bodyData="data"
