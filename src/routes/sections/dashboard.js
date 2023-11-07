@@ -360,9 +360,10 @@ export const dashboardRoutes = [
         children: [
           {
             element: <VendorIndex />,
+            index: true,
           },
         ],
-        },
+      },
         {
         path: 'materials',
         children: [

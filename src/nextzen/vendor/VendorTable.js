@@ -94,7 +94,7 @@ const VendorTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: 'FactoryName',
+      orderBy: 'VendorName',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
