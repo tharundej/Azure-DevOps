@@ -277,6 +277,9 @@ export const paths = {
     },
     materials:{
       materials:`${ROOTS.DASHBOARD}/materials`,
-    }
+    },
+    products:{
+      products:`${ROOTS.DASHBOARD}/products`,
+    },
   },
 };
