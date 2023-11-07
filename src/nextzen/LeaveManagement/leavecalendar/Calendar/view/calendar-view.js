@@ -1,29 +1,20 @@
 import Calendar from '@fullcalendar/react'; // => request placed at the top
-
 import interactionPlugin from '@fullcalendar/interaction';
-
 import listPlugin from '@fullcalendar/list';
-
 import dayGridPlugin from '@fullcalendar/daygrid';
-
 import timeGridPlugin from '@fullcalendar/timegrid';
-
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback } from 'react';
-
 import axios from 'axios';
-
 // @mui
 import { useTheme } from '@mui/material/styles';
-
-import {Card,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Tab,Tabs,IconButton} from '@mui/material';
-
+import {Card,OutlinedInput,FormControl,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-
+import dayjs from 'dayjs';
 import { useResponsive } from 'src/hooks/use-responsive';
 // _mock
 import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
@@ -31,41 +22,29 @@ import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 import { useGetEvents, updateEvent } from 'src/api/calendar';
 // components
 import Iconify from 'src/components/iconify';
-
 import { useSettingsContext } from 'src/components/settings';
-
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-
 import { styled } from '@mui/system'; // Import styled from @mui/system
-
 import { LoadingScreen } from 'src/components/loading-screen';
-
 import { useCalendar, useEvent } from '../hooks';
-
 import { StyledCalendar } from '../styles';
-
 import CalendarForm from '../calendar-form';
-
 import CalendarToolbar from '../calendar-toolbar';
-
 import CalendarFilters from '../calendar-filters';
-
 import CalendarFiltersResult from '../calendar-filters-result';
-
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-
-
-
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import formatDateToYYYYMMDD from '../../../../global/GetDateFormat';
 // ----------------------------------------------------------------------
-
 const defaultFilters = {
   colors: [],
   from_date: null,
   to_date: null,
 };
-
 // ----------------------------------------------------------------------
-
 const CustomTab = styled(Tab)(({ theme }) => ({
  
   padding:"5px",
@@ -85,31 +64,25 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   //   color:"#637381"
   // },
 }));
-
 export default function CalendarView() {
+ //----------------Calendar -------------------
+  
   const theme = useTheme();
-
   const settings = useSettingsContext();
-
   const smUp = useResponsive('up', 'sm');
-
   const openFilters = useBoolean();
-
   const [filters, setFilters] = useState(defaultFilters);
-
   const { events, eventsLoading } = useGetEvents();
-
   const [listOfHolidays,setListOfHolidays]= useState();
-
+  const [dropdownstatus,setDropdownStatus]=useState([])
+  const [dropdownLeaveType,setDropdownLeaveType]=useState([])
 useEffect(()=>{
   holidayslist();
 },[])
-
   const dateError =
     filters.from_date && filters.to_date
       ? filters.from_date.getTime() > filters.to_date.getTime()
       : false;
-
   const {
     calendarRef,
     //
@@ -135,21 +108,18 @@ useEffect(()=>{
     //
     onClickEventInFilters,
   } = useCalendar();
-
-
-
   const holidayslist = (e) => {
     console.log("holidaysss")
     const payload = {
-      company_id: "COMP1",
-       employee_id:"info1"
-    
-    }
+      company_id: "C1"
+    };
+   
     
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url:baseUrl + `holidayList`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
+    // url:baseUrl + `holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -158,30 +128,22 @@ useEffect(()=>{
     .catch((error) => {
       console.log(error);
     });
-
   };
-
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
-
    
-
   useEffect(() => {
     onInitialView();
   }, [onInitialView]);
-
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   }, []);
-
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
-
   const canReset = !!filters.colors.length || (!!filters.from_date && !!filters.to_date);
-
   const dataFiltered = applyFilter({
     inputData: events,
     filters,
@@ -219,35 +181,39 @@ useEffect(()=>{
   );
   const timezone = "Asia/Kolkata";
   const [tabIndex, setTabIndex] = useState(0);
-  const [listData,setListData] = useState();
+  
   const handleChange = (event, value) => {
     setTabIndex(value);
   }
-  
-  const historydata = [
-    {
-      appliedleave:"AL",
-      from_date:"31/10/2023",
-      to_date:"02/11/2023",
-      no_of_days:"3",
-      day_span:"Full Day",
-      leave_reason:"Due to some Personal Work not able to attend the office.",
-      leave_status:"Approved",
-    },
-    {
-      appliedleave:"SL",
-      from_date:"31-10-2023",
-      to_date:"02-11-2023",
-      no_of_days:"3",
-      day_span:"Full Day",
-      leave_reason:"Due to some Personal Work not able to attend the office.",
-      leave_status:"Approved",
-    }
-  ]
+// -------------------------------
+  // -----------------History,Pending and Approved ---------------------------
+  const [listData,setListData] = useState();
+  const [historyData,setHistoryData] = useState();
   const [pendingCount, setPendingCount] = useState(0);
   const [approvedCount, setApprovedCount] = useState(0);
   const [loading,setLoading] = useState(false);
+  const [leaveType,SetLeaveType]= useState();
+  const getLeaveType = () => {
+    const payload = {
+        company_id: "C1"
+    }
+   
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      // url: baseUrl + `getLeaveType`,
+      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      data:  payload
+    };
   
+    axios.request(config).then((response) => {
+      SetLeaveType(response?.data?.list)
+    })
+  
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   const updateCounts = (response) => {
     if (response?.message === "Pending leaves") {
       setPendingCount(response.Count);
@@ -265,7 +231,8 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: baseUrl + `pendingapproved`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/pendingapproved`,
+    // url: baseUrl + `pendingapproved`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -273,15 +240,43 @@ useEffect(()=>{
     setListData(response?.data)
     setLoading(false);
   })
-
     .catch((error) => {
       console.log(error);
       setLoading(false);
     });
-
   }, [setListData]);
-
+  const LeaveHistory = () => {
+    setLoading(true);
+    const payload = {
+      "employee_id": "E1",  
+      "search": "",
+      "Page":1,
+      "Count":10,
+      "from_date":(dates?.fFromDate)?dates?.fFromDate:"",
+      "to_date": (dates?.fToDate)?dates?.fToDate:""
+    }
+     
+    const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url: `https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLeaveHistory`,
+    // url: baseUrl + `pendingapproved`,
+    data:  payload
+    }
+  axios.request(config).then((response) => {
+    console.log(response,"responsee",response.data.list)
+    setHistoryData(response.data)
+    setLoading(false);
+  })
+    .catch((error) => {
+      console.log(error);
+      setLoading(false);
+    });
+  }
   useEffect(()=>{
+    if(tabIndex === 1){
+      LeaveHistory();
+    }
     if(tabIndex===2){
       PendingApproved(true)
     }
@@ -289,10 +284,7 @@ useEffect(()=>{
       PendingApproved(false)
     }
   },[tabIndex, PendingApproved ])
-
-
-
-  const [expanded, setExpanded] = useState(Array(historydata?.length).fill(false));
+  const [expanded, setExpanded] = useState(Array(historyData?.list?.length).fill(false));
   const [pending,setPending] = useState(Array(listData?.response?.length).fill(false));
   const [approved,setApproved] = useState(Array(listData?.response?.length).fill(false));
   const handleExpanded=(index)=>{
@@ -310,12 +302,78 @@ const handleApproved=(index)=>{
   newExpanded[index] = !newExpanded[index];
   setApproved(newExpanded);
 }
+// -------------------------
+// ------------Filters Dialog-----------------
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+    overflow:"hidden"
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+const [open,setOpen]=useState(false);
+const [dates,setDates]=useState({
+  fFromDate:"",
+  fToDate:"",
+})
+const handleClickOpen=()=>{
+  getLeaveType()
+  setOpen(true);
+ 
+}
+const handleClickClose=()=>{
+  setOpen(false)
+}
+const handleApply = async()=>{
+ LeaveHistory()
+ setOpen(false)
+}
+const [dropdown,setDropdown]=useState({
+})
+const handleChangeDropDown = (event,field) => {
+  const {
+    target: { value },
+  } = event;
+  
+  if(field==="LeaveTypeName"){
+    setDropdownLeaveType(value)
+    const obj=dropdown;
+    obj[field]=value;
+    setDropdown(obj);
+  }
+  // else if(field==="fStatus"){
+  //   setDropdownStatus(value)
+  //   const obj=dropdown;
+  //   obj[field]=value;
+  //   setDropdown(obj);
+  // }
+};
 
-const dynamicValue = listData?.response?.length;
-
+const handleCancel = async()=>{
+  setDropdownStatus([]);
+  setDropdownLeaveType([]);
+  setDates({
+    fFromDate: "",
+    fToDate: "",
+    fStatus: "",  
+    fLeaveTypeName: "", 
+  });
+}
+// --------------------------------
   return (
     <>
-
     <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary"  TabIndicatorProps={{ style: { display: 'none' } }} sx={{marginTop:"5px"}}>
     <CustomTab label="Leave Request" />
       <CustomTab label="History"  />
@@ -323,14 +381,12 @@ const dynamicValue = listData?.response?.length;
       <CustomTab label={approvedCount?`Approved (${approvedCount})`: "Approved"} /> 
     </Tabs>
   <br/>
+  {/* Calendar Tab Code */}
     {(tabIndex===0) && <>
-     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+     <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
         <Stack
           alignItems="flex-end"
           justifyContent="flex-end"
-          // sx={{
-          //   mb: { xs: 3, md: 5 },
-          // }}
         >
           <Button
             variant="contained"
@@ -340,9 +396,7 @@ const dynamicValue = listData?.response?.length;
            Leave Request
           </Button>
         </Stack>
-
         {canReset && renderResults}
-
         <Card>
           <StyledCalendar>
             <CalendarToolbar
@@ -355,7 +409,6 @@ const dynamicValue = listData?.response?.length;
               onChangeView={onChangeView}
               // onOpenFilters={openFilters.onTrue}
             />
-
             <Calendar
               weekends
               droppable
@@ -392,7 +445,6 @@ const dynamicValue = listData?.response?.length;
           </StyledCalendar>
         </Card>
       </Container>
-
       <Dialog
         fullWidth
         maxWidth="xs"
@@ -406,7 +458,6 @@ const dynamicValue = listData?.response?.length;
         <DialogTitle sx={{ minHeight: 76 }}>
           {openForm && <> {currentEvent?.leave_id ? 'Edit Event' : 'Leave Request'}</>}
         </DialogTitle>
-
         <CalendarForm
           currentEvent={currentEvent}
           colorOptions={CALENDAR_COLOR_OPTIONS}
@@ -415,52 +466,170 @@ const dynamicValue = listData?.response?.length;
       </Dialog>
       </>
       }
-      {(tabIndex === 1) &&
+      {/* History Tab Code */}
+      {(tabIndex === 1) && (
       <>
-         
-                {
-                  historydata?.map((itm,index) => (
-                   
+       <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+           <Iconify icon="mi:filter"/>
+      </Button>
+      </Stack>
+      <BootstrapDialog
+        onClose={handleClickClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        
+        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        </DialogTitle>
+        <DialogContent sx={{mt:0,paddingBottom:0}}>
+          <Grid>
+                <Grid>
+            <Typography>Leave Duration</Typography>
+            <Grid container flexDirection="row">
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.fFromDate ? dayjs(dates.fFromDate) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fFromDate:newValue? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.fToDate ? dayjs(dates.fToDate) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fToDate: newValue ? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                </Grid>
+                </Grid>
+                <Grid>
+                  {/* <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="fStatus">status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownstatus}
+                  onChange={(e)=>handleChangeDropDown(e,'fStatus')}
+                  input={<OutlinedInput label="Status" />}
+                  MenuProps={MenuProps}
+                >
+                 
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="approve">Approved</MenuItem>
+                    <MenuItem value="reject">Rejected</MenuItem>
+                  
+                </Select>
+              </FormControl>
+                   </Grid> */}
+                   <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="LeaveTypeName">Leave Type</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_2"
+                  id="demo-multiple-status_2"
+                  value={dropdownLeaveType}
+                  multiple
+                  onChange={(e)=>handleChangeDropDown(e,'LeaveTypeName')}
+                  input={<OutlinedInput label="Leave Type" />}
+                  MenuProps={MenuProps}
+                >
+                    {leaveType?.map((status) => (
+                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
+                  {status.leave_Type_Name}
+                </MenuItem>
+              ))}
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
+               </Grid>
+           
+         </DialogContent>
+         <div style={{marginBottom:16}}>  <Button sx={{float:'right',backgroundColor:"#3B82F6",color:"white",marginRight:2,"&:hover": {
+        backgroundColor: "#3B82F6", 
+      },}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15,backgroundColor:"#e22929",color:"white","&:hover": {
+        backgroundColor: "#e22929", 
+      },}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+   
+    </BootstrapDialog>
+     {loading ? 
+     <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
+     :(historyData?.list != null ? (
+                  historyData?.list.map((itm,index) => (
                       <Card sx={{margin:"10px"}}>
-
                         <CardContent >
                           
                { (!expanded[index])?  <>
                <Typography>
-                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave}  
+                <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName}  
                 <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
              
               </Typography>
-                <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {itm?.leave_status}
+                <Typography><span style={{fontWeight:600}}>Leave Status :  </span>  {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}
                 
                 </Typography>
                   </>
                  :<>
                   <Typography >
-                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.appliedleave} <br/>
-                            <span >From : {itm?.from_date} To : {itm?.to_date}</span>
+                            <span style={{fontWeight:700}}>Applied Leave : </span> {itm?.leaveTypeName} <br/>
+                            <span >From : {itm?.fromDate} To : {itm?.toDate}</span>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-up-2-thin"/></IconButton>
                
                   </Typography>
-                          <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
+                          {/* <Typography><span>No of leave day(s) : </span> {itm?.no_of_days}
                           
-                           </Typography>
-                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.day_span}</Typography>
-                          <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.leave_reason}</Typography>
-                          <Typography><span style={{fontWeight:600}}>Leave Status : </span> {itm?.leave_status}</Typography>
+                           </Typography> */}
+                          <Typography><span style={{fontWeight:600}}>Day Span : </span> {itm?.leaveDays} Days</Typography>
+                          <Typography><span style={{fontWeight:600}}>Leave Reason : </span> {itm?.comments}</Typography>
+                          <Typography><span style={{fontWeight:600}}>Leave Status : </span> {(itm?.status===0)?"Pending":(itm?.status===1)?"Approved":"Rejected"}</Typography>
                           </>}
                         </CardContent>
                       </Card>
                     )
                   )
-               }
-        
-      </>}
+     ) :
+     
+     (<div style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}>
+     No Leaves 
+   </div>)
+     )}
+      </>
+      )}
+      {/* Pending Tab Code */}
     {(tabIndex === 2) && (
   <>
-    {loading ? (
-      <LoadingScreen />
-    ) : (
+    {loading ? 
+     <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
+     : (
       listData?.response != null ? (
         listData?.response?.map((itm, index) => (
           <Card sx={{ margin: "10px" }}>
@@ -506,12 +675,12 @@ const dynamicValue = listData?.response?.length;
     )}
   </>
   )}
-
+  {/* Approved Tab Code */}
 {(tabIndex === 3) && (
   <>
-    {loading ? (
-      <LoadingScreen />
-    ) : (
+    {loading ? 
+      <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
+    : (
       listData?.response != null ? (
         listData?.response?.map((itm, index) => (
           <Card sx={{ margin: "10px" }}>
@@ -551,25 +720,17 @@ const dynamicValue = listData?.response?.length;
     )}
   </>
 )}
-
     </> 
   );
-
 }
-
   // ----------------------------------------------------------------------
-
 function applyFilter({ inputData, filters, dateError }) {
   const { colors, from_date, to_date } = filters;
-
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   inputData = stabilizedThis.map((el) => el[0]);
-
   if (colors.length) {
     inputData = inputData.filter((event) => colors.includes(event.color));
   }
-
   if (!dateError) {
     if (from_date && to_date) {
       inputData = inputData.filter(
@@ -581,7 +742,7 @@ function applyFilter({ inputData, filters, dateError }) {
   }
   return inputData;
 }
-
+// Events Style in Calendar 
 function renderEventContent(eventContent) {
   const {event} = eventContent; // Get the event title
   const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"

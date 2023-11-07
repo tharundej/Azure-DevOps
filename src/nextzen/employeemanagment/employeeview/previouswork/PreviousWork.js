@@ -9,10 +9,11 @@ import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
 
 
 const employeeData=[ {
-  "previousCompanyName": "Tesla",
-  "designation": "CEO",
-  "startDate": "2020-12-02",
-  "presentlyWorking": true,
+
+  "previousCompanyName": "",
+  "designation": "",
+  "startDate": "",
+  "presentlyWorking": "",
   "endDate": "",
     documents:[
       {
@@ -73,7 +74,7 @@ const PreviousWork = () => {
 
         }
     ]
-    const [employeeEducation,setEmployeeEducation] =useState([{
+    const [employeeWork,setEmployeeWork] =useState([{
       "companyName": "Newcomp22",
       "employeeId": "NEWC19",
       "previousCompanyName": "Tesla",
@@ -89,7 +90,7 @@ const PreviousWork = () => {
       }
     ]
     }])
-    const [expanded, setExpanded] = useState(Array(employeeEducation?.length).fill(false));
+    const [expanded, setExpanded] = useState(Array(employeeWork?.length).fill(false));
     const tabIndex=1;
 
     const handleExpanded=(index)=>{
@@ -120,19 +121,11 @@ const PreviousWork = () => {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      setEmployeeEducation(response.data.data)
+      setEmployeeWork(response.data.data)
     })
     .catch((error) => {
       console.log(error);
-      setEmployeeEducation([{
-        "companyName": "Newcomp22",
-        "employeeId": "NEWC19",
-        "previousCompanyName": "Tesla",
-        "designation": "CEO",
-        "startDate": "2020-12-02",
-        "presentlyWorking": true,
-        "endDate": null,
-      }])
+      
     });
    }
 
@@ -148,7 +141,7 @@ const PreviousWork = () => {
       <CreatePreviousWork open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Work</Button>
+          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
           </Grid>
         </Grid>
 
@@ -156,7 +149,7 @@ const PreviousWork = () => {
       <>
          
                 {
-                  employeeEducation?.map((itm,index) => (
+                  employeeWork?.map((itm,index) => (
                    
                       <Card sx={{margin:"10px"}}>
 
