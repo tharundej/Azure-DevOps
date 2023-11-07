@@ -271,6 +271,12 @@ export const paths = {
     },
     factory:{
       factory:`${ROOTS.DASHBOARD}/factory`,
+    },
+    vendor:{
+      vendor:`${ROOTS.DASHBOARD}/vendor`,
+    },
+    materials:{
+      materials:`${ROOTS.DASHBOARD}/materials`,
     }
   },
 };

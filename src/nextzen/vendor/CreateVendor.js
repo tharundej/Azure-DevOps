@@ -13,9 +13,7 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-
-export default function CreateMaterials({ currentData, handleClose }) {
-
+export default function CreateVendor({ currentUser, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -23,15 +21,18 @@ export default function CreateMaterials({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-
-      VendorName: currentData?.VendorName || '',
-      hsnID: currentData?.hsnID || '',
-      MaterialName: currentData?.MaterialName || '',
-      MaterialType: currentData?.MaterialType || '',
-      status: currentData?.status || '',
+      name: currentUser?.name || '',
+      emailID: currentUser?.emailID || '',
+      phoneNo: currentUser?.phoneNo || '',
+      address: currentUser?.address || '',
+      bankName: currentUser?.bankName || '',
+      nameAsPerBank: currentUser?.nameAsPerBank || '',
+      accountNo: currentUser?.accountNo || '',
+      ifscCode: currentUser?.ifscCode || '',
+      bankBranchName: currentUser?.bankBranchName || '',
+      status: currentUser?.status || '',
     }),
-    [currentData]
-
+    [currentUser]
   );
 
   const methods = useForm({
@@ -49,21 +50,20 @@ export default function CreateMaterials({ currentData, handleClose }) {
   } = methods;
   const values = watch();
 
-
-  const materialsOptions = ['Type 1', 'Type 2'];
-  const [selectedMaterials, setSelectedMaterials] = useState(defaultValues.MaterialType || '');
-
+  const statusOptions = ['Active', 'Inactive'];
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const handleStatusChange = (event, newValue) => {
+    setSelectedStatus(newValue);
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
-
-    data.MaterialType = selectedMaterials;
-
+    data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addMaterials', data).then(
+      const response = await instance.post('addFactory', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -78,7 +78,7 @@ export default function CreateMaterials({ currentData, handleClose }) {
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Materials</DialogTitle>
+        <DialogTitle>ADD New Vendor</DialogTitle>
 
         <DialogContent>
           <Box
@@ -91,21 +91,26 @@ export default function CreateMaterials({ currentData, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="VendorName" label="Vendor Name" />
-
-            <RHFTextField name="hsnID" label="HSN ID" />
-
-            <RHFTextField name="MaterialName" label="Material Name" />
+            <RHFTextField name="vendorname" label="Vendor Name" />
+            <RHFTextField name="factoryname" label="Factory Name" />
+            <RHFTextField name="phoneNo" label="Phone No" />
+            <RHFTextField name="emailID" label="Email ID" />
+            <RHFTextField name="address" label="Address" />
+            <RHFTextField name="panno" label="PAN No" />
+            <RHFTextField name="gstno" label="GST No" />
+            <RHFTextField name="bankName" label="Bank Name" />
+            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
+            <RHFTextField name="accountNo" label="Account No" />
+            <RHFTextField name="ifscCode" label="IFSC Code" />
+            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
             <RHFAutocomplete
-              name="MaterialType"
-              id="MaterialType"
-
-              options={materialsOptions || []}
-              value={selectedMaterials}
-              onChange={(event, newValue) => setSelectedMaterials(newValue)}
-
+              name="status"
+              id="status-autocomplete"
+              options={statusOptions || []}
+              value={selectedStatus}
+              onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Select Material Type" variant="outlined" />
+                <TextField {...params} label="Select Status" variant="outlined" />
               )}
             />
           </Box>
@@ -124,7 +129,7 @@ export default function CreateMaterials({ currentData, handleClose }) {
   );
 }
 
-CreateMaterials.propTypes = {
-  currentData: PropTypes.object,
+CreateVendor.propTypes = {
+  currentUser: PropTypes.object,
   handleClose: PropTypes.any,
 };

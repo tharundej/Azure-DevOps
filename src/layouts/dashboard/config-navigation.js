@@ -404,11 +404,21 @@ export function useNavData() {
       // },
       // factory
       {
-        subheader: 'factory',
+        subheader: 'Accounting',
         items: [
           {
             title: t('factory'),
             path: paths.dashboard.factory.factory,
+            icon: ICONS.dashboard,
+          },
+          {
+            title: t('vendor'),
+            path: paths.dashboard.vendor.vendor,
+            icon: ICONS.dashboard,
+          },
+          {
+            title: t('materials'),
+            path: paths.dashboard.materials.materials,
             icon: ICONS.dashboard,
           },
         ],
