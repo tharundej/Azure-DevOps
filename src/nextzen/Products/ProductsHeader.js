@@ -6,9 +6,9 @@ import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import CreateMaterials from './CreateMaterials';
+import CreateProducts from './CreateProducts';
 
-const MaterialsHead = ({ filterSearch, filterData }) => {
+const ProductsHead = ({ filterSearch, filterData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,13 +38,12 @@ const MaterialsHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-
-          <CreateMaterials currentData={{}} handleClose={handleClose} />
+          <CreateProducts currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Materials Details</Typography>
+          <Typography variant="h4">Products Details</Typography>
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
@@ -90,9 +89,9 @@ const MaterialsHead = ({ filterSearch, filterData }) => {
   );
 };
 
-MaterialsHead.propTypes = {
+ProductsHead.propTypes = {
   filterSearch: PropTypes.func, // A function to handle search filtering.
   filterData: PropTypes.any, // The data to be filtered (modify 'any' with the actual data type if known).
 };
 
-export default MaterialsHead;
+export default ProductsHead;
