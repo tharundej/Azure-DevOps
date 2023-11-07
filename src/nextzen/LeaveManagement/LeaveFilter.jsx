@@ -58,8 +58,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `getLeaveType`,
-      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      // url: baseUrl + `getLeaveType`,
+      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
