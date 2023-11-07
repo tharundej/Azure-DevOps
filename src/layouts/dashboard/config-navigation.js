@@ -426,6 +426,11 @@ export function useNavData() {
             path: paths.dashboard.materials.materials,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('products'),
+            path: paths.dashboard.products.products,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],

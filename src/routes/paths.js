@@ -280,6 +280,9 @@ export const paths = {
     },
     assets:{
       assets:`${ROOTS.DASHBOARD}/assets`,
-    }
+    },
+    products:{
+      products:`${ROOTS.DASHBOARD}/products`,
+    },
   },
 };
