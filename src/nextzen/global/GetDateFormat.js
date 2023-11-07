@@ -1,7 +1,7 @@
 export default function formatDateToYYYYMMDD(newValue) {
   const date = new Date(newValue?.$d);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
 
   return `${year}-${month}-${day}`;

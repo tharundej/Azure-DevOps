@@ -81,6 +81,8 @@ import ShiftConfigurationFilters from '../configaration/shiftconfiguration/Shift
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
 import HolidaysFilters from '../configaration/leaveconfiguration/holidays/HolidaysFilters';
+import SalaryStructureFilters from '../employeemanagment/salarystructure/SalaryStructureFilters';
+import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWeekFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -128,7 +130,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   useEffect(() => {
     // onclickActions();
     getTableData();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
  
   const getTableData = (payload) => {
@@ -148,13 +150,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-        // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+         url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
-      // url: `http://192.168.0.184:3001/erp/${endpoint}`,
-      url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-      
-      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
+                // url: `http://192.168.0.123:3001/erp/${endpoint}`,
+            //  url:`http://192.168.1.115:3000/erp/${endpoint}`,
+          //  vishal
+        // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       headers: {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
       },
@@ -250,7 +251,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     }
     else if (eventData?.type === "edit"){
       buttonFunction(rowData);
- 
+      
       console.log("servce call will called for edit")
     }
     else if (eventData?.type === "delete"){
@@ -288,7 +289,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
   useEffect(()=>{
     getTableData(initialDefaultPayload);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   },[initialDefaultPayload])
 
   const onChangeRowsPerPageHandeler = (event) => {
@@ -428,13 +429,14 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-
+       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
         <Card>
 
        

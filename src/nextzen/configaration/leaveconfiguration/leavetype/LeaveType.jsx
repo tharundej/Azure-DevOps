@@ -45,13 +45,7 @@ export default function LeaveType() {
       }
     };
      
-     
-    // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
-    // const tabContents = [
-    //   <div>Tab 1 Content</div>,
-    //   <div>Tab 2 Content</div>,
-    //   <div>Tab 3 Content</div>,
-    // ];
+
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
   
     React.useEffect(() => {

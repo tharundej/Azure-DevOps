@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import { styled } from '@mui/system';
 
-import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete } from '../../../components/hook-form';
 
 import {
   Card,
@@ -50,7 +50,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-import PayScheduleform from './PayScheduleform';
+import SalaryStructureForm from './SalaryStructureForm';
 
 const defaultFilters = {
   name: '',
@@ -88,20 +88,19 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions }) {
+export default function SalaryStructureFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
+  const departmentName = [
+    'HR',
   ];
+  const designationName = [
+    'executive'
+  ]
+
+  const designationGradeName = [
+    'senior',
+    'junior'
+  ]
 
   const [dropdown, setDropdown] = useState({});
 
@@ -235,27 +234,26 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     console.log(value);
     // console.log( typeof value === 'string' ? value.split(',') : value,)
   };
-  const [search, setSearch]=useState("");
 
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        // searchData(search)
-        console.log(searchTerm,"search ........")
-        };
   const handleApply = async () => {
     setDatesData([]);
-
-    const data1 = await formWithDropdown();
-    filterData(data1);
-    console.log(data1, ';;;');
+    const data = await formWithDropdown();
+    filterData(data);
+    console.log(data, ';;;');
 
     //   filterData(data);
     handleClickClose();
   };
+  const [search, setSearch]=useState("");
 
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
   return (
     <>
-      <Grid
+       <Grid
         container
         spacing={2}
         alignItems="center"
@@ -272,8 +270,8 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
           
         </Grid>
         <Grid item>
-        <PayScheduleform/>
-        </Grid>
+       <SalaryStructureForm/>
+       </Grid>
         <Grid item>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -299,9 +297,18 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}>
-         
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
+        <DialogContent  sx={{minWidth:"500px"}}
+        //   style={{
+        //     paddingTop: '20px',
+        //     paddingRight: '17px',
+        //     paddingBottom: '44px',
+        //     paddingLeft: '44px',
+        //   }}
+        >
+          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
+            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
+           
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel id="department_name">Department Name</InputLabel>
@@ -316,7 +323,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {names.map((name) => (
+                    {departmentName.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -338,7 +345,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {names.map((name) => (
+                      {designationName.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -352,7 +359,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                 </Grid>
                 <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
+                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
@@ -360,11 +367,11 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     multiple
                     value={dropdownDesignationGradeName}
                     onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Pay Pchedule Type" />}
+                    input={<OutlinedInput label="Designation Grade Name" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {names.map((name) => (
+                    {designationGradeName.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -379,26 +386,31 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
              
           
         </DialogContent>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Button
           onClick={() => {
             handleApply();
           }}
+          // variant="outlined"
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
         >
           Apply
         </Button>
+        </div>
       </BootstrapDialog>
     </>
   );
 }
 
-// PayScheduleFilters.propTypes={
+// SalaryStructureFilters.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-PayScheduleFilters.propTypes = {
+SalaryStructureFilters.propTypes = {
   filterData: PropTypes.func,
+  searchData: PropTypes.any,
 };
 
-PayScheduleFilters.propTypes = {
+SalaryStructureFilters.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,

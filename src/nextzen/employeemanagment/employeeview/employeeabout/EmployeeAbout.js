@@ -103,7 +103,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
    
   
    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   },[])
 
   const handleChange=(e,field)=>{
@@ -141,19 +141,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
            sx={{cursor: "pointer",color:'orange'}}
           onClick={()=>{
 
-            bunkDataEdit.addr_line1=bunkDataEdit?.address_line_1;
-            bunkDataEdit.addr_line2=bunkDataEdit?.address_line_2;
-
-            delete bunkDataEdit.address_line_1;
-            delete bunkDataEdit.address_line_2
            
-            const timeStamp = JSON.stringify(new Date().getTime());
-
-              const cilentToken=cilentIdFormationWithdata(timeStamp,bunkDataEdit)
-          
-              ApiHitBunkUpdate(cilentToken,timeStamp,bunkDataEdit);
-
-            // console.log(bunkDataEdit,'bunkDataEdit');
 
             
            

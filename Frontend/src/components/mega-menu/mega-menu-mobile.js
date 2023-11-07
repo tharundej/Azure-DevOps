@@ -30,7 +30,7 @@ export default function MegaMenuMobile({ data, open, action, onOpen, onClose }) 
     if (open) {
       onClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [pathname]);
 
   return (
@@ -115,7 +115,7 @@ function SubMenu({ parent, pathname }) {
     if (openDrawer) {
       handleCloseDrawer();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [pathname]);
 
   const handleOpenDrawer = useCallback(() => {

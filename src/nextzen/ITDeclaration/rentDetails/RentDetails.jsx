@@ -51,8 +51,11 @@ export default function RentDetails() {
     { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
   
+   
     // Add more months as needed
   ]);
+
+  const [isPreviousData , setIsPreviousData ] =useState(false)
   const [reload , setReload] = useState(false)
 var [landLardName , setLandLardName] = useState("")
 var [landLardAddress , setLandLardAddress] = useState("")
@@ -199,7 +202,7 @@ const correctedData = data
  const payload = 
   {
     "companyId": "COMP1",
-    "employeeId": "ibm4",
+    "employeeId": "ibm3",
     "financialYear": "2023-2024",
     "nameOfLandlord": landLardName,
     "addressOfLandlord": landLardAddress,
@@ -257,15 +260,16 @@ const editRentDetails = async () => {
     //  "company_id": rentDetailsData?.companyId,
     //  "employee_id": rentDetailsData?.employeeId,
     "companyId": "COMP1",
-    "employeeId" :"info5",
+    "employeeId" :"ibm3",
      "financialYear": rentDetailsData?.financialYear,
      "nameOfLandlord": rentDetailsData?.nameOfLandlord,
      "addressOfLandlord": rentDetailsData?.addressOfLandlord,
      "data": updatedData ,
      "panOfTheLandlord": rentDetailsData?.panOfTheLandlord,
-     "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
-     "panNumber": rentDetailsData?.panNumber,
-     "declarationReceivedFromlandlord": rentDetailsData?.companyId,
+    //  "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
+    "declarationReceivedFromLandlord": false,
+    "panNumber": panNumbers,
+    //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
      "fileName": attachedDocummentFileName ? attachedDocummentFileName :rentDetailsData?.file_name ,
      "fileContent" :attachedDocumment ?attachedDocumment : rentDetailsData?.rentDocs,
      "landlordFileName" :landlord_file_name ? landlord_file_name : rentDetailsData?.landlord_file_name,
@@ -333,6 +337,10 @@ const editRentDetails = async () => {
     .then((response) => {
       if (response.status === 200) {
         const rowsData = response?.data?.data;
+        if(rowsData !== null || undefined){
+          setIsPreviousData(true)
+          
+        }
         console.log(rowsData)
         setRendDetailsData(rowsData);
         setLandLardName(response?.data?.data?.nameOfLandlord)
@@ -340,8 +348,8 @@ const editRentDetails = async () => {
         setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
         setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
         setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
-        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : null
-        setPanNumbers( (response?.data?.data?.pan_number ===undefined || null )?['', '', ''] : response?.data?.data?.pan_number ) 
+        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : ""
+        setPanNumbers( response?.data?.data?.pan_number == undefined || null ?['', '', ''] :response?.data?.data?.pan_number  ) 
 
         console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers ,response?.data?.data?.pan_number )
 
@@ -373,7 +381,7 @@ const editRentDetails = async () => {
     });
   //  console.log(result, 'resultsreults');
 };
-console.log(rentDetailsData , "rentDetailsDatarentDetailsData")
+console.log(rentDetailsData , "rentDetailsDatarentDetailsData" , isPreviousData ,"previousData" ,panNumbers)
 const attchementHandler = () =>{
   setOpenAttchementDilog(true)
 }

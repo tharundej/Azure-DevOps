@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';

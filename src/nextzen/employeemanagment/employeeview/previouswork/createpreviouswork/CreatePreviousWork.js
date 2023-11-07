@@ -100,9 +100,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
         }
         
       ]
-       
       
-     
     };
     const handleAdd = () => {
         setDefaultValues((prev) => [...prev, obj]);
