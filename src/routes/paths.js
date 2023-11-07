@@ -284,5 +284,8 @@ export const paths = {
     products:{
       products:`${ROOTS.DASHBOARD}/products`,
     },
+    customers:{
+      customers:`${ROOTS.DASHBOARD}/customers`,
+    },
   },
 };

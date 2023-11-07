@@ -83,6 +83,7 @@ import VendorHead from '../vendor/VendorHeader';
 import MaterialsHead from '../Materials/MaterialsHeader';
 import AssetsHead from '../assets/AssetsHeader';
 import ProductsHead from '../Products/ProductsHeader';
+import CustomersHead from '../Customers/CustomersHeader';
 
 const defaultFilters = {
   name: '',
@@ -402,6 +403,9 @@ const BasicTable = ({ endpoint, defaultPayload, headerData, rowActions, bodyData
           )}
           {filterName === 'ProductsHead' && (
             <ProductsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'CustomersHead' && (
+            <CustomersHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           <Card>
             <TableContainer

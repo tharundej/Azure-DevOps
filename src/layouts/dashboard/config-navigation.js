@@ -431,6 +431,11 @@ export function useNavData() {
             path: paths.dashboard.products.products,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('customers'),
+            path: paths.dashboard.customers.customers,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],
