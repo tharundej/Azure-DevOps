@@ -27,7 +27,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Today } from '@mui/icons-material';
 
-
+import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -40,7 +40,8 @@ import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
-
+import SalaryAdvanceForm from './SalaryAdvaceForm';
+import { baseUrl } from '../global/BaseUrl';
 
 
 const defaultFilters = {
@@ -80,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SalarySearchFilter({filterData,filterOptions}){
+export default function SalarySearchFilter({filterSearch,filterData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -101,24 +102,21 @@ export default function SalarySearchFilter({filterData,filterOptions}){
 
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
-  const [personName, setPersonName] = React.useState([]);
-
-  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
-  const [dropdownProjectName,setDropdownProjectName]=useState([])
-  const [dropdownActivity,setdropdownActivity]=useState([])
+  const [dropdownpaymentstatus,setDropdownPaymentStatus]=useState([])
+  const [dropdownapprover,setdropdownApproverName] = useState([])
 
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
         field:'requestDate',
-        from:'requestDateStart',
-        to:'requestDateEnd'
+        from:'RequestDateStart',
+        to:'RequestDateEnd'
       },
       {
         field:'paidDate',
-        from:'PaidDateFrom',
-        to:'PaidDateTo'
+        from:'paidDateStart',
+        to:'paidDateEnd'
       },
     
     ]
@@ -131,26 +129,29 @@ export default function SalarySearchFilter({filterData,filterOptions}){
         options:[]
       },
       {
-        field:'paidAmount',
-        options:[]
+          field:'paymentStatus',
+          options:[]
       },
       {
-        field:'requestAmount',
+        field:'approverName',
         options:[]
       }
+     
     ]
   )
 
 
-  const [datesSavedArray,setDatesSavedArray]=useState(["requestDateStart","requestDateEnd","offer_date_from","offer_date_to"])
+  const [datesSavedArray,setDatesSavedArray]=useState(["RequestDateStart","RequestDateEnd","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    requestDateStart:null,
-    requestDateEnd:null,
-    PaidDateFrom:null,
-    PaidDateTo:null,
- 
+    RequestDateStart:"",
+    RequestDateEnd:"",
+    paidDateStart:"",
+    paidDateEnd:"",
+    status:"",
+    paymentStatus:"",
+    approverName:"",
   })
 
   function formDateDataStructure(){
@@ -162,15 +163,10 @@ export default function SalarySearchFilter({filterData,filterOptions}){
        datesFiledArray.forEach((item,index)=>{  
          
         arr1[item.field]={
-          from:formatDateToYYYYMMDD(dates[item?.from]),
-          to:formatDateToYYYYMMDD(dates[item?.to])
+          from:dates[item?.from],
+          to:dates[item?.to]
         }
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }  
-        //  arr1.push(obj);
+      
         })
         setDatesData(arr1);
         resolve(arr1)   
@@ -184,28 +180,21 @@ export default function SalarySearchFilter({filterData,filterOptions}){
     return new Promise((resolve) => {
      
 
-      const arr1={};
+      const arr1 = {
+        status: "",
+        paymentStatus: "",
+      };
        dropdownFiledArray.forEach((item,index)=>{  
          
         if(dropdown[item.field]?.length>0){
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           data[item.field]=commaSeparatedString;
         }
-        
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
          
         })
-        // setDatesData(arr1);
+        arr1.status = data.status;
+        arr1.paymentStatus = data.paymentStatus;
         resolve(arr1)
         
     })
@@ -218,6 +207,7 @@ export default function SalarySearchFilter({filterData,filterOptions}){
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
+      ApproversList();
     }
     const handleClickClose=()=>{
       setOpen(false)
@@ -229,31 +219,26 @@ export default function SalarySearchFilter({filterData,filterOptions}){
         target: { value },
       } = event;
       
-      if(field==="requestAmount"){
-        setDropdownProjectName(value)
-        const obj=dropdown;
-        obj[field]=value;
-        setDropdown(obj);
-      }
-      else if(field==="status"){
+     
+      if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="paidAmount"){
-        setdropdownActivity(value)
+      else if(field==="paymentStatus"){
+        setDropdownPaymentStatus(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="approverName"){
+        setdropdownApproverName(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
     
-
-        // On autofill we get a stringified value.
-        
-      
-        console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
     };
 
     const handleApply = async()=>{
@@ -262,43 +247,103 @@ export default function SalarySearchFilter({filterData,filterOptions}){
       
       const data1=await formWithDropdown(data);
       filterData(data);
-      console.log(data,';;;')
-  
-    //   filterData(data);
     handleClickClose()
       
     }
-    
+    const [showForm, setShowForm] = useState  (false);
+    const [approversList,setApproversList]=useState();
+    const handleClose = () => setShowForm(false);
+    const handleTimeForm =()=>{
+      setShowForm(true)
+    } 
+    const handleCancel = async()=>{
+      setDropdownStatus([]);
+      setDropdownPaymentStatus([]);
+      setDates({
+        RequestDateStart:"",
+        RequestDateEnd:"",
+        paidDateStart:"",
+        paidDateEnd:"",
+        status:"",
+        paymentStatus:"",
+      })
+      setOpen(false);
+    }
 
-  
+    const handleSearch=(e)=>{
+      filterSearch(e?.target?.value)
+    }
+
+    const ApproversList = () => {
+      console.log("Approverslist api called")
+      const payload = {
+        companyID: "COMP1"
+      }
+     
+      const config = {
+        method: 'POST',
+        maxBodyLength: Infinity,
+        url: baseUrl + `/approverDetails`,
+        data:  payload
+      };
+    
+      axios.request(config).then((response) => {
+        setApproversList(response?.data)
+      })
+    
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+
+
+
     return (
         <>
+          {showForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
+      </Dialog>
+    )}
           <Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch} 
+            onChange={e=>{handleSearch(e)}} 
 
             />
             </Grid>
 
             <Grid md={4} xs={4} item>
                 
-                <Grid >
-                <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
-      </Button>
+                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+               <Grid item>  
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Apply Salary Advance</Button>
+               </Grid>
+               <Grid>
+               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+               <Iconify icon="mi:filter"/>
+               </Button>
+      </Grid>
 
-      </Stack>
                 </Grid>
 
  
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -316,7 +361,7 @@ export default function SalarySearchFilter({filterData,filterOptions}){
           <Grid>
 
                 <Grid>
-            <Typography> Request Date </Typography>
+            <Typography> Requested Date </Typography>
      
 
             <Grid container flexDirection="row">
@@ -326,12 +371,12 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.requestDateStart}
+                      value={dates?.RequestDateStart ? dayjs(dates.RequestDateStart) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          requestDateStart: newValue,
+                          RequestDateStart: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -344,21 +389,21 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.requestDateEnd}
+                      value={dates?.RequestDateEnd ? dayjs(dates.RequestDateEnd) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          requestDateEnd: newValue,
+                          RequestDateEnd: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
-                <Grid>
+              </Grid>
+              </Grid>
+                <Grid sx={{marginTop:2}}>
             <Typography> Paid Date </Typography>
      
 
@@ -369,12 +414,12 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.PaidDateFrom}
+                      value={dates?.paidDateStart ? dayjs(dates.paidDateStart) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          PaidDateFrom: newValue,
+                          paidDateStart: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -387,12 +432,12 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.PaidDateTo}
+                      value={dates?.paidDateEnd ? dayjs(dates.paidDateEnd) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          PaidDateTo: newValue,
+                          paidDateEnd: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -401,61 +446,32 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid container marginTop={2}>
-  {/* <Typography>Offer Date</Typography> */}
-  <Grid container spacing={2}>
-    <Grid item xs={12}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Requested Amount</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
-          multiple
-          value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'requestAmount')}
-          input={<OutlinedInput label="Requested Amount" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-    <Grid item xs={12}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Paid Amount</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_2"
-          id="demo-multiple-status_2"
-          multiple
-          value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'paidAmount')}
-          input={<OutlinedInput label="Paid Amount" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  </Grid>
-</Grid>
-
-
+              
+              <Grid>
+              <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="approverName">Approver Name</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownapprover}
+                  onChange={(e)=>handleChangeDropDown(e,'approverName')}
+                  input={<OutlinedInput label="Approver Name" />}
+                  MenuProps={MenuProps}
+                >
+            {approversList?.data?.map((item) => {
+  return (
+                <MenuItem value={item?.approver}>
+                  {item.approver}
+                </MenuItem>
+  )
+  })}
+                </Select>
+              </FormControl>
+                   </Grid>
+              </Grid>
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
@@ -470,15 +486,33 @@ export default function SalarySearchFilter({filterData,filterOptions}){
                   input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
+                 
+                 <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="approved">Approved</MenuItem>
+                    <MenuItem value="rejected">Rejected</MenuItem>
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
+
+                <Grid>
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="Status">Payment Status</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownpaymentstatus}
+                  onChange={(e)=>handleChangeDropDown(e,'paymentStatus')}
+                  input={<OutlinedInput label="Payment Status" />}
+                  MenuProps={MenuProps}
+                >
+                 
+               
+                    <MenuItem value="debited">Debited</MenuItem>
+                    <MenuItem value="credited">Credited</MenuItem>
                 </Select>
               </FormControl>
                    </Grid>
@@ -488,26 +522,16 @@ export default function SalarySearchFilter({filterData,filterOptions}){
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
-   
-    </BootstrapDialog>
+         <div style={{marginBottom:16,marginTop:3}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+    </Dialog>
     </>
     )
     
 }
 
-// SalarySearchFilter.propTypes={
-//     handleFilters: PropTypes.any,
-// }
 SalarySearchFilter.propTypes={
-    filterData: PropTypes.func,
-}
-
-SalarySearchFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
+  filterSearch: PropTypes.any,
+  filterData:PropTypes.any
+    
 }

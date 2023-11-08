@@ -51,18 +51,19 @@ export default function CompoffApprove({ currentUser ,}) {
   ]
 
   const dialogConfig={
-    title: 'Claim Filters',
+    title: 'Compoff Approve',
     fields: [
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
       // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Claim Start Date', name: 'claim_start_date',category:"claim",  },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claim_end_date',category:"claim",  },
-      { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
+      { type: 'datePicker', label: ' Start Date', name: 'start_date',category:"claim",  },
+      { type: 'datePicker', label: ' End Date', name: 'end_date',category:"claim",  },
+      // { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
       { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   }
+
 
   const TABLE_HEAD = [
     {
@@ -477,7 +478,7 @@ console.log(defaultValues,"defaultValues")
 
 
       <SurendraBasicTable
-        endpoint="/listLeave"
+        endpoint="GetMycompoffdetails"
         defaultPayload={defaultPayload}
         headerData={TABLE_HEAD}
         rowActions={actions}

@@ -29,6 +29,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -47,8 +48,8 @@ import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 export default function MyCompoff({ currentUser ,}) {
   const compoff_type = [
     { code: '', label: '', phone: '' },
-    { code: 'AD', label: 'Encash Amount', phone: '376' },
-    { code: 'AD', label: 'Encash leave', phone: '376' },
+    { code: 'AD', label: 'Encash Amount', id:0, phone: '376' },
+    { code: 'AD', label: 'Encash leave', id:1,phone: '376' },
    
 
   ]
@@ -62,7 +63,7 @@ export default function MyCompoff({ currentUser ,}) {
   }
 
   const dialogConfig={
-    title: 'Claim Filters',
+    title: 'My Compoff',
     fields: [
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
@@ -169,11 +170,15 @@ export default function MyCompoff({ currentUser ,}) {
 
   })
 
+  const [compoffId, setCompoffId]= useState();
+  console.log(compoffId,"compoffId")
+
   
   const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
       if (eventData?.type === 'edit') {
+        handleOpenEdit()
         console.log("kl")
       
       }
@@ -214,6 +219,15 @@ export default function MyCompoff({ currentUser ,}) {
   const handleClose = () => setOpen(false);
 
 
+  // modal edit
+  const [openEdit,setOpenEdit]=React.useState(false);
+
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  }
+  const handleCloseEdit = () => setOpenEdit(false);
+
+
   // modal 
   
   const NewUserSchema = Yup.object().shape({
@@ -245,7 +259,8 @@ export default function MyCompoff({ currentUser ,}) {
 
       company_id:currentUser?.company_id|| 'COMP2',
       employee_id:currentUser?.employee_id|| 'ibm2',
-      compensantory_configuration_id:currentUser?.compensantory_configuration_id|| 11,
+      // compensantory_configuration_id:currentUser?.compoffId|| 11,
+      compensantory_configuration_id:compoffId || currentUser?.compensantory_configuration || null,
       start_date:currentUser?.start_date|| '2023-11-10',
       end_date:currentUser?.end_date|| '2023-11-10',
       approver_id: currentUser?.approver_id || 'ibm6',
@@ -254,19 +269,8 @@ export default function MyCompoff({ currentUser ,}) {
 
 
 
-  //  "employee_id":"ibm2",
 
-  // "company_id":"COMP2",
-
-  // "compensantory_configuration_id":11,
-
-  // "start_date":"2023-11-10",
-
-  // "end_date":"2023-11-10",
-
-  // "approver_id":"ibm6",
-
-  // "reason":""
+ 
 
     }),
     [currentUser]
@@ -350,6 +354,7 @@ export default function MyCompoff({ currentUser ,}) {
       console.error(error);
     }
   });
+  
 
   return (
     <>
@@ -369,7 +374,7 @@ export default function MyCompoff({ currentUser ,}) {
       >
         <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Apply All Claims</DialogTitle>
+          <DialogTitle>Apply My Compoff</DialogTitle>
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -399,40 +404,38 @@ export default function MyCompoff({ currentUser ,}) {
               <RHFAutocomplete
                 name="type_oc_claim"
                 label="Select Compoff Type"
-                options={compoff_type.map((claimtype) => claimtype.label)}
-                getOptionLabel={(option) => option}
+                options={compoff_type}
+                bindLabel="label"
+                getOptionLabel={(option) => option.label} // Use 'label' as the display label
                 isOptionEqualToValue={(option, value) => option === value}
+
+                 // options={compoff_type}
+                // getOptionLabel={(option) => option.label}
+                // getOptionSelected={(option, value) => option.number === value}
+                // isOptionEqualToValue={(option, value) => option.number === value}
                 
                
               />
-              {/* <RHFAutocomplete
-                name="country"
-                label=" Currency for Reimbursement"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
 
-                  if (!label) {
-                    return null;
-                  }
 
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              /> */}
+         <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={compoff_type}
+            // value={id}
+            getOptionLabel={(option) => option.label}
+            onChange={(e, newValue) => {
+              if (newValue) {
+                setCompoffId(newValue.id);
+              } else {
+                setCompoffId(null);
+              }
+            }}
+            sx={{ width: 200 }}
+            renderInput={(params) => <TextField {...params} label="Select Compoff Type" />}
+          />
+
+            
 
 
               {/* <RHFTextField name="claim_amount" label="Claim Amount" /> */}
@@ -464,7 +467,7 @@ export default function MyCompoff({ currentUser ,}) {
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comment" label="comments" />
+              <RHFTextField name="reason" label="comments" />
               {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
              
 
@@ -489,8 +492,139 @@ export default function MyCompoff({ currentUser ,}) {
       </Dialog>
 
 
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={openEdit}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          <DialogTitle>Edit My Compoff</DialogTitle>
+
+          <DialogContent>
+            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+            Account is waiting for confirmation
+          </Alert> */}
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              {/* <RHFSelect name="status" label="Status">
+              {USER_STATUS_OPTIONS.map((status) => (
+                <MenuItem key={status.value} value={status.value}>
+                  {status.label}
+                </MenuItem>
+              ))}
+            </RHFSelect> */}
+
+              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+              <RHFTextField name="reason" label="Employee Name" />
+              <RHFAutocomplete
+                name="type_oc_claim"
+                label="Select Compoff Type"
+                options={compoff_type}
+                bindLabel="label"
+                getOptionLabel={(option) => option.label} // Use 'label' as the display label
+                isOptionEqualToValue={(option, value) => option === value}
+  
+               
+              />
+             
+            
+             
+             
+              {/* <RHFTextField name="reason" label="comments" /> */}
+              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Start Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                      // handleChangeDate(newValue, 'to');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="End Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                     // handleChangeDate(newValue, 'End');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <RHFAutocomplete
+                name="type_oc_claim"
+                label="Select Compoff Type"
+                options={compoff_type}
+                bindLabel="label"
+                getOptionLabel={(option) => option.label} // Use 'label' as the display label
+                isOptionEqualToValue={(option, value) => option === value}
+  
+               
+              />
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expire Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                     // handleChangeDate(newValue, 'End');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <RHFTextField name="approverName" label="Approver Name" />
+             
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleCloseEdit}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
+
       <SurendraBasicTable
-         endpoint="/listLeave"
+         endpoint="GetMycompoffdetails"
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
          rowActions={actions}
