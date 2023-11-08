@@ -104,7 +104,7 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const BasicTable = ({ endpoint, defaultPayload ,headerData,onClickActions, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
  
@@ -289,6 +289,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
  
   const handleEditRow = (rowData,eventData) => {
+    onClickActions(rowData,eventData)
     console.log(rowData,"rowdataa", eventData);
     if (eventData?.endpoint === "/approveLeave"){
       approveLeave(rowData,eventData)
@@ -635,6 +636,10 @@ function applyFilter({ inputData, comparator, filters }) {
 BasicTable.propTypes = {
   endpoint: PropTypes.string,
 };
+
+BasicTable.propTypes = {
+  onClickActions:PropTypes.func,
+}
  
 BasicTable.propTypes = {
   defaultPayload: PropTypes.object,
