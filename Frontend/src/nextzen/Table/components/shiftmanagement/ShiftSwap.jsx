@@ -49,8 +49,8 @@ export default function ShiftSwap() {
 
         { id: "FromShift_name", label: "From Shift Name", width: 180, type: "text" },
     
-        { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
-        { id: "Swap_Date", label: "Swap Date", width: 220, type: "text" },
+        { id: "from_shift_name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "start_date", label: "Swap Date", width: 220, type: "text" },
     
         { id: "ToShift_Name", label: "To Shift Name", width: 180, type: "text" },
     

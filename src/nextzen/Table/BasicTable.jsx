@@ -163,7 +163,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
         //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
-      // url: `http://192.168.1.192:3001/erp/${endpoint}`,
+      // url: `http://192.168.1.199:3001/erp${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
        url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -178,7 +178,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     };
  
  
- 
+    console.log("**********************: ", config)
     axios.request(config).then((response) => {
       setLoading(false);
       // // console.log(response?.data?.bodyContent);
@@ -415,14 +415,14 @@ getTableData(payload)
      {loading?<LoadingScreen sx={{display:"flex",justifyContent:"center",alignItems:'center'}}/>:  
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
-      {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "MyShiftFilter" && <MyShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "AssignShiftFilter" && <AssignShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SalaryFilter" && <SalarySearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "LoanSearchFilter" && <LoanSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+       {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
+       {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+       {filterName === "MyShiftFilter" && <MyShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+       {filterName === "AssignShiftFilter" && <AssignShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
+       {filterName === "SalaryFilter" && <SalarySearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+       {filterName === "LoanSearchFilter" && <LoanSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
        {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
@@ -432,7 +432,7 @@ getTableData(payload)
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
         <Card>
