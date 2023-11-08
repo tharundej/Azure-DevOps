@@ -571,6 +571,7 @@ const onSubmit = handleSubmit(async (data) => {
       buttonFunction={handleOpen}
       filterContent={dialogConfig}
       dialogPayload={externalFilter}
+      onclickActions={onclickActions}
 
       // searchFilterheader={searchFilterheader}
        

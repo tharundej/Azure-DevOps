@@ -16,20 +16,20 @@ export const StatouryTable = () => {
    
     { id: 'employeeName', label: 'Employee name',  type: 'text', minWidth:'180px' },
     { id: 'aadharNumber', label: 'Aadhar Number',  type: 'text', minWidth:'150px' },
-    { id: 'panNumber', label: 'Pan Number', type: 'text', minWidth:'150px' },
-    { id: 'uan', label: 'Uan Number', type: 'text', minWidth:'150px' },
+    { id: 'panNumber', label: 'Pan Number', type: 'text', minWidth:'180px' },
+    { id: 'uan', label: 'Uan Number', type: 'text', minWidth:'180px' },
 
-    { id: 'accountHolderName', label: 'Account holder Name',  type: 'text' },
-    { id: 'passportNo', label: 'Passport Number',  type: 'text' },
+    { id: 'accountHolderName', label: 'Account holder Name',  type: 'text',minWidth:'180px' },
+    { id: 'passportNo', label: 'Passport Number',  type: 'text',minWidth:'180px' },
     { id: 'bankName', label: 'Bank Name',  type: 'text' },
-    { id: 'accountNumber', label: 'Account Number',  type: 'text' },
-    { id: 'bankBranch', label: 'Bank Branch',  type: 'text' },
-    { id: 'ifscCode', label: 'IFSC Code', type: 'text' },
-    { id: 'pfNumber', label: 'PF Number', type: 'text' },
-    { id: 'esicNumber', label: 'ESIC Number', type: 'text' },
-    { id: 'ptNumber', label: 'PT Number', type: 'text' },
-    { id: 'lwfNumber', label: 'LWF', type: 'text' },
-    { id: 'pfType', label: 'PF Type', type: 'text' },
+    { id: 'accountNumber', label: 'Account Number',  type: 'text',minWidth:'180px' },
+    { id: 'bankBranch', label: 'Bank Branch',  type: 'text',minWidth:'180px' },
+    { id: 'ifscCode', label: 'IFSC Code', type: 'text',minWidth:'180px' },
+    { id: 'pfNumber', label: 'PF Number', type: 'text',minWidth:'180px' },
+    { id: 'esicNumber', label: 'ESIC Number', type: 'text',minWidth:'180px' },
+    { id: 'ptNumber', label: 'PT Number', type: 'text',minWidth:'180px' },
+    { id: 'lwfNumber', label: 'LWF', type: 'text',minWidth:'180px' },
+    { id: 'pfType', label: 'PF Type', type: 'text',minWidth:'180px' },
   ]);
   const defaultPayload ={
 
@@ -71,13 +71,11 @@ export const StatouryTable = () => {
   
   }
   const actions = [
-    { name: 'Approve', icon: 'hh', id: 'approve', type: 'serviceCall', endpoint: '/accept' },
-
-    { name: 'View', icon: 'hh', id: 'view' },
+   
 
     { name: 'Edit', icon: 'hh', id: 'edit' },
 
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+   
   ];
   return (
     <>

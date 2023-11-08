@@ -82,7 +82,7 @@ export default function ProductDetailsSummary({
     if (product) {
       reset(defaultValues);
     }
-    
+   
   }, [product]);
 
   const onSubmit = handleSubmit(async (data) => {

@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import axios from 'axios';
@@ -83,7 +83,7 @@ const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-    
+   
   }, [reload]);
   React.useEffect(() => {
     //   setShown(shown)

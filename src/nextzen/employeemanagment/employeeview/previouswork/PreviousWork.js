@@ -5,6 +5,7 @@ import axios from 'axios';
 import FilesGrid from '../files/FilesGrid';
 import CreateEducation from '../employeeeducation/createeducation/CreateEducation';
 import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
@@ -77,9 +78,9 @@ const PreviousWork = () => {
     const [employeeWork,setEmployeeWork] =useState([{
       "companyName": "Newcomp22",
       "employeeId": "NEWC19",
-      "previousCompanyName": "Tesla",
-      "designation": "CEO",
-      "startDate": "2020-12-02",
+      "previousCompanyName": "",
+      "designation": "",
+      "startDate": "",
       "presentlyWorking": true,
       "endDate": null,
       "documents":[
@@ -110,7 +111,7 @@ const PreviousWork = () => {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getExperience',
+      url: `${baseUrl}/getExperience`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -172,7 +173,7 @@ const PreviousWork = () => {
 
                             <Grid>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleAddEducation([itm],"updateEducationDetails")}><Iconify icon="material-symbols:edit"/></IconButton>}
+                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleAddEducation([itm],"updateWorkDetails")}><Iconify icon="material-symbols:edit"/></IconButton>}
                            </Grid>
                             </Typography>
                           

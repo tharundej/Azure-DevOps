@@ -441,7 +441,7 @@ export default function ClaimSearchFilter({filterData,filterOptions}){
               </FormControl>
                    </Grid>
                 </Grid>
-               </Grid>
+               </Grid> 
 
 
            

@@ -42,7 +42,7 @@ export function CheckoutProvider({ children }) {
     update('discount', state.items.length ? state.discount : 0);
     update('shipping', state.items.length ? state.shipping : 0);
     update('total', state.subTotal - state.discount + state.shipping);
-    
+   
   }, [
     state.items,
     state.activeStep,
