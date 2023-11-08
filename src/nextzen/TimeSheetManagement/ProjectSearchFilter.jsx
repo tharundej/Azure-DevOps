@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ProjectSearchFilter({filterData,filterOptions}){
+export default function ProjectSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -136,6 +136,13 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
     ]
   )
 
+  const [search, setSearch]=useState("");
+
+  const handleSearch = (searchTerm) => {
+    setSearch(searchTerm)
+      searchData(search)
+      console.log(searchTerm,"search ........")
+      };
 
   const [datesSavedArray,setDatesSavedArray]=useState(["start_date","end_date","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
@@ -271,7 +278,8 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch} 
+            // onChange={handleSeacrch}
+            onChange={(e) => handleSearch(e.target.value)}
 
             />
             </Grid>
@@ -451,6 +459,9 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
 // }
 ProjectSearchFilter.propTypes={
     filterData: PropTypes.func,
+}
+ProjectSearchFilter.propTypes={
+  searchData: PropTypes.any,
 }
 
 ProjectSearchFilter.propTypes={

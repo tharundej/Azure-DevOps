@@ -116,11 +116,11 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
    
 
     
-const [search, setSearch]=useState("");
+;
 
     const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
+ 
+        searchData(searchTerm)
         console.log(searchTerm,"search ........")
         };
     // dynamic dialog checking 

@@ -66,7 +66,13 @@ export default function MyClaims({ currentUser ,}) {
     { code: 'AD', label: 'Hotel', value:2, phone: '376' },
 
   ]
+  const compoff_type = [
+    { code: '', label: '', phone: '' },
+    { code: 'AD', label: 'Travel', id:0, phone: '376' },
+    { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
+    { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
 
+  ]
   const currency = [
     {
       value: 'USD',
@@ -205,6 +211,15 @@ const handleClick=()=>{
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
+
+
+   // modal edit
+   const [openEdit,setOpenEdit]=React.useState(false);
+
+   const handleOpenEdit = () => {
+     setOpenEdit(true);
+   }
+   const handleCloseEdit = () => setOpenEdit(false);
 
 
   const actions = [
@@ -351,21 +366,35 @@ const onSubmit = handleSubmit(async (data) => {
   }
 });
   // for upload docmunt
+  const [editData, setEditData]=useState()
 
-  const onclickActions = (event) => {
-    console.log( "my claims from to basic table")
-    console.log(event)
-    if (event && event?.eventData) {
-      if (event?.eventData?.type === 'serviceCall') {
-        // serviceCall(event.eventData.endpoint,event.rowData)
+  const onclickActions = (rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+      setEditData(rowData)
+      if (eventData?.type === 'edit') {
+
+        handleOpenEdit()
+        console.log("kl")
+      
+      }
+      
         
-      } else {
+       else{
+     
+
+    }
+    }
+ 
+    
+    else {
           // navigate[event.eventData.route]
+
       }
     }
-  }
 
 
+console.log(editData,"editData")
   const serviceCall = (endpoint, payload) => {
 
   }
@@ -376,18 +405,7 @@ const onSubmit = handleSubmit(async (data) => {
         <title> Dashboard: myclaims</title>
       </Helmet>
 
-      {/* <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button> */}
-      {/* <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField fullWidth label="Search">o</TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <Button sx={{ alignSelf: "center" }} variant="contained" onClick={handleOpen}>Open modal</Button>
-          <Button variant="contained" >Filter</Button>
-          <Button variant="contained" >exports</Button>
-        </Grid>
-       
-      </Grid> */}
+     
 
 <Dialog
         fullWidth
@@ -555,6 +573,105 @@ const onSubmit = handleSubmit(async (data) => {
           </DialogActions>
         </FormProvider>
       </Dialog>
+
+
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={openEdit}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          <DialogTitle>Edit My Claim</DialogTitle>
+
+          <DialogContent>
+            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+            Account is waiting for confirmation
+          </Alert> */}
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+             
+
+              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+              {/* <RHFTextField name="reason" label="Employee Name" /> */}
+              <RHFAutocomplete
+                name="Claim Type"
+                label="Claim Type"
+                options={compoff_type}
+               
+                getOptionLabel={(option) => option.label} // Use 'label' as the display label
+                isOptionEqualToValue={(option, value) => option === value}
+                value={editData?.claim_type} 
+               
+              />
+             
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Claim Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                      // handleChangeDate(newValue, 'to');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <RHFTextField name="approverName"  label="Claim Amount" value={editData?.claim_amount} />
+             
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expense Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                     // handleChangeDate(newValue, 'End');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+            
+             
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleCloseEdit}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
 
 
       <SurendraBasicTable
