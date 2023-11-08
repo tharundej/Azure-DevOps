@@ -49,12 +49,12 @@ export default function TimeProject() {
     
         { id: "project_name", label: "Project Name", width: 220, type: "text" },
     
-        { id: "start_date", label: "start_date", width: 180, type: "text" },
+        { id: "start_date", label: "Start Date", width: 180, type: "text" },
     
-        { id: "end_date", label: "end_date", width: 100, type: "text" },
-        { id: "due_date", label: "due date", width: 100, type: "text" },
-        { id: "status", label: "status", width: 100, type: "text" },
-        { id: "activity_name", label: "activity_name", width: 100, type: "text" },
+        { id: "end_date", label: "End Date", width: 100, type: "text" },
+        { id: "due_date", label: "Due Date", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "activity_name", label: "Activity Name", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -157,8 +157,8 @@ export default function TimeProject() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   <Button className="button" onClick={handleTimeForm}>Add Project</Button>
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
     <BasicTable
 
