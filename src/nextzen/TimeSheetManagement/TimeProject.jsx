@@ -77,7 +77,7 @@ export default function TimeProject() {
         try{
           console.log(rowdata,"rowData:::::")
         const  data= {
-          project_id:'5',
+          project_id: JSON.stringify( rowdata.project_id),
            
           };
           const response = await instance.post('deleteproject',data);
