@@ -3,6 +3,8 @@ import React ,{useEffect, useState} from 'react'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 import {
     TextField,
     Button,
@@ -48,7 +50,8 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        //url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        url: `${baseUrl}/${endpoint}`,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
