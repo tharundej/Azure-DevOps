@@ -120,33 +120,46 @@ const Options = [
   // Get Employe List 
   const getEmployeSwap = async () => {
 
-    const data = JSON.stringify({
+    // const data = JSON.stringify({
+    //   "company_id": "COMP2",
+    //   "from_shift_group": 2,
+    //   "to_shift_group": 4,
+    //   "search": ""
+    // });
+    // // const endpoint = 'GetSwpEmployee';
+    // const config = {
+    //   method: 'post',
+    //   maxBodyLength: Infinity,
+    //   url: `${instance}${'/GetSwapEmployee'}`,
+    //   // url:' http://192.168.1.79:8080/appTest/GetSwapEmployee',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   data, // Assuming you have a variable named 'data' defined earlier
+    // };
+
+    // axios.request(config)
+    //   .then((response) => {
+    //     console.log(JSON.stringify(response.data));
+    //     setEmployeSwapDetails(response.data.Data)
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    try{
+   const data = JSON.stringify({
       "company_id": "COMP2",
-      "from_shift_group": 2,
+      "from_shift_group": 4,
       "to_shift_group": 4,
       "search": ""
     });
-    // const endpoint = 'GetSwpEmployee';
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: `${instance}${endpoint}`,
-      url:' http://192.168.1.79:8080/appTest/GetSwapEmployee',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data, // Assuming you have a variable named 'data' defined earlier
-    };
-
-    axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
+        const response = await instance.post('/GetSwapEmployee',data);
         setEmployeSwapDetails(response.data.Data)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+      }catch(error){
+    console.error("Error", error);
+    throw error;
+      }
   }
 
   const onSubmit = handleSubmit(async (data) => {

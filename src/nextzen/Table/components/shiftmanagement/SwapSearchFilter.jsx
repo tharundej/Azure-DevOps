@@ -143,9 +143,13 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
   
   
     const [datesSavedArray,setDatesSavedArray]=useState(["from_date","to_date","offer_date_from","offer_date_to"])
-    const [datesData,setDatesData]=useState([])
+    const [datesData,setDatesData]=useState('')
   
     const [Swapdates,setSwapdates]=useState()
+    const [CurrentUser,setcurrentUser]=useState({
+      swap_date: '',
+    })
+    console.log("🚀 ~ file: SwapSearchFilter.jsx:151 ~ SwapSearchFilter ~ swap_date:", CurrentUser.swap_date)
     console.log("🚀 ~ file: SwapSearchFilter.jsx:144 ~ SwapSearchFilter ~ Swapdates:", Swapdates)
   
     function formDateDataStructure(){
@@ -153,21 +157,21 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
       return new Promise((resolve) => {
        
   
-        const arr1={};
-         datesFiledArray.forEach((item,index)=>{  
+        // const arr1={};
+        //  datesFiledArray.forEach((item,index)=>{  
            
-          arr1[item.field]={
-            from:formatDateToYYYYMMDD(Swapdates[item?.from]),
-            to:formatDateToYYYYMMDD(Swapdates[item?.to])
-          }
-          //  const obj={
-          //    filed_name:item?.field,
-          //    from:Swapdates[item?.from],
-          //    to:Swapdates[item?.to]
-          //  }  
-          //  arr1.push(obj);
-          })
-          setDatesData(arr1);
+        //   arr1[item.field]={
+        //     from:formatDateToYYYYMMDD(Swapdates[item?.from]),
+        //     to:formatDateToYYYYMMDD(Swapdates[item?.to])
+        //   }
+        //   //  const obj={
+        //   //    filed_name:item?.field,
+        //   //    from:Swapdates[item?.from],
+        //   //    to:Swapdates[item?.to]
+        //   //  }  
+        //   //  arr1.push(obj);
+        //   })
+          setDatesData(CurrentUser.swap_date);
           resolve(arr1)   
       })
       
@@ -184,7 +188,7 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
            
           if(dropdown[item.field]?.length>0){
             const arrayOfStrings = dropdown[item.field];
-            const commaSeparatedString = arrayOfStrings.join(', ');
+            const commaSeparatedString = arrayOfStrings.join(',');
             arr1[item.field]=commaSeparatedString;
           }
           
@@ -243,8 +247,10 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
   
       const handleApply = async()=>{
         setDatesData([]);
-       
+       console.log("swapp daaate",CurrentUser.swap_date)
+        // const data=await formDateDataStructure();
         const data1=await formWithDropdown();
+        data1.swap_date=CurrentUser?.swap_date
         filterData(data1);
         console.log(data1,';;;')
     
@@ -305,22 +311,23 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
 
             <Grid container  spacing={1} >
               <Grid item xs={12}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '2px' }}
-                      label="Swap Date"
-                      value={Swapdates}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setSwapdates((prev) => ({
-                          ...prev,
-                          Swapdates: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
+              <DatePicker
+                  fullWidth
+                    value={CurrentUser?.swap_date ? dayjs(CurrentUser?.swap_date).toDate() : null}
+                    onChange={(date) => {
+                      setcurrentUser(prev => ({
+                        ...prev,
+                        swap_date: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Swap Birth"
+                  />
                 </Grid>
 
                 </Grid>
@@ -383,7 +390,7 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
 
                 {/* <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
+                <FormControl fullWidth > 
                 <InputLabel fullWidth id="shift_name">shift_name</InputLabel>
                 <Select
                 fullWidth
