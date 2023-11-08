@@ -9,6 +9,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
+import Expenses from 'src/nextzen/expenses/Expenses';
 
 // ----------------------------------------------------------------------
 
@@ -356,6 +357,15 @@ export const dashboardRoutes = [
         children: [
           {
             element: <FactoryIndex />,
+            index: true,
+          },
+        ],
+      },
+	  {
+        path: 'expenses',
+        children: [
+          {
+            element: <Expenses />,
             index: true,
           },
         ],

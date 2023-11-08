@@ -254,6 +254,9 @@ export const paths = {
     factory: {
       factory: `${ROOTS.DASHBOARD}/factory`,
     },
+    expenses: {
+      expenses: `${ROOTS.DASHBOARD}/expenses`,
+    },
     vendor: {
       vendor: `${ROOTS.DASHBOARD}/vendor`,
     },
