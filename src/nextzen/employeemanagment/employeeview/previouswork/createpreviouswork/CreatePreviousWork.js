@@ -140,29 +140,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
         setDefaultValues(currObj);
       };
 
-      function handleFileSelect(event,index,name) {
-        // const fileInput = event.target;
-        // const file = fileInput.files[0];
-      
-        // if (file) {
-        //   const reader = new FileReader();
-      
-        //   reader.onload = function (e) {
-        //     const base64String = e.target.result;
-        //     console.log('Base64 string:', base64String);
-        //     setAttachmentString(base64String)
-        //     const newObj = defaultValues;
-        //     newObj[index][name] = base64String;
-        //   setDefaultValues(newObj);
-      
-        //     setImage( [base64String]);
-        //     setViewImage(true);
-        //     Here, you can send the `base64String` to your server or perform other actions.
-        //   };
-      
-        //   reader.readAsDataURL(file);
-        // }
-      }
+     
        
            
 

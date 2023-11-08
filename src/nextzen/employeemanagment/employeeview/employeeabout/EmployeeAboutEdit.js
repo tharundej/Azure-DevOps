@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -16,12 +17,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { Button,Box,Autocomplete,TextField } from '@mui/material';
+import { Button,Box,Autocomplete,TextField,Grid } from '@mui/material';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
@@ -29,44 +31,10 @@ const employmentTypeOptions=[
 
 ]
 
-const EmployeeAboutEdit = ({open,handleEditClose}) => {
+const EmployeeAboutEdit = ({open,handleEditClose,currentUserData}) => {
   const [type,setType]=useState({label:"Permanent",id:'1'})
-    const currentUser=
-      {
-          "employeeID": "ibm1",
-          "firstName": "ram",
-          "middleName": null,
-          "lastName": "r",
-          "emailID": "anilraina0310@gmail.com",
-          "contactNumber": 8908765334,
-          "emergencyContactNumber": null,
-          "dateOfBirth": "2023-02-11",
-          "fatherName": "nithya",
-          "motherName": "abc",
-          "maritalStatus": "unmarried",
-          "nationality": "indian",
-          "religion": "hindu",
-          "bloodGroup": "A+",
-          "offerDate": "2022-03-03",
-          "joiningDate": "2022-03-03",
-          "pAddressLine1": "robersonpet",
-          "pAddressLine2": "bpet",
-          "pCity": "blore",
-          "pState": "kolar",
-          "pPincode": 64286,
-          "rAddressLine1": "2,304,d",
-          "rAddressLine2": "bbb",
-          "rCity": "canada",
-          "rState": "kolar",
-          "rPincode": 84686,
-          "employmentType": null,
-          "departmentName": null,
-          "Designation": null,
-          "gradeName": null,
-          "ctc": null,
-          "workingLocation": null,
-          "reportingManagerName": null
-      }
+    const [currentUser,setcurrentUserData]=useState(currentUserData)
+     
 
 
     const NewUserSchema = Yup.object().shape({
@@ -78,8 +46,8 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
         middleName: Yup.string(),
         lastName: Yup.string(),
         emailID: Yup.string(),
-        contactNumber: Yup.string(),
-        emergencyContactNumber: Yup.string(),
+        contactNumber: Yup.number(),
+        emergencyContactNumber: Yup.number(),
         dateOfBirth: Yup.mixed().nullable(),
         fatherName: Yup.string(),
         motherName: Yup.string(),
@@ -93,76 +61,107 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
         pAddressLine2: Yup.string(),
         pCity: Yup.string(),
         pState: Yup.string(),
-        pPincode: Yup.string(),
+        pPincode: Yup.number(),
         rAddressLine1: Yup.string(),
         rAddressLine2: Yup.string(),
         rCity: Yup.string(),
         rState: Yup.string(),
-        rPincode: Yup.string()
+        rPincode: Yup.number()
 
     
       });
     
-      const defaultValues = useMemo(
+      const defaultValues1 = useMemo(
         () => ({
            
 
 
            
-            firstName: currentUser?.firstName||'',
-            middleName: currentUser?.middleName||'',
-            lastName: currentUser?.lastName||'',
-            emailID: currentUser?.emailID||'',
-            contactNumber: currentUser?.contactNumber||'',
-            emergencyContactNumber: currentUser?.emergencyContactNumber||'',
-            dateOfBirth: dayjs(currentUser?.dateOfBirth)?.$d||'',
-            fatherName: currentUser?.fatherName||'',
-            motherName: currentUser?.motherName||'',
-            maritalStatus: currentUser?.maritalStatus||'',
-            nationality: currentUser?.nationality||'',
-            religion: currentUser?.religion||'',
-            bloodGroup: currentUser?.bloodGroup||'',
-            offerDate: dayjs(currentUser?.offerDate)?.$d||'',
-            joiningDate:dayjs(currentUser?.joiningDate)?.$d||'',
-            pAddressLine1: currentUser?.pAddressLine1||'',
-            pAddressLine2: currentUser?.pAddressLine2||'',
-            pCity: currentUser?.pCity||'',
-            pState: currentUser?.pState||'',
-            pPincode: currentUser?.pPincode||'',
-            rAddressLine1: currentUser?.rAddressLine1||'',
-            rAddressLine2: currentUser?.rAddressLine2||'',
-            rCity: currentUser?.rCity||'',
-            rState: currentUser?.rState||'',
-            rPincode: currentUser?.rPincode||''
+            firstName: currentUserData?.firstName||'',
+            middleName: currentUserData?.middleName||'',
+            lastName: currentUserData?.lastName||'',
+            emailID: currentUserData?.emailID||'',
+            contactNumber: currentUserData?.contactNumber||'',
+            emergencyContactNumber: currentUserData?.emergencyContactNumber||'',
+            dateOfBirth: dayjs(currentUserData?.dateOfBirth)?.$d||'',
+            fatherName: currentUserData?.fatherName||'',
+            motherName: currentUserData?.motherName||'',
+            maritalStatus: currentUserData?.maritalStatus||'',
+            nationality: currentUserData?.nationality||'',
+            religion: currentUserData?.religion||'',
+            bloodGroup: currentUserData?.bloodGroup||'',
+            offerDate: dayjs(currentUserData?.offerDate)?.$d||'',
+            joiningDate:dayjs(currentUserData?.joiningDate)?.$d||'',
+            pAddressLine1: currentUserData?.pAddressLine1||'',
+            pAddressLine2: currentUserData?.pAddressLine2||'',
+            pCity: currentUserData?.pCity||'',
+            pState: currentUserData?.pState||'',
+            pPincode: currentUserData?.pPincode||'',
+            rAddressLine1: currentUserData?.rAddressLine1||'',
+            rAddressLine2: currentUserData?.rAddressLine2||'',
+            rCity: currentUserData?.rCity||'',
+            rState: currentUserData?.rState||'',
+            rPincode: currentUserData?.rPincode||''
            
     
     
         }),
-        [currentUser]
+        [currentUserData]
       );
-    
-      const methods = useForm({
-        resolver: yupResolver(NewUserSchema),
-        defaultValues,
-      });
-    
-      const {
-        reset,
-        watch,
-        control,
-        setValue,
-        handleSubmit,
-        formState: { isSubmitting },
-      } = methods;
-    
-      const values = watch();
+
+      const [defaultValues,setDefaultvalues]=useState({})
+
+      useEffect(()=>{
+        if(defaultValues1){
+          setDefaultvalues(defaultValues1)
+        }
+      },[defaultValues1])
+    console.log(defaultValues1,'defaultValuesdefaultValues')
+    const methods = useForm({
+      resolver: yupResolver(NewUserSchema),
+      defaultValues,
+    });
+    const {
+      reset,
+      watch,
+      control,
+      setValue,
+      handleSubmit,
+      formState: { isSubmitting },
+    } = methods;
+  
+    const values = watch();
+      
     
       const onSubmit = handleSubmit(async (data) => {
-        console.log(data,'uyfgv');
+    
+        data.employeeID= currentUserData.employeeID
+        data.offerDate=currentUserDataData.offerDate
+        data.dateOfBirth=currentUserDataData.dateOfBirth
+        data.joiningDate=currentUserDataData.joiningDate
+
+        console.log(data,'ll')
     
         try {
          
-            console.log('aa')
+          const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateOnboardingForm',
+            headers: { 
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+              'Content-Type': 'application/json', 
+            },
+            data : data
+          };
+           
+          axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
          
         } catch (error) {
           console.error(error);
@@ -197,7 +196,37 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
               }}
             >
              
-             
+             <Grid container flexDirection='column' >
+             <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="firstName"
+                    label="First Name"
+                    variant="outlined"
+                    id="firstName"
+                     value={currentUserData?.firstName}
+                    onChange={(e) => {
+                      // handleChange(e, index, 'nameOfTheDegree');
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="middleName"
+                    label="Middle Name"
+                    variant="outlined"
+                    id="middleName"
+                    value={currentUserData?.middleName}
+                    onChange={(e) => {
+                      // handleChange(e, index, 'nameOfTheDegree');
+                    }}
+                  />
+                  </Grid>
+
+             </Grid>
              
 
                 
@@ -304,7 +333,7 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
             getOptionLabel={(option) => option.label}
             onChange={(e,newvalue)=>{
               setType(newvalue)
-              // currentUser.employmentType=newvalue
+              // currentUserData.employmentType=newvalue
              
               
               
@@ -361,5 +390,6 @@ export default EmployeeAboutEdit
 
 EmployeeAboutEdit.propTypes = {
     open: PropTypes.string,
-    handleEditClose:PropTypes.func
+    handleEditClose:PropTypes.func,
+    currentUserDataData:PropTypes.object
   };

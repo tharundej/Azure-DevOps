@@ -429,7 +429,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
                 <Grid>
 
                   <Grid item>
-                  {console.log(index,'opopop')}
+                 
                   <input
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
