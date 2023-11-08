@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -16,12 +17,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { Button,Box,Autocomplete,TextField } from '@mui/material';
+import { Button,Box,Autocomplete,TextField,Grid } from '@mui/material';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
@@ -29,44 +31,20 @@ const employmentTypeOptions=[
 
 ]
 
-const EmployeeAboutEdit = ({open,handleEditClose}) => {
+const EmployeeAboutEdit = ({open,handleEditClose,currentUserData}) => {
   const [type,setType]=useState({label:"Permanent",id:'1'})
-    const currentUser=
-      {
-          "employeeID": "ibm1",
-          "firstName": "ram",
-          "middleName": null,
-          "lastName": "r",
-          "emailID": "anilraina0310@gmail.com",
-          "contactNumber": 8908765334,
-          "emergencyContactNumber": null,
-          "dateOfBirth": "2023-02-11",
-          "fatherName": "nithya",
-          "motherName": "abc",
-          "maritalStatus": "unmarried",
-          "nationality": "indian",
-          "religion": "hindu",
-          "bloodGroup": "A+",
-          "offerDate": "2022-03-03",
-          "joiningDate": "2022-03-03",
-          "pAddressLine1": "robersonpet",
-          "pAddressLine2": "bpet",
-          "pCity": "blore",
-          "pState": "kolar",
-          "pPincode": 64286,
-          "rAddressLine1": "2,304,d",
-          "rAddressLine2": "bbb",
-          "rCity": "canada",
-          "rState": "kolar",
-          "rPincode": 84686,
-          "employmentType": null,
-          "departmentName": null,
-          "Designation": null,
-          "gradeName": null,
-          "ctc": null,
-          "workingLocation": null,
-          "reportingManagerName": null
+    const [currentUser,setcurrentUser]=useState()
+
+    useEffect(()=>{
+      if(currentUserData){
+      //  currentUserData.dateOfBirth=new Date(currentUserData.dateOfBirth);
+        setcurrentUser(currentUserData)
       }
+      console.log(currentUser,'currentUsercurrentUser')
+    },[currentUserData])
+
+    
+     
 
 
     const NewUserSchema = Yup.object().shape({
@@ -78,8 +56,8 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
         middleName: Yup.string(),
         lastName: Yup.string(),
         emailID: Yup.string(),
-        contactNumber: Yup.string(),
-        emergencyContactNumber: Yup.string(),
+        contactNumber: Yup.number(),
+        emergencyContactNumber: Yup.number(),
         dateOfBirth: Yup.mixed().nullable(),
         fatherName: Yup.string(),
         motherName: Yup.string(),
@@ -93,17 +71,17 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
         pAddressLine2: Yup.string(),
         pCity: Yup.string(),
         pState: Yup.string(),
-        pPincode: Yup.string(),
+        pPincode: Yup.number(),
         rAddressLine1: Yup.string(),
         rAddressLine2: Yup.string(),
         rCity: Yup.string(),
         rState: Yup.string(),
-        rPincode: Yup.string()
+        rPincode: Yup.number()
 
     
       });
     
-      const defaultValues = useMemo(
+      const defaultValues1 = useMemo(
         () => ({
            
 
@@ -140,29 +118,58 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
         }),
         [currentUser]
       );
-    
-      const methods = useForm({
-        resolver: yupResolver(NewUserSchema),
-        defaultValues,
-      });
-    
-      const {
-        reset,
-        watch,
-        control,
-        setValue,
-        handleSubmit,
-        formState: { isSubmitting },
-      } = methods;
-    
-      const values = watch();
+
+      const [defaultValues,setDefaultvalues]=useState({})
+
+      useEffect(()=>{
+        if(defaultValues1){
+          setDefaultvalues(defaultValues1)
+        }
+      },[defaultValues1])
+    console.log(defaultValues1,'defaultValuesdefaultValues')
+    const methods = useForm({
+      resolver: yupResolver(NewUserSchema),
+      defaultValues,
+    });
+    const {
+      reset,
+      watch,
+      control,
+      setValue,
+      handleSubmit,
+      formState: { isSubmitting },
+    } = methods;
+  
+    const values = watch();
+      
     
       const onSubmit = handleSubmit(async (data) => {
-        console.log(data,'uyfgv');
+    
+        currentUser.employeeID= currentUser.employeeID
+       
+
+        console.log(data,'ll')
     
         try {
          
-            console.log('aa')
+          const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateOnboardingForm',
+            headers: { 
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+              'Content-Type': 'application/json', 
+            },
+            data : currentUser
+          };
+           
+          axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
          
         } catch (error) {
           console.error(error);
@@ -192,143 +199,509 @@ const EmployeeAboutEdit = ({open,handleEditClose}) => {
               display="grid"
               marginTop={2}
               gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                // xs: 'repeat(1, 1fr)',
+                // sm: 'repeat(2, 1fr)',
               }}
             >
-             
-             
+
+              {/* <Grid container>      */}
+
+             <Grid container   spacing={2} md={12} xs={12} lg={12}  >
+             <Grid md={6} xs={12}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="firstName"
+                    label="First Name"
+                    variant="outlined"
+                    id="firstName"
+                     value={currentUser?.firstName}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        firstName:e?.target.value
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12}  fullWidth item>
+                  <TextField
+                    fullWidth
+                
+                    name="middleName"
+                    label="Middle Name"
+                    variant="outlined"
+                    id="middleName"
+                    value={currentUser?.middleName}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        middleName:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="lastName"
+                    label="Last Name"
+                    variant="outlined"
+                    id="firstName"
+                     value={currentUser?.lastName}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        lastName:e?.target.value
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="emailID"
+                    label="Email ID"
+                    variant="outlined"
+                    id="middleName"
+                    value={currentUser?.emailID}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        emailID:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="contactNumber"
+                    label="Contact Number"
+                    variant="outlined"
+                    id="contactNumber"
+                     value={currentUser?.contactNumber}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        contactNumber: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="emergencyContactNumber"
+                    label="Emergency Contact Number"
+                    variant="outlined"
+                    id="emergencyContactNumber"
+                    value={currentUser?.emergencyContactNumber}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={currentUser?.dateOfBirth ? dayjs(currentUser?.dateOfBirth).toDate() : null}
+                    onChange={(date) => {
+                      setcurrentUser(prev => ({
+                        ...prev,
+                        dateOfBirth: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date Of Birth"
+                  />
+                  
+                </Grid>
+
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={currentUser?.joiningDate ? dayjs(currentUser?.joiningDate).toDate() : null}
+                    onChange={(date) => {
+                      setcurrentUser(prev => ({
+                        ...prev,
+                        joiningDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date Of Birth"
+                  />
+                  
+                </Grid>
+
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={currentUser?.offerDate ? dayjs(currentUser?.offerDate).toDate() : null}
+                    onChange={(date) => {
+                      setcurrentUser(prev => ({
+                        ...prev,
+                        offerDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date Of Birth"
+                  />
+                  
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="emergencyContactNumber"
+                    label="Emergency Contact Number"
+                    variant="outlined"
+                    id="emergencyContactNumber"
+                    value={currentUser?.emergencyContactNumber}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        emergencyContactNumber:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="fatherName"
+                    label="Father Name"
+                    variant="outlined"
+                    id="fatherName"
+                    value={currentUser?.fatherName}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        fatherName:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="motherName"
+                    label="Mother Name"
+                    variant="outlined"
+                    id="motherName"
+                    value={currentUser?.motherName}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        motherName:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="maritalStatus"
+                    label="mMrital Status"
+                    variant="outlined"
+                    id="motherName"
+                    value={currentUser?.maritalStatus}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        maritalStatus:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="nationality"
+                    label="Nationality"
+                    variant="outlined"
+                    id="nationality"
+                    value={currentUser?.nationality}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        nationality:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="religion"
+                    label="Religion"
+                    variant="outlined"
+                    id="religion"
+                    value={currentUser?.religion}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        religion:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="bloodGroup"
+                    label="Blood Group"
+                    variant="outlined"
+                    id="BloodGroup"
+                    value={currentUser?.bloodGroup}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        bloodGroup:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="pAddressLine1"
+                    label="pAddressLine1"
+                    variant="outlined"
+                    id="pAddressLine1"
+                    value={currentUser?.pAddressLine1}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        pAddressLine1:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="pAddressLine2"
+                    label="pAddressLine2"
+                    variant="outlined"
+                    id="pAddressLine2"
+                    value={currentUser?.pAddressLine2}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        pAddressLine2:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="pCity"
+                    label="City"
+                    variant="outlined"
+                    id="pCity"
+                    value={currentUser?.pCity}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        pAdpCitydressLine1:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="pState"
+                    label="State"
+                    variant="outlined"
+                    id="pState"
+                    value={currentUser?.pState}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        pState:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="pPincode"
+                    label="Pincode"
+                    variant="outlined"
+                    id="pState"
+                    value={currentUser?.pPincode}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        pPincode:parseInt(e.target.value, 10) || ''
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="rAddressLine1"
+                    label="rAddressLine1"
+                    variant="outlined"
+                    id="rAddressLine1"
+                    value={currentUser?.rAddressLine1}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        rAddressLine1:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="rAddressLine2"
+                    label="rAddressLine2"
+                    variant="outlined"
+                    id="rAddressLine2"
+                    value={currentUser?.rAddressLine2}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        rAddressLine2:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="rCity"
+                    label="City"
+                    variant="outlined"
+                    id="rCity"
+                    value={currentUser?.rCity}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        rCity:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="rState"
+                    label="State"
+                    variant="outlined"
+                    id="pState"
+                    value={currentUser?.rState}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        rState:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="rPincode"
+                    label="Pincode"
+                    variant="outlined"
+                    id="pState"
+                    value={currentUser?.rPincode}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        rPincode:parseInt(e.target.value, 10) || ''
+                      }))
+                    }}
+                  />
+                  </Grid>
+             </Grid>
+
+            
+             {/* </Grid> */}
+
              
 
                 
             
-            <RHFTextField name="firstName" label="First Name"  value={values.firstName}/>
-            <RHFTextField name="middleName" label="Middle Name" />
-            <RHFTextField name="lastName" label="Last Name" />
-            <RHFTextField name="emailID" label="Email ID" />
-            <RHFTextField name="contactNumber" label="Contact Number" type="number" />
-            <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number"/>
-
-            {/* <RHFTextField name="dateOfBirth" label="Date Of Birth" /> */}
-            <Controller
-                name="dateOfBirth"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                <DatePicker
-                    label="Date Of Birth"
-                    value={field.value}
-                    onChange={(newValue) => {
-                    field.onChange(newValue);
-                    }}
-                    slotProps={{
-                    textField: {
-                        fullWidth: true,
-                        error: !!error,
-                        helperText: error?.message,
-                    },
-                    }}
-                />
-                )}
-            />
-
-            <RHFTextField name="fatherName" label="Father Name" />
-            <RHFTextField name="motherName" label="Mother Name" />
-
-            <RHFTextField name="maritalStatus" label="Marital Status" />
-
-            <RHFTextField name="nationality" label="Nationality" />
-            <RHFTextField name="religion" label="Religion" />
-            <RHFTextField name="bloodGroup" label="Blood Group" />
-            <Controller
-                name="offerDate"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                <DatePicker
-                    label="Offer Date"
-                    value={field.value}
-                    onChange={(newValue) => {
-                    field.onChange(newValue);
-                    }}
-                    slotProps={{
-                    textField: {
-                        fullWidth: true,
-                        error: !!error,
-                        helperText: error?.message,
-                    },
-                    }}
-                />
-                )}
-            />
-
-                <Controller
-                name="joiningDate"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                <DatePicker
-                    label="Joining Date"
-                    value={field.value}
-                    onChange={(newValue) => {
-                    field.onChange(newValue);
-                    }}
-                    slotProps={{
-                    textField: {
-                        fullWidth: true,
-                        error: !!error,
-                        helperText: error?.message,
-                    },
-                    }}
-                />
-                )}
-            />
-
-            {/* <RHFTextField name="offerDate" label="Offer Date" /> */}
-
-            {/* <RHFTextField name="joiningDate" label="Joining Date" /> */}
-
-            <RHFTextField name="pAddressLine1" label="P Address Line 1" />
-            <RHFTextField name="pAddressLine2" label="P Address Line 2" />
-            <RHFTextField name="pCity" label="P City" />
-            <RHFTextField name="pState" label="P State" />
-            <RHFTextField name="pPincode" label="P Pincode" />
-            <RHFTextField name="rAddressLine1" label="R Address Line 1" />
-            <RHFTextField name="rAddressLine2" label="R Address Line 2" />
-            <RHFTextField name="rCity" label="R City" />
-            <RHFTextField name="rState" label="R State" />
-            <RHFTextField name="rPincode" label="R Pincode" />
-
-            <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={employmentTypeOptions}
-            value={type}
-            getOptionLabel={(option) => option.label}
-            onChange={(e,newvalue)=>{
-              setType(newvalue)
-              // currentUser.employmentType=newvalue
-             
-              
-              
-            
-            }}
-            // sx={{ width: 200 }}
-            renderInput={(params) => <TextField {...params} label="employmentType" />}
-          />
-          
-
-
-        
-{/* 
-            <RHFTextField name="departmentName" label="Department Name" />
-
-            <RHFTextField name="Designation" label="Designation" />
-
-            <RHFTextField name="gradeName" label="Grade Name" />
            
-            <RHFTextField name="workingLocation" label="Working Location" />
-
-            <RHFTextField name="reportingManagerName" label="Reporting Manager Name" /> */}
-             
-              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
              
              
 
@@ -361,5 +734,6 @@ export default EmployeeAboutEdit
 
 EmployeeAboutEdit.propTypes = {
     open: PropTypes.string,
-    handleEditClose:PropTypes.func
+    handleEditClose:PropTypes.func,
+    currentUserData:PropTypes.object
   };

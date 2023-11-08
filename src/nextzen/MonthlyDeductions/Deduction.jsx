@@ -136,7 +136,6 @@ export default function Deduction() {
  <SalaryAdvanceForm currentUser={{}} />
       </Dialog>
     )} */}
-<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   {/* <Button className="button" onClick={handleTimeForm}>Apply Salary Advance</Button> */}
@@ -148,7 +147,7 @@ export default function Deduction() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 
-endpoint='listProject'
+endpoint='/listProject'
 
 rowActions={actions}
 

@@ -8,6 +8,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 import {
     TextField,
     Button,
@@ -39,30 +41,53 @@ import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
   
+  const onSaveData=()=>{
 
+    const arr=defaultValues
+    for(var i=0;i<arr.length;i++){
+      // console.log(formatDateToYYYYMMDD(defaultValues[i]?.startDate || ""),'defaultValues?.startDate')
+      arr.startDate=formatDateToYYYYMMDD(arr[i]?.startDate )
+      arr.endDate=formatDateToYYYYMMDD(arr[i]?.endDate )
+      
+    }
+    setDefaultValues(arr)
+    console.log(defaultValues)
+    onSave()
+
+
+
+
+  }
     const onSave=()=>{
-    console.log(defaultValues);
+   
 
      const obj={
       companyId: "COMP5",
       employeeId: "NEWC19",
       experience:defaultValues
      }
+     console.log(obj);
       
       const config = {
 
         method: 'post',
         maxBodyLength: Infinity,
-        url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        url: `${baseUrl}/${endpoint}`,
+       // url:'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
         },
-        data : obj
+        data : {
+      companyId: "COMP5",
+      employeeId: "NEWC19",
+      experience:defaultValues
+     }
       };
        
       axios.request(config)
@@ -116,29 +141,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
         setDefaultValues(currObj);
       };
 
-      function handleFileSelect(event,index,name) {
-        // const fileInput = event.target;
-        // const file = fileInput.files[0];
-      
-        // if (file) {
-        //   const reader = new FileReader();
-      
-        //   reader.onload = function (e) {
-        //     const base64String = e.target.result;
-        //     console.log('Base64 string:', base64String);
-        //     setAttachmentString(base64String)
-        //     const newObj = defaultValues;
-        //     newObj[index][name] = base64String;
-        //   setDefaultValues(newObj);
-      
-        //     setImage( [base64String]);
-        //     setViewImage(true);
-        //     Here, you can send the `base64String` to your server or perform other actions.
-        //   };
-      
-        //   reader.readAsDataURL(file);
-        // }
-      }
+     
        
            
 
@@ -277,6 +280,22 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
         //setSelectedFile(file);
       };
+
+      const handleChangeDate=(newvalue,field,index)=>{
+
+        const newArray = [...defaultValues];
+
+        console.log(newvalue,'newvalue')
+
+       
+         newArray[index] = {
+           ...newArray[index],
+           [field]: newvalue
+       }
+
+       setDefaultValues(newArray)
+
+      }
       
      
       
@@ -360,12 +379,71 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                       label="Start Date"
                       value={dayjs(item?.startDate===""?dayjs() :item?.startDate)}
                       onChange={(newval) => {
-                        handleChange(newval, index, 'startDate');
+                        handleChangeDate(newval,  'startDate',index,);
                       }}
                       style={{ width: '100%' }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                </Grid>
+
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                    onChange={(date) => {
+
+                      const newArray = [...defaultValues];
+
+                      
+              
+                     
+                       newArray[index] = {
+                         ...newArray[index],
+                         endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                     }
+              
+                     setDefaultValues(newArray)
+                     
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="End Date"
+                  />
+                  
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                    onChange={(date) => {
+
+                      const newArray = [...defaultValues];
+
+                      
+              
+                     
+                       newArray[index] = {
+                         ...newArray[index],
+                         startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                     }
+              
+                     setDefaultValues(newArray)
+                     
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="End Date"
+                  />
+                  
                 </Grid>
                 <Grid md={6} xs={12} item>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -375,7 +453,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                       label="End Date"
                       value={dayjs(item?.endDate===""?dayjs() :item?.endDate)}
                       onChange={(newval) => {
-                        handleChange(newval, index, 'endDate');
+                        handleChangeDate(newval, 'endDate', index,);
                       }}
                       required={false}
                     />
@@ -510,7 +588,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}
+            <LoadingButton type="submit" variant="contained" onClick={onSaveData}
             sx={{backgroundColor:'#3B82F6',color:'white'}}>
               Save
             </LoadingButton>
