@@ -39,19 +39,39 @@ import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
   
+  const onSaveData=()=>{
 
+    const arr=defaultValues
+    for(var i=0;i<arr.length;i++){
+      // console.log(formatDateToYYYYMMDD(defaultValues[i]?.startDate || ""),'defaultValues?.startDate')
+      arr.startDate=formatDateToYYYYMMDD(arr[i]?.startDate )
+      arr.endDate=formatDateToYYYYMMDD(arr[i]?.endDate )
+      
+    }
+    setDefaultValues(arr)
+    console.log(defaultValues)
+   setTimeout(()=>{
+    onSave();
+   },[4000])
+
+
+
+
+  }
     const onSave=()=>{
-    console.log(defaultValues);
+   
 
      const obj={
       companyId: "COMP5",
       employeeId: "NEWC19",
       experience:defaultValues
      }
+     console.log(obj);
       
       const config = {
 
@@ -62,7 +82,11 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
         },
-        data : obj
+        data : {
+      companyId: "COMP5",
+      employeeId: "NEWC19",
+      experience:defaultValues
+     }
       };
        
       axios.request(config)
@@ -116,29 +140,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
         setDefaultValues(currObj);
       };
 
-      function handleFileSelect(event,index,name) {
-        // const fileInput = event.target;
-        // const file = fileInput.files[0];
-      
-        // if (file) {
-        //   const reader = new FileReader();
-      
-        //   reader.onload = function (e) {
-        //     const base64String = e.target.result;
-        //     console.log('Base64 string:', base64String);
-        //     setAttachmentString(base64String)
-        //     const newObj = defaultValues;
-        //     newObj[index][name] = base64String;
-        //   setDefaultValues(newObj);
-      
-        //     setImage( [base64String]);
-        //     setViewImage(true);
-        //     Here, you can send the `base64String` to your server or perform other actions.
-        //   };
-      
-        //   reader.readAsDataURL(file);
-        // }
-      }
+     
        
            
 
@@ -146,32 +148,22 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
            
       const handleChange = (e, index, field) => {
 
-        const newArray=defaultValues
-       if(field==='grade' || field==="yearOfPassing"){
         const { value, id } = e.target;
+        const newObj = defaultValues;
+        const newArray = [...defaultValues];
 
-       
+       if(field==='grade' || field==="yearOfPassing"){
+
+        newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: parseInt(value,10)
       }
-    }
 
-      else if(field==="endDate"  || field==="startDate"){
-        
-        
-       // newObj[index][field]=e;
-        newArray[index] = {
-          ...newArray[index],
-          [field]:e
-      }
 
-    }
-    
-    else{
-      const { value, id } = e.target;
-        
-        
+       }else{
+
+        newObj[index][field]=e?.target?.value ;
         newArray[index] = {
           ...newArray[index],
           [field]: value
@@ -287,6 +279,22 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
         //setSelectedFile(file);
       };
+
+      const handleChangeDate=(newvalue,field,index)=>{
+
+        const newArray = [...defaultValues];
+
+        console.log(newvalue,'newvalue')
+
+       
+         newArray[index] = {
+           ...newArray[index],
+           [field]: newvalue
+       }
+
+       setDefaultValues(newArray)
+
+      }
       
      
       
@@ -336,7 +344,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     name="previousCompanyName"
                     label="Company Name"
                     variant="outlined"
-                    id="previousCompanyName"
+                    id={`previousCompanyName${index}`}
                      value={item?.previousCompanyName}
                     onChange={(e) => {
                       handleChange(e, index, 'previousCompanyName');
@@ -370,7 +378,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                       label="Start Date"
                       value={dayjs(item?.startDate===""?dayjs() :item?.startDate)}
                       onChange={(newval) => {
-                        handleChange(newval, index, 'startDate');
+                        handleChangeDate(newval,  'startDate',index,);
                       }}
                       style={{ width: '100%' }}
                     />
@@ -385,7 +393,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                       label="End Date"
                       value={dayjs(item?.endDate===""?dayjs() :item?.endDate)}
                       onChange={(newval) => {
-                        handleChange(newval, index, 'endDate');
+                        handleChangeDate(newval, 'endDate', index,);
                       }}
                       required={false}
                     />
@@ -516,11 +524,11 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
             </DialogContent>
 
             <DialogActions>
-            <Button variant="outlined" onClick={()=>{setDefaultValues(employeeData);onhandleClose()}}>
+            <Button variant="outlined" onClick={()=>{setDefaultValues([]);onhandleClose()}}>
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}
+            <LoadingButton type="submit" variant="contained" onClick={onSaveData}
             sx={{backgroundColor:'#3B82F6',color:'white'}}>
               Save
             </LoadingButton>

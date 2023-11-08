@@ -29,7 +29,7 @@ import EmployeeAboutEdit from './EmployeeAboutEdit';
 // ----------------------------------------------------------------------
 
 export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
-
+  var currentEmployeeData={};
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
         setOpen(true);
@@ -37,40 +37,36 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
     const handleEditClose=()=>{
         setOpen(false);
     }
-    const currentEmployee={
-        "employeeID": "ibm1",
-        "firstName": "ram",
-        "middleName": null,
-        "lastName": "r",
-        "emailID": "anilraina0310@gmail.com",
-        "contactNumber": 8908765334,
-        "emergencyContactNumber": null,
-        "dateOfBirth": "2023-02-11",
-        "fatherName": "nithya",
-        "motherName": "abc",
-        "maritalStatus": "unmarried",
-        "nationality": "indian",
-        "religion": "hindu",
-        "bloodGroup": "A+",
-        "offerDate": "2022-03-03",
-        "joiningDate": "2022-03-03",
-        "pAddressLine1": "robersonpet",
-        "pAddressLine2": "bpet",
-        "pCity": "blore",
-        "pState": "kolar",
-        "pPincode": 64286,
-        "rAddressLine1": "2,304,d",
-        "rAddressLine2": "bbb",
-        "rCity": "canada",
-        "rState": "kolar",
-        "rPincode": 84686,
-        "employmentType": null,
-        "departmentName": null,
-        "Designation": null,
-        "gradeName": null,
-        "ctc": null,
-        "workingLocation": null,
-        "reportingManagerName": null
+    const [currentEmployee,setCurrentEmployee]=useState({
+      
+    })
+
+    const ApiHit=()=>{
+      let data = JSON.stringify({
+        "employeeID": "INFO29"
+      });
+       
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getOnboardingFormDetails',
+        headers: { 
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+          'Content-Type': 'application/json', 
+          'Cookie': '.Tunnels.Relay.WebForwarding.Cookies=CfDJ8M67rYfw57hCj5sJjtQyecHRP-MlNI5uDkjwk83Wo2eKfP0o67oOafW3-I1VC5LjZgdyZoWLT7e5xaBW370utqAQIfitAZWusIwwc4JcLu2Sf3qfxjwiDmUaIGlzdVijeyWgN6Y0eyrYG0pTE78qHfvCKXDQI4AptAhIEOoucE-xmRiDys7GA8c70-Gb-doYn6Ya-ukvVD8Q49KJxDOD-WqGkhCr_skieWJYHJnCxnVtMsvfDKAOeklzjBMIibAfb5c8vIBM9OlZdc5MX1RLhPFiHYBRBL7lp-LtH_6muOnK45zFlZ8ZQb_RS1jKawf6rWox4w_xi8frutwJldMuBsxorByg3PMEUxZ_9Z2M12A5gF8xi1Buf4TSLTHp2gQAD52XDYHKVvU7ysuMgssrpQBJigvC8lV05MTycAdcjF0Us5GvdxkPs2gQnx1JJJrgx4iETPP-3iB1NGckqt_X8_77J15kHioxyeuu-ozfcJT5yMCE7yNZBfDw4nLXYrt51pux9ah7b2E_emhepIwbKiiK_1-dKa90kHG6t1cpOSEgvfm_McLEUp1dMwfU5i6-xvF8Pt2K6PSm37-bHfhVaacVRl5dWVCLtgT6Q1y0nOZxrEczcElltp8TSaGLOEvmj6DJagjO4lhNnDnda2KA8kBU_QvO9Kk65Hj34FDBsrwcuVAfF6QxR2MDDMojHc47usSJu_RonBw5_K_pcF84aeeqRkko_eJd3WJQ3bDcwumyxcHw43j9O5h1JVvCZShftF54UYw-5OD9dVwOjueLeTgUsrZRMY02Ayn7nXQ8JEOLX2anDO8DeJXKYoQ5EMfJz3Dhz12uwNW39l8AZMFyUuphCcBP8QIU6FsIM0dJkFVUUa99bfPc5L7_jO4x-6irfyFr-AjkKTih4dbR0nGVcU0'
+        },
+        data : data
+      };
+       
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setCurrentEmployee(response.data.data)
+        currentEmployeeData=response.data.data
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
   const { logout } = useAuthContext();
   const popover = usePopover();
@@ -102,7 +98,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
    
   
-   
+   ApiHit()
     
   },[])
 
@@ -113,153 +109,11 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
   
 }
  
-  const renderCustomer = (
-    <>
-    <Grid padding="5px" container flexDirection="row" alignItems="center" justifyContent="space-between"> 
-      <Grid item>
-        <Grid container flexDirection="row" spacing={1} alignItems="center"  >
-          <Grid  item>
-          <Typography sx={{paddingLeft:'10px'}} variant='h5'>Organisation Info</Typography>
-          </Grid>
-      
-      </Grid>
-      </Grid>
-
-      <Grid item>
-        {!edit && <Iconify 
-        sx={{cursor: "pointer",color:'orange'}}
-          onClick={()=>{
-            
-            setEdit(true);
-          }}
-        icon="solar:pen-bold" />}
-
-        {edit &&
-        <Grid container flexDirection="row" spacing={1}>
-          <Grid item>
-          <Iconify 
-           sx={{cursor: "pointer",color:'orange'}}
-          onClick={()=>{
-
-           
-
-            
-           
-            setEdit(false);
-          }}
-        icon="material-symbols:save" />
-
-          </Grid>
-          <Grid item>
-          <Iconify 
-           sx={{cursor: "pointer",color:'orange'}}
-          onClick={()=>{
-            bunkDataEdit.is_active=bunkData.is_active;
-            setEdit(false);
-          }}
-        icon="basil:cancel-solid" />
-          </Grid>
-
-        </Grid>
-        }
-       
-        
-        </Grid>
-
-</Grid>
-      <Stack direction="row" sx={{ p: 3 }}>
-        <Avatar
-          alt={bunkData?.bunk_name}
-          src={bunkData.avatarUrl}
-          sx={{ width: 48, height: 48, mr: 2 }}
-        />
-
-        <Stack spacing={0.5} alignItems="flex-start" sx={{ typography: 'body2' }}>
-         
-         
-          <Typography variant="subtitle2">
-            
-            {!edit && bunkData?.bunk_name}</Typography>
-            {edit &&
-            <TextField
-           
-           variant="outlined"
-           color="primary"
-           style={{ marginBottom: '4px' }}
-           onChange={(e)=>{handleChange(e,'bunk_name')}}
-           value={bunkDataEdit?.bunk_name}
-           
-           InputProps={{
-             style: {
-               color: 'orange',
-               fontWeight: 'bold'
-             }
-           }}
-         />}
-
-
-
-          <Box sx={{ color: 'text.secondary' }}>
-            
-            {!edit && bunkData?.owner_name}
-            {edit &&
-            <TextField
-           
-           variant="outlined"
-           color="primary"
-           style={{ marginBottom: '4px' }}
-           onChange={(e)=>{handleChange(e,'owner_name')}}
-           value={bunkDataEdit?.owner_name}
-           
-           InputProps={{
-             style: {
-               color: 'orange',
-               fontWeight: 'bold'
-             }
-           }}
-         />}
-          
-          </Box>
-
-          <Box>
-           
-            <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
-              {!edit && bunkData?.gstin}
-              {edit &&
-            <TextField
-           
-           variant="outlined"
-           color="primary"
-           style={{ marginBottom: '4px' }}
-           onChange={(e)=>{handleChange(e,'gstin')}}
-           value={bunkDataEdit?.gstin}
-           
-           InputProps={{
-             style: {
-               color: 'orange',
-               fontWeight: 'bold'
-             }
-           }}
-         />}
-            </Box>
-          </Box>
-
-          {/* <Button
-            size="small"
-            color="error"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ mt: 1 }}
-          >
-            Add to Blacklist
-          </Button> */}
-        </Stack>
-      </Stack>
-    </>
-  );
+ 
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose}/>
+    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>

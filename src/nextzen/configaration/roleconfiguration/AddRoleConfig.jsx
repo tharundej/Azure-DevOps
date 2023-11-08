@@ -17,6 +17,10 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 // utils
 // routes
 import { useRouter } from 'src/routes/hooks';
@@ -34,7 +38,7 @@ import instance from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Alert, Button, Snackbar } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { Icon } from '@iconify/react';
 
 
 export default function AddRoleConfig({ currentUser }) {
@@ -80,6 +84,13 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     fileContent: '',
   });
 
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    reset1();
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
@@ -405,7 +416,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+       
       }}
     >
         <Snackbar
@@ -510,8 +521,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
 
             <Grid item xs={2}>
               <Button onClick={AddDesignation}>Add</Button>
-              <Button className="button">Filter</Button>
-              <Button className="button">Report</Button>
+              
             </Grid>
           </Grid>
 
@@ -579,6 +589,181 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
             </Grid>
           </Grid>
         </Grid>
+
+        {/* sai  */}
+       
+<Button
+        onClick={handleOpen}
+        variant="contained"
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{ margin: '20px' }}
+      >
+        Role Config
+      </Button>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        onClose={()=> {console.log("hi")}}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
+        <FormProvider >
+          <DialogTitle>Role Config</DialogTitle>
+          <DialogContent>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)', // Add this line for three items in a row
+              }}
+            >
+        
+        
+           
+              <TextField
+                label="Department "
+                name="department"
+                value={null}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+         
+           
+            <Autocomplete
+              disablePortal
+              name="Location"
+              id="combo-box-demo"
+              options={locationType?.map((employeepayType) => ({
+                label: employeepayType.locationName,
+                value: employeepayType.locationName,
+                ...employeepayType,
+              }))}
+              value={formData.Location}
+              onChange={(event, newValue, selectedOption) =>
+                handleAutocompleteChange('Location', newValue, selectedOption)
+              }
+                renderInput={(params) => <TextField {...params} label="Location" />}
+              />
+         
+          
+              <Button  onClick={AddDepartment}>Add</Button>
+        
+          {/* Row 2 */}
+
+         
+      
+          
+              <Autocomplete
+                disablePortal
+                name="Department"
+                id="combo-box-demo"
+                options={departmentType?.map((department) => ({
+                    label: department.departmentName,
+                    value: department.departmentName,
+                    ...department,
+                  }))}
+                value={formData.Department}
+                onChange={(event, newValue ,selectedOption) => handleDesignationChange('Department', newValue ,selectedOption)}
+                // sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Department" />}
+              />
+           
+         
+              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
+
+              <TextField
+                label="Designation"
+                name="designation"
+                value={null}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+          
+
+       
+              <Button onClick={AddDesignation}>Add</Button>
+              
+          
+
+         
+            <Autocomplete
+              disablePortal
+              name="Location"
+              id="combo-box-demo"
+              options={designationType?.map((employeepayType) => ({
+                label: employeepayType.designationName,
+                value: employeepayType.designationName,
+                ...employeepayType,
+              }))}
+              value={formData.Designation}
+              onChange={(event, newValue, selectedOption) =>
+                handleDesignationGradeChange('Designation', newValue, selectedOption)
+              }
+                renderInput={(params) => <TextField {...params} label="Designation " />}
+              />
+          
+              <TextField
+                label="Designation Grade"
+                name="designationGrade"
+                value={null}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+          
+              <Button onClick={AddDesignationGrade}>Add</Button>
+         
+
+          {/*       
+        <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
+        <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+         */}
+          {/* <Grid
+            item
+            container
+            xs={10}
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
+            direction="row"
+            style={{ marginBottom: '1rem', textAlign: 'center' }}
+          >
+            <Grid item xs={2}>
+              <Button className="button">Save</Button>
+            </Grid>
+            <Grid item xs={2}>
+              <Button className="button">Cancel</Button>
+            </Grid>
+          </Grid> */}
+      
+              
+            </Box>
+          </DialogContent>
+ 
+          <DialogActions>
+            <Button variant="outlined" onClick={()=> {console.log("hi")}}>
+              Cancel
+            </Button>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              onClick={()=> {console.log("hi")}}
+              loading={()=> {console.log("hi")}}
+            >
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
   
     </div>
   );
