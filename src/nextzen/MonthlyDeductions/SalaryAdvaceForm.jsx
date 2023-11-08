@@ -98,19 +98,10 @@ const [sendData, setSendData] = useState({
   projectId : '',  
 })
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: SalaryAdvanceForm.jsx:93 ~ onSubmit ~ data:", data)
-    console.log('uyfgv');
-
+   
     try {
-      // data.company_id = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      // data.selectedActivity = selectedActivity;
-      data.companyID = "COMP1";
-      data.employeeID = "info4";
+      data.companyID = JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
+      data.employeeID = JSON.parse(JSON.stringify(localStorage.getItem('employeeID')));
 
       console.log(data, 'data111ugsghghh');
 
@@ -138,7 +129,7 @@ const [sendData, setSendData] = useState({
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                Enter Your requestAmount to Request Salary In Advace 
+                Enter Your Amount to Request Salary In Advace 
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
@@ -151,16 +142,16 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="requestAmount" label=" Enter Amount" />
+                <RHFTextField name="requestAmount" label="Amount" />
    
-                <RHFTextField name="commentStatus" label="Commen" />
+                <RHFTextField name="commentStatus" label="Comments" />
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Apply Salary Advance'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
            
             </Card>

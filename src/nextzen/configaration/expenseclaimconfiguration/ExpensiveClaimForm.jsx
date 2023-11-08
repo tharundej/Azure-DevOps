@@ -33,7 +33,6 @@ export default function ExpenseClaimForm({ currentUser }) {
     department_name: Yup.string().required('Department Name is Required'),
     designation_name: Yup.string().required('Designation Name is Required'),
     designation_grade_name: Yup.string().required('Designation Grade Name is Required'),
-    employee_name: Yup.string().required('Employee Name is Required'),
   });
 
   const defaultValues1 = useMemo(
@@ -42,7 +41,6 @@ export default function ExpenseClaimForm({ currentUser }) {
       department_name: currentUser?.department_name || null,
       designation_name: currentUser?.designation_name || null,
       designation_grade_name: currentUser?.designation_grade_name || null,
-      employee_name: currentUser?.employee_name || null,
     }),
     [currentUser]
   );
@@ -86,18 +84,17 @@ export default function ExpenseClaimForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
-      >
-        Add ExpensiveConfig
+        sx={{margin:'20px'}}>
+        Add Expensive
       </Button>
       <Dialog
-        fullWidth
-        maxWidth={false}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { maxWidth: 720 },
-        }}
+       fullWidth
+       maxWidth={false}
+       open={open}
+       onClose={handleClose}
+       PaperProps={{
+         sx: { maxWidth: 720 },
+       }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           <DialogTitle>Add ExpensiveConfig</DialogTitle>
@@ -128,7 +125,6 @@ export default function ExpenseClaimForm({ currentUser }) {
                 label="Designation Grade Name"
                 options={designationGradeName.map((name) => name.type)}
               />
-              <RHFTextField name="employee_name" label="Employee Name" />
             </Box>
           </DialogContent>
 

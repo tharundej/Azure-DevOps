@@ -1,50 +1,31 @@
 
 import axios from "axios";
 import { baseUrl } from "../BaseUrl";
-const ApiHitLocations=()=>{
+const ApiHitLocations = async () => {
+  try {
     const data1 = JSON.stringify({
-
       "companyID": "COMP1"
-    
     });
-    
-     
-    
+
     const config = {
-    
       method: 'post',
-    
       maxBodyLength: Infinity,
-    
-      url: `${baseUrl}locationOnboardingDepartment`,
-    
+      url: `${baseUrl}/locationOnboardingDepartment`,
       headers: {
-    
         'Content-Type': 'application/json'
-    
       },
-    
       data : data1
-    
     };
-    
-     
-    
-    axios.request(config)
-    
-    .then((response) => {
-    
-      console.log(JSON.stringify(response.data));
-      setLocationOptions(response?.data?.data ||[])
-    
-    })
-    
-    .catch((error) => {
-    
-      console.log(error);
-    
-    });
+
+    const response = await axios.request(config);
+    console.log(JSON.stringify(response.data));
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
+}
+
   const ApiHitDepartment=(obj)=>{
     const config = {
 

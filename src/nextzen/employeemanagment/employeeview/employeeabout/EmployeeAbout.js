@@ -21,6 +21,9 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
@@ -29,6 +32,11 @@ import EmployeeAboutEdit from './EmployeeAboutEdit';
 // ----------------------------------------------------------------------
 
 export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
+  const userlocation={
+    "locationID": 30,
+    "locationName": "location1"
+}
+  const [locations,setLocations]=useState([])
   var currentEmployeeData={};
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
@@ -41,6 +49,20 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
       
     })
 
+    useEffect(() => {
+      const fetchLocations = async () => {
+        try {
+          const locations = await ApiHitLocations();
+          setLocations(locations);
+          //console.log(locations, 'locations');
+        } catch (error) {
+          console.error('Error fetching locations:', error);
+        }
+      };
+    
+      fetchLocations();
+    }, []);
+
     const ApiHit=()=>{
       let data = JSON.stringify({
         "employeeID": "info2"
@@ -49,7 +71,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getOnboardingFormDetails',
+        url: `${baseUrl}/getOnboardingFormDetails`,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json', 
@@ -112,7 +134,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} />
+    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>

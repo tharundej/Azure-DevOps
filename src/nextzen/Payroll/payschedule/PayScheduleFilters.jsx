@@ -235,13 +235,11 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     console.log(value);
     // console.log( typeof value === 'string' ? value.split(',') : value,)
   };
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        // searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+  const handleSearch = (searchTerm) => {
+     
+    searchData(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
   const handleApply = async () => {
     setDatesData([]);
 
@@ -263,18 +261,18 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
         direction="row"
         style={{ marginBottom: '1rem' }}
       >
-        <Grid item>
+        <Grid item md={8} xs={8}>
         <TextField
             placeholder="Search...."
              fullWidth
-             onChange={handleSearch}
+             onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item>
+        <Grid item md={2} xs={2}>
         <PayScheduleform/>
         </Grid>
-        <Grid item>
+        <Grid item md={2} xs={2} >
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            

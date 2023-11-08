@@ -115,8 +115,6 @@ const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfi
 
 const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
 
-const MailConfiguration = lazy(()=> import('../../nextzen/configaration/mailconfiguration/MailConfiguration'));
-
 const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
 
 const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
@@ -294,7 +292,6 @@ export const dashboardRoutes = [
           },
           {path:'leaveconfiguration',element:<LeaveConfiguration/>},
           {path:'compoffconfiguration',element:<CompoffConfiguration/>},
-          {path:'mailconfiguration',element:<MailConfiguration/>},
           {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
           {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
           {path:'shiftconfiguration',element:<ShiftConfiguration/>},

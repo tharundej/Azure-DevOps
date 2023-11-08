@@ -202,7 +202,6 @@ export const paths = {
         root:`${ROOTS.DASHBOARD}/configaration`,
         leaveconfiguration: `${ROOTS.DASHBOARD}/configaration/leaveconfiguration`,
         compoffconfiguration: `${ROOTS.DASHBOARD}/configaration/compoffconfiguration`,
-        mailconfiguration: `${ROOTS.DASHBOARD}/configaration/mailconfiguration`,
         appraisalconfiguration: `${ROOTS.DASHBOARD}/configaration/appraisalconfiguration`,
       expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configaration/expenseclaimconfiguration`,
       shiftconfiguration: `${ROOTS.DASHBOARD}/configaration/shiftconfiguration`,

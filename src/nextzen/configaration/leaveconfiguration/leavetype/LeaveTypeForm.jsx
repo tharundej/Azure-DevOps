@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState,useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -24,6 +24,10 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 export default function LeaveTypeForm({ currentUser}) {
   const [open, setOpen] = useState(false);
@@ -33,21 +37,20 @@ export default function LeaveTypeForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    LeaveTypeId: Yup.number().required('Leave Type Id is Required'),
-    LeaveName: Yup.number().required('Leave Name is Required'),
-    StartDate: Yup.number().required('Start Date is Required'),
+    LeaveName: Yup.string().required('Leave Name is Required'),
     TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.number().required('Term Type is Required'),
+    TermType: Yup.string().required('Term Type is Required'),
     ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
     ElTakenRange: Yup.number().required('El Taken Range is Required'),
   });
 
+  const [formData, setFormData] = useState({});
+  const [locationType, setLocationType] = useState([]);
+  const [selectedDates, setSelectedDates] = useState(dayjs());
 
   const defaultValues1 = useMemo(
     () => ({
-      LeaveTypeId: currentUser?.LeaveTypeId || null,
       LeaveName: currentUser?.LeaveName || null,
-      StartDate: currentUser?.StartDate || null,
       TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
       TermType: currentUser?.TermType || null,
       ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
@@ -76,6 +79,8 @@ export default function LeaveTypeForm({ currentUser}) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId=localStorage.getItem('companyID')
+     data.startDate = formatDateToYYYYMMDD(selectedDates);
+    // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
@@ -85,24 +90,63 @@ export default function LeaveTypeForm({ currentUser}) {
       console.log('error', error);
     }
   });
+  // const getLocation = async () => {
+  //   const payload = {
+  //     companyID: 'COMP1',
+  //   };
 
+  //   const config = {
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+  //     headers: {
+  //       Authorization:
+  //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+  //       'Content-Type': 'text/plain',
+  //     },
+  //     data: payload,
+  //   };
+  //   const result = await axios
+  //     .request(config)
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         const rowsData = response?.data?.data;
+  //         setLocationType(rowsData);
+  //         console.log(JSON.stringify(response?.data?.data), 'result');
 
+  //         console.log(response);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   //  console.log(result, 'resultsreults');
+  // };
 
-//   const handleDrop1 = useCallback(
-//     (acceptedFiles) => {
-//       const file = acceptedFiles[0];
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     getLocation();
+  //   };
+  //   fetchData();
+  // }, []);
 
-//       const newFile = Object.assign(file, {
-//         preview: URL.createObjectURL(file),
-//       });
+  const handleDateChanges = (date) => {
+    setSelectedDates(date);
+  };
+  const TermTypes=[
+    {type:'Annual'},
+    {type:'Month'}
+  ]
 
-//       if (file) {
-//         setValue1('avatarUrl', newFile, { shouldValidate: true });
-//       }
-//     },
-//     [setValue1]
-//   );
- 
+const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+  console.log(name, selectedValue, selectedOption);
+  setFormData({
+    ...formData,
+    [name]: selectedValue,
+    locationID: selectedOption?.locationID,
+    locationName: selectedOption?.locationName,
+  });
+};
   return (
     <>
       <Button onClick={handleOpen}  variant="contained"
@@ -131,11 +175,34 @@ export default function LeaveTypeForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="LeaveTypeId" label="Leave Type Id" />
-                <RHFTextField name="LeaveName" label="Leave Name" />
-                <RHFTextField name="StartDate" label="Start Date" />
+                {/* <Autocomplete
+                disablePortal
+                name="Location"
+                id="combo-box-demo"
+                options={locationType?.map((employeepayType) => ({
+                  label: employeepayType.locationName,
+                  value: employeepayType.locationName,
+                  ...employeepayType,
+                }))}
+                onChange={(event, newValue, selectedOption) =>
+                  handleAutocompleteChange('Location', newValue, selectedOption)
+                }
+                renderInput={(params) => <TextField {...params} label="Location" />}
+              /> */}
+                <RHFTextField name="LeaveName" label="Leave Name"/>
+                <RHFTextField name="totalNumberOfLeaves" label="Total Number Of Leaves" />
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Start Date"
+                    value={selectedDates}
+                    onChange={handleDateChanges}
+                  />
+                </DemoContainer>
+              </LocalizationProvider> */}
                 <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFTextField name="TermType" label="Term Type" />
+                <RHFAutocomplete name="TermType" label="Term Type" options={TermTypes.map((name)=>name.type)}/>
                 <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
               </Box>
             </DialogContent>
