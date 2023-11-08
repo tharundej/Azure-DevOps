@@ -152,7 +152,7 @@ headerData={TABLE_HEAD}
 
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
-endpoint='timeSheetApprovals'
+endpoint='/timeSheetApprovals'
 
 rowActions={actions}
 

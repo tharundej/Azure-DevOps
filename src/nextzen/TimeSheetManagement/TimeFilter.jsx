@@ -354,7 +354,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
                 <Grid container marginTop={2}>
   {/* <Typography>Offer Date</Typography> */}
   <Grid container spacing={2}>
-    <Grid item xs={6}>
+    <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Project Name</InputLabel>
         <Select
@@ -378,7 +378,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
         </Select>
       </FormControl>
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Activity Name</InputLabel>
         <Select

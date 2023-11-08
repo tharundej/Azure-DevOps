@@ -30,7 +30,7 @@ export default function MyShiftDetails() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -44,26 +44,44 @@ export default function MyShiftDetails() {
     
         },
     
-        { id: "Employe_Name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
 
-        { id: "Shift_name", label: "Shift Name", width: 180, type: "text" },
+        { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
-        { id: "Shiftgroup_Name", label: "Shift Group Name", width: 220, type: "text" },
-        { id: "Date", label: "Date", width: 220, type: "text" },
+        // { id: "Shiftgroup_Name", label: "Shift Group Name", width: 220, type: "text" },
+        // { id: "Date", label: "Date", width: 220, type: "text" },
     
-        { id: "Start_Time", label: "Start Time", width: 180, type: "text" },
+        { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "End_time", label: "End time", width: 100, type: "text" },
-        { id: "Start_Date", label: "Start Date", width: 100, type: "text" },
-        { id: "End_Date", label: "End Date", width: 100, type: "text" },
-        { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
+        { id: "end_time", label: "End time", width: 100, type: "text" },
+        { id: "start_date", label: "Start Date", width: 100, type: "text" },
+        { id: "end_date ", label: "End Date", width: 100, type: "text" },
+        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
       ];
     
      
-    
+    const defaultPayload ={
+      "company_id":"COMP2",
+      "employee_id":"ibm1",
+      "page":0,
+      "count":3,
+      "Search":"r",
+      "externalFilters":{
+      "shift_name": "",
+      "shift_term": "",
+      "startdate":"",
+      "enddate":""
+   
+  },
+      "sort": {
+      "orderby": "shift_name",
+      "key": 0
+  } 
+   
+  }
       const actions = [
     
         { name: "approve", icon: "hh", path: "jjj" },
@@ -74,33 +92,7 @@ export default function MyShiftDetails() {
     
       ];
     
-      const bodyContent = [
     
-        {
-    
-          SL_NO: "1",
-          Employe_Name:"Aight",
-    
-          Shift_name: "Aswin!23",
-    
-          Shiftgroup_Name: "BellErp",
-
-          Date: "12/12/2023",
-    
-          Start_Time: "12/12/2023",
-    
-          End_time: "Coding",
-    
-          Start_Date: "2hour 40minutes",
-
-          End_Date: "122hour 40minutes",
-
-          Sift_term: "Weakly",
-          
-    
-        },
-    
-      ];
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -128,17 +120,16 @@ export default function MyShiftDetails() {
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
   {/* <Button className="button" onClick={handleTimeForm    }>Assign Shift</Button> */}
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
     <BasicTable
-
-headdata={TABLE_HEAD}
-
-bodydata={bodyContent}
-
+defaultPayload={defaultPayload}
+headerData={TABLE_HEAD}
+endpoint='/Myshiftdetails'
+bodyData='data'
 rowActions={actions}
-
+filterName='MyShiftFilter'
 />  
     </>
   );

@@ -17,6 +17,10 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 // utils
 // routes
 import { useRouter } from 'src/routes/hooks';
@@ -34,6 +38,8 @@ import instance from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Alert, Button, Snackbar } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Icon } from '@iconify/react';
+import Iconify from 'src/components/iconify/iconify';
 
 
 
@@ -80,6 +86,13 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     fileContent: '',
   });
 
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    reset1();
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
@@ -405,7 +418,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+       
       }}
     >
         <Snackbar
@@ -422,21 +435,44 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         </Alert>
       </Snackbar>
      
-        <Grid
-          container
-          spacing={2}
-          style={{ marginTop: '1rem', justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-          >
-            <Grid item xs={4}>
+       
+        {/* sai  */}
+       
+{/* <Button
+        onClick={handleOpen}
+        variant="contained"
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{ margin: '20px' }}
+      >
+        Role Config
+      </Button> */}
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={true}
+        onClose={()=> {console.log("hi")}}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
+        <FormProvider >
+          <DialogTitle>Role Config</DialogTitle>
+          <DialogContent>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(3, 1fr)',
+                md: 'repeat(3, 1fr)', // Add this line for three items in a row
+              }}
+            >
+        
+        
+           
               <TextField
                 label="Department "
                 name="department"
@@ -445,8 +481,8 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 variant="outlined"
                 fullWidth
               />
-            </Grid>
-            <Grid item xs={4}>
+         
+           
             <Autocomplete
               disablePortal
               name="Location"
@@ -462,24 +498,15 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
-            </Grid>
-            <Grid item xs={2}>
+         
+          
               <Button  onClick={AddDepartment}>Add</Button>
-            </Grid>
-          </Grid>
-
+        
           {/* Row 2 */}
 
-          <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-          >
-            <Grid item xs={4}>
+         
+      
+          
               <Autocomplete
                 disablePortal
                 name="Department"
@@ -494,8 +521,8 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 // sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="Department" />}
               />
-            </Grid>
-            <Grid item xs={4}>
+           
+         
               {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
 
               <TextField
@@ -506,25 +533,14 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 variant="outlined"
                 fullWidth
               />
-            </Grid>
+          
 
-            <Grid item xs={2}>
+       
               <Button onClick={AddDesignation}>Add</Button>
-              <Button className="button">Filter</Button>
-              <Button className="button">Report</Button>
-            </Grid>
-          </Grid>
+              
+          
 
-          <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-          >
-            <Grid item xs={4}>
+         
             <Autocomplete
               disablePortal
               name="Location"
@@ -540,8 +556,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               }
                 renderInput={(params) => <TextField {...params} label="Designation " />}
               />
-            </Grid>
-            <Grid item xs={4}>
+          
               <TextField
                 label="Designation Grade"
                 name="designationGrade"
@@ -550,18 +565,15 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 variant="outlined"
                 fullWidth
               />
-            </Grid>
-
-            <Grid item xs={2}>
+          
               <Button onClick={AddDesignationGrade}>Add</Button>
-            </Grid>
-          </Grid>
+         
 
           {/*       
         <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
         <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
          */}
-          <Grid
+          {/* <Grid
             item
             container
             xs={10}
@@ -577,8 +589,27 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
             <Grid item xs={2}>
               <Button className="button">Cancel</Button>
             </Grid>
-          </Grid>
-        </Grid>
+          </Grid> */}
+      
+              
+            </Box>
+          </DialogContent>
+ 
+          <DialogActions>
+            <Button variant="outlined" onClick={()=> {console.log("hi")}}>
+              Cancel
+            </Button>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              onClick={()=> {console.log("hi")}}
+              loading={()=> {console.log("hi")}}
+            >
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
   
     </div>
   );

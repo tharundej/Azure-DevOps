@@ -29,7 +29,7 @@ const FilesGrid = ({dataFiltered}) => {
             {dataFiltered
               ?.filter((i) => i?.type !== 'folder')
               ?.map((file) => (
-                file.typeName &&(
+                file.fileType &&(
                 <FileBox
                   key={file?.id}
                   file={file}

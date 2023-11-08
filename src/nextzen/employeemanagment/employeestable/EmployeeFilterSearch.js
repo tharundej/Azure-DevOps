@@ -438,7 +438,7 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -853,7 +853,7 @@ const [stateOptions,setOptions]=useState([])
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     

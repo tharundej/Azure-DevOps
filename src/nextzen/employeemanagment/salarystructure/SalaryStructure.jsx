@@ -4,12 +4,16 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function SalaryStructure() {
     const TABLE_HEAD = [
-      { id: 'marketRate', label: 'Market Rate', type: 'text' },
-      { id: 'minimum', label: 'Minimum', type: 'text' },
-      { id: 'midpoint', label: 'Midpoint', type: 'text' },
-      { id: 'maximum', label: 'Maximum', type: 'text' },
-      { id: 'spread', label: 'Spread', type: 'text' },
-      { id: 'range', label: 'Range', type: 'text' },
+      { id: 'departmentName', label: 'Department Name', type: 'text',minWidth:'150px' },
+      { id: 'designationName', label: 'Designation Name', type: 'text',minWidth:'150px' },
+      { id: 'designationGradeName', label: 'Designation Grade Name', type: 'text',minWidth:'150px' },
+
+      { id: 'marketRate', label: 'Market Rate', type: 'text',minWidth:'150px' },
+      { id: 'minimum', label: 'Minimum', type: 'text',minWidth:'150px' },
+      { id: 'midpoint', label: 'Midpoint', type: 'text',minWidth:'150px' },
+      { id: 'maximum', label: 'Maximum', type: 'text' ,minWidth:'150px'},
+      { id: 'spread', label: 'Spread', type: 'text',minWidth:'150px' },
+      { id: 'range', label: 'Range', type: 'text' ,minWidth:'150px'},
 
     ];
     const actions = [
@@ -20,26 +24,26 @@ export default function SalaryStructure() {
     const defaultPayload = 
     {
       "count": 5,
-      "page": 1,
+      "page": 0,
       "search": "",
       "companyId": "COMP1",
       "externalFilters": {
-        "payscheduleType": "weekly7",
-        "employmentType": "",
-        "basicPayPercentage":"",
-        "hraPercentage":"",
-        "daPercentage":"",
-        "ltaPercentage":"",
-        "employerPfPercentage":"",
-        "employeePfPercentage":"",
-        "esicPercentage":"",
-        "tdsPercentage":"10"
+          "departmentName": "",
+          "designationName": "",
+          "designationGradeName": "",
+          "marketRate": "",
+          "minimum": "",
+          "midpoint": "",
+          "maximum": "",
+          "spread": "",
+          "ranges": ""
       },
       "sort": {
-        "key": 1,
-        "orderBy": ""
+          "key": 1,
+          "orderBy": ""
       }
-    };
+  }
+    
      
      
     // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
@@ -65,7 +69,7 @@ export default function SalaryStructure() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint=""
+          endpoint="/getallSalaryStructure"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='SalaryStructureFilterSearch'

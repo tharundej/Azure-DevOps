@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import axios from 'axios';
@@ -51,6 +51,7 @@ export default function FileUploader({
   previousData
 }) {
   console.log(previousData ,"previousData")
+  // var [previousData , setPreviousData]  = useState([])
   const userId = 5;
   var [images, setImages] = React.useState([]);
   const [viewImage, setViewImage] = React.useState(false);
@@ -64,9 +65,17 @@ export default function FileUploader({
     //   setShown(shown)
     if(previousData)
     {
+      // Extracting landlordFileName into a separate array
+const landlordFileNames = previousData.map(doc => doc.landlordFileName);
+
+// Extracting landlordFileContent into a separate array
+const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
+
+      // setPreviousData(previousData)
       setViewImage(true)
       images = previousData
-      setImages(images)
+      setImages(landlordFileContents)
+      setFileNames(landlordFileNames)
       console.log(images ,"imagesimagesimages")
     }
     setOpen(showAttachmentDilog);
@@ -74,7 +83,7 @@ export default function FileUploader({
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
-    
+   
   }, [reload]);
   React.useEffect(() => {
     //   setShown(shown)
@@ -109,6 +118,8 @@ export default function FileUploader({
       // Add the file name to the fileNames state
       setFileNames([...fileNames, e.target.files[0].name]);
 
+
+
       setViewImage(true);
     });
   };
@@ -118,15 +129,17 @@ export default function FileUploader({
       throw new Error('No Document Is Selected To Upload.');
     }
 
-    handleUploadattchment(images);
+    handleUploadattchment(images ,fileNames);
     handleUploadattchmentFileName(fileNames);
   };
 
   //   Method to delete the images that is selected
 
   const deleteImage = (index) => {
+   
     images.splice(index, 1);
     setImages([...images]);
+    console.log(images.length ,images)
   };
 
   return (
@@ -172,12 +185,12 @@ export default function FileUploader({
                       style={{ display: 'flex', flexDirection: 'column' }}
                     >
                       {viewImage
-                        ? images.map((image, index) => (
+                        ? images?.map((image, index) => (
                             <div
                               key={index}
                               style={{ marginLeft: '5px', color: '#000', marginBottom: '10px' }}
                             >
-                              {previousData ?previousData[index].landlordFileName : fileNames[index]}
+                              {fileNames[index]}
                               <Iconify
                                 id="icon-delete-image"
                                 onClick={() => deleteImage(index)}

@@ -160,7 +160,11 @@ export default function MyCompoff({ currentUser ,}) {
 
   const [del, setDel]= React.useState({
 
-    compensatoryRequestId:"",
+    
+     employeeId:"ibm4",
+      companyId:"COMP2",
+      compensantoryRequestId:0
+  
        
 
   })
@@ -177,7 +181,7 @@ export default function MyCompoff({ currentUser ,}) {
         console.log("delete")
         setDel(prevState => ({
               ...prevState,
-              compensatoryRequestId:"1",
+              compensantoryRequestId:3,
           }));
 
           handle(del);

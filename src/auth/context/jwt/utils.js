@@ -36,7 +36,6 @@ export const isValidToken = (accessToken) => {
 // ----------------------------------------------------------------------
 
 // export const tokenExpired = (exp) => {
-
 //   let expiredTimer;
 
 //   const currentTime = Date.now();

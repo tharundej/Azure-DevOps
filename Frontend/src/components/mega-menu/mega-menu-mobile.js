@@ -29,8 +29,7 @@ export default function MegaMenuMobile({ data, open, action, onOpen, onClose }) 
   useEffect(() => {
     if (open) {
       onClose();
-    }
-    
+    }    
   }, [pathname]);
 
   return (

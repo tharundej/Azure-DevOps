@@ -1,0 +1,9 @@
+.css-1s13gk4-MuiPaper-root-MuiDialog-paper{
+    width : 400px !important
+}
+.MuiDialogTitle-root+.css-1ivg71h-MuiDialogContent-root{
+    padding-top: 0 !important;
+}
+/* .custom-dialog-width {
+    width: 400px !important;
+  } */

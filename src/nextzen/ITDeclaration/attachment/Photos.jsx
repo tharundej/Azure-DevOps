@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import axios from 'axios';

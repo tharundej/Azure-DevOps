@@ -68,7 +68,7 @@ export default function OnBoardForm() {
     }
     else if(activeStep+1===4){
      
-      childref.current.childFunctionExperience()
+      childref.current.childFunctionDocuments()
 
     }
 

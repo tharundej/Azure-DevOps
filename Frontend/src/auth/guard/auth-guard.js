@@ -41,8 +41,7 @@ export default function AuthGuard({ children }) {
   }, [authenticated, method, router]);
 
   useEffect(() => {
-    check();
-    
+    check();    
   }, []);
 
   if (!checked) {
