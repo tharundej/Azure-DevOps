@@ -31,7 +31,27 @@ const employmentTypeOptions=[
 
 ]
 
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData}) => {
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+
+
+const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation}) => {
+
+  const [locations,setLocations]=useState([])
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const locations1 = await ApiHitLocations();
+        setLocations(locations1);
+        //console.log(locations, 'locations');
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+  
+    fetchLocations();
+  }, []);
+
   const [type,setType]=useState({label:"Permanent",id:'1'})
     const [currentUser,setcurrentUser]=useState()
 
@@ -207,6 +227,25 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData}) => {
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
+
+              <Grid md={6} xs={12} fullWidth item>
+              {console.log(locations,'editlocations')}
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={locations}
+                value={userlocation}
+                getOptionLabel={(option) => option.locationName}
+                onChange={(e,newvalue)=>{
+                
+                
+                
+              
+                }}
+                sx={{ width: 200 }}
+                renderInput={(params) => <TextField {...params} label="Location" />}
+          />
+              </Grid>
              <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
@@ -735,5 +774,6 @@ export default EmployeeAboutEdit
 EmployeeAboutEdit.propTypes = {
     open: PropTypes.string,
     handleEditClose:PropTypes.func,
-    currentUserData:PropTypes.object
+    currentUserData:PropTypes.object,
+    userlocation:PropTypes.object
   };
