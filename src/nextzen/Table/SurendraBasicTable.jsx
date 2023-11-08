@@ -247,7 +247,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims
-      url: `http://192.168.1.192:3001/erp/${endpoint}`,
+      url: `http://192.168.1.199:3001/erp${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
