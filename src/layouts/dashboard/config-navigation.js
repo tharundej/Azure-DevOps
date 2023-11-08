@@ -451,6 +451,11 @@ export function useNavData() {
             path: paths.dashboard.balancesheet.balancesheet,
             icon: ICONS.dashboard,
           },
+          {
+            title: t('Expenses'),
+            path: paths.dashboard.expenses.expenses,
+            icon: ICONS.dashboard,
+          },
         ],
       },
     ],

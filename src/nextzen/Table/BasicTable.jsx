@@ -86,6 +86,9 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+import FuelHead from '../expenses/FuelHeader';
+import VehicleHead from '../expenses/VehicleHeader';
+import OtherExpensesHead from '../expenses/OtherExpensesHeader';
 
 const defaultFilters = {
   name: '',
@@ -393,6 +396,15 @@ const BasicTable = ({ endpoint, defaultPayload, headerData, rowActions, bodyData
           )}
           {filterName === 'FactoryHead' && (
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'FuelHead' && (
+            <FuelHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'VehicleHead' && (
+            <VehicleHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'OtherExpensesHead' && (
+            <OtherExpensesHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />

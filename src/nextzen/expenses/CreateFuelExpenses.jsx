@@ -13,7 +13,7 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-export default function CreateFactory({ currentUser, handleClose }) {
+export default function CreateFuelExpenses({ currentUser, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -75,7 +75,7 @@ export default function CreateFactory({ currentUser, handleClose }) {
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Factory</DialogTitle>
+        <DialogTitle>Add New Fuel Expense</DialogTitle>
 
         <DialogContent>
           <Box
@@ -88,15 +88,14 @@ export default function CreateFactory({ currentUser, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="name" label="Name" />
-            <RHFTextField name="emailID" label="Email ID" />
-            <RHFTextField name="phoneNo" label="Phone No" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="bankName" label=" Bank Name" />
-            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
-            <RHFTextField name="accountNo" label="Account No" />
-            <RHFTextField name="ifscCode" label="IFSC Code" />
-            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFTextField name="factoryName" label="Factory Name" />
+            <RHFTextField name="date" label="Date" />
+            <RHFTextField name="invoice" label="Invoice" />
+            <RHFTextField name="vehicleNo" label="Vehicle No." />
+            <RHFTextField name="vehicleType" label="Vehicle Type" />
+            <RHFTextField name="advanceAmount" label="Advance Amount" />
+            <RHFTextField name="balanceAmount" label="Balance Amount" />
+            <RHFTextField name="totalAmount" label="Total Amount" />
             <RHFAutocomplete
               name="status"
               id="status-autocomplete"
@@ -123,7 +122,7 @@ export default function CreateFactory({ currentUser, handleClose }) {
   );
 }
 
-CreateFactory.propTypes = {
+CreateFuelExpenses.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.any,
 };
