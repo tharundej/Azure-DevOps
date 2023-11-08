@@ -13,7 +13,9 @@ import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
 import ReusableTabs from '../tabs/ReusableTabs';
 import SalaryAdvanceForm from './SalaryAdvaceForm';
-
+import { baseUrl } from '../global/BaseUrl';
+import axios from 'axios';
+import {useSnackbar} from '../../components/snackbar';
 const bull = (
   <Box
     component="span"
@@ -24,7 +26,7 @@ const bull = (
 );
 
 export default function SalaryAdvace() {
-   
+    const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
 
         // {
@@ -62,10 +64,10 @@ export default function SalaryAdvace() {
     
       const actions = [
     
-        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveLoanDetails"},
-        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveLoanDetails"},
+        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance"},
+        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance"},
     
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateLoanDetails" },
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance" },
     
     
       ];
@@ -111,6 +113,45 @@ export default function SalaryAdvace() {
       "orderBy": ""
     }
   }
+
+  const onClickActions=(rowdata,event)=>{
+    console.log(rowdata,"rowdataa",event)
+    if(event?.name==="Approve" || event?.name==="Reject")
+    {
+      handleSalaryApprove(rowdata,event)
+    }
+    else if (event?.name==="Edit"){
+        handleEditLoanForm(rowdata)
+    }
+  
+  }
+
+  const handleSalaryApprove=(rowdata,event)=>{
+    var payload =
+    {
+      "employeeID":"info4",
+      "salaryAdvanceID":rowdata?.SalaryAdvanceID,
+      "paidAmount":rowdata?.paidAmount,
+      "commentStatus":rowdata?.commentStatus,
+      "status":event?.id,
+      "paymentStatus":rowdata?.paymentStatus
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    url: baseUrl + `/approveSalaryAdvance`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+      console.log(error);
+    });
+  
+  }
       
   return (
     <>
@@ -141,7 +182,7 @@ endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
 rowActions={actions}
 bodyData="data"
-
+onClickActions={onClickActions}
 />  
     </>
   );

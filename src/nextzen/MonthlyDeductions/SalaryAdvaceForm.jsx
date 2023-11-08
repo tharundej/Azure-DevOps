@@ -54,7 +54,7 @@ export default function SalaryAdvanceForm({ currentUser,handleClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    requestAmount: Yup.string(),
+    requestAmount: Yup.number(),
     // start_date: Yup.string(),
     // end_date: Yup.string(),
     // due_date: Yup.string().required('First Name is Required'),
@@ -107,9 +107,11 @@ const [sendData, setSendData] = useState({
 
       const response = await instance.post('addSalaryAdvance', data).then(
         (successData) => {
+          enqueueSnackbar(successData?.data?.message,{variant:'success'})
           console.log('sucess', successData);
         },
         (error) => {
+          enqueueSnackbar(error?.data?.Message,{variant:'Error'})
           console.log('lllll', error);
         }
       );

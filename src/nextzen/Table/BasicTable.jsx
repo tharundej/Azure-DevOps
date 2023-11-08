@@ -259,26 +259,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   const handleEditRow = (rowData,eventData) => {
     onClickActions(rowData,eventData);
-    if (eventData?.type === "/serviceCall"){
-     console.log("servicecall")
-    }
-    else if (eventData?.type === "edit"){
-      buttonFunction(rowData);
-      
-      console.log("servce call will called for edit")
-    }
-    else if (eventData?.type === "delete"){
-      deleteFunction(rowData);
- 
-      console.log("servce call will called for delete")
-    }
-    else{
-      console.log("servce call error")
-    }
- 
- 
-   
- 
   }
  
   const handleFilterStatus = useCallback(
