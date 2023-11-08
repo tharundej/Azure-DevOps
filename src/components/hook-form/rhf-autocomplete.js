@@ -16,8 +16,10 @@ export default function RHFAutocomplete({ name, label, placeholder, helperText, 
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
+          
           onChange={(event, newValue) => {setValue(name, newValue, { shouldValidate: true })}}
           renderInput={(params) => (
+            // console.log(params),
             <TextField
               label={label}
               placeholder={placeholder}
