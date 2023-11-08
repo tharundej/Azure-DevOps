@@ -43,7 +43,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": "INFO29"
+        "employeeID": "info2"
       });
        
       const config = {
@@ -53,7 +53,6 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json', 
-          'Cookie': '.Tunnels.Relay.WebForwarding.Cookies=CfDJ8M67rYfw57hCj5sJjtQyecHRP-MlNI5uDkjwk83Wo2eKfP0o67oOafW3-I1VC5LjZgdyZoWLT7e5xaBW370utqAQIfitAZWusIwwc4JcLu2Sf3qfxjwiDmUaIGlzdVijeyWgN6Y0eyrYG0pTE78qHfvCKXDQI4AptAhIEOoucE-xmRiDys7GA8c70-Gb-doYn6Ya-ukvVD8Q49KJxDOD-WqGkhCr_skieWJYHJnCxnVtMsvfDKAOeklzjBMIibAfb5c8vIBM9OlZdc5MX1RLhPFiHYBRBL7lp-LtH_6muOnK45zFlZ8ZQb_RS1jKawf6rWox4w_xi8frutwJldMuBsxorByg3PMEUxZ_9Z2M12A5gF8xi1Buf4TSLTHp2gQAD52XDYHKVvU7ysuMgssrpQBJigvC8lV05MTycAdcjF0Us5GvdxkPs2gQnx1JJJrgx4iETPP-3iB1NGckqt_X8_77J15kHioxyeuu-ozfcJT5yMCE7yNZBfDw4nLXYrt51pux9ah7b2E_emhepIwbKiiK_1-dKa90kHG6t1cpOSEgvfm_McLEUp1dMwfU5i6-xvF8Pt2K6PSm37-bHfhVaacVRl5dWVCLtgT6Q1y0nOZxrEczcElltp8TSaGLOEvmj6DJagjO4lhNnDnda2KA8kBU_QvO9Kk65Hj34FDBsrwcuVAfF6QxR2MDDMojHc47usSJu_RonBw5_K_pcF84aeeqRkko_eJd3WJQ3bDcwumyxcHw43j9O5h1JVvCZShftF54UYw-5OD9dVwOjueLeTgUsrZRMY02Ayn7nXQ8JEOLX2anDO8DeJXKYoQ5EMfJz3Dhz12uwNW39l8AZMFyUuphCcBP8QIU6FsIM0dJkFVUUa99bfPc5L7_jO4x-6irfyFr-AjkKTih4dbR0nGVcU0'
         },
         data : data
       };

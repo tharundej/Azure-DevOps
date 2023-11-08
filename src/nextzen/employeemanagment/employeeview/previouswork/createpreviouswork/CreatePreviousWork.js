@@ -8,6 +8,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 import {
     TextField,
     Button,
@@ -55,9 +57,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
     }
     setDefaultValues(arr)
     console.log(defaultValues)
-   setTimeout(()=>{
-    onSave();
-   },[4000])
+    onSave()
 
 
 
@@ -77,7 +77,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
         method: 'post',
         maxBodyLength: Infinity,
-        url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        url: `${baseUrl}/${endpoint}`,
+       // url:'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
@@ -384,6 +385,65 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                </Grid>
+
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                    onChange={(date) => {
+
+                      const newArray = [...defaultValues];
+
+                      
+              
+                     
+                       newArray[index] = {
+                         ...newArray[index],
+                         endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                     }
+              
+                     setDefaultValues(newArray)
+                     
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="End Date"
+                  />
+                  
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                    onChange={(date) => {
+
+                      const newArray = [...defaultValues];
+
+                      
+              
+                     
+                       newArray[index] = {
+                         ...newArray[index],
+                         startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                     }
+              
+                     setDefaultValues(newArray)
+                     
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="End Date"
+                  />
+                  
                 </Grid>
                 <Grid md={6} xs={12} item>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
