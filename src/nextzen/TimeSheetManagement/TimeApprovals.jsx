@@ -39,7 +39,7 @@ export default function TimeApprovals() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -56,40 +56,32 @@ export default function TimeApprovals() {
         { id: "employee_id", label: "Employe Id", width: 180, type: "text" },
         { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "project_name", label: "project_name", width: 220, type: "text" },    
-        { id: "activity_name", label: "Activity Name", width: 100, type: "text" },
-        { id: "duration", label: "duration", width: 100, type: "text" },
+        { id: "project_name", label: "Project Name", width: 220, type: "text" },    
+        { id: "activity_name", label: "Activity Name", width: 220, type: "text" },
+        { id: "duration", label: "Duration", width: 100, type: "text" },
         { id: "hours_worked", label: "Hours Worked", width: 100, type: "text" },
-        { id: "status", label: "status", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
       ];
     
      const defaultPayload={
-      
-    "employee_id": "E1",      // Replace with the actual employee ID
-
-    "page": "1",
-
-    "limit": "2",
-
-    "sort_by": "employee_name",  // Replace with the desired sorting field
-
-    "sort_order": "asc",         // Replace with "asc" or "desc"
-
- 
-
-    "search": "",            // Replace with the search term
-
-    "filter_employee_name": "",  // Replace with the desired filter values
-
-    "filter_project_name": "",
-
-    "filter_activity_name": "",
-
-    "filter_status": ""
-     }
+      "count": 2,
+      "page": 1,
+      "search": "",
+      "employee_id": "E1",
+      "externalFilters": {
+        "employee_name": "",
+        "project_name": "",
+        "activity_name": "",
+        "status": ""
+      },
+      "sort": {
+        "key": 1,
+        "orderBy": "project_name"
+      }
+    }
     
       const actions = [
     
@@ -101,33 +93,7 @@ export default function TimeApprovals() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          Project_Id: "Aswin!23",
-
-          employee_id: 'Aswi!23',
-          
-          employee_name: "Aswin",
-
-          project_name: "BellErp",
-
-    
-          activity_name: "Coding",
-    
-          duration: "2hour 40minutes",
-
-          hours_worked: "122hour 40minutes",
-
-          status: "Approved",
-          
-    
-        },
-    
-      ];
+  
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -143,16 +109,17 @@ export default function TimeApprovals() {
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
  
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
     <BasicTable
 
 headerData={TABLE_HEAD}
-
+filterName='ApprovalSearchFilter'
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
-endpoint='timeSheetApprovals'
+endpoint='/timeSheetApprovals'
+bodyData="timesheets"
 
 rowActions={actions}
 

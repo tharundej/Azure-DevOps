@@ -3,6 +3,7 @@ import {Card,CardContent,Typography,IconButton,Button,Grid} from '@mui/material'
 import Iconify from 'src/components/iconify';
 import FilesGrid from '../files/FilesGrid';
 import CreateEducation from './createeducation/CreateEducation';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import axios from 'axios';
 
@@ -85,7 +86,8 @@ const EmployeeEducation = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getEducationDetails',
+      // url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getEducationDetails',
+      url: `${baseUrl}/getEducationDetails`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'

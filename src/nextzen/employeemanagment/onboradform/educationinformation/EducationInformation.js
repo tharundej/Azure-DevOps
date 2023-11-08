@@ -33,6 +33,7 @@ import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const   EducationInformation=forwardRef((props,ref)=> {
   const [employeeData,setEmployeeData]=useState([ {
@@ -78,7 +79,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
      let config = {
        method: 'post',
        maxBodyLength: Infinity,
-       url: `https://2d56hsdn-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+       url: `${baseUrl}${endpoint}`,
        headers: { 
          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
          'Content-Type': 'application/json'

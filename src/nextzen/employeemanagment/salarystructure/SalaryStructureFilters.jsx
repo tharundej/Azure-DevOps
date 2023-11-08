@@ -246,10 +246,10 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
   };
   const [search, setSearch]=useState("");
 
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
+    const handleSearch = (e) => {
+      setSearch(e?.target?.value)
+        searchData(e?.target?.value)
+        // console.log(searchTerm,"search ........")
         };
   return (
     <>

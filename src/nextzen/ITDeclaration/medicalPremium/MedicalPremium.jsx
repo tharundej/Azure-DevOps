@@ -26,7 +26,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+// import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
 
@@ -49,6 +49,7 @@ const headings = [
 
 
 export default function MedicalPremium() {
+  const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/'
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -79,8 +80,7 @@ export default function MedicalPremium() {
     policyCitizenshipType: '',
     amountOfPremium: '',
     eligibleDeduction: '',
-    fileName: [],
-    fileContent: '',
+    documents :[]
   });
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
@@ -98,16 +98,36 @@ export default function MedicalPremium() {
   const closeAttchementDilod = () =>{
     setOpenAttchementDilog(false)
   }
-  const handleUploadattchment =(data)=>{
-    attachedDocumment = data
-   setAttachedDocument(attachedDocumment)
-  //  setFormData({ ...formData, [fileContent] :  attachedDocumment});
-   setFormData((prevFormData) => ({
-    ...prevFormData,
-    fileContent: attachedDocumment,
-  }));
-   console.log(attachedDocumment ,data)
- }
+  const handleUploadattchment = (files, fileNames) => {
+    console.log(files, fileNames, "getting from uploader ");
+  
+    // Create a new array to store the objects
+    const newArray = [];
+  
+    // Ensure both arrays have the same length
+    if (files.length === fileNames.length) {
+      for (var i = 0; i < files.length; i++) {
+        var obj = {
+          fileContent: files[i],
+          fileName: fileNames[i]
+        };
+        newArray.push(obj);
+      }
+  
+      // Update medicalTableDataDoc by merging with the existing array of objects
+      setMedicalTableDataDoc((prevFormData) => ([
+        ...prevFormData,
+          ...newArray
+      ]));
+  
+      console.log(medicalTableDataDoc, "updated");
+    } else {
+      console.error("Arrays must have the same length");
+    }
+  };
+  
+
+ console.log(medicalTableDataDoc ,"updated22")
  const handleUploadattchmentFileName =(data)=>{
    attachedDocummentFileName = data
    setAttachedDocumentFileName(attachedDocummentFileName)
@@ -158,7 +178,7 @@ export default function MedicalPremium() {
   const saveMedicalDetails = async () => {
     const payload = {
       companyID: 'COMP1',
-      employeeID: 'info4',
+      employeeID: 'INFO21',
       type: formData?.type,
       policyNumber: formData?.policyNumber,
       dateOfCommencementOfPolicy: '2023-10-15',
@@ -189,7 +209,7 @@ export default function MedicalPremium() {
         if (response.status === 200) {
           setISReloading(!isreloading);
           setSnackbarSeverity('success');
-          setSnackbarMessage('Rent details saved successfully!');
+          setSnackbarMessage('Medical Insurance details saved successfully!');
           setSnackbarOpen(true);
           console.log('success');
         }
@@ -197,7 +217,7 @@ export default function MedicalPremium() {
       .catch((error) => {
         setOpen(true);
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving rent details. Please try again.');
+        setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
         setSnackbarOpen(true);
         console.log(error);
       });
@@ -207,7 +227,7 @@ export default function MedicalPremium() {
   const editMedicalDetails = async () => {
     const payload = {
       companyID: 'COMP1',
-      employeeID: 'info4',
+      employeeID: 'INFO21',
       data: [
         {
           ID: 3,
@@ -222,14 +242,13 @@ export default function MedicalPremium() {
           policyCitizenshipType: formData?.policyCitizenshipType,
           amountOfPremium: formData?.amountOfPremium,
           eligibleDeduction: formData?.eligibleDeduction,
-          fileName: '',
-          fileContent: '',
+          documents:medicalTableDataDoc
         },
       ],
     };
 
     const config = {
-      method: 'put',
+      method: 'post',
       maxBodyLength: Infinity,
       url: baseUrl +'updateMedicalInsuranceDetails',
       headers: {
@@ -245,7 +264,7 @@ export default function MedicalPremium() {
         if (response.status === 200) {
           setISReloading(!isreloading);
           setSnackbarSeverity('success');
-          setSnackbarMessage('Rent details saved successfully!');
+          setSnackbarMessage('Medical Insurance  Updated successfully!');
           setSnackbarOpen(true);
           console.log('success');
         }
@@ -253,7 +272,7 @@ export default function MedicalPremium() {
       .catch((error) => {
         setOpen(true);
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving rent details. Please try again.');
+        setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
         setSnackbarOpen(true);
         console.log(error);
       });
@@ -261,7 +280,7 @@ export default function MedicalPremium() {
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: 'info2' };
+    const payload = { employeeId: 'INFO21' };
 
     const config = {
       method: 'post',
@@ -292,7 +311,7 @@ export default function MedicalPremium() {
   };
   console.log(medicalTableData, 'resultsreults');
   const getMedicalPremumDetailsDocs = async () => {
-    const payload = { employeeId: 'info2' };
+    const payload = { employeeId: 'INFO21' };
 
     const config = {
       method: 'post',
@@ -311,6 +330,7 @@ export default function MedicalPremium() {
         if (response.status === 200) {
           const rowsData = response?.data?.data;
           setMedicalTableDataDoc(rowsData);
+          
           console.log(JSON.stringify(response?.data), 'setMedicalTableDataDoc');
 
           console.log(response);
@@ -320,6 +340,30 @@ export default function MedicalPremium() {
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
+  };
+
+  // handle edit 
+  const handleEdit = (rowData) => {
+    console.log(rowData)
+    setFormData({
+      companyID: 'COMP1',
+      employeeID: 'INFO21',
+      type: rowData.type,
+      policyNumber: rowData.policyNumber,
+      dateOfCommencementOfPolicy: '2023-10-15', // You may need to update this value
+      insuredPersonName: rowData.insuredPersonName,
+      relationshipType: rowData.relationshipType,
+      payMode: rowData.payMode,
+      policyCitizenshipType: rowData.policyCitizenshipType,
+      amountOfPremium: rowData.amountOfPremium,
+      eligibleDeduction: rowData.eligibleDeduction,
+      // Add other fields as needed
+    });
+
+    // Set the attached documents if available
+    if (rowData.documents && rowData.documents.length > 0) {
+      setMedicalTableDataDoc([...rowData.documents]);
+    }
   };
 
   const snackBarAlertHandleClose = (event, reason) => {
@@ -338,7 +382,7 @@ export default function MedicalPremium() {
     fetchData();
     
   }, [isreloading]);
-  console.log(medicalTableData?.MedicalDocs , "medicalDATA", medicalTableData?.MedicalDocs?.length)
+  console.log(medicalTableDataDoc, "doc", medicalTableDataDoc)
   return (
     <div>
       <Snackbar
@@ -359,7 +403,11 @@ export default function MedicalPremium() {
         </Alert>
       </Snackbar>
       <FormProvider {...methods}>
-        <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+        <Grid container spacing={2} >
+
+
+          {/* grid 1 */}
+          <Grid item container spacing={2} xs={8} style={{ marginTop: '1rem' }}>
           {/* search and filter  */}
           {/* <Grid
             container
@@ -530,7 +578,7 @@ export default function MedicalPremium() {
                 <Button className="button" onClick={attchementHandler}>Attchement</Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={saveMedicalDetails}>
+                <Button className="button" onClick={editMedicalDetails}>
                   Save
                 </Button>
               </Grid>
@@ -541,6 +589,74 @@ export default function MedicalPremium() {
           </Grid>
           {/* card */}
         </Grid>
+          {/* grid 1 end  */}
+
+          {/* grid 2 */}
+<Grid item xs={4}>
+<Grid
+          item
+          container
+          xs={12}
+          spacing={2}
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
+          style={{ marginBottom: '1rem', marginTop: '1rem' }}
+        >
+          <Grid xs={6}>
+            <Grid
+              item
+              container
+              xs={12}
+              style={{
+                padding: '10px',
+                backgroundColor: '#2196f3',
+                color: 'white',
+                border: 'none',
+              }}
+            >
+              <Grid item xs={6}>
+                Total Decduction U/S 80D
+              </Grid>
+              <Grid item xs={6}>
+                Overal Deduction
+              </Grid>
+            </Grid>
+            <Divider style={{ backgroundColor: 'black' }} />
+            <Grid item container xs={12} style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Grid item xs={6}>
+                Self Spouse & Child
+              </Grid>
+              <Grid item xs={6}>
+                0
+              </Grid>
+            </Grid>
+            <Divider style={{ backgroundColor: 'black' }} />
+            <Grid item container xs={12} style={{ padding: '10px' }}>
+              <Grid item xs={6}>
+                Parent(s)
+              </Grid>
+              <Grid item xs={6}>
+                0
+              </Grid>
+            </Grid>
+            <Divider style={{ backgroundColor: 'black' }} />
+            <Grid item container xs={12} style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Grid item xs={6}>
+                Total Deduction
+              </Grid>
+              <Grid item xs={6}>
+                0
+              </Grid>
+            </Grid>
+            <Divider style={{ backgroundColor: 'black' }} />
+          </Grid>
+        </Grid>
+</Grid>
+          {/* grid 2 end  */}
+
+        </Grid >
+      
 
         <TableContainer component={Paper}>
           <Table>
@@ -577,7 +693,9 @@ export default function MedicalPremium() {
                     <TableCell style={{ textAlign: 'center'}}>{row.amountOfPremium}</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.eligibleDeduction}</TableCell>
 
-                    <TableCell style={{ textAlign: 'center'}} >{row.action}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                <Button onClick={() => handleEdit(row)}>Edit</Button>
+              </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
