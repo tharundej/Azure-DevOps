@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MyShiftSearchFilter({filterData,filterOptions}){
+export default function MyShiftSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -98,6 +98,14 @@ export default function MyShiftSearchFilter({filterData,filterOptions}){
   const [dropdown,setDropdown]=useState({
 
   })
+
+  const [search, setSearch]=useState("");
+
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
 
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
@@ -271,7 +279,8 @@ export default function MyShiftSearchFilter({filterData,filterOptions}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch} 
+            // onChange={handleSeacrch}
+            onChange={(e) => handleSearch(e.target.value)}
 
             />
             </Grid>
