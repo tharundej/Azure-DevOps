@@ -149,7 +149,7 @@ const Options = [
     try{
    const data = JSON.stringify({
       "company_id": "COMP2",
-      "from_shift_group": 4,
+      "from_shift_group": 3,
       "to_shift_group": 4,
       "search": ""
     });
