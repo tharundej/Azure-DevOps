@@ -111,15 +111,16 @@ useEffect(()=>{
   const holidayslist = (e) => {
     console.log("holidaysss")
     const payload = {
-      company_id: "C1"
+      companyId: "C1"
+      // companyId:localStorage.getItem('companyID')
     };
    
     
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
-    url:baseUrl + `/holidayList`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
+    // url:baseUrl + `/holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -130,7 +131,7 @@ useEffect(()=>{
     });
   };
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
-   
+   console.log(selectEventId,"selevctedeventt",currentEvent)
   useEffect(() => {
     onInitialView();
   }, [onInitialView]);
@@ -150,18 +151,19 @@ useEffect(()=>{
     dateError,
   });
   const updatedEvents = dataFiltered?.map((event) => ({
-    title: event.leavetype_name,
-    start: event.from_date,
-    end: event.to_date,
+    title: event.leaveTypeName,
+    start: event.fromDate,
+    end: event.toDate,
+    id:event.leaveId,
     type:"leave",
     color:event.color
   }));
  
   const HolidayEvents = listOfHolidays?
   listOfHolidays?.map((event)=>({
-    title : event.holiday_name,
-    start: event.holiday_date,
-    end: event.holiday_date,
+    title : event.holidayName,
+    start: event.holidayDate,
+    end: event.holidayDate,
     type:"holiday"
    }))
 :[]
@@ -195,14 +197,15 @@ useEffect(()=>{
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
     const payload = {
-        company_id: "C1"
+        companyId: "C1"
+        // companyId:localStorage.getItem('companyID')
     }
    
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `/getLeaveType`,
-      // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      // url: baseUrl + `/getLeaveType`,
+      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -423,7 +426,7 @@ const handleCancel = async()=>{
               eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}
-             // eventClick={onClickEvent}
+             eventClick={onClickEvent}
               height={smUp ? 720 : 'auto'}
               eventDrop={(arg) => {
                 onDropEvent(arg, updateEvent);
@@ -455,7 +458,7 @@ const handleCancel = async()=>{
         }}
       >
         <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> {currentEvent?.leave_id ? 'Edit Event' : 'Leave Request'}</>}
+          {openForm && <> {selectEventId ? 'Edit Event' : 'Leave Request'}</>}
         </DialogTitle>
         <CalendarForm
           currentEvent={currentEvent}

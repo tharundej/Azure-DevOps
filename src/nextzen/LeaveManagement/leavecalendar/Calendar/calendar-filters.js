@@ -127,7 +127,7 @@ export default function CalendarFilters({
         {orderBy(events, ['to_date_unix'], ['desc']).map((event) => (
           <ListItemButton
             key={event.id}
-            onClick={() => onClickEvent(`${event.leave_id}`)}
+            onClick={() => onClickEvent(`${event.id}`)}
             sx={{
               py: 1.5,
               borderBottom: (theme) => `dashed 1px ${theme.palette.divider}`,
@@ -149,7 +149,7 @@ export default function CalendarFilters({
               disableTypography
               primary={
                 <Typography variant="subtitle2" sx={{ fontSize: 13, mt: 0.5 }}>
-                  {event.leavetype_name}
+                  {event.leaveTypeName}
                 </Typography>
               }
               secondary={

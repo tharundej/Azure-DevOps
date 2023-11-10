@@ -52,14 +52,15 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
     const payload = {
-        company_id: "C1"
+        companyId: "C1"
+        // companyId:localStorage.getItem('companyID')
     }
    
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `/getLeaveType`,
-      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      // url: baseUrl + `/getLeaveType`,
+      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   

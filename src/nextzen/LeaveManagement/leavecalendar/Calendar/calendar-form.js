@@ -82,19 +82,19 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     const secondhalfValue = selectedValue === "second_half" ? "1" : "0";
 
     const eventData = {
-      leave_type_id:data?.leave_type_id,
-      company_id: "C1",
-      employee_id:"E1",
+      leaveTypeId:data?.leave_type_id,
+      companyId: "C1",
+      employeeId:"E1",
       comments: data?.comments,
-      apply_date: "",
-      from_date: formatDateToYYYYMMDD(datesUsed?.fromDate),
-      to_date: formatDateToYYYYMMDD(datesUsed?.toDate),
+      applyDate: "",
+      fromDate: formatDateToYYYYMMDD(datesUsed?.fromDate),
+      toDate: formatDateToYYYYMMDD(datesUsed?.toDate),
       status:data?.status,
       fullday:fulldayValue,
       firsthalf:firsthalfValue,
       secondhalf:secondhalfValue,
       attachment: attachmentString,
-      status_date:"",
+      statusDate:"",
       color:(data?.leave_type_id===1)?"#0c1f31":(data?.leave_type_id===2)?"#d4a085":(data?.leave_type_id===3)?"#c9de8c":"#ffbed1"
     };
     try {
@@ -124,13 +124,13 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
   const onDelete = useCallback(async () => {
     try {
-      await deleteEvent(`${currentEvent?.leave_id}`);
+      await deleteEvent(`${currentEvent?.leaveId}`);
       enqueueSnackbar('Delete success!');
       onClose();
     } catch (error) {
       console.error(error);
     }
-  }, [currentEvent?.leave_id, enqueueSnackbar, onClose]);
+  }, [currentEvent?.leaveId, enqueueSnackbar, onClose]);
 
   
   function getBase64(file) {
@@ -172,15 +172,16 @@ useEffect(()=>{
 const getLeaveList = () => {
   setLoader(true);
   const payload = {
-    company_id: "C1",
-     employee_id:"E1"
-  
+    companyId: "C1",
+    employeeId:"E1"
+    // companyId: localStorage.getItem('companyID'),
+    // employeeId: localStorage.getItem('employeeID')
   }
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: baseUrl + `/getLeaveType`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+    // url: baseUrl + `/getLeaveType`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
@@ -197,16 +198,17 @@ const getLeaveList = () => {
 const AvailableLeaves = () => {
   setLoader(true);
   const payload = {
-    company_id: JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
-     employee_id:JSON.parse(JSON.stringify(localStorage.getItem('employeeID')))
-  
+    // companyId: localStorage.getItem('companyID'),
+    //  employeeId:localStorage.getItem('employeeID')
+    companyId:"C1",
+    employeeId:"E1"
   }
  
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: baseUrl + `/availableLeave`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
+    // url: baseUrl + `/availableLeave`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 
@@ -231,14 +233,14 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
 <Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
   {availableLeaves?.balances.map((itm)=> (
-    <Typography>{itm?.leave_type_name} : {itm?.leave_balance}</Typography>
+    <Typography>{itm?.leaveTypeName} : {itm?.leaveBalance}</Typography>
   ))}
 </Stack>
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leave_type_id" label="Leave Type">
               {listLeave?.map((status) => (
-                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
-                  {status.leave_Type_Name}
+                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}>
+                  {status.leaveTypeName}
                 </MenuItem>
               ))}
             </RHFSelect> 
@@ -312,7 +314,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
       </Stack>
 
       <DialogActions>
-        {!!currentEvent?.leave_id && (
+        {!!currentEvent?.leaveId && (
           <Tooltip title="Delete Event">
             <IconButton onClick={onDelete}>
               <Iconify icon="solar:trash-bin-trash-bold" />

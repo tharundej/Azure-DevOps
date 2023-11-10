@@ -38,38 +38,19 @@ import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 export default function SalaryAdvanceForm({ currentUser,handleClose }) {
-  
-  const [datesUsed, setDatesUsed] = useState({
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-    due_date: dayjs(new Date()),
-    // activity_name:[]
-  });
-  const [selectedActivity, setSelectedActivity] = useState([]);
-
-  const handleSelectChange = (event, values) => {
-    setSelectedActivity(values);
-  };
+ 
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
     requestAmount: Yup.number(),
-    // start_date: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
     commentStatus: Yup.string(),
-   
-   
   });
 
   const defaultValues = useMemo(
     () => ({
    
         requestAmount: currentUser?.requestAmount || '',
-        start_date: currentUser?.start_date || '',
-        end_date: currentUser?.end_date || '',
-        due_date: currentUser?.due_date || '',
         commentStatus: currentUser?.commentStatus || '',
   
    
@@ -100,10 +81,9 @@ const [sendData, setSendData] = useState({
   const onSubmit = handleSubmit(async (data) => {
    
     try {
-      data.companyID = JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
-      data.employeeID = JSON.parse(JSON.stringify(localStorage.getItem('employeeID')));
+      data.companyID = localStorage.getItem('companyID'),
+      data.employeeID = localStorage.getItem('employeeID');
 
-      console.log(data, 'data111ugsghghh');
 
       const response = await instance.post('addSalaryAdvance', data).then(
         (successData) => {

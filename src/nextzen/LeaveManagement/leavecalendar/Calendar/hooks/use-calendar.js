@@ -105,11 +105,14 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
+      console.log(event,"evnetsttss",event.publicId,"idd",event.id)
       onOpenForm();
-      setSelectEventId(event.leave_id);
+      setSelectEventId(event.id);
     },
     [onOpenForm]
   );
+
+  console.log(selectEventId,"selectedeventttid")
 
   const onResizeEvent = useCallback((arg, updateEvent) => {
     const { event } = arg;
