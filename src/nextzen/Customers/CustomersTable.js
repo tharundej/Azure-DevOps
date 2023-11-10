@@ -15,31 +15,14 @@ const CustomersTable = () => {
   ];
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
-  const ApiHit = () => {
-    const data1 = body_for_employee;
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/CustomersDetails',
-      // headers: {
-      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      // },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setBodyContent(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const ApiHit = async () => {
+    try {
+      const response = await getCustomerListAPI(defaultPayload);
+      console.log('location success', response);
+      setBodyContent(response);
+    } catch (error) {
+      console.log('API request failed:', error.message);
+    }
   };
 
   useEffect(() => {
@@ -47,47 +30,25 @@ const CustomersTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const defaultPayload = {
-    count: 5,
+    companyId: 'COMP1',
     page: 0,
-    search: '',
-    fcompanyID: 'COMP1',
-    externalFilters: {
-      fMaritalStatus: '',
-      fBloodGroup: '',
-      fPState: '',
-      fPEmployementType: '',
-      fPdepartmentName: '',
-      fPDesignation: '',
-      fPDesignationGrade: '',
-      fWorkingLocation: '',
-      fjoiningDate: {
-        from: '',
-        to: '',
-      },
-      fDOB: {
-        from: '',
-        to: '',
-      },
-      fofferDate: {
-        from: '',
-        to: '',
-      },
-    },
+    count: 10,
+    search: 'pr',
     sort: {
-      key: 1,
-      orderBy: 'CustomerName',
+      orderby: '',
+      key: 0,
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'CustomerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
-    { id: 'CustomerCompany Name', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
-    { id: ' EmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
-    { id: ' PhoneNo', label: ' Phone No', type: 'text', minWidth: '180px' },
-    { id: 'CustomerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
-    { id: 'GSTNo', label: 'GST No', type: 'text', minWidth: '180px' },
-    { id: 'PANNo', label: 'PAN No', type: 'text', minWidth: '180px' },
-    { id: 'CustomerPANNo', label: 'Customer TAN No', type: 'text', minWidth: '180px' },
+    { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
+    { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
+    { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
+    { id: 'customerPhoneNo', label: ' Phone No', type: 'text', minWidth: '180px' },
+    { id: 'customerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
+    { id: 'customerGstNo', label: 'GST No', type: 'text', minWidth: '180px' },
+    { id: 'customerPanNo', label: 'PAN No', type: 'text', minWidth: '180px' },
+    { id: 'customerTanNo', label: 'Customer TAN No', type: 'text', minWidth: '180px' },
     { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
@@ -97,7 +58,7 @@ const CustomersTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/CustomersDetails"
+        endpoint="/listcustomers"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
