@@ -38,9 +38,9 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   const [dataToCreateOrEdit,setDataForCreateOrEdit]=useState({})
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
-      setEndpoint("updateStatutoryDetails");
-      setDataForCreateOrEdit(employeeStatouryData)
-      console.log('0p',dataToCreateOrEdit)
+      setEndpoint("/updateStatutoryDetails");
+      //setDataForCreateOrEdit(employeeStatouryData)
+      //console.log('0p',dataToCreateOrEdit)
       setStatouryCreateOpen(true);
     }
     const handleEditClose=()=>{
@@ -61,7 +61,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getStatutoryDetailsEmployee',
+        url: `${baseUrl}/getStatutoryDetailsEmployee`,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json'
@@ -71,11 +71,12 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 
         axios.request(config)
         .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         setEmployeeStatouryData(response.data.data)
         })
         .catch((error) => {
         console.log(error);
+        
         });
 
   }
@@ -139,7 +140,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 
  const handleAddStatuory=()=>{
   setDataForCreateOrEdit(dataa)
-  setEndpoint("addStatutoryDetails");
+  setEndpoint("/addStatutoryDetails");
   
   setStatouryCreateOpen(true)
  }
@@ -315,14 +316,15 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         <Typography variant='h5' component="body">Statoury Information</Typography>
 
         </Grid>
-        <Grid item>
-        <Iconify 
-        sx={{cursor: "pointer",color:'orange'}}
-          onClick={()=>{
-            
+        <Grid sx={{cursor: "pointer"}} onClick={()=>{
+            console.log('handle clickeddd')
             handleEdit()
-          }}
-        icon="solar:pen-bold" />
+          }} item>
+        {/* <Iconify 
+        
+          
+        icon="solar:pen-bold" /> */}
+        <Button>Edit</Button>
 
         </Grid>
     </Grid>
@@ -489,9 +491,9 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUser={dataa} endpoint={endpoint}/>
+    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={dataa} endpoint={endpoint}/>
 
-    {employeeStatouryData.accountHolderName==="" && 
+    {employeeStatouryData.employeeID==="" && 
     
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>

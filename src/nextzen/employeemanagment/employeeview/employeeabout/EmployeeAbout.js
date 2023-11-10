@@ -21,6 +21,9 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
@@ -29,6 +32,11 @@ import EmployeeAboutEdit from './EmployeeAboutEdit';
 // ----------------------------------------------------------------------
 
 export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
+  const userlocation={
+    "locationID": 30,
+    "locationName": "location1"
+}
+  const [locations,setLocations]=useState([])
   var currentEmployeeData={};
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
@@ -37,9 +45,89 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
     const handleEditClose=()=>{
         setOpen(false);
     }
-    const [currentEmployee,setCurrentEmployee]=useState({
-      
-    })
+    const [currentEmployee,setCurrentEmployee]=useState("")
+
+    const [dropDownOptions,setDropDownOptions]=useState({})
+    const [dropDownvalue,setDropDownValue]=useState({})
+
+    const funcDropDownValue=(arr,field,id)=>{
+      var retValueArray={}
+      console.log(arr,field,id,"designationID")
+      for(var i=0;arr?.length;i++){
+        if(arr[i][field]===id){
+          return arr[i];
+        }
+      }
+      return {};
+    }
+
+
+    useEffect(() => {
+      if(currentEmployee){
+      const fetchLocations = async () => {
+        const deptObj={
+          companyID:'COMP1',
+          locationID:currentEmployee?.locationID
+        }
+        const desgObj={
+          companyID:'COMP1',
+          departmentID:currentEmployee?.departmentID
+        }
+        const desgGradeObj={
+          companyID:'COMP1',
+          designationID:currentEmployee?.designationID
+        }
+        try {
+          const locations = await ApiHitLocations();
+          const department=await ApiHitDepartment(deptObj);
+          const desgination=await ApiHitDesgniation(desgObj)
+          const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj)
+          const roles= await ApiHitRoles()
+          const manager=await ApiHitManager()
+
+          const arr={
+            locationsOptions:locations,
+            departmentOptions:department,
+            desginationOptions:desgination,
+            desginationGradeOptions:desginationGrade,
+            rolesOptions:roles,
+            managerOptions:manager
+
+
+          }
+          setDropDownOptions(arr);
+
+          const locationValue=funcDropDownValue(locations,'locationID',currentEmployee?.locationID)
+          const departmentValue=funcDropDownValue(department,'departmentID',currentEmployee?.departmentID)
+          const desginationValue=funcDropDownValue(desgination,'designationID',currentEmployee?.designationID)
+          const desginationGradeValue=funcDropDownValue(desginationGrade,'designationGradeID',currentEmployee?.designationGradeID)
+          const rolesValue=funcDropDownValue(roles,'roleID',currentEmployee?.roleID)
+          const managerValue=funcDropDownValue(manager,'managerID',currentEmployee?.reportingManagerID)
+
+          const arrValue={
+            locationValue:locationValue,
+            departmentValue:departmentValue,
+            desginationValue:desginationValue,
+            desginationGradeValue:desginationGradeValue,
+            rolesValue:rolesValue,
+            managerValue:managerValue
+
+          }
+
+
+          setDropDownValue(arrValue);
+          console.log("arrValue", 'locationsdepartmentarr');
+         
+          setLocations(locations);
+          
+        } catch (error) {
+          console.error('Error fetching locations:', error);
+        }
+      };
+    
+      fetchLocations();
+    }
+    }, [currentEmployee]);
 
     const ApiHit=()=>{
       let data = JSON.stringify({
@@ -49,7 +137,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getOnboardingFormDetails',
+        url: `${baseUrl}/getOnboardingFormDetails`,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json', 
@@ -67,16 +155,16 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
         console.log(error);
       });
     }
-  const { logout } = useAuthContext();
-  const popover = usePopover();
-  const[bunkData,setBunkData]=useState({})
-  const [edit,setEdit]=useState(false)
-  const[bunkDataEdit,setBunkDataEdit]=useState({})
-  const [state,setState]=useState({});
-  const [stateOptions,setStateOptions]=useState([]);
-  const [cityOptions,setCityOptions]=useState([])
-  const [city,setCity]=useState({})
-  const router=useRouter()
+      const { logout } = useAuthContext();
+      const popover = usePopover();
+      const[bunkData,setBunkData]=useState({})
+      const [edit,setEdit]=useState(false)
+      const[bunkDataEdit,setBunkDataEdit]=useState({})
+      const [state,setState]=useState({});
+      const [stateOptions,setStateOptions]=useState([]);
+      const [cityOptions,setCityOptions]=useState([])
+      const [city,setCity]=useState({})
+      const router=useRouter()
 
   const handleLogout = async () => {
     try {
@@ -112,7 +200,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} />
+    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>
@@ -450,10 +538,14 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
     </>
   );
 
+
+
+
   const renderPayment = (
     <>
+    {console.log(dropDownvalue,'dropDownvaluedropDownvalue')}
       <CardHeader
-        title="Payment"
+        title="Role"
         action={
           <IconButton>
             <Iconify icon="solar:pen-bold" />
@@ -462,11 +554,11 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
       />
       <Stack direction="row" alignItems="center" sx={{ p: 3, typography: 'body2' }}>
         <Box component="span" sx={{ color: 'text.secondary', flexGrow: 1 }}>
-          Phone number
+          Location :
         </Box>
 
-        {payment?.cardNumber}
-        <Iconify icon="logos:mastercard" width={24} sx={{ ml: 0.5 }} />
+        {dropDownvalue?.locationValue?.locationName}
+      
       </Stack>
     </>
   );
@@ -485,7 +577,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {/* {renderPayment} */}
+      {renderPayment}
     </Card>
   );
 }
