@@ -25,8 +25,22 @@ import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 export default function CreateAssets({ currentUser, handleClose }) {
   const newUserSchema = Yup.object().shape({
-    name: Yup.string(),
-    status: Yup.string(),
+    // locationId: Yup.string().required('location is Required'),
+    assetsName: Yup.string().required('Asset Name is Required'),
+    // assetsType: Yup.string().required('Asset Type is Required'),
+    poNumber: Yup.string().required('PO Number is Required'),
+    // poDate: Yup.date().required('PO Date is Required'),
+    poValue: Yup.number().positive().required('PO Value is Required'),
+    invoiceNumber: Yup.string().required('Invoice Number is Required'),
+    // invoiceDate: Yup.date().required('Invoice Date is Required'),
+    // assetsStartDate: Yup.date().required('Assets Date is Required'),
+    // warrantyDate: Yup.date().required('Warranty Date is Required'),
+    supplierName: Yup.string().required('Supplier Name is Required'),
+    supplierEmailId: Yup.string().required('Supplier Email Id is Required'),
+    supplierContactNumber: Yup.number().required('Supplier Contact Number is Required'),
+    // expiryDate: Yup.date().required('Expiry Date is Required'),
+    // lapseOfWarrantyDate: Yup.date().required('Lapse Of Warranty Date is Required'),
+    totalAmount: Yup.number().positive().required('Total Amount is Required'),
   });
 
   const defaultValues = useMemo(
@@ -51,7 +65,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
       totalAmount: currentUser?.totalAmount || '',
       assetsCondition: currentUser?.assetsCondition || '',
       updatedDate: currentUser?.updatedDate || '',
-      deleteBit: currentUser?.deleteBit || 1,
+      deleteBit: currentUser?.deleteBit || 0,
       companyId: currentUser?.companyId || 'COMP1',
     }),
     [currentUser]
@@ -69,6 +83,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    errors,
   } = methods;
   const values = watch();
 
@@ -79,7 +94,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
   );
   const [selectedAssetsType, setSelectedAssetsType] = useState(defaultValues.assetsType || '');
   const [locationsOptions, setLocationsOptions] = useState([
-    { locationID: '0', locationName: 'Select Location' },
+    { locationID: '', locationName: 'Select Location *' },
   ]);
   const [selectedLocation, setSelectedLocation] = useState(
     defaultValues.locationId || locationsOptions[0]
@@ -186,7 +201,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
                 <TextField {...params} label="Select Location" variant="outlined" />
               )}
             />
-            <RHFTextField name="assetsName" label="Assets Name" />
+            <RHFTextField name="assetsName" label="Assets Name *" />
             <RHFAutocomplete
               name="assetsType"
               id="type-autocomplete"
@@ -194,10 +209,10 @@ export default function CreateAssets({ currentUser, handleClose }) {
               value={selectedAssetsType}
               onChange={(event, newValue) => setSelectedAssetsType(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Assets type" variant="outlined" />
+                <TextField {...params} label="Assets type *" variant="outlined" />
               )}
             />
-            <RHFTextField name="poNumber" label="PO Number" />
+            <RHFTextField name="poNumber" label="PO Number *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -214,13 +229,13 @@ export default function CreateAssets({ currentUser, handleClose }) {
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField type="number" name="poValue" label="PO Value" />
-            <RHFTextField name="invoiceNumber" label="Invoice No" />
+            <RHFTextField type="number" name="poValue" label="PO Value *" />
+            <RHFTextField name="invoiceNumber" label="Invoice No *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Invoice Date"
+                  label="Invoice Date *"
                   value={datesUsed?.invoiceDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -236,7 +251,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Start Date"
+                  label="Start Date *"
                   value={datesUsed?.assetsStartDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -252,7 +267,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Warranty Date"
+                  label="Warranty Date *"
                   value={datesUsed?.warrantyDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -264,18 +279,18 @@ export default function CreateAssets({ currentUser, handleClose }) {
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="supplierName" label="Supplier Name" />
-            <RHFTextField name="supplierEmailId" label="Supplier Email Id" />
+            <RHFTextField name="supplierName" label="Supplier Name *" />
+            <RHFTextField name="supplierEmailId" label="Supplier Email Id *" />
             <RHFTextField
               type="number"
               name="supplierContactNumber"
-              label="Supplier Contact Number"
+              label="Supplier Contact Number *"
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Expiry Date"
+                  label="Expiry Date *"
                   value={datesUsed?.expiryDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -291,7 +306,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="lapse Of Warranty Date"
+                  label="lapse Of Warranty Date *"
                   value={datesUsed?.lapseOfWarrantyDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -305,7 +320,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
             </LocalizationProvider>
             <RHFTextField type="number" name="amount" label="Amount" />
             <RHFTextField type="number" name="gstAmount" label="GST Amount" />
-            <RHFTextField type="number" name="totalAmount" label="Total Amount" />
+            <RHFTextField type="number" name="totalAmount" label="Total Amount *" />
 
             <RHFAutocomplete
               name="assetsCondition"
