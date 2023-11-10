@@ -157,20 +157,20 @@ export const dashboardRoutes = [
         ],
       },
 
-      {
-        path: 'employeemanagementhome',
-        children: [
-          { element: <EmployeeManagementHome />, index: true },
-          { path: ':id/edit', element: <Edits /> },
-          { path: 'userneweditform', element: <UserNewEditForm1 /> },
-          { path: 'onboardform', element: <OnBoardForm />},
+      // {
+      //   path: 'employeemanagementhome',
+      //   children: [
+      //     { element: <EmployeeManagementHome />, index: true },
+      //     { path: ':id/edit', element: <Edits /> },
+      //     { path: 'userneweditform', element: <UserNewEditForm1 /> },
+      //     { path: 'onboardform', element: <OnBoardForm />},
           
-          { path: 'employeeview', element: <EmployeeView />},
-          //  { path: ':id/edit', element: <Edits /> },
-          // { path: 'reusetable', element: <ReuseTable /> },
-          //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
-        ],
-      },
+      //     { path: 'employeeview', element: <EmployeeView />},
+      //     //  { path: ':id/edit', element: <Edits /> },
+      //     // { path: 'reusetable', element: <ReuseTable /> },
+      //     //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+      //   ],
+      // },
 
       {
         path: 'user',
@@ -365,4 +365,27 @@ export const dashboardRoutes = [
       { path: 'blank', element: <BlankPage /> },
     ],
   },
+  {
+    path: 'employeemanagementhome',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <EmployeeManagementHome />, index: true },
+      { path: ':id/edit', element: <Edits /> },
+      { path: 'userneweditform', element: <UserNewEditForm1 /> },
+      { path: 'onboardform', element: <OnBoardForm />},
+      
+      { path: 'employeeview', element: <EmployeeView />},
+      //  { path: ':id/edit', element: <Edits /> },
+      // { path: 'reusetable', element: <ReuseTable /> },
+      //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+    ],
+  }
 ];
