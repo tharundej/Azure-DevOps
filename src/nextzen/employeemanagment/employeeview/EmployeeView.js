@@ -12,6 +12,8 @@ import Statoury from './statoury/Statoury';
 
 import PreviousWork from './previouswork/PreviousWork';
 
+import Documents from "../../employeemanagment/employeeview/documents/Documets"
+
 const TABS = [
     {
       value: 'About',
@@ -32,6 +34,11 @@ const TABS = [
       value: 'Statoury',
       label: 'Statoury',
       icon: <Iconify icon="mdi:card-account-details-star" width={24} />,
+    },
+    {
+      value: 'Documents',
+      label: 'Documents',
+      icon: <Iconify icon="et:documents" width={24} />,
     },
   ];
  
@@ -110,6 +117,7 @@ const EmployeeView = () => {
 
       {currentTab === 'Education' && <EmployeeEducation  />}
       {currentTab==='Experience' && <PreviousWork />}
+      {currentTab==='Documents' && <Documents />}
     
       {/* // {currentTab === 'friends' && (
       //   <ProfileFriends
