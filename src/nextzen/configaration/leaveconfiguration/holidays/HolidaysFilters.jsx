@@ -245,11 +245,13 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
     //   filterData(data);
     handleClickClose();
   };
-  const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+  const [search, setSearch]=useState("");
+
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
   return (
     <>
        <Grid
@@ -258,20 +260,20 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '0.1rem' }}
+        style={{ marginBottom: '1rem' }}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item>
         <TextField
             placeholder="Search...."
              fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+             onChange={handleSearch}
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item>
             <HolidaysForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            

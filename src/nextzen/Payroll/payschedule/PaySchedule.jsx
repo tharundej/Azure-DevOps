@@ -31,16 +31,16 @@ const bull = (
 
 export default function BasicCard() {
   const TABLE_HEAD = [
-    { id: 'employementType', label: 'Employee Type', type: 'text', minWidth:140 },
-    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth:140 },
-    { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text', minWidth:120 },
-    { id: 'hraPercentage', label: 'HRA %', type: 'text' , minWidth:100},
-    { id: 'daPercentage', label: 'DA %', type: 'text' , minWidth:100},
-    {id: 'ltaPercentage',label:'LTA %',type:'text', minWidth:100},
-    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text' , minWidth:100},
-    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth:100 },
-    {id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth:100 },
-    { id: 'tdsPercentage', label: 'TDS %', type: 'text' , minWidth:100},
+    { id: 'employementType', label: 'Employee Type', type: 'text' },
+    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text' },
+    { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text' },
+    { id: 'hraPercentage', label: 'HRA %', type: 'text' },
+    { id: 'daPercentage', label: 'DA %', type: 'text' },
+    {id: 'ltaPercentage',label:'LTA %',type:'text'},
+    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text' },
+    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text' },
+    {id: 'esicPercentage', label: 'ESIC %', type: 'text' },
+    { id: 'tdsPercentage', label: 'TDS %', type: 'text' },
   ];
   const actions = [
     { name: 'View', icon: 'hh', path: 'jjj' },
@@ -114,7 +114,7 @@ export default function BasicCard() {
      
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getallPaySchedule"
+        endpoint="getallPaySchedule"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="PayScheduleFilterSearch"

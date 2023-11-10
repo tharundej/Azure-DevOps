@@ -7,7 +7,7 @@ export default function PayScheduleform() {
   
     return (
       <Grid>
-        <GeneralForminfo  currentUser={{}} />
+        <GeneralForminfo style={{ paddingTop: '10px' }} currentUser={{}} />
       </Grid>
     );
   }

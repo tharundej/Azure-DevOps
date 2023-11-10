@@ -1,12 +1,12 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
-import axios from 'axios';
+
+
+
 import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
 
 import { useState } from 'react';
-
-import {useSnackbar} from '../../../components/snackbar'
 
 import {Typography,CardContent,Grid,Card,TextField,InputAdornment} from '@mui/material';
 
@@ -14,13 +14,12 @@ import Iconify from 'src/components/iconify/iconify';
 import LeaveFilter from '../LeaveFilter';
  
 export default function Approveleave(){
-  const {enqueueSnackbar} = useSnackbar()
    const theme = useTheme();
     const defaultPayload={
         "count": 5,
         "page": 0,
         "search": "",
-        "eid": JSON.parse(JSON.stringify(localStorage.getItem('employeeID'))),
+        "eid": "info1",
         "externalFilters": {
           "fApplyDate": "",
           "fFromDate": "",
@@ -73,33 +72,7 @@ export default function Approveleave(){
     
       ];
 
-const onClickActions=(rowdata,event)=>{
-        var payload ={
-          "leave_id": rowdata?.leaveId,
-          "emp_id": rowdata?.employeeId,
-          "status": event?.id,           
-          "leave_type_id":rowdata?.leaveTypeId,
-          "duration": rowdata?.requestedDuration 
-       }
-      console.log(payload,"requestedddbodyyy")
-      const config = {
-        method: 'POST',
-        maxBodyLength:Infinity,
-        url: baseUrl + `/approveLeave`,
-        // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
-        data: payload
-      
-      }
-      axios.request(config).then((response) => {
-        enqueueSnackbar(response.data.message,{variant:'success'})
-      })
-        .catch((error) => {
-          enqueueSnackbar(error.message,{variant:'Error'})
-          console.log(error);
-        });
-      
-      }
-   
+  
  return (
   <>
   <BasicTable 
@@ -108,9 +81,7 @@ const onClickActions=(rowdata,event)=>{
   defaultPayload={defaultPayload} 
   rowActions={actions} 
   bodyData = 'appliedLeave'
-  filterName="LeavelistFilter"
-  onClickActions={onClickActions}/>
-  
+  filterName="LeavelistFilter"/>
   </>
  )
 }

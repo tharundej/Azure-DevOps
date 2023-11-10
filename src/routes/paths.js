@@ -126,9 +126,9 @@ export const paths = {
 
     },
     employee:{
-      root: `/employeemanagementhome`,
+      root: `${ROOTS.DASHBOARD}/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-       onboardform: `/employeemanagementhome/onboardform`,
+       onboardform: `${ROOTS.DASHBOARD}/employeemanagementhome/onboardform`,
       
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
@@ -202,6 +202,7 @@ export const paths = {
         root:`${ROOTS.DASHBOARD}/configaration`,
         leaveconfiguration: `${ROOTS.DASHBOARD}/configaration/leaveconfiguration`,
         compoffconfiguration: `${ROOTS.DASHBOARD}/configaration/compoffconfiguration`,
+        mailconfiguration: `${ROOTS.DASHBOARD}/configaration/mailconfiguration`,
         appraisalconfiguration: `${ROOTS.DASHBOARD}/configaration/appraisalconfiguration`,
       expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configaration/expenseclaimconfiguration`,
       shiftconfiguration: `${ROOTS.DASHBOARD}/configaration/shiftconfiguration`,

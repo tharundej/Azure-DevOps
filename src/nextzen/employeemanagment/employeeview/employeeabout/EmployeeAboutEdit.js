@@ -31,29 +31,7 @@ const employmentTypeOptions=[
 
 ]
 
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
-
-
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue}) => {
-  const [userdropDownOptions,setUserDropDownOptions]=useState(dropDownOptions);
-  const [userdropDownvalue,setUserDropDownValue]=useState(dropDownvalue)
-
-  const [locations,setLocations]=useState([])
-
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const locations1 = await ApiHitLocations();
-        setLocations(locations1);
-        //console.log(locations, 'locations');
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
-  
-    fetchLocations();
-  }, []);
-
+const EmployeeAboutEdit = ({open,handleEditClose,currentUserData}) => {
   const [type,setType]=useState({label:"Permanent",id:'1'})
     const [currentUser,setcurrentUser]=useState()
 
@@ -229,35 +207,6 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-
-             <Grid container >
-                <Grid item xs={12} md={6}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={userdropDownOptions?.locationsOptions}
-                    value={userdropDownvalue?.locationValue}
-                    getOptionLabel={(option) => option.locationName}
-                    onChange={(e, newvalue) => {}}
-                    renderInput={(params) => <TextField {...params} label="Location"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container >
-                <Grid item xs={12} md={6}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={userdropDownOptions?.departmentOptions}
-                    value={userdropDownvalue?.departmentValue}
-                    getOptionLabel={(option) => option.departmentName}
-                    onChange={(e, newvalue) => {}}
-                    renderInput={(params) => <TextField {...params} label="Location"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
              <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
@@ -274,7 +223,6 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                       }
                       ))
                     }}
-                    style={{ paddingLeft: 0, width: '100%' }}
                   />
                 </Grid>
                 <Grid md={6} xs={12}  fullWidth item>
@@ -787,9 +735,5 @@ export default EmployeeAboutEdit
 EmployeeAboutEdit.propTypes = {
     open: PropTypes.string,
     handleEditClose:PropTypes.func,
-    currentUserData:PropTypes.object,
-    userlocation:PropTypes.object,
-    dropDownOptions:PropTypes.array,
-    dropDownvalue:PropTypes.array
-
+    currentUserData:PropTypes.object
   };

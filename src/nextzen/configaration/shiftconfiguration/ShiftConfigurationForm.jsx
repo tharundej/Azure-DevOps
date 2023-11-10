@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState,useEffect } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -31,19 +31,19 @@ export default function ShiftConfigurationForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
-  const [formData, setFormData] = useState({});
-  const [locationType, setLocationType] = useState([]);
-  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30')); // State for Start Time
-  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
+  const [startTime, setStartTime] = useState(dayjs("2022-04-17T15:30")); // State for Start Time
+  const [endTime, setEndTime] = useState(dayjs("2022-04-17T15:30"));
   const NewUserSchema1 = Yup.object().shape({
     ShiftName: Yup.string().required('Shift Name is Required'),
     ShiftTerm: Yup.string().required('Shift Term is Required'),
+    LocationId: Yup.number().required('Location Id is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
       ShiftName: currentUser?.ShiftName || null,
       ShiftTerm: currentUser?.ShiftTerm || null,
+      LocationId: currentUser?.LocationId || null,
     }),
     [currentUser]
   );
@@ -54,82 +54,33 @@ export default function ShiftConfigurationForm({ currentUser }) {
   });
 
   const {
-    setValue: setValue1,
+    setValue:setValue1,
     handleSubmit: handleSubmit1,
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
   } = methods1;
-  const ShiftNames = [
-    { type:'General'},
-    { type:'Morning'},
-    { type:'AfterNoon'},
-    { type:'Night'},
-  ];
-  const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
+  const ShiftNames=[
+    {type:'General'},
+    {type:'Morging'},
+    {type:'AfterNoon'},
+    {type:'Night'},
 
-  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(name, selectedValue, selectedOption);
-    setFormData({
-      ...formData,
-      [name]: selectedValue,
-      locationID: selectedOption?.locationID,
-      locationName: selectedOption?.locationName,
-    });
-  };
+  ]
 
-  const getLocation = async () => {
-    const payload = {
-      companyID: 'COMP1',
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
-      headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setLocationType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      getLocation();
-    };
-    fetchData();
-  }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = localStorage.getItem('companyID');
+    data.companyId=localStorage.getItem('companyID')
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post('http://192.168.1.115:3000/erp/addShiftConfig', data);
-      console.log('sucess', response);
+      console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
     }
   });
+
 
   return (
     <>
@@ -163,49 +114,24 @@ export default function ShiftConfigurationForm({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFAutocomplete
-                freeSolo
-                placeholder="Press Enter to Add Custom"
-                label="Shift Name"
-                name="ShiftName"
-                options={ShiftNames.map((name)=>name.type)}
-              />
+              <RHFAutocomplete  label="Shift Name" name="ShiftName" options={ShiftNames.map((ShiftName)=>ShiftName.type)}/>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileTimePicker
-                  label="Start Time"
-                  defaultValue={dayjs('2022-04-17T15:60')}
-                  onChange={(newValue) => setStartTime(newValue)}
-                />
-              </LocalizationProvider>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileTimePicker
-                  label="End Time"
-                  defaultValue={dayjs('2022-04-17T15:30')}
-                  onChange={(newValue) => setEndTime(newValue)}
-                />
-              </LocalizationProvider>
-              <RHFAutocomplete
-                freeSolo
-                placeholder="Press Enter to Add Custom"
-                label="Shift Term"
-                name="ShiftTerm"
-                options={ShiftTerms.map((ShiftTerm) => ShiftTerm.type)}
-              />
+            <MobileTimePicker
+              label="Start Time"
+              defaultValue={dayjs("2022-04-17T15:60")}
+              onChange={(newValue) => setStartTime(newValue)}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileTimePicker
+              label="End Time"
+              defaultValue={dayjs("2022-04-17T15:30")}
+              onChange={(newValue) => setEndTime(newValue)}
+            />
+          </LocalizationProvider>
+          <RHFTextField  label="Shift Term" name="ShiftTerm" />
 
-              <Autocomplete
-                disablePortal
-                name="Location"
-                id="combo-box-demo"
-                options={locationType?.map((employeepayType) => ({
-                  label: employeepayType.locationName,
-                  value: employeepayType.locationName,
-                  ...employeepayType,
-                }))}
-                onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
-                }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              />
+          <RHFTextField  label="Location Id" name="LocationId" />
             </Box>
           </DialogContent>
 

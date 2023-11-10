@@ -33,7 +33,9 @@ export default function HolidaysForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+
+  });
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
 
@@ -70,13 +72,13 @@ export default function HolidaysForm({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
-    };
-
+        "companyID":"COMP1"
+    }
+  
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -89,9 +91,9 @@ export default function HolidaysForm({ currentUser }) {
       .then((response) => {
         if (response.status === 200) {
           const rowsData = response?.data?.data;
-          setLocationType(rowsData);
+          setLocationType(rowsData)
           console.log(JSON.stringify(response?.data?.data), 'result');
-
+  
           console.log(response);
         }
       })
@@ -108,10 +110,11 @@ export default function HolidaysForm({ currentUser }) {
     fetchData();
   }, []);
 
+  
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP7';
-    data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    data.locationID = formData?.Location?.locationID;
+    data.companyId = localStorage.getItem('companyID');
+    data.holidayDate=formatDateToYYYYMMDD(selectedDates);
+    data.locationID=formData?.Location?.locationID
     console.log('submitted data111', data);
 
     try {
@@ -128,16 +131,18 @@ export default function HolidaysForm({ currentUser }) {
     setSelectedDates(date);
   };
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(name, selectedValue, selectedOption);
+
+    console.log(name  ,  selectedValue , selectedOption)
     setFormData({
       ...formData,
       [name]: selectedValue,
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+   
   };
 
-  console.log(formData, 'formdata for location');
+  console.log( formData ,"formdata for location")
   return (
     <>
       <Button
@@ -172,15 +177,15 @@ export default function HolidaysForm({ currentUser }) {
             >
               <RHFTextField name="holidayName" label="Holiday Name" />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Holiday Date"
-                    value={selectedDates}
-                    onChange={handleDateChanges}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        sx={{ width: '100%', paddingLeft: '3px' }}
+                        label="Holiday Date"
+                          value={selectedDates}
+                        onChange={handleDateChanges}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
               <RHFAutocomplete
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
@@ -191,18 +196,18 @@ export default function HolidaysForm({ currentUser }) {
                 label="Repeats Anually"
                 options={RepeatsAnuallys.map((RepeatsAnually) => RepeatsAnually.type)}
               />
-              <Autocomplete
-                disablePortal
-                name="Location"
-                id="combo-box-demo"
-                options={locationType?.map((employeepayType) => ({
-                  label: employeepayType.locationName,
-                  value: employeepayType.locationName,
-                  ...employeepayType,
-                }))}
-                onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
-                }
+               <Autocomplete
+              disablePortal
+              name="Location"
+              id="combo-box-demo"
+              options={locationType?.map((employeepayType) => ({
+                label: employeepayType.locationName,
+                value: employeepayType.locationName,
+                ...employeepayType,
+              }))}
+              onChange={(event, newValue, selectedOption) =>
+                handleAutocompleteChange('Location', newValue, selectedOption)
+              }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
             </Box>

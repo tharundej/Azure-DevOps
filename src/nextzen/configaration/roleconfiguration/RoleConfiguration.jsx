@@ -151,7 +151,7 @@ export default function RoleConfiguration() {
       <BasicTable
         headerData={TABLE_HEAD}
         defaultPayload={defaultPayload}
-        endpoint="/listProject"
+        endpoint="listProject"
         bodyData="data"
         rowActions={actions}
       />

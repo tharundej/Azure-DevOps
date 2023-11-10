@@ -267,7 +267,7 @@ const handleApply=()=>{
 //   { type: 'Select', label: 'Status', name: 'status', options: ['Option 1', 'Option 2', 'Option 3'] },
 //   { type: 'Select', label: 'Payment Status', name: 'paymentStatus', options: ['Option A', 'Option B', 'Option C'] },
 // ];
-console.log(selectedFields,"selectedFields 2nd method")
+// console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
           <Grid container alignItems="center" paddingBottom="10px">

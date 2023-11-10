@@ -115,7 +115,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/ctcSalaryStructure`,
+      url: `${baseUrl}ctcSalaryStructure`,
     
       headers: {
     
@@ -158,7 +158,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/locationOnboardingDepartment`,
+      url: `${baseUrl}locationOnboardingDepartment`,
     
       headers: {
     
@@ -195,7 +195,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/onboardingDepartment`,
+      url: `${baseUrl}onboardingDepartment`,
     
       headers: {
     
@@ -232,7 +232,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/onboardingDesignation`,
+      url: `${baseUrl}onboardingDesignation`,
     
       headers: {
     
@@ -269,7 +269,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/onboardingDesignationGrade`,
+      url: `${baseUrl}onboardingDesignationGrade`,
     
       headers: {
     
@@ -311,7 +311,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/onboardingRole`,
+      url: `${baseUrl}onboardingRole`,
     
       headers: {
     
@@ -354,7 +354,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       maxBodyLength: Infinity,
     
-      url: `${baseUrl}/onboardingReportingManager`,
+      url: `${baseUrl}onboardingReportingManager`,
     
       headers: {
     
@@ -435,7 +435,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
       
 
-      const response = await axios.post(`${baseUrl}/onBoarding`, data).then(
+      const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
         (successData) => {
           console.log('sucess', successData);
         },

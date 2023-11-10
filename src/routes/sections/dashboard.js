@@ -115,6 +115,8 @@ const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfi
 
 const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
 
+const MailConfiguration = lazy(()=> import('../../nextzen/configaration/mailconfiguration/MailConfiguration'));
+
 const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
 
 const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
@@ -157,20 +159,20 @@ export const dashboardRoutes = [
         ],
       },
 
-      // {
-      //   path: 'employeemanagementhome',
-      //   children: [
-      //     { element: <EmployeeManagementHome />, index: true },
-      //     { path: ':id/edit', element: <Edits /> },
-      //     { path: 'userneweditform', element: <UserNewEditForm1 /> },
-      //     { path: 'onboardform', element: <OnBoardForm />},
+      {
+        path: 'employeemanagementhome',
+        children: [
+          { element: <EmployeeManagementHome />, index: true },
+          { path: ':id/edit', element: <Edits /> },
+          { path: 'userneweditform', element: <UserNewEditForm1 /> },
+          { path: 'onboardform', element: <OnBoardForm />},
           
-      //     { path: 'employeeview', element: <EmployeeView />},
-      //     //  { path: ':id/edit', element: <Edits /> },
-      //     // { path: 'reusetable', element: <ReuseTable /> },
-      //     //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
-      //   ],
-      // },
+          { path: 'employeeview', element: <EmployeeView />},
+          //  { path: ':id/edit', element: <Edits /> },
+          // { path: 'reusetable', element: <ReuseTable /> },
+          //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+        ],
+      },
 
       {
         path: 'user',
@@ -292,6 +294,7 @@ export const dashboardRoutes = [
           },
           {path:'leaveconfiguration',element:<LeaveConfiguration/>},
           {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+          {path:'mailconfiguration',element:<MailConfiguration/>},
           {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
           {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
           {path:'shiftconfiguration',element:<ShiftConfiguration/>},
@@ -365,27 +368,4 @@ export const dashboardRoutes = [
       { path: 'blank', element: <BlankPage /> },
     ],
   },
-  {
-    path: 'employeemanagementhome',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <EmployeeManagementHome />, index: true },
-      { path: ':id/edit', element: <Edits /> },
-      { path: 'userneweditform', element: <UserNewEditForm1 /> },
-      { path: 'onboardform', element: <OnBoardForm />},
-      
-      { path: 'employeeview', element: <EmployeeView />},
-      //  { path: ':id/edit', element: <Edits /> },
-      // { path: 'reusetable', element: <ReuseTable /> },
-      //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
-    ],
-  }
 ];
