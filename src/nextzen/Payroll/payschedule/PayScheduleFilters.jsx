@@ -102,7 +102,13 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     'Virginia Andrews',
     'Kelly Snyder',
   ];
-
+  const employeeTypes=[
+    'Permanent',
+    'Contract'
+  ];
+  const payScheduleTypes=[
+    'typ1',
+  ];
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -112,8 +118,8 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownpayScheduleType, setdropdownpayScheduleType] = useState([]);
+  const [dropdownemployeeType, setdropdownemployeeType] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -129,11 +135,11 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'payScheduleType',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'employeeType',
       options: [],
     },
   ]);
@@ -218,13 +224,13 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
+    } else if (field === 'payScheduleType') {
+      setdropdownpayScheduleType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'employeeType') {
+      setdropdownemployeeType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -297,24 +303,24 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}>
+        <DialogContent  sx={{minWidth:"300px"}}>
          
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="employeeType">Employee Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownemployeeType}
+                    onChange={(e) => handleChangeDropDown(e, 'employeeType')}
+                    input={<OutlinedInput label="Employee Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {names.map((name) => (
+                    {employeeTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -324,19 +330,19 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
+                    <InputLabel id="payScheduleType">Pay Schedule Type</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
+                      value={dropdownpayScheduleType}
+                      onChange={(e) => handleChangeDropDown(e, 'payScheduleType')}
+                      input={<OutlinedInput label="Pay Schedule Type" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {names.map((name) => (
+                      {payScheduleTypes.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -348,7 +354,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid  item xs={12} md={6}>
+                {/* <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
                   <Select
@@ -369,7 +375,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     ))}
                   </Select>
               </FormControl>
-                   </Grid>
+                   </Grid> */}
             </Grid>
 
            
@@ -377,13 +383,16 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
              
           
         </DialogContent>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Button
           onClick={() => {
             handleApply();
           }}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
         >
           Apply
         </Button>
+        </div>
       </BootstrapDialog>
     </>
   );

@@ -83,7 +83,7 @@ export default function AmplifyNewPasswordView() {
       const payload ={
         "password":data.password
     }
-    const response = await axios.post(baseUrl+'newPassword', payload);
+    const response = await axios.post(baseUrl+'/newPassword', payload);
     console.log(response?.data.code)
     if(response?.data.code===200){
         console.log('sucess')

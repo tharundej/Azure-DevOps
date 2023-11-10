@@ -295,7 +295,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',

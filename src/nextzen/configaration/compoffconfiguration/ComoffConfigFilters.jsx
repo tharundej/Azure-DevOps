@@ -50,7 +50,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-import WorkWeekForm from './WorkWeekForm';
+import ComoffConfigurationForm from './CompoffConfiguration';
 
 
 const defaultFilters = {
@@ -89,27 +89,20 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function WorkWeekFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function ComoffConfigFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const dayTypes = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+  const holidayNames = [
+    'Diwali',
+    'Gandhi Jayanthi'
   ];
-  const actionsTypes = [
-    'FullDay',
-    'HalfDay',
-    'Holiday'
-  ];
-
-  const locationTypes = [
-    'infobell',
-  
+  const locationName = [
+    'infobell'
   ]
+
+  // const designationGradeName = [
+  //   'senior',
+  //   'junior'
+  // ]
 
   const [dropdown, setDropdown] = useState({});
 
@@ -119,9 +112,9 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
-  const [dropdownLocations, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownActions, setdropdownActions] = useState([]);
-  const [dropdownDay, setdropdownDay] = useState([]);
+  const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
+  const [dropdownLocation, setdropdownLocation] = useState([]);
+  const [dropdownHolidayname, setdropdownDepartmentname] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -133,15 +126,15 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
     {
-      field: 'locations',
+      field: 'designation_grade_name',
       options: [],
     },
     {
-      field: 'actions',
+      field: 'location',
       options: [],
     },
     {
-      field: 'day',
+      field: 'holiday_name',
       options: [],
     },
   ]);
@@ -216,7 +209,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
       target: { value },
     } = event;
 
-    if (field === 'locations') {
+    if (field === 'designation_grade_name') {
       setDropdownDesignationGradeName(value);
       const obj = dropdown;
       obj[field] = value;
@@ -226,13 +219,13 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'actions') {
-      setdropdownActions(value);
+    } else if (field === 'location') {
+      setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'day') {
-      setdropdownDay(value);
+    } else if (field === 'holiday_name') {
+      setdropdownDepartmentname(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -266,7 +259,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '0.1rem' }}
       >
         <Grid item  md={8} xs={8}>
         <TextField
@@ -277,7 +270,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
           
         </Grid>
         <Grid item  md={2} xs={2}>
-       <WorkWeekForm/>
+            <ComoffConfigurationForm/>
        </Grid>
         <Grid item  md={2} xs={2}>
         <Grid>
@@ -318,19 +311,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="day">Day</InputLabel>
+                  <InputLabel id="holiday_name">Holiday Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDay}
-                    onChange={(e) => handleChangeDropDown(e, 'day')}
-                    input={<OutlinedInput label="Day" />}
+                    value={dropdownHolidayname}
+                    onChange={(e) => handleChangeDropDown(e, 'holiday_name')}
+                    input={<OutlinedInput label="Holiday Name" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {dayTypes.map((name) => (
+                    {holidayNames.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -340,19 +333,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="actions">Actions</InputLabel>
+                    <InputLabel id="location">Location</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownActions}
-                      onChange={(e) => handleChangeDropDown(e, 'actions')}
-                      input={<OutlinedInput label="Actions" />}
+                      value={dropdownLocation}
+                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {actionsTypes.map((name) => (
+                      {locationName.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -365,26 +358,26 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
                   </FormControl>
                 </Grid>
                 <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="locations">Locations</InputLabel>
+                {/* <FormControl fullWidth >
+                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownLocations}
-                    onChange={(e) => handleChangeDropDown(e, 'locations')}
-                    input={<OutlinedInput label="Locations" />}
+                    value={dropdownDesignationGradeName}
+                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
+                    input={<OutlinedInput label="Designation Grade Name" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {locationTypes.map((name) => (
+                    {designationGradeName.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
                     ))}
                   </Select>
-              </FormControl>
+              </FormControl> */}
                    </Grid>
             </Grid>
 
@@ -409,15 +402,15 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
   );
 }
 
-// WorkWeekFilters.propTypes={
+// ComoffConfigFilters.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-WorkWeekFilters.propTypes = {
+ComoffConfigFilters.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
 };
 
-WorkWeekFilters.propTypes = {
+ComoffConfigFilters.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,
