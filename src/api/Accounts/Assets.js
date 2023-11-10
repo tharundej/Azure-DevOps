@@ -1,14 +1,22 @@
-import axios from 'axios';
+import instance from '../BaseURL';
 
-const BASE_URL = 'http://192.168.1.199:3001/erp/';
 export const createAssetsAPI = async (requestBody) => {
-    try {
-      const response = await axios.post(`${BASE_URL}addAssets`, requestBody);
-      console.log('API response:', response.data); // Log the response data
-      return response.data.data;
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error; // Re-throw the error to propagate it
-    }
-  };
-  
+  try {
+    const response = await instance.post(`addAssets`, requestBody);
+    console.log('API response:', response); // Log the response data
+    return response.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
+export const getLocationAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`locationOnboardingDepartment`, requestBody);
+    console.log('API response:', response.data); // Log the response data
+    return response.data.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
