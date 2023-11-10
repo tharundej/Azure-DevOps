@@ -541,7 +541,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
 
 
-  const renderRole = (
+  const renderPayment = (
     <>
     {console.log(dropDownvalue,'dropDownvaluedropDownvalue')}
       <CardHeader
@@ -552,27 +552,14 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
           </IconButton>
         }
       />
-       <Grid container spacing={20}>
+      <Stack direction="row" alignItems="center" sx={{ p: 3, typography: 'body2' }}>
+        <Box component="span" sx={{ color: 'text.secondary', flexGrow: 1 }}>
+          Location :
+        </Box>
 
-          <Grid item>
-          <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
-          <Stack direction="row" alignItems="center">
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-         Location
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {dropDownvalue?.locationValue?.locationName}
-          </Box>
-              
-
-          </Stack>
-          
-
-
-
-          </Stack>
-          </Grid>
-          </Grid>
+        {dropDownvalue?.locationValue?.locationName}
+      
+      </Stack>
     </>
   );
 
@@ -590,7 +577,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {renderRole}
+      {renderPayment}
     </Card>
   );
 }
