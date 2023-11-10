@@ -409,7 +409,7 @@ getTableData(payload)
 };
 
 const getRowActionsBasedOnStatus = (status) => {
-  if (status === 'pending' || status==="") {
+  if (status === 'pending' || status===""|| status==="Pending") {
     return rowActions
   } 
   else {
