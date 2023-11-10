@@ -115,9 +115,9 @@ export function AuthProvider({ children }) {
 
     // console.log(data, 'data ......');
 
-    //  const response = await axios.post( baseUrl + "loginUser" , data);
+     const response = await axios.post( baseUrl + "/loginUser" , data);
     //  const response = await axios.post(endpoints.auth.login, data);
-    const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
+    // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
    const companyID = localStorage.setItem('companyID',response?.data?.companyID);
    const employeeID = localStorage.setItem('employeeID',response?.data?.employeeID);
     const { accessToken, user } = response.data;
@@ -158,7 +158,7 @@ export function AuthProvider({ children }) {
       securityA2
     };
       console.log(data, 'data ......');
-     const response = await axios.post(baseUrl+'signup', data);
+     const response = await axios.post(baseUrl+'/signup', data);
     // const response = await axios.post(endpoints.auth.register, data);
 
     console.log(response)
