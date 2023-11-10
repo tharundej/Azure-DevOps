@@ -34,6 +34,7 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
+  tableDataExport,
 }) {
   const confirm = useBoolean();
 
@@ -50,6 +51,7 @@ export default function UserTableRow({
   
   return (
     <>
+     { console.log(tableDataExport,"tabledata exported")}
       <TableRow hover selected={selected}>
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
@@ -105,6 +107,7 @@ export default function UserTableRow({
             
             </>
           ))}
+         
 
         {rowActions && rowActions?.length > 0 && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
@@ -119,7 +122,7 @@ export default function UserTableRow({
           arrow="right-top"
           sx={{ width: 140 }}
         >
-          {rowActions?.map((item) => (
+          {(tableDataExport?.status === "pending")?(rowActions?.map((item) => (
             <>
               <MenuItem
                 onClick={() => {
@@ -127,13 +130,15 @@ export default function UserTableRow({
                 
                   popover.onClose();
                 }}
-              >
+              > {}
                 <Iconify icon="solar:pen-bold" />
                 {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>
-          ))}
+          ))):(0)
+}
+          
         </CustomPopover>
       </TableRow>
 
@@ -160,4 +165,5 @@ UserTableRow.propTypes = {
   selected: PropTypes.bool,
   headerContent: PropTypes.any,
   rowActions: PropTypes.any,
+  tableDataExport:PropTypes.any,
 };
