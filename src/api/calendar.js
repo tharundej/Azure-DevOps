@@ -121,25 +121,26 @@ export async function updateEvent(eventData) {
 // ----------------------------------------------------------------------
 
 export async function deleteEvent(eventId) {
+  console.log(eventId,"deletee")
   /**
    * Work on server
    */
-  // const data = { eventId };
-  // await axios.patch(endpoints.calendar, data);
+  const data = { eventId };
+  await axios.patch(endpoints.calendar, data);
 
   /**
    * Work in local
    */
-  mutate(
-    URL,
-    (currentData) => {
-      const events = currentData.events.filter((event) => event.id !== eventId);
+  // mutate(
+  //   URL,
+  //   (currentData) => {
+  //     const events = currentData.events.filter((event) => event.id !== eventId);
 
-      return {
-        ...currentData,
-        events,
-      };
-    },
-    false
-  );
+  //     return {
+  //       ...currentData,
+  //       events,
+  //     };
+  //   },
+  //   false
+  // );
 }

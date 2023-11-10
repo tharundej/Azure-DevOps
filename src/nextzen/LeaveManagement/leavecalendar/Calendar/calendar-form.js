@@ -37,19 +37,19 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
-    leave_type_id:Yup.number(),
-    company_id:Yup.string(),
-    employee_id:Yup.string(),
-    from_date: Yup.string(),
-    to_date: Yup.string(),
+    leaveTypeId:Yup.number(),
+    companyId:Yup.string(),
+    employeeId:Yup.string(),
+    fromDate: Yup.string(),
+    toDate: Yup.string(),
     comments: Yup.string(),
-    apply_date:Yup.mixed(),
+    applyDate:Yup.mixed(),
     status:Yup.string(),
     fullday:Yup.string(),
     firsthalf:Yup.string(),
     secondhalf:Yup.string(),
     attachment:Yup.string(),
-    status_date:Yup.string(),
+    statusDate:Yup.string(),
     color:Yup.string()
   });
 
@@ -57,6 +57,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     resolver: yupResolver(EventSchema),
     defaultValues: currentEvent,
   });
+console.log(methods,"methodddd")
 
   const {
     reset,
@@ -227,7 +228,10 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
 console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
 
   return (
+  
   <>
+  {!currentEvent ?
+    <>
    {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
@@ -339,6 +343,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
       </DialogActions>
     </FormProvider>}
     </>
+  :"delete"}</>
   );
 
 }
@@ -348,3 +353,4 @@ CalendarForm.propTypes = {
   currentEvent: PropTypes.object,
   onClose: PropTypes.func,
 };
+

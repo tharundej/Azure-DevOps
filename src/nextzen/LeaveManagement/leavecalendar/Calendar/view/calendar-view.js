@@ -458,7 +458,7 @@ const handleCancel = async()=>{
         }}
       >
         <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> {selectEventId ? 'Edit Event' : 'Leave Request'}</>}
+          {openForm && <> {currentEvent?.leaveId ? 'Edit Event' : 'Leave Request'}</>}
         </DialogTitle>
         <CalendarForm
           currentEvent={currentEvent}
@@ -637,7 +637,7 @@ const handleCancel = async()=>{
               {!pending[index] ? (
                 <>
                   <Typography>
-                    <span style={{ fontWeight: 700 }}>Applied Leave : </span> {itm?.Leave_type}
+                    <span style={{ fontWeight: 700 }}>Applied Leave : </span> {itm?.leaveType}
                     <IconButton
                       sx={{ position: 'absolute', top: 15, right: 0 }}
                       onClick={() => handlePending(index)}
@@ -645,13 +645,13 @@ const handleCancel = async()=>{
                       <Iconify icon="iconamoon:arrow-down-2-thin" />
                     </IconButton>
                   </Typography>
-                  <Typography><span style={{ fontWeight: 600 }}>Leave Status :</span>{itm?.leave_status}</Typography>
+                  <Typography><span style={{ fontWeight: 600 }}>Leave Status :</span>{itm?.leaveStatus}</Typography>
                 </>
               ) : (
                 <>
                   <Typography>
-                    <span style={{ fontWeight: 700 }}>Applied Leave : </span> {itm?.Leave_type}<br />
-                    <span>From : {itm?.From_date} To : {itm?.To_date}</span>
+                    <span style={{ fontWeight: 700 }}>Applied Leave : </span> {itm?.leaveType}<br />
+                    <span>From : {itm?.fromDate} To : {itm?.toDate}</span>
                     <IconButton
                       sx={{ position: 'absolute', top: 15, right: 0 }}
                       onClick={() => handlePending(index)}
@@ -660,8 +660,8 @@ const handleCancel = async()=>{
                     </IconButton>
                   </Typography>
                   <Typography><span>No of leave day(s) : </span> {itm?.duration}</Typography>
-                  <Typography><span style={{ fontWeight: 600 }}>Leave Reason : </span> {itm?.leave_reason}</Typography>
-                  <Typography><span style={{ fontWeight: 600 }}>Leave Status : </span> {itm?.leave_status} </Typography>
+                  <Typography><span style={{ fontWeight: 600 }}>Leave Reason : </span> {itm?.leaveReason}</Typography>
+                  <Typography><span style={{ fontWeight: 600 }}>Leave Status : </span> {itm?.leaveStatus} </Typography>
                 </>
               )}
             </CardContent>
@@ -723,32 +723,34 @@ const handleCancel = async()=>{
     </> 
   );
 }
+
   // ----------------------------------------------------------------------
-function applyFilter({ inputData, filters, dateError }) {
-  const { colors, from_date, to_date } = filters;
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-  inputData = stabilizedThis.map((el) => el[0]);
-  if (colors.length) {
-    inputData = inputData.filter((event) => colors.includes(event.color));
-  }
-  if (!dateError) {
-    if (from_date && to_date) {
-      inputData = inputData.filter(
-        (event) =>
-          fTimestamp(event.from_date_unix) >= fTimestamp(from_date) &&
-          fTimestamp(event.to_date_unix) <= fTimestamp(to_date)
-      );
+  function applyFilter({ inputData, filters, dateError }) {
+    const { colors, from_date, to_date } = filters;
+    const stabilizedThis = inputData.map((el, index) => [el, index]);
+    inputData = stabilizedThis.map((el) => el[0]);
+    if (colors.length) {
+      inputData = inputData.filter((event) => colors.includes(event.color));
     }
+    if (!dateError) {
+      if (from_date && to_date) {
+        inputData = inputData.filter(
+          (event) =>
+            fTimestamp(event.from_date_unix) >= fTimestamp(from_date) &&
+            fTimestamp(event.to_date_unix) <= fTimestamp(to_date)
+        );
+      }
+    }
+    return inputData;
   }
-  return inputData;
-}
-// Events Style in Calendar 
-function renderEventContent(eventContent) {
-  const {event} = eventContent; // Get the event title
-  const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
-  return (
-    
-      <div style={{color:"black",fontWeight:"700",backgroundColor,padding:"4px"}}>{event?.title}</div>
-    
-  );
-}
+  // Events Style in Calendar 
+  function renderEventContent(eventContent) {
+    const {event} = eventContent; // Get the event title
+    const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
+    return (
+      
+        <div style={{color:"black",fontWeight:"700",backgroundColor,padding:"4px"}}>{event?.title}</div>
+      
+    );
+  }
+  

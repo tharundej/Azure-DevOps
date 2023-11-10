@@ -105,7 +105,7 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
-      console.log(event,"evnetsttss",event.publicId,"idd",event.id)
+      console.log(event,"evnetsttss","idd",event.id)
       onOpenForm();
       setSelectEventId(event.id);
     },
@@ -170,3 +170,6 @@ export default function useCalendar() {
     onClickEventInFilters,
   };
 }
+
+
+
