@@ -35,7 +35,7 @@ const CustomersHead = ({ filterSearch, filterData }) => {
           onClose={handleClose}
           PaperProps={{
             sx: {
-              maxWidth: 770,
+              maxWidth: 1000,
             },
           }}
           className="custom-dialog"

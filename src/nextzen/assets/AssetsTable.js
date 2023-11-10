@@ -30,73 +30,47 @@ const AssetsTable = () => {
         options: ['active', 'inactive'],
         field_name: 'status',
       },
-      
     ],
   });
   const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
+  const defaultPayload = {
+    company_id: 'comp1',
     page: 1,
-  });
-  const ApiHit = () => {
-    const data1 = body_for_employee;
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/AssetsDetails',
-      // headers: {
-      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      // },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setBodyContent(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    count: 5,
+    search: '',
+    externalFilters: {
+      podate: {
+        from_date: '',
+        to_date: '',
+      },
+      invoicedate: {
+        from_date: '',
+        to_date: '',
+      },
+      asset_name: '',
+      asset_type: '',
+      supplier_name: 'Supplier XYZ',
+    },
+    sort: {
+      key: 1,
+      orderBy: 'a.assets_name',
+    },
+  };
+  const ApiHit = async () => {
+    try {
+      const response = await getAssetsListAPI(defaultPayload);
+      console.log('location success', response);
+      setBodyContent(response);
+    } catch (error) {
+      console.log('API request failed:', error.message);
+    }
   };
 
   useEffect(() => {
     ApiHit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const defaultPayload = {
-    count: 5,
-    page: 0,
-    search: '',
-    fcompanyID: 'COMP1',
-    externalFilters: {
-      fMaritalStatus: '',
-      fBloodGroup: '',
-      fPState: '',
-      fPEmployementType: '',
-      fPdepartmentName: '',
-      fPDesignation: '',
-      fPDesignationGrade: '',
-      fWorkingLocation: '',
-      fjoiningDate: {
-        from: '',
-        to: '',
-      },
-      fDOB: {
-        from: '',
-        to: '',
-      },
-      fofferDate: {
-        from: '',
-        to: '',
-      },
-    },
-    sort: {
-      key: 1,
-      orderBy: 'VendorName',
-    },
-  };
+
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'AssetsName', label: 'Assets Name', type: 'text', minWidth: '180px' },
@@ -125,7 +99,7 @@ const AssetsTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/AssetsDetails"
+        endpoint="/listassets"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}

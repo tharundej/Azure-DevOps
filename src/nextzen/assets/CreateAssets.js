@@ -102,7 +102,6 @@ export default function CreateAssets({ currentUser, handleClose }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const [errorMessage, setErrorMessage] = useState();
   const [datesUsed, setDatesUsed] = useState({
     poDate: dayjs(new Date()),
     invoiceDate: dayjs(new Date()),
@@ -150,12 +149,11 @@ export default function CreateAssets({ currentUser, handleClose }) {
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
-        setErrorMessage(error.response.data.message);
         handleCallSnackbar(error.response.data.message, 'warning');
         console.log('request failed:', error.response.data.message);
       } else {
         // Handle other errors
-        setErrorMessage(error.message);
+        handleCallSnackbar(error.message, 'warning');
         console.log('API request failed:', error.message);
       }
     }
