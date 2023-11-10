@@ -137,9 +137,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   useEffect(() => {
     // onclickActions();
-    getTableData();
+    getTableData(initialDefaultPayload);
      
-  }, [])
+  }, [initialDefaultPayload])
  
   const getTableData = (payload) => {
     setLoading(false);
@@ -160,7 +160,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-        //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+          // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.199:3001/erp${endpoint}`,
@@ -300,6 +300,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   useEffect(()=>{
     getTableData(initialDefaultPayload);
+    
      
   },[initialDefaultPayload])
 
@@ -318,9 +319,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
       search: searchTerm,
+      
       // Filter_Headers:
      
     }));
+    console.log(payload,"testingggggggggggg")
    getTableData(payload)
   }
  
@@ -372,27 +375,28 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const handleFilterSearch = (searchTerm) => {
  
     console.log(searchTerm,"searched dataaaaaaaaaaa")
-  
+ 
    
-  
+ 
    
-  
+ 
       const payload = initialDefaultPayload;
-  
+ 
       setInitialDefaultPayload(prevPayload => ({
-  
+ 
         ...prevPayload,
-  
+ 
         search: searchTerm,
-  
+ 
         // Filter_Headers:
-  
+ 
        
-  
+ 
       }));
-  
+      console.log(payload,'jjjjjjjjjjj')
+ 
       getTableData(payload)
-  
+ 
     }
  
      // sort
@@ -448,13 +452,15 @@ getTableData(payload)
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "CompoffFilterSearch" && <CompoffFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+
         <Card>
 
        
