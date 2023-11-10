@@ -69,39 +69,14 @@ export default function BasicCard() {
   ];
 
   return (
-    // <Card sx={{ minWidth: 275 }}>
-    //   <CardContent>
-    //     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-    //       Leave management
-    //     </Typography>
-    //   </CardContent>
-    //   <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    // </Card>
+   
     
     <>
-      {/* <Helmet>
-        <title> Dashboard: claims </title>
-      </Helmet> */}
-{/* <Button
-
-component={RouterLink}
-
-href={paths.dashboard.employee.onboardform}
-
-variant="contained"
-
-startIcon={<Iconify icon="mingcute:add-line" />}
->Add New Employee</Button> */}
       
    
   
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
-    {/* <BasicTable
-        headdata={TABLE_HEAD}
-        bodydata={bodyContent}
-        rowActions={actions}
-      /> */}
+    
     </>
   );
 }
-

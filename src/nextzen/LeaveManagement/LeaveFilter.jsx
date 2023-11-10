@@ -58,8 +58,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      // url: baseUrl + `getLeaveType`,
-      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      url: baseUrl + `/getLeaveType`,
+      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -241,7 +241,7 @@ export default function LeaveFilter({filterSearch,filterData}){
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -434,7 +434,7 @@ export default function LeaveFilter({filterSearch,filterData}){
          </DialogContent>
        <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
          <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     
