@@ -118,8 +118,8 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
-    url:baseUrl + `/holidayList`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
+    // url:baseUrl + `holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {
@@ -201,8 +201,8 @@ useEffect(()=>{
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `/getLeaveType`,
-      // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      // url: baseUrl + `getLeaveType`,
+      url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -231,8 +231,8 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: `/erp/pendingapproved`,
-    url: baseUrl + `/pendingapproved`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/pendingapproved`,
+    // url: baseUrl + `pendingapproved`,
     data:  payload
     }
   axios.request(config).then((response) => {

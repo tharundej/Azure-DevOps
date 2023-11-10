@@ -151,7 +151,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData,rowActions,tableDataExport,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData,rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
   // const popover = usePopover();
 
@@ -822,8 +822,7 @@ const [sortColumn, setSortColumn]=useState("")
                           headerContent={TABLE_HEAD}
                          
                           rowActions={getRowActionsBasedOnStatus(row.status)|| []}
-                          tableDataExport={tableData || []}
-
+                         
                         />
 
 

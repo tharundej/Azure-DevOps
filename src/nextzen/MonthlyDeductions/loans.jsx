@@ -7,10 +7,9 @@ import { useState, useEffect } from 'react';
 import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../Table/BasicTable';
-import { baseUrl } from '../global/BaseUrl';
-import axios from 'axios';
+
 import ApplyLoan from './ApplyLoan';
-import {useSnackbar} from '../../components/snackbar';
+
 const bull = (
   <Box
     component="span"
@@ -21,32 +20,37 @@ const bull = (
 );
 
 export default function Loans() {
-
-  const {enqueueSnackbar} = useSnackbar()
+   
       const TABLE_HEAD = [
 
         {
     
-          id: "loanID",
+          id: "Employe_name",
     
-          label: "SL_NO",
-          minWidth:"5pc",
+          label: " SL_NO",
+    
           type: "text",
+    
+          containesAvatar: false,
+    
+     
+    
+          secondaryText: "text",
     
         },
     
-        { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+        { id: "employeeName", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
+        { id: "requestDate", label: "request Date", width: 220, type: "text" },
     
-        { id: "requestAmount", label: "Request Amount", minWidth: "7pc", type: "text" },
+        { id: "requestAmount", label: "Request Amount", width: 180, type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-        { id: "paidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
-        { id: "noOfInstallments", label: "No of Installments", minWidth: "7pc", type: "text" },
-        { id: "interestRate", label: "Interest Rate", minWidth: "7pc", type: "text" },
-        { id: "approverName", label: " Approver Name", minWidth: "10pc", type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "paidDate", label: "Paid Date", width: 100, type: "text" },
+        { id: "paidAmount", label: "paid Amount", width: 100, type: "text" },
+        { id: "noOfInstallments", label: "No Instalment ", width: 100, type: "text" },
+        { id: "interestRate", label: "Intrest Rate", width: 100, type: "text" },
+        { id: "approverName", label: " Approver Name", width: 100, type: "text" },
+        { id: "status", label: "status", width: 100, type: "text" },
         { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
@@ -57,11 +61,11 @@ export default function Loans() {
     
       const actions = [
     
-        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveLoanDetails"},
-        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveLoanDetails"},
+        { name: "approve", icon: "hh", path: "jjj" },
     
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateLoanDetails" },
+        { name: "view", icon: "hh", path: "jjj" },
     
+        { name: "eerr", icon: "hh", path: "jjj" },
     
       ];
     
@@ -85,17 +89,17 @@ export default function Loans() {
     "externalFilters": {
   "requestDate": {
    
-  "from": "",
+  "RequestDateStart": "",
    
-  "to": ""
+  "RequestDateEnd": ""
    
   },
    
   "paidDate": {
    
-  "from": "",
+  "PaidDateFrom": "",
    
-  "to": ""
+  "PaidDateTo": ""
    
   },
    
@@ -103,7 +107,7 @@ export default function Loans() {
       "status": "",
       "requestAmount":"",
       "paidAmount":"",
-      "approverName":"",
+      "approverID":"",
       "interestRate" : ""
     },
     "sort": {
@@ -111,45 +115,7 @@ export default function Loans() {
       "orderBy": ""
     }
   }
-
-  const onClickActions=(rowdata,event)=>{
-    console.log(rowdata,"rowdataa",event)
-    if(event?.name==="Approve" || event?.name==="Reject")
-    {
-      handleLoanApprove(rowdata,event)
-    }
-    else if (event?.name==="Edit"){
-        handleEditLoanForm(rowdata)
-    }
-  
-  }
-
-  const handleLoanApprove=(rowdata,event)=>{
-    var payload =
-    {
-      "employeeID":"info 3",
-      "loanID": rowdata?.loanID,
-      "paidAmount":rowdata?.paidAmount,
-      "noOfInstallments":rowdata?.noOfInstallments,
-      "interestRate":rowdata?.interestRate,
-      "status":event?.id
-  }
-  const config = {
-    method: 'POST',
-    maxBodyLength:Infinity,
-    url: baseUrl + `/approveLoanDetails`,
-    data: payload
-  
-  }
-  axios.request(config).then((response) => {
-    enqueueSnackbar(response.data.message,{variant:'success'})
-  })
-    .catch((error) => {
-      enqueueSnackbar(error.message,{variant:'Error'})
-      console.log(error);
-    });
-  
-  }
+      
   return (
     <>
       {showForm && (
@@ -166,9 +132,12 @@ export default function Loans() {
  <ApplyLoan currentUser={{}} handleClose={handleClose} />
       </Dialog>
     )}
+<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
- 
+  <Button className="button" onClick={handleTimeForm}>Apply Loan </Button>
+<Button className="button">Filter</Button>
+<Button className="button">Report</Button>
 </Container>
     <BasicTable
 
@@ -179,7 +148,6 @@ endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actions}
-onClickActions={onClickActions}
 
 />  
     </>

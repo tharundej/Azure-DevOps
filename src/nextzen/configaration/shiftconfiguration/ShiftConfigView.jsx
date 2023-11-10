@@ -6,11 +6,11 @@ import { BasicTable } from '../../Table/BasicTable';
 
 export default function ShiftConfigView() {
     const TABLE_HEAD = [
-      { id: 'shiftName', label: 'Shift Name', type: 'text' , minWidth:180  },
-      { id: 'startTime', label: 'Start Time', type: 'text' , minWidth:180},
-      { id: 'endTime', label: 'End Time', type: 'text' , minWidth:180},
-      { id: 'shiftTerm', label: 'Shift Term', type: 'text', minWidth:180 },
-      { id: 'locationId', label: 'Location Id', type: 'text' , minWidth:180},
+      { id: 'shiftName', label: 'Shift Name', type: 'text' },
+      { id: 'startTime', label: 'Start Time', type: 'text' },
+      { id: 'endTime', label: 'End Time', type: 'text' },
+      { id: 'shiftTerm', label: 'Shift Term', type: 'text' },
+      { id: 'locationId', label: 'Location Id', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -21,11 +21,10 @@ export default function ShiftConfigView() {
     {
       "companyId":"COMP2",
       "locationId":32,
-      "count":5,
       "search":"",
-      "page": 0,
+      "page": 1,
       "limit": 5,
-      "externalFilters": {
+      "externalFilter": {
           "shiftTerm": "",
           "shiftName": "",
           "startTime": "",
@@ -33,7 +32,7 @@ export default function ShiftConfigView() {
       },
       "sort": {
           "key": 0,
-          "orderBy": ""
+          "orderBy": "start_time"
       }
       
   };
@@ -55,7 +54,7 @@ export default function ShiftConfigView() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="/getALLShiftConfig"
+          endpoint="getALLShiftConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='ShiftConfigurationFilterSearch'

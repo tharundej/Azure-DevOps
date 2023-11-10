@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,searchData}){
+export default function ShiftRoasterFilter({filterData,filterOptions}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -100,15 +100,6 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
   
     })
   
-
-
-    const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
     const [personName, setPersonName] = React.useState([]);
@@ -290,8 +281,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch}
-            onChange={(e) => handleSearch(e.target.value)}
+            // onChange={handleSeacrch} 
 
             />
             </Grid>

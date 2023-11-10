@@ -4,9 +4,11 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function LeavePeriod() {
     const TABLE_HEAD = [
-      { id: 'leavePeriodType', label: 'Leave Period Type', type: 'text', minWidth:280  },
-      { id: 'startDate', label: 'Start Date', type: 'text', minWidth:280  },
-      { id: 'endDate', label: 'End date', type: 'text', minWidth:180  },
+      { id: 'slNo', label: 'SL NO', type: 'text' },
+      { id: 'leavePeriodId', label: 'Leave Period ID', type: 'text' },
+      { id: 'leavePeriodName', label: 'Leave Period Name', type: 'text' },
+      { id: 'startDate', label: 'Start Date', type: 'text' },
+      { id: 'endDate', label: 'End date', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -15,9 +17,35 @@ export default function LeavePeriod() {
 
     const defaultPayload = 
     {
-      "companyID":"COMP1"
-  };
-
+      "count": 5,
+      "page": 1,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+        "payscheduleType": "weekly7",
+        "employmentType": "",
+        "basicPayPercentage":"",
+        "hraPercentage":"",
+        "daPercentage":"",
+        "ltaPercentage":"",
+        "employerPfPercentage":"",
+        "employeePfPercentage":"",
+        "esicPercentage":"",
+        "tdsPercentage":"10"
+      },
+      "sort": {
+        "key": 1,
+        "orderBy": ""
+      }
+    };
+     
+     
+    // const tabLabels = ['Tab 1', 'Tab 2', 'Tab 3'];
+    // const tabContents = [
+    //   <div>Tab 1 Content</div>,
+    //   <div>Tab 2 Content</div>,
+    //   <div>Tab 3 Content</div>,
+    // ];
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
   
     React.useEffect(() => {
@@ -35,7 +63,7 @@ export default function LeavePeriod() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="/getAllLeavePeriod"
+          endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='LeavePeriodFilterSearch'

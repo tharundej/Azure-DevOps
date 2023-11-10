@@ -34,7 +34,7 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
-  tableDataExport,
+
 }) {
   const confirm = useBoolean();
 
@@ -51,7 +51,7 @@ export default function UserTableRow({
   
   return (
     <>
-     { console.log(tableDataExport,"tabledata exported")}
+     
       <TableRow hover selected={selected}>
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
@@ -122,7 +122,8 @@ export default function UserTableRow({
           arrow="right-top"
           sx={{ width: 140 }}
         >
-          {(tableDataExport?.status === "pending")?(rowActions?.map((item) => (
+         
+          {rowActions?.map((item) => (
             <>
               <MenuItem
                 onClick={() => {
@@ -136,8 +137,7 @@ export default function UserTableRow({
                 {item?.name }
               </MenuItem>
             </>
-          ))):(0)
-}
+          ))}
           
         </CustomPopover>
       </TableRow>
@@ -165,5 +165,5 @@ UserTableRow.propTypes = {
   selected: PropTypes.bool,
   headerContent: PropTypes.any,
   rowActions: PropTypes.any,
-  tableDataExport:PropTypes.any,
+ 
 };
