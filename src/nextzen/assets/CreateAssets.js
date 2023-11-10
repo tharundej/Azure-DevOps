@@ -1,26 +1,30 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-
-import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
+import { useForm, reset } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import dayjs from 'dayjs';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-
-import { createAssetsAPI } from 'src/api/Accounts/Assets';
-
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+import { createAssetsAPI, getLocationAPI } from '../../api/Accounts/Assets';
+import SnackBarComponent from '../global/SnackBarComponent';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 export default function CreateAssets({ currentUser, handleClose }) {
-  const NewUserSchema = Yup.object().shape({
+  const newUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
   });
@@ -54,7 +58,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver(newUserSchema),
     defaultValues,
   });
 
@@ -69,19 +73,20 @@ export default function CreateAssets({ currentUser, handleClose }) {
   const values = watch();
 
   const assetsConditionOptions = ['In Use', 'Scrap & Sold', 'Spare', 'Scrap', 'Under Maintenance'];
+  const asstesTypeOptions = ['Electronic1', 'Electronic2'];
   const [selectedassetsCondition, setSelectedassetsCondition] = useState(
     defaultValues.assetsCondition || ''
   );
-  const asstesTypeOptions = ['Electronic1', 'Electronic2'];
   const [selectedAssetsType, setSelectedAssetsType] = useState(defaultValues.assetsType || '');
-  const lcoationsOptions = [
-    { id: 0, value: 'Select Location' },
-    { id: 30, value: 'loca1' },
-    { id: 31, value: 'loca2' },
-  ];
+  const [locationsOptions, setLocationsOptions] = useState([
+    { locationID: '0', locationName: 'Select Location' },
+  ]);
   const [selectedLocation, setSelectedLocation] = useState(
-    defaultValues.locationId || lcoationsOptions[0]
+    defaultValues.locationId || locationsOptions[0]
   );
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
   const [errorMessage, setErrorMessage] = useState();
   const [datesUsed, setDatesUsed] = useState({
     poDate: dayjs(new Date()),
@@ -92,10 +97,25 @@ export default function CreateAssets({ currentUser, handleClose }) {
     lapseOfWarrantyDate: dayjs(new Date()),
     updatedDate: dayjs(new Date()),
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = { companyID: 'COMP1' };
+      try {
+        const response = await getLocationAPI(data);
+        console.log('location success', response);
+        setLocationsOptions(response);
+      } catch (error) {
+        setErrorMessage(error.message);
+        console.log('API request failed:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddAssets ~ onSubmit ~ data:', data);
-    data.locationId = selectedLocation.id;
+    data.locationId = selectedLocation.locationID;
     data.assetsType = selectedAssetsType;
     data.assetsCondition = selectedassetsCondition;
     data.poDate = formatDateToYYYYMMDD(datesUsed?.poDate);
@@ -108,18 +128,43 @@ export default function CreateAssets({ currentUser, handleClose }) {
     try {
       console.log(data, 'data111ugsghghh');
       const response = await createAssetsAPI(data);
-      console.log('success', response);
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      // handleClose(); // Close the dialog on success
+      reset(); // Reset the form values
     } catch (error) {
-      setErrorMessage(error.message);
-      console.log('API request failed:', error.message);
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        // Handle the case where the asset already exists
+        setErrorMessage(error.response.data.message);
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        // Handle other errors
+        setErrorMessage(error.message);
+        console.log('API request failed:', error.message);
+      }
     }
   });
+
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>Add New Assets</DialogTitle>
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
-          <h3 style={{ color: 'red' }}>{errorMessage}</h3>
           <Box
             rowGap={3}
             columnGap={2}
@@ -133,10 +178,10 @@ export default function CreateAssets({ currentUser, handleClose }) {
             <RHFAutocomplete
               name="locationId"
               id="location-autocomplete"
-              options={lcoationsOptions || []}
+              options={locationsOptions || []}
               value={selectedLocation}
               onChange={(event, newValue) => setSelectedLocation(newValue)}
-              getOptionLabel={(option) => option.value}
+              getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
                 <TextField {...params} label="Select Location" variant="outlined" />
               )}
