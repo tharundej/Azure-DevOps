@@ -92,6 +92,8 @@ import SwapSearchFilter from './components/shiftmanagement/SwapSearchFilter';
 import SalaryStructureFilters from '../employeemanagment/salarystructure/SalaryStructureFilters';
 import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWeekFilters';
 import { baseUrl } from '../global/BaseUrl';
+import CompoffConfigurationTable from '../configaration/compoffconfiguration/CompoffConfigurationTable';
+import ComoffConfigFilters from '../configaration/compoffconfiguration/ComoffConfigFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -104,7 +106,7 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const BasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
@@ -160,12 +162,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-          // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+           url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.199:3001/erp${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-       url: baseUrl+`${endpoint}`,
+      //  url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
@@ -258,7 +260,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
  
   const handleEditRow = (rowData,eventData) => {
-    onClickActions(rowData,eventData);
+    onclickActions(rowData,eventData);
     if (eventData?.type === "/serviceCall"){
      console.log("servicecall")
     }
@@ -459,7 +461,8 @@ getTableData(payload)
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "CompoffFilterSearch" && <CompoffFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
 
         <Card>
 
@@ -612,7 +615,7 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes = {
-  onClickActions:PropTypes.func,
+  onclickActions:PropTypes.any,
 }
  
 BasicTable.propTypes = {

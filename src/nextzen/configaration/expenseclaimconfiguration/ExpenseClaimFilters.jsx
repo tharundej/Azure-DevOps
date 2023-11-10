@@ -298,7 +298,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',

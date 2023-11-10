@@ -4,7 +4,6 @@ import axios from 'axios';
 
 export default function ExpenseClaimConfiguration() {
   const TABLE_HEAD = [
-    { id: 'employee_name', label: 'Employee Name', type: 'text', minWidth:180 },
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth:180  },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth:180  },
     { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text', minWidth:180  },

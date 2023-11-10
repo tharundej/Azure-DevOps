@@ -81,7 +81,7 @@ export default function VerifyOtp() {
             "jwtTokenString" : localStorage.getItem('jwt_access_token'),
             "otp":data.code
         }
-        const response = await axios.post('https://2d56hsdn-3001.inc1.devtunnels.ms/erp/verifyRegisterOtp', payload);
+        const response = await axios.post(baseUrl+'/verifyRegisterOtp', payload);
         console.log(response?.data.code)
         if(response?.data.code===200){
             console.log('sucess')
@@ -101,7 +101,7 @@ export default function VerifyOtp() {
       await resendCodeRegister?.(values.email);
       const payload= {
        jwtTokenString: localStorage.getItem('jwt_access_token')}
-      const response = await axios.post(baseUrl+'resendOtp',payload)
+      const response = await axios.post(baseUrl+'/resendOtp',payload)
       
     } catch (error) {
       console.error(error);
