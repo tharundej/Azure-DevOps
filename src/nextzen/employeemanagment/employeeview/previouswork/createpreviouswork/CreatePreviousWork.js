@@ -131,15 +131,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
     const handleAdd = () => {
         setDefaultValues((prev) => [...prev, obj]);
       };
-      const handleAddEducation = (index) => {
-        const currObj=defaultValues;
-        const fileObj=  {
-            fileName:'',
-            fileContent:''
-        };
-        currObj[index].documents.push(fileObj)
-        setDefaultValues(currObj);
-      };
+      
 
      
        
@@ -320,6 +312,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
               <Typography>Add Previous Work</Typography>
 
             <Stack sx={{paddingTop:'20px'}}>
+
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -370,21 +363,35 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
 
 
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                <LocalizationProvider fullWidth dateAdapter={AdapterDayjs}>
-                  <DemoContainer fullWidth components={['DatePicker', 'DatePicker']}>
                     
-                    <DatePicker
-                    
-                      label="Start Date"
-                      value={dayjs(item?.startDate===""?dayjs() :item?.startDate)}
-                      onChange={(newval) => {
-                        handleChangeDate(newval,  'startDate',index,);
-                      }}
-                      style={{ width: '100%' }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
+              <Grid md={6} xs={12} item>
+                  <DatePicker
+                  fullWidth
+                    value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                    onChange={(date) => {
+
+                      const newArray = [...defaultValues];
+
+                      
+              
+                     
+                       newArray[index] = {
+                         ...newArray[index],
+                         startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                     }
+              
+                     setDefaultValues(newArray)
+                     
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Start Date"
+                  />
+                  
                 </Grid>
 
                 <Grid md={6} xs={12} item>
@@ -416,50 +423,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
                   />
                   
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <DatePicker
-                  fullWidth
-                    value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
-                    onChange={(date) => {
-
-                      const newArray = [...defaultValues];
-
-                      
-              
-                     
-                       newArray[index] = {
-                         ...newArray[index],
-                         startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                     }
-              
-                     setDefaultValues(newArray)
-                     
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                    inputFormat="yyyy-MM-dd"
-                    variant="inline"
-                    format="yyyy-MM-dd"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="End Date"
-                  />
-                  
-                </Grid>
-                <Grid md={6} xs={12} item>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker', 'DatePicker']}>
-                    
-                    <DatePicker
-                      label="End Date"
-                      value={dayjs(item?.endDate===""?dayjs() :item?.endDate)}
-                      onChange={(newval) => {
-                        handleChangeDate(newval, 'endDate', index,);
-                      }}
-                      required={false}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
+            
+               
               </Grid>
              
                   

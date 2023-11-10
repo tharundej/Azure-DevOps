@@ -60,15 +60,43 @@ export default function TimeProject() {
     
       ];
     
-     
+      const onClickActions=(rowdata,event)=>{
+        if(event?.name==="Edit"){
+          handleEditAPICALL(rowdata,event)
+        }
+        else if(event?.name==="view"){
+          handleViewAPICALL(rowdata,event)
+        }
+        else if(event?.name==="Delete"){
+          handleDeleteAPICALL(rowdata,event)
+        }
+      }
+
+      const handleDeleteAPICALL = async (rowdata,event)=>{
+        console.log("iam here ")
+        try{
+          console.log(rowdata,"rowData:::::")
+        const  data= {
+          project_id: JSON.stringify( rowdata.project_id),
+           
+          };
+          const response = await instance.post('deleteproject',data);
+          // setReportingManagerData(response.data.list)
+          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+        }catch(error){
+      console.error("Error", error);
+      throw error;
+        }
+      }
     
+
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "view", icon: "hh", path: "jjj" },
+        { name: "view", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+        { name: "Delete", icon: "hh", id: "1", type: "serviceCall", endpoint: '/deleteproject'},
     
       ];
     
@@ -112,7 +140,7 @@ export default function TimeProject() {
 
     "count": 10,
 
-    "search": "testing",
+    "search": "",
 
     "externalFilters": {
 
@@ -139,7 +167,7 @@ export default function TimeProject() {
       
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -152,11 +180,11 @@ export default function TimeProject() {
 >
  <AddTimeProject currentUser={{}}handleClose={handleClose} />
       </Dialog>
-    )}
-<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
+    )} */}
+{/* <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/> */}
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Add Project</Button>
+  {/* <Button className="button" onClick={handleTimeForm}>Add Project</Button> */}
 {/* <Button className="button">Filter</Button>
 <Button className="button">Report</Button> */}
 </Container>
@@ -165,9 +193,11 @@ export default function TimeProject() {
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 filterName="TimeProjectFilter"
-endpoint='listProject'
+endpoint='/listProject'
 bodyData='data'
+onClickActions={onClickActions}
 rowActions={actions}
+
 
 />  
     </>
