@@ -59,23 +59,43 @@ export default function AssignShiftComponent() {
     
       ];
     
+      const onClickActions=(rowdata,event)=>{
+        console.log("row dataaaaaa")
+        var payload ={
+          "project_id": rowdata?.project_id,
+        
+       }
+      console.log(payload,"requestedddbodyyy")
+      const config = {
+        method: 'POST',
+        maxBodyLength:Infinity,
+        url: baseUrl + `/DeleteShiftRoaster`,
+        // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
+        data: payload
      
+      }
+      axios.request(config).then((response) => {
+        enqueueSnackbar(response.data.message,{variant:'success'})
+      })
+        .catch((error) => {
+          enqueueSnackbar(error.message,{variant:'Error'})
+          console.log(error);
+        });
+     
+      }
+    
     
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
-    
-        { name: "view", icon: "hh", path: "jjj" },
-    
-        { name: "eerr", icon: "hh", path: "jjj" },
-    
+        { name: "Edit", icon: "hh", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+        { name: "Delete", icon: "hh", id: "0", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
       ];
     
       const defaultPayload ={
         "cid": "COMP2",
         "search": "",
         "page": 1,
-        "limit": 10,
+        "count": 1,
         "externalFilters": {
             "shift_term": "",
             "start_date": "",
@@ -84,7 +104,7 @@ export default function AssignShiftComponent() {
         },
         "sort": {
             "key": 1,
-            "orderBy": "start_date"
+            "orderBy": ""
         }
     }
       const [showForm, setShowForm] = useState  (false);
@@ -96,7 +116,7 @@ export default function AssignShiftComponent() {
     
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -109,11 +129,11 @@ export default function AssignShiftComponent() {
 >
  <AssignShift currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Assign Shift</Button>
+  {/* <Button className="button" onClick={handleTimeForm}>Assign Shift</Button> */}
 {/* <Button className="button">Filter</Button>
 <Button className="button">Report</Button> */}
 </Container>
@@ -126,6 +146,7 @@ defaultPayload={defaultPayload}
 
 filterName='AssignShiftFilter'
 rowActions={actions}
+onClickActions={onClickActions}
 
 />  
     </>

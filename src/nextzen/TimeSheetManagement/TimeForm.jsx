@@ -120,13 +120,13 @@ export default function TimeForm({ currentUser, handleClose }) {
 const [projectDetails ,setProjectDetails] = useState([])
 const [activityData ,SetActivityData] = useState([])
 console.log("🚀 ~ file: TimeForm.jsx:122 ~ TimeForm ~ activityData:", activityData)
-// const [projectId ,SetProjectId]= useState(currentProjectData.project_id)
+// const [projectId ,SetProjectId]= useState(currentProjectData.projectId)
 console.log("🚀 ~ file: TimeForm.jsx:121 ~ TimeForm ~ activityData:", activityData)
 const [currentProjectData ,setCurrentProjectData] = useState({})
 const [currentActivitytData ,setCurrentActivitytData] = useState({})
 console.log("🚀 ~ file: TimeForm.jsx:119 ~ TimeForm ~ projectDetails:", projectDetails)
 
-const PrName = projectDetails.map((item) => item.project_name);
+const PrName = projectDetails.map((item) => item.projectName);
 console.log("🚀 ~ file: TimeForm.jsx:123 ~ TimeForm ~ PrName:", PrName)
 
 const getProjectName = async ()=>{
@@ -185,7 +185,7 @@ const getActivityName = async ()=>{
     try {
       data.company_id = 'COMP2';
       data.activity_id =String( currentActivitytData.activity_id);;
-      data.project_id =String( currentProjectData.project_id);
+      data.projectId =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
       data.start_time = '2023-10-17 11:50:02.023';
       data.end_time = '2023-10-17 11:50:02.023';
@@ -243,7 +243,7 @@ const getActivityName = async ()=>{
             id="combo-box-demo"
             options={projectDetails}
             value={currentProjectData}
-            getOptionLabel={(option) => option.project_name}
+            getOptionLabel={(option) => option.projectName}
             onChange={(e,newvalue)=>{
              
              
@@ -251,7 +251,7 @@ const getActivityName = async ()=>{
               )
               // const obj={
               //   // companyID:'COMP1',
-              //   project_id:newvalue?.project_id
+              //   projectId:newvalue?.projectId
               // }
  
               // ApiHitDepartment(obj)
@@ -278,7 +278,7 @@ const getActivityName = async ()=>{
               )
               // const obj={
               //   // companyID:'COMP1',
-              //   project_id:newvalue?.project_id
+              //   projectId:newvalue?.projectId
               // }
  
               // ApiHitDepartment(obj)
@@ -293,7 +293,7 @@ const getActivityName = async ()=>{
             renderInput={(params) => <TextField {...params} label="Activity Name" />}
           />
                 {/* <RHFTextField name="Employe_Name" label=" Employe Name " /> */}
-                {/* <RHFTextField name="Project_Name" label="Project Name  " /> */}
+                {/* <RHFTextField name="projectName" label="Project Name  " /> */}
                 {/* <RHFTextField name="Activity_Name" label="Activity Name " /> */}
                 <RHFTextField name="monday" label="monday" />
                 <RHFTextField name="tuesday" label="tuesday" />

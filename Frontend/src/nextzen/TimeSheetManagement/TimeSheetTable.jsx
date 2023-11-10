@@ -29,7 +29,7 @@ export default function TimeSheetTable() {
 
         {
     
-          id: "SL_NO",
+          id: "",
     
           label: " SL_NO",
     
@@ -42,17 +42,16 @@ export default function TimeSheetTable() {
           secondaryText: "text",
     
         },
+        { id: "projectId", label: "Project Id", width: 180, type: "text" },
     
-        { id: "Project_id", label: "Project Id", width: 180, type: "text" },
+        { id: "projectName", label: "Project Name", width: 220, type: "text" },
     
-        { id: "project_name", label: "Project Name", width: 220, type: "text" },
+        { id: "dateOfActivity", label: "date of Activity", width: 180, type: "text" },
     
-        { id: "date_of_activity", label: "date_of_activity", width: 180, type: "text" },
-    
-        { id: "activity_name", label: "activity_name", width: 100, type: "text" },
-        { id: "working_time", label: "Working Time", width: 100, type: "text" },
-        { id: "Total_working_time", label: "TotalWorking Time", width: 100, type: "text" },
-        { id: "status", label: "status", width: 100, type: "text" },
+        { id: "activityName", label: "activity Name", width: 100, type: "text" },
+        { id: "workingTime", label: "Working Time", width: 100, type: "text" },
+        { id: "totalWorkingTime", label: "Total Working Time", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
