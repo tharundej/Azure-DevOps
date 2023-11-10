@@ -21,55 +21,22 @@ export default function Deduction() {
 
     { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
 
-    { id: "requestDate", label: "Deduction Type", minWidth: "8pc", type: "text" },
+    { id:"deductionType", label: "Deduction Type", minWidth: "8pc", type: "text" },
 
-    { id: "requestAmount", label: "Taken Amount", minWidth: "7pc", type: "text" },
+    { id: "takenAmount", label: "Taken Amount", minWidth: "7pc", type: "text" },
 
-    { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-    { id: "paidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
     { id: "noOfInstallments", label: "Installment No", minWidth: "7pc", type: "text" },
-    { id: "interestRate", label: "Interest Rate", minWidth: "7pc", type: "text" },
-    { id: "approverName", label: "Deducted From", minWidth: "10pc", type: "text" },
-    { id: "paidDate", label: "Deducted Date", minWidth: "8pc", type: "text" },
-    { id: "paidAmount", label: "Deducted Amount", minWidth: "7pc", type: "text" },
-    { id: "paidAmount", label: "Balance Amount", minWidth: "7pc", type: "text" },
-    { id: "employeeName", label: "Comments", minWidth: "10pc", type: "text" }
+    { id: "deductedDate", label: "Deducted Date", minWidth: "8pc", type: "text" },
+    { id: "deductedAmount", label: "Deducted Amount", minWidth: "7pc", type: "text" },
+    { id: "balanceAmount", label: "Balance Amount", minWidth: "7pc", type: "text" },
+    { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
 
   ];
 
 const defaultPayload={
-"count": 5,
-"page": 1,
-"search": "",
-"companyID": "COMP1",
-"externalFilters": {
-"requestDate": {
-
-"from": "",
-
-"to": ""
-
-},
-
-"paidDate": {
-
-"from": "",
-
-"to": ""
-
-},
-
-
-  "status": "",
-  "requestAmount":"",
-  "paidAmount":"",
-  "approverName":"",
-  "interestRate" : ""
-},
-"sort": {
-  "key":null ,
-  "orderBy": ""
-}
+    "page":1,
+    "count":4,
+    "companyID":"COMP1"
 }
 return (
 <>

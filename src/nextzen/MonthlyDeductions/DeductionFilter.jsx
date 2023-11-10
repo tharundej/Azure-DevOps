@@ -162,8 +162,30 @@ export default function DeductionFilter({filterSearch,filterData}){
         setOpen(false);
       }
 
+      const [showForm, setShowForm] = useState  (false);
+      const handleClose = () => setShowForm(false);
+      const handleTimeForm =()=>{
+        setShowForm(true)
+      } 
+
     return (
         <>
+           {showForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+<DialogContent>
+    Add Deduction
+</DialogContent>
+      </Dialog>
+    )}
           <Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
             <TextField placeholder='Search....' 
@@ -174,6 +196,9 @@ export default function DeductionFilter({filterSearch,filterData}){
             <Grid md={4} xs={4} item>
                 
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+                <Grid item>  
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Deduction</Button>
+               </Grid>
                <Grid>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
                <Iconify icon="mi:filter"/>
