@@ -23,14 +23,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 import { MobileTimePicker } from '@mui/x-date-pickers';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { Alert, Snackbar } from '@mui/material';
 
 export default function ShiftConfigurationForm({ currentUser }) {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset1();
   };
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30')); // State for Start Time
@@ -85,7 +91,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -96,7 +102,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response?.status === 200) {
           const rowsData = response?.data?.data;
           setLocationType(rowsData);
           console.log(JSON.stringify(response?.data?.data), 'result');
@@ -117,22 +123,52 @@ export default function ShiftConfigurationForm({ currentUser }) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = localStorage.getItem('companyID');
+    data.companyId = 'COMP2';
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('http://192.168.1.115:3000/erp/addShiftConfig', data);
+      const response = await axios.post(baseUrl+'/addShiftConfig', data);
+      if(response?.status===200){
+        handleClose();
+        setSnackbarSeverity('success');
+         setSnackbarMessage('Shift Configuration Added Succuessfully!');
+         setSnackbarOpen(true);
+      
       console.log('sucess', response);
+      }
     } catch (error) {
+      setOpen(true);
+       setSnackbarSeverity('error');
+       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+       setSnackbarOpen(true);
       console.log('error', error);
     }
   });
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(true);
+  };
   return (
     <>
+    <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={7000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"

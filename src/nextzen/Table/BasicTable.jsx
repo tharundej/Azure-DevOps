@@ -106,13 +106,13 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
  console.log(initialDefaultPayload,"initialDefaultPayload====================")
 //  console.log(actioonns,"actions==......")
-//  console.log(onclickActions(),"onclickActions  function --->")
+//  console.log(onClickActions(),"onClickActions  function --->")
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
   const countValue = initialDefaultPayload?.Count;
@@ -138,7 +138,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // const bodyData = 'appliedLeave';
  
   useEffect(() => {
-    // onclickActions();
+    // onClickActions();
     getTableData(initialDefaultPayload);
      
   }, [initialDefaultPayload])
@@ -184,8 +184,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
     axios.request(config).then((response) => {
       setLoading(false);
       // // console.log(response?.data?.bodyContent);
-      setTableData(response?.data?.[bodyData]|| []);
-      // setTableData(response?.data?.data|| []);
+      // setTableData(response?.data?.[bodyData]|| []);
+       setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalRecords || 0)
@@ -260,7 +260,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
  
   const handleEditRow = (rowData,eventData) => {
-    onclickActions(rowData,eventData);
+    onClickActions(rowData,eventData);
     if (eventData?.type === "/serviceCall"){
      console.log("servicecall")
     }
@@ -453,9 +453,9 @@ getTableData(payload)
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
-       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
+       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions} />}
+       {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
@@ -615,7 +615,7 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes = {
-  onclickActions:PropTypes.any,
+  onClickActions:PropTypes.any,
 }
  
 BasicTable.propTypes = {
