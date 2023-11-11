@@ -12,6 +12,33 @@ export default function ShiftConfigView() {
       { id: 'shiftTerm', label: 'Shift Term', type: 'text', minWidth:180 },
       { id: 'locationName', label: 'Location Name', type: 'text' , minWidth:180},
     ];
+
+    const onClickActions=(rowdata,event)=>{
+      if(event?.name==="Edit"){
+        handleEditAPICALL(rowdata,event)
+      }
+      else if(event?.name==="Delete"){
+        handleDeleteAPICALL(rowdata,event)
+      }
+    }
+
+    const handleDeleteAPICALL = async (rowdata,event)=>{
+      console.log("iam here ")
+      try{
+        console.log(rowdata,"rowData:::::")
+      const  data= {
+        project_id: JSON.stringify( rowdata.project_id),
+         
+        };
+        const response = await instance.post('deleteproject',data);
+        // setReportingManagerData(response.data.list)
+        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+      }catch(error){
+    console.error("Error", error);
+    throw error;
+      }
+    }
+
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
@@ -58,6 +85,7 @@ export default function ShiftConfigView() {
           endpoint="/getALLShiftConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
+          onClickActions={onClickActions}
           filterName='ShiftConfigurationFilterSearch'
         />
       

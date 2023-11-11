@@ -28,15 +28,50 @@ export default function ComoffConfigurationForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const handleClose2 = () => {
+    setOpen(false);
+    reset2();
+  };
+
+  const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
+  const [isTextFieldVisible, setTextFieldVisible] = useState(false);
+  const handleAutocompleteChange = (event, newValue) => {
+    setSelectedOption(newValue);
+
+    // Check if the selected option should show the text field
+    if (newValue) {
+      if (newValue.type === 'Leave') {
+        setTextFieldVisible(true);
+      } else if (newValue.type === 'Incashment') {
+        setTextFieldVisible(false);
+      }
+    }
+  };
+
+  const getOptionLabel = (compensatory) => compensatory.type;
+
   const NewUserSchema1 = Yup.object().shape({
-    compensatory: Yup.string().required('Expense Name is Required'),
-    type: Yup.string().required('Department Name is Required'),
+    type: Yup.string().required('Type is Required'),
+    value: Yup.number().required('Value is Required'),
+  });
+
+  const NewUserSchema2 = Yup.object().shape({
+    type: Yup.string().required('Type is Required'),
+    value: Yup.number().required('Value is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      compensatory: currentUser?.compensatory || null,
-      type: currentUser?.type || null,
+      type: currentUser?.type || 'Expiry Days',
+      value: currentUser?.type || null,
+    }),
+    [currentUser]
+  );
+
+  const defaultValues2 = useMemo(
+    () => ({
+      type: currentUser?.type || 'Amount',
+      value: currentUser?.type || null,
     }),
     [currentUser]
   );
@@ -46,30 +81,62 @@ export default function ComoffConfigurationForm({ currentUser }) {
     defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
   });
 
+  const methods2 = useForm({
+    resolver: yupResolver(NewUserSchema2),
+    defaultValues: defaultValues2, // Use defaultValues instead of defaultValues2
+  });
+
   const {
     setValue: setValue1,
     handleSubmit: handleSubmit1,
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
   } = methods1;
-  const compensatorytypes = [{ type: 'Leave' }, { type: 'Incashment' }];
-  const types = [{ type: 'Expiry Days' }, { type: 'Amount' }];
 
+  const {
+    setValue: setValue2,
+    handleSubmit: handleSubmit2,
+    formState: { isSubmitting: isSubmitting2 },
+    reset: reset2,
+  } = methods2;
+
+  const compensatorytypes1 = [{ type: 'Leave' }, { type: 'Incashment' }];
+  const types1 = [{ type: 'Expiry Days' }];
+
+  const types2 = [{ type: 'Amount' }];
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
+    data.compensatory = selectedOption?.type;
+
     console.log('submitted data111', data);
 
-    try {
-      const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
-        data
-      );
-      console.log('sucess', response);
-    } catch (error) {
-      console.log('error', error);
-    }
+    // try {
+    //   const response = await axios.post(
+    //     'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
+    //     data
+    //   );
+    //   console.log('sucess', response);
+    // } catch (error) {
+    //   console.log('error', error);
+    // }
+  });
+
+  const onSubmit2 = handleSubmit2(async (data) => {
+    data.companyId = localStorage.getItem('companyID');
+    data.compensatory = selectedOption?.type;
+    console.log('submitted data2222', data);
+
+    // try {
+    //   const response = await axios.post(
+    //     'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
+    //     data
+    //   );
+    //   console.log('sucess', response);
+    // } catch (error) {
+    //   console.log('error', error);
+    // }
   });
 
   return (
@@ -91,46 +158,109 @@ export default function ComoffConfigurationForm({ currentUser }) {
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Comoff Config</DialogTitle>
-          <DialogContent>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              marginTop={2}
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFAutocomplete
-                name="type"
-                label="Type"
-                options={compensatorytypes.map((name) => name.type)}
-              />
-              <RHFAutocomplete
-                name="compensatory"
-                label="Compensatory"
-                options={types.map((name) => name.type)}
-              />
-            </Box>
-          </DialogContent>
+        {isTextFieldVisible ? (
+          <FormProvider methods={methods1} onSubmit={onSubmit1}>
+            <DialogTitle>Add Comoff Config</DialogTitle>
+            
+            <DialogContent>
+            <Autocomplete
+              disablePortal
+              name="compensatory"
+              id="combo-box-demo"
+              options={compensatorytypes1}
+              getOptionLabel={getOptionLabel}
+              value={selectedOption} // Use selectedOption or an empty string
+              onChange={handleAutocompleteChange}
+              sx={{ width: 300, padding: '8px' }}
+              renderInput={(params) => <TextField {...params} label="Compensatory" />}
+            />
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                marginTop={2}
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                <RHFAutocomplete
+                  name="type"
+                  label="Type"
+                  options={types1.map((name) => name.type)}
+                />
+                <div>
+                <RHFTextField name="value" label="Value" />
+                </div>
+              </Box>
+            </DialogContent>
 
-          <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              loading={isSubmitting1}
-            >
-              Save
-            </LoadingButton>
-          </DialogActions>
-        </FormProvider>
+            <DialogActions>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                onClick={onSubmit1}
+                loading={isSubmitting1}
+              >
+                Save
+              </LoadingButton>
+            </DialogActions>
+          </FormProvider>
+        ) : (
+          <FormProvider methods={methods2} onSubmit={onSubmit2}>
+            <DialogTitle>Add Comoff Config</DialogTitle>
+            
+            <DialogContent>
+            <Autocomplete
+              disablePortal
+              name="compensatory"
+              id="combo-box-demo"
+              options={compensatorytypes1}
+              getOptionLabel={getOptionLabel}
+              value={selectedOption} // Use selectedOption or an empty string
+              onChange={handleAutocompleteChange}
+              sx={{ width: 300, padding: '8px' }}
+              renderInput={(params) => <TextField {...params} label="Compensatory" />}
+            />
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                marginTop={2}
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                <div >
+                  <RHFAutocomplete
+                    name="type"
+                    label="Type"
+                    options={types2.map((name) => name.type)}
+                  />
+                </div>
+                <RHFTextField name="value" label="Value" />
+              </Box>
+            </DialogContent>
+
+            <DialogActions>
+              <Button variant="outlined" onClick={handleClose2}>
+                Cancel
+              </Button>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                onClick={onSubmit2}
+                loading={isSubmitting2}
+              >
+                Save
+              </LoadingButton>
+            </DialogActions>
+          </FormProvider>
+        )}
       </Dialog>
     </>
   );

@@ -140,6 +140,7 @@ export default function GeneralForminfo({ currentUser}) {
     console.log('submitted data2222', data);
 
     
+    
 
     try {
       const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
@@ -232,17 +233,6 @@ export default function GeneralForminfo({ currentUser}) {
         }}
 
       >
-            {/* <Autocomplete
-                  disablePortal
-                  name="employee_type"
-                  id="combo-box-demo"
-                  options={employeepayTypes}
-                  getOptionLabel={getOptionLabel}
-                  value={selectedOption} // Use selectedOption or an empty string
-                  onChange={handleAutocompleteChange}
-                  sx={{ width: 300, padding: '8px' }}
-                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
-                /> */}
         
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
