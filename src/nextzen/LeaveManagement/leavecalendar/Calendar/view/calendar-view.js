@@ -74,8 +74,8 @@ export default function CalendarView() {
   const [filters, setFilters] = useState(defaultFilters);
   const { events, eventsLoading } = useGetEvents();
   const [listOfHolidays,setListOfHolidays]= useState();
-  const [dropdownstatus,setDropdownStatus]=useState([])
-  const [dropdownLeaveType,setDropdownLeaveType]=useState([])
+  const [dropdownstatus,setDropdownStatus]=useState("")
+  const [dropdownLeaveType,setDropdownLeaveType]=useState("")
 useEffect(()=>{
   holidayslist();
 },[])
@@ -251,12 +251,31 @@ useEffect(()=>{
   const LeaveHistory = () => {
     setLoading(true);
     const payload = {
-      "employee_id": "E1",  
-      "search": "",
-      "Page":1,
-      "Count":10,
-      "from_date":(dates?.fFromDate)?dates?.fFromDate:"",
-      "to_date": (dates?.fToDate)?dates?.fToDate:""
+      "employee_id": "info1",
+       "status":(dropdownstatus)?dropdownstatus:"",
+       "leavetypename":(dropdownLeaveType)?dropdownLeaveType:"",
+       "search": "",
+      "Page": 1,
+      "Count": 7,
+   "externalFilters":{
+      
+       "apply_date":{
+           "from_date":(dates?.applyDatefrom)?dates?.applyDatefrom:"",
+           "to_date":(dates?.applyDateto)?dates?.applyDateto:""
+       },
+
+       "from_date":{
+           "from_date":(dates?.fromDatefrom)?dates?.fromDatefrom:"",
+           "to_date":(dates?.fromDateto)?dates?.fromDateto:"",
+       },
+       "to_date":{
+            "from_date":(dates?.toDatefrom)?dates?.toDatefrom:"",
+           "to_date":(dates?.toDateto)?dates?.toDateto:""
+       }
+      }
+
+      // "from_date":(dates?.applyDatefrom)?dates?.applyDatefrom:"",
+      // "to_date": (dates?.applyDateto)?dates?.applyDateto:""
     }
      
     const config = {
@@ -328,8 +347,12 @@ const ITEM_HEIGHT = 48;
   };
 const [open,setOpen]=useState(false);
 const [dates,setDates]=useState({
-  fFromDate:"",
-  fToDate:"",
+  applyDatefrom:"",
+  applyDateto:"",
+  fromDatefrom:"",
+  fromDateto:"",
+  toDatefrom:"",
+  toDateto:""
 })
 const handleClickOpen=()=>{
   getLeaveType()
@@ -343,33 +366,17 @@ const handleApply = async()=>{
  setOpen(false)
  LeaveHistory()
 }
-const [dropdown,setDropdown]=useState({
-})
-const handleChangeDropDown = (event,field) => {
-  const {
-    target: { value },
-  } = event;
-  
-  if(field==="LeaveTypeName"){
-    setDropdownLeaveType(value)
-    const obj=dropdown;
-    obj[field]=value;
-    setDropdown(obj);
-  }
-  // else if(field==="fStatus"){
-  //   setDropdownStatus(value)
-  //   const obj=dropdown;
-  //   obj[field]=value;
-  //   setDropdown(obj);
-  // }
-};
 
 const handleCancel = async()=>{
   setDropdownStatus([]);
   setDropdownLeaveType([]);
   setDates({
-    fFromDate: "",
-    fToDate: "",
+    applyDatefrom: "",
+    applyDateto: "",
+    fromDatefrom:"",
+    fromDateto:"",
+    toDatefrom:"",
+    toDateto:""
   });
   setOpen(false);
 }
@@ -530,21 +537,21 @@ const handleCancel = async()=>{
         </DialogTitle>
         <DialogContent sx={{mt:0,paddingBottom:0}}>
           <Grid>
-                <Grid>
-            <Typography>Leave Duration</Typography>
+            <Grid>
+            <Typography>Apply Date</Typography>
             <Grid container flexDirection="row">
             <Grid item>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fFromDate ? dayjs(dates.fFromDate) : null}
+                      label="From"
+                      value={dates?.applyDatefrom ? dayjs(dates.applyDatefrom) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fFromDate:newValue? formatDateToYYYYMMDD(newValue):"",
+                          applyDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -556,32 +563,113 @@ const handleCancel = async()=>{
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fToDate ? dayjs(dates.fToDate) : null}
+                      label="To"
+                      value={dates?.applyDateto ? dayjs(dates.applyDateto) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          fToDate: newValue ? formatDateToYYYYMMDD(newValue):"",
+                          applyDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
+              </Grid>
                 </Grid>
+                <Grid sx={{marginTop:2}}>
+            <Typography>Start Date</Typography>
+            <Grid container flexDirection="row">
+            <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From"
+                      value={dates?.fromDatefrom ? dayjs(dates.fromDatefrom) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fromDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To"
+                      value={dates?.fromDateto ? dayjs(dates.fromDateto) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          fromDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+              </Grid>
+                </Grid>
+                <Grid sx={{marginTop:2}}>
+            <Typography>End Date</Typography>
+            <Grid container flexDirection="row">
+            <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From"
+                      value={dates?.toDatefrom ? dayjs(dates.toDatefrom) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          toDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To"
+                      value={dates?.toDateto ? dayjs(dates.toDateto) : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          toDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+              </Grid>
                 </Grid>
                 <Grid>
-                  {/* <Grid marginTop="10px" xs={12} md={6}>
+                  <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="fStatus">status</InputLabel>
+                <InputLabel fullWidth id="status">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
-                  multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'fStatus')}
+                  onChange={(e)=>setDropdownStatus(e.target.value)}
                   input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
@@ -592,7 +680,7 @@ const handleCancel = async()=>{
                   
                 </Select>
               </FormControl>
-                   </Grid> */}
+                   </Grid>
                    <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="LeaveTypeName">Leave Type</InputLabel>
@@ -601,8 +689,7 @@ const handleCancel = async()=>{
                   labelId="demo-multiple-name-status_2"
                   id="demo-multiple-status_2"
                   value={dropdownLeaveType}
-                  multiple
-                  onChange={(e)=>handleChangeDropDown(e,'LeaveTypeName')}
+                  onChange={(e)=>setDropdownLeaveType(e.target.value)}
                   input={<OutlinedInput label="Leave Type" />}
                   MenuProps={MenuProps}
                 >
@@ -630,8 +717,8 @@ const handleCancel = async()=>{
     {loading ? 
      <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
      : (
-      listData?.response != null ? (
-        listData?.response?.map((itm, index) => (
+      listData?.data != null ? (
+        listData?.data?.map((itm, index) => (
           <Card sx={{ margin: "10px" }}>
             <CardContent>
               {!pending[index] ? (
@@ -681,8 +768,8 @@ const handleCancel = async()=>{
     {loading ? 
       <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
     : (
-      listData?.response != null ? (
-        listData?.response?.map((itm, index) => (
+      listData?.data != null ? (
+        listData?.data?.map((itm, index) => (
           <Card sx={{ margin: "10px" }}>
             <CardContent>
               {(!approved[index]) ? (

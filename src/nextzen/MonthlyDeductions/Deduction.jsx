@@ -35,7 +35,7 @@ export default function Deduction() {
 
 const defaultPayload={
     "page":1,
-    "count":4,
+    "count":10,
     "companyID":"COMP1"
 }
 return (

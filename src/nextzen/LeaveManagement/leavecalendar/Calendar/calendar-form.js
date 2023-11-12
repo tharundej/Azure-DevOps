@@ -230,8 +230,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
   return (
   
   <>
-  {!currentEvent ?
-    <>
+  {currentEvent?.leaveId ?"delete": <>
    {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
@@ -342,8 +341,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>
-  :"delete"}</>
+    </>}</>
   );
 
 }

@@ -1,7 +1,10 @@
 import PropTypes, { element } from 'prop-types';
-import React,{ useEffect, useState,useCallback } from 'react';
+import React,{ useEffect, useState,useCallback , useMemo,forwardRef} from 'react';
 import axios from 'axios';
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,Dialog,DialogTitle,MenuItem,FormControl,Select,
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
+import {Card,Box,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,Dialog,DialogTitle,MenuItem,FormControl,Select,
    DialogActions,Typography,InputLabel} from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -14,6 +17,9 @@ import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
+import FormProvider from 'src/components/hook-form/form-provider';
+import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
+
 const defaultFilters = {
   name: '',
   type: [],
@@ -123,6 +129,61 @@ export default function DeductionFilter({filterSearch,filterData}){
     const handleClickClose=()=>{
       setOpen(false)
     }
+
+    const NewUserSchema = Yup.object().shape({
+      comments:Yup.string(),
+      deductionType:Yup.string(),
+      employeeID:Yup.string(),
+      companyID:Yup.string()
+    })
+
+    const defaultValues = useMemo(
+    
+      () => ({
+        comments:"",
+        deductionType:"",
+        employeeID:"",
+        companyID:""
+      }),
+      []
+    );
+
+    const methods = useForm({
+      resolver: yupResolver(NewUserSchema),
+      defaultValues,
+    });
+
+    const {
+      reset,
+      watch,
+      control,
+      setValue,
+      handleSubmit,
+      formState: { isSubmitting },
+    } = methods;
+  
+    const values = watch();
+
+    const onSubmit = handleSubmit(async (data)=>{
+      console.log(data,"Dataaaa")
+      try{
+        data.companyID="COMP1";
+
+        const response = await axios.post(`http://192.168.0.111:3002/erp/addDeductionDetails`,data).then(
+          (successData)=> {
+            console.log(successData,"Success")
+          },
+          (error)=>{
+            console.log(error,"error")
+          }
+        )
+        console.log(response,"Responsssee")
+      }
+      catch (error){
+        console.error(error)
+      }
+    });
+    
     const handleChangeDropDown = (event,field) => {
       const {
         target: { value },
@@ -163,11 +224,35 @@ export default function DeductionFilter({filterSearch,filterData}){
       }
 
       const [showForm, setShowForm] = useState  (false);
+      const[employeesList,setEmployeesList]=useState();
+    
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
         setShowForm(true)
+        getEmployeesList()
       } 
-
+      const getEmployeesList = () => {
+       
+        const config = {
+          method: 'POST',
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.111:3002/erp/getLoanEmployeeDetails`
+        };
+      
+        axios.request(config).then((response) => {
+          setEmployeesList(response?.data)
+        })
+      
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+       
+      const handleDeductionCancel=()=>{
+        reset();
+        setShowForm(false);
+      }
+      
     return (
         <>
            {showForm && (
@@ -181,11 +266,43 @@ export default function DeductionFilter({filterSearch,filterData}){
  }}
  className="custom-dialog"  
 >
+<FormProvider methods={methods} onSubmit={onSubmit}>
+    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
+        Add Deduction
+    </Typography>
 <DialogContent>
-    Add Deduction
+<Grid>
+<RHFSelect name="employeeID" label="Employee">
+              {employeesList?.data?.map((employee) => (
+                <MenuItem value={employee?.EmployeeID} key={employee?.EmployeeID}>
+                  {employee?.employeeName}
+                </MenuItem>
+              ))}
+</RHFSelect>
+</Grid>
+{/* <RHFAutocomplete
+              name="employeeID"
+              label="Employee"
+              options={employeesList?.data?.map((employee) => employee.employeeName)}
+              value={employeesList?.data?.map((employee) => employee.employeeID)}
+            /> */}
+<Grid sx={{marginTop:2}}>
+<RHFSelect name="deductionType" label="Deduction Type">
+       <MenuItem value="Salary">Salary</MenuItem> 
+       <MenuItem value="Cash">Cash</MenuItem>    
+</RHFSelect>
+</Grid>
+<Grid sx={{marginTop:2}}>
+<RHFTextField name="comments" label="Comments" />
+</Grid>
+<Button sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} onClick={handleDeductionCancel}>Cancel</Button>
 </DialogContent>
+</FormProvider>
       </Dialog>
     )}
+
+    {/* FIlter and Searchhh */}
           <Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
             <TextField placeholder='Search....' 
@@ -208,7 +325,7 @@ export default function DeductionFilter({filterSearch,filterData}){
  
       </Grid>
          </Grid>
-     
+     {/* FILTER DIALOG */}
       <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
