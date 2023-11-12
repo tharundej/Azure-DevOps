@@ -8,7 +8,8 @@ import Typography from '@mui/material/Typography';
 import ReusableTabs from '../tabs/ReusableTabs';
 import CompoffApprove from './components/CompoffApprove';
 import MyCompoff from './components/MyCompoff';
-import MyClaims from "./components/MyClaims"
+import MyClaims from "./components/MyClaims";
+import ApproveClaim from './components/ApproveClaim';
 
 const bull = (
   <Box
@@ -54,12 +55,13 @@ export default function BasicCard() {
       status: "active",
     },
   ];
-  const tabLabels = ['My Claims', 'My Compoff', 'Compoff Approve'];
+  const tabLabels = ['My Claims', 'Claim Approve', 'My Compoff', 'Compoff Approve'];
   const tabContents = [
     <div>
 
       <MyClaims currentUser={{}}/>
     </div>,
+    <div><ApproveClaim  /></div>,
     <div>
       <MyCompoff />
     </div>,
@@ -67,38 +69,15 @@ export default function BasicCard() {
   ];
 
   return (
-    // <Card sx={{ minWidth: 275 }}>
-    //   <CardContent>
-    //     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-    //       Leave management
-    //     </Typography>
-    //   </CardContent>
-    //   <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    // </Card>
+   
     
     <>
-      {/* <Helmet>
-        <title> Dashboard: claims </title>
-      </Helmet> */}
-{/* <Button
-
-component={RouterLink}
-
-href={paths.dashboard.employee.onboardform}
-
-variant="contained"
-
-startIcon={<Iconify icon="mingcute:add-line" />}
->Add New Employee</Button> */}
       
    
   
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents}/>
-    {/* <BasicTable
-        headdata={TABLE_HEAD}
-        bodydata={bodyContent}
-        rowActions={actions}
-      /> */}
+    
     </>
   );
 }
+

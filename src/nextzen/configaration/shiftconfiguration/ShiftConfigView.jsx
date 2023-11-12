@@ -21,11 +21,10 @@ export default function ShiftConfigView() {
     {
       "companyId":"COMP2",
       "locationId":32,
-      "count":5,
       "search":"",
-      "page": 0,
+      "page": 1,
       "limit": 5,
-      "externalFilters": {
+      "externalFilter": {
           "shiftTerm": "",
           "shiftName": "",
           "startTime": "",
@@ -33,7 +32,7 @@ export default function ShiftConfigView() {
       },
       "sort": {
           "key": 0,
-          "orderBy": ""
+          "orderBy": "start_time"
       }
       
   };
@@ -55,7 +54,7 @@ export default function ShiftConfigView() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="/getALLShiftConfig"
+          endpoint="getALLShiftConfig"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='ShiftConfigurationFilterSearch'

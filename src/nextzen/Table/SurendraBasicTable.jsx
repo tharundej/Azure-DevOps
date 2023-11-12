@@ -151,7 +151,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData,rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
   // const popover = usePopover();
 
@@ -161,7 +161,7 @@ const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerDat
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
 
- console.log(initialDefaultPayload,"initialDefaultPayload====================")
+//  console.log(initialDefaultPayload,"initialDefaultPayload====================")
 
 //  console.log(actions,"actions==......")
 
@@ -169,7 +169,7 @@ const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerDat
 
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
 
-  console.log(initialDefaultPayload?.Page,"page value")
+  // console.log(initialDefaultPayload?.Page,"page value")
 
   // const countValue = initialDefaultPayload?.Count;
 
@@ -212,7 +212,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   // const bodyData = 'appliedLeave';
 
- 
+  const getRowActionsBasedOnStatus = (status) => {
+    if (status === 'pending' || status==="" || status ==="Pending") {
+      return rowActions
+    }
+    else {
+      return null
+    }
+  }
 
   useEffect(() => {
 
@@ -664,8 +671,6 @@ const [sortColumn, setSortColumn]=useState("")
     console.log(payload,field,"sortinglllllllllll")
     
 
-  
-
   table.onSort(field); 
   getTableData(payload)
 };
@@ -789,7 +794,6 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-                    {console.log(tableData)}
 
                     {tableData && tableData.length > 0 && tableData
 
@@ -814,16 +818,12 @@ const [sortColumn, setSortColumn]=useState("")
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
-
-                          rowActions={rowActions || []}
-
+                         
+                          rowActions={getRowActionsBasedOnStatus(row.status)|| []}
+                         
                         />
 
-{/* {tableData.map((headCell) => (
-      <TableCell key={headCell.id}>
-        {row[headCell.id] || '-'}
-      </TableCell>
-    ))} */}
+
 
                         
 

@@ -8,11 +8,14 @@ import Iconify from 'src/components/iconify/iconify';
 
 export default function LeaveType() {
     const TABLE_HEAD = [
-      { id: 'leaveName', label: 'Leave Name', type: 'text' , minWidth:180},
-      { id: 'totalNumberOfLeaves', label: 'Total Number Of Leaves', type: 'text', minWidth:180 },
-      { id: 'termType', label: 'Term Type', type: 'text', minWidth:180 },
-      { id: 'elUpperCapLimit', label: 'EL Upper Cap Limit', type: 'text', minWidth:180 },
-      { id: 'elTakenRange', label: 'EL Taken Range', type: 'text' , minWidth:180},
+      { id: 'slNo', label: 'SL NO', type: 'text' },
+      { id: 'leaveTypeId', label: 'Leave Type ID', type: 'text' },
+      { id: 'leaveName', label: 'Leave Name', type: 'text' },
+      { id: 'startDate', label: 'Start Date', type: 'text' },
+      { id: 'totalNumberOfLeaves', label: 'Total Number Of Leaves', type: 'text' },
+      { id: 'termType', label: 'Term Type', type: 'text' },
+      { id: 'elUpperCapLimit', label: 'EL Upper Cap Limit', type: 'text' },
+      { id: 'elTakenRange', label: 'EL Taken Range', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -20,8 +23,27 @@ export default function LeaveType() {
     ];
     const defaultPayload = 
     {
-      "companyID":"COMP4"
-  };
+      "count": 5,
+      "page": 1,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+        "payscheduleType": "",
+        "employmentType": "",
+        "basicPayPercentage":"",
+        "hraPercentage":"",
+        "daPercentage":"",
+        "ltaPercentage":"",
+        "employerPfPercentage":"",
+        "employeePfPercentage":"",
+        "esicPercentage":"",
+        "tdsPercentage":""
+      },
+      "sort": {
+        "key": 1,
+        "orderBy": ""
+      }
+    };
      
 
     const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
@@ -42,7 +64,7 @@ export default function LeaveType() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="/getLeaveType"
+          endpoint=""
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName="LeaveTypeFilterSearch"

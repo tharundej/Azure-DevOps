@@ -499,6 +499,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
             </Grid>
           ))}
         </>
+            {defaultValues[0]?.documents?.length && 
           <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
@@ -509,7 +510,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
         >
           Add Education
         </Button>
-        </Grid>
+        </Grid>}
         {/* <Button
           variant="contained"
           color="primary"

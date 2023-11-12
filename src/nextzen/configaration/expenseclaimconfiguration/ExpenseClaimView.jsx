@@ -18,7 +18,7 @@ export default function ExpenseClaimConfiguration() {
     company_id: 'COMP2',
     employee_id: 'ibm1',
     page: 0,
-    count: 5,
+    count: 6,
     search: '',
     externalFilters: {
       department_name: '',
@@ -26,7 +26,7 @@ export default function ExpenseClaimConfiguration() {
       designation_grade_name: '',
     },
     sort: {
-      orderby: '',
+      orderby: 'expense_name',
       key: 0,
     },
   };
@@ -83,7 +83,7 @@ export default function ExpenseClaimConfiguration() {
   return (
     <BasicTable
       headerData={TABLE_HEAD}
-      endpoint="/getExpenseConfig"
+      endpoint="getExpenseConfig"
       defaultPayload={defaultPayload}
       rowActions={actions}
       filterName="ExpensiveClaimFilterSearch"

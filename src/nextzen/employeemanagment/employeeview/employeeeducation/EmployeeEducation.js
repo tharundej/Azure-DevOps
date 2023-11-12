@@ -4,6 +4,7 @@ import Iconify from 'src/components/iconify';
 import FilesGrid from '../files/FilesGrid';
 import CreateEducation from './createeducation/CreateEducation';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
 
 import axios from 'axios';
 
@@ -30,6 +31,7 @@ const employeeData=[ {
 ]
 
 const EmployeeEducation = () => {
+  const docType=["Marks Memo","Ssc Cards",'Provisional']
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
 
@@ -40,7 +42,7 @@ const EmployeeEducation = () => {
   };
   
   useEffect(() => {
-    console.log('aa',employeeDataToEditOrCreate.length)
+    //console.log('aa',employeeDataToEditOrCreate.length)
     if(employeeDataToEditOrCreate?.length>0){
     setOpen(true);
    
@@ -54,16 +56,15 @@ const EmployeeEducation = () => {
 
     const dataFiltered=[
         {
-            type:'pdf',
-            id:"1",
-            name:'marks'
+            fileName:'pdf',
+            fileType:"1",
+            fileContent:'marks'
         },
         {
-            type:'pdf',
-            id:"2",
-            name:'marks'
-
-        }
+          fileName:'pdf',
+          fileType:"1",
+          fileContent:'marks'
+      }
     ]
     const [employeeEducation,setEmployeeEducation] =useState( [])
     const [expanded, setExpanded] = useState(Array(employeeEducation?.length).fill(false));
@@ -114,6 +115,7 @@ const EmployeeEducation = () => {
    
   return (
     <>
+    
       <CreateEducation open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
@@ -148,7 +150,10 @@ const EmployeeEducation = () => {
 
                             <Grid>
                             <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleAddEducation([itm],"updateEducationDetails")}><Iconify icon="material-symbols:edit"/></IconButton>}
+                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>{
+                            const item=itm;
+                            delete item.documents;
+                            handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>}
                            </Grid>
                             </Typography>
                           
@@ -159,7 +164,9 @@ const EmployeeEducation = () => {
                           <Typography><span style={{fontWeight:600}}>Grade Type : </span> {itm?.gradeType}</Typography>
                           <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
 
-                        <FilesGrid dataFiltered={itm?.documents} />
+                        {/* <FilesGrid dataFiltered={itm?.documents} /> */}
+                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
+                       
 
                           </>}
                         </CardContent>
