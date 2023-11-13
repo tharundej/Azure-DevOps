@@ -253,13 +253,11 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
     //   filterData(data);
     handleClickClose();
   };
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+  const handleSearch = (searchTerm) => {
+     
+    searchData(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
   return (
     <>
        <Grid
@@ -270,18 +268,18 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
         direction="row"
         style={{ marginBottom: '1rem' }}
       >
-        <Grid item>
+        <Grid item  md={8} xs={8}>
         <TextField
             placeholder="Search...."
              fullWidth
-             onChange={handleSearch}
+             onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
        <WorkWeekForm/>
        </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            

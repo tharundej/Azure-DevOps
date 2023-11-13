@@ -53,7 +53,7 @@ console.log(row,'row data')
   return (
     <>
      
-      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} onClick={()=>onHandleEditRow(row?.employeeId)}>
+      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
@@ -61,10 +61,12 @@ console.log(row,'row data')
           headerContent.map((ele) => (
             <>
               <TableCell
+              onClick={()=>onHandleEditRow(row?.employeeId)}
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
-                  width:ele.width || ''
+                  width:ele.width || '',
+                  cursor:'pointer'
                 }}
               >
                 {ele.containesAvatar && (
@@ -108,7 +110,6 @@ console.log(row,'row data')
             
             </>
           ))}
-         
 
         {rowActions && rowActions?.length > 0 && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
@@ -123,7 +124,6 @@ console.log(row,'row data')
           arrow="right-top"
           sx={{ width: 140 }}
         >
-         
           {rowActions?.map((item) => (
             <>
               <MenuItem
@@ -132,14 +132,13 @@ console.log(row,'row data')
                 
                   popover.onClose();
                 }}
-              > {}
+              >
                 <Iconify icon="solar:pen-bold" />
                 {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>
           ))}
-          
         </CustomPopover>
       </TableRow>
 

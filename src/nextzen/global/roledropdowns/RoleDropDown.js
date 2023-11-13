@@ -39,12 +39,9 @@ const ApiHitDepartment = async (obj) => {
     };
 
     const response = await axios.request(config);
-    console.log(response.data.data,'response.data.dataresponse.data.data1')
     return response.data.data || [];
   } catch (error) {
     console.error(error);
-    console.log(response.data.data,'response.data.dataresponse.data.data2')
-
     return [];
   }
 }

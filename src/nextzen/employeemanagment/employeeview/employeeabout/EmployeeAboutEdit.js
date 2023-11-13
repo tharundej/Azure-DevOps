@@ -35,26 +35,8 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocation
 
 
 const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue}) => {
-   console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
-   const [userdropDownOptions,setUserDropDownOptions]=useState("");
-   const [userdropDownvalue,setUserDropDownValue]=useState("")
-  useEffect(()=>{
-    if(dropDownOptions){
-     
-      setUserDropDownOptions(dropDownOptions)
-      
-    }
-  },[dropDownOptions])
-
-  useEffect(()=>{
-    if(dropDownOptions){
-      console.log(dropDownOptions,'dropDownOptionsm')
-      setUserDropDownValue(dropDownvalue)
-      
-    }
-  },[dropDownvalue])
- 
-  
+  const [userdropDownOptions,setUserDropDownOptions]=useState(dropDownOptions);
+  const [userdropDownvalue,setUserDropDownValue]=useState(dropDownvalue)
 
   const [locations,setLocations]=useState([])
 
@@ -249,52 +231,14 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
 
              <Grid container >
-              
                 <Grid item xs={12} md={6}>
-                  {console.log(userdropDownvalue,'userdropDownvalue?.locationValue')}
                   <Autocomplete
                     disablePortal
-                    id="locationsOptions"
-                    options={userdropDownOptions?.locationsOptions || []}
+                    id="combo-box-demo"
+                    options={userdropDownOptions?.locationsOptions}
                     value={userdropDownvalue?.locationValue}
-                    getOptionLabel={(option) => option?.locationName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.locationValue=newvalue;
-                      newArr.departmentValue=undefined;
-                      newArr.desginationValue=undefined
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const deptObj={
-                          companyID:'COMP1',
-                          locationID:newvalue?.locationID
-                        }
-                        const department=await ApiHitDepartment(deptObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.departmentOptions=department;
-                        optionsArr.desginationGradeOptions=[];
-                        optionsArr.desginationOptions=[];
-                        console.log(optionsArr,'optionsArroptionsArr')
-                        setUserDropDownOptions(optionsArr)
-
-                      }
-                      catch(error){
-                        
-                      }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }
-                    
-                  }
-
-                   
-                    
+                    getOptionLabel={(option) => option.locationName}
+                    onChange={(e, newvalue) => {}}
                     renderInput={(params) => <TextField {...params} label="Location"
                     style={{ paddingLeft: '16px', width: '100%' }} />}
                   />
@@ -302,47 +246,14 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
               </Grid>
               <Grid container >
                 <Grid item xs={12} md={6}>
-                {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                   <Autocomplete
                     disablePortal
-                    id="departmentName"
-                    options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
-
+                    id="combo-box-demo"
+                    options={userdropDownOptions?.departmentOptions}
                     value={userdropDownvalue?.departmentValue}
-
                     getOptionLabel={(option) => option.departmentName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.departmentValue=newvalue;
-                      newArr.desginationValue=undefined;
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgObj={
-                          companyID:'COMP1',
-                          departmentID:newvalue?.departmentID
-                        }
-                        const desgination=await ApiHitDesgniation(desgObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationOptions=desgination;
-                        optionsArr.desginationGradeOptions=[];
-                        
-                       
-                        setUserDropDownOptions(optionsArr)
-
-                      }
-                      catch(error){
-                        
-                      }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Department"
+                    onChange={(e, newvalue) => {}}
+                    renderInput={(params) => <TextField {...params} label="Location"
                     style={{ paddingLeft: '16px', width: '100%' }} />}
                   />
                 </Grid>

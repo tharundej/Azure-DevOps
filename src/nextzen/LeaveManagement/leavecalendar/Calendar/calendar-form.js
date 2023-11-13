@@ -179,8 +179,8 @@ const getLeaveList = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: baseUrl + `getLeaveType`,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+    url: baseUrl + `/getLeaveType`,
+    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
@@ -197,16 +197,16 @@ const getLeaveList = () => {
 const AvailableLeaves = () => {
   setLoader(true);
   const payload = {
-    company_id: "C1",
-     employee_id:"E1"
+    company_id: JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
+     employee_id:JSON.parse(JSON.stringify(localStorage.getItem('employeeID')))
   
   }
  
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: baseUrl + `availableLeave`,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
+    url: baseUrl + `/availableLeave`,
+    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 

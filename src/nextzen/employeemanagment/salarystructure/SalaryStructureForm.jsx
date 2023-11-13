@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -25,7 +25,13 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 
-export default function SalaryStructureForm({ currentUser}) {
+export default function SalaryStructureForm({ currentUserData}) {
+  const [currentUser,setcurrentUser]=useState("")
+  useEffect(()=>{
+    if(currentUserData){
+      setcurrentUser(currentUserData);
+    }
+  },[currentUserData])
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -109,10 +115,80 @@ export default function SalaryStructureForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="marketRate" label="Market Rate" />
-                <RHFTextField name="minimum" label="Minimum" />
-                <RHFTextField name="midpoint" label="Midpoint" />
-                <RHFTextField name="maximum" label="Maximum" />
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="marketRate"
+                    label="market Rate"
+                    variant="outlined"
+                    id="motherName"
+                    value={currentUser?.marketRate}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        marketRate:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="minimum"
+                    label="Minimum"
+                    variant="outlined"
+                    id="minimum"
+                    value={currentUser?.minimum}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        minimum:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="midpoint"
+                    label="Mid Point"
+                    variant="outlined"
+                    id="midpoint"
+                    value={currentUser?.midpoint}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        midpoint:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="maximum"
+                    label="Maximum"
+                    variant="outlined"
+                    id="maximum"
+                    value={currentUser?.maximum}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        maximum:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+               
               </Box>
             </DialogContent>
 

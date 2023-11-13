@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import Iconify from 'src/components/iconify';
 
 import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
@@ -27,173 +26,42 @@ import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 
 import { Stack } from '@mui/system';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 // const EducationInformation=forwardRef((props,ref)=>{
 const PreviousWorkDetails=forwardRef((props,ref)=>{
 
-  const obj =   {
-    nameOfTheDegree:  '',
-    stream:  '',
-    university:  '',
-    yearOfPassing: undefined,
-    document_data:'',
-    gradeType:'',
-    grade:undefined,
-    documents:[
-      {
-        fileType:'',
-        fileName:'',
-        fileContent:''
-    }
-    
-  ]
-  
-};
 
-  const [defaultValues, setDefaultValues] = useState([
-    {
-      previousCompanyName: '',
-      startDate: dayjs(new Date()),
-      endDate: dayjs(new Date()),
-      employementType: '',
-      primarySkills: [],
-      
-      designation:'',
+  const ApiHitExperience=(dataExperience)=>{
+    const data1 =dataExperience ;
 
-      documents:[
-        {
-          fileType:'',
-          fileName:'',
-          fileContent:''
-      }
-      
-    ]
-    },
-  ]);
-  const handleDelete = (id) => {
-    // Use filter to create a new array without the item to delete
-    const updatedItems = defaultValues.filter((item,index) => index !== id);
-    // Update the state with the new array
-    setDefaultValues(updatedItems);
-  };
+    // data1.from=formatDateToYYYYMMDD(dataExperience?.from);
+    // data1.to=formatDateToYYYYMMDD(dataExperience.to);
 
-  const handleAddDocument=(index)=>{
-    const newArray = [...defaultValues];
-    const obj1={
-      fileType:'',
-      fileName:'',
-      fileContent:''
-  }
-    newArray[index].documents = [
-      ... newArray[index].documents,
-      obj1,
-    ];
-
-    setDefaultValues(newArray);
-  }
-
-  const handleDeleteDocument=(index,index1)=>{
-    const updatedItems = defaultValues[index].documents.filter((item,index3) => index3 !== index1);
-
-    const newArray = [...defaultValues];
-   
-    newArray[index].documents =updatedItems
-   
-    console.log(updatedItems,'updatedItems')
-
-   setDefaultValues(newArray);
-  }
-  const handleCategoryChange = (e,index,index1) => {
-    const { value, id } = e.target;
-    // const newObj = defaultValues;
-    
-
-    const newArray = [...defaultValues];
-
-    newArray[index].documents[index1] = {
-      ... newArray[index].documents[index1],
-      fileType: value
-    };
-    console.log(index)
-    
-    setDefaultValues(newArray);
-  };
-
-  const handleFileUpload = (event,index,index1) => {
-        
-    const file = event.target.files[0];
-    // const { value, id } = e.target;
-    // const newObj = defaultValues;
-
-      const base64String=1;
-    const reader = new FileReader();
-
-    reader.onload = function(event) {
-    const base64String = event.target.result.split(',')[1];
-    console.log(base64String);
-    const newArray = [...defaultValues];
-
-    newArray[index].documents[index1] = {
-      ... newArray[index].documents[index1],
-      fileName: file.name,
-      fileContent:base64String
-    };
-    console.log(index,'newArraynewArraynewArray')
-    setDefaultValues(newArray);
-
-    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'text/plain'
+      },
+      data : data1
     };
 
-  reader.readAsDataURL(file);
-    
-
-    
-
-    //setSelectedFile(file);
-  };
-
-     
-
-  const ApiHitExperience=()=>{
-    const obj={
-      companyId: "COMP5",
-      employeeId: "NEWC19",
-      experience:defaultValues
-     }
-     console.log(obj,'obbbbb');
-      
-      const config = {
-
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${baseUrl}/addExperience`,
-       // url:'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
-        headers: { 
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
-          'Content-Type': 'application/json'
-        },
-        data : {
-      companyId: "COMP5",
-      employeeId: "NEWC19",
-      experience:defaultValues
-     }
-      };
-       
-      axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        onhandleClose()
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      props.nextStep();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   useImperativeHandle(ref,()=>({
     childFunctionExperience(){
-      ApiHitExperience();
+     handleSubmit();
       
     }
   }))
@@ -224,9 +92,27 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
   };
   const [value, setValue] = React.useState(dayjs(new Date()));
   const [attachmentString,setAttachmentString]=useState("");
- 
+  const [defaultValues, setDefaultValues] = useState([
+    {
+      previousCompanyName: '',
+      startDate: dayjs(new Date()),
+      endDate: dayjs(new Date()),
+      employementType: '',
+      primarySkills: [],
+      relevingLetter: '',
+      designation:''
+    },
+  ]);
 
-
+  const obj = {
+    previousCompanyName: '',
+    designation: '',
+    startDate: dayjs(new Date()),
+    endDate: dayjs(new Date()),
+    employement_type: '',
+    primarySkills: [],
+    relevingLetter: '',
+  };
   function formatDateToYYYYMMDD(newValue) {
    console.log(newValue)
     const date = new Date(newValue.$d);
@@ -241,37 +127,11 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
     setDefaultValues((prev) => [...prev, obj]);
   };
   const handleChange = (e, index, field) => {
-
-    const { value, id } = e.target;
     const newObj = defaultValues;
-    const newArray = [...defaultValues];
+    newObj[index][field] = e?.target?.value || '';
 
-   if(field==='grade' || field==="yearOfPassing"){
-
-    newObj[index][field]=e?.target?.value ;
-    newArray[index] = {
-      ...newArray[index],
-      [field]: parseInt(value,10)
-  }
-
-
-   }else{
-
-    newObj[index][field]=e?.target?.value ;
-    newArray[index] = {
-      ...newArray[index],
-      [field]: value
-  }
-
-   }
-        
-     
- 
-    // console.log(newArray)
-    
-    setDefaultValues(newArray);
+    setDefaultValues(newObj);
   };
-    
 
   const handleChangeDate = (newValue, index, name) => {
     const newObj = defaultValues;
@@ -348,238 +208,173 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
 }
   return (
-    <Stack sx={{paddingTop:'20px'}}>
-              
-    <form style={{ padding: '4px' }}>
-      <>
-        {defaultValues?.map((item, index) => (
-          <Grid sx={{ padding: '40px' }}>
-
-              {index!==0 &&(
-              <Grid sx={{display:'flex',alignItems:'center',justifyContent:'flex-end',paddingBottom:'2px'}}  item>
-               <Iconify
-                      // key={label}
-                      icon='material-symbols:delete'
-                      width={28}
-                      sx={{ mr: 1,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'flex-end' }}
-                      onClick={()=>handleDelete(index)}
-                    />
-                  </Grid>
-              )}
-             {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
-            <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-              <Grid md={6} xs={12} item>
-                <TextField
-                  fullWidth
-              
-                  name="previousCompanyName"
-                  label="Company Name"
-                  variant="outlined"
-                  id={`previousCompanyName${index}`}
-                   value={item?.previousCompanyName}
-                  onChange={(e) => {
-                    handleChange(e, index, 'previousCompanyName');
-                  }}
-                />
-              </Grid>
-              <Grid md={6} xs={12} item>
-                <TextField
-                  fullWidth
-                  
-                  name="designation"
-                  label="Designation"
-                  id="designation"
-                   value={item?.designation}
-                  onChange={(e) => {
-                    handleChange(e, index, 'designation');
-                  }}
-                  variant="outlined"
-                />
-              </Grid>
-            </Grid>
-
-
-            <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-             
-
-              <Grid md={6} xs={12} item>
-                <DatePicker
-                fullWidth
-                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
-                  onChange={(date) => {
-
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="End Date"
-                />
-                
-              </Grid>
-              <Grid md={6} xs={12} item>
-                <DatePicker
-                fullWidth
-                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
-                  onChange={(date) => {
-
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="End Date"
-                />
-                
-              </Grid>
-              
-            </Grid>
-           
-                
-            {item?.documents?.map((file,index1)=>(
+    <Stack>
+      <form style={{ padding: '40px' }}>
+        <>
+          {defaultValues?.map((item, index) => (
+            <Grid sx={{ padding: '40px' }}>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-              <Grid item xs={12} md={6} >
-
-             
-              <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
-                  <Select
-                      label="Select a doc Type"
-                      value={file?.fileType}
-                      onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                      name="Select a doc Type"
-                  >
-                      <MenuItem value="salary-slips">Salary Slips</MenuItem>
-                      <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
-                      
-                      {/* Add more categories here */}
-                  </Select>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="previous_company"
+                    label="Previous Company Name"
+                    variant="outlined"
+                    onChange={(e) => {
+                      handleChange(e, index, 'previousCompanyName');
+                    }}
+                  />
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="desgination"
+                    label="Desgination"
+                    onChange={(e) => {
+                      handleChange(e, index, 'designation');
+                    }}
+                    variant="outlined"
+                  />
+                </Grid>
+              </Grid>
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                <Grid md={6} xs={12} item>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        sx={{ width: '100%', paddingLeft: '3px' }}
+                        label="start date"
+                        onChange={(newValue) => {
+                          handleChangeDate(newValue, index, 'startDate');
+                        }}
+                        value={item?.startDate}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        sx={{ width: '100%', paddingLeft: '3px' }}
+                        label="To"
+                        value={item?.endDate}
+                        onChange={(newValue) => {
+                          handleChangeDate(newValue, index, 'endDate');
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+              </Grid>
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                <Grid md={6} xs={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Employement Type</InputLabel>
+                    <Select
+                      labelId="Employement Type"
+                      id="Employement Type"
+                      // value={item?.employement_type}
+                      name="employmen_type"
+                      label="Employement Type"
+                      onChange={(e) => {
+                        handleChange(e, index, 'employmen_type');
+                      }}
+                    >
+                      <MenuItem value={1}>Primary</MenuItem>
+                      <MenuItem value={2}>Contract</MenuItem>
+                    </Select>
                   </FormControl>
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <Autocomplete
+                    multiple
+                    id="Primary Skills"
+                    options={top100Films.map((option) => option.title)}
+                    freeSolo
+                    onChange={(e, values) => {
+                      handleChangeMultiple(e, values, index, 'primarySkills');
+                    }}
+                    renderTags={(value1, getTagProps) =>
+                      value1.map((option, index1) => (
+                        <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="filled"
+                        label="Primary Skills"
+                        placeholder="Favorites"
+                      />
+                    )}
+                  />
+                </Grid>
               </Grid>
-
-              <Grid item xs={12} md={6}>
-              <Grid>
-
-                <Grid item>
-                {console.log(index,'opopop')}
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                <Grid md={6} xs={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="Employement Type" label="Employement Type">
+                      Employement Type
+                    </InputLabel>
+                    <Select
+                      labelId="Employement Type"
+                      id="demo-simple-select"
+                      value="1"
+                      label="Employement Type"
+                      //   onChange={handleChange}
+                    >
+                      <MenuItem value={1}>Primary</MenuItem>
+                      <MenuItem value={2}>Contract</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid md={6} xs={12} item>
+                  <Typography>Salary Slips</Typography>
                 <input
-                 id={`file-upload-input-${index}-${index1}`}
+
                   type="file"
-                  accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                  onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
-                  style={{ display: 'none' }}
-                 
-              />
-              <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                  <Button variant="outlined" component="h6">
-                  Choose File
-                  </Button>
-              </label>
-              <Typography variant="body2" color="textSecondary">
-                  {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
-              </Typography>
+
+                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+                  id="fileInput"
+
+                  onChange={(e)=>{
+
+                    handleFileSelect(e)
+
+                  }}
+
+                  />
                 </Grid>
-                <Grid container alignItems="center" justifyContent="flex-end" item>
-                { index1===0 &&
-                 
-                    <Button 
-                    onClick={()=>{
-                      handleAddDocument(index)
-                    }
-                     
-                      
-                     
-                      
-
-                    }
-                    >Add</Button>
-                 
-
-                }
-                 { index1!==0 &&
-                  
-                    <Button 
-                    onClick={()=>{
-                      handleDeleteDocument(index,index1)
-                    }
-                     
-                      
-                     
-                      
-
-                    }
-                    >Delete</Button>
-                  
-
-                }
-                </Grid>
-                
-                
               </Grid>
-             
-              </Grid>
-             
-                 
-
             </Grid>
-            ))}
-           
-          
-          </Grid>
-        ))}
-      </>
+          ))}
+        </>
         <Grid container alignItems="center" justifyContent="end">
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          handleAdd();
-        }}
-      >
-        Add Work
-      </Button>
-      </Grid>
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          handleSubmit();
-        }}
-      >
-        Submit
-      </Button> */}
-    </form>
-          </Stack>
-
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            handleAdd();
+          }}
+        >
+          Add Experience
+        </Button>
+        </Grid>
+        {/* <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            handleSubmit();
+          }}
+        >
+          Submit
+        </Button> */}
+      </form>
+    </Stack>
   );
 })
 PreviousWorkDetails.propTypes = {

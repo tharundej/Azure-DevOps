@@ -20,8 +20,13 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { Alert, Snackbar } from '@mui/material';
 
 export default function ExpenseClaimForm({ currentUser }) {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,7 +38,6 @@ export default function ExpenseClaimForm({ currentUser }) {
     department_name: Yup.string().required('Department Name is Required'),
     designation_name: Yup.string().required('Designation Name is Required'),
     designation_grade_name: Yup.string().required('Designation Grade Name is Required'),
-    employee_name: Yup.string().required('Employee Name is Required'),
   });
 
   const defaultValues1 = useMemo(
@@ -42,7 +46,6 @@ export default function ExpenseClaimForm({ currentUser }) {
       department_name: currentUser?.department_name || null,
       designation_name: currentUser?.designation_name || null,
       designation_grade_name: currentUser?.designation_grade_name || null,
-      employee_name: currentUser?.employee_name || null,
     }),
     [currentUser]
   );
@@ -66,38 +69,66 @@ export default function ExpenseClaimForm({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = localStorage.getItem('companyID');
+    data.companyId = 'COMP2'
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
+        baseUrl+'/',
         data
       );
+      if(response?.data?.code===200){
+        handleClose();
+        setSnackbarSeverity('success');
+         setSnackbarMessage('Shift Configuration Added Succuessfully!');
+         setSnackbarOpen(true);
       console.log('sucess', response);
+      }
     } catch (error) {
+      setOpen(false);
+       setSnackbarSeverity('error');
+       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+       setSnackbarOpen(true);
       console.log('error', error);
     }
   });
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(false);
+  };
   return (
     <>
+     <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={7000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
-      >
-        Add ExpensiveConfig
+        sx={{margin:'20px'}}>
+        Add Expensive
       </Button>
       <Dialog
-        fullWidth
-        maxWidth={false}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { maxWidth: 720 },
-        }}
+       fullWidth
+       maxWidth={false}
+       open={open}
+       onClose={handleClose}
+       PaperProps={{
+         sx: { maxWidth: 720 },
+       }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           <DialogTitle>Add ExpensiveConfig</DialogTitle>
@@ -128,7 +159,6 @@ export default function ExpenseClaimForm({ currentUser }) {
                 label="Designation Grade Name"
                 options={designationGradeName.map((name) => name.type)}
               />
-              <RHFTextField name="employee_name" label="Employee Name" />
             </Box>
           </DialogContent>
 

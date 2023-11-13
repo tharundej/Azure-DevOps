@@ -97,9 +97,9 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     'Night',
     'Afternoon'
   ];
-  const ShiftTerm = [
+  const ShiftTerms = [
     'weekly',
-    'monthly',
+    'Monthly',
   ]
   const locationName = [
     'infobell'
@@ -179,7 +179,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -237,13 +237,11 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     console.log(value);
     // console.log( typeof value === 'string' ? value.split(',') : value,)
   };
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        // searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+  const handleSearch = (searchTerm) => {
+     
+    searchData(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
   const handleApply = async () => {
     setDatesData([]);
 
@@ -263,20 +261,20 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item>
+        <Grid item  md={8} xs={8}>
         <TextField
             placeholder="Search...."
              fullWidth
-             onChange={handleSearch}
+             onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
        <ShiftConfigurationForm/>
         </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -304,7 +302,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
         <DialogContent  sx={{minWidth:"300px"}}>
          
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
-              <Grid item xs={6}>
+              <Grid item xs={6} marginTop="10px">
                 <FormControl fullWidth>
                   <InputLabel id="shiftTerm">Shift Term</InputLabel>
                   <Select
@@ -318,7 +316,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {names.map((name) => (
+                    {ShiftTerms.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -326,7 +324,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6} >
+              <Grid item xs={6} marginTop="10px" >
                   <FormControl fullWidth>
                     <InputLabel id="shiftName">Shift Name</InputLabel>
                     <Select
@@ -340,7 +338,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {names.map((name) => (
+                      {ShiftNames.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}

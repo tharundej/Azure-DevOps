@@ -24,8 +24,10 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import { Alert, Snackbar } from '@mui/material';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-export default function GeneralForminfo({ currentUser}) {
+export default function GeneralForminfo({ currentUser }) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -40,7 +42,7 @@ export default function GeneralForminfo({ currentUser}) {
 
   //   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
-   const handleOpen = () => setOpen(true);
+  const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset1();
@@ -49,6 +51,9 @@ export default function GeneralForminfo({ currentUser}) {
     setOpen(false);
     reset2();
   };
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
     payPcheduleType: Yup.string().required('Payschedule Type is Required'),
     basicPayPercentage: Yup.number().required('Basic Pay is Required'),
@@ -90,7 +95,7 @@ export default function GeneralForminfo({ currentUser}) {
     resolver: yupResolver(NewUserSchema1),
     defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
   });
-  
+
   const methods2 = useForm({
     resolver: yupResolver(NewUserSchema2),
     defaultValues: defaultValues2, // Use defaultValues instead of defaultValues2
@@ -106,14 +111,14 @@ export default function GeneralForminfo({ currentUser}) {
   const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' }];
 
   const {
-    setValue:setValue1,
+    setValue: setValue1,
     handleSubmit: handleSubmit1,
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
   } = methods1;
 
   const {
-    setValue:setValue2,
+    setValue: setValue2,
     handleSubmit: handleSubmit2,
     formState: { isSubmitting: isSubmitting2 },
     reset: reset2,
@@ -122,81 +127,53 @@ export default function GeneralForminfo({ currentUser}) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employeepayType=selectedOption?.type
-    data.companyId=localStorage.getItem('companyID')
+    data.employeepayType = selectedOption?.type;
+    data.companyId = localStorage.getItem('companyID');
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
-      console.log('sucess',response);
+      const response = await axios.post(baseUrl + '/addPaySchedule', data);
+      if (response?.status === 200 || 201 && response?.data?.success) {
+        handleClose();
+        setSnackbarSeverity('success');
+        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
     } catch (error) {
+      setOpen(true);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Adding PayRoll. Please try again.');
+      setSnackbarOpen(true);
       console.log('error', error);
     }
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.employeepayType=selectedOption?.type
-    data.companyId=localStorage.getItem('companyID')
+    data.employeepayType = selectedOption?.type;
+    data.companyId = localStorage.getItem('companyID');
     console.log('submitted data2222', data);
 
-    
-
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
-      console.log('sucess',response);
+      const response = await axios.post(baseUrl + '/addPaySchedule', data);
+      if (response?.status === 200 ||201 && response?.data?.success) {
+        handleClose();
+        setSnackbarSeverity('success');
+        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
     } catch (error) {
+      setOpen(true);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Adding PayRoll. Please try again.');
+      setSnackbarOpen(true);
       console.log('error', error);
     }
   });
-  // await new Promise((resolve) => setTimeout(resolve, 500));
-  // reset();
-  // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-  // router.push(paths.dashboard.user.list);
-  // console.info('DATA', data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // });
 
-  const handleDrop1 = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue1('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue1]
-  );
-  const handleDrop2 = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue2('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue2]
-  );
-  const handleDropdownChange = (event) => {
-    const selectedValue = event.target.value;
-    setSelectedOption(selectedValue);
-
-    // Check if the selected option should show the text field
-    if (selectedValue === 'showTextFieldOption') {
-      setTextFieldVisible(true);
-    } else {
-      setTextFieldVisible(false);
-    }
-  };
   const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
   const [isTextFieldVisible, setTextFieldVisible] = useState(false); // State to manage the visibility of the text field
 
@@ -211,17 +188,43 @@ export default function GeneralForminfo({ currentUser}) {
     }
   };
 
-   const getOptionLabel = (employeepayType) => employeepayType.type;
-  // const HandleChange=(params)=>{
-  //   console.log(params,'paramsssss')
+  const getOptionLabel = (employeepayType) => employeepayType.type;
 
-  // }
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
 
   return (
     <>
-      <Button onClick={handleOpen}  variant="contained"
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Button
+        onClick={handleOpen}
+        variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add PayRoll</Button>
+        sx={{ margin: '20px' }}
+      >
+        Add PayRoll
+      </Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -230,36 +233,23 @@ export default function GeneralForminfo({ currentUser}) {
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
-
       >
-            {/* <Autocomplete
-                  disablePortal
-                  name="employee_type"
-                  id="combo-box-demo"
-                  options={employeepayTypes}
-                  getOptionLabel={getOptionLabel}
-                  value={selectedOption} // Use selectedOption or an empty string
-                  onChange={handleAutocompleteChange}
-                  sx={{ width: 300, padding: '8px' }}
-                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
-                /> */}
-        
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             {/* methods1={methods1} onSubmit={onSubmit} */}
             <DialogTitle>Add PayRoll</DialogTitle>
             <Autocomplete
-                  disablePortal
-                  name="employee_type"
-                  id="combo-box-demo"
-                  options={employeepayTypes}
-                  getOptionLabel={getOptionLabel}
-                  value={selectedOption} // Use selectedOption or an empty string
-                  onChange={handleAutocompleteChange}
-                  sx={{ width: 300, padding: '8px' }}
-                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
-                />
+              disablePortal
+              name="employee_type"
+              id="combo-box-demo"
+              options={employeepayTypes}
+              getOptionLabel={getOptionLabel}
+              value={selectedOption} // Use selectedOption or an empty string
+              onChange={handleAutocompleteChange}
+              sx={{ width: 300, padding: '8px' }}
+              renderInput={(params) => <TextField {...params} label="Employee Type" />}
+            />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -307,18 +297,20 @@ export default function GeneralForminfo({ currentUser}) {
             {/* methods1={methods1} onSubmit={onSubmit} */}
             <DialogTitle>Add PayRoll</DialogTitle>
             <Autocomplete
-                  disablePortal
-                  name="employee_type"
-                  id="combo-box-demo"
-                  options={employeepayTypes}
-                  getOptionLabel={getOptionLabel}
-                  value={selectedOption} // Use selectedOption or an empty string
-                  onChange={handleAutocompleteChange}
-                  sx={{  width: 300,
-                    marginLeft: 1, // Adjust the left margin to align with other elements
-                    marginTop: 1, }}
-                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
-                />
+              disablePortal
+              name="employee_type"
+              id="combo-box-demo"
+              options={employeepayTypes}
+              getOptionLabel={getOptionLabel}
+              value={selectedOption} // Use selectedOption or an empty string
+              onChange={handleAutocompleteChange}
+              sx={{
+                width: 300,
+                marginLeft: 1, // Adjust the left margin to align with other elements
+                marginTop: 1,
+              }}
+              renderInput={(params) => <TextField {...params} label="Employee Type" />}
+            />
             <DialogContent>
               <Box
                 rowGap={3}
