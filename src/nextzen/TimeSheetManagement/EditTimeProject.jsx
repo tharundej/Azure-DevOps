@@ -36,7 +36,8 @@ import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function AddTimeProject({ currentUser,handleClose }) {
+export default function EditTimeProject({ currentUser,handleClose ,tableEDitData}) { 
+  console.log("🚀 ~ file: EditTimeProject.jsx:40 ~ EditTimeProject ~ tableEDitData:", tableEDitData)
   const[commaSeparatedString,setCommaSepaatedString]=useState("")
   const[commaSepaatedEmployeString,setCommaSepaatedEmployeString]=useState("")
   const [datesUsed, setDatesUsed] = useState({
@@ -65,18 +66,18 @@ useEffect(() => {
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const [employesListData,setEmployesListData]= useState([])
   const [EmployeList,setemployeeList]= useState([])
-  console.log("🚀 ~ file: AddTimeProject.jsx:66 ~ AddTimeProject ~ employesListData:", employesListData)
-  console.log("🚀 ~ file: AddTimeProject.jsx:56 ~ AddTimeProject ~ currentReportingData:", currentReportingData[0]?.employee_id)
+  console.log("🚀 ~ file: EditTimeProject.jsx:66 ~ EditTimeProject ~ employesListData:", employesListData)
+  console.log("🚀 ~ file: EditTimeProject.jsx:56 ~ EditTimeProject ~ currentReportingData:", currentReportingData[0]?.employee_id)
   // const ReportingManager = currentReportingData.map()
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
-      console.log("🚀 ~ file: AddTimeProject.jsx:72 ~ handleSelectChange ~ values:", values)
+      console.log("🚀 ~ file: EditTimeProject.jsx:72 ~ handleSelectChange ~ values:", values)
       
      setCommaSepaatedString(activity_name.join(','))
   };
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
-     console.log("🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
+     console.log("🚀 ~ file: EditTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
     //  setemployeeList ( currentEmployeData[0]?.employee_id);
       
     // setCommaSepaatedEmployeString(EmployeList.join(','))
@@ -136,18 +137,18 @@ const [sendData, setSendData] = useState({
   projectId : '',  
 })
 const [reportingManager,setReportingManagerData]= useState([])
-console.log("🚀 ~ file: AddTimeProject.jsx:102 ~ AddTimeProject ~ reportingManager:", reportingManager)
+console.log("🚀 ~ file: EditTimeProject.jsx:102 ~ EditTimeProject ~ reportingManager:", reportingManager)
 
 
 const getEmployeReport = async ()=>{
   try{
   const  data= {
-      companyId:'COMP1',
+      company_id:'COMP1',
      
     };
-    const response = await instance.post('getReportingmanager',data);
+    const response = await instance.post('/getReportingmanager',data);
     setReportingManagerData(response.data.list)
-    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
   }catch(error){
 console.error("Error", error);
 throw error;
@@ -156,14 +157,14 @@ throw error;
 let getEmployeList = async (props)=>{
   try{
   const  data= {
-      companyId:'COMP1',
-      reportingManagerId:currentReportingData[0]?.employee_id,
+      company_id:'COMP1',
+      reporting_manager_id:currentReportingData[0]?.employee_id,
     };
     data.reporting_manager_id =props;
-    console.log("🚀 ~ file: AddTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
-    const response = await instance.post('employeereporting',data);
+    console.log("🚀 ~ file: EditTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
+    const response = await instance.post('/employeereporting',data);
     setEmployesListData(response.data.list)
-    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
   }catch(error){
 console.error("Error", error);
 throw error;
@@ -179,8 +180,8 @@ const join=()=>{
   
   // ["empl1","emp2","emp3"];
   
-  console.log("🚀 ~ file: AddTimeProject.jsx:176 ~ join ~ commaSepaatedEmployeString:", commaSepaatedEmployeString)
-  console.log("🚀 ~ file: AddTimeProject.jsx:183 ~ join ~ arr:", arr)
+  console.log("🚀 ~ file: EditTimeProject.jsx:176 ~ join ~ commaSepaatedEmployeString:", commaSepaatedEmployeString)
+  console.log("🚀 ~ file: EditTimeProject.jsx:183 ~ join ~ arr:", arr)
   return arr;
 
   // ["anil","aswin"]
@@ -188,7 +189,7 @@ const join=()=>{
 }
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:", data)
+    console.log("🚀 ~ file: EditTimeProject.jsx:93 ~ onSubmit ~ data:", data)
     console.log('uyfgv');
 
     try {
@@ -198,16 +199,18 @@ const join=()=>{
       data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
       data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.activity_name = [commaSeparatedString];
-      data.project_manager =currentReportingData[0]?.employee_id;
-      data.company_id = "COMP2";
-      data.employee_id =join();
-      data.delete =   0;
+    //   data.activity_name = [commaSeparatedString];
+    //   data.project_manager =currentReportingData[0]?.employee_id;
+      data.status = tableEDitData.status;
+      data.project_id = tableEDitData.project_id;
+      data.lastupdated = dayjs(new Date());
+    //   data.employee_id =join();
+    //   data.delete =   0;
       
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addProject', data).then(
+      const response = await instance.post('updateproject', data).then(
         (successData) => {
           console.log('sucess', successData);
           handleClose()
@@ -224,12 +227,14 @@ const join=()=>{
 
  
   const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
+    { title: 'Approve', year: 1994 },
+    { title: 'Pending', year: 1972 },
+    { title: 'Reject', year: 1974 },
+
   ];
+  const startDate = tableEDitData?.startDate ? dayjs(tableEDitData.startDate, 'YYYY-MM-DD') : dayjs(new Date());
+  const endDate = tableEDitData?.endDate ? dayjs(tableEDitData.endDate, 'YYYY-MM-DD') : dayjs(new Date());
+  const dueDate = tableEDitData?.dueDate ? dayjs(tableEDitData.dueDate, 'YYYY-MM-DD') : dayjs(new Date());
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -238,7 +243,7 @@ const join=()=>{
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                ADD YOUR  POJECT  HERE .....
+                EDIT YOUR  POJECT  HERE .....
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
@@ -251,14 +256,14 @@ const join=()=>{
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="project_name" label=" Project Name  " />
+                <RHFTextField name="project_name" label=" Project Name"  value={tableEDitData.projectName}  readOnly/>
 
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Start date"
-                      value={datesUsed?.start_date}
+                      value={startDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
@@ -274,7 +279,7 @@ const join=()=>{
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="End date"
-                      value={datesUsed?.end_date}
+                      value={endDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
@@ -290,7 +295,7 @@ const join=()=>{
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Due Date"
-                      value={datesUsed?.due_date}
+                      value={dueDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
@@ -302,34 +307,35 @@ const join=()=>{
                   </DemoContainer>
                 </LocalizationProvider>
                 
-                <RHFTextField name="status" label="status" />
+                {/* <RHFTextField name="status" label="status" value={tableEDitData.status}  readOnly /> */}
      <Grid md={10} xs={12} item>
 
      <Autocomplete
-        multiple
-        id="activity_name"
+        // multiple
+        id="status"
         options={top100Films.map((option) => option.title)}
         freeSolo
         onChange={handleSelectChange} // Attach the handleSelectChange function
-        value={activity_name} // Pass the selected values
+        value={tableEDitData.status} // Pass the selected values
         renderTags={(value1, getTagProps) =>
           value1.map((option, index1) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
+            <Chip variant="" label={option} {...getTagProps({ index1 })} />
           ))
         }
         renderInput={(params) => (
           <TextField
             {...params}
             variant="filled"
-            label="Activity Name"
+            label="status"
             placeholder="Favorites"
           />
         )}
       />
 
 </Grid>
+                <RHFTextField name="activityName" label="Activity Name" value={tableEDitData.activityName}  readOnly />
 <Grid md={10} xs={12} item>
-<Autocomplete
+{/* <Autocomplete
             multiple
             disablePortal
             id="combo-box-demo"
@@ -360,7 +366,7 @@ const join=()=>{
               width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Project Manager" />}
-          />
+          /> */}
 </Grid>
 
 <Grid md={10} xs={12} item>
@@ -402,7 +408,7 @@ const join=()=>{
 
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'save Project'}
+                  {!currentUser ? 'Create User' : 'Update Project'}
                 </LoadingButton>
                 <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
@@ -415,7 +421,7 @@ const join=()=>{
   );
 }
 
-AddTimeProject.propTypes = {
+EditTimeProject.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };

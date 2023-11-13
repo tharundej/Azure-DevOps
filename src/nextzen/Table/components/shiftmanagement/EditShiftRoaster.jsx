@@ -43,7 +43,8 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function AddEmployeShift({ currentUser , handleClose }) {
+export default function EditShiftRoaster({ currentUser , handleClose ,editData }) {
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData)
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -218,6 +219,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     {id :"3" , name:"shift B"},
     {id :"4" , name:"shift C"},
   ]
+//   const defaultDesignationValue = editData.
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -233,7 +235,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-   Add Employee Shift Here ...
+   Edit Employee Shift Here ...
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -248,7 +250,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     >
      
 
-<RHFSelect name="shiftGroupName" label="Shift Group Name ">
+<RHFSelect name="shiftGroupName" label="Shift Group Name " >
 
 <option value="full_day" >Full Day</option>
 
@@ -283,6 +285,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 disablePortal
 id="combo-box-demo"
 options={departmentData || []}
+// defaultValue={defaultDesignationValue|| []}
 value={CurrentDepartmentData?.departmentID}
 getOptionLabel={(option) => option.departmentName}
 onChange={(e,newvalue)=>{
@@ -402,7 +405,7 @@ placeholder="Favorites"
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
         {!currentUser ? 'Create User' : 'Add  Employe To Shift'}
       </LoadingButton>
-      <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
+      <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={console.log("first")}>Cancel</Button>
     </Stack>
     
    
@@ -414,7 +417,7 @@ placeholder="Favorites"
   );
 }
 
-AddEmployeShift.propTypes = {
+EditShiftRoaster.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };
