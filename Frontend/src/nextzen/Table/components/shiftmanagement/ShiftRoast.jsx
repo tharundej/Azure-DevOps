@@ -67,11 +67,11 @@ export default function ShiftRoast() {
     
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "approve", icon: "hh",  },
     
-        { name: "view", icon: "hh", path: "jjj" },
+        { name: "view", icon: "hh",  },
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+        { name: "eerr", icon: "hh",  },
     
       ];
     

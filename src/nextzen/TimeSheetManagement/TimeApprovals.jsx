@@ -135,7 +135,7 @@ filterName='ApprovalSearchFilter'
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
 endpoint='/timeSheetApprovals'
-bodyData="timeSheets"
+bodyData="data"
 onClickActions={onClickActions}
 rowActions={actions}
 

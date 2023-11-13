@@ -39,12 +39,12 @@ import formatDateToYYYYMMDD from '../global/GetDateFormat';
 export default function AddTimeProject({ currentUser }) {
   const[commaSeparatedString,setCommaSepaatedString]=useState("")
   const [datesUsed, setDatesUsed] = useState({
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-    due_date: dayjs(new Date()),
-    // activity_name:[]
+    startDate: dayjs(new Date()),
+    endDate: dayjs(new Date()),
+    dueDate: dayjs(new Date()),
+    // activityName:[]
   });
-  const [activity_name, setSelectedActivity] = useState([]);
+  const [activityName, setSelectedActivity] = useState([]);
  
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
@@ -55,10 +55,10 @@ export default function AddTimeProject({ currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    project_name: Yup.string(),
-    // start_date: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
+    projectName: Yup.string(),
+    // startDate: Yup.string(),
+    // endDate: Yup.string(),
+    // dueDate: Yup.string().required('First Name is Required'),
     status: Yup.string(),
    
    
@@ -67,10 +67,10 @@ export default function AddTimeProject({ currentUser }) {
   const defaultValues = useMemo(
     () => ({
    
-        project_name: currentUser?.project_name || '',
-        start_date: currentUser?.start_date || '',
-        end_date: currentUser?.end_date || '',
-        due_date: currentUser?.due_date || '',
+        projectName: currentUser?.projectName || '',
+        startDate: currentUser?.startDate || '',
+        endDate: currentUser?.endDate || '',
+        dueDate: currentUser?.dueDate || '',
         status: currentUser?.status || '',
   
    
@@ -106,11 +106,11 @@ const [sendData, setSendData] = useState({
       // data.company_id = '0001';
       // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      data.activity_name = commaSeparatedString;
-      data.company_id = "COMP2";
+      data.dueDate = formatDateToYYYYMMDD(datesUsed?.dueDate);
+      data.endDate = formatDateToYYYYMMDD(datesUsed?.endDate);
+      data.startDate = formatDateToYYYYMMDD(datesUsed?.startDate);
+      data.activityName = commaSeparatedString;
+      data.companyId = "COMP2";
       data.delete =   0;
 
       console.log(data, 'data111ugsghghh');
@@ -158,7 +158,7 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="project_name" label=" Project Name  " />
+                <RHFTextField name="projectName" label=" Project Name  " />
                 <span>
                     <Typography sx={{marginLeft:'5px'}}>
                         Previous Project id was 2 next is 3
@@ -169,12 +169,12 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Start date"
-                      value={datesUsed?.start_date}
+                      value={datesUsed?.startDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          start_date: newValue,
+                          startDate: newValue,
                         }));
                       }}
                     />
@@ -185,7 +185,7 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="End date"
-                      value={datesUsed?.end_date}
+                      value={datesUsed?.endDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
@@ -201,12 +201,12 @@ const [sendData, setSendData] = useState({
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Due Date"
-                      value={datesUsed?.due_date}
+                      value={datesUsed?.dueDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          due_date: newValue,
+                          dueDate: newValue,
                         }));
                       }}
                     />
@@ -222,11 +222,11 @@ const [sendData, setSendData] = useState({
 
      <Autocomplete
         multiple
-        id="activity_name"
+        id="activityName"
         options={top100Films.map((option) => option.title)}
         freeSolo
         onChange={handleSelectChange} // Attach the handleSelectChange function
-        value={activity_name} // Pass the selected values
+        value={activityName} // Pass the selected values
         renderTags={(value1, getTagProps) =>
           value1.map((option, index1) => (
             <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
