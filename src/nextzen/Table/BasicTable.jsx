@@ -107,7 +107,8 @@ const defaultFilters = {
 // ----------------------------------------------------------------------
  
 const 
-BasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
+BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
+ 
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
  
@@ -292,26 +293,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
  
   const handleEditRow = (rowData,eventData) => {
-    onclickActions(rowData,eventData);
-    if (eventData?.type === "/serviceCall"){
-     console.log("servicecall")
-    }
-    else if (eventData?.type === "edit"){
-      buttonFunction(rowData);
-      
-      console.log("servce call will called for edit")
-    }
-    else if (eventData?.type === "delete"){
-      deleteFunction(rowData);
- 
-      console.log("servce call will called for delete")
-    }
-    else{
-      console.log("servce call error")
-    }
- 
- 
-   
+    console.log(rowData,"handleditt",eventData)
+    onClickActions(rowData,eventData);
+    
+    
  
   }
  
@@ -487,7 +472,7 @@ getTableData(payload)
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
+       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
@@ -552,7 +537,10 @@ getTableData(payload)
                           selected={table.selected.includes(row.id)}
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={(event) => { handleEditRow(row, event) }}
+                          onEditRow={(event) => { handleEditRow
+                            
+                            
+                            (row, event) }}
                           headerContent={TABLE_HEAD}
                           rowActions={rowActions || []}
                         />
@@ -644,7 +632,7 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes = {
-  onclickActions:PropTypes.any,
+  onClickActions:PropTypes.any,
 }
  
 BasicTable.propTypes = {

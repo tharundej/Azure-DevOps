@@ -24,20 +24,39 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 export default function SalaryStructureForm({ currentUserData}) {
+  const handleClose=()=>setOpen(false)
   const [currentUser,setcurrentUser]=useState("")
-  useEffect(()=>{
-    if(currentUserData){
-      setcurrentUser(currentUserData);
-    }
-  },[currentUserData])
+  const [options,setOptions]=useState({})
+  const [optionsValue,setOptionsValue]=useState({})
   const [open, setOpen] = useState(false);
+  useEffect(()=>{
+    const fetchDepartment=async()=>{
+      if(open){
+        try{
+        
+          const obj={
+            departmentOptions:await ApiHitDepartmentWithoutLocation(),
+          }
+          setOptions(obj)
+          console.log(obj,'objjjjjj')
+        }
+        catch(error){
+  
+        }
+       
+      }
+    }
+    
+
+    fetchDepartment();
+    
+  },[open])
+ 
    const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    reset1();
-  };
+
   const NewUserSchema1 = Yup.object().shape({
     marketRate: Yup.number().required('Market Rate is Required'),
     minimum: Yup.number().required('Minimum is Required'),
@@ -73,17 +92,9 @@ export default function SalaryStructureForm({ currentUserData}) {
 
   //   const values = watch();
 
-  const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId=localStorage.getItem('companyID')
-    console.log('submitted data111', data);
-
-    try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
-      console.log('sucess',response);
-    } catch (error) {
-      console.log('error', error);
-    }
-  });
+  const onSubmit1 = async () => {
+    console.log(optionsValue,currentUser)
+  };
 
 
  
@@ -95,7 +106,7 @@ export default function SalaryStructureForm({ currentUserData}) {
       <Dialog
         fullWidth
         maxWidth={false}
-        open={open}
+        open={ open}
         onClose={handleClose}
         PaperProps={{
           sx: { maxWidth: 720 },
@@ -188,6 +199,134 @@ export default function SalaryStructureForm({ currentUserData}) {
                     }}
                   />
                   </Grid>
+
+                  <Grid container >
+              
+              <Grid item xs={12} md={6}>
+              
+                <Autocomplete
+                  disablePortal
+                  id="departmentOptions"
+                  options={options?.departmentOptions || []}
+                  value={optionsValue?.departmentName}
+                  getOptionLabel={(option) => option?.departmentName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...optionsValue };
+                      newArr.departmentValue=newvalue
+                    newArr.designationValue=undefined;
+                    newArr.designationGradeValue=undefined;
+
+                    
+                    console.log(newArr)
+                   
+                    try{
+                      const deptObj={
+                        companyID:'COMP1',
+                        departmentID:newvalue?.departmentID
+                      }
+                      const desgination=await ApiHitDesgniation(deptObj);
+                      var optionsArr={...options};
+                     
+                      optionsArr.desginationGradeOptions=[];
+                      optionsArr.desginationOptions=desgination;
+                      console.log(optionsArr,'optionsArroptionsArr')
+                      setOptions(optionsArr)
+
+                    }
+                    catch(error){
+                      
+                    }
+
+                   
+                    
+                    setOptionsValue(newArr)
+                   }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Department"
+                  style={{ paddingLeft: '16px', width: '100%' }} />}
+                />
+              </Grid>
+                  </Grid>
+
+                  <Grid container >
+                <Grid item xs={12} md={6}>
+                 
+                  <Autocomplete
+                    disablePortal
+                    id="Desgination"
+                    options={options?.desginationOptions  || []}
+                    value={optionsValue?.desginationValue}
+                    getOptionLabel={(option) => option.designationName}
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...options };
+                      newArr.desginationValue=newvalue;
+                    
+                      newArr.desginationGradeValue=undefined
+                      
+                      console.log(newArr)
+                     
+                      try{
+                        const desgGradeObj={
+                          companyID:'COMP1',
+                          designationID:newvalue?.designationID
+                        }
+                        const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                        var optionsArr={...optionsValue};
+                        optionsArr.desginationGradeOptions=desginationGrade;
+                        
+                        
+                       
+                        setOptions(optionsArr)
+
+                      }
+                      catch(error){
+                        
+                      }
+
+                     
+                      
+                      setOptionsValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Desgination"
+                    style={{ paddingLeft: '16px', width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container >
+                <Grid item xs={12} md={6}>
+                
+                  <Autocomplete
+                    disablePortal
+                    id="DesginationGrade"
+                    options={options?.desginationGradeOptions  || []}
+                    value={optionsValue?.desginationGradeValue}
+                    getOptionLabel={(option) => option.designationGradeName}
+
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...optionsValue };
+                      newArr.desginationGradeValue=newvalue;
+                    
+                    
+                      
+                    
+
+                     
+                      
+                      setOptionsValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Desgination Grade"
+                    style={{ paddingLeft: '16px', width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
                
               </Box>
             </DialogContent>
@@ -196,14 +335,14 @@ export default function SalaryStructureForm({ currentUserData}) {
               <Button variant="outlined" onClick={handleClose}>
                 Cancel
               </Button>
-              <LoadingButton
-                type="submit"
+              <Button
+               
                 variant="contained"
                 onClick={onSubmit1}
-                loading={isSubmitting1}
+               
               >
                 Save
-              </LoadingButton>
+              </Button>
             </DialogActions>
           </FormProvider>
         )}
@@ -214,4 +353,7 @@ export default function SalaryStructureForm({ currentUserData}) {
 
 SalaryStructureForm.propTypes = {
   currentUser: PropTypes.object,
+  openModal:PropTypes.bool,
+  type:PropTypes.string,
+  handleClose:PropTypes.func
 };

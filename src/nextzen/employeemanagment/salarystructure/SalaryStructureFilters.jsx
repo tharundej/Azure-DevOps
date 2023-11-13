@@ -88,7 +88,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SalaryStructureFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function SalaryStructureFilters({ filterData, filterOptions ,filterSearch,searchData,cellData,openModal,type}) {
   const theme = useTheme();
   const departmentName = [
     'HR',
@@ -270,7 +270,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           
         </Grid>
         <Grid item>
-       <SalaryStructureForm currentUserData={filterData}/>
+       {/* <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type}/> */}
        </Grid>
         <Grid item>
         <Grid>
@@ -284,7 +284,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         </Grid>
       </Grid>
 
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -397,7 +397,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           Apply
         </Button>
         </div>
-      </BootstrapDialog>
+      </Dialog>
     </>
   );
 }
@@ -408,6 +408,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 SalaryStructureFilters.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
+  type:PropTypes.string
 };
 
 SalaryStructureFilters.propTypes = {
