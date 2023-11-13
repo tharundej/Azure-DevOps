@@ -53,7 +53,7 @@ console.log(row,'row data')
   return (
     <>
      
-      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} onClick={()=>onHandleEditRow(row?.employeeId)}>
+      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
@@ -61,10 +61,12 @@ console.log(row,'row data')
           headerContent.map((ele) => (
             <>
               <TableCell
+              onClick={()=>onHandleEditRow(row?.employeeId)}
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
-                  width:ele.width || ''
+                  width:ele.width || '',
+                  cursor:'pointer'
                 }}
               >
                 {ele.containesAvatar && (

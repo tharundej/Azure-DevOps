@@ -270,7 +270,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           
         </Grid>
         <Grid item>
-       <SalaryStructureForm/>
+       <SalaryStructureForm currentUserData={filterData}/>
        </Grid>
         <Grid item>
         <Grid>
