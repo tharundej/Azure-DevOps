@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React,{ useEffect, useState,useCallback } from 'react';
 import { styled } from '@mui/system';
-
+import { format } from 'date-fns';
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
+import {Card,TextField,CardContent,  InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
@@ -18,7 +18,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs from 'dayjs';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 import Dialog from '@mui/material/Dialog';
 
@@ -88,7 +88,7 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
   const theme = useTheme();
   
 
-  
+ 
  
   
 
@@ -116,11 +116,11 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
    
 
     
-const [search, setSearch]=useState("");
+;
 
     const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
+ 
+        searchData(searchTerm)
         console.log(searchTerm,"search ........")
         };
     // dynamic dialog checking 
@@ -130,62 +130,62 @@ const [search, setSearch]=useState("");
     setOpen(false);
   };
 
-  const  externalFilter = {
+  // const  externalFilter = {
     
-      claimStartDate:"",
-      claimEndDate:"",
+  //     claimStartDate:"",
+  //     claimEndDate:"",
 
  
     
-      expensestartdate:"",
-      expenseenddate:"",
+  //     expensestartdate:"",
+  //     expenseenddate:"",
 
    
    
-      status:"",
-      paymentstatus:""
+  //     status:"",
+  //     paymentstatus:""
     
     
-  }
-  const [selectedDate, setSelectedDate] = useState(externalFilter);
+  // }
+  // const [selectedDate, setSelectedDate] = useState(externalFilter);
   
-  const handleDateChange = ( field, date) => {
-    // const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-    setSelectedDate(prevDates => ({
-      ...prevDates,
+  // const handleDateChange = ( field, date) => {
+  //   // const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  //   setSelectedDate(prevDates => ({
+  //     ...prevDates,
      
        
-        [field]: date,
+  //       [field]: date,
      
-    }));
+  //   }));
 
     
    
-  };
+  // };
   
-  console.log(selectedDate,"SelectedDate1234------>")
+  // console.log(selectedDate,"SelectedDate1234------>")
 
 
   // const [selectedValue, setSelectedValue] = useState(externalFilter);
 
-const handleSelectChange = (field, value) => {
-  // setSelectedValue(prevValues => ({
-  //   ...prevValues,
-  //   [fieldName]: value,
-  // }));
-  // console.log(value,"value......")
+// const handleSelectChange = (field, value) => {
+//   // setSelectedValue(prevValues => ({
+//   //   ...prevValues,
+//   //   [fieldName]: value,
+//   // }));
+//   // console.log(value,"value......")
 
-  setSelectedDate(prevFilter => ({
-    ...prevFilter,
-    [field]: value,}))
+//   setSelectedDate(prevFilter => ({
+//     ...prevFilter,
+//     [field]: value,}))
 
-  // if (fieldName === 'status') {
-  //   setSelectedDate(prevFilter => ({
-  //     ...prevFilter,
-  //     status: value,
-  //   }));
-  // }
-};
+//   // if (fieldName === 'status') {
+//   //   setSelectedDate(prevFilter => ({
+//   //     ...prevFilter,
+//   //     status: value,
+//   //   }));
+//   // }
+// };
 
 // const handleMultiSelectChange = (fieldName, newValue) => {
 //   setSelectedValue(prevValues => ({
@@ -219,15 +219,45 @@ const handleSelectChange = (field, value) => {
 
 
 // trial 2 method
+// console.log(dialogPayload,"dialogPayload----")
 const [selectedFields, setSelectedFields] = useState(dialogPayload);
 
-const handleFieldChange = (field, value) => {
+const handleFieldChange = (fieldtype,field, value) => {
+  console.log(fieldtype,"field", field,"field.....")
+  let formattedValue = value; 
+
+ 
+  if (fieldtype === 'datePicker') {
+    try {
+      console.log(value)
+      console.log("+++++++++++++")
+      const formattedDate = format(new Date(value), 'yyyy-MM-dd');
+      console.log(formattedDate)
+      formattedValue = formattedDate;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      
+    }
+  }
+
+
+
   setSelectedFields(prevFields => ({
     ...prevFields,
-    [field]: value
+    [field]: formattedValue
   }));
-  filterData(selectedFields)
+
 };
+
+const handleApply=()=>{
+ 
+    filterData(selectedFields)
+
+    onClose();
+    // setSelectedFields(dialogPayload);
+    
+
+}
 
 // const fields = [
 //   { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate' },
@@ -237,7 +267,7 @@ const handleFieldChange = (field, value) => {
 //   { type: 'Select', label: 'Status', name: 'status', options: ['Option 1', 'Option 2', 'Option 3'] },
 //   { type: 'Select', label: 'Payment Status', name: 'paymentStatus', options: ['Option A', 'Option B', 'Option C'] },
 // ];
-console.log(selectedFields,"selectedFields 2nd method")
+// console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
           <Grid container alignItems="center" paddingBottom="10px">
@@ -251,7 +281,7 @@ console.log(selectedFields,"selectedFields 2nd method")
             />
             </Grid>
             <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
-              {addButton && <Button variant='contained'  onClick={buttonFunction}>{addButton}</Button>}
+              {addButton && <Button variant='contained'  sx={{borderRadius:"4px"}} onClick={buttonFunction}>{addButton}</Button>}
               
 
             </Grid>
@@ -280,82 +310,27 @@ console.log(selectedFields,"selectedFields 2nd method")
 
 
 
-     <Dialog open={open} onClose={onClose}  maxWidth="900px" >
-      {/* <DialogTitle>{title}</DialogTitle> */}
-      <DialogContent>
+     <Dialog open={open} onClose={onClose}  maxWidth="1200px" >
+      <Grid container flex flexDirection={"row"}>
+      <Grid item  xs={10}>
+      <DialogTitle>{title}</DialogTitle>
+      </Grid>
+      <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
+      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={handleApply} />
+      </Grid>
+      </Grid>
+
+   
+      <DialogContent  >
       
-        {/* {fields.map((field, index) => {
-          if (field.type === 'datePicker') {
-            return (
-              <Grid xs={6} margin={3}>
-              <div key={index}>
-                <DatePicker
-                  label={field.label}
-              value={selectedFields[field.name]}
-              onChange={(date) => handleFieldChange(field.name, date)}
-                  renderInput={(params) => <TextField {...params} variant="outlined" />}
-                />
-              </div>
-              </Grid>
-            );
-          }
-          // if (field.type === 'Select') {
-          //   return <>
-          //   <FormControl fullWidth>
-          //    <Select  fullWidth key={index} label={field.label} options={field.options} />
-          //    </FormControl>
-          //   </>
-          // }
-          if (field.type === 'Select') {
-            return (
-              <FormControl fullWidth key={index}>
-                 <InputLabel>{field.label}</InputLabel>
-                <Select
-                  label={field.label}
-                  // placeholder="sure"
-                  // value={selectedDate[field.name] || ''}
-                  // onChange={(e) => handleDateChange( field.name, e.target.value)}
-                  value={selectedDate[field.name] || ''}
-               
-                  onChange={(e) => handleSelectChange(field.name, e.target.value)}
-                  variant="outlined"
-                >
-                  {field.options.map((option) => (
-                    <MenuItem key={index} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            );
-          }
-
-          // if (field.type === 'multiSelect') {
-          //   return (
-          //     <Grid xs={6} margin={3}>
-          //       <Autocomplete
-          //         multiple
-          //         id={field.name}
-          //         options={field.options}
-          //         value={selectedValue[field.name] || []}
-          //         onChange={(event, newValue) => handleMultiSelectChange(field.name, newValue)}
-          //         isOptionEqualToValue={(option, value) => option === value}
-          //         renderInput={(params) => <TextField {...params} variant="outlined" label={field.label} />}
-          //       />
-          //     </Grid>
-          //   );
-          // }
-          return null;
-        })} */}
-
-
+      {/* <Grid container item spacing={3} xs={6} flex flexDirection={"row"}> */}
       {fields.map((field, index) => (
-        <Grid key={index} xs={6} margin={3}>
+        <Grid key={index} item xs={6} md={4} margin={3}>
           {field.type === 'datePicker' && (
             <DatePicker
               label={field.label}
-              value={selectedFields[field.name]}
-              onChange={(date) => handleFieldChange(field.name, date)}
+              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): ''}
+              onChange={(date) => handleFieldChange(field.type,field.name, date)}
               renderInput={(params) => <TextField {...params} variant="outlined" />}
             />
           )}
@@ -365,7 +340,7 @@ console.log(selectedFields,"selectedFields 2nd method")
               <Select
                 label={field.label}
                 value={selectedFields[field.name] || ""}
-                onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                onChange={(e) => handleFieldChange(field.type,field.name, e.target.value)}
                 variant="outlined"
               >
                 {field.options.map((option, optionIndex) => (
@@ -378,9 +353,13 @@ console.log(selectedFields,"selectedFields 2nd method")
           )}
         </Grid>
       ))}
-    
-      
+     {/* </Grid> */}
+     
+      <Grid container justifyContent="flex-end"  marginBottom={3} >
+      <Button variant='outlined' sx={{backgroundColor:"grey"}} onClick={handleApply}>apply</Button>
+      </Grid >
       </DialogContent>
+      
     </Dialog>
     </>
     )

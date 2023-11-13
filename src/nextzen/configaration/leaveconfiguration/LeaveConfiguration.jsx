@@ -5,6 +5,12 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import ReusableTabs from '../../tabs/ReusableTabs';
+import LeavePeriod from './leaveperiod/LeavePeriod';
+import LeaveType from './leavetype/LeaveType';
+import Holidays from './holidays/Holidays';
+import WorkWeek from './workweek/WorkWeek';
+
 
 const bull = (
   <Box
@@ -15,20 +21,27 @@ const bull = (
   </Box>
 );
 
+const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work week'];
+  const tabContents = [
+    <div>
+      <LeavePeriod/>
+    </div>,
+    <div>
+      <LeaveType/>
+    </div>,
+    <div>
+      <Holidays/>
+    </div>,
+    <div>
+      <WorkWeek/>
+    </div>
+  ];
+
 export default function BasicCard() {
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-        Leave Configuration
-        </Typography>
-       
-      
-       
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+    <ReusableTabs
+        tabLabels={tabLabels}
+        tabContents={tabContents}
+      />
   );
 }

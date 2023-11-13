@@ -55,7 +55,7 @@ export default function AmplifyForgotPasswordView() {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: baseUrl+'checkUserExists',
+        url: baseUrl +'/checkUserExists',
         headers: {
           Authorization:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',

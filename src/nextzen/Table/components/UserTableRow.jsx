@@ -34,6 +34,8 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
+  onHandleEditRow
+
 }) {
   const confirm = useBoolean();
 
@@ -46,11 +48,12 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
-
+console.log(row,'row data')
   
   return (
     <>
-      <TableRow hover selected={selected}>
+     
+      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
@@ -58,10 +61,12 @@ export default function UserTableRow({
           headerContent.map((ele) => (
             <>
               <TableCell
+              onClick={()=>onHandleEditRow(row?.employeeId)}
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
-                  width:ele.width || ''
+                  width:ele.width || '',
+                  cursor:'pointer'
                 }}
               >
                 {ele.containesAvatar && (
@@ -105,6 +110,7 @@ export default function UserTableRow({
             
             </>
           ))}
+         
 
         {rowActions && rowActions?.length > 0 && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
@@ -119,6 +125,7 @@ export default function UserTableRow({
           arrow="right-top"
           sx={{ width: 140 }}
         >
+         
           {rowActions?.map((item) => (
             <>
               <MenuItem
@@ -127,13 +134,14 @@ export default function UserTableRow({
                 
                   popover.onClose();
                 }}
-              >
+              > {}
                 <Iconify icon="solar:pen-bold" />
                 {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>
           ))}
+          
         </CustomPopover>
       </TableRow>
 
@@ -160,4 +168,6 @@ UserTableRow.propTypes = {
   selected: PropTypes.bool,
   headerContent: PropTypes.any,
   rowActions: PropTypes.any,
+  onHandleEditRow:PropTypes.any
+ 
 };

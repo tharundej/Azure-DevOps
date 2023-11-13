@@ -48,6 +48,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
+  const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
+
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
@@ -87,7 +89,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     // companyID: Yup.string(),
     // companyName: Yup.string(),
   
-    firstName: Yup.string().required("first name is required"),
+    firstName: Yup.string().required("First name is required"),
     middleName: Yup.string(),
     lastName: Yup.string().required("Last name is required"),
     email: Yup.string().required("Email is required"),
@@ -194,9 +196,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const data1 = dataGeneral;
         let emp_id;
         const config = {
-          method: 'post',
+          method: 'POST',
           maxBodyLength: Infinity,
-          url: `${baseUrl}onBoarding`,
+          url: `${baseUrl}/onBoarding`,
           headers: { 
             'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
             'Content-Type': 'text/plain'
@@ -230,10 +232,21 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     try {
       data.companyID = 'COMP1';
       data.companyName = 'infobell';
+
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
       data.offerDate = formatDateToYYYYMMDD(datesUsed?.offer_date);
       data.joiningDate = formatDateToYYYYMMDD(datesUsed?.joining_date);
       data.dateOfBirth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+
+      if(isSameAsPermanent){
+        data.rAddressLine1=data.pAddressLine1;
+        data.rAddressLine2=data.pAddressLine2
+        data.rCity=data.pCity;
+        data.rState=data.pState;
+        data.rPincode=data.pPincode;
+      }
+
+     
 
       
        ApiHitGeneralInformation(data);
@@ -340,21 +353,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 />
               )}
 
-              <RHFSwitch
-                name="isVerified"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Email Verified
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Disabling this will automatically send the user a verification email
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              />
+             
             </Card>
           </Grid>
 
@@ -372,17 +371,17 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="firstName" label="First Name " />
+                <RHFTextField name="firstName" label="First Name* " />
                 <RHFTextField name="middleName" label="Middle Name " />
-                <RHFTextField name="lastName" label="Last Name " />
-                <RHFTextField name="email" label="Email Id " />
-                <RHFTextField name="contactNumber" label="Contact Number " />
+                <RHFTextField name="lastName" label="Last Name* " />
+                <RHFTextField name="email" label="Email Id* " />
+                <RHFTextField name="contactNumber" label="Contact Number* " />
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Birth"
+                      label="Date Of Birth*"
                       value={datesUsed?.date_of_birth}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
@@ -439,11 +438,18 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="pCity" label="City " />
                 <RHFTextField name="pState" label="State " />
                 <RHFTextField name="pPincode" label="Pincode " />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Switch checked={isSameAsPermanent} onChange={()=>{setIsSameAsPermanent(!isSameAsPermanent)}} />
+                  <span>Same As Permanent Address</span>
+                </div>
+                { !isSameAsPermanent && <>
                 <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
                 <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
                 <RHFTextField name="rCity" label="Resendial City " />
                 <RHFTextField name="rState" label="Resendial State " />
                 <RHFTextField name="rPincode" label="Resendial Pincode" />
+                </>
+                }
            
 
                 {/* <RHFTextField name="name" label="Full Name" />

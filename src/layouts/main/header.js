@@ -22,7 +22,8 @@ import Label from 'src/components/label';
 //
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
-import NavMobile from './nav/mobile';
+
+import NavMobile from './nav/mobile/nav-mobile';
 import NavDesktop from './nav/desktop';
 //
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';

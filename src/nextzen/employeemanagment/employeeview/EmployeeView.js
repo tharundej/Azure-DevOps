@@ -6,26 +6,39 @@ import ProfileCover from 'src/sections/user/profile-cover';
 
 import Iconify from '../../../components/iconify/iconify';
 
+import EmployeeAbout from './employeeabout/EmployeeAbout';
+import EmployeeEducation from './employeeeducation/EmployeeEducation';
+import Statoury from './statoury/Statoury';
+
+import PreviousWork from './previouswork/PreviousWork';
+
+import Documents from "../../employeemanagment/employeeview/documents/Documets"
+
 const TABS = [
     {
-      value: 'profile',
-      label: 'Profile',
+      value: 'About',
+      label: 'About',
       icon: <Iconify icon="solar:user-id-bold" width={24} />,
     },
     {
-      value: 'followers',
-      label: 'Followers',
-      icon: <Iconify icon="solar:heart-bold" width={24} />,
+      value: 'Education',
+      label: 'Education',
+      icon: <Iconify icon="mdi:education-outline" width={24} />,
     },
     {
-      value: 'friends',
-      label: 'Friends',
+      value: 'Experience',
+      label: 'Experience',
       icon: <Iconify icon="solar:users-group-rounded-bold" width={24} />,
     },
     {
-      value: 'gallery',
-      label: 'Gallery',
-      icon: <Iconify icon="solar:gallery-wide-bold" width={24} />,
+      value: 'Statoury',
+      label: 'Statoury',
+      icon: <Iconify icon="mdi:card-account-details-star" width={24} />,
+    },
+    {
+      value: 'Documents',
+      label: 'Documents',
+      icon: <Iconify icon="et:documents" width={24} />,
     },
   ];
  
@@ -38,7 +51,7 @@ const EmployeeView = () => {
   
     const [searchFriends, setSearchFriends] = useState('');
   
-    const [currentTab, setCurrentTab] = useState('profile');
+    const [currentTab, setCurrentTab] = useState('About');
   
     const handleChangeTab = useCallback((event, newValue) => {
       setCurrentTab(newValue);
@@ -100,19 +113,21 @@ const EmployeeView = () => {
         </Tabs>
       </Card>
 
-      {/* {currentTab === 'profile' && <ProfileHome info={_userAbout} posts={_userFeeds} />}
+      {currentTab === 'About' && <EmployeeAbout  />}
 
-      {currentTab === 'followers' && <ProfileFollowers followers={_userFollowers} />}
+      {currentTab === 'Education' && <EmployeeEducation  />}
+      {currentTab==='Experience' && <PreviousWork />}
+      {currentTab==='Documents' && <Documents />}
+    
+      {/* // {currentTab === 'friends' && (
+      //   <ProfileFriends
+      //     friends={_userFriends}
+      //     searchFriends={searchFriends}
+      //     onSearchFriends={handleSearchFriends}
+      //   />
+      // )} */}
 
-      {currentTab === 'friends' && (
-        <ProfileFriends
-          friends={_userFriends}
-          searchFriends={searchFriends}
-          onSearchFriends={handleSearchFriends}
-        />
-      )}
-
-      {currentTab === 'gallery' && <ProfileGallery gallery={_userGallery} />} */}
+      {currentTab === 'Statoury' && <Statoury  />}
     </Container>
 
 

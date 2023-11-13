@@ -68,7 +68,7 @@ export default function OnBoardForm() {
     }
     else if(activeStep+1===4){
      
-      childref.current.childFunctionExperience()
+      childref.current.childFunctionDocuments()
 
     }
 
@@ -112,10 +112,7 @@ export default function OnBoardForm() {
     setCompleted({});
   };
 
-  const callBeta=()=>{
-     childref.current.childFunctionGeneral();
-    // childref.current.childFunction1();
-  }
+ 
  
 const handleCallSnackbar=(message,severity)=>{
   setOpenSnackbar(true);
@@ -180,9 +177,15 @@ const handleCallSnackbar=(message,severity)=>{
               <Button onClick={handleNext} sx={{ mr: 1 }}>
                 Save and Continue
               </Button>
-
+              {activeStep+1!==1 &&
+              <Button onClick={handleNextIncrement} sx={{ mr: 1 }}>
+                Skip
+              </Button>
+              }
+              
              
             </Box>
+            
           </>
         )}
       </div>

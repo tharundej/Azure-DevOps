@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {Tabs,Tab,Box} from '@mui/material';
-import { styled } from '@mui/system'; // Import styled from @mui/system
+import { styled } from '@mui/system';
+
+// Import styled from @mui/system
+
 const CustomTab = styled(Tab)(({ theme }) => ({
   '&.MuiTab-root.Mui-selected': {
        backgroundColor: "#3B82F6",

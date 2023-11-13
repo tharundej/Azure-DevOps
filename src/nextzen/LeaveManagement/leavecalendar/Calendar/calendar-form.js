@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card} from '@mui/material';
 
 // utils
 import uuidv4 from 'src/utils/uuidv4';
@@ -26,12 +26,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { LoadingScreen } from 'src/components/loading-screen';
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
   const [listLeave,setListLeave] = useState();
+  const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
     leave_type_id:Yup.number(),
@@ -64,7 +67,6 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   } = methods;
 
   const values = watch();
-
   
   const [datesUsed, setDatesUsed] = useState({
     fromDate: dayjs(new Date()),
@@ -81,8 +83,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
     const eventData = {
       leave_type_id:data?.leave_type_id,
-      company_id: "COMP1",
-      employee_id:"info1",
+      company_id: "C1",
+      employee_id:"E1",
       comments: data?.comments,
       apply_date: "",
       from_date: formatDateToYYYYMMDD(datesUsed?.fromDate),
@@ -97,18 +99,21 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     };
     try {
       const result = await createEvent(eventData);
-      if (result && result.data && result.data.success) {
-        // Display the success message from the result.
-        enqueueSnackbar(result.data.message, { variant: 'success' });
-      }
+      
       onClose();
+      enqueueSnackbar("Leave applied", { variant: 'success' });
       reset();
-    } catch (error) {
+    } 
+    catch (error) {
       // Handle the error, e.g., show a snackbar.
       if (error.response && error.response.data && error.response.data.message) {
+        console.log(error.response,"error",error.response.data,"dataa")
         if (error.response.data["show message"] === "user") {
           // Display the error message from the response
           enqueueSnackbar(error.response.data.message, { variant: 'error' });
+       }
+       else{
+        enqueueSnackbar('An error occurred while applying the leave.', { variant: 'error' });
        }
       } else {
         // Display a generic error message
@@ -165,19 +170,22 @@ useEffect(()=>{
 
 
 const getLeaveList = () => {
+  setLoader(true);
   const payload = {
-    company_id: "COMP1",
-     employee_id:"info1"
+    company_id: "C1",
+     employee_id:"E1"
   
   }
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87.3001/erp/getLeaveType`,
+    // url: baseUrl + `getLeaveType`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
   axios.request(config).then((response) => {
+    setLoader(false);
     setListLeave(response?.data?.list)
   })
 
@@ -187,20 +195,23 @@ const getLeaveList = () => {
 }
 
 const AvailableLeaves = () => {
+  setLoader(true);
   const payload = {
-    company_id: "COMP1",
-     employee_id:"info1"
+    company_id: "C1",
+     employee_id:"E1"
   
   }
  
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.87.3001/erp/availableLeave`,
+    // url: baseUrl + `availableLeave`,
+    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 
   axios.request(config).then((response) => {
+    setLoader(false);
     setAvailableLeaves(response?.data)
   })
 
@@ -209,8 +220,13 @@ const AvailableLeaves = () => {
     });
 }
 
+const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
+
+console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
 
   return (
+  <>
+   {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
 <Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
@@ -261,7 +277,7 @@ const AvailableLeaves = () => {
           />
      </DemoContainer>
      </LocalizationProvider>
-         <RHFRadioGroup
+        {(isSameDay)? <RHFRadioGroup
               row
               name="day_span"
               label="Day Span"
@@ -272,7 +288,7 @@ const AvailableLeaves = () => {
                 { value: 'first_half', label:'First Half' },
                 { value: 'second_half', label: 'Second Half' },
               ]}
-            />
+            />:null}
 <Typography variant="subtitle2">Attachments</Typography>
 <input
   type="file"
@@ -319,8 +335,10 @@ const AvailableLeaves = () => {
           Save Changes
         </LoadingButton>
       </DialogActions>
-    </FormProvider>
+    </FormProvider>}
+    </>
   );
+
 }
 
 CalendarForm.propTypes = {

@@ -63,7 +63,7 @@ const BalanceSheetTable = () => {
 
   useEffect(() => {
     ApiHit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
   const defaultPayload = {
     count: 5,

@@ -122,7 +122,7 @@ export default function UserNewEditForm({ currentUser }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      Nithin
+      
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
@@ -240,7 +240,11 @@ export default function UserNewEditForm({ currentUser }) {
                 label="Country"
                 options={countries.map((country) => country.label)}
                 getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
+                
+                isOptionEqualToValue={(option, value) =>{ 
+                  
+                 
+                  return option === value}}
                 renderOption={(propss, option) => {
                   const { code, label, phone } = countries.filter(
                     (country) => country.label === option

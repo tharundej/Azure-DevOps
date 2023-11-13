@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import test from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -53,7 +54,7 @@ export default function JwtRegisterView() {
   const [datesUsed, setDatesUsed] = useState({
     companyDateOfIncorporation: dayjs(new Date()),
   });
-
+  
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -65,7 +66,10 @@ export default function JwtRegisterView() {
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
-    cin: Yup.string().required('CIN is required'),
+    cin: Yup.string()
+    .required('CIN is required')
+  .matches(/^[\dA-Z]+$/, 'CIN should only contain uppercase letters and digits')
+  .test('len', 'CIN should be exactly 21 characters long', (val) => val && val.length === 21),
     companyName: Yup.string().required('Compnay name required'),
     companyRegistrationNo: Yup.number().required('Company Registration Number is required'),
     companyCeoName: Yup.string().required('CEO name required'),
@@ -75,9 +79,9 @@ export default function JwtRegisterView() {
       .email('Email must be a valid email address'),
     // companyDateOfIncorporation: Yup.string().required('Date of corporation is required'),
     phoneNo: Yup.string()
-      .required('Phone No is required')
-      .length(10, 'Phone No must be exactly 10 digits')
-      .matches(/^[0-9]+$/, 'Phone No should only contain numbers'),
+    .required('Phone No is required')
+    .length(10, 'Phone No must be exactly 10 digits')
+    .matches(/^[1-9]\d*$/, 'Phone No should only contain numbers and cannot start from 0'),
     firstName: Yup.string()
       .required('First name is required')
       .matches(/^[A-Za-z\s]+$/, 'First name must contain only letters and spaces'),
@@ -239,7 +243,7 @@ export default function JwtRegisterView() {
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
                         sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="companyDateOfIncorporation"
+                        label="Company Date of Incorporation"
                         // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                         defaultValue={dayjs(new Date())}
                         onChange={(newValue) => {
@@ -269,7 +273,7 @@ export default function JwtRegisterView() {
                   <RHFTextField name="phoneNo" label="Phone No" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="firstName" label="first Name" />
+                  <RHFTextField name="firstName" label="First Name" />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <RHFTextField name="middleName" label="Middle Name" />

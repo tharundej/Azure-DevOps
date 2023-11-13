@@ -29,7 +29,7 @@ import { baseUrl } from '../global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line react/prop-types
+
 export default function AmplifyNewPasswordView({emailId}) {
   const { newPassword, forgotPassword } = useAuthContext();
 
@@ -86,7 +86,7 @@ export default function AmplifyNewPasswordView({emailId}) {
         "jwtTokenString":localStorage.getItem('jwt_access_token')
         
     }
-    const response = await axios.post(baseUrl+'createPassword', payload);
+    const response = await axios.post(baseUrl+'/createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
     console.log(payload,'createpassword')
     if(response?.data.code===201){

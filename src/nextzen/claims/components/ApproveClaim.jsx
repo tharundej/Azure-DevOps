@@ -87,7 +87,7 @@ export default function ApproveClaim({ currentUser }) {
   // ]
   const TABLE_HEAD = [
     {
-      id: "employeename",
+      id: "employeeName",
       label: " Employee Name",
       width: 180,
       type: "text",
@@ -95,11 +95,12 @@ export default function ApproveClaim({ currentUser }) {
 
       secondaryText: "email",
     },
-    { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
-    { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
-    { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "claimType", label: "Claim Type", width: 180, type: "text" },
+    { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
+    { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
+    { id: "approveAmount", label: "Max Approve Amount", width: 200, type: "text" },
+    { id: "expenseDate", label: "Expense Date", width: 100, type: "text" },
+    { id: "approverName", label: "Approver Name", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -110,11 +111,20 @@ export default function ApproveClaim({ currentUser }) {
 
   const defaultPayload={
 
-  
-      "employee_id":"ibm3",
-      "page":0,
-      "search":"",
-      "count":5
+    "companyId":"COMP2",
+    "count":5,
+    "page":0,
+    "search":"",
+    "externalFilter":{
+    "claimType":"",
+    "claimStartDate":"",
+    "claimEndDate":"",
+    "status":""
+}, 
+    "sort":{
+    "key":0,
+    "order":""
+}
    
 }
 const handleClick=()=>{
@@ -122,34 +132,33 @@ const handleClick=()=>{
 }
 
 const externalFilter = {
-  claimStartDate: "",
-  claimEndDate: "",
-  // expenseStartDate: "",
-  // expenseEndDate: "",
+  // claimStartDate: "",
+  // claimEndDate: "",
+  expenseStartDate: "",
+  expenseEndDate: "",
   // status: "",
-  paymentStatus: ""
+  paymentstatus: ""
 }
 
 
-const dialogConfig ={
-    title: 'Dynamic Dialog Example',
-    fields: [
+const dialogConfig={
+  title: 'Approve Claim Filters',
+  fields: [
 
-      { type: 'datePicker', label: 'Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
-    //   { type: 'datePicker', label: 'End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-    //   { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim", value: new Date() },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-      { type: 'Select', label: 'Select Options', options: ['Option 1', 'Option 2', 'Option 3'] },
-      // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'Option 3'] },
-    ],
-  } 
-  const actions = [
-
-    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
-    { name: "View", icon: "hh", id: 'view' },
-    { name: "Edit", icon: "hh", id: 'edit' },
-    { name: "Delete", icon: "hh", id: 'delete' },
-  ];
+    { type: 'datePicker', label: 'Expense Start Date', name: 'expenseStartDate',category:"expense", value: new Date() },
+    { type: 'datePicker', label: 'Expense End Date', name: 'expenseEndDate',category:"expense", value: new Date() },
+    // { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
+    // { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
+    // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
+    { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+    // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
+  ],
+} 
+const actions = [
+  { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
+  { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+  // { name: "eerr", icon: "hh", path: "jjj" },
+];
   const searchFilterheader = [
 
     { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
@@ -270,19 +279,97 @@ const dialogConfig ={
   });
   // for upload docmunt
 
-  const onclickActions = (event) => {
-    console.log( "my claims from to basic table")
-    console.log(event)
-    if (event && event?.eventData) {
-      if (event?.eventData?.type === 'serviceCall') {
-        // serviceCall(event.eventData.endpoint,event.rowData)
+  // const onclickActions = (event) => {
+  //   console.log( "my claims from to basic table")
+  //   console.log(event)
+  //   if (event && event?.eventData) {
+  //     if (event?.eventData?.type === 'serviceCall') {
+  //       // serviceCall(event.eventData.endpoint,event.rowData)
         
-      } else {
-          // navigate[event.eventData.route]
-      }
+  //     } else {
+  //         // navigate[event.eventData.route]
+  //     }
+  //   }
+  // }
+
+
+  const [approve, setApprove]= React.useState({
+
+    // compensatoryRequestId:"1",
+    //     status: "",
+    //     utilisation: "1"
+    companyId:"COMP2",
+    employeeId:"ibm3",
+    expenseClaimId :"13" ,
+    approverManagerId:"ibm1",
+    status:""
+ 
+
+  })
+  // console.log(approve,"approve data11111111")
+  const onclickActions = (rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+      if (eventData?.type === 'status') {
+        // handle(approve);
+           if (eventData?.name === 'Approve'){
+            setApprove(prevState => ({
+              ...prevState,
+              status: "Approve"
+          }));
+          handle(approve);
+          console.log(approve,"approve api")
+
+           }
+          
+        
+       else{
+        setApprove(prevState => ({
+          ...prevState,
+          status: "Reject"
+      }));
+      
+
+    }
     }
   }
+    
+    else {
+          // navigate[event.eventData.route]
 
+      }
+    }
+   
+
+    const  handle =(async (approve) => {
+    
+      console.log(approve,"approve defaultValues111")
+     
+  
+      try {
+       
+        // console.log(data, 'formdata api in check');
+  
+        const response = await axios.post('http://192.168.1.135:3001/erp/updateClaimStatus', approve).then(
+          (successData) => {
+            console.log('sucess', successData);
+          },
+          (error) => {
+            console.log('lllll', error);
+          }
+        );
+  
+        // await new Promise((resolve) => setTimeout(resolve, 500));
+        // reset();
+        // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+        // router.push(paths.dashboard.user.list);
+        // console.info('DATA', data);
+      } catch (error) {
+  
+        alert("api hit not done")
+        console.error(error);
+      }
+    });
 
   const serviceCall = (endpoint, payload) => {
 
@@ -309,7 +396,7 @@ const dialogConfig ={
       
       <SurendraBasicTable
 
-      endpoint="/getAllClaims"
+      endpoint="getAllClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
@@ -317,6 +404,7 @@ const dialogConfig ={
       filterName="claimSearchFilter"
       filterContent={dialogConfig}
       dialogPayload={externalFilter}
+      onclickActions={onclickActions}
       // searchFilterheader={searchFilterheader}
        
       />

@@ -47,7 +47,7 @@ import IconButton from '@mui/material/IconButton';
 
 import TableContainer from '@mui/material/TableContainer';
 
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+// import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import MenuItem from '@mui/material/MenuItem';
 
@@ -151,9 +151,9 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData,rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
 
-  const popover = usePopover();
+  // const popover = usePopover();
 
  
 
@@ -161,7 +161,7 @@ const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,b
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
 
- console.log(initialDefaultPayload,"initialDefaultPayload====================")
+//  console.log(initialDefaultPayload,"initialDefaultPayload====================")
 
 //  console.log(actions,"actions==......")
 
@@ -169,7 +169,7 @@ const SurendraBasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,b
 
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
 
-  console.log(initialDefaultPayload?.Page,"page value")
+  // console.log(initialDefaultPayload?.Page,"page value")
 
   // const countValue = initialDefaultPayload?.Count;
 
@@ -200,7 +200,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const [tableData, setTableData] = useState([]);
 
  
-
   // const [rowActions, setRowActions] = useState(actions);
 
   // console.log(endpointdata,"endpoint urlll")
@@ -213,7 +212,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   // const bodyData = 'appliedLeave';
 
- 
+  const getRowActionsBasedOnStatus = (status) => {
+    if (status === 'pending' || status==="" || status ==="Pending") {
+      return rowActions
+    }
+    else {
+      return null
+    }
+  }
 
   useEffect(() => {
 
@@ -221,25 +227,23 @@ const [filterHeaders, setFilterHeaders]=useState([])
     // onclickActions();
 
     getTableData(initialDefaultPayload);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    
+  }, [initialDefaultPayload])
 
  
 
   const getTableData = (payload) => {
 
-    // let initialDefaultPayloadCopy =initialDefaultPayload;
-    // if(payload){
-    //   initialDefaultPayloadCopy = payload;
-    // }
+    let initialDefaultPayloadCopy =initialDefaultPayload;
+    if(payload){
+      initialDefaultPayloadCopy = payload;
+    }
     // let initialDefaultPayloadCopy =initialDefaultPayload;
     // if(payload){
     //   initialDefaultPayloadCopy = payload;
     // }
     // if(actionType === 'pageChange'){
-
     //   initialDefaultPayloadCopy.Page = data;
-
     // }
 
     const config = {
@@ -248,9 +252,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       maxBodyLength: Infinity,
 
-      // url:`http://192.168.1.79:8080/appTest/GetMyClaims`,
-      // http://192.168.1.26:3001/erp/getAllClaims
-      url: `http://192.168.1.87:3001/erp/${endpoint}`,
+      // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // http://192.168.1.26:3001/erp/getAllClaims,
+      url: `http://192.168.1.199:3001/erp/${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -292,18 +296,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
       console.log(response)
 
  
-
-      // if(actionType === 'pageChange'){
-
-      //   // let initialDefaultPayloadCopy =
-
-      //   setInitialDefaultPayload((prevData)=>({
-
-      //     ...prevData, Page:data
-
-      //   }))
-
-      // }
 
  
 
@@ -385,7 +377,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  // const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
+  const notFound = (!tableData?.length && canReset) || !tableData?.length;
 
  
 
@@ -424,6 +416,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
 
   const handleEditRow = (rowData,eventData) => {
+    onclickActions(rowData,eventData)
    
     console.log(rowData, eventData)
 
@@ -435,7 +428,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     else if (eventData?.type === "edit"){
    
-      buttonFunction();
+      // buttonFunction();
       
       
       // eventData?.handleOpen()
@@ -450,7 +443,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     }
 
     else{
-
+      console.log(eventData,"eventData----")
       console.log("else part..")
 
     }
@@ -507,7 +500,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   // useEffect(()=>{
   //   getTableData(initialDefaultPayload);
 
-  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  //    
   // },[initialDefaultPayload])
   const onChangeRowsPerPageHandeler = (event) => {
 
@@ -553,7 +546,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(searchTerm, "searched data");
 
     if (timer) {
-      clearTimeout(timer); // Clear previous timer
+      clearTimeout(timer); 
     }
 
     const newTimer = setTimeout(() => {
@@ -563,7 +556,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
         search: searchTerm,
       }));
       getTableData(payload);
-    }, 300); // Adjust the delay as needed (300 milliseconds in this example)
+    }, 300); 
 
     setTimer(newTimer);
   };
@@ -626,13 +619,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     // useEffect(()=>{
     //      getTableData(initialDefaultPayload)
-    //      // eslint-disable-next-line react-hooks/exhaustive-deps
+    //      
     // },[initialDefaultPayload])
 
 
   const handleFilterOptions=(data)=>{
     
-    console.log(data,"filtered data")
+    console.log(data,"filtered data  from claim search")
+    
 
     const payload = initialDefaultPayload;
 
@@ -640,12 +634,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       ...prevPayload,
 
-      // Search: searchTerm,
+      
       externalFilters:data
      
     }));
     
-
+    getTableData(payload);
     console.log(payload,"after filter effected")
     
 
@@ -677,8 +671,6 @@ const [sortColumn, setSortColumn]=useState("")
     console.log(payload,field,"sortinglllllllllll")
     
 
-  
-
   table.onSort(field); 
   getTableData(payload)
 };
@@ -707,7 +699,7 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-          <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
+          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' ,  width: '100%' }}>
 
             <TableSelectedAction
 
@@ -753,6 +745,8 @@ const [sortColumn, setSortColumn]=useState("")
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
+                // component={Paper}
+                // style={{ height: 400, width: '100%', position:"sticky"}}
 
                   order={table.order}
 
@@ -800,7 +794,6 @@ const [sortColumn, setSortColumn]=useState("")
 
        
 
-                    {console.log(tableData)}
 
                     {tableData && tableData.length > 0 && tableData
 
@@ -825,10 +818,14 @@ const [sortColumn, setSortColumn]=useState("")
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
-
-                          rowActions={rowActions || []}
-
+                         
+                          rowActions={getRowActionsBasedOnStatus(row.status)|| []}
+                         
                         />
+
+
+
+                        
 
                        
 
@@ -839,6 +836,7 @@ const [sortColumn, setSortColumn]=useState("")
                         </>
 
                       ))}
+                      
 
        
 
@@ -846,7 +844,7 @@ const [sortColumn, setSortColumn]=useState("")
 
  
 
-                    {/* <TableNoData notFound={notFound} /> */}
+                    <TableNoData notFound={notFound} />
 
                   </TableBody>
 
@@ -1020,7 +1018,7 @@ SurendraBasicTable.propTypes = {
 
 SurendraBasicTable.propTypes = {
 
-  bodyData: PropTypes.func,
+  bodyData: PropTypes.any,
 
 };
 
@@ -1052,17 +1050,14 @@ SurendraBasicTable.propTypes = {
 };
 
 SurendraBasicTable.propTypes = {
-
   dialogPayload: PropTypes.any
-
 };
 
-
+SurendraBasicTable.propTypes = {
+  onclickActions: PropTypes.any
+};
 // dialogPayload
 // SurendraBasicTable.propTypes = {
 //   searchFilterheader: PropTypes.any
 // };
-
- 
-
 export { SurendraBasicTable };

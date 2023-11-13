@@ -23,10 +23,9 @@ export default function EmployeeTable() {
 
   const actions = [
 
-    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
-    { name: "View", icon: "hh", id: 'view' },
-    { name: "Edit", icon: "hh", id: 'edit' },
-    { name: "Delete", icon: "hh", id: 'delete' },
+    
+    { name: "View", icon: "hh", id: 'view' }
+    
   ];
 
   const [filterOptions,setFilterOptions]=useState({
@@ -85,7 +84,7 @@ export default function EmployeeTable() {
 
   useEffect(()=>{
    ApiHit();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   },[])
 
   const defaultPayload={
@@ -193,10 +192,17 @@ export default function EmployeeTable() {
   //     status: 'active',
   //   },
   // ];
+  const router = useRouter();
 
-  const handleCalled=()=>{
-    console.log("hii1")
-  }
+
+  const handleEditRowParent = useCallback(
+    (id) => {
+      console.log('called',paths.dashboard.employee.userview(id))
+      router.push(paths.dashboard.employee.userview(id));
+    },
+    [router]
+    
+  );
   return (
     <>
       <Helmet>
@@ -212,7 +218,7 @@ export default function EmployeeTable() {
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions} filterName="EmployeeFilterSearch"
+rowActions={actions} filterName="EmployeeFilterSearch"  handleEditRowParent={handleEditRowParent}
  />
     </>
   );

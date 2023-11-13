@@ -27,6 +27,7 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import Search from "src/nextzen/search/search";
 import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 // import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -58,6 +59,46 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function MyClaims({ currentUser ,}) {
+  
+  const claim_type = [
+    { code: '', label: '', phone: '' },
+    { code: 'AD', label: 'Travel', value:0, phone: '376' },
+    { code: 'AD', label: 'Medical',value:1, phone: '376' },
+    { code: 'AD', label: 'Hotel', value:2, phone: '376' },
+
+  ]
+  // const compoff_type = [
+  //   { id: 'Empty', label: 'Empty', value: '' },
+  //   { code: 'AD', label: 'Travel', id:0, phone: '376' },
+  //   { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
+  //   { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
+
+  // ]
+  const compoff_type = [
+    { code: 'Empty', label: 'Empty', phone: '' , value:1},
+    { code: 'AD', label: 'travel', id:0, phone: '376', value:2},
+    { code: 'AD', label: 'medical', id:1,phone: '376', value:3 },
+    { code: 'AD', label: 'hotel', id:1,phone: '376' , value :4},
+
+  ]
+  const currency = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
 
   // const defaultPayload = {
   //   "count":5,
@@ -142,23 +183,23 @@ const handleClick=()=>{
   ];
 
   const externalFilter = {
-    claimStartDate: "",
-    claimEndDate: "",
-    expenseStartDate: "",
-    expenseEndDate: "",
+    
+    claim_start_date: "",
+    claim_end_date: "",
     status: "",
-    paymentStatus: ""
+    claim_type: ""
+
   }
    const dialogConfig={
-    title: 'Dynamic Dialog Example',
+    title: 'Claim Filters',
     fields: [
 
-      { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-      // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
-      { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+      // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
+      // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
+      { type: 'datePicker', label: 'Claim Start Date', name: 'claim_start_date',category:"claim",  },
+      { type: 'datePicker', label: 'Claim End Date', name: 'claim_end_date',category:"claim",  },
+      { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
+      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   } 
@@ -178,6 +219,15 @@ const handleClick=()=>{
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
+
+
+   // modal edit
+   const [openEdit,setOpenEdit]=React.useState(false);
+
+   const handleOpenEdit = () => {
+     setOpenEdit(true);
+   }
+   const handleCloseEdit = () => setOpenEdit(false);
 
 
   const actions = [
@@ -216,8 +266,18 @@ const handleClick=()=>{
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    claim_amount: Yup.string().required('Claim Amount is Required'),
-    comments: Yup.string(),
+    claim_amount: Yup.number().required('Claim Amount is Required'),
+    comment: Yup.string(),
+    file_name: Yup.string(),
+    company_id: Yup.string(),
+    employee_id: Yup.string(),
+    currency: Yup.string(),
+    expense_date:Yup.string(),
+    file_format: Yup.string(),
+    file: Yup.mixed(),
+    expense_config_id:Yup.number(),
+
+    
 
 
 
@@ -226,15 +286,24 @@ const handleClick=()=>{
 
   const defaultValues = useMemo(
     () => ({
-      claim_amount: currentUser?.claim_amount || '',
-      comments: currentUser?.comments || '',
-      // image_name: currentUser?.image_name || '',
-      // image_data: currentUser?.image_data || '',
+      claim_amount: currentUser?.claim_amount || null ,
+      comment: currentUser?.comment || '',
+      // type_oc_claim: currentUser?.type_oc_claim|| '',
+      currency:currentUser?.currency|| '$',
 
+      company_id:currentUser?.company_id || 'COMP2',
+      employee_id:currentUser?.employee_id || 'ibm3',
+      expense_config_id:currentUser?.expense_config_id|| 2,
+      expense_date:currentUser?.expense_date|| "2023-11-12",
+
+      file_format:currentUser?.file_format|| "pdf",
+      file:currentUser?.file,
+      // formData.append("expense_date", "2023-11-12"); file_format:jpg
 
     }),
     [currentUser]
   );
+
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -250,22 +319,158 @@ const handleClick=()=>{
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  
 
+ // formdata and not json
+const formData= new FormData();
+
+const values = watch();
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+  console.log('uyfgv');
+  console.log(data,"defaultValues111")
+  // formData.append("file", null );
+  // formData.append("claim_amount", 1234 );
+  // formData.append("company_id", "COMP2" );
+  // formData.append("employee_id", "ibm3" );
+  // formData.append("currency", "$");
+  // formData.append("expense_config_id", 2);
+  // formData.append("expense_date", "2023-11-12");
+
+  const formDataForRequest = new FormData();
+  for (const key in data) {
+    formDataForRequest.append(key, data[key]);
+  }
+
+
+  try {
+    // data.company_id = '0001';
+    // data.company_name = 'infbell';
+    // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+    // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+    // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+    // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+
+
+
+    console.log(formData, 'formdata api in check');
+
+    const response = await axios.post('http://192.168.1.115:3000/erp/applyClaim', formDataForRequest).then(
+      (successData) => {
+        console.log('sucess', successData);
+      },
+      (error) => {
+        console.log('lllll', error);
+      }
+    );
+
+    // await new Promise((resolve) => setTimeout(resolve, 500));
+    // reset();
+    // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+    // router.push(paths.dashboard.user.list);
+    // console.info('DATA', data);
+  } catch (error) {
+    console.error(error);
+  }
+});
+  // for upload docmunt
+  const [editData, setEditData]=useState({
+  })
+
+  const handleEditChange = (field, value) => {
+    console.log(field,value,"sssssssss")
+    
+    setEditData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
+
+  
+  const onclickActions = async(rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+     
+      console.log(rowData,'rowDatarowData')
+      // hit api for options return the resposnse.data.data
+      // const arr= await ApiHitClaimTypeOptions()
+      
+      const updatedRowData = {
+        ...rowData,
+        company_id: 'COMP2',
+      };
+    
+      setEditData(updatedRowData);
+
+      if (eventData?.type === 'edit') {
+
+        handleOpenEdit()
+        console.log("kl")
+      
+      }
+      
+        
+       else{
+     
+
+    }
+    }
+ 
+    
+    else {
+          // navigate[event.eventData.route]
+
+      }
+    }
+
+
+  const serviceCall = (endpoint, payload) => {
+
+  }
+
+  const onSubmitEdit2 = async(editData, event) => {
+    
+    try {
+      event.preventDefault();
+      editData.claim_type=editData?.claim_type?.label
+
+     console.log(editData,"editDataeditData")
+      // editData.preventDefault();
+      // console.log(data, 'formdata api in check');
+
+      // const formData = new FormData(editData.target);
+      // const formObject = {};
+
+      // // Iterate over form elements and add them to the object
+      // formData.forEach((value, key) => {
+      //   formObject[key] = value;
+      // });
+      const response = await axios.post('http://192.168.1.199:3001/erp/EditMyClaims', editData).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  }
+  const onSubmitEdit =  handleSubmit(async(editData) => {
+    
+    console.log(editData,"editData defaultValues111")
+   
 
     try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+     
+      // console.log(data, 'formdata api in check');
 
-      console.log(data, 'data111ugsghghh');
-
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post('http://192.168.1.199:3001/erp/EditMyClaims', editData).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -280,28 +485,11 @@ const handleClick=()=>{
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
+
+      alert("api hit not done")
       console.error(error);
     }
   });
-  // for upload docmunt
-
-  const onclickActions = (event) => {
-    console.log( "my claims from to basic table")
-    console.log(event)
-    if (event && event?.eventData) {
-      if (event?.eventData?.type === 'serviceCall') {
-        // serviceCall(event.eventData.endpoint,event.rowData)
-        
-      } else {
-          // navigate[event.eventData.route]
-      }
-    }
-  }
-
-
-  const serviceCall = (endpoint, payload) => {
-
-  }
 
   return (
     <>
@@ -309,20 +497,9 @@ const handleClick=()=>{
         <title> Dashboard: myclaims</title>
       </Helmet>
 
-      {/* <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button> */}
-      {/* <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField fullWidth label="Search">o</TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <Button sx={{ alignSelf: "center" }} variant="contained" onClick={handleOpen}>Open modal</Button>
-          <Button variant="contained" >Filter</Button>
-          <Button variant="contained" >exports</Button>
-        </Grid>
-       
-      </Grid> */}
+     
 
-      <Dialog
+<Dialog
         fullWidth
         maxWidth={false}
         open={open}
@@ -360,35 +537,30 @@ const handleClick=()=>{
             </RHFSelect> */}
 
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+
               <RHFAutocomplete
-                name="country"
+                name="type_oc_claim"
                 label="Type Of Claim"
-                options={countries.map((country) => country.label)}
+                options={claim_type.map((claimtype) =>claimtype.label)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
-
-                  if (!label) {
-                    return null;
-                  }
-
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
+             
               />
+
+
+
               <RHFAutocomplete
+                name="currency"
+                label="currency"
+                options={currency.map((claimtype) => claimtype.label)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+            
+              />
+ 
+
+              
+              {/* <RHFAutocomplete
                 name="country"
                 label=" Currency for Reimbursement"
                 options={countries.map((country) => country.label)}
@@ -415,7 +587,7 @@ const handleClick=()=>{
                     </li>
                   );
                 }}
-              />
+              /> */}
 
 
               <RHFTextField name="claim_amount" label="Claim Amount" />
@@ -433,7 +605,7 @@ const handleClick=()=>{
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comments" label="comments" />
+              <RHFTextField name="comment" label="comments" />
               {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
               <Grid sx={{ alignSelf: "flex-end" }}>
 
@@ -494,6 +666,127 @@ const handleClick=()=>{
         </FormProvider>
       </Dialog>
 
+
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={openEdit}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(editData, event)}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          <DialogTitle>Edit My Claim</DialogTitle>
+
+          <DialogContent>
+            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+            Account is waiting for confirmation
+          </Alert> */}
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+             
+
+              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+              
+              {/* <RHFAutocomplete
+                name="claim_type"
+                label="Claim Type"
+                options={compoff_type}
+               
+                getOptionLabel={(option) => option.label}
+               getOptionValue={(option) => option.value}
+                
+                isOptionEqualToValue={(option, value) => option === value}
+                value={editData?.claim_type || {}} 
+                onChange={(event, newValue) => handleEditChange('claim_type', newValue)
+              }
+               
+              /> */}
+
+<Autocomplete
+  name="claim_type"
+  label="Claim Type"
+  options={compoff_type}
+  
+  getOptionLabel={(option) => option.label}
+  // getOptionValue={(option) => option.value}  // Specify the property used as the value
+  // isOptionEqualToValue={(option, value) => option.value === value} // Adjust this line to compare values
+  value={editData?.claim_type || null}  // Set the value to null if it's undefined
+  onChange={(event, newValue) => handleEditChange('claim_type', newValue)}
+  renderInput={(params) => (
+    <TextField {...params} label="Claim Type" variant="outlined" />
+  )}
+/>
+             
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Claim Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                      // handleChangeDate(newValue, 'to');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <RHFTextField name="claim_amount"  label="Claim Amount" value={editData?.claim_amount}
+              onChange={(event) => handleEditChange('claim_amount', event.target.value)}
+              />
+             
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expense Date"
+                    // value={item?.to}
+                    onChange={(newValue) => {
+                     // handleChangeDate(newValue, 'End');
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+            
+             
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleCloseEdit}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained"   loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
+
+
       <SurendraBasicTable
 
       endpoint="GetMyClaims"
@@ -508,6 +801,7 @@ const handleClick=()=>{
       buttonFunction={handleOpen}
       filterContent={dialogConfig}
       dialogPayload={externalFilter}
+      onclickActions={onclickActions}
 
       // searchFilterheader={searchFilterheader}
        

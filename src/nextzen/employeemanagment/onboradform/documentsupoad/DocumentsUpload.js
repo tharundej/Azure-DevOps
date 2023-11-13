@@ -1,47 +1,154 @@
-import React,{forwardRef,useState} from 'react'
+import React,{forwardRef,useImperativeHandle,useState} from 'react'
 
-import { Grid,Box,Card ,Typography} from '@mui/material'
+import { Grid,Box,Card ,Typography,Button,  FormControl,
+  Select,
+  MenuItem,
+  InputLabel } from '@mui/material'
 
-const   DocumentsUpload=forwardRef((props,ref)=> {
-    const [attachmentString,setAttachmentString]=useState("");
+var   DocumentsUpload=forwardRef((props,ref)=> {
 
-    function handleFileSelect(event) {
+  var [defaultValues,setDefaultValues]=useState([ {
+    fileType:'',
+    fileName:'',
+    fileContent:''
+}])
 
-        const fileInput = event.target;
+
+
+  var handleCategoryChange = (e,index) => {
+    var { value, id } = e.target;
+    // var newObj = defaultValues;
+    
+
+    var newArray = [...defaultValues];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    console.log(newArray,'type changed')
+
+    
+    setDefaultValues(newArray);
+  };
+
+  var handleAddDocument=(index)=>{
+    var newArray = [...defaultValues];
+    var obj1={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+    newArray = [
+      ... newArray,
+      obj1,
+    ];
+    console.log(newArray,'new docs')
+
+    setDefaultValues(newArray);
+  }
+
+  var handleDeleteDocument=(index)=>{
+    var updatedItems = defaultValues.filter((item,index1) => index1 !== index);
+
+    var newArray = [...defaultValues];
+   
+    newArray =updatedItems
+   
+    console.log(newArray,'docs deleted')
+
+
+   setDefaultValues(newArray);
+  }
+  useImperativeHandle(ref,()=>({
+    childFunctionDocuments(){
+      onSubmit();
+
+
+
+
       
-        const file = fileInput.files[0];
+    }
+  }))
+
+  var onSubmit=()=>{
+    console.log(attachments);
+  }
+    var [attachments,setAttachments]=useState([]);
+
+    var handleFileUpload = (event,index) => {
+        
+      var file = event.target.files[0];
+      // var { value, id } = e.target;
+      // var newObj = defaultValues;
+
+        var base64String=1;
+      var reader = new FileReader();
+
+      reader.onload = function(event) {
+      var base64String = event.target.result.split(',')[1];
+      console.log(base64String);
+      var newArray = [...defaultValues];
+
+      newArray[index] = {
+        ... newArray[index],
+        fileName: file.name,
+        fileContent:base64String
+      };
+      console.log(newArray,'file uploaded')
+      setDefaultValues(newArray);
+
+      // Now you can do something with the base64String, for example, send it to a server or store it in state.
+      };
+
+    reader.readAsDataURL(file);
+      
+
+      
+
+      //setSelectedFile(file);
+    };
+
+    // function handleFileSelect(event) {
+
+    //   let newArray=attachments
+
+
+    //     var fileInput = event.target;
+      
+    //     var file = fileInput.files[0];
       
       
       
-        if (file) {
+    //     if (file) {
       
-          const reader = new FileReader();
-      
-      
-      
-          reader.onload = function (e) {
-      
-            const base64String = e.target.result;
-      
-            console.log('Base64 string:', base64String);
-      
-            setAttachmentString(base64String)
-      
-            // setImage( [base64String]);
-      
-            // setViewImage(true);
-      
-            // Here, you can send the `base64String` to your server or perform other actions.
-      
-          };
+    //       var reader = new FileReader();
       
       
       
-          reader.readAsDataURL(file);
+    //       reader.onload = function (e) {
       
-        }
+    //         var base64String = e.target.result;
       
-      }
+    //         console.log('Base64 string:', base64String);
+      
+    //         setAttachmentString(base64String)
+      
+    //         // setImage( [base64String]);
+      
+    //         // setViewImage(true);
+      
+    //         // Here, you can send the `base64String` to your server or perform other actions.
+      
+    //       };
+      
+      
+      
+    //       reader.readAsDataURL(file);
+      
+    //     }
+      
+    //   }
   return (
     <>
          <Grid xs={12} md={8}>
@@ -56,60 +163,101 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                 }}
               >
 
-                <Grid md={6} xs={12} item>
-                  <Typography>Aadhar Crad</Typography>
-                <input
+                
+                   {defaultValues?.map((file,index)=>(
+                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
-                  type="file"
+                <Grid item xs={12} md={6} >
 
-                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-
-                  id="fileInput"
-
-                  onChange={(e)=>{
-
-                    handleFileSelect(e)
-
-                  }}
-
-                  />
+               
+                <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                    <Select
+                        label="Select a doc Type"
+                        value={file?.fileType}
+                        onChange={(e)=>{handleCategoryChange(e,index)}}
+                        name="Select a doc Type"
+                    >
+                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
+                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        
+                        {/* Add more categories here */}
+                    </Select>
+                    </FormControl>
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <Typography>Pan Card</Typography>
-                <input
 
-                  type="file"
+                <Grid item xs={12} md={6}>
+                <Grid>
 
-                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  <Grid item>
+                
+                  <input
+                   id={`file-upload-input-${index}`}
+                    type="file"
+                    accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                    style={{ display: 'none' }}
+                   
+                />
+                <label htmlFor= {`file-upload-input-${index}`}>
+                    <Button variant="outlined" component="h6">
+                    Choose File
+                    </Button>
+                </label>
+                <Typography variant="body2" color="textSecondary">
+                    {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                </Typography>
+                  </Grid>
+                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                  { index===0 &&
+                   
+                      <Button 
+                      onClick={()=>{
+                        handleAddDocument(index)
+                      }
+                       
+                        
+                       
+                        
 
-                  id="fileInput"
+                      }
+                      >Add</Button>
+                   
 
-                  onChange={(e)=>{
+                  }
+                   { index!==0 &&
+                    
+                      <Button 
+                      onClick={()=>{
+                        handleDeleteDocument(index)
+                      }
+                       
+                        
+                       
+                        
 
-                    handleFileSelect(e)
+                      }
+                      >Delete</Button>
+                    
 
-                  }}
-
-                  />
+                  }
+                  </Grid>
+                  
+                  
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <Typography>Pan Card</Typography>
-                <input
-
-                  type="file"
-
-                  accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-
-                  id="fileInput"
-
-                  onChange={(e)=>{
-
-                    handleFileSelect(e)
-
-                  }}
-
-                  />
+               
                 </Grid>
+               
+                   
+
+              </Grid>
+               ))}
+
+
+
+                   
+                    
+                
                 </Box>
 
               </Card>

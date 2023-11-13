@@ -1,4 +1,4 @@
-/* eslint-disable import/no-named-as-default */
+
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import * as Yup from 'yup';
@@ -188,15 +188,13 @@ export default function BasicCard(currentUser) {
   };
 
   return (
-    <>
-      
+  
       <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
         handleCreatePayrun={handleCreatePayrun}
         changeOfTab={changeOfTabHandeler}
       />
-    </>
   );
 }
 BasicCard.prototype = {

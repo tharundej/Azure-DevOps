@@ -39,6 +39,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
+import TimeForm from './TimeForm';
 
 
 
@@ -136,6 +137,12 @@ export default function TimeSearchFilter({filterData,filterOptions}){
     ]
   )
 
+  const [showForm, setShowForm] = useState  (false);
+  const handleClose = () => setShowForm(false);
+  const handleTimeForm =()=>{
+    setShowForm(true)
+    console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+  }
 
   const [datesSavedArray,setDatesSavedArray]=useState(["from_date","to_date","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
@@ -266,27 +273,44 @@ export default function TimeSearchFilter({filterData,filterOptions}){
   
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
+              {showForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+<TimeForm currentUser={{}} handleClose={handleClose}/>
+      </Dialog>
+    )}
+ <Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
-
-            <TextField placeholder='Search....' 
+ 
+            <TextField placeholder='Search....'
             fullWidth
-            // onChange={handleSeacrch} 
-
+            onChange={e=>{handleSearch(e)}}
+ 
             />
             </Grid>
-
+ 
             <Grid md={4} xs={4} item>
-                
-                <Grid >
-                <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
-      </Button>
-
-      </Stack>
+               
+                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+               <Grid item>  
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Time Sheet</Button>
+               </Grid>
+               <Grid sx={{marginLeft:'4px'}}>
+               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+               <Iconify icon="mi:filter"/>
+               </Button>
+      </Grid>
+ 
                 </Grid>
-
+ 
  
       </Grid>
          </Grid>
@@ -354,7 +378,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
                 <Grid container marginTop={2}>
   {/* <Typography>Offer Date</Typography> */}
   <Grid container spacing={2}>
-    <Grid item xs={6}>
+    <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Project Name</InputLabel>
         <Select
@@ -378,7 +402,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
         </Select>
       </FormControl>
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Activity Name</InputLabel>
         <Select
