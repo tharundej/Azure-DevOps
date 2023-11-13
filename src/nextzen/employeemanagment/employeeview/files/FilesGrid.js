@@ -5,7 +5,7 @@ import FileBox from './FileBox';
 
 
 
-const FilesGrid = ({dataFiltered}) => {
+const FilesGrid = ({dataFiltered,onEdit,onDelete}) => {
 
     console.log(dataFiltered,'looool')
     const onSelectItem=(id)=>{
@@ -26,18 +26,23 @@ const FilesGrid = ({dataFiltered}) => {
             }}
             gap={3}
           >
-            {dataFiltered
+            {dataFiltered?.length && dataFiltered
               ?.filter((i) => i?.type !== 'folder')
-              ?.map((file) => (
+              ?.map((file,index) => (
                 file.fileType &&(
+
+                   
                 <FileBox
                   key={file?.id}
                   file={file}
+                  index={index}
                   
-                  onSelect={() => onSelectItem(file?.id)}
-                  onDelete={() => onDeleteItem(file?.id)}
-                  sx={{ maxWidth: 'auto' }}
-                />)
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  sx={{ maxWidth: 'auto' }}/>
+                
+                
+                )
                 
               ))}
           </Box>
@@ -48,4 +53,6 @@ export default FilesGrid
 
 FilesGrid.PropTypes={
     dataFiltered: PropTypes.any,
+    onEdit:PropTypes.func,
+    onDelete:PropTypes.func
 }

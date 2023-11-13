@@ -192,10 +192,17 @@ export default function EmployeeTable() {
   //     status: 'active',
   //   },
   // ];
+  const router = useRouter();
 
-  const handleCalled=()=>{
-    console.log("hii1")
-  }
+
+  const handleEditRowParent = useCallback(
+    (id) => {
+      console.log('called',paths.dashboard.employee.userview(id))
+      router.push(paths.dashboard.employee.userview(id));
+    },
+    [router]
+    
+  );
   return (
     <>
       <Helmet>
@@ -211,7 +218,7 @@ export default function EmployeeTable() {
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions} filterName="EmployeeFilterSearch"
+rowActions={actions} filterName="EmployeeFilterSearch"  handleEditRowParent={handleEditRowParent}
  />
     </>
   );

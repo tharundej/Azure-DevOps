@@ -1,18 +1,144 @@
-import React,{forwardRef,useImperativeHandle,useState} from 'react'
+import React,{forwardRef,useEffect,useImperativeHandle,useState} from 'react'
 
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
   InputLabel } from '@mui/material'
 
-var   DocumentsUpload=forwardRef((props,ref)=> {
+  import { Helmet } from "react-helmet-async";
+import Dialog from '@mui/material/Dialog';
+import PropTypes from 'prop-types';
 
-  var [defaultValues,setDefaultValues]=useState([ {
-    fileType:'',
-    fileName:'',
-    fileContent:''
-}])
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Iconify from 'src/components/iconify';
+import { baseUrl } from '../BaseUrl';
+import axios from 'axios';
 
+const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
+  
+
+  var [defaultValues,setDefaultValues]=useState([])
+
+  useEffect(()=>{
+    if(documents){
+        if(type==="create"){
+            console.log(documents,'create')
+            setDefaultValues(documents.documents)
+        }else{
+            console.log(endpoint,'endpoint')
+            setDefaultValues(documents.documents)
+        }
+       
+    }
+  },[documents])
+    const onSaveData=()=>{
+        if(type==="edit"){
+           const obj={
+            "companyId": "COMP5",
+                "employeeId": "NEWC19",
+                "id":defaultValues[0].id,
+
+                "fileType":defaultValues[0].fileType,
+                fileContent:defaultValues[0].fileContent,
+                fileName:defaultValues[0].fileName
+           }
+           console.log(defaultValues,'on edit save')
+           ApiHitEdit(obj);
+        }
+        else if(type==="create"){
+            ApiHitCreate();
+        }
+        else{
+          ApiHitAddDocs();
+        }
+    }
+
+    const ApiHitEdit=(obj)=>{
+        
+      
+          
+
+            let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `${baseUrl}${endpoint}`,
+            headers: { 
+                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
+            },
+            data : obj
+            };
+
+            axios.request(config)
+            .then((response) => {
+            console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+            console.log(error);
+});
+
+    }
+    const ApiHitCreate=()=>{
+        
+                let data = JSON.stringify({
+                "companyId": documents?.companyId,
+                "employeeId": documents?.employeeId,
+                
+                "documents": defaultValues
+                });
+
+                let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: `${baseUrl}/addDocuments`,
+                headers: { 
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+                    'Content-Type': 'application/json'
+                },
+                data : data
+                };
+
+                axios.request(config)
+                .then((response) => {
+                console.log(JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+
+    }
+
+    const ApiHitAddDocs=()=>{
+      let data = JSON.stringify({
+        "companyId": documents?.companyId,
+        "employeeId": documents?.employeeId,
+        "mainRecordId":documents?.mainRecordID,
+        "documents": defaultValues
+        });
+
+        console.log(documents?.mainRecordID,data,'add docs ')
+
+        let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${baseUrl}/uploadWorkDoc`,
+        headers: { 
+            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        axios.request(config)
+        .then((response) => {
+        console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+        console.log(error);
+        });
+    }
 
 
   var handleCategoryChange = (e,index) => {
@@ -60,23 +186,12 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
 
    setDefaultValues(newArray);
   }
-  useImperativeHandle(ref,()=>({
-    childFunctionDocuments(){
-      onSubmit();
 
 
 
-
-      
-    }
-  }))
-
-  var onSubmit=()=>{
-    console.log(attachments);
-  }
     var [attachments,setAttachments]=useState([]);
 
-    var handleFileUpload = (event,index) => {
+    const handleFileUpload = (event,index) => {
         
       var file = event.target.files[0];
       // var { value, id } = e.target;
@@ -151,6 +266,18 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
     //   }
   return (
     <>
+
+            <Dialog
+                fullWidth
+                maxWidth={false}
+                open={open}
+                // onClose={handleClose}
+                PaperProps={{
+                sx: { maxWidth: 720 },
+                }}
+            >
+         <DialogContent>
+          
          <Grid xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Box
@@ -164,10 +291,10 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
               >
 
                 
-                   {defaultValues?.map((file,index)=>(
+                   {defaultValues && defaultValues?.map((file,index)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
-                <Grid item xs={12} md={6} >
+                <Grid item xs={12} md={12} >
 
                
                 <FormControl fullWidth>
@@ -178,15 +305,18 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
                         onChange={(e)=>{handleCategoryChange(e,index)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
-                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        {docType?.map((type, idx) => (
+                        <MenuItem key={idx} value={type.toLowerCase().replace(' ', '-')}>
+                            {type}
+                        </MenuItem>
+                        ))}
                         
                         {/* Add more categories here */}
                     </Select>
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                 <Grid>
 
                   <Grid item>
@@ -209,7 +339,7 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
                 </Typography>
                   </Grid>
                   <Grid container alignItems="center" justifyContent="flex-end" item>
-                  { index===0 &&
+                  { index===0 && type!=="edit" &&
                    
                       <Button 
                       onClick={()=>{
@@ -262,9 +392,35 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
 
               </Card>
             </Grid>
+            </DialogContent>
+
+            <DialogActions>
+            <Button variant="outlined" onClick={()=>{setDefaultValues([ {
+                    fileType:'',
+                    fileName:'',
+                    fileContent:''
+                }]);onhandleClose()}}>
+              Cancel
+            </Button>
+
+            <Button type="submit" variant="contained" onClick={()=>onSaveData()}
+            sx={{backgroundColor:'#3B82F6',color:'white'}}>
+              Save
+            </Button>
+          </DialogActions>
+          </Dialog>
 
     </>
   )
-});
+};
 
-export default DocumentsUpload
+FileEditCreate.propTypes = {
+    open: PropTypes.string,
+    onhandleClose:PropTypes.func,
+    documents:PropTypes.array,
+    endpoint:PropTypes.string,
+    docType:PropTypes.array,
+    type:PropTypes.string
+  };
+
+  export default FileEditCreate;

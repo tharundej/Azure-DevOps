@@ -382,7 +382,7 @@ export const dashboardRoutes = [
       { path: 'userneweditform', element: <UserNewEditForm1 /> },
       { path: 'onboardform', element: <OnBoardForm />},
       
-      { path: 'employeeview', element: <EmployeeView />},
+      { path: ':id/employeeview', element: <EmployeeView />},
       //  { path: ':id/edit', element: <Edits /> },
       // { path: 'reusetable', element: <ReuseTable /> },
       //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },

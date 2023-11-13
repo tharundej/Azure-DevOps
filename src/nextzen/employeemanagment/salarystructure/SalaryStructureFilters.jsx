@@ -267,8 +267,8 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
-       <SalaryStructureForm/>
+        <Grid item>
+       <SalaryStructureForm currentUserData={filterData}/>
        </Grid>
         <Grid item  md={2} xs={2}>
         <Grid>

@@ -106,7 +106,8 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const 
+BasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {  
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
@@ -162,12 +163,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-          //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
+        //   url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.199:3001/erp${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-         url: baseUrl+`${endpoint}`,
+        url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
@@ -184,7 +185,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
     axios.request(config).then((response) => {
       setLoading(false);
       // // console.log(response?.data?.bodyContent);
-      // setTableData(response?.data?.[bodyData]|| []);
+      //setTableData(response?.data?.[bodyData]|| []);
        setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
@@ -520,6 +521,7 @@ getTableData(payload)
                         <UserTableRow
                           key={row.id}
                           row={row}
+                          onHandleEditRow={(id)=>handleEditRowParent(id)}
                           selected={table.selected.includes(row.id)}
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
@@ -641,7 +643,8 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes ={
-  deleteFunction:PropTypes.any
+  deleteFunction:PropTypes.any,
+  handleEditRowParent:PropTypes.any
 };
  
  

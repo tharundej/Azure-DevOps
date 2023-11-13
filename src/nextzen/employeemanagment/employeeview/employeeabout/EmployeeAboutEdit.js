@@ -31,7 +31,7 @@ const employmentTypeOptions=[
 
 ]
 
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue}) => {
@@ -254,6 +254,81 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                     getOptionLabel={(option) => option.departmentName}
                     onChange={(e, newvalue) => {}}
                     renderInput={(params) => <TextField {...params} label="Location"
+                    style={{ paddingLeft: '16px', width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container >
+                <Grid item xs={12} md={6}>
+                 
+                  <Autocomplete
+                    disablePortal
+                    id="Desgination"
+                    options={userdropDownOptions?.desginationOptions  || []}
+                    value={userdropDownvalue?.desginationValue}
+                    getOptionLabel={(option) => option.designationName}
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.desginationValue=newvalue;
+                    
+                      newArr.desginationGradeValue=undefined
+                      
+                      console.log(newArr)
+                     
+                      try{
+                        const desgGradeObj={
+                          companyID:'COMP1',
+                          desginationID:newvalue?.desginationID
+                        }
+                        const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                        var optionsArr={...userdropDownOptions};
+                        optionsArr.desginationGradeOptions=desdesginationGradegination;
+                        
+                        
+                       
+                        setUserDropDownOptions(optionsArr)
+
+                      }
+                      catch(error){
+                        
+                      }
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Desgination"
+                    style={{ paddingLeft: '16px', width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container >
+                <Grid item xs={12} md={6}>
+                
+                  <Autocomplete
+                    disablePortal
+                    id="DesginationGrade"
+                    options={userdropDownOptions?.desginationGradeOptions  || []}
+                    value={userdropDownvalue?.desginationGradeValue}
+                    getOptionLabel={(option) => option.designationGradeName}
+
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.desginationGradeValue=newvalue;
+                    
+                    
+                      
+                    
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="DesginationGrade"
                     style={{ paddingLeft: '16px', width: '100%' }} />}
                   />
                 </Grid>

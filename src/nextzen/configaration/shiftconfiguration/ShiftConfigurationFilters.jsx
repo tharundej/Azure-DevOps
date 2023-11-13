@@ -376,6 +376,32 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                     </Select>
                   </FormControl>
                 </Grid>
+                <Grid item xs={6} >
+                  <FormControl fullWidth>
+                    <InputLabel id="location">Location</InputLabel>
+                    <Select
+                    fullWidth
+                      labelId="demo-multiple-name-shift_name_1"
+                      id="demo-multiple-shift_name_1"
+                      multiple
+                      value={dropdownLocation}
+                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      input={<OutlinedInput label="Location" />}
+                      MenuProps={MenuProps}
+                    //   sx={{minWidth:'300px'}}
+                    >
+                      {locationName.map((name) => (
+                        <MenuItem
+                          key={name}
+                          value={name}
+                          style={getStyles(name, personName, theme)}
+                        >
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
             </Grid>
 
            
