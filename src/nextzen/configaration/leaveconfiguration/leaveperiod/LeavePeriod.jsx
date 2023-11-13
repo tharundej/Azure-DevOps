@@ -11,6 +11,7 @@ export default function LeavePeriod() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');  
   const [open, setOpen] = useState(false);
+
     const TABLE_HEAD = [
       { id: 'leavePeriodType', label: 'Leave Period Type', type: 'text', minWidth:280  },
       { id: 'startDate', label: 'Start Date', type: 'text', minWidth:280  },
@@ -23,11 +24,18 @@ export default function LeavePeriod() {
 
     const defaultPayload = 
     {
-      "companyID":"COMP1",
-      "count": 5,
-      "page":0
-
-  };
+      "count":5,
+      "page": 0,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+        "leavePeriodType":""
+      },
+      "sort": {
+        "key": 1,
+        "orderBy": ""
+      }
+    };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       handleEditAPICALL(rowdata, event);
@@ -43,12 +51,11 @@ export default function LeavePeriod() {
           companyID:"COMP1",
           leavePeriodID: rowdata.leavePeriodID,
       };
-      const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
-      if(response?.data?.code===200  ){
+      const response = await axios.post( 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/deleteLeavePeriod', data);
+      if(response?.data?.code===200 ){
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-         handleClose()
       
       console.log('sucess', response);
 
@@ -89,13 +96,16 @@ export default function LeavePeriod() {
         return;
       }
     setSnackbarOpen(false)
-      setOpen(true);
+      setOpen(false);
     };
+    React.useEffect(()=>{
+
+    },[])
     return (
       <>
        <Snackbar
     open={snackbarOpen}
-    autoHideDuration={6000}
+    autoHideDuration={5000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',

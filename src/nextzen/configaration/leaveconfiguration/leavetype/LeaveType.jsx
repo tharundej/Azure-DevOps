@@ -6,6 +6,8 @@ import { Container } from '@mui/system';
 import { BasicTable } from '../../../Table/BasicTable';
 import Iconify from 'src/components/iconify/iconify';
 import { useState } from 'react';
+import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function LeaveType() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -13,19 +15,30 @@ export default function LeaveType() {
   const [snackbarMessage, setSnackbarMessage] = useState('');  
   const [open, setOpen] = useState(false);
     const TABLE_HEAD = [
-      { id: 'leaveName', label: 'Leave Name', type: 'text' , minWidth:180},
-      { id: 'totalNumberOfLeaves', label: 'Total Number Of Leaves', type: 'text', minWidth:180 },
-      { id: 'termType', label: 'Term Type', type: 'text', minWidth:180 },
-      { id: 'elUpperCapLimit', label: 'EL Upper Cap Limit', type: 'text', minWidth:180 },
-      { id: 'elTakenRange', label: 'EL Taken Range', type: 'text' , minWidth:180},
+      { id: 'leaveTypeName', label: 'Leave Name', type: 'text' , minWidth:180},
+      { id: 'totalNumberLeave', label: 'Total Number Of Leaves', type: 'text', minWidth:180 },
+      { id: 'leavePeriodType', label: 'Term Type', type: 'text', minWidth:180 },
+      { id: 'leaveTakeRange', label: 'Leave Take Range', type: 'text' , minWidth:180},
+      { id: 'upperCapLimit', label: 'EL Upper Cap Limit', type: 'text', minWidth:180 },
     ];
     const actions = [
-      { name: 'View', icon: 'hh', path: 'jjj' },
-      { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
+      { name: 'Edit', icon: 'hh', path: 'jjj' },
+      { name: 'Delete', icon: 'hh', path: 'jjj' },
     ];
     const defaultPayload = 
     {
-      "companyID":"COMP4"
+      "count": 5,
+      "page": 0,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+          "leaveTypeName": "",
+          "leavePeriodType": ""
+      },
+      "sort": {
+          "key": 1,
+          "orderBy": ""
+      }
   };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
@@ -40,15 +53,13 @@ export default function LeaveType() {
       console.log(rowdata, 'rowData:::::');
       const data = {
           companyID:"COMP1",
-          leavePeriodID: rowdata.leavePeriodID,
+           leaveTypeID: rowdata.leaveTypeID,
       };
-      const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
+      const response = await axios.post( 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/deleteLeaveType', data);
       if(response?.data?.code===200  ){
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-         handleClose()
-      
+         setSnackbarOpen(true);      
       console.log('sucess', response);
 
       }
@@ -106,7 +117,7 @@ export default function LeaveType() {
   </Snackbar>
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint="/getLeaveType"
+          endpoint="/getallLeaveType"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName="LeaveTypeFilterSearch"

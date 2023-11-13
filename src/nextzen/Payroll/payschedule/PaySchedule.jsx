@@ -104,7 +104,7 @@ export default function BasicCard() {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyId: 'COMP2',
+        companyId: 'COMP1',
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
@@ -112,7 +112,6 @@ export default function BasicCard() {
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-         handleClose()
       
       console.log('sucess', response);
 

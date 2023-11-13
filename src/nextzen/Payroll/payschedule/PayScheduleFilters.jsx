@@ -88,7 +88,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions }) {
+export default function PayScheduleFilters({ filterData, filterOptions,searchData  }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -104,7 +104,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   ];
   const employeeTypes=[
     'Permanent',
-    'Contract'
+    'contract'
   ];
   const payScheduleTypes=[
     'typ1',
@@ -403,6 +403,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
 // }
 PayScheduleFilters.propTypes = {
   filterData: PropTypes.func,
+  searchData: PropTypes.any,
 };
 
 PayScheduleFilters.propTypes = {

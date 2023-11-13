@@ -92,11 +92,13 @@ function getStyles(name, personName, theme) {
 export default function LeaveTypeFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
   const termTypes = [
-    'Annual',
-    'Month'
+    'Custom Period',
+    'Fiscal Year'
   ];
-  const leaveNames = [
-    'Diwali'
+  const leaveTypeNames = [
+    'Sick Leave',
+    'CL',
+    'CL1'
   ]
 
   const designationGradeName = [
@@ -130,11 +132,11 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       options: [],
     },
     {
-      field: 'leaveName',
+      field: 'leaveTypeName',
       options: [],
     },
     {
-      field: 'termType',
+      field: 'leavePeriodType',
       options: [],
     },
   ]);
@@ -178,7 +180,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -219,12 +221,12 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'leaveName') {
+    } else if (field === 'leaveTypeName') {
       setdropdownleaveName(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'termType') {
+    } else if (field === 'leavePeriodType') {
       setdropdownTermtype(value);
       const obj = dropdown;
       obj[field] = value;
@@ -311,14 +313,14 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="termType">Term Type</InputLabel>
+                  <InputLabel id="leavePeriodType">Term Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
                     value={dropdownTermtype}
-                    onChange={(e) => handleChangeDropDown(e, 'termType')}
+                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
                     input={<OutlinedInput label="Term Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
@@ -333,19 +335,19 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="leaveName">Leave Name</InputLabel>
+                    <InputLabel id="leaveTypeName">Leave Name</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownleaveName}
-                      onChange={(e) => handleChangeDropDown(e, 'leaveName')}
-                      input={<OutlinedInput label="Leave Name" />}
+                      onChange={(e) => handleChangeDropDown(e, 'leaveTypeName')}
+                      input={<OutlinedInput label="leave Type Name" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {leaveNames.map((name) => (
+                      {leaveTypeNames.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
