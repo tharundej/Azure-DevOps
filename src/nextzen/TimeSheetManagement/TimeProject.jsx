@@ -77,7 +77,7 @@ export default function TimeProject() {
         try{
           console.log(rowdata,"rowData:::::")
         const  data= {
-          project_id:'5',
+          project_id: JSON.stringify( rowdata.project_id),
            
           };
           const response = await instance.post('deleteproject',data);
@@ -167,7 +167,7 @@ export default function TimeProject() {
       
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -180,11 +180,11 @@ export default function TimeProject() {
 >
  <AddTimeProject currentUser={{}}handleClose={handleClose} />
       </Dialog>
-    )}
-<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
+    )} */}
+{/* <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/> */}
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Add Project</Button>
+  {/* <Button className="button" onClick={handleTimeForm}>Add Project</Button> */}
 {/* <Button className="button">Filter</Button>
 <Button className="button">Report</Button> */}
 </Container>

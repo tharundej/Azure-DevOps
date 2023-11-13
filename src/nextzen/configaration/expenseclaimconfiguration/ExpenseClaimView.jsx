@@ -4,7 +4,6 @@ import axios from 'axios';
 
 export default function ExpenseClaimConfiguration() {
   const TABLE_HEAD = [
-    { id: 'employee_name', label: 'Employee Name', type: 'text', minWidth:180 },
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth:180  },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth:180  },
     { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text', minWidth:180  },
@@ -19,7 +18,7 @@ export default function ExpenseClaimConfiguration() {
     company_id: 'COMP2',
     employee_id: 'ibm1',
     page: 0,
-    count: 5,
+    count: 6,
     search: '',
     externalFilters: {
       department_name: '',
@@ -27,7 +26,7 @@ export default function ExpenseClaimConfiguration() {
       designation_grade_name: '',
     },
     sort: {
-      orderby: '',
+      orderby: 'expense_name',
       key: 0,
     },
   };
@@ -84,7 +83,7 @@ export default function ExpenseClaimConfiguration() {
   return (
     <BasicTable
       headerData={TABLE_HEAD}
-      endpoint="/getExpenseConfig"
+      endpoint="getExpenseConfig"
       defaultPayload={defaultPayload}
       rowActions={actions}
       filterName="ExpensiveClaimFilterSearch"

@@ -47,10 +47,10 @@ export default function ShiftSwap() {
     
         { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
 
-        { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "From_shift_name", label: "From Shift Name", width: 180, type: "text" },
     
         // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
-        { id: "start_date", label: "Swap Date", width: 220, type: "text" },
+        { id: "swap_date", label: "Swap Date", width: 220, type: "text" },
         { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
         // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
@@ -100,7 +100,7 @@ export default function ShiftSwap() {
     
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -113,18 +113,18 @@ export default function ShiftSwap() {
 >
  <ShiftSwapForm currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm    }> Shift Swap</Button>
+  {/* <Button className="button" onClick={handleTimeForm    }> Shift Swap</Button> */}
 {/* <Button className="button">Filter</Button>
 <Button className="button">Report</Button> */}
 </Container>
     <BasicTable
 
 headerData={TABLE_HEAD}
-endpoint="/MyShiftSwap"
+endpoint="MyShiftSwap"
 bodyData='data'
 defaultPayload={defaultPayload}
 filterName="SwapSearchFilter"

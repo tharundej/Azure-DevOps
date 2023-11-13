@@ -13,6 +13,9 @@ import { BasicTable } from '../Table/BasicTable';
 import TimeForm from './TimeForm';
 import ReusableTabs from '../tabs/ReusableTabs';
 import './Time.css';
+import { baseUrl } from '../global/BaseUrl';
+import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
 
 const bull = (
   <Box
@@ -24,17 +27,7 @@ const bull = (
 );
 
 export default function TimeApprovals() {
-      // const TABLE_HEAD = [
-      //   { id: 'SL_NO', label: ' SL NO' },
-      //   { id: 'Project_Id', label: 'Project Id', width: 180 },
-      //   { id: 'project_name', label: 'Project Name', width: 220 },
-      //   { id: 'Date', label: 'Date', width: 180 },
-      //   { id: 'Activity', label: 'Activity', width: 100 },
-      //   { id: 'Working_Time', label: 'Working Time', width: 100 },
-      //   { id: 'TotalWorking_Time', label: ' Total Working Time', width: 100 },
-      //   { id: 'status', label: ' status', width: 100 },
-      //   { id: '', width: 88 },
-      // ];
+
       const TABLE_HEAD = [
 
         {
@@ -53,43 +46,69 @@ export default function TimeApprovals() {
     
         },
     
-        { id: "employee_id", label: "Employe Id", width: 180, type: "text" },
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employeeId", label: "Employe Id", width: 180, type: "text" },
+        { id: "employeeName", label: "Employe Name", width: 180, type: "text" },
     
-        { id: "project_name", label: "Project Name", width: 220, type: "text" },    
-        { id: "activity_name", label: "Activity Name", width: 220, type: "text" },
+        { id: "projectName", label: "Project Name", width: 220, type: "text" },    
+        { id: "activityName", label: "Activity Name", width: 220, type: "text" },
         { id: "duration", label: "Duration", width: 100, type: "text" },
-        { id: "hours_worked", label: "Hours Worked", width: 100, type: "text" },
+        { id: "hoursWorked", label: "Hours Worked", width: 100, type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
       ];
+
+
+
+      const onClickActions=(rowdata,event)=>{
+        console.log("row dataaaaaa")
+        var payload ={
+          "project_id": rowdata?.projectId,
+          "employee_id": rowdata?.employeeId,
+          "status": parseInt( event?.id),          
+       }
+      console.log(payload,"requestedddbodyyy")
+      const config = {
+        method: 'POST',
+        maxBodyLength:Infinity,
+        url: baseUrl + `/updateTimesheetStatus`,
+        // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
+        data: payload
+     
+      }
+      axios.request(config).then((response) => {
+        enqueueSnackbar(response.data.Message,{variant:'success'})
+      })
+        .catch((error) => {
+          enqueueSnackbar(error.Message,{variant:'Error'})
+          console.log(error);
+        });
+     
+      }
     
      const defaultPayload={
       "count": 2,
       "page": 1,
       "search": "",
-      "employee_id": "ibm2",
+      "employeeId": "info1",
       "externalFilters": {
-        "employee_name": "",
-        "project_name": "",
-        "activity_name": "",
+        "employeeName": "",
+        "projectName": "",
+        "activityName": "",
         "status": ""
       },
       "sort": {
         "key": 1,
-        "orderBy": "project_name"
+        "orderBy": ""
       }
     }
     
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "Approve", icon: "hh", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
     
-        { name: "view", icon: "hh", path: "jjj" },
-    
-        { name: "eerr", icon: "hh", path: "jjj" },
+        { name: "Reject", icon: "hh", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
     
       ];
     
@@ -100,10 +119,7 @@ export default function TimeApprovals() {
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       }
-      const tabLabels = ["Projects" , "My Timesheet" , "Approvals"]
-      const tabContents = [
-        <div>  </div>
-      ]
+
   return (
     <>
 
@@ -119,8 +135,8 @@ filterName='ApprovalSearchFilter'
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
 endpoint='/timeSheetApprovals'
-bodyData="timesheets"
-
+bodyData="timeSheets"
+onClickActions={onClickActions}
 rowActions={actions}
 
 />  

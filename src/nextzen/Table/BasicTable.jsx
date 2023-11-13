@@ -92,6 +92,8 @@ import SwapSearchFilter from './components/shiftmanagement/SwapSearchFilter';
 import SalaryStructureFilters from '../employeemanagment/salarystructure/SalaryStructureFilters';
 import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWeekFilters';
 import { baseUrl } from '../global/BaseUrl';
+import CompoffConfigurationTable from '../configaration/compoffconfiguration/CompoffConfigurationTable';
+import ComoffConfigFilters from '../configaration/compoffconfiguration/ComoffConfigFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -104,12 +106,14 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const 
+BasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
+ 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
  console.log(initialDefaultPayload,"initialDefaultPayload====================")
-//  console.log(actioonns,"actions==......")
+//  console.log(actions,"actions==......")
 //  console.log(onclickActions(),"onclickActions  function --->")
   const [newPage, setNewPage]=useState(initialDefaultPayload?.Page);
   console.log(initialDefaultPayload?.Page,"page value")
@@ -137,9 +141,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   useEffect(() => {
     // onclickActions();
-    getTableData(initialDefaultPayload);
+    getTableData();
      
-  }, [initialDefaultPayload])
+  }, [])
  
   const getTableData = (payload) => {
     setLoading(false);
@@ -160,12 +164,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-          // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        //   url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
-      // url: `http://192.168.1.199:3001/erp${endpoint}`,
+      // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-       url: baseUrl+`${endpoint}`,
+        url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
@@ -178,12 +182,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
     };
  
  
-    console.log("**********************: ", config)
+ 
     axios.request(config).then((response) => {
       setLoading(false);
       // // console.log(response?.data?.bodyContent);
-      // setTableData(response?.data?.[bodyData]|| []);
-      setTableData(response?.data?.data|| []);
+      //setTableData(response?.data?.[bodyData]|| []);
+       setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalRecords || 0)
@@ -257,8 +261,38 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
   }
  
+  const approveLeave = (rowdata,event)=>{
+    var payload ={
+        "leave_id": rowdata?.leaveId,
+        "emp_id": rowdata?.employeeId,
+        "status": event?.id,           
+        "leave_type_id":rowdata?.leaveTypeId,
+        "duration": rowdata?.requestedDuration 
+    }
+    console.log(payload,"requestedddbodyyy")
+    const config = {
+      method: 'POST',
+      maxBodyLength:Infinity,
+      // url: baseUrl + `approveLeave`,
+      url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
+      data: payload
+    
+    }
+    axios.request(config).then((response) => {
+      console.log(response,"responsedata",response.data)
+      enqueueSnackbar(response.data.message,{variant:'success'})
+      getTableData()
+    })
+      .catch((error) => {
+        enqueueSnackbar(error.message,{variant:'Error'})
+        console.log(error);
+      });
+    
+  }
+ 
+ 
   const handleEditRow = (rowData,eventData) => {
-    onClickActions(rowData,eventData);
+    onclickActions(rowData,eventData);
     if (eventData?.type === "/serviceCall"){
      console.log("servicecall")
     }
@@ -300,7 +334,6 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
   useEffect(()=>{
     getTableData(initialDefaultPayload);
-    
      
   },[initialDefaultPayload])
 
@@ -319,11 +352,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
       search: searchTerm,
-      
       // Filter_Headers:
      
     }));
-    console.log(payload,"testingggggggggggg")
    getTableData(payload)
   }
  
@@ -375,28 +406,27 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const handleFilterSearch = (searchTerm) => {
  
     console.log(searchTerm,"searched dataaaaaaaaaaa")
- 
+  
    
- 
+  
    
- 
+  
       const payload = initialDefaultPayload;
- 
+  
       setInitialDefaultPayload(prevPayload => ({
- 
+  
         ...prevPayload,
- 
+  
         search: searchTerm,
- 
+  
         // Filter_Headers:
- 
+  
        
- 
+  
       }));
-      console.log(payload,'jjjjjjjjjjj')
- 
+  
       getTableData(payload)
- 
+  
     }
  
      // sort
@@ -439,27 +469,28 @@ getTableData(payload)
      {loading?<LoadingScreen sx={{display:"flex",justifyContent:"center",alignItems:'center'}}/>:  
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
-      {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
-       {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
-       {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
-       {filterName === "MyShiftFilter" && <MyShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
-       {filterName === "AssignShiftFilter" && <AssignShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
-       {filterName === "SalaryFilter" && <SalarySearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
-       {filterName === "LoanSearchFilter" && <LoanSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+      {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "MyShiftFilter" && <MyShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "AssignShiftFilter" && <AssignShiftSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "SalaryFilter" && <SalarySearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LoanSearchFilter" && <LoanSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeavelistFilter" && <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
        {filterName === "EmployeeListFilter" && <EmployeeTableFilter filterData={handleFIlterOptions}/>}
        {filterName === "statuortySearchFilter" && <SearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "EmployeeFilterSearch" && <EmployeeFilterSearch  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
+       {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}/>}
+       {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "CompoffFilterSearch" && <CompoffFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
 
         <Card>
 
@@ -517,6 +548,7 @@ getTableData(payload)
                         <UserTableRow
                           key={row.id}
                           row={row}
+                          onHandleEditRow={(id)=>handleEditRowParent(id)}
                           selected={table.selected.includes(row.id)}
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
@@ -612,7 +644,7 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes = {
-  onClickActions:PropTypes.func,
+  onclickActions:PropTypes.any,
 }
  
 BasicTable.propTypes = {
@@ -638,7 +670,8 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes ={
-  deleteFunction:PropTypes.any
+  deleteFunction:PropTypes.any,
+  handleEditRowParent:PropTypes.any
 };
  
  

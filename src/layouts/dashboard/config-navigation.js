@@ -134,16 +134,16 @@ export function useNavData() {
             
           },
           {
-            title:t('configaration'),
-            path:paths.dashboard.configaration.root,
+            title:t('configarations'),
+            path:paths.dashboard.configarations.root,
             icon:ICONS.user,
             children: [
-              { title: t('Leave Configuration'), path: paths.dashboard.configaration.leaveconfiguration },
-              { title: t('Compoff Configuration'), path: paths.dashboard.configaration.compoffconfiguration },
-               { title: t('Appraisal Configuration'), path: paths.dashboard.configaration.appraisalconfiguration },
-               { title: t('Expense Claim Configuration'), path: paths.dashboard.configaration.expenseclaimconfiguration },
-               { title: t('Shift Configuration'), path: paths.dashboard.configaration.shiftconfiguration },
-               { title: t('Role Configuration'), path: paths.dashboard.configaration.roleconfiguration },
+              { title: t('Leave Configuration'), path: paths.dashboard.configarations.leaveconfiguration },
+              { title: t('Compoff Configuration'), path: paths.dashboard.configarations.compoffconfiguration },
+               { title: t('Appraisal Configuration'), path: paths.dashboard.configarations.appraisalconfiguration },
+               { title: t('Expense Claim Configuration'), path: paths.dashboard.configarations.expenseclaimconfiguration },
+               { title: t('Shift Configuration'), path: paths.dashboard.configarations.shiftconfiguration },
+               { title: t('Role Configuration'), path: paths.dashboard.configarations.roleconfiguration },
 
             ],
           },

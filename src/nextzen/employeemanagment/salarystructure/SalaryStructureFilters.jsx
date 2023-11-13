@@ -244,11 +244,13 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
     //   filterData(data);
     handleClickClose();
   };
-  const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+  const [search, setSearch]=useState("");
+
+    const handleSearch = (e) => {
+      setSearch(e?.target?.value)
+        searchData(e?.target?.value)
+        // console.log(searchTerm,"search ........")
+        };
   return (
     <>
        <Grid
@@ -259,7 +261,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         direction="row"
         style={{ marginBottom: '1rem' }}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -267,10 +269,10 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item>
        <SalaryStructureForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -295,7 +297,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',

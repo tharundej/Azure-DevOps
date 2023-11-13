@@ -18,6 +18,7 @@ export default function Month() {
   return (
     <>
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
     </>
   );
 }

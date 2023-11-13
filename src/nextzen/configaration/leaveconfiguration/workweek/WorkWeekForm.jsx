@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState ,useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -26,6 +26,8 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 
 export default function WorkWeekForm({ currentUser}) {
+  const [formData, setFormData] = useState({});
+  const [locationType, setLocationType] = useState([]);
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,25 +35,15 @@ export default function WorkWeekForm({ currentUser}) {
     reset1();
   };
   const NewUserSchema1 = Yup.object().shape({
-    monday: Yup.string().required('Monday is Required'),
-    tuesday: Yup.string().required('Tuesday Required'),
-    wednesday: Yup.string().required('Wednesday Required'),
-    thursday: Yup.string().required('Thursday Required'),
-    friday: Yup.string().required('Friday Required'),
-    saturday: Yup.string().required('Saturday Required'),
-    sunday: Yup.string().required('Sunday Required'),
+    day: Yup.string().required('Day is Required'),
+    action: Yup.string().required('Action Required'),
   });
 
 
   const defaultValues1 = useMemo(
     () => ({
-      monday: currentUser?.monday || null,
-      tuesday: currentUser?.tuesday || null,
-      wednesday: currentUser?.wednesday || null,
-      thursday: currentUser?.thursday || null,
-      friday: currentUser?.friday || null,
-      saturday: currentUser?.saturday || null,
-      sunday: currentUser?.sunday || null,
+      day: currentUser?.day || null,
+      action: currentUser?.action || null,
 
     }),
     [currentUser]
@@ -70,12 +62,52 @@ export default function WorkWeekForm({ currentUser}) {
     reset: reset1,
   } = methods1;
 
+  const getLocation = async () => {
+    const payload = {
+      companyID: 'COMP1',
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          setLocationType(rowsData);
+          console.log(JSON.stringify(response?.data?.data), 'result');
+
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      getLocation();
+    };
+    fetchData();
+  }, []);
 
 
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId=localStorage.getItem('companyID')
+    data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
@@ -86,11 +118,28 @@ export default function WorkWeekForm({ currentUser}) {
     }
   });
   const DayTypes = [
-    {type: "Full Day"},
-    {type: "Half Day"},
-    {type: "Non-Working Day"}
+    {type: "Monday"},
+    {type: "Tuesday"},
+    {type: "Wednesday"},
+    {type: "Thursday"},
+    {type: "Friday"},
+    {type: "Saturday"},
+    {type: "Sunday"},
   ];
-
+const actionTypes=[
+  {type: "Full Day"},
+  {type: "Half Day"},
+  {type: "Holiday"},
+];
+const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+  console.log(name, selectedValue, selectedOption);
+  setFormData({
+    ...formData,
+    [name]: selectedValue,
+    locationID: selectedOption?.locationID,
+    locationName: selectedOption?.locationName,
+  });
+};
  
   return (
     <>
@@ -120,13 +169,22 @@ export default function WorkWeekForm({ currentUser}) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="monday" label="Monday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="tuesday" label="Tuesday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="wednesday" label="Wednesday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="thursday" label="Thursday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="friday" label="Friday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="saturday" label="Saturday" />
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="sunday" label="Sunday"/>
+                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="day" label="Day" />
+                <RHFAutocomplete options={actionTypes.map((actionType) => actionType.type)}name="action" label="Action" />
+                <Autocomplete
+                disablePortal
+                name="Location"
+                id="combo-box-demo"
+                options={locationType?.map((employeepayType) => ({
+                  label: employeepayType.locationName,
+                  value: employeepayType.locationName,
+                  ...employeepayType,
+                }))}
+                onChange={(event, newValue, selectedOption) =>
+                  handleAutocompleteChange('Location', newValue, selectedOption)
+                }
+                renderInput={(params) => <TextField {...params} label="Location" />}
+              />
               </Box>
             </DialogContent>
 

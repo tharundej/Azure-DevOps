@@ -11,6 +11,8 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AddEmployeShift from './AddeployeShift';
+import instance from 'src/api/BaseURL';
+import { enqueueSnackbar } from 'notistack';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -84,11 +86,10 @@ export default function ShiftRoast() {
     
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+        { name: "Delete", icon: "hh", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
     
-        { name: "view", icon: "hh", path: "jjj" },
-    
-        { name: "eerr", icon: "hh", path: "jjj" },
+
     
       ];
     
@@ -99,10 +100,37 @@ export default function ShiftRoast() {
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       }
-    
+
+      const onClickActions=(rowdata,event)=>{
+        if(event?.name==="Edit"){
+          handleEditAPICALL(rowdata,event)
+        }
+        else if(event?.name==="Delete"){
+          handleDeleteAPICALL(rowdata,event)
+        }
+      }
+      const handleDeleteAPICALL = async (rowdata,event)=>{
+        console.log("iam here ")
+        try{
+          console.log(rowdata,"rowData:::::")
+        const  data= {
+          DeleteShiftRoaster: JSON.stringify( rowdata.project_id),
+           
+          };
+          const response = await instance.post('DeleteShiftRoaster',data);
+          // setReportingManagerData(response.data.list)
+          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+          enqueueSnackbar(response.data.Message,{variant:'success'})
+        }catch(error){
+      console.error("Error", error);
+      enqueueSnackbar(error.Message,{variant:'Error'})
+
+      throw error;
+        }
+      }
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -115,11 +143,11 @@ export default function ShiftRoast() {
 >
  <AddEmployeShift currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}> Add Employe To Shift</Button>
+  {/* <Button className="button" onClick={handleTimeForm}> Add Employe To Shift</Button> */}
 </Container>
     <BasicTable
 headerData={TABLE_HEAD}
@@ -128,6 +156,7 @@ filterName="ShiftRoastFilter"
 bodyData='data'
 endpoint='/ShiftRoaster'
 rowActions={actions}
+onClickActions={onClickActions}
 
 />  
     </>

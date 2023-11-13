@@ -113,7 +113,7 @@ const Configaration = lazy(()=> import('../../nextzen/configaration/Configaratio
 
 const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
 
-const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/CompoffConfiguration'));
+const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView'));
 
 const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
 
@@ -285,7 +285,7 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path:'configaration',
+        path:'configarations',
         children:[
           {
             element: <Configaration/>,index:true
@@ -382,7 +382,7 @@ export const dashboardRoutes = [
       { path: 'userneweditform', element: <UserNewEditForm1 /> },
       { path: 'onboardform', element: <OnBoardForm />},
       
-      { path: 'employeeview', element: <EmployeeView />},
+      { path: ':id/employeeview', element: <EmployeeView />},
       //  { path: ':id/edit', element: <Edits /> },
       // { path: 'reusetable', element: <ReuseTable /> },
       //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
