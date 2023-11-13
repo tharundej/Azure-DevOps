@@ -108,19 +108,30 @@ export default function BasicCard() {
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
-      if (response?.status === 200) {
+      if(response?.data?.code===200  ){
         setSnackbarSeverity('success');
-        setSnackbarMessage('Payroll Deleted Succuessfully!');
-        setSnackbarOpen(true);
+         setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+         handleClose()
+      
+      console.log('sucess', response);
 
-        console.log('sucess', response);
       }
-    } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Payroll. Please try again.');
-      setSnackbarOpen(true);
-      console.log('error', error);
-    }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+
+      }
+    
+  } catch (error) {
+    setSnackbarSeverity('error');
+    setSnackbarMessage('Error While Deleting Pay Schedule. Please try again.');
+    setSnackbarOpen(true);
+   console.log('error', error);
+ }
   };
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 

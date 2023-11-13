@@ -19,14 +19,18 @@ import { PasswordIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import axios from 'axios';
-import { CardContent } from '@mui/material';
+import { Alert, CardContent, Snackbar } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 export default function AmplifyForgotPasswordView() {
   const { forgotPassword } = useAuthContext();
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false)
   const router = useRouter();
 
   const ForgotPasswordSchema = Yup.object().shape({
@@ -66,32 +70,25 @@ export default function AmplifyForgotPasswordView() {
       axios
         .request(config)
         .then((response) => {
-          if (response?.data.code === 200) {
-            console.log('sucess');
-        router.push(paths.auth.jwt.otpverification);
+          if(response?.status===200){
+            setSnackbarSeverity('success');
+             setSnackbarMessage('Email Sent Succuessfully!');
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+          router.push(paths.auth.jwt.otpverification);
+
           }
         })
       } catch (error) {
-        console.error(error);
-      }
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Email Does Not Exisit. Please try again.');
+        setSnackbarOpen(true);
+       console.log('error', error);
+     }
     });
   
       
-
-      // const response = await axios.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/checkUserExists', payload);
-      // await forgotPassword?.(data.email);
-
-      // const searchParams = new URLSearchParams({
-      //   email: data.email,
-      // }).toString();
-      // console.log(response?.data.code);
-      // if (response?.data.code === 200) {
-      //   console.log('sucess');
-      //   router.push(paths.auth.jwt.otpverification);
-      // }
-      // const href = `${paths.auth.jwt.otpverification}?${searchParams}`;
-      // router.push(href);
-   
   const renderForm = (
     <Stack spacing={3} alignItems="center" sx={{maxWidth: '400px',
     mx: 'auto', // Center horizontally
@@ -139,12 +136,30 @@ export default function AmplifyForgotPasswordView() {
       </Stack>
     </>
   );
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(true);
+  };
   return (
     <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
-
+      <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={6000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       {renderForm}
     </FormProvider>
     </CardContent>
