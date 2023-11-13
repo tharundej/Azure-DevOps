@@ -88,11 +88,9 @@ const [sendData, setSendData] = useState({
       const response = await instance.post('addSalaryAdvance', data).then(
         (successData) => {
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
-          console.log('sucess', successData);
         },
         (error) => {
           enqueueSnackbar(error?.data?.Message,{variant:'Error'})
-          console.log('lllll', error);
         }
       );
 

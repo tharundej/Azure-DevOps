@@ -160,7 +160,7 @@ export default function CalendarFilters({
                 >
              
                     <>
-                      {`${fDateTime(event.from_date, 'dd MMM yy p')} - ${fDateTime(
+                      {`${fDateTime(event.fromDate, 'dd MMM yy p')} - ${fDateTime(
                         event.to_date,
                         'dd MMM yy p'
                       )}`}

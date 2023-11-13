@@ -56,15 +56,10 @@ export default function DeductionFilter({filterSearch,filterData}){
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'requestDate',
+        field:'deductedDate',
         from:'deductedDateStart',
         to:'deductedDateEnd'
-      },
-      {
-        field:'paidDate',
-        from:'PaidDateFrom',
-        to:'PaidDateTo'
-      },
+      }
     
     ]
   )
@@ -165,11 +160,10 @@ export default function DeductionFilter({filterSearch,filterData}){
     const values = watch();
 
     const onSubmit = handleSubmit(async (data)=>{
-      console.log(data,"Dataaaa")
       try{
-        data.companyID="COMP1";
+        data.companyID=localStorage?.getItem('companyID');
 
-        const response = await axios.post(`http://192.168.0.111:3002/erp/addDeductionDetails`,data).then(
+        const response = await axios.post(baseUrl+`addDeductionDetails`,data).then(
           (successData)=> {
             console.log(successData,"Success")
           },
@@ -177,7 +171,6 @@ export default function DeductionFilter({filterSearch,filterData}){
             console.log(error,"error")
           }
         )
-        console.log(response,"Responsssee")
       }
       catch (error){
         console.error(error)
@@ -203,9 +196,8 @@ export default function DeductionFilter({filterSearch,filterData}){
       const data = await formDateDataStructure();
       
       const data1=await formWithDropdown(data);
-    //   filterData(data);
-      console.log(data,"filtereddata")
-    // handleClickClose()
+      filterData(data);
+    handleClickClose()
       
     }
       const handleSearch=(e)=>{
@@ -216,9 +208,7 @@ export default function DeductionFilter({filterSearch,filterData}){
         setdropdowndeductiontype([]);
         setDates({
           deductedDateStart:"",
-          deductedDateEnd:"",
-          PaidDateFrom:"",
-          PaidDateTo:""
+          deductedDateEnd:""
         })
         setOpen(false);
       }
@@ -236,7 +226,8 @@ export default function DeductionFilter({filterSearch,filterData}){
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
-          url: `http://192.168.0.111:3002/erp/getLoanEmployeeDetails`
+          // url: `http://192.168.1.56:3001/erp/getLoanEmployeeDetails`,
+          url:baseUrl + `getLoanEmployeeDetails`,
         };
       
         axios.request(config).then((response) => {
@@ -295,7 +286,7 @@ export default function DeductionFilter({filterSearch,filterData}){
 <Grid sx={{marginTop:2}}>
 <RHFTextField name="comments" label="Comments" />
 </Grid>
-<Button sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
+<Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
 <Button sx={{float:"right",right:10,marginTop:2}} onClick={handleDeductionCancel}>Cancel</Button>
 </DialogContent>
 </FormProvider>
@@ -379,49 +370,7 @@ export default function DeductionFilter({filterSearch,filterData}){
                 </Grid>
                 </Grid>
                 </Grid>
-                <Grid sx={{marginTop:2}}>
-            <Typography> Paid Date </Typography>
-     
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.PaidDateFrom?dates.PaidDateFrom:null}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          PaidDateFrom: newValue?formatDateToYYYYMMDD(newValue):"",
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.PaidDateTo?dates.PaidDateTo:null}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          PaidDateTo: newValue?formatDateToYYYYMMDD(newValue):"",
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
-           
+            
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
@@ -438,7 +387,7 @@ export default function DeductionFilter({filterSearch,filterData}){
                 >
                  
                  <MenuItem value="salary">Salary</MenuItem>
-                    <MenuItem value="loan">Loan</MenuItem>
+                    <MenuItem value="Cash">Cash</MenuItem>
                 </Select>
               </FormControl>
                    </Grid>

@@ -208,9 +208,9 @@ export default function LoanSearchFilter({filterSearch,filterData}){
       }
 
       const ApproversList = () => {
-        console.log("Approverslist api called")
         const payload = {
-          companyID: "COMP1"
+          // companyID: "COMP1"
+          companyID:localStorage?.getItem('companyID')
         }
        
         const config = {

@@ -60,9 +60,9 @@ export default function Loans() {
       
   const defaultPayload={
     "count": 5,
-    "page": 1,
+    "page": 0,
     "search": "",
-    "companyID": "COMP1",
+    "companyID": localStorage?.getItem('companyID'),
     "externalFilters": {
   "requestDate": {
    

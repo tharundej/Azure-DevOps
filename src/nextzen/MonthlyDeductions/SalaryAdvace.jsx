@@ -59,10 +59,10 @@ export default function SalaryAdvace() {
         setShowForm(true)
       } 
   const defaultPayload={
-    "count": 10,
-    "page": 1,
-    "search": "COMP1",
-    "companyID": "COMP1",
+    "count": 5,
+    "page": 0,
+    "search": "",
+    "companyID": localStorage?.getItem('companyID'),
     "externalFilters": {
   "requestDate": {
    

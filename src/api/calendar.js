@@ -9,18 +9,18 @@ import { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-// const ApplyLeave = baseUrl + '/applyLeave';
-// const URL = baseUrl+'/appliedLeaveList';
+const ApplyLeave = baseUrl + '/applyLeave';
+const URL = baseUrl+'/appliedLeaveList';
 
-const ApplyLeave =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave`;
-const URL =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList`
+// const ApplyLeave =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave`;
+// const URL =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList`
 
 
 const options = {
-  // companyId: localStorage.getItem('companyID'),
-  //  employeeId:localStorage.getItem('employeeID')
-  companyId: "C1",
-   employeeId:"E1"
+  companyId: localStorage.getItem('companyID'),
+   employeeId:localStorage.getItem('employeeID')
+  // companyId: "C1",
+  //  employeeId:"E1"
 }
 
 
@@ -47,18 +47,6 @@ console.log(events,"eventsssss")
 // ----------------------------------------------------------------------
 
 export async function createEvent(eventData) {
-  console.log(eventData,"eventdata")
-  /**
-   * Work on server
-   */
-  // const data = { eventData };
-  // try {
-  // await axios.post(ApplyLeave, eventData);
-  // mutate([URL,options]); 
-  // }
-  // catch(error){
-  //    console.log(error.response.data)
-  // }
   try {
     const response = await axios.post(ApplyLeave, eventData);
     // Check the response for errors and throw an error if needed.
@@ -120,14 +108,27 @@ export async function updateEvent(eventData) {
 
 // ----------------------------------------------------------------------
 
-export async function deleteEvent(eventId) {
-  console.log(eventId,"deletee")
+export async function deleteEvent(leaveId,employeeId) {
+  console.log(leaveId,"deletee",employeeId)
   /**
    * Work on server
    */
-  const data = { eventId };
-  await axios.patch(endpoints.calendar, data);
+  const data = { 
+    employeeId:employeeId,
+    LeaveId:JSON.stringify(parseInt(leaveId))
+   };
+   try{
+ const response =  await axios.post(`http://192.168.1.199:3001/erp/deletLeaveRequest`, data);
+ if (response.data.success === false) {
+  throw new Error(response.data.message);
+ }
+  mutate([URL,options]); 
+  return response.data;
+  }
 
+   catch(error){
+    throw error;
+   }
   /**
    * Work in local
    */

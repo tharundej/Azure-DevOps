@@ -34,9 +34,22 @@ export default function Deduction() {
   ];
 
 const defaultPayload={
-    "page":1,
-    "count":10,
-    "companyID":"COMP1"
+    "count":4,
+    "page":0,
+    "search":"",
+    "companyID":localStorage?.getItem('companyID'),
+    "externalFilters":{
+        "deductionType":"",
+        "noOfInstallments":"",
+        "deductedDate":{
+            "from":"",
+            "to":""
+        }
+    },
+    "sort":{
+        "key":0,
+        "orderby":""
+    }
 }
 return (
 <>
@@ -44,7 +57,7 @@ return (
 <BasicTable
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
-endpoint='/getLoanDetailsHr'
+endpoint='/getLoanDeductionDetailsHR'
 bodyData='data'
 filterName="DeductionFilter"
 />  

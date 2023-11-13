@@ -276,14 +276,15 @@ export default function SalarySearchFilter({filterSearch,filterData}){
 
     const ApproversList = () => {
       const payload = {
-        companyID: "COMP1"
+        // companyID: "COMP1"
+        companyID:localStorage?.getItem('companyID')
       }
      
       const config = {
         method: 'POST',
         maxBodyLength: Infinity,
-        // url: baseUrl + `/getApproverDetailsSalaryDetails`,
-        url: `http://192.168.0.111:3002/erp/getApproverDetailsSalaryDetails`,
+        url: baseUrl + `/getApproverDetailsSalaryDetails`,
+        // url: `http://192.168.1.56:3001/erp/getApproverDetailsSalaryDetails`,
         data:  payload
       };
     
