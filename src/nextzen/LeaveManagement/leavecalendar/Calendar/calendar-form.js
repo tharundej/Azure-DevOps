@@ -179,8 +179,8 @@ const getLeaveList = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: baseUrl + `getLeaveType`,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+    url: baseUrl + `/getLeaveType`,
+    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
@@ -206,8 +206,8 @@ const AvailableLeaves = () => {
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: baseUrl + `availableLeave`,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
+    url: baseUrl + `/availableLeave`,
+    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 
@@ -371,4 +371,3 @@ CalendarForm.propTypes = {
   currentEvent: PropTypes.object,
   onClose: PropTypes.func,
 };
-

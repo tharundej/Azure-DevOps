@@ -88,8 +88,8 @@ useEffect(()=>{
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
-    // url:baseUrl + `holidayList`,
+    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
+    url:baseUrl + `/holidayList`,
     data:  payload
     }
   axios.request(config).then((response) => {

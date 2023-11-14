@@ -15,7 +15,7 @@ const URL = baseUrl+'/appliedLeaveList';
 // const ApplyLeave =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave`;
 // const URL =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList`
 
-
+console.log(localStorage.getItem('companyID'),'localStorage.getItem')
 const options = {
   companyId: localStorage.getItem('companyID'),
    employeeId:localStorage.getItem('employeeID')
