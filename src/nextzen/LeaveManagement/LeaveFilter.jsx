@@ -52,7 +52,8 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
     const payload = {
-        company_id: "C1"
+        // companyId: "C1"
+        companyId:localStorage.getItem('companyID')
     }
    
     const config = {

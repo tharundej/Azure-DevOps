@@ -80,6 +80,7 @@ import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilte
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
 import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
 import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
+import DeductionFilter from '../MonthlyDeductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
@@ -445,7 +446,19 @@ const payload = initialDefaultPayload;
 table.onSort(field);
 getTableData(payload)
 };
-  
+
+const getRowActionsBasedOnStatus = (status) => {
+  if (status === 'pending' || status===""|| status==="Pending") {
+    return rowActions
+  } 
+  else {
+    return null
+  } 
+}
+
+
+
+
   
   return (
     <>
@@ -477,6 +490,8 @@ getTableData(payload)
        {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
 
+       {filterName==="DeductionFilter" && <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
+       
         <Card>
 
        
@@ -542,7 +557,7 @@ getTableData(payload)
                             
                             (row, event) }}
                           headerContent={TABLE_HEAD}
-                          rowActions={rowActions || []}
+                          rowActions={getRowActionsBasedOnStatus(row.status)}
                         />
                        
  

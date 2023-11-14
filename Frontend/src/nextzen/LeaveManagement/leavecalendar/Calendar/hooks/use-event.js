@@ -6,15 +6,14 @@ import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 // ----------------------------------------------------------------------
 
 export default function useEvent(events, selectEventId, selectedRange, openForm) {
-  console.log(events,"eventsss",selectEventId)
-  const currentEvent = events.find((event) => event.leaveId === parseInt(selectEventId));
-  console.log(currentEvent,"currenteventt",selectEventId)
+  const currentEvent = events.find((event) => event.leaveId === selectEventId);
+console.log(selectEventId,"selevctedatata",selectedRange,"hgdasd",events)
   const defaultValues = useMemo(
     () => ({
-      leaveTypeId:0,
-      companyId: localStorage.getItem('companyID'),
-      employeeId:localStorage.getItem('employeeID'),
-      applyDate:"",
+      leave_type_id:0,
+      company_id: "C1",
+      employee_id:"E1",
+      apply_date:"",
       status:"pending",
       fullday:"0",
       firsthalf:"0",
@@ -22,8 +21,8 @@ export default function useEvent(events, selectEventId, selectedRange, openForm)
       attachment: "",
       status_date:"",
       comments: "",
-      fromDate: selectedRange ? selectedRange.start : new Date().getTime(),
-      toDate: selectedRange ? selectedRange.end : new Date().getTime(),
+      from_date: selectedRange ? selectedRange.start : new Date().getTime(),
+      to_date: selectedRange ? selectedRange.end : new Date().getTime(),
       color:"#ffffff"
     }),
     [selectedRange]

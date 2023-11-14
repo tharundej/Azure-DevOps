@@ -1,34 +1,19 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-
-import Button from '@mui/material/Button';
-
-import { useState, useEffect } from 'react';
-import { Container } from '@mui/system';
-import { Dialog } from '@mui/material';
+import {Button,Dialog,DialogContent,TextField,Grid,Stack,Typography} from '@mui/material';
+import { useState,useCallback} from 'react';
 import { BasicTable } from '../Table/BasicTable';
 
 import ApplyLoan from './ApplyLoan';
-
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
-
+import {useSnackbar} from '../../components/snackbar';
 export default function Loans() {
-   
+  const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
-
         {
     
-          id: "Employe_name",
+          id: "employeeID",
     
-          label: " SL_NO",
-    
+          label: "Employee Id",
+          minWidth:"8pc",
           type: "text",
     
           containesAvatar: false,
@@ -45,15 +30,13 @@ export default function Loans() {
     
         { id: "requestAmount", label: "Request Amount", width: 180, type: "text" },
     
-        { id: "paidDate", label: "Paid Date", width: 100, type: "text" },
-        { id: "paidAmount", label: "paid Amount", width: 100, type: "text" },
-        { id: "noOfInstallments", label: "No Instalment ", width: 100, type: "text" },
-        { id: "interestRate", label: "Intrest Rate", width: 100, type: "text" },
-        { id: "approverName", label: " Approver Name", width: 100, type: "text" },
-        { id: "status", label: "status", width: 100, type: "text" },
+        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
+        { id: "paidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
+        { id: "noOfInstallments", label: "No of Installments", minWidth: "7pc", type: "text" },
+        { id: "interestRate", label: "Interest Rate", minWidth: "7pc", type: "text" },
+        { id: "approverName", label: " Approver Name", minWidth: "10pc", type: "text" },
         { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-    
-        // { id: '', width: 88 },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
       ];
     
@@ -71,21 +54,20 @@ export default function Loans() {
     
     
       const [showForm, setShowForm] = useState  (false);
-      const handleClose = () => setShowForm(false);
+      const handleClose = () => {
+        setShowForm(false);
+        setShowEditForm(false);
+      }
       const handleTimeForm =()=>{
         setShowForm(true)
-        console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+       
       } 
       
-    
-      const[tableData,SetTableData] = useState({})
-      console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
-
   const defaultPayload={
     "count": 5,
-    "page": 1,
+    "page": 0,
     "search": "",
-    "companyID": "COMP1",
+    "companyID": localStorage?.getItem('companyID'),
     "externalFilters": {
   "requestDate": {
    
@@ -115,7 +97,74 @@ export default function Loans() {
       "orderBy": ""
     }
   }
+  const onClickActions=(rowdata,event)=>{
+    if(event?.name==="Approve" || event?.name==="Reject")
+    {
+      handleLoanApprove(rowdata,event)
+    }
+    else if (event?.name==="Edit"){
+        handleEditLoanForm(rowdata)
+    }
+  
+  }
+  const handleLoanApprove=(rowdata,event)=>{
+    var payload =
+    {
+      "employeeID":"info 3",
+      "loanID": rowdata?.loanID,
+      "paidAmount":rowdata?.paidAmount,
+      "noOfInstallments":rowdata?.noOfInstallments,
+      "interestRate":rowdata?.interestRate,
+      "status":event?.id
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    url: baseUrl + `/approveLoanDetails`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+    });
+  
+  }
+  const [value,setValue] = useState();
+  const handleChange = useCallback((event) => {
+    setValue(event.target.value);
+  }, []);
       
+  const [showEditForm,setShowEditForm]= useState(false);
+const [rowData,setRowData] = useState();
+  const handleEditLoanForm=(rowdata)=>{
+    setRowData(rowdata)
+    setShowEditForm(true);
+  }
+  const handleEditLoan=()=>{
+   var payload = {
+      "loanID":rowData?.loanID,
+      "requestAmount":parseInt(value)
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    url: baseUrl + `/updateLoanDetails`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+    handleClose()
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+      handleClose()
+    });
+  
+  }
   return (
     <>
       {showForm && (
@@ -132,23 +181,52 @@ export default function Loans() {
  <ApplyLoan currentUser={{}} handleClose={handleClose} />
       </Dialog>
     )}
-<hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
-    <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
-  {/* <div>Content Here</div> */}
-  <Button className="button" onClick={handleTimeForm}>Apply Loan </Button>
-<Button className="button">Filter</Button>
-<Button className="button">Report</Button>
-</Container>
+ {(showEditForm) && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showEditForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 500 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+  <DialogContent>
+  <Grid container spacing={2}>
+     <Grid xs={12} md={12}>
+            <Grid sx={{padding:'8px'}}>
+              <Typography sx={{marginLeft:'5px'}}>
+                Edit Your Loan Request 
+              </Typography>
+            </Grid>
+      </Grid>
+      <Grid  xs={12} md={12} sx={{marginLeft:5}}>
+      <TextField
+                
+                fullWidth
+                defaultValue={rowData?.requestAmount}
+                value={value}
+                onChange={handleChange}
+                label="Amount"
+              />
+      </Grid>
+     </Grid>
+  </DialogContent>
+  <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+               <Button variant="contained" color="primary" onClick={handleEditLoan}>Apply</Button>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
+      </Dialog>
+    )}
     <BasicTable
-
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
-
 endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actions}
-
+onClickActions={onClickActions}
 />  
     </>
   );

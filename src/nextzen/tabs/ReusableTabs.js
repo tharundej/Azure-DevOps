@@ -47,7 +47,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
      minHeight: "2rem",
      
    }));
-function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
+function ReusableTabs({ tabLabels, tabContents, changeOfTab,tabsSx }) {
   const [value, setValue] = useState(0);
  
   const handleChange = (event, newValue) => {
@@ -60,13 +60,14 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
  
   return (
     <div>
-        <Box sx={{marginBottom:"0 !important", borderBottom:"3px solid #3b82f6 !important"}}>
+        <Box sx={{marginBottom:"0"}}>
         <Tabs
         value={value}
         onChange={handleChange}
         variant="scrollable"
         scrollButtons="auto"
-        TabIndicatorProps={{ style: { display: 'none' } }} 
+        TabIndicatorProps={{ style: { display: 'none' } }}
+        sx={tabsSx} 
       >
         {tabLabels?.map((label, index) => (
           <CustomTab
@@ -88,6 +89,7 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab }) {
 ReusableTabs.propTypes = {
   tabLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
   tabContents: PropTypes.arrayOf(PropTypes.node).isRequired,
-  changeOfTab: PropTypes.any
+  changeOfTab: PropTypes.any,
+  tabsSx: PropTypes.object,
 };
 export default ReusableTabs;
