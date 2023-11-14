@@ -50,7 +50,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-import ExpenseClaimConfiguration from './ExpenseClaimConfiguration';
+import ExpenseClaimConfiguration from '../leaveconfiguration/holidays/ExpenseClaimConfiguration';
 import ExpenseClaimForm from './ExpensiveClaimForm';
 
 const defaultFilters = {

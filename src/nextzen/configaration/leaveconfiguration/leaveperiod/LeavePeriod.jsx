@@ -105,7 +105,7 @@ export default function LeavePeriod() {
       <>
        <Snackbar
     open={snackbarOpen}
-    autoHideDuration={5000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',

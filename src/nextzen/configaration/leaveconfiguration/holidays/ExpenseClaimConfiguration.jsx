@@ -5,8 +5,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ReusableTabs from '../../tabs/ReusableTabs';
-import ExpenseClaimConfiguration from './ExpenseClaimView';
+import ReusableTabs from '../../../tabs/ReusableTabs';
+import ExpenseClaimConfiguration from '../../expenseclaimconfiguration/ExpenseClaimView';
 
 
 const bull = (

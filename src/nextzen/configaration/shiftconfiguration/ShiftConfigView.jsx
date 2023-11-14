@@ -99,7 +99,7 @@ export default function ShiftConfigView() {
     <>
     <Snackbar
     open={snackbarOpen}
-    autoHideDuration={6000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',

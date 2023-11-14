@@ -117,7 +117,7 @@ const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compo
 
 const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
 
-const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/leaveconfiguration/holidays/ExpenseClaimConfiguration'));
 
 const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 

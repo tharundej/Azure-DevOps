@@ -158,7 +158,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     <>
     <Snackbar
     open={snackbarOpen}
-    autoHideDuration={7000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',

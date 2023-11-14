@@ -489,9 +489,9 @@ const getRowActionsBasedOnStatus = (row) => {
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
-       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}onClickActions={onClickActions}/>}
        {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
-       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
 
        {filterName==="DeductionFilter" && <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
        

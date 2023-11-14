@@ -12,11 +12,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 // @mui
-import dayjs from 'dayjs';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -28,19 +23,6 @@ import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function GeneralForminfo({ currentUser }) {
-  const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
-  });
-  //   const [datesUsed, setDatesUsed] = useState({
-  //     date_of_birth: dayjs(new Date()),
-  //     joining_date: dayjs(new Date()),
-  //     offer_date: dayjs(new Date()),
-  //   });
-  //   const router = useRouter();
-
-  //   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -87,6 +69,7 @@ export default function GeneralForminfo({ currentUser }) {
   );
   const defaultValues2 = useMemo(
     () => ({
+      // employee_type: currentUser?.employee_type || '',
       payPcheduleType: currentUser?.payPcheduleType || '',
       tdsPercentage: currentUser?.tdsPercentage || null,
     }),
@@ -129,13 +112,13 @@ export default function GeneralForminfo({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employementType = selectedOption?.type;
+    data.employee_type = selectedOption?.type;
     data.companyId = localStorage.getItem('companyID');
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.status === 200 || 201 && response?.data?.success) {
+      if (response?.status === 200 || (201 && response?.data?.success)) {
         handleClose();
         setSnackbarSeverity('success');
         setSnackbarMessage('PayRoll Added Succuessfully!');
@@ -153,13 +136,13 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.employementType = selectedOption?.type;
+    data.employee_type = selectedOption?.type;
     data.companyId = localStorage.getItem('companyID');
     console.log('submitted data2222', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.status === 200 ||201 && response?.data?.success) {
+      if (response?.status === 200 || (201 && response?.data?.success)) {
         handleClose();
         setSnackbarSeverity('success');
         setSnackbarMessage('PayRoll Added Succuessfully!');
@@ -204,7 +187,7 @@ export default function GeneralForminfo({ currentUser }) {
     <>
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={snackBarAlertHandleClose}
         anchorOrigin={{
           vertical: 'top',
@@ -241,17 +224,7 @@ export default function GeneralForminfo({ currentUser }) {
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             {/* methods1={methods1} onSubmit={onSubmit} */}
             <DialogTitle>Add PayRoll</DialogTitle>
-            <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
+
             <DialogContent>
               <Box
                 rowGap={3}
@@ -263,6 +236,24 @@ export default function GeneralForminfo({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+                <RHFAutocomplete
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  isOptionEqualToValue={(option, value) => option.type === value.type}
+                  getOptionSelected={(option, value) => option.type === value.type}
+                  value={selectedOption}
+                  onChange={handleAutocompleteChange}
+                  sx={{
+                    width: 300,
+                    margin: 'auto',
+                    marginTop: 1,
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
+
                 <RHFAutocomplete
                   name="payPcheduleType"
                   label="Pay Schedule Type"
@@ -298,21 +289,7 @@ export default function GeneralForminfo({ currentUser }) {
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
             {/* methods1={methods1} onSubmit={onSubmit} */}
             <DialogTitle>Add PayRoll</DialogTitle>
-            <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{
-                width: 300,
-                marginLeft: 1, // Adjust the left margin to align with other elements
-                marginTop: 1,
-              }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
+
             <DialogContent>
               <Box
                 rowGap={3}
@@ -324,14 +301,35 @@ export default function GeneralForminfo({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <div>
+                <RHFAutocomplete
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  isOptionEqualToValue={(option, value) => option.type === value.type}
+                  getOptionSelected={(option, value) => option.type === value.type}
+                  value={selectedOption}
+                  onChange={handleAutocompleteChange}
+                  sx={{
+                    width: 300,
+                    margin: 'auto',
+                    marginTop: 1,
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
+
                 <RHFAutocomplete
                   name="payPcheduleType"
                   label="Pay Schedule Type"
                   options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
+                  sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
-                  <RHFTextField name="tdsPercentage" label="TDS %" />
-                </div>
+                <RHFTextField
+                  name="tdsPercentage"
+                  label="TDS %"
+                  sx={{ width: '100%' }} // Adjust width as needed
+                />
               </Box>
             </DialogContent>
 
