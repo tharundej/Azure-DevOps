@@ -96,23 +96,21 @@ const [sendData, setSendData] = useState({
   projectId : '',  
 })
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: ApplyLoan.jsx:93 ~ onSubmit ~ data:", data)
-    console.log('uyfgv');
 
     try {
     
-      data.companyID = "COMP1";
-      data.employeeID = "info7";
-
+      data.companyID = localStorage.getItem('companyID'),
+      data.employeeID = localStorage.getItem('employeeID')
+      
+      // data.companyID="comp1",
+      // data.employeeID="info3"
       const response = await instance.post('addLoanDetails', data).then(
         (successData) => {
-          console.log('sucess', successData);
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
           handleClose()
         },
         (error) => {
           enqueueSnackbar(error?.data?.Message,{variant:'Error'})
-          console.log('lllll', error);
         }
       );
 

@@ -17,7 +17,7 @@ export default function Month() {
       ]
   return (
     <>
-    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
     </>
   );
 }

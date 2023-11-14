@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 
@@ -84,6 +85,7 @@ export default function useCalendar() {
 
   const onSelectRange = useCallback(
     (arg) => {
+      console.log(arg,"arggg")
       if (calendarEl) {
         const calendarApi = calendarEl.getApi();
         calendarApi.unselect();
@@ -91,8 +93,8 @@ export default function useCalendar() {
      
       onOpenForm();
       setSelectedRange({
-        start: fTimestamp(arg.start),
-        end: fTimestamp(arg.end),
+        start: arg.startStr,
+        end:arg.endStr ,
       });
     },
   
@@ -105,19 +107,22 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
+      console.log(event,"evnetsttss","idd",event.id)
       onOpenForm();
-      setSelectEventId(event.leave_id);
+      setSelectEventId(event.id);
     },
     [onOpenForm]
   );
+
+  console.log(selectEventId,"selectedeventttid")
 
   const onResizeEvent = useCallback((arg, updateEvent) => {
     const { event } = arg;
 
     updateEvent({
       // id: event.id,
-      from_date: fTimestamp(event.from_date),
-      to_date: fTimestamp(event.to_date),
+      fromDate: fTimestamp(event.fromDate),
+      toDate: fTimestamp(event.toDate),
     });
   }, []);
 
@@ -126,8 +131,8 @@ export default function useCalendar() {
 
     updateEvent({
       // id: event.id,
-      from_date: fTimestamp(event.from_date),
-      to_date: fTimestamp(event.end_date),
+      fromDate: fTimestamp(event.fromDate),
+      toDate: fTimestamp(event.toDate),
     });
   }, []);
 
@@ -167,3 +172,5 @@ export default function useCalendar() {
     onClickEventInFilters,
   };
 }
+
+
