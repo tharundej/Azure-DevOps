@@ -20,12 +20,15 @@ import {
   useTheme,
   Snackbar,
   Alert,
+  Dialog,
 } from '@mui/material';
 import GeneralForminfo from './GeneralForminfo';
 import PayScheduleform from './PayScheduleform';
 import { useState } from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import EditPaySchedule from './EditPaySchedule';
+import { button } from 'src/theme/overrides/components/button';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -53,7 +56,7 @@ export default function BasicCard() {
   ];
   const actions = [
     { name: 'Delete', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj', type: 'edit' },
+    { name: 'Edit', icon: 'hh', path: 'jjj',type:'edit'},
   ];
   const bodyContent = [
     {
@@ -93,12 +96,12 @@ export default function BasicCard() {
 
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
-      handleEditAPICALL(rowdata, event);
+       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
   };
-
+    const buttonFunction =(rowdata)=>{console.log(rowdata,'rowdataaaaaaaaaaaaaa')}
   const deleteFunction = async (rowdata, event) => {
     console.log('iam here ');
     try {
@@ -132,6 +135,11 @@ export default function BasicCard() {
    console.log('error', error);
  }
   };
+
+  const [showEdit , setShowEdit] = useState(false)
+  const [tableEDitData , SetTableEditData] = useState({})
+  const handleEditClose = ()=> setShowEdit(false)
+
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 
   React.useEffect(() => {
@@ -172,7 +180,20 @@ export default function BasicCard() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-
+      {showEdit && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showEdit}
+ onClose={handleEditClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <EditPaySchedule currentUser={{}}handleClose={handleEditClose} tableEDitData={tableEDitData} buttonFunction={buttonFunction}/>
+      </Dialog>
+    )}
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/getallPaySchedule"
@@ -180,6 +201,8 @@ export default function BasicCard() {
         rowActions={actions}
         filterName="PayScheduleFilterSearch"
         onClickActions={onClickActions}
+        //  bodyData='data'
+          // buttonFunction={buttonFunction}
       />
     </>
   );
