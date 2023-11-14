@@ -125,6 +125,8 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const [designationData,setDesignationData] =useState([])
   const [CurrentDesignationData,setCurrentDesignationData] =useState({})
   const [gradeData,setgradeData] =useState([])
+  const [employeData,setEmployeData] =useState([])
+  console.log("🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:", employeData)
   const [CurrentGradeData,setCurrentGradeData] =useState({})
 
 
@@ -170,6 +172,22 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
       };
       const response = await instance.post('/onboardingDesignationGrade',data);
       setgradeData(response.data.data)
+      getEmploye()
+      console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+    }catch(error){
+  console.error("Error", error);
+  throw error;
+    }
+  }
+  const getEmploye = async (newvalue)=>{
+    try{
+    const  data= {
+      
+      companyiD:'COMP1',
+       
+      };
+      const response = await instance.post('/getEmployeeIDDetails',data);
+      setEmployeData(response.data.data)
       console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
     }catch(error){
   console.error("Error", error);

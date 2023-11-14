@@ -302,7 +302,7 @@ export default function AssignShiftSearchFilter({filterData,filterOptions,search
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>

@@ -9,10 +9,11 @@ import { _userList } from 'src/_mock';
 import { useState } from 'react';
 import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
-import { BasicTable } from '../Table/BasicTable';
-import TimeForm from './TimeForm';
-import ReusableTabs from '../tabs/ReusableTabs';
-import './Time.css';
+import { BasicTable } from '../../BasicTable'; 
+import AssignShift from './AssignShift';
+
+// import ReusableTabs from '../tabs/ReusableTabs';
+// import './Time.css';
 
 const bull = (
   <Box
@@ -23,8 +24,8 @@ const bull = (
   </Box>
 );
 
-export default function TimeSheetTable() {
-     
+export default function Swaprequest() {
+   
       const TABLE_HEAD = [
 
         {
@@ -42,54 +43,47 @@ export default function TimeSheetTable() {
           secondaryText: "text",
     
         },
-        { id: "projectId", label: "Project Id", width: 180, type: "text" },
     
-        { id: "projectName", label: "Project Name", width: 220, type: "text" },
+        { id: "employee_shift_swap_id", label: "Employe Shift Swap ID", width: 180, type: "text" },
+
+        { id: "from_shift_group", label: "From Shift Group", width: 180, type: "text" },
     
-        { id: "dateOfActivity", label: "date of Activity", width: 180, type: "text" },
+        // { id: "Shiftgroup_Name", label: "Shift Group Name", width: 220, type: "text" },
+        // { id: "Date", label: "Date", width: 220, type: "text" },
     
-        { id: "activityName", label: "activity Name", width: 100, type: "text" },
-        { id: "workingTime", label: "Working Time", width: 100, type: "text" },
-        { id: "totalWorkingTime", label: "Total Working Time", width: 100, type: "text" },
+        { id: "employee_id", label: "Employee ID", width: 180, type: "text" },
+    
+        { id: "request_date", label: "Request Date", width: 100, type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
+        { id: "start_date", label: "Start Date", width: 100, type: "text" },
+        { id: "end_date", label: "End Date", width: 100, type: "text" },
+        { id: "comment", label: "Comment", width: 100, type: "text" },
     
-        // { id: '', width: 88 },
+        // { id: '', width: 88 }, 
     
       ];
- 
     
      
-    const defaultPayload={
-      "employee_id":"ibm2",
-
+    const defaultPayload ={
+      "company_id":"COMP2",
+      "employee_id":"ibm1",
       "page":0,
-  
-      "count":30,
-  
-      "search":"",
-  
+      "count":3,
+      "Search":"r",
       "externalFilters":{
-  
-               "project_name":"",
-  
-               "activity_name":"",
-  
-               "Status":"",
-  
-               "from_date":"",
-  
-               "to_date":""
-  
-      },
-  
-      "sort":{
-  
-          "key":1,
-  
-          "orderBy":"pa.activity_name"
-  
-      }
-    }
+      "shift_name": "",
+      "shift_term": "",
+      "startdate":"",
+      "enddate":""
+   
+  },
+      "sort": {
+      "orderby": "shift_name",
+      "key": 0
+  } 
+   
+  }
       const actions = [
     
         { name: "approve", icon: "hh", path: "jjj" },
@@ -100,7 +94,7 @@ export default function TimeSheetTable() {
     
       ];
     
-   
+    
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -110,7 +104,7 @@ export default function TimeSheetTable() {
     
   return (
     <>
-      {/* {showForm && (
+      {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -121,23 +115,24 @@ export default function TimeSheetTable() {
  }}
  className="custom-dialog"  
 >
- <TimeForm currentUser={{}} handleClose={handleClose}/>
+ <AssignShift currentUser={{}} />
       </Dialog>
-    )} */}
-   
+    )}
+
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
-  {/* <Button className="button" onClick={handleTimeForm}>Add Time Sheet</Button> */}
-{/* <Button className="button" >Filter</Button>
-<Button className="button" >Report</Button> */}
+  {/* <Button className="button" onClick={handleTimeForm    }>Assign Shift</Button> */}
+{/* <Button className="button">Filter</Button>
+<Button className="button">Report</Button> */}
 </Container>
- <BasicTable
- defaultPayload={defaultPayload}
- headerData={TABLE_HEAD}
- endpoint='/Mytimesheets'
- bodyData='data'
- filterName="TimeSearchFilter"
- />
+    <BasicTable
+defaultPayload={defaultPayload}
+headerData={TABLE_HEAD}
+endpoint='/Swaprequest'
+bodyData='data'
+rowActions={actions}
+filterName='MyShiftFilter'
+/>  
     </>
   );
 }
