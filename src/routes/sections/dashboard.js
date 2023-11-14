@@ -285,7 +285,7 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path:'configarations',
+        path:'configurations',
         children:[
           {
             element: <Configaration/>,index:true

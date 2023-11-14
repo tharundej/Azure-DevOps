@@ -64,7 +64,7 @@ export default function LeaveType() {
 
       }
       if(response?.data?.code===400  ){
-        setSnackbarSeverity('success');
+        setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
       

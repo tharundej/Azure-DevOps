@@ -199,14 +199,14 @@ export const paths = {
      
     },
     
-      configarations:{
-        root:`${ROOTS.DASHBOARD}/configarations`,
-        leaveconfiguration: `${ROOTS.DASHBOARD}/configarations/leaveconfiguration`,
-        compoffconfiguration: `${ROOTS.DASHBOARD}/configarations/compoffconfiguration`,
-        appraisalconfiguration: `${ROOTS.DASHBOARD}/configarations/appraisalconfiguration`,
-      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configarations/expenseclaimconfiguration`,
-      shiftconfiguration: `${ROOTS.DASHBOARD}/configarations/shiftconfiguration`,
-      roleconfiguration: `${ROOTS.DASHBOARD}/configarations/roleconfiguration`,
+      configurations:{
+        root:`${ROOTS.DASHBOARD}/configurations`,
+        leaveconfiguration: `${ROOTS.DASHBOARD}/configurations/leaveconfiguration`,
+        compoffconfiguration: `${ROOTS.DASHBOARD}/configurations/compoffconfiguration`,
+        appraisalconfiguration: `${ROOTS.DASHBOARD}/configurations/appraisalconfiguration`,
+      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configurations/expenseclaimconfiguration`,
+      shiftconfiguration: `${ROOTS.DASHBOARD}/configurations/shiftconfiguration`,
+      roleconfiguration: `${ROOTS.DASHBOARD}/configurations/roleconfiguration`,
       },
     
 

@@ -32,7 +32,7 @@ export default function AmplifyForgotPasswordView() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false)
   const router = useRouter();
-
+  const [errorMsg, setErrorMsg] = useState('');
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
@@ -70,7 +70,7 @@ export default function AmplifyForgotPasswordView() {
       axios
         .request(config)
         .then((response) => {
-          if(response?.status===200){
+          if(response?.data?.code===200 ){
             setSnackbarSeverity('success');
              setSnackbarMessage('Email Sent Succuessfully!');
              setSnackbarOpen(true);
@@ -79,10 +79,18 @@ export default function AmplifyForgotPasswordView() {
           router.push(paths.auth.jwt.otpverification);
 
           }
+          if(response?.data?.code===400  ){
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response?.data?.message);
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+    
+          }
         })
       } catch (error) {
         setSnackbarSeverity('error');
-        setSnackbarMessage('Email Does Not Exisit. Please try again.');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
        console.log('error', error);
      }

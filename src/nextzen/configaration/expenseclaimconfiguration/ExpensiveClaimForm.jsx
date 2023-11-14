@@ -131,7 +131,7 @@ export default function ExpenseClaimForm({ currentUser }) {
        }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add ExpensiveConfig</DialogTitle>
+          <DialogTitle>Add Expensive Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}

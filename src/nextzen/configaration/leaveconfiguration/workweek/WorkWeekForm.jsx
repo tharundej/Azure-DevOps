@@ -159,7 +159,7 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add Work Week</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}

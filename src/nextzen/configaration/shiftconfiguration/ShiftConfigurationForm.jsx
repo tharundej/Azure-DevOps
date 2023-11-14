@@ -175,7 +175,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px' }}
       >
-        Add ExpensiveConfig
+        Add Shift Config
       </Button>
       <Dialog
         fullWidth
@@ -187,7 +187,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add ExpensiveConfig</DialogTitle>
+          <DialogTitle>Add Shift Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}

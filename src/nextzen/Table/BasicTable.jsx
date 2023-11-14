@@ -485,7 +485,7 @@ const getRowActionsBasedOnStatus = (row) => {
        {filterName === "ExpensiveClaimFilterSearch" && <ExpenseClaimFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "PayScheduleFilterSearch" && <PayScheduleFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "ShiftConfigurationFilterSearch" && <ShiftConfigurationFilters  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
-       {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+       {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} onClickActions={onClickActions}/>}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
