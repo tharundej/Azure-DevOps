@@ -45,13 +45,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-export default function EditPaySchedule({ currentUser, handleClose, tableEDitData,handleEditAPICALL }) {
+export default function EditPaySchedule({ currentUser, handleClose, tableEDitData }) {
   console.log('tableEDitData:', tableEDitData);
 
-  useEffect(() => {
-    getEmployeReport();
-  }, []);
-
+  // useEffect(() => {
+  //   getEmployeReport();
+  // }, []);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -66,53 +65,77 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
     reset2();
   };
   const [isTextFieldVisible, setTextFieldVisible] = useState(false); // State to manage the visibility of the text field
-  const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
-
-  const handleSelectChange = (event, values) => {
-    console.log('values:', values);
-    setSelectedOption(values);
-
+  const [selectedOption, setSelectedOption] = useState(tableEDitData); // State to manage the selected option in Autocomplete
+  const [autoCompleteChange, setAutoCompleteChange] = useState();
+  const [valueSelected, setValueSelected] = useState(tableEDitData);
+  console.log(valueSelected,'valueSelectedeeeeeeee')
+ 
+  const handleSelectChange = (field,value) => {
+    // console.log('values:', value);
+    // console.log('event', event.target.value);
+    // setSelectedOption(value);
+    console.log(field,value,'valllllllllll')
+    setValueSelected((prevData)=>({
+      ...prevData,
+      [field]:value,
+      
+    }));
+    console.log(valueSelected,"valueeeeeeeeeeeeeeeeeeee")
+    // tableEDitData.payScheduleType = event.target.value;
+    // tableEDitData.basicPayPercentage = event.target.value;
+    // tableEDitData.hraPercentage = event.target.value;
+    // tableEDitData.daPercentage = event.target.value;
+    // tableEDitData.employeePfPercentage = event.target.value;
+    // tableEDitData.employerPfPercentage = event.target.value;
+    // tableEDitData.ltaPercentage = event.target.value;
+    // tableEDitData.esicPercentage = event.target.value;
+    // tableEDitData.tdsPercentage = event.target.value;
     // Check if the selected option should show the text field
-    if (values && values.type === 'Permanent') {
+    
+  };
+  const handleForms=(event,value)=>{
+    console.log(selectedOption,"selectedOption")
+    setSelectedOption(value)
+    if (value && value.type === 'Permanent') {
       setTextFieldVisible(true);
     } else {
       setTextFieldVisible(false);
     }
-  };
-
+  }
+  console.log('deb', valueSelected);
   const NewUserSchema1 = Yup.object().shape({
-    payScheduleType: Yup.string().required('Payschedule Type is Required'),
-    basicPayPercentage: Yup.number().required('Basic Pay is Required'),
-    hraPercentage: Yup.number().required('hraPercentage is Required'),
-    daPercentage: Yup.number().required('DA is Required'),
-    employeePfPercentage: Yup.number().required('Employee PF is Required'),
-    employerPfPercentage: Yup.number().required('Employer PF is Required'),
-    ltaPercentage: Yup.number().required('LTA is Required'),
-    esicPercentage: Yup.number().required('esic is Required'),
-    tdsPercentage: Yup.number().required('TDS is Required'),
+    payScheduleType: Yup.string(),
+    basicPayPercentage: Yup.number(),
+    hraPercentage: Yup.number(),
+    daPercentage: Yup.number(),
+    employeePfPercentage: Yup.number(),
+    employerPfPercentage: Yup.number(),
+    ltaPercentage: Yup.number(),
+    esicPercentage: Yup.number(),
+    tdsPercentage: Yup.number(),
   });
 
   const NewUserSchema2 = Yup.object().shape({
-    tdsPercentage: Yup.number().required('TDS is Required'),
+    tdsPercentage: Yup.number(),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      payScheduleType: currentUser?.payScheduleType || '',
-      basicPayPercentage: currentUser?.basicPayPercentage || null,
-      hraPercentage: currentUser?.hraPercentage || null,
-      daPercentage: currentUser?.daPercentage || null,
-      employeePfPercentage: currentUser?.employeePfPercentage || null,
-      employerPfPercentage: currentUser?.employerPfPercentage || null,
-      ltaPercentage: currentUser?.ltaPercentage || null,
-      esicPercentage: currentUser?.esicPercentage || null,
-      tdsPercentage: currentUser?.tdsPercentage || null,
+      payScheduleType: currentUser?.payScheduleType,
+      basicPayPercentage: currentUser?.basicPayPercentage,
+      hraPercentage: currentUser?.hraPercentage,
+      daPercentage: currentUser?.daPercentage,
+      employeePfPercentage: currentUser?.employeePfPercentage,
+      employerPfPercentage: currentUser?.employerPfPercentage,
+      ltaPercentage: currentUser?.ltaPercentage,
+      esicPercentage: currentUser?.esicPercentage,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
   const defaultValues2 = useMemo(
     () => ({
-      tdsPercentage: currentUser?.tdsPercentage || null,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
@@ -141,37 +164,37 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
     reset: reset2,
   } = methods2;
 
-  const getEmployeReport = async () => {
-    try {
-      const data = {
-        count: 5,
-        page: 1,
-        search: '',
-        companyId: 'COMP1',
-        externalFilters: {
-          payscheduleType: '',
-          employmentType: '',
-          basicPayPercentage: '',
-          hraPercentage: '',
-          daPercentage: '',
-          ltaPercentage: '',
-          employerPfPercentage: '',
-          employeePfPercentage: '',
-          esicPercentage: '',
-          tdsPercentage: '',
-        },
-        sort: {
-          key: 1,
-          orderBy: '',
-        },
-      };
-      const response = await axios.post(baseUrl + '/getallPaySchedule', data);
-      console.log('response.data:', response.data);
-    } catch (error) {
-      console.error('Error', error);
-      throw error;
-    }
-  };
+  // const getEmployeReport = async () => {
+  //   try {
+  //     const data = {
+  //       count: 5,
+  //       page: 1,
+  //       search: '',
+  //       companyId: 'COMP1',
+  //       externalFilters: {
+  //         payscheduleType: '',
+  //         employmentType: '',
+  //         basicPayPercentage: '',
+  //         hraPercentage: '',
+  //         daPercentage: '',
+  //         ltaPercentage: '',
+  //         employerPfPercentage: '',
+  //         employeePfPercentage: '',
+  //         esicPercentage: '',
+  //         tdsPercentage: '',
+  //       },
+  //       sort: {
+  //         key: 1,
+  //         orderBy: '',
+  //       },
+  //     };
+  //     const response = await axios.post(baseUrl + '/getallPaySchedule', data);
+  //     console.log('response.data:', response.data);
+  //   } catch (error) {
+  //     console.error('Error', error);
+  //     throw error;
+  //   }
+  // };
 
   const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' }];
   const payscheduleTypes = [
@@ -186,7 +209,7 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
     console.log('data:', data);
 
     data.company_id = 'COMP1';
-  
+
     data.payScheduleType = tableEDitData.payScheduleType;
     data.basicPayPercentage = tableEDitData.basicPayPercentage;
     data.hraPercentage = tableEDitData.hraPercentage;
@@ -196,7 +219,6 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
     data.ltaPercentage = tableEDitData.ltaPercentage;
     data.esicPercentage = tableEDitData.esicPercentage;
     data.tdsPercentage = tableEDitData.tdsPercentage;
-
 
     console.log(data, 'data111ugsghghh');
 
@@ -217,8 +239,8 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
     data.company_id = 'COMP1';
-
-    data.tdsPercentage = tableEDitData.tdsPercentage;
+    data.employementType=valueSelected.employementType
+    data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
 
     console.log(data, 'data111ugsghghh');
 
@@ -251,7 +273,7 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
     <>
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={snackBarAlertHandleClose}
         anchorOrigin={{
           vertical: 'top',
@@ -293,8 +315,8 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
               id="combo-box-demo"
               options={employeepayTypes}
               getOptionLabel={getOptionLabel}
-              value={tableEDitData.employee_type} // Use selectedOption or an empty string
-              onChange={handleSelectChange}
+              value={tableEDitData.employee_type} // Use tableEDitData or an empty string
+              onChange={handleForms}
               sx={{ width: 300, padding: '8px' }}
               renderInput={(params) => <TextField {...params} label="Employee Type" />}
             />
@@ -314,43 +336,51 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
                   label="Pay Schedule Type"
                   value={tableEDitData.payScheduleType}
                   options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
+                  // onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField
                   name="basicPayPercentage"
                   label="Basic Pay %"
                   value={tableEDitData.basicPayPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
 
                 <RHFTextField
                   name="hraPercentage"
                   label="HRA %"
                   value={tableEDitData.hraPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField name="daPercentage" label="DA %" value={tableEDitData.daPercentage} />
                 <RHFTextField
                   name="employeePfPercentage"
                   label="Employee PF %"
                   value={tableEDitData.employeePfPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField
                   name="employerPfPercentage"
                   label="Employer PF %"
                   value={tableEDitData.employerPfPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField
                   name="ltaPercentage"
                   label="LTA %"
                   value={tableEDitData.ltaPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField
                   name="esicPercentage"
                   label="ESIC %"
                   value={tableEDitData.esicPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
                 <RHFTextField
                   name="tdsPercentage"
                   label="TDS %"
                   value={tableEDitData.tdsPercentage}
+                  onChange={(e) => handleSelectChange(e, e.target.value)}
                 />
               </Box>
             </DialogContent>
@@ -379,7 +409,8 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
               options={employeepayTypes}
               getOptionLabel={getOptionLabel}
               value={tableEDitData.employee_type} // Use selectedOption or an empty string
-              onChange={handleSelectChange}
+              // defaultValue={tableEDitData.employee_type}
+              onChange={handleForms}
               sx={{
                 width: 300,
                 marginLeft: 1, // Adjust the left margin to align with other elements
@@ -402,7 +433,8 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
                   <RHFTextField
                     name="tdsPercentage"
                     label="TDS %"
-                    value={tableEDitData.tdsPercentage}
+                    value={valueSelected?.tdsPercentage}
+                    onChange={(e) => handleSelectChange("tdsPercentage", e.target.value)}
                   />
                 </div>
               </Box>

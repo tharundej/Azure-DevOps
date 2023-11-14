@@ -101,6 +101,7 @@ export default function WorkWeekForm({ currentUser}) {
       getLocation();
     };
     fetchData();
+    
   }, []);
 
 
@@ -110,9 +111,9 @@ export default function WorkWeekForm({ currentUser}) {
     data.companyId=localStorage.getItem('companyID')
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
-
+    handleClose()
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      const response = await axios.post(baseUrl+'/addWorkWeek', data);
       console.log('sucess',response);
     } catch (error) {
       console.log('error', error);

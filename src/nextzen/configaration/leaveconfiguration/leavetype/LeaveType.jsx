@@ -55,7 +55,7 @@ export default function LeaveType() {
           companyID:"COMP1",
            leaveTypeID: rowdata.leaveTypeID,
       };
-      const response = await axios.post( 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/deleteLeaveType', data);
+      const response = await axios.post( baseUrl+'/deleteLeaveType', data);
       if(response?.data?.code===200  ){
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);

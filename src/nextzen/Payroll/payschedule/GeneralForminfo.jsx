@@ -55,7 +55,7 @@ export default function GeneralForminfo({ currentUser }) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
-    payScheduleType: Yup.string().required('Payschedule Type is Required'),
+    payPcheduleType: Yup.string().required('Payschedule Type is Required'),
     basicPayPercentage: Yup.number().required('Basic Pay is Required'),
     hraPercentage: Yup.number().required('hraPercentage is Required'),
     daPercentage: Yup.number().required('DA is Required'),
@@ -67,12 +67,13 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const NewUserSchema2 = Yup.object().shape({
+    payPcheduleType: Yup.string().required('Payschedule Type is Required'),
     tdsPercentage: Yup.number().required('TDS is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      payScheduleType: currentUser?.payScheduleType || '',
+      payPcheduleType: currentUser?.payPcheduleType || '',
       basicPayPercentage: currentUser?.basicPayPercentage || null,
       hraPercentage: currentUser?.hraPercentage || null,
       daPercentage: currentUser?.daPercentage || null,
@@ -86,6 +87,7 @@ export default function GeneralForminfo({ currentUser }) {
   );
   const defaultValues2 = useMemo(
     () => ({
+      payPcheduleType: currentUser?.payPcheduleType || '',
       tdsPercentage: currentUser?.tdsPercentage || null,
     }),
     [currentUser]
@@ -101,7 +103,7 @@ export default function GeneralForminfo({ currentUser }) {
     defaultValues: defaultValues2, // Use defaultValues instead of defaultValues2
   });
 
-  const payscheduleTypes = [
+  const payPcheduleTypes = [
     { type: '52-Once a week' },
     { type: '26-Once in a two weeks' },
     { type: '24- Twice a month' },
@@ -127,7 +129,7 @@ export default function GeneralForminfo({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employeepayType = selectedOption?.type;
+    data.employementType = selectedOption?.type;
     data.companyId = localStorage.getItem('companyID');
     console.log('submitted data111', data);
 
@@ -151,7 +153,7 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.employeepayType = selectedOption?.type;
+    data.employementType = selectedOption?.type;
     data.companyId = localStorage.getItem('companyID');
     console.log('submitted data2222', data);
 
@@ -262,9 +264,9 @@ export default function GeneralForminfo({ currentUser }) {
                 }}
               >
                 <RHFAutocomplete
-                  name="payScheduleType"
+                  name="payPcheduleType"
                   label="Pay Schedule Type"
-                  options={payscheduleTypes.map((payscheduleType) => payscheduleType.type)}
+                  options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
                 />
                 <RHFTextField name="basicPayPercentage" label="Basic Pay %" />
 
@@ -323,6 +325,11 @@ export default function GeneralForminfo({ currentUser }) {
                 }}
               >
                 <div>
+                <RHFAutocomplete
+                  name="payPcheduleType"
+                  label="Pay Schedule Type"
+                  options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
+                />
                   <RHFTextField name="tdsPercentage" label="TDS %" />
                 </div>
               </Box>

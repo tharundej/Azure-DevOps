@@ -20,6 +20,7 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function ComoffConfigurationForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -51,27 +52,25 @@ export default function ComoffConfigurationForm({ currentUser }) {
   const getOptionLabel = (compensatory) => compensatory.type;
 
   const NewUserSchema1 = Yup.object().shape({
-    type: Yup.string().required('Type is Required'),
-    value: Yup.number().required('Value is Required'),
+    expiryDays: Yup.number().required('Expiry Days is Required'),
   });
 
   const NewUserSchema2 = Yup.object().shape({
-    type: Yup.string().required('Type is Required'),
-    value: Yup.number().required('Value is Required'),
+    amount: Yup.number().required('Amount is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      type: currentUser?.type || 'Expiry Days',
-      value: currentUser?.type || null,
+      expiryDays: currentUser?.expiryDays || null,
+
     }),
     [currentUser]
   );
 
   const defaultValues2 = useMemo(
     () => ({
-      type: currentUser?.type || 'Amount',
-      value: currentUser?.type || null,
+      amount: currentUser?.amount || null,
+
     }),
     [currentUser]
   );
@@ -101,42 +100,39 @@ export default function ComoffConfigurationForm({ currentUser }) {
   } = methods2;
 
   const compensatorytypes1 = [{ type: 'Leave' }, { type: 'Incashment' }];
-  const types1 = [{ type: 'Expiry Days' }];
 
-  const types2 = [{ type: 'Amount' }];
-  //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = localStorage.getItem('companyID');
-    data.compensatory = selectedOption?.type;
+    data.companyId = 'COMP1';
+    data.compensantoryPolicies = selectedOption?.type;
 
     console.log('submitted data111', data);
 
-    // try {
-    //   const response = await axios.post(
-    //     'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
-    //     data
-    //   );
-    //   console.log('sucess', response);
-    // } catch (error) {
-    //   console.log('error', error);
-    // }
+    try {
+      const response = await axios.post(
+        baseUrl+'/addCompensantoryConfiguration',
+        data
+      );
+      console.log('sucess', response);
+    } catch (error) {
+      console.log('error', error);
+    }
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.companyId = localStorage.getItem('companyID');
-    data.compensatory = selectedOption?.type;
+    data.companyId = 'COMP1';
+    data.compensantoryPolicies = selectedOption?.type;
     console.log('submitted data2222', data);
 
-    // try {
-    //   const response = await axios.post(
-    //     'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule',
-    //     data
-    //   );
-    //   console.log('sucess', response);
-    // } catch (error) {
-    //   console.log('error', error);
-    // }
+    try {
+      const response = await axios.post(
+        baseUrl+'/addCompensantoryConfiguration',
+        data
+      );
+      console.log('sucess', response);
+    } catch (error) {
+      console.log('error', error);
+    }
   });
 
   return (
@@ -184,14 +180,10 @@ export default function ComoffConfigurationForm({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFAutocomplete
-                  name="type"
-                  label="Type"
-                  options={types1.map((name) => name.type)}
+                <RHFTextField
+                  name="expiryDays"
+                  label="Expiry Days"
                 />
-                <div>
-                <RHFTextField name="value" label="Value" />
-                </div>
               </Box>
             </DialogContent>
 
@@ -235,14 +227,12 @@ export default function ComoffConfigurationForm({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <div >
-                  <RHFAutocomplete
-                    name="type"
-                    label="Type"
-                    options={types2.map((name) => name.type)}
+
+                  <RHFTextField
+                    name="amount"
+                    label="amount"
                   />
-                </div>
-                <RHFTextField name="value" label="Value" />
+                
               </Box>
             </DialogContent>
 

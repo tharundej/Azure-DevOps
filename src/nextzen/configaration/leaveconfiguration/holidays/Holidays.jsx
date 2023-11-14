@@ -4,6 +4,7 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { useState } from 'react';
 import { Alert, Snackbar } from '@mui/material';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function Holidays() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -67,7 +68,7 @@ export default function Holidays() {
             companyID:"COMP1",
              holidayID: rowdata.holidayID,
         };
-        const response = await axios.post( 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/deleteHoliday', data);
+        const response = await axios.post( baseUrl+'/deleteHoliday', data);
         if(response?.data?.code===200  ){
           setSnackbarSeverity('success');
            setSnackbarMessage(response?.data?.message);

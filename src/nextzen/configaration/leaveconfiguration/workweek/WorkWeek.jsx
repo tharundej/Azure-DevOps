@@ -4,9 +4,9 @@ import { BasicTable } from '../../../Table/BasicTable';
 
 export default function WorkWeek() {
     const TABLE_HEAD = [
-      { id: 'day', label: 'Day', type: 'text' },
-      { id: 'action', label: 'Action', type: 'text' },
-      { id: 'location', label: 'Location', type: 'text' },
+      { id: 'day', label: 'Day', type: 'text',minWidth:280 },
+      { id: 'action', label: 'Action', type: 'text',minWidth:280 },
+      { id: 'locationName', label: 'Location', type: 'text',minWidth:280 },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -14,7 +14,17 @@ export default function WorkWeek() {
     ];
     const defaultPayload = 
     {
-        "company_id": "0001"
+      "count":5,
+      "page": 0,
+      "search": "",
+      "companyId": "COMP1",
+      "externalFilters": {
+        "locationName":""
+      },
+      "sort": {
+        "key": 1,
+        "orderBy": ""
+      }
     }
      
      

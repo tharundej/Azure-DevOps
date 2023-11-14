@@ -42,6 +42,7 @@ export default function BasicCard() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const [editData, setEditData] = useState({});
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text', minWidth: 140 },
     { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 140 },
@@ -55,8 +56,14 @@ export default function BasicCard() {
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
   ];
   const actions = [
-    { name: 'Delete', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj',type:'edit'},
+    {
+      name: 'Delete',
+      icon: 'hh',
+      path: 'jjj',
+      type: 'serviceCall',
+      endpoint: '/updateTimesheetStatus',
+    },
+    { name: 'Edit', icon: 'hh', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
   ];
   const bodyContent = [
     {
@@ -73,7 +80,7 @@ export default function BasicCard() {
   ];
   const defaultPayload = {
     count: 5,
-    page: 1,
+    page: 0,
     search: '',
     companyId: 'COMP1',
     externalFilters: {
@@ -96,12 +103,16 @@ export default function BasicCard() {
 
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
-       buttonFunction(rowdata, event);
+      buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
   };
-    const buttonFunction =(rowdata)=>{console.log(rowdata,'rowdataaaaaaaaaaaaaa')}
+  const buttonFunction = (rowdata) => {
+    setShowEdit(true);
+    setEditData(rowdata);
+    console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
+  };
   const deleteFunction = async (rowdata, event) => {
     console.log('iam here ');
     try {
@@ -111,34 +122,31 @@ export default function BasicCard() {
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
-      if(response?.data?.code===200  ){
-        setSnackbarSeverity('success');
-         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
-
-      }
-      if(response?.data?.code===400  ){
+      if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
+        setSnackbarOpen(true);
 
+        console.log('sucess', response);
       }
-    
-  } catch (error) {
-    setSnackbarSeverity('error');
-    setSnackbarMessage('Error While Deleting Pay Schedule. Please try again.');
-    setSnackbarOpen(true);
-   console.log('error', error);
- }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Deleting Pay Schedule. Please try again.');
+      setSnackbarOpen(true);
+      console.log('error', error);
+    }
   };
 
-  const [showEdit , setShowEdit] = useState(false)
-  const [tableEDitData , SetTableEditData] = useState({})
-  const handleEditClose = ()=> setShowEdit(false)
+  const [showEdit, setShowEdit] = useState(false);
+  const [tableEDitData, SetTableEditData] = useState({});
+  const handleEditClose = () => setShowEdit(false);
 
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 
@@ -181,19 +189,23 @@ export default function BasicCard() {
         </Alert>
       </Snackbar>
       {showEdit && (
- <Dialog
- fullWidth
- maxWidth={false}
- open={showEdit}
- onClose={handleEditClose}
- PaperProps={{
-   sx: { maxWidth: 770 , overflow:'hidden'},
- }}
- className="custom-dialog"  
->
- <EditPaySchedule currentUser={{}}handleClose={handleEditClose} tableEDitData={tableEDitData} buttonFunction={buttonFunction}/>
-      </Dialog>
-    )}
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={showEdit}
+          onClose={handleEditClose}
+          PaperProps={{
+            sx: { maxWidth: 770, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <EditPaySchedule
+            currentUser={{}}
+            handleClose={handleEditClose}
+            tableEDitData={editData}
+          />
+        </Dialog>
+      )}
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/getallPaySchedule"
@@ -202,7 +214,7 @@ export default function BasicCard() {
         filterName="PayScheduleFilterSearch"
         onClickActions={onClickActions}
         //  bodyData='data'
-          // buttonFunction={buttonFunction}
+        // buttonFunction={buttonFunction}
       />
     </>
   );
