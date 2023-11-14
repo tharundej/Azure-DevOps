@@ -32,11 +32,30 @@ const employmentTypeOptions=[
 ]
 
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue}) => {
-  const [userdropDownOptions,setUserDropDownOptions]=useState(dropDownOptions);
-  const [userdropDownvalue,setUserDropDownValue]=useState(dropDownvalue)
+const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+   console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
+   const [userdropDownOptions,setUserDropDownOptions]=useState("");
+   const [userdropDownvalue,setUserDropDownValue]=useState("")
+  useEffect(()=>{
+    if(dropDownOptions){
+     
+      setUserDropDownOptions(dropDownOptions)
+      
+    }
+  },[dropDownOptions])
+
+  useEffect(()=>{
+    if(dropDownOptions){
+      console.log(dropDownOptions,'dropDownOptionsm')
+      setUserDropDownValue(dropDownvalue)
+      
+    }
+  },[dropDownvalue])
+ 
+  
 
   const [locations,setLocations]=useState([])
 
@@ -167,7 +186,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
     
       const onSubmit = handleSubmit(async (data) => {
     
-        currentUser.employeeID= currentUser.employeeID
+        currentUser.employeeID= employeeIDForApis
        
 
         console.log(data,'ll')
@@ -177,7 +196,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
           const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateOnboardingForm',
+            url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
               'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
               'Content-Type': 'application/json', 
@@ -232,6 +251,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
 
              <Grid container >
                 <Grid item xs={12} md={6}>
+                
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
@@ -865,6 +885,7 @@ EmployeeAboutEdit.propTypes = {
     currentUserData:PropTypes.object,
     userlocation:PropTypes.object,
     dropDownOptions:PropTypes.array,
-    dropDownvalue:PropTypes.array
+    dropDownvalue:PropTypes.array,
+    employeeIDForApis:PropTypes.string
 
   };

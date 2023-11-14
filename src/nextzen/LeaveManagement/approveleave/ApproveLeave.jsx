@@ -20,7 +20,7 @@ export default function Approveleave(){
         "count": 5,
         "page": 0,
         "search": "",
-        "eid": JSON.parse(JSON.stringify(localStorage.getItem('employeeID'))),
+        "eid": localStorage.getItem('employeeID'),
         "externalFilters": {
           "fApplyDate": "",
           "fFromDate": "",
@@ -60,7 +60,7 @@ export default function Approveleave(){
             { id: "fromDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "toDate",label:"End Date",minWidth:"7pc",type:"text"},
             {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
-            {id: 'status',label:'Status',minWidth:"8pc",type:'text'}
+            {id: 'status',label:'Status',minWidth:"8pc",type: "badge"}
             // { id: '', width: 88 },
 
        ]);

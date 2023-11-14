@@ -80,6 +80,7 @@ import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilte
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
 import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
 import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
+import DeductionFilter from '../MonthlyDeductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
@@ -433,7 +434,19 @@ const payload = initialDefaultPayload;
 table.onSort(field);
 getTableData(payload)
 };
-  
+
+const getRowActionsBasedOnStatus = (status) => {
+  if (status === 'pending' || status===""|| status==="Pending") {
+    return rowActions
+  } 
+  else {
+    return null
+  } 
+}
+
+
+
+
   
   return (
     <>
@@ -525,9 +538,12 @@ getTableData(payload)
                           selected={table.selected.includes(row.id)}
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={(event) => { handleEditRow(row, event) }}
+                          onEditRow={(event) => { handleEditRow
+                            
+                            
+                            (row, event) }}
                           headerContent={TABLE_HEAD}
-                          rowActions={rowActions || []}
+                          rowActions={getRowActionsBasedOnStatus(row.status)}
                         />
                        
  

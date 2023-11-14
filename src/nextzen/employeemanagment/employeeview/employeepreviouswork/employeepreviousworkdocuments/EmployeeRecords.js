@@ -25,13 +25,13 @@ const styles = {
 
 import FileEditCreate from 'src/nextzen/global/fileUploads/FileEditCreate';
 
-const EmployeeRecords = ({docsData,docType,endpoint}) => {
+const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
   const [endPointTopass,setEndpointTOPass]=useState("dcocs")
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
       "companyId": "COMP5",
-      "employeeId": "NEWC19",
+      "employeeId":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
           fileType:'',
@@ -62,7 +62,7 @@ const EmployeeRecords = ({docsData,docType,endpoint}) => {
 
         const obj={
           "companyId": "COMP5",
-          "employeeId": "NEWC19",
+          "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
         console.log(obj,'edit obj')
@@ -101,7 +101,7 @@ const EmployeeRecords = ({docsData,docType,endpoint}) => {
 
         let data = JSON.stringify({
             "companyId": "COMP5",
-            "employeeId": "NEWC19"
+            "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
           let config = {
@@ -172,6 +172,7 @@ export default EmployeeRecords
 EmployeeRecords.PropTypes={
     docsData: PropTypes.obj,
     docType:PropTypes.array,
-    endpoint:PropTypes.string
+    endpoint:PropTypes.string,
+    employeeIDForApis:PropTypes.string
     
 }

@@ -100,8 +100,6 @@ export default function SalarySearchFilter({filterSearch,filterData}){
 
   })
 
-  const [dateError,setDataError]=useState("")
-  const [filters,setFilters]=useState(defaultFilters)
   const [dropdownstatus,setDropdownStatus]=useState([])
   const [dropdownpaymentstatus,setDropdownPaymentStatus]=useState([])
   const [dropdownapprover,setdropdownApproverName] = useState([])
@@ -259,6 +257,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
     const handleCancel = async()=>{
       setDropdownStatus([]);
       setDropdownPaymentStatus([]);
+      setdropdownApproverName([]);
       setDates({
         RequestDateStart:"",
         RequestDateEnd:"",
@@ -266,6 +265,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
         paidDateEnd:"",
         status:"",
         paymentStatus:"",
+        approverName:"",
       })
       setOpen(false);
     }
@@ -275,15 +275,16 @@ export default function SalarySearchFilter({filterSearch,filterData}){
     }
 
     const ApproversList = () => {
-      console.log("Approverslist api called")
       const payload = {
-        companyID: "COMP1"
+        // companyID: "COMP1"
+        companyID:localStorage?.getItem('companyID')
       }
      
       const config = {
         method: 'POST',
         maxBodyLength: Infinity,
-        url: baseUrl + `/approverDetails`,
+        url: baseUrl + `/getApproverDetailsSalaryDetails`,
+        // url: `http://192.168.1.56:3001/erp/getApproverDetailsSalaryDetails`,
         data:  payload
       };
     

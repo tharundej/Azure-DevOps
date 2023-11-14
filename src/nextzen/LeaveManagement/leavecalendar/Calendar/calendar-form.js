@@ -7,13 +7,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid} from '@mui/material';
 
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
 // api
-import { createEvent, updateEvent, deleteEvent } from 'src/api/calendar';
+import { createEvent, updateEvent, deleteEvent, useGetEvents } from 'src/api/calendar';
 // components
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -30,26 +30,26 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 // ----------------------------------------------------------------------
 
-export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
+export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose }) {
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
   const [listLeave,setListLeave] = useState();
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
-    leave_type_id:Yup.number(),
-    company_id:Yup.string(),
-    employee_id:Yup.string(),
-    from_date: Yup.string(),
-    to_date: Yup.string(),
+    leaveTypeId:Yup.number(),
+    companyId:Yup.string(),
+    employeeId:Yup.string(),
+    fromDate: Yup.string(),
+    toDate: Yup.string(),
     comments: Yup.string(),
-    apply_date:Yup.mixed(),
+    applyDate:Yup.mixed(),
     status:Yup.string(),
     fullday:Yup.string(),
     firsthalf:Yup.string(),
     secondhalf:Yup.string(),
     attachment:Yup.string(),
-    status_date:Yup.string(),
+    statusDate:Yup.string(),
     color:Yup.string()
   });
 
@@ -57,7 +57,6 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     resolver: yupResolver(EventSchema),
     defaultValues: currentEvent,
   });
-
   const {
     reset,
     watch,
@@ -69,8 +68,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const values = watch();
   
   const [datesUsed, setDatesUsed] = useState({
-    fromDate: dayjs(new Date()),
-    toDate: dayjs(new Date()),
+    fromDate:(selectedRange?.start)?dayjs(selectedRange?.start):dayjs(new Date()),
+    toDate:(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date()),
     
   });
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
@@ -82,20 +81,20 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     const secondhalfValue = selectedValue === "second_half" ? "1" : "0";
 
     const eventData = {
-      leave_type_id:data?.leave_type_id,
-      company_id: "C1",
-      employee_id:"E1",
+      leaveTypeId:data?.leaveTypeId,
+      companyId: localStorage.getItem('companyID'),
+      employeeId:localStorage.getItem('employeeID'),
       comments: data?.comments,
-      apply_date: "",
-      from_date: formatDateToYYYYMMDD(datesUsed?.fromDate),
-      to_date: formatDateToYYYYMMDD(datesUsed?.toDate),
+      applyDate: "",
+      fromDate:(selectedRange?.start)?selectedRange?.start:formatDateToYYYYMMDD(datesUsed?.fromDate),
+      toDate: (selectedRange?.end)?selectedRange?.end:formatDateToYYYYMMDD(datesUsed?.toDate),
       status:data?.status,
       fullday:fulldayValue,
       firsthalf:firsthalfValue,
       secondhalf:secondhalfValue,
       attachment: attachmentString,
-      status_date:"",
-      color:(data?.leave_type_id===1)?"#0c1f31":(data?.leave_type_id===2)?"#d4a085":(data?.leave_type_id===3)?"#c9de8c":"#ffbed1"
+      statusDate:"",
+      color:(data?.leaveTypeId===1)?"#0c1f31":(data?.leaveTypeId===2)?"#d4a085":(data?.leaveTypeId===3)?"#c9de8c":"#ffbed1"
     };
     try {
       const result = await createEvent(eventData);
@@ -107,7 +106,6 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
     catch (error) {
       // Handle the error, e.g., show a snackbar.
       if (error.response && error.response.data && error.response.data.message) {
-        console.log(error.response,"error",error.response.data,"dataa")
         if (error.response.data["show message"] === "user") {
           // Display the error message from the response
           enqueueSnackbar(error.response.data.message, { variant: 'error' });
@@ -124,13 +122,14 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
 
   const onDelete = useCallback(async () => {
     try {
-      await deleteEvent(`${currentEvent?.leave_id}`);
+      const {leaveId,employeeId}= currentEvent
+      await deleteEvent(leaveId,employeeId);
       enqueueSnackbar('Delete success!');
       onClose();
     } catch (error) {
       console.error(error);
     }
-  }, [currentEvent?.leave_id, enqueueSnackbar, onClose]);
+  }, [currentEvent?.leaveId, enqueueSnackbar, onClose]);
 
   
   function getBase64(file) {
@@ -172,9 +171,10 @@ useEffect(()=>{
 const getLeaveList = () => {
   setLoader(true);
   const payload = {
-    company_id: "C1",
-     employee_id:"E1"
-  
+    // companyId: "C1",
+    // employeeId:"E1"
+    companyId: localStorage.getItem('companyID'),
+    employeeId: localStorage.getItem('employeeID')
   }
   const config = {
     method: 'POST',
@@ -197,9 +197,10 @@ const getLeaveList = () => {
 const AvailableLeaves = () => {
   setLoader(true);
   const payload = {
-    company_id: JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
-     employee_id:JSON.parse(JSON.stringify(localStorage.getItem('employeeID')))
-  
+    companyId: localStorage.getItem('companyID'),
+     employeeId:localStorage.getItem('employeeID')
+    // companyId:"C1",
+    // employeeId:"E1"
   }
  
   const config = {
@@ -222,34 +223,58 @@ const AvailableLeaves = () => {
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
 
-console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
-
   return (
+  
+  <>
+  {currentEvent?.leaveStatus==="pending" ? 
+  <>
+   <Tooltip title="Delete Event" sx={{float:"right",right:5}}>
+    <IconButton onClick={onDelete}>
+      <Iconify icon="solar:trash-bin-trash-bold" />
+    </IconButton>
+  </Tooltip>
+  <Grid sx={{marginLeft:1}}>
+      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
+      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
+      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
+     <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+      
+  </Grid>
+   
+  </>
+  : (currentEvent?.leaveStatus==="approved")?
+  <Grid sx={{marginLeft:1}}>
+      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
+      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
+      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
+      <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+  </Grid>
+  :
   <>
    {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
 <Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
   {availableLeaves?.balances.map((itm)=> (
-    <Typography>{itm?.leave_type_name} : {itm?.leave_balance}</Typography>
+    <Typography>{itm?.leaveTypeName} : {itm?.leaveBalance}</Typography>
   ))}
 </Stack>
       <Stack spacing={3} sx={{ px: 3 }}>
-     <RHFSelect name="leave_type_id" label="Leave Type">
+     <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
-                <MenuItem value={status.leave_Type_ID} key={status.leave_Type_ID}>
-                  {status.leave_Type_Name}
+                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}>
+                  {status.leaveTypeName}
                 </MenuItem>
               ))}
             </RHFSelect> 
-     <RHFTextField name="comments" label="Comments" multiline rows={3} />
+     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Comments" />
      <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
               <DatePicker
                 sx={{ width: '100%', paddingLeft: '3px' }}
                 label="From"
-                value={datesUsed?.fromDate}
-                defaultValue={dayjs(new Date())}
+                value={(selectedRange?.start)?dayjs(selectedRange?.start):datesUsed?.fromDate}
+                defaultValue={(selectedRange?.start)?dayjs(selectedRange?.start):dayjs(new Date())}
                 onChange={(newValue) => {
                   setDatesUsed((prev) => ({
                     ...prev,
@@ -266,8 +291,8 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
             <DatePicker
             sx={{ width: '100%', paddingLeft: '3px' }}
             label="To"
-            value={datesUsed?.toDate}
-            defaultValue={dayjs(new Date())}
+            value={(selectedRange?.end)?dayjs(selectedRange?.end):datesUsed?.toDate}
+            defaultValue={(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date())}
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
                 ...prev,
@@ -312,7 +337,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
       </Stack>
 
       <DialogActions>
-        {!!currentEvent?.leave_id && (
+        {!!currentEvent?.leaveId && (
           <Tooltip title="Delete Event">
             <IconButton onClick={onDelete}>
               <Iconify icon="solar:trash-bin-trash-bold" />
@@ -336,7 +361,7 @@ console.log(isSameDay,"dayyy",datesUsed?.fromDate,"dateee",datesUsed?.toDate)
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>
+    </>}</>
   );
 
 }
@@ -346,3 +371,4 @@ CalendarForm.propTypes = {
   currentEvent: PropTypes.object,
   onClose: PropTypes.func,
 };
+
