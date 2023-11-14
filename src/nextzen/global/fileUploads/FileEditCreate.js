@@ -38,7 +38,7 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
         if(type==="edit"){
            const obj={
             "companyId": "COMP5",
-                "employeeId": "NEWC19",
+                "employeeId": employeeIDForApis,
                 "id":defaultValues[0].id,
 
                 "fileType":defaultValues[0].fileType,
@@ -84,7 +84,7 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
         
                 let data = JSON.stringify({
                 "companyId": documents?.companyId,
-                "employeeId": documents?.employeeId,
+                "employeeId": employeeIDForApis,
                 
                 "documents": defaultValues
                 });
@@ -113,7 +113,7 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
     const ApiHitAddDocs=()=>{
       let data = JSON.stringify({
         "companyId": documents?.companyId,
-        "employeeId": documents?.employeeId,
+        "employeeId": employeeIDForApis,
         "mainRecordId":documents?.mainRecordID,
         "documents": defaultValues
         });
@@ -420,7 +420,8 @@ FileEditCreate.propTypes = {
     documents:PropTypes.array,
     endpoint:PropTypes.string,
     docType:PropTypes.array,
-    type:PropTypes.string
+    type:PropTypes.string,
+    employeeIDForApis:PropTypes.string
   };
 
   export default FileEditCreate;

@@ -24,7 +24,9 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function SalaryStructureForm({ currentUserData}) {
   const handleClose=()=>setOpen(false)
@@ -92,9 +94,40 @@ export default function SalaryStructureForm({ currentUserData}) {
 
   //   const values = watch();
 
+  const ApiHit=(data)=>{
+    console.log(data,'ApiHitdata')
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/addSalaryStructure`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+     
+  }
+
   const onSubmit1 = async () => {
-    console.log(optionsValue,currentUser)
+    console.log(optionsValue,currentUser,'optionsValue')
+    const obj={...currentUser}
+    obj.departmentID=optionsValue?.departmentValue?.departmentID || "";
+    obj.designationID=optionsValue?.desginationValue?.designationID || "";
+    obj.designationGradeID=optionsValue?.desginationGradeValue?.designationGradeID || "";
+    obj.companyID= "COMP1";
+    ApiHit(obj)
+
   };
+
+
 
 
  
@@ -130,7 +163,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
-                
+                    type="number"
                     name="marketRate"
                     label="market Rate"
                     variant="outlined"
@@ -140,7 +173,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        marketRate:e?.target.value
+                        marketRate:parseInt(e?.target.value,10)
                       }))
                     }}
                   />
@@ -148,7 +181,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
-                
+                    type="number"
                     name="minimum"
                     label="Minimum"
                     variant="outlined"
@@ -158,7 +191,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        minimum:e?.target.value
+                        minimum:parseInt(e?.target.value,10)
                       }))
                     }}
                   />
@@ -169,6 +202,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                 
                     name="midpoint"
                     label="Mid Point"
+                    type="number"
                     variant="outlined"
                     id="midpoint"
                     value={currentUser?.midpoint}
@@ -176,7 +210,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        midpoint:e?.target.value
+                        midpoint:parseInt(e?.target.value,10)
                       }))
                     }}
                   />
@@ -184,7 +218,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
-                
+                    type="number"
                     name="maximum"
                     label="Maximum"
                     variant="outlined"
@@ -194,7 +228,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        maximum:e?.target.value
+                        maximum:parseInt(e?.target.value,10)
                       }))
                     }}
                   />
@@ -208,7 +242,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                   disablePortal
                   id="departmentOptions"
                   options={options?.departmentOptions || []}
-                  value={optionsValue?.departmentName}
+                  value={optionsValue?.departmentValue}
                   getOptionLabel={(option) => option?.departmentName}
                   onChange={async(e, newvalue) => {
                   
@@ -218,7 +252,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                     newArr.designationGradeValue=undefined;
 
                     
-                    console.log(newArr)
+                    console.log(newArr,'newArr')
                    
                     try{
                       const deptObj={
@@ -230,7 +264,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                      
                       optionsArr.desginationGradeOptions=[];
                       optionsArr.desginationOptions=desgination;
-                      console.log(optionsArr,'optionsArroptionsArr')
+                     
                       setOptions(optionsArr)
 
                     }
@@ -253,80 +287,80 @@ export default function SalaryStructureForm({ currentUserData}) {
               </Grid>
                   </Grid>
 
+                      <Grid container >
+                    <Grid item xs={12} md={6}>
+                    
+                      <Autocomplete
+                        disablePortal
+                        id="Desgination"
+                        options={options?.desginationOptions  || []}
+                        value={optionsValue?.desginationValue}
+                        getOptionLabel={(option) => option.designationName}
+                        onChange={async(e, newvalue) => {
+                        
+                          var newArr = { ...optionsValue };
+                          newArr.desginationValue=newvalue;
+                        
+                          newArr.desginationGradeValue=undefined
+                          
+                          console.log(newArr)
+                        
+                          try{
+                            const desgGradeObj={
+                              companyID:'COMP1',
+                              designationID:newvalue?.designationID
+                            }
+                            const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                            var optionsArr={...options};
+                            optionsArr.desginationGradeOptions=desginationGrade;
+                            
+                            
+                          
+                            setOptions(optionsArr)
+
+                          }
+                          catch(error){
+                            
+                          }
+
+                        
+                          
+                          setOptionsValue(newArr)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Desgination"
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                      />
+                    </Grid>
+                      </Grid>
+
                   <Grid container >
-                <Grid item xs={12} md={6}>
-                 
-                  <Autocomplete
-                    disablePortal
-                    id="Desgination"
-                    options={options?.desginationOptions  || []}
-                    value={optionsValue?.desginationValue}
-                    getOptionLabel={(option) => option.designationName}
-                    onChange={async(e, newvalue) => {
+                    <Grid item xs={12} md={6}>
                     
-                      var newArr = { ...options };
-                      newArr.desginationValue=newvalue;
-                    
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgGradeObj={
-                          companyID:'COMP1',
-                          designationID:newvalue?.designationID
-                        }
-                        const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
-                        var optionsArr={...optionsValue};
-                        optionsArr.desginationGradeOptions=desginationGrade;
+                      <Autocomplete
+                        disablePortal
+                        id="DesginationGrade"
+                        options={options?.desginationGradeOptions  || []}
+                        value={optionsValue?.desginationGradeValue}
+                        getOptionLabel={(option) => option.designationGradeName}
+
+                        onChange={async(e, newvalue) => {
+                        
+                          var newArr = { ...optionsValue };
+                          newArr.desginationGradeValue=newvalue;
                         
                         
-                       
-                        setOptions(optionsArr)
-
-                      }
-                      catch(error){
+                          
                         
-                      }
 
-                     
-                      
-                      setOptionsValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Desgination"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container >
-                <Grid item xs={12} md={6}>
-                
-                  <Autocomplete
-                    disablePortal
-                    id="DesginationGrade"
-                    options={options?.desginationGradeOptions  || []}
-                    value={optionsValue?.desginationGradeValue}
-                    getOptionLabel={(option) => option.designationGradeName}
-
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...optionsValue };
-                      newArr.desginationGradeValue=newvalue;
-                    
-                    
-                      
-                    
-
-                     
-                      
-                      setOptionsValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
+                        console.log(newArr,'newArr')
+                          
+                          setOptionsValue(newArr)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Desgination Grade"
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                      />
+                    </Grid>
+                  </Grid>
                
               </Box>
             </DialogContent>

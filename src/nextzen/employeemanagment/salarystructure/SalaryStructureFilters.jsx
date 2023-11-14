@@ -6,6 +6,9 @@ import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from '../../../components/hook-form';
 
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+
+
 import {
   Card,
   TextField,
@@ -124,15 +127,15 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
     {
-      field: 'designation_grade_name',
+      field: 'departmentName',
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'designationName',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'designationGradeName',
       options: [],
     },
   ]);
@@ -194,6 +197,30 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
   }
 
   const [open, setOpen] = useState(false);
+  const [options,setOptions]=useState({})
+  const [optionsValue,setOptionsValue]=useState({})
+  useEffect(()=>{
+    const fetchDepartment=async()=>{
+      if(open){
+        try{
+        
+          const obj={
+            departmentOptions:await ApiHitDepartmentWithoutLocation(),
+          }
+          setOptions(obj)
+          console.log(obj,'objjjjjj')
+        }
+        catch(error){
+  
+        }
+       
+      }
+    }
+    
+
+    fetchDepartment();
+    
+  },[open])
   const [openDateRange, setOpendateRange] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -309,78 +336,137 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
             {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
            
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {departmentName.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {designationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {designationGradeName.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl>
-                   </Grid>
+
             </Grid>
 
+
+                  <Grid container >
+              
+              <Grid item xs={12} md={6}>
+              
+                <Autocomplete
+                  disablePortal
+                  id="departmentOptions"
+                  options={options?.departmentOptions || []}
+                  value={optionsValue?.departmentValue}
+                  getOptionLabel={(option) => option?.departmentName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...optionsValue };
+                      newArr.departmentValue=newvalue
+                    newArr.designationValue=undefined;
+                    newArr.designationGradeValue=undefined;
+
+                    
+                    console.log(newArr,'newArr')
+                   
+                    try{
+                      const deptObj={
+                        companyID:'COMP1',
+                        departmentID:newvalue?.departmentID
+                      }
+                      const desgination=await ApiHitDesgniation(deptObj);
+                      var optionsArr={...options};
+                     
+                      optionsArr.desginationGradeOptions=[];
+                      optionsArr.desginationOptions=desgination;
+                     
+                      setOptions(optionsArr)
+
+                    }
+                    catch(error){
+                      
+                    }
+
+                   
+                    
+                    setOptionsValue(newArr)
+                   }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Department"
+                  style={{ paddingLeft: '16px', width: '100%' }} />}
+                />
+              </Grid>
+                  </Grid>
+
+                  <Grid container >
+                    <Grid item xs={12} md={6}>
+                    
+                      <Autocomplete
+                        disablePortal
+                        id="Desgination"
+                        options={options?.desginationOptions  || []}
+                        value={optionsValue?.desginationValue}
+                        getOptionLabel={(option) => option.designationName}
+                        onChange={async(e, newvalue) => {
+                        
+                          var newArr = { ...optionsValue };
+                          newArr.desginationValue=newvalue;
+                        
+                          newArr.desginationGradeValue=undefined
+                          
+                          console.log(newArr)
+                        
+                          try{
+                            const desgGradeObj={
+                              companyID:'COMP1',
+                              designationID:newvalue?.designationID
+                            }
+                            const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                            var optionsArr={...options};
+                            optionsArr.desginationGradeOptions=desginationGrade;
+                            
+                            
+                          
+                            setOptions(optionsArr)
+
+                          }
+                          catch(error){
+                            
+                          }
+
+                        
+                          
+                          setOptionsValue(newArr)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Desgination"
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                      />
+                    </Grid>
+                      </Grid>
+
+                  <Grid container >
+                    <Grid item xs={12} md={6}>
+                    
+                      <Autocomplete
+                        disablePortal
+                        id="DesginationGrade"
+                        options={options?.desginationGradeOptions  || []}
+                        value={optionsValue?.desginationGradeValue}
+                        getOptionLabel={(option) => option.designationGradeName}
+
+                        onChange={async(e, newvalue) => {
+                        
+                          var newArr = { ...optionsValue };
+                          newArr.desginationGradeValue=newvalue;
+                        
+                        
+                          
+                        
+
+                        console.log(newArr,'newArr')
+                          
+                          setOptionsValue(newArr)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Desgination Grade"
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                      />
+                    </Grid>
+                  </Grid>
            
             
              

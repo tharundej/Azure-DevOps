@@ -31,7 +31,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
+export default function EmployeeAbout({  delivery, shippingAddress, payment,employeeIDForApis }) {
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -131,7 +131,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": "info2"
+        "employeeID": employeeIDForApis
       });
        
       const config = {
@@ -200,7 +200,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} />
+    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>
@@ -600,4 +600,5 @@ EmployeeAbout.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
+  employeeIDForApis:PropTypes.string
 };
