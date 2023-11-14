@@ -219,9 +219,18 @@ export default function LeaveFilter({filterSearch,filterData}){
       setOpen(false);
     }
 
-    const handleSearch=(e)=>{
-      filterSearch(e?.target?.value)
-    }
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
+        filterSearch(e?.target?.value)
+      },1000)
     
   
     return (

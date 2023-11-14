@@ -200,9 +200,18 @@ export default function DeductionFilter({filterSearch,filterData}){
     handleClickClose()
       
     }
-      const handleSearch=(e)=>{
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      }
+      },1000)
   
       const handleCancel = async()=>{
         setdropdowndeductiontype([]);
@@ -227,7 +236,7 @@ export default function DeductionFilter({filterSearch,filterData}){
           method: 'POST',
           maxBodyLength: Infinity,
           // url: `http://192.168.1.56:3001/erp/getLoanEmployeeDetails`,
-          url:baseUrl + `getLoanEmployeeDetails`,
+          url:baseUrl + `/getLoanEmployeeDetails`,
         };
       
         axios.request(config).then((response) => {
