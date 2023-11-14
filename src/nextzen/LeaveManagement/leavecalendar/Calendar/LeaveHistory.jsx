@@ -87,7 +87,7 @@ export default function History(){
     const LeaveHistory = () => {
         setLoading(true);
         const payload = {
-          "employeeId": "info1",
+          "employeeId": localStorage?.getItem('employeeID'),
           "search": "",
           "Page": 1,
           "Count": 7,
