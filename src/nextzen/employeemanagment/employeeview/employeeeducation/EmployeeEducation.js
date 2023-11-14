@@ -5,7 +5,7 @@ import FilesGrid from '../files/FilesGrid';
 import CreateEducation from './createeducation/CreateEducation';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
-
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const employeeData=[ {
@@ -30,7 +30,7 @@ const employeeData=[ {
 
 ]
 
-const EmployeeEducation = () => {
+const EmployeeEducation = ({employeeIDForApis}) => {
   const docType=["Marks Memo","Ssc Cards",'Provisional']
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
@@ -81,7 +81,7 @@ const EmployeeEducation = () => {
    const ApiHit=()=>{
     let data = JSON.stringify({
       "companyId": "COMP5",
-      "employeeId": "NEWC19"
+      "employeeId": employeeIDForApis
     });
      
     let config = {
@@ -116,7 +116,7 @@ const EmployeeEducation = () => {
   return (
     <>
     
-      <CreateEducation open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+      <CreateEducation open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
@@ -165,7 +165,7 @@ const EmployeeEducation = () => {
                           <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
 
                         {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
+                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} />
                        
 
                           </>}
@@ -179,5 +179,9 @@ const EmployeeEducation = () => {
     </>
   )
 }
+
+EmployeeEducation.propTypes = {
+  employeeIDForApis:PropTypes.string
+};
 
 export default EmployeeEducation

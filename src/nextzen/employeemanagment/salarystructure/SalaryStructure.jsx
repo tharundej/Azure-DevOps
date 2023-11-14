@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React,{useState} from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import SalaryStructureForm from './SalaryStructureForm';
 
 export default function SalaryStructure() {
     const TABLE_HEAD = [
@@ -43,6 +44,22 @@ export default function SalaryStructure() {
           "orderBy": ""
       }
   }
+  const[cellData,setCellData]=useState("")
+  const[openModal,setOpenModal]=useState(false)
+  const[type,setType]=useState("create")
+
+  const handleClose=()=>setOpenModal(false)
+  const onClickActions=(rowData,event)=>{
+    console.log(rowData,event,'aaaaabbb');
+    if(event.name==="Edit"){
+      setCellData(rowData);
+      setType("edit");
+      setOpenModal(true);
+
+
+    }
+
+  }
     
      
      
@@ -66,14 +83,18 @@ export default function SalaryStructure() {
       };
     }, []);
     return (
-      
+      <>
+        <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type} handleClose={handleClose}/>
         <BasicTable
           headerData={TABLE_HEAD}
           endpoint="/getallSalaryStructure"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName='SalaryStructureFilterSearch'
+          onClickActions={onClickActions}
         />
+
+        </>
       
     );
   }

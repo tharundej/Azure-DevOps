@@ -36,9 +36,7 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-
 export default function ApplyLoan({ currentUser,handleClose }) {
-  
   const [datesUsed, setDatesUsed] = useState({
     No_instalment: dayjs(new Date()),
     end_date: dayjs(new Date()),
@@ -54,11 +52,11 @@ export default function ApplyLoan({ currentUser,handleClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Amount: Yup.string(),
+    requestAmount: Yup.number(),
     // No_instalment: Yup.string(),
     // end_date: Yup.string(),
     // due_date: Yup.string().required('First Name is Required'),
-    Comment: Yup.string(),
+    comment: Yup.string(),
    
    
   });
@@ -66,11 +64,11 @@ export default function ApplyLoan({ currentUser,handleClose }) {
   const defaultValues = useMemo(
     () => ({
    
-        Amount: currentUser?.Amount || '',
+        requestAmount: currentUser?.requestAmount || '',
         // No_instalment: currentUser?.No_instalment || '',
         // end_date: currentUser?.end_date || '',
         // due_date: currentUser?.due_date || '',
-        Comment: currentUser?.Comment || '',
+        comment: currentUser?.comment || '',
   
    
     }),
@@ -98,29 +96,21 @@ const [sendData, setSendData] = useState({
   projectId : '',  
 })
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: ApplyLoan.jsx:93 ~ onSubmit ~ data:", data)
-    console.log('uyfgv');
 
     try {
-      // data.company_id = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      // data.No_instalment = formatDateToYYYYMMDD(datesUsed?.No_instalment);
-      data.selectedActivity = selectedActivity;
-      data.companyID = "COMP1";
-      data.employeeID = "info7";
-
-      console.log(data, 'data111ugsghghh');
-
+    
+      data.companyID = localStorage.getItem('companyID'),
+      data.employeeID = localStorage.getItem('employeeID')
+      
+      // data.companyID="comp1",
+      // data.employeeID="info3"
       const response = await instance.post('addLoanDetails', data).then(
         (successData) => {
-          console.log('sucess', successData);
+          enqueueSnackbar(successData?.data?.message,{variant:'success'})
           handleClose()
         },
         (error) => {
-          console.log('lllll', error);
+          enqueueSnackbar(error?.data?.Message,{variant:'Error'})
         }
       );
 
@@ -152,16 +142,16 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="Amount" type={number} label=" Enter Amount" />
+                <RHFTextField name="requestAmount" type={number} label="Enter Amount" />
                 {/* <RHFTextField name="No_instalment" label=" No Of Instalment" /> */}
-                <RHFTextField name="Comment" label="Comment" />
+                <RHFTextField name="comment" label="Comment" />
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Apply Loan'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
+                <Button sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
            
             </Card>

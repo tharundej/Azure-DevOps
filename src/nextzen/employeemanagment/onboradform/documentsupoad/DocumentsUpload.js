@@ -1,11 +1,12 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
-
+import axios from 'axios';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
   InputLabel } from '@mui/material'
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-var   DocumentsUpload=forwardRef((props,ref)=> {
+const   DocumentsUpload=forwardRef((props,ref)=> {
 
   var [defaultValues,setDefaultValues]=useState([ {
     fileType:'',
@@ -62,7 +63,13 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
   }
   useImperativeHandle(ref,()=>({
     childFunctionDocuments(){
-      onSubmit();
+      console.log('ggg')
+      const obj={
+        "companyId": "COMP5",
+        "employeeId": localStorage.getItem('employeeIdCreated'),
+        documents:defaultValues
+      }
+      onSubmit(obj);
 
 
 
@@ -71,8 +78,26 @@ var   DocumentsUpload=forwardRef((props,ref)=> {
     }
   }))
 
-  var onSubmit=()=>{
-    console.log(attachments);
+  var onSubmit=(data)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/addDocuments`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      props.nextStep()
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
     var [attachments,setAttachments]=useState([]);
 

@@ -200,7 +200,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           maxBodyLength: Infinity,
           url: `${baseUrl}/onBoarding`,
           headers: { 
-            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+             
             'Content-Type': 'text/plain'
           },
           data : data1
@@ -211,7 +212,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           console.log(JSON.stringify(response.data));
          
           console.log(response.data.empID,'nithinnn')
-          localStorage.setItem("employeeId",response.data?.empID)
+          localStorage.setItem("employeeIdCreated",response.data?.empID)
           
           props.nextStep();
           props.handleCallSnackbar(response.data.message,"success")
