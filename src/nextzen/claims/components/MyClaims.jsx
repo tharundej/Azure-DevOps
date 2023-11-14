@@ -27,7 +27,6 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import Search from "src/nextzen/search/search";
 import Box from '@mui/material/Box';
-import Autocomplete from '@mui/material/Autocomplete';
 // import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -59,7 +58,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function MyClaims({ currentUser ,}) {
-  
+
   const claim_type = [
     { code: '', label: '', phone: '' },
     { code: 'AD', label: 'Travel', value:0, phone: '376' },
@@ -67,18 +66,11 @@ export default function MyClaims({ currentUser ,}) {
     { code: 'AD', label: 'Hotel', value:2, phone: '376' },
 
   ]
-  // const compoff_type = [
-  //   { id: 'Empty', label: 'Empty', value: '' },
-  //   { code: 'AD', label: 'Travel', id:0, phone: '376' },
-  //   { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
-  //   { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
-
-  // ]
   const compoff_type = [
-    { code: 'Empty', label: 'Empty', phone: '' , value:1},
-    { code: 'AD', label: 'travel', id:0, phone: '376', value:2},
-    { code: 'AD', label: 'medical', id:1,phone: '376', value:3 },
-    { code: 'AD', label: 'hotel', id:1,phone: '376' , value :4},
+    { code: '', label: '', phone: '' },
+    { code: 'AD', label: 'Travel', id:0, phone: '376' },
+    { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
+    { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
 
   ]
   const currency = [
@@ -266,7 +258,7 @@ const handleClick=()=>{
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    claim_amount: Yup.number().required('Claim Amount is Required'),
+    claim_amount: Yup.string().required('Claim Amount is Required'),
     comment: Yup.string(),
     file_name: Yup.string(),
     company_id: Yup.string(),
@@ -325,7 +317,8 @@ const handleClick=()=>{
 const formData= new FormData();
 
 const values = watch();
-  const onSubmit = handleSubmit(async (data) => {
+console.log(defaultValues,"defaultValues")
+const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
   console.log(data,"defaultValues111")
   // formData.append("file", null );
@@ -373,35 +366,12 @@ const values = watch();
   }
 });
   // for upload docmunt
-  const [editData, setEditData]=useState({
-  })
+  const [editData, setEditData]=useState()
 
-  const handleEditChange = (field, value) => {
-    console.log(field,value,"sssssssss")
-    
-    setEditData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
-
-
-  
-  const onclickActions = async(rowData,eventData) => {
+  const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
-     
-      console.log(rowData,'rowDatarowData')
-      // hit api for options return the resposnse.data.data
-      // const arr= await ApiHitClaimTypeOptions()
-      
-      const updatedRowData = {
-        ...rowData,
-        company_id: 'COMP2',
-      };
-    
-      setEditData(updatedRowData);
-
+      setEditData(rowData)
       if (eventData?.type === 'edit') {
 
         handleOpenEdit()
@@ -424,72 +394,10 @@ const values = watch();
     }
 
 
+console.log(editData,"editData")
   const serviceCall = (endpoint, payload) => {
 
   }
-
-  const onSubmitEdit2 = async(editData, event) => {
-    
-    try {
-      event.preventDefault();
-      editData.claim_type=editData?.claim_type?.label
-
-     console.log(editData,"editDataeditData")
-      // editData.preventDefault();
-      // console.log(data, 'formdata api in check');
-
-      // const formData = new FormData(editData.target);
-      // const formObject = {};
-
-      // // Iterate over form elements and add them to the object
-      // formData.forEach((value, key) => {
-      //   formObject[key] = value;
-      // });
-      const response = await axios.post('http://192.168.1.199:3001/erp/EditMyClaims', editData).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-
-      
-    } catch (error) {
-
-      alert("api hit not done")
-      console.error(error);
-    }
-  }
-  const onSubmitEdit =  handleSubmit(async(editData) => {
-    
-    console.log(editData,"editData defaultValues111")
-   
-
-    try {
-     
-      // console.log(data, 'formdata api in check');
-
-      const response = await axios.post('http://192.168.1.199:3001/erp/EditMyClaims', editData).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-
-      alert("api hit not done")
-      console.error(error);
-    }
-  });
 
   return (
     <>
@@ -557,7 +465,7 @@ const values = watch();
                 isOptionEqualToValue={(option, value) => option === value}
             
               />
- 
+
 
               
               {/* <RHFAutocomplete
@@ -676,7 +584,7 @@ const values = watch();
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(editData, event)}>
+        <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
           <DialogTitle>Edit My Claim</DialogTitle>
 
@@ -699,36 +607,17 @@ const values = watch();
              
 
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              
-              {/* <RHFAutocomplete
-                name="claim_type"
+              {/* <RHFTextField name="reason" label="Employee Name" /> */}
+              <RHFAutocomplete
+                name="Claim Type"
                 label="Claim Type"
                 options={compoff_type}
                
-                getOptionLabel={(option) => option.label}
-               getOptionValue={(option) => option.value}
-                
+                getOptionLabel={(option) => option.label} // Use 'label' as the display label
                 isOptionEqualToValue={(option, value) => option === value}
-                value={editData?.claim_type || {}} 
-                onChange={(event, newValue) => handleEditChange('claim_type', newValue)
-              }
+                value={editData?.claim_type} 
                
-              /> */}
-
-<Autocomplete
-  name="claim_type"
-  label="Claim Type"
-  options={compoff_type}
-  
-  getOptionLabel={(option) => option.label}
-  // getOptionValue={(option) => option.value}  // Specify the property used as the value
-  // isOptionEqualToValue={(option, value) => option.value === value} // Adjust this line to compare values
-  value={editData?.claim_type || null}  // Set the value to null if it's undefined
-  onChange={(event, newValue) => handleEditChange('claim_type', newValue)}
-  renderInput={(params) => (
-    <TextField {...params} label="Claim Type" variant="outlined" />
-  )}
-/>
+              />
              
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -744,9 +633,7 @@ const values = watch();
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="claim_amount"  label="Claim Amount" value={editData?.claim_amount}
-              onChange={(event) => handleEditChange('claim_amount', event.target.value)}
-              />
+              <RHFTextField name="approverName"  label="Claim Amount" value={editData?.claim_amount} />
              
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -778,7 +665,7 @@ const values = watch();
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained"   loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
