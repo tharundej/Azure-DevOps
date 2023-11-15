@@ -124,6 +124,7 @@ const BasicTable = ({
   buttonFunction,
   deleteFunction,
   handleEditRowParent,
+  handleOpenModal,
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -190,7 +191,7 @@ const BasicTable = ({
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
       },
       data: initialDefaultPayload,
     };
@@ -420,8 +421,10 @@ const BasicTable = ({
     getTableData(payload);
   };
 
-  const getRowActionsBasedOnStatus = (status) => {
-    if (status === 'pending' || status === '' || status === 'Pending') {
+  const getRowActionsBasedOnStatus = (row) => {
+    if (row?.status === 'pending' || row?.status === '' || row?.status === 'Pending') {
+      return rowActions;
+    } else if (!row?.status || row?.status === undefined) {
       return rowActions;
     } else {
       return null;
@@ -529,6 +532,7 @@ const BasicTable = ({
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              onHandleOpen={handleOpenModal}
             />
           )}
           {filterName === 'WorkWeekFilterSearch' && (
@@ -586,6 +590,7 @@ const BasicTable = ({
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {/* accounts  */}
+
           <Card>
             <TableContainer
               sx={{ position: 'relative', overflow: 'unset', padding: '0px !important' }}
@@ -744,6 +749,7 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.func,
+  handleOpenModal: PropTypes.func,
 };
 BasicTable.propTypes = {
   filterName: PropTypes.any,
