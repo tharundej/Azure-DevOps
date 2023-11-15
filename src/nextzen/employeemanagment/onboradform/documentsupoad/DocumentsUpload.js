@@ -65,7 +65,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": "COMP5",
+        "companyId": "COMP1",
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
