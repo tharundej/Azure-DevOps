@@ -8,12 +8,14 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import {
   Alert,
+  Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Snackbar,
+  TextField,
 } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
@@ -47,7 +49,7 @@ export default function LeavePeriod({ currentUser }) {
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
-
+  const [valueSelected, setValueSelected] = useState();
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string(),
   });
@@ -96,6 +98,7 @@ export default function LeavePeriod({ currentUser }) {
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditData(rowdata);
+      setValueSelected(rowdata);
       handleOpenEdit();
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
@@ -115,10 +118,7 @@ export default function LeavePeriod({ currentUser }) {
         companyID: 'COMP1',
         leavePeriodID: rowdata.leavePeriodID,
       };
-      const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/deleteLeavePeriod',
-        data
-      );
+      const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
@@ -217,6 +217,17 @@ export default function LeavePeriod({ currentUser }) {
   const handleDateChanges2 = (date) => {
     setSelectedDates2(date);
   };
+  const handleSelectChange = (field, value) => {
+    // console.log('values:', value);
+    // console.log('event', event.target.value);
+    // setSelectedOption(value);
+    console.log(field, value, 'valllllllllll');
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 
   React.useEffect(() => {
@@ -281,12 +292,19 @@ export default function LeavePeriod({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFAutocomplete
+              <Autocomplete
                 name="leavePeriodType"
                 label="Leave Period Type"
-                options={leavePeriodNames.map((leavePeriodName) => leavePeriodName.type)}
-                value={editData?.leavePeriodType}
-                
+                options={leavePeriodNames}
+                value={valueSelected?.leavePeriodType || null}
+                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
+                // isOptionEqualToValue={(option, value) => option.value === value}
+                onChange={(e, newValue) =>
+                  handleSelectChange('leavePeriodType', newValue || null)
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Leave Period Type" variant="outlined" />
+                )}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>

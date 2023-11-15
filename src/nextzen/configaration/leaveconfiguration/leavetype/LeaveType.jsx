@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Autocomplete,
 } from '@mui/material';
 import { Container } from '@mui/system';
 import { BasicTable } from '../../../Table/BasicTable';
@@ -151,6 +152,7 @@ export default function LeaveType({ currentUser }) {
     if (event?.name === 'Edit') {
       setEditData(rowdata);
       setValueSelected(rowdata)
+      
       handleOpenEdit();
       console.log(rowdata,'edidataaaa')
       buttonFunction(rowdata, event);
