@@ -80,6 +80,7 @@ import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilte
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
 import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
 import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
+import DeductionFilter from '../MonthlyDeductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
@@ -92,6 +93,8 @@ import SwapSearchFilter from './components/shiftmanagement/SwapSearchFilter';
 import SalaryStructureFilters from '../employeemanagment/salarystructure/SalaryStructureFilters';
 import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWeekFilters';
 import { baseUrl } from '../global/BaseUrl';
+import CompoffConfigurationTable from '../configaration/compoffconfiguration/CompoffConfigurationTable';
+import ComoffConfigFilters from '../configaration/compoffconfiguration/ComoffConfigFilters';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -104,7 +107,9 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const BasicTable = ({ endpoint, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction}) => {
+const 
+BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
+ 
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
  
@@ -161,12 +166,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
       method: 'POST',
       maxBodyLength: Infinity,
       // url: `http://localhost:4001${endpoint}`,
-        //  url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+        //   url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       // https://xql1qfwp-3001.inc1.devtunnels.ms/
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-       url: baseUrl+`${endpoint}`,
+        url: baseUrl+`${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
@@ -183,8 +188,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
     axios.request(config).then((response) => {
       setLoading(false);
       // // console.log(response?.data?.bodyContent);
-      // setTableData(response?.data?.[bodyData]|| []);
-      setTableData(response?.data?.data|| []);
+      //setTableData(response?.data?.[bodyData]|| []);
+       setTableData(response?.data?.data|| []);
      
       setFilterHeaders(response?.data?.filterHeaders || []);
       setTotalRecordsCount(response?.data?.totalRecords || 0)
@@ -289,26 +294,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
  
   const handleEditRow = (rowData,eventData) => {
-    console.log(rowData,"rowdataa", eventData);
-    if (eventData?.endpoint === "/approveLeave"){
-      approveLeave(rowData,eventData)
-    }
-    else if (eventData?.type === "edit"){
-      buttonFunction(rowData);
-      
-      console.log("servce call will called for edit")
-    }
-    else if (eventData?.type === "delete"){
-      deleteFunction(rowData);
- 
-      console.log("servce call will called for delete")
-    }
-    else{
-      console.log("servce call error")
-    }
- 
- 
-   
+    console.log(rowData,"handleditt",eventData)
+    onClickActions(rowData,eventData);
+    
+    
  
   }
  
@@ -457,7 +446,19 @@ const payload = initialDefaultPayload;
 table.onSort(field);
 getTableData(payload)
 };
-  
+
+const getRowActionsBasedOnStatus = (status) => {
+  if (status === 'pending' || status===""|| status==="Pending") {
+    return rowActions
+  } 
+  else {
+    return null
+  } 
+}
+
+
+
+
   
   return (
     <>
@@ -484,8 +485,13 @@ getTableData(payload)
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
+       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+
+       {filterName==="DeductionFilter" && <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
+       
         <Card>
 
        
@@ -542,12 +548,16 @@ getTableData(payload)
                         <UserTableRow
                           key={row.id}
                           row={row}
+                          onHandleEditRow={(id)=>handleEditRowParent(id)}
                           selected={table.selected.includes(row.id)}
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={(event) => { handleEditRow(row, event) }}
+                          onEditRow={(event) => { handleEditRow
+                            
+                            
+                            (row, event) }}
                           headerContent={TABLE_HEAD}
-                          rowActions={rowActions || []}
+                          rowActions={getRowActionsBasedOnStatus(row.status)}
                         />
                        
  
@@ -635,6 +645,10 @@ function applyFilter({ inputData, comparator, filters }) {
 BasicTable.propTypes = {
   endpoint: PropTypes.string,
 };
+
+BasicTable.propTypes = {
+  onClickActions:PropTypes.any,
+}
  
 BasicTable.propTypes = {
   defaultPayload: PropTypes.object,
@@ -659,7 +673,8 @@ BasicTable.propTypes = {
 };
 
 BasicTable.propTypes ={
-  deleteFunction:PropTypes.any
+  deleteFunction:PropTypes.any,
+  handleEditRowParent:PropTypes.any
 };
  
  

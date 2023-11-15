@@ -62,7 +62,7 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const apiUrl='https://xql1qfwp-3001.inc1.devtunnels.ms/erp/verifyOtp';
+        const apiUrl=baseUrl+'/verifyOtp';
         const payload={
           otp:parseInt(data.code, 10)
         }
@@ -84,7 +84,7 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
-       const response = await axios.post(baseUrl+'resendOtpToUser');
+       const response = await axios.post(baseUrl+'/resendOtpToUser');
         
     } catch (error) {
       console.error(error);

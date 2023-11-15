@@ -16,7 +16,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { Button,Box,Autocomplete,TextField } from '@mui/material';
+import { Button,Box,Autocomplete,TextField ,Grid} from '@mui/material';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -25,6 +25,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import axios from 'axios';
 
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
@@ -32,10 +34,18 @@ const employmentTypeOptions=[
 
 ]
 
-const StatouryForm = ({open,onHandleClose,currentUser,employeeIDToCreate,endpoint }) => {
+const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint }) => {
+ 
   const [type,setType]=useState({label:"Permanent",id:'1'})
-  console.log(currentUser)
-  // const [currentUser,setCurrentUser]=useState({})
+  
+   const [currentUser,setCurrentUser]=useState()
+
+   useEffect(()=>{
+    if(currentUserData){
+      setCurrentUser(currentUserData)
+    }
+
+   },[currentUserData])
 
  
   // useEffect(()=>{
@@ -153,10 +163,10 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       const values = watch();
     
       const onSubmit = handleSubmit(async (data) => {
-        console.log(data,'uyfgv');
+        console.log(currentUser,'uyfgv');
     
-        data.employeeID=employeeIDToCreate
-        data.companyID='COMP5'
+        currentUser.employeeID=employeeIDToCreate
+        currentUser.companyID='COMP5'
       
          
           
@@ -166,13 +176,13 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            //url: `${baseUrl}addStatutoryDetails`,
-            url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+            url: `${baseUrl}${endpoint}`,
+            // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
             headers: { 
               'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
               'Content-Type': 'application/json'
             },
-            data : data
+            data : currentUser
           };
           
            
@@ -185,6 +195,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             console.log(error);
           });
       });
+
+      const pfTypeOptions = ['pflimit', 'pfnolimit'];
   return (
     <>
 
@@ -216,55 +228,281 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             }}
           >
 
+          <Grid container   spacing={2} md={12} xs={12} lg={12}  >
 
-
-            <RHFTextField name="aadharNumber" label="Aadhar Number" />
-             <RHFTextField name="panNumber" label="Pan Number" />
-             <RHFTextField name="passportNumber" label="Passport Number" />
-             
-
-
-              <RHFTextField name="accountholderName" label="Account Holder Name" />
-              <RHFTextField name="bankAccountNumber" label="Account Number" type="number" />
-            <RHFTextField name="bankName" label="Bank Name" />
-            <RHFTextField name="bankBranch" label="Bank Branch" />   
-            <RHFTextField name="ifscCode" label="IFSC Code" />
-         
-           
-            <RHFAutocomplete
-                name="pfType"
+          <Grid md={6} xs={12}  fullWidth  item>
+                  <TextField
+                    fullWidth
                 
-                label="PFType"
-                options={payTypes.map((country) => country.type)}
-                getOptionLabel={(option) => option}
+                    name="employeeName"
+                    label="Employeea Name"
+                    variant="outlined"
+                    id="employeeName"
+                     value={currentUser?.employeeName}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        employeeName:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="accountNumber"
+                    label="Account Number"
+                    variant="outlined"
+                    id="accountNumber"
+                     value={currentUser?.accountNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        accountNumber: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12}  fullWidth  item>
+                  <TextField
+                    fullWidth
                 
-                isOptionEqualToValue={(option, value) =>{ 
-                  
-                 
-                  return option === value}}
-                renderOption={(propss, option) => {
-                  const { type } = payTypes.filter(
-                    (country) => country.type === option
-                  )[0];
+                    name="accountHolderName"
+                    label="Account Holder Name"
+                    variant="outlined"
+                    id="employeeName"
+                     value={currentUser?.employeeName}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        accountHolderName:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+          <Grid md={6} xs={12}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="bankBranch"
+                    label="Bank Branch"
+                    variant="outlined"
+                    id="employeeName"
+                     value={currentUser?.employeeName}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        bankBranch:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
 
-                  if (!type) {
-                    return null;
-                  }
+          <Grid md={6} xs={12}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="bankName"
+                    label="Bank Name"
+                    variant="outlined"
+                    id="bankName"
+                     value={currentUser?.bankName}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        bankName:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
 
-                  return (
-                    <li {...propss} key={type}>
-                      
-                      {type} 
-                    </li>
-                  );
-                }}
-              />
-            
-            <RHFTextField name="uan" label="UAN Number" type="number" />
-            <RHFTextField name="pfNumber" label="PF Number" type="number" />
-            <RHFTextField name="esicNumber" label="ESIC Number"  type="number"/>
-            <RHFTextField name="ptNumber" label="PT%" type="number" />
-            <RHFTextField name="lwfNumber" label="LWF%" />
+          <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="esicNumber"
+                    label="ESIC Number"
+                    variant="outlined"
+                    id="esicNumber"
+                     value={currentUser?.esicNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        esicNumber: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="ifscCode"
+                    label="IFSC Code"
+                    variant="outlined"
+                    id="ifscCode"
+                     value={currentUser?.ifscCode}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        ifscCode:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="lwfNumber"
+                    label="lwf Number"
+                    variant="outlined"
+                    id="lwfNumber"
+                     value={currentUser?.lwfNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        lwfNumber:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6}  fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="panNumber"
+                    label="Pan Number"
+                    variant="outlined"
+                    id="panNumber"
+                     value={currentUser?.panNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        panNumber:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+
+
+          <Grid md={6} xs={12} lg={6} fullWidth  item>
+                  <TextField
+                    fullWidth
+                
+                    name="passportNumber"
+                    label="Passport Number"
+                    variant="outlined"
+                    id="passportNumber"
+                     value={currentUser?.passportNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        passportNumber:e?.target.value
+                      }
+                      ))
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="pfNumber"
+                    label="PF Number"
+                    variant="outlined"
+                    id="pfNumber"
+                     value={currentUser?.pfNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        pfNumber: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12}  lg={6} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="ptNumber"
+                    label="PT Number"
+                    variant="outlined"
+                    id="ptNumber"
+                     value={currentUser?.ptNumber}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        ptNumber: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="uan"
+                    label="uan"
+                    variant="outlined"
+                    id="uan"
+                     value={currentUser?.uan}
+                    onChange={(e) => {
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        uan: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6} item>
+          <Autocomplete
+              value={currentUser?.pfType}
+              onChange={(e,nw)=>{
+                setCurrentUser(prev=>({
+                  ...prev,
+                  pfType: nw
+                }
+                ))
+              }}
+              options={pfTypeOptions}
+              renderInput={(params) => <TextField {...params} label="PF Type" />}
+      />
+          </Grid>
+
+          </Grid>
+
+          
           </Box>
         </DialogContent>
 

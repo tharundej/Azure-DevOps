@@ -52,14 +52,15 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
     const payload = {
-        company_id: "C1"
+        // companyId: "C1"
+        companyId:localStorage.getItem('companyID')
     }
    
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      // url: baseUrl + `getLeaveType`,
-      url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
+      url: baseUrl + `/getLeaveType`,
+      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -218,9 +219,18 @@ export default function LeaveFilter({filterSearch,filterData}){
       setOpen(false);
     }
 
-    const handleSearch=(e)=>{
-      filterSearch(e?.target?.value)
-    }
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
+        filterSearch(e?.target?.value)
+      },1000)
     
   
     return (
@@ -241,7 +251,7 @@ export default function LeaveFilter({filterSearch,filterData}){
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -434,7 +444,7 @@ export default function LeaveFilter({filterSearch,filterData}){
          </DialogContent>
        <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
          <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     

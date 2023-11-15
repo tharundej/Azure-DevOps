@@ -246,8 +246,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       maxBodyLength: Infinity,
 
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-      // http://192.168.1.26:3001/erp/getAllClaims
-      url: `http://192.168.1.192:3001/erp/${endpoint}`,
+      // http://192.168.1.26:3001/erp/getAllClaims,
+      url: `http://192.168.1.199:3001/erp/${endpoint}`,
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -664,8 +664,6 @@ const [sortColumn, setSortColumn]=useState("")
     console.log(payload,field,"sortinglllllllllll")
     
 
-  
-
   table.onSort(field); 
   getTableData(payload)
 };
@@ -819,6 +817,14 @@ const [sortColumn, setSortColumn]=useState("")
 
                         />
 
+{/* {tableData.map((headCell) => (
+      <TableCell key={headCell.id}>
+        {row[headCell.id] || '-'}
+      </TableCell>
+    ))} */}
+
+                        
+
                        
 
  
@@ -828,6 +834,7 @@ const [sortColumn, setSortColumn]=useState("")
                         </>
 
                       ))}
+                      
 
        
 
@@ -1041,23 +1048,14 @@ SurendraBasicTable.propTypes = {
 };
 
 SurendraBasicTable.propTypes = {
-
   dialogPayload: PropTypes.any
-
 };
 
 SurendraBasicTable.propTypes = {
-
   onclickActions: PropTypes.any
-
 };
-
-
 // dialogPayload
 // SurendraBasicTable.propTypes = {
 //   searchFilterheader: PropTypes.any
 // };
-
- 
-
 export { SurendraBasicTable };

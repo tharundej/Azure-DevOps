@@ -91,8 +91,9 @@ function getStyles(name, personName, theme) {
 
 export default function LeavePeriodFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const departmentName = [
-    'HR',
+  const leavePeriodTypes = [
+    'Financial Year',
+    'Year'
   ];
   const designationName = [
     'executive'
@@ -113,7 +114,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownleavePeriodType, setdropdownleavePeriodType] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -133,7 +134,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'leavePeriodType',
       options: [],
     },
   ]);
@@ -223,8 +224,8 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'leavePeriodType') {
+      setdropdownleavePeriodType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -245,13 +246,11 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
     //   filterData(data);
     handleClickClose();
   };
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+  const handleSearch = (searchTerm) => {
+     
+    searchData(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
   return (
     <>
        <Grid
@@ -260,20 +259,20 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item>
+        <Grid item  md={8} xs={8}>
         <TextField
             placeholder="Search...."
              fullWidth
-             onChange={handleSearch}
+             onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
        <LeavePeriodForm/>
        </Grid>
-        <Grid item>
+        <Grid item  md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -298,7 +297,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',
@@ -309,22 +308,22 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
             {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
            
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownleavePeriodType}
+                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                    input={<OutlinedInput label="Leave Period Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {departmentName.map((name) => (
+                    {leavePeriodTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -332,7 +331,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6} >
+              {/* <Grid item xs={6} >
                   <FormControl fullWidth>
                     <InputLabel id="designation_name">Designation Name</InputLabel>
                     <Select
@@ -357,8 +356,8 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
+                </Grid> */}
+                {/* <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
@@ -379,7 +378,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                     ))}
                   </Select>
               </FormControl>
-                   </Grid>
+                   </Grid> */}
             </Grid>
 
            

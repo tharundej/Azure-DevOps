@@ -39,6 +39,7 @@ import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
+import AddTimeProject from './AddTimeProject';
 
 
 
@@ -80,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ProjectSearchFilter({filterData,filterOptions}){
+export default function ProjectSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -98,7 +99,7 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
   const [dropdown,setDropdown]=useState({
 
   })
-
+  const [showForm, setShowForm] = useState  (false);
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
@@ -136,6 +137,14 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
     ]
   )
 
+  const [search, setSearch]=useState("");
+  const handleClose = () => setShowForm(false);
+
+  const handleSearch = (searchTerm) => {
+    setSearch(searchTerm)
+      searchData(search)
+      console.log(searchTerm,"search ........")
+      };
 
   const [datesSavedArray,setDatesSavedArray]=useState(["start_date","end_date","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
@@ -262,34 +271,56 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
       
     }
     
-
+    const handleTimeForm =()=>{
+      setShowForm(true)
+      console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+    } 
   
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
+              {showForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <AddTimeProject currentUser={{}}handleClose={handleClose} />
+      </Dialog>
+    )}
+<Grid container alignItems="center" paddingBottom="10px">
             <Grid md={8} xs={8} item>
-
-            <TextField placeholder='Search....' 
+ 
+            <TextField placeholder='Search....'
             fullWidth
-            // onChange={handleSeacrch} 
-
+            onChange={e=>{handleSearch(e)}}
+ 
             />
             </Grid>
-
+ 
             <Grid md={4} xs={4} item>
-                
-                <Grid >
-                <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
-      </Button>
-
-      </Stack>
+               
+                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+               <Grid item>  
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Project</Button>
+               </Grid>
+               <Grid sx={{marginLeft:'4px'}}>
+               <Button  onClick={handleClickOpen} sx={{width:"80px"}}>
+               <Iconify icon="mi:filter"/>
+               </Button>
+      </Grid>
+ 
                 </Grid>
-
+ 
  
       </Grid>
          </Grid>
+
+         
      
       <BootstrapDialog
         onClose={handleClickClose}
@@ -451,6 +482,9 @@ export default function ProjectSearchFilter({filterData,filterOptions}){
 // }
 ProjectSearchFilter.propTypes={
     filterData: PropTypes.func,
+}
+ProjectSearchFilter.propTypes={
+  searchData: PropTypes.any,
 }
 
 ProjectSearchFilter.propTypes={

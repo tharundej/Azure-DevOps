@@ -4,11 +4,11 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 export default function Holidays() {
     const TABLE_HEAD = [
-      { id: 'Name', label: 'Name', type: 'text' },
-      { id: 'Date', label: 'Date', type: 'text' },
-      { id: 'Full Day/Half Day', label: 'Full Day/Half Day', type: 'text' },
-      { id: 'Repeats Anually', label: 'Repeats Anually', type: 'text' },
-      { id: 'Locations', label: 'Locations', type: 'text' },
+      { id: 'holidayName', label: 'Holiday Name', type: 'text', minWidth:180 },
+      { id: 'holidayDate', label: 'Holiday Date', type: 'text' , minWidth:180},
+      { id: 'fulldayHalfday', label: 'Full Day/Half Day', type: 'text', minWidth:180 },
+      { id: 'repeatAnnualy', label: 'Repeats Anually', type: 'text', minWidth:180 },
+      { id: 'locationName', label: 'Locations', type: 'text', minWidth:180 },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },
@@ -29,21 +29,16 @@ export default function Holidays() {
     // ];
     const defaultPayload = 
     {
-      "count": 5,
-      "page": 1,
+      "count":3,
+      "page": 2,
       "search": "",
       "companyId": "COMP1",
       "externalFilters": {
-        "payscheduleType": "weekly7",
-        "employmentType": "",
-        "basicPayPercentage":"",
-        "hraPercentage":"",
-        "daPercentage":"",
-        "ltaPercentage":"",
-        "employerPfPercentage":"",
-        "employeePfPercentage":"",
-        "esicPercentage":"",
-        "tdsPercentage":"10"
+        "holidayName":"",
+        "holidayDate": "",
+        "repeatAnnualy": "",
+        "fulldayHalfday": "",
+        "locationName":""
       },
       "sort": {
         "key": 1,
@@ -68,7 +63,7 @@ export default function Holidays() {
       
         <BasicTable
           headerData={TABLE_HEAD}
-          endpoint=""
+          endpoint="/getallHoliday"
           defaultPayload={defaultPayload}
           rowActions={actions}
           filterName="holidaysFilterSearch"

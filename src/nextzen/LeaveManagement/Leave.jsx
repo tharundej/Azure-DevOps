@@ -18,8 +18,7 @@ import ReusableTabs from '../tabs/ReusableTabs';
 
 import Approveleave from './approveleave/ApproveLeave';
 
-import CalendarView from './leavecalendar/Calendar/view/calendar-view';
-
+import LeaveRequest from './leavecalendar/Calendar/LeaveRequest';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -33,12 +32,12 @@ export default function BasicCard() {
     <div>
       <Approveleave />
     </div>,
-    <div><CalendarView/></div>,
+    <div><LeaveRequest/></div>,
   ];
 
   return (
     
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
 
   );
 }
