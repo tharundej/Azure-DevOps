@@ -255,7 +255,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
     <FormProvider methods={methods} onSubmit={onSubmit}>
 <div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
 <Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
-  {availableLeaves?.balances.map((itm)=> (
+  {availableLeaves?.balances?.map((itm)=> (
     <Typography>{itm?.leaveTypeName} : {itm?.leaveBalance}</Typography>
   ))}
 </Stack>
@@ -354,6 +354,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
         <LoadingButton
           type="submit"
           variant="contained"
+          color="primary"
           loading={isSubmitting}
           // disabled={dateError}
         >
