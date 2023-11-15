@@ -72,11 +72,12 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
 
         axios.request(config)
         .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         setEmployeeStatouryData(response.data.data)
         })
         .catch((error) => {
         console.log(error);
+        
         });
 
   }
@@ -316,14 +317,15 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Typography variant='h5' component="body">Statoury Information</Typography>
 
         </Grid>
-        <Grid item>
-        <Iconify 
-        sx={{cursor: "pointer",color:'orange'}}
-          onClick={()=>{
-            
+        <Grid sx={{cursor: "pointer"}} onClick={()=>{
+            console.log('handle clickeddd')
             handleEdit()
-          }}
-        icon="solar:pen-bold" />
+          }} item>
+        {/* <Iconify 
+        
+          
+        icon="solar:pen-bold" /> */}
+        <Button>Edit</Button>
 
         </Grid>
     </Grid>
