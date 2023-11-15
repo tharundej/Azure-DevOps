@@ -194,6 +194,7 @@ export default function BasicCard(currentUser) {
         tabContents={tabContents}
         handleCreatePayrun={handleCreatePayrun}
         changeOfTab={changeOfTabHandeler}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
   );
 }

@@ -27,6 +27,7 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import Search from "src/nextzen/search/search";
 import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 // import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -51,6 +52,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import { baseUrl } from '../../global/BaseUrl';
 
 
 
@@ -58,7 +60,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function MyClaims({ currentUser ,}) {
-
+  
   const claim_type = [
     { code: '', label: '', phone: '' },
     { code: 'AD', label: 'Travel', value:0, phone: '376' },
@@ -66,11 +68,18 @@ export default function MyClaims({ currentUser ,}) {
     { code: 'AD', label: 'Hotel', value:2, phone: '376' },
 
   ]
+  // const compoff_type = [
+  //   { id: 'Empty', label: 'Empty', value: '' },
+  //   { code: 'AD', label: 'Travel', id:0, phone: '376' },
+  //   { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
+  //   { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
+
+  // ]
   const compoff_type = [
-    { code: '', label: '', phone: '' },
-    { code: 'AD', label: 'Travel', id:0, phone: '376' },
-    { code: 'AD', label: 'Medical leave', id:1,phone: '376' },
-    { code: 'AD', label: 'Hotel ', id:1,phone: '376' },
+    { code: 'Empty', label: '', phone: '' , value:1},
+    { code: 'AD', label: 'travel', id:0, phone: '376', value:2},
+    { code: 'AD', label: 'medical', id:1,phone: '376', value:3 },
+    { code: 'AD', label: 'hotel', id:1,phone: '376' , value :4},
 
   ]
   const currency = [
@@ -92,32 +101,7 @@ export default function MyClaims({ currentUser ,}) {
     },
   ];
 
-  // const defaultPayload = {
-  //   "count":5,
-  //   "page":0
-  // }
-  // const TABLE_HEAD = [
-  //   {
-  //     // id: "name",
-  //     id: "employee_name",
-  //     label: " Employee Name",
-      
-  //     type: "text",
-  //     containesAvatar: false,
-
-  //     secondaryText: "email",
-  //   },
-  //   { id: "claim_type", label: "Claim Type",  type: "text" },
-  //   { id: "claim_date", label: "Claim Date",  type: "text" },
-  //   { id: "claim_amount", label: "Claim Amount",  type: "text" },
-  //   { id: "expense_date", label: "Expense Date",  type: "text" },
-  //   { id: "approve_amount", label: "Approval Amount",  type: "text" },
-  //   { id: "approver_name", label: "Approver Name",  type: "text" },
-  //   { id: "status", label: "Status",  type: "badge" },
-  //   // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
-  //   // { id: "leave_type", label: "Status", width: 100, type: "badge" },
-  //   // { id: '', width: 88 },
-  // ]
+  
   const TABLE_HEAD = [
     {
       id: "employeename",
@@ -138,12 +122,12 @@ export default function MyClaims({ currentUser ,}) {
 
     // { id: '', width: 88 },
   ]
-
-
-
+  // console.log(localStorage.getItem('reportingManagerID'),'localStorage.getItem')
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
   const defaultPayload={
 
-    "employee_id":"ibm3",
+    "employee_id":employeeID,
     "page":0,
     "count":5,
     "search":"",
@@ -243,11 +227,43 @@ const handleClick=()=>{
   };
   // form related data
 
-  const handleChangeDate = (newValue, index, name) => {
-    // const newObj = defaultValues;
-    // newObj[index][name] = new Date(newValue);
-    // setDefaultValues(newObj);
+  // const handleChangeDate = (newValue, index, name) => {
+  //   const newObj = defaultValues;
+  //   newObj[index][name] = new Date(newValue);
+    
+  // };
+
+
+
+  // const handleChangeDate = (newValue, index, name) => {
+    
+  //   const newObj = { ...defaultValues };   
+  //   // newObj[index][name] = new Date(newValue);
+
+
+  //   newObj[index] = {
+  //     ...newObj[index],
+  //     [name]: new Date(newValue),
+  //   };
+  //   console.log(newObj,"date in my claims"); 
+  // };
+
+  const handleChangeDate = (newValue, name) => {
+    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
+    const newObj = { ...defaultValues };
+    newObj[name] = formattedDate;
+   
+    
+  
+   
+    // newObj[name] = new Date(newValue);
+ 
+    console.log(formattedDate, "date in my claims");
+  
+   
   };
+  
+
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -258,7 +274,7 @@ const handleClick=()=>{
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    claim_amount: Yup.string().required('Claim Amount is Required'),
+    claim_amount: Yup.number().required('Claim Amount is Required'),
     comment: Yup.string(),
     file_name: Yup.string(),
     company_id: Yup.string(),
@@ -317,8 +333,7 @@ const handleClick=()=>{
 const formData= new FormData();
 
 const values = watch();
-console.log(defaultValues,"defaultValues")
-const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
   console.log(data,"defaultValues111")
   // formData.append("file", null );
@@ -346,8 +361,8 @@ const onSubmit = handleSubmit(async (data) => {
 
 
     console.log(formData, 'formdata api in check');
-
-    const response = await axios.post('http://192.168.1.115:3000/erp/applyClaim', formDataForRequest).then(
+    // baseUrl+`${endpoint}`
+    const response = await axios.post(baseUrl+"/applyClaim", formDataForRequest).then(
       (successData) => {
         console.log('sucess', successData);
       },
@@ -366,12 +381,38 @@ const onSubmit = handleSubmit(async (data) => {
   }
 });
   // for upload docmunt
-  const [editData, setEditData]=useState()
+  const [editData, setEditData]=useState({
+  })
 
-  const onclickActions = (rowData,eventData) => {
+  const handleEditChange = (field, value) => {
+    console.log(field,value,"sssssssss")
+    
+    setEditData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
+  
+
+
+  
+  const onclickActions = async(rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
-      setEditData(rowData)
+     
+      console.log(rowData,'rowDatarowData')
+      // hit api for options return the resposnse.data.data
+      // const arr= await ApiHitClaimTypeOptions()
+      
+      const updatedRowData = {
+        ...rowData,
+        company_id: 'COMP2',
+      };
+    
+      console.log("updatedRowData",updatedRowData)
+      setEditData(updatedRowData);
+
       if (eventData?.type === 'edit') {
 
         handleOpenEdit()
@@ -394,10 +435,64 @@ const onSubmit = handleSubmit(async (data) => {
     }
 
 
-console.log(editData,"editData")
   const serviceCall = (endpoint, payload) => {
 
   }
+ 
+
+  const onSubmitEdit2 = async(editData, event) => {
+    
+    try {
+      event.preventDefault();
+      // editData.claim_type=editData?.claim_type?.label
+
+     console.log(editData,"editDataeditData")
+      
+      const response = await axios.post(baseUrl+"/EditMyClaims", editData).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  }
+  const onSubmitEdit =  handleSubmit(async(editData) => {
+    
+    console.log(editData,"editData defaultValues111")
+   
+
+    try {
+     
+      // console.log(data, 'formdata api in check');
+
+      const response = await axios.post('http://192.168.1.199:3001/erp/EditMyClaims', editData).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  });
 
   return (
     <>
@@ -417,8 +512,8 @@ console.log(editData,"editData")
         }}
       >
         <FormProvider methods={methods} onSubmit={onSubmit}>
-          {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Apply All Claims</DialogTitle>
+    
+          <DialogTitle>Apply  Claim</DialogTitle>
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -436,15 +531,9 @@ console.log(editData,"editData")
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {/* <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect> */}
+              
 
-              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+        
 
               <RHFAutocomplete
                 name="type_oc_claim"
@@ -465,38 +554,10 @@ console.log(editData,"editData")
                 isOptionEqualToValue={(option, value) => option === value}
             
               />
-
+ 
 
               
-              {/* <RHFAutocomplete
-                name="country"
-                label=" Currency for Reimbursement"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
-
-                  if (!label) {
-                    return null;
-                  }
-
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              /> */}
-
+             
 
               <RHFTextField name="claim_amount" label="Claim Amount" />
               <Grid sx={{ alignSelf: "flex-start" }}  >
@@ -504,17 +565,19 @@ console.log(editData,"editData")
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="To"
-                    // value={item?.to}
+                    label="Expense Date"
+                    
+                
+                    // value={new Date(value), 'yyyy-MM-dd'}
                     onChange={(newValue) => {
-                      handleChangeDate(newValue, 'to');
+                      handleChangeDate(newValue, 'expense_date');
                     }}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
               <RHFTextField name="comment" label="comments" />
-              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
+             
               <Grid sx={{ alignSelf: "flex-end" }}>
 
                 <Controller
@@ -530,29 +593,7 @@ console.log(editData,"editData")
                   )}
                 />
               </Grid>
-              <TextField
-                fullWidth
-                variant="outlined"
-                InputLabelProps={{ htmlFor: 'contained-button-file' }}
-                label="Upload Document"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <input
-                        accept=".doc,.pdf"
-                        style={{ display: 'none' }}
-                        id="contained-button-file"
-                        multiple
-                        type="file"
-                      />
-                      <label htmlFor="contained-button-file">
-                        {/* <CloudUploadIcon /> */}
-                        <CloudUploadIcon />
-                      </label>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+             
 
 
 
@@ -584,7 +625,7 @@ console.log(editData,"editData")
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods} onSubmit={onSubmit}>
+        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(editData, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
           <DialogTitle>Edit My Claim</DialogTitle>
 
@@ -607,17 +648,23 @@ console.log(editData,"editData")
              
 
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              {/* <RHFTextField name="reason" label="Employee Name" /> */}
-              <RHFAutocomplete
-                name="Claim Type"
-                label="Claim Type"
-                options={compoff_type}
-               
-                getOptionLabel={(option) => option.label} // Use 'label' as the display label
-                isOptionEqualToValue={(option, value) => option === value}
-                value={editData?.claim_type} 
-               
-              />
+              
+              
+
+<Autocomplete
+  name="claim_type"
+  label="Claim Type"
+  options={compoff_type}
+  
+  getOptionLabel={(option) => option.label}
+  // getOptionValue={(option) => option.value} 
+  // isOptionEqualToValue={(option, value) => option.value === value} 
+  value={editData?.claim_type || null}  
+  onChange={(event, newValue) => {console.log("newValue", newValue);handleEditChange('claim_type', newValue)}}
+  renderInput={(params) => (
+    <TextField {...params} label="Claim Type" variant="outlined" />
+  )}
+/>
              
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -625,15 +672,20 @@ console.log(editData,"editData")
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Claim Date"
-                    // value={item?.to}
+                    value={ dayjs( editData['claim_date'] || null)}
                     onChange={(newValue) => {
-                      // handleChangeDate(newValue, 'to');
+                      
+                      handleEditChange('claim_date', formatDateToYYYYMMDD(newValue));
                     }}
                   />
+                
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="approverName"  label="Claim Amount" value={editData?.claim_amount} />
+              <RHFTextField name="claim_amount"  label="Claim Amount" 
+              value={editData?.claim_amount}
+              onChange={(event) => handleEditChange('claim_amount', event.target.value)}
+              />
              
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -641,9 +693,11 @@ console.log(editData,"editData")
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Expense Date"
-                    // value={item?.to}
-                    onChange={(newValue) => {
-                     // handleChangeDate(newValue, 'End');
+                    
+                    // value={editData?.expense_date || ""}
+                    value={ dayjs( editData['expense_date'] || null)}
+                    onChange={(newValue) => {  
+                      handleEditChange('expense_date', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}
@@ -665,7 +719,7 @@ console.log(editData,"editData")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained"   loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -676,7 +730,7 @@ console.log(editData,"editData")
 
       <SurendraBasicTable
 
-      endpoint="GetMyClaims"
+      endpoint="/GetMyClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}
@@ -699,4 +753,3 @@ console.log(editData,"editData")
 MyClaims.propTypes = {
   currentUser: PropTypes.object,
 };
-

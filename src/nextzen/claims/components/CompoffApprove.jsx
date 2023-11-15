@@ -25,6 +25,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { baseUrl } from '../../global/BaseUrl';
 
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
@@ -41,7 +42,9 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 
+
 export default function CompoffApprove({ currentUser ,}) {
+  const {enqueueSnackbar} = useSnackbar()
   const claim_type = [
     { code: '', label: '', phone: '' },
     { code: 'AD', label: 'Travel', phone: '376' },
@@ -83,14 +86,15 @@ export default function CompoffApprove({ currentUser ,}) {
     { id: "approver_name", label: "Approver Name", width: 180, type: "text" },
     // { id: '', width: 88 },
   ]
-
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
 
 
   const defaultPayload={
 
   
     "employee_id":"",
-    "company_id":"COMP2",
+    "company_id":"COMP1",
     "page":0,
     "search":"",
     "count":5,
@@ -147,6 +151,12 @@ const externalFilter = {
         utilisation: "1"
 
   })
+
+
+  useEffect(()=>{
+    handle(approve);
+  },[approve])
+
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
@@ -158,7 +168,7 @@ const externalFilter = {
               ...prevState,
               status: "Approve"
           }));
-          handle(approve);
+          // handle(approve);
           console.log(approve,"approve api")
 
            }
@@ -248,12 +258,14 @@ console.log(defaultValues,"defaultValues")
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://192.168.0.184:3001/erp/q', data).then(
+      const response = await axios.post(baseUrl+'/q', data).then(
         (successData) => {
-          console.log('sucess', successData);
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          console.log('success', successData);
         },
         (error) => {
           console.log('lllll', error);
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -263,6 +275,7 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
+      enqueueSnackbar(response?.data?.message,{variant:'error'})
       console.error(error);
     }
   });
@@ -277,12 +290,14 @@ console.log(defaultValues,"defaultValues")
      
       // console.log(data, 'formdata api in check');
 
-      const response = await axios.post('http://192.168.0.123:3001/erp/UpdateMycompoffdetails', approve).then(
-        (successData) => {
-          console.log('sucess', successData);
+      const response = await axios.post(baseUrl+'/UpdateMycompoffdetails', approve).then(
+        (response) => {
+          console.log('sucess', response);
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -292,8 +307,8 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
-
-      alert("api hit not done")
+      enqueueSnackbar(response?.data?.message,{variant:'error'})
+      // alert("api hit not done")
       console.error(error);
     }
   });
@@ -478,7 +493,7 @@ console.log(defaultValues,"defaultValues")
 
 
       <SurendraBasicTable
-        endpoint="GetMycompoffdetails"
+        endpoint="/GetMycompoffdetails"
         defaultPayload={defaultPayload}
         headerData={TABLE_HEAD}
         rowActions={actions}

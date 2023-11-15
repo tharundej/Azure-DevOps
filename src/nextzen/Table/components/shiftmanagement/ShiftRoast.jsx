@@ -13,6 +13,7 @@ import { BasicTable } from '../../BasicTable';
 import AddEmployeShift from './AddeployeShift';
 import instance from 'src/api/BaseURL';
 import { enqueueSnackbar } from 'notistack';
+import EditShiftRoaster from './EditShiftRoaster';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -63,6 +64,7 @@ export default function ShiftRoast() {
         
         { id: "start_date", label: " Start Date", width: 100, type: "text" },
         { id: "end_date", label: "End Date", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
         // { id: '', width: 88 },
     
       ];
@@ -94,8 +96,9 @@ export default function ShiftRoast() {
       ];
     
  
-      const [showForm, setShowForm] = useState  (false);
-      const handleClose = () => setShowForm(false);
+      const [showEdit, setShowEdit] = useState  (false);
+      const handleClose = () => setShowEdit(false);
+      const [editData,setEditData]=useState({})
       const handleTimeForm =()=>{
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
@@ -128,22 +131,26 @@ export default function ShiftRoast() {
       throw error;
         }
       }
+      const handleEditAPICALL = async (rowdata,event)=>{
+        setShowEdit(true);
+        setEditData(rowdata)
+      }
   return (
     <>
-      {/* {showForm && (
+      {showEdit && (
  <Dialog
  fullWidth
  maxWidth={false}
- open={showForm}
+ open={showEdit}
  onClose={handleClose}
  PaperProps={{
    sx: { maxWidth: 770 , overflow:'hidden'},
  }}
  className="custom-dialog"  
 >
- <AddEmployeShift currentUser={{}} />
+ <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
       </Dialog>
-    )} */}
+    )}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}

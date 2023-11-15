@@ -42,11 +42,12 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function ShiftSwapForm({ currentUser , handleClose }) {
+export default function CreateSwapRequest({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
+    startDate: dayjs(new Date()),
   });
   const router = useRouter();
 
@@ -144,24 +145,17 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     try {
     
   const data = {
-    "employee_1":{
-      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name),
-      "employee_id":"ibm4", //  currentEmployeSwapData1.employee_shift_swap_id
-    },
-    "employee_2":{
-      "employee_shift_swap_id":parseInt(FromShiftGroup_Name),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name1),
-      "employee_id":"ibm4"  //  currentEmployeSwapData1.employee_shift_swap_id
-    },
-    "company_id":"COMP2",
-    "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
-    "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
+    companyId:"COMP2",
+    employeeId:"ibm4",
+    fromShiftGroup:parseInt( FromShiftGroup_Name1),
+    toShiftGroup:parseInt (ToShiftGroup_Name),
+    startDate:formatDateToYYYYMMDD( datesUsed.startDate),
     
+
   }
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('/ ', data).then(
+      const response = await instance.post('/createSwapRequest', data).then(
         (successData) => {
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
@@ -206,9 +200,8 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       }}
     >
 
-   
       <Autocomplete
-  // multiple
+  // multiple hhs
   disablePortal
   id="combo-box-demo"
   options={Options}
@@ -266,7 +259,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
 />
 
-      <Autocomplete
+      {/* <Autocomplete
   disablePortal
   id="combo-box-demo"
   options={employeSwapDetails || []}
@@ -284,25 +277,25 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
-/>
+/> */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
           <DatePicker
             sx={{ width: '100%', paddingLeft: '3px' }}
             label="Start Date"
-            value={datesUsed?.start_date}
+            value={datesUsed?.startDate}
             defaultValue={dayjs(new Date())}
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
                 ...prev,
-                start_date: newValue,
+                startDate: newValue,
               }));
             }}
           />
         </DemoContainer>
       </LocalizationProvider>       
       
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
+         {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
           <DatePicker
             sx={{ width: '100%', paddingLeft: '3px' }}
@@ -317,9 +310,11 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
             }}
           />
         </DemoContainer>
-      </LocalizationProvider>
+      </LocalizationProvider> */}
+<RHFTextField name="comment" label="Comments " />
 
-      <br />
+
+      {/* <br />
       <Stack>
         <Typography>
           Select second Employe To Swap...
@@ -393,12 +388,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
-/>
+/> */}
     </Box>
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Swap Shift'}
+        {!currentUser ? 'Create User' : ' Request Shift Swap'}
       </LoadingButton>
       {/* <Button type='submit'></Button> */}
       <Button onClick={handleClose} sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
@@ -411,7 +406,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   );
 }
 
-ShiftSwapForm.propTypes = {
+CreateSwapRequest.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };

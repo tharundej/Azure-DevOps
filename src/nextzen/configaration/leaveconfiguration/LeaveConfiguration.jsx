@@ -21,7 +21,7 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work week'];
+const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work Week'];
   const tabContents = [
     <div>
       <LeavePeriod/>
@@ -42,6 +42,7 @@ export default function BasicCard() {
     <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
   );
 }

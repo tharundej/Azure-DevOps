@@ -336,7 +336,7 @@ export default function JwtRegisterView() {
         {renderTerms}
         <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000} // Adjust the duration as needed
+        autoHideDuration={4000} // Adjust the duration as needed
         onClose={handleSnackbarClose}
         anchorOrigin={{
           vertical: 'top',

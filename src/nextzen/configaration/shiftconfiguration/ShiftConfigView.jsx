@@ -58,7 +58,7 @@ export default function ShiftConfigView() {
 
   const defaultPayload = {
     companyId: 'COMP2',
-    locationId: 34,
+    locationId: 32,
     count: 5,
     search: '',
     page: 0,
@@ -99,7 +99,7 @@ export default function ShiftConfigView() {
     <>
     <Snackbar
     open={snackbarOpen}
-    autoHideDuration={6000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',

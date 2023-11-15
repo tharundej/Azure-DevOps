@@ -43,7 +43,8 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function AddEmployeShift({ currentUser , handleClose }) {
+export default function EditShiftRoaster({ currentUser , handleClose ,editData }) {
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData)
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -110,7 +111,6 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const values = watch();
   useEffect(() => {
     getDepartment()
-    getEmploye()
   }, [])
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
@@ -126,8 +126,6 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const [designationData,setDesignationData] =useState([])
   const [CurrentDesignationData,setCurrentDesignationData] =useState({})
   const [gradeData,setgradeData] =useState([])
-  const [employeData,setEmployeData] =useState([])
-  console.log("🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:", employeData)
   const [CurrentGradeData,setCurrentGradeData] =useState({})
 
 
@@ -173,40 +171,13 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
       };
       const response = await instance.post('/onboardingDesignationGrade',data);
       setgradeData(response.data.data)
-      
       console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
     }catch(error){
   console.error("Error", error);
   throw error;
     }
   }
-  const getEmploye = async (newvalue)=>{
-    try{
-    const  data= {
-      
-      companyiD:'COMP1',
-       
-      };
-      const response = await instance.post('/getEmployeeIDDetails',data);
-      setEmployeData(response.data.data)
-      console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
-    }catch(error){
-  console.error("Error", error);
-  throw error;
-    }
-  }
-  const [currentEmployeData, setCurrentEmployeData] = useState([]);
-  const handleSelectEmployeChange = (event, values) => {
-    setCurrentEmployeData(values);
-     console.log("🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
-    //  setemployeeList ( currentEmployeData[0]?.employeeId);
-      
-    // setCommaSepaatedEmployeString(EmployeList.join(','))
-  };
 
-
-
-  
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
@@ -228,10 +199,10 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     
           const response = await instance.post('/addShiftDetails', data).then(
             (successData) => {
-              handleClose()
               enqueueSnackbar(response.data.message,{variant:'success'})
     
               console.log('sucess', successData);
+              handleClose()
             },
             (error) => {
               enqueueSnackbar(error.message,{variant:'Error'})
@@ -248,6 +219,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     {id :"3" , name:"shift B"},
     {id :"4" , name:"shift C"},
   ]
+//   const defaultDesignationValue = editData.
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -263,7 +235,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-   Add Employee Shift Here ...
+   Edit Employee Shift Here ...
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -278,7 +250,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     >
      
 
-<RHFSelect name="shiftGroupName" label="Shift Group Name ">
+<RHFSelect name="shiftGroupName" label="Shift Group Name " >
 
 <option value="full_day" >Full Day</option>
 
@@ -313,6 +285,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 disablePortal
 id="combo-box-demo"
 options={departmentData || []}
+// defaultValue={defaultDesignationValue|| []}
 value={CurrentDepartmentData?.departmentID}
 getOptionLabel={(option) => option.departmentName}
 onChange={(e,newvalue)=>{
@@ -388,13 +361,13 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
 />
 
-{/* <Autocomplete
+<Autocomplete
 
 multiple
 
 id="Primary Skills"
 
-options={employeData.map((option) => option.EmployeeName)}
+options={top100Films.map((option) => option.title)}
 
 freeSolo
 
@@ -425,46 +398,14 @@ placeholder="Favorites"
 
 )}
 
-/> */}
-<Autocomplete
-            multiple
-            disablePortal
-            id="hfh"
-            options={employeData || []}
-            value={currentEmployeData}
-            getOptionLabel={(option) => option.EmployeeName}
-            // onChange={(e,newvalue)=>{
-             
-             
-            //   setCurrentEmployeData(newvalue
-                
-            //   );
-              
-             
-              // const obj={
-              //   companyId:'COMP1',
-              //   reporting_manager_id:newvalue?.employeeId
-              // }
- 
-              // ApiHitDepartment(obj)
-              // const timeStampCity = JSON.stringify(new Date().getTime());
-              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
-           
-            // }}
-            onChange={handleSelectEmployeChange}
-            sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-            }}
-            renderInput={(params) => <TextField {...params} label=" Select employee" />}
-          />
+/>
     </Box>
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
         {!currentUser ? 'Create User' : 'Add  Employe To Shift'}
       </LoadingButton>
-      <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
+      <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={console.log("first")}>Cancel</Button>
     </Stack>
     
    
@@ -476,7 +417,7 @@ placeholder="Favorites"
   );
 }
 
-AddEmployeShift.propTypes = {
+EditShiftRoaster.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };
