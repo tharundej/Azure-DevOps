@@ -113,8 +113,8 @@ export default function History(){
         const config = {
         method: 'POST',
         maxBodyLength: Infinity,
-        // url: baseUrl+ `/getLeaveHistory`,
-        url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLeaveHistory`,
+        url: baseUrl+ `/getLeaveHistory`,
+        // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLeaveHistory`,
         data:  payload
         }
       axios.request(config).then((response) => {

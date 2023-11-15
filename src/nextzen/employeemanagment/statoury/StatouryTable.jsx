@@ -41,9 +41,7 @@ export const StatouryTable = () => {
   
       "externalFilters": {
   
-      "employeeId": "",
-  
-      "employeeName": "",
+     
   
       
   
@@ -51,13 +49,7 @@ export const StatouryTable = () => {
   
      
   
-      "accountHolderName": "",
-  
-      "bankName": "",
-  
-      "ifscCode": "",
-  
-      "bankBranch": ""
+    
   
     },
   
