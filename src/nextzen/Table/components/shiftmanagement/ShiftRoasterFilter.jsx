@@ -314,7 +314,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -510,6 +510,9 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 // }
 ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
+}
+ShiftRoasterFilter.propTypes={
+  searchData: PropTypes.any,
 }
 
 ShiftRoasterFilter.propTypes={

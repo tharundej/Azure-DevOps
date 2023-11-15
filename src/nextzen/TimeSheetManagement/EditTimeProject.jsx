@@ -41,19 +41,19 @@ export default function EditTimeProject({ currentUser,handleClose ,tableEDitData
   const[commaSeparatedString,setCommaSepaatedString]=useState("")
   const[commaSepaatedEmployeString,setCommaSepaatedEmployeString]=useState("")
   const [datesUsed, setDatesUsed] = useState({
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-    due_date: dayjs(new Date()),
+    startDate: dayjs(new Date()),
+    endDate: dayjs(new Date()),
+    dueDate: dayjs(new Date()),
     // activity_name:[]
   });
 
 
 useEffect(() => {
-  getEmployeReport()
+  getEmployeReport1()
   // if (Array.isArray(currentReportingData) && currentReportingData.length > 0) {
-  //   const firstEmployeeId = currentReportingData[0].employee_id;
+  //   const firstEmployeeId = currentReportingData[0].employeeId;
   //   if (firstEmployeeId !== 0) {
-  //     getEmployeList();
+  //     getEmployeList1();
   //   }
   // }
 
@@ -62,12 +62,12 @@ useEffect(() => {
 
   const [activity_name, setSelectedActivity] = useState([]);
   const [project_manager, setProject_manager] = useState([]);
-  const [currentReportingData, setCurrentReportingData] = useState([]);
+  const [currentReportingData, setCurrentReportingData] = useState({});
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const [employesListData,setEmployesListData]= useState([])
   const [EmployeList,setemployeeList]= useState([])
   console.log("🚀 ~ file: EditTimeProject.jsx:66 ~ EditTimeProject ~ employesListData:", employesListData)
-  console.log("🚀 ~ file: EditTimeProject.jsx:56 ~ EditTimeProject ~ currentReportingData:", currentReportingData[0]?.employee_id)
+  console.log("🚀 ~ file: EditTimeProject.jsx:56 ~ EditTimeProject ~ currentReportingData:", currentReportingData.employeeId)
   // const ReportingManager = currentReportingData.map()
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
@@ -78,14 +78,15 @@ useEffect(() => {
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
      console.log("🚀 ~ file: EditTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
-    //  setemployeeList ( currentEmployeData[0]?.employee_id);
+    //  setemployeeList ( currentEmployeData[0]?.employeeId);
       
     // setCommaSepaatedEmployeString(EmployeList.join(','))
   };
 
   const handleSelectRepoChange = async (event, values) => {
     setCurrentReportingData(values);
-    await getEmployeList(values[0].employee_id)
+    console.log("🚀 ~ file: EditTimeProject.jsx:88 ~ handleSelectRepoChange ~ values:", values)
+    await getEmployeList1(values.employeeId)
       
     // SetCommaSeparatedRepoString (values.join(','))
   };
@@ -93,10 +94,10 @@ useEffect(() => {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    project_name: Yup.string(),
-    // start_date: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
+    // project_name: Yup.string(),
+    // startDate: Yup.string(),
+    // endDate: Yup.string(),
+    // dueDate: Yup.string().required('First Name is Required'),
     status: Yup.string(),
    
    
@@ -105,10 +106,10 @@ useEffect(() => {
   const defaultValues = useMemo(
     () => ({
    
-        project_name: currentUser?.project_name || '',
-        start_date: currentUser?.start_date || '',
-        end_date: currentUser?.end_date || '',
-        due_date: currentUser?.due_date || '',
+        // project_name: currentUser?.project_name || '',
+        startDate: currentUser?.startDate || '',
+        endDate: currentUser?.endDate || '',
+        dueDate: currentUser?.dueDate || '',
         status: currentUser?.status || '',
   
    
@@ -140,31 +141,31 @@ const [reportingManager,setReportingManagerData]= useState([])
 console.log("🚀 ~ file: EditTimeProject.jsx:102 ~ EditTimeProject ~ reportingManager:", reportingManager)
 
 
-const getEmployeReport = async ()=>{
+const getEmployeReport1 = async ()=>{
   try{
   const  data= {
-      company_id:'COMP1',
+      companyId:'COMP1',
      
     };
     const response = await instance.post('/getReportingmanager',data);
     setReportingManagerData(response.data.list)
-    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport1 ~ response.data:", response.data)
   }catch(error){
 console.error("Error", error);
 throw error;
   }
 }
-let getEmployeList = async (props)=>{
+let getEmployeList1 = async (props)=>{
   try{
   const  data= {
-      company_id:'COMP1',
-      reporting_manager_id:currentReportingData[0]?.employee_id,
+      companyId:'COMP1',
+      reportinManagerId:currentReportingData[0]?.employeeId,
     };
-    data.reporting_manager_id =props;
-    console.log("🚀 ~ file: EditTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
+    data.reportingManagerId =props;
+    console.log("🚀 ~ file: EditTimeProject.jsx:149 ~ getEmployeList1 ~ data:", data)
     const response = await instance.post('/employeereporting',data);
     setEmployesListData(response.data.list)
-    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+    console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport1 ~ response.data:", response.data)
   }catch(error){
 console.error("Error", error);
 throw error;
@@ -174,7 +175,7 @@ throw error;
 const join=()=>{
   const arr=[];
   for(let i=0;i<currentEmployeData.length;i+=1){
-    arr.push(currentEmployeData[i].employee_id);
+    arr.push(currentEmployeData[i].employeeId);
   }
   
   
@@ -196,15 +197,15 @@ const join=()=>{
       // data.company_id = '0001';
       // data.company_name = 'infbell';
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
+      data.dueDate = formatDateToYYYYMMDD(datesUsed?.dueDate);
+      data.endDate = formatDateToYYYYMMDD(datesUsed?.endDate);
+      data.startDate = formatDateToYYYYMMDD(datesUsed?.startDate);
     //   data.activity_name = [commaSeparatedString];
-    //   data.project_manager =currentReportingData[0]?.employee_id;
+      data.projectManager =currentReportingData?.employeeId;
       data.status = tableEDitData.status;
-      data.project_id = tableEDitData.project_id;
-      data.lastupdated = dayjs(new Date());
-    //   data.employee_id =join();
+      data.projectId =JSON.stringify( tableEDitData?.projectID);
+    //   data.lastupdated = dayjs(new Date());
+      data.employeeId =join();
     //   data.delete =   0;
       
 
@@ -256,7 +257,7 @@ const join=()=>{
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="project_name" label=" Project Name"  value={tableEDitData.projectName}  readOnly/>
+                <TextField  label=" Project Name"  value={tableEDitData.projectName}  readOnly/>
 
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
@@ -268,7 +269,7 @@ const join=()=>{
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          start_date: newValue,
+                          startDate: newValue,
                         }));
                       }}
                     />
@@ -300,7 +301,7 @@ const join=()=>{
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          due_date: newValue,
+                          dueDate: newValue,
                         }));
                       }}
                     />
@@ -335,13 +336,13 @@ const join=()=>{
 </Grid>
                 <RHFTextField name="activityName" label="Activity Name" value={tableEDitData.activityName}  readOnly />
 <Grid md={10} xs={12} item>
-{/* <Autocomplete
-            multiple
+<Autocomplete
+            
             disablePortal
             id="combo-box-demo"
-            options={reportingManager}
+            options={reportingManager || []}
             value={currentReportingData}
-            getOptionLabel={(option) => option.first_name}
+            getOptionLabel={(option) => option.firstName}
             // onChange={(e,newvalue)=>{
              
              
@@ -352,7 +353,7 @@ const join=()=>{
              
               // const obj={
               //   company_id:'COMP1',
-              //   reporting_manager_id:newvalue?.employee_id
+              //   reporting_manager_id:newvalue?.employeeId
               // }
  
               // ApiHitDepartment(obj)
@@ -366,7 +367,7 @@ const join=()=>{
               width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Project Manager" />}
-          /> */}
+          />
 </Grid>
 
 <Grid md={10} xs={12} item>
@@ -374,9 +375,9 @@ const join=()=>{
             multiple
             disablePortal
             id="hfh"
-            options={employesListData}
+            options={employesListData || []}
             value={currentEmployeData}
-            getOptionLabel={(option) => option.first_name}
+            getOptionLabel={(option) => option.firstName}
             // onChange={(e,newvalue)=>{
              
              
@@ -387,7 +388,7 @@ const join=()=>{
              
               // const obj={
               //   company_id:'COMP1',
-              //   reporting_manager_id:newvalue?.employee_id
+              //   reporting_manager_id:newvalue?.employeeId
               // }
  
               // ApiHitDepartment(obj)

@@ -297,7 +297,7 @@ export default function ProjectSearchFilter({filterData,filterOptions,searchData
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+ onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
