@@ -40,6 +40,7 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import ShiftSwapForm from './ShiftSwapForm';
+import CreateSwapRequest from './CreateSwapRequest';
 
 
 
@@ -103,8 +104,15 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
   
     const [showForm, setShowForm] = useState  (false);
     const handleClose = () => setShowForm(false);
+    const [showRequesForm, setShowRequestForm] = useState  (false);
+    const handleRequestClose = () => setShowRequestForm(false);
+
     const handleTimeForm =()=>{
       setShowForm(true)
+      console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+    }
+    const handleRequestForm =()=>{
+      setShowRequestForm(true)
       console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
     }
 
@@ -282,8 +290,22 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
  <ShiftSwapForm currentUser={{}} handleClose={handleClose} />
       </Dialog>
     )}
+              {showRequesForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showRequesForm}
+ onClose={handleRequestClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <CreateSwapRequest currentUser={{}} handleClose={handleRequestClose} />
+      </Dialog>
+    )}
  <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+            <Grid md={6} xs={6} item>
  
             <TextField placeholder='Search....'
             fullWidth
@@ -292,11 +314,14 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
             />
             </Grid>
  
-            <Grid md={4} xs={4} item>
+            <Grid md={6} xs={6} item>
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
                <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Shift Swap</Button>
+               </Grid>
+               <Grid item  sx={{marginLeft:'4px'}}>  
+               <Button variant='contained' color='primary' className="button" onClick={handleRequestForm}>Request Swap</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
