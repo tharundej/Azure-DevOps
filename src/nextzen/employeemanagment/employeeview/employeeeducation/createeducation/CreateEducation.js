@@ -42,7 +42,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   console.log(employeeData);
     const onSave=()=>{
      const obj={
-      companyId: "COMP5",
+      companyId: "COMP1",
       employeeId: employeeIDForApis,
       education:defaultValues
      }

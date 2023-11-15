@@ -246,7 +246,7 @@ export default function EmployeeTableFilter({filterSearch,filterData}){
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      console.log(data,';;;')
+      console.log(data1,'externalfiltersdata')
 
       filterData(data);
       // call parent function and pass it

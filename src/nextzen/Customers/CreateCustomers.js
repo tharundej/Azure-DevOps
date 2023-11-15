@@ -85,8 +85,10 @@ export default function CreateCustomers({ currentData, handleClose }) {
       const response = await createCustomerAPI(data);
       console.log('Create success', response);
       handleCallSnackbar(response.Message, 'success');
-      // handleClose();
       reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.Message, 'warning');

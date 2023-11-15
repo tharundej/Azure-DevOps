@@ -119,11 +119,8 @@ export default function SearchFilter({filterSearch,filterData}){
       {
         field:'pfType',
         options:[]
-      },
-      {
-        field:'employment_type',
-        options:[]
       }
+     
     ]
   )
 
@@ -243,7 +240,7 @@ export default function SearchFilter({filterSearch,filterData}){
 
     const handleApply=async()=>{
       setDatesData([]);
-      const data = await formDateDataStructure();
+      const data = {};
       const data1=await formWithDropdown(data);
       console.log(data,';;;')
 
