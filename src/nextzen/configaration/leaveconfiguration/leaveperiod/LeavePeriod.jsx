@@ -286,6 +286,7 @@ export default function LeavePeriod({ currentUser }) {
                 label="Leave Period Type"
                 options={leavePeriodNames.map((leavePeriodName) => leavePeriodName.type)}
                 value={editData?.leavePeriodType}
+                
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>

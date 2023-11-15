@@ -74,21 +74,23 @@ export default function VerifyOtp() {
           otp:parseInt(data.code, 10)
         }
         const response = await axios.post(apiUrl,payload);
-        console.log(response?.data.code)
-        if(response?.data?.code===200 ){
+        console.log(response?.data?.data?.code)
+        if(response?.data?.data?.code===200 ){
           setSnackbarSeverity('success');
-           setSnackbarMessage('Email Sent Succuessfully!');
-           setSnackbarOpen(true);
+      setSnackbarMessage('Email Sent Succuessfully!');
+      setSnackbarOpen(true);
+   
         
         console.log('sucess', response);
             router.push(paths.auth.jwt.setpassword);
           }
           if(response?.data?.code===400 ||202 ){
             setSnackbarSeverity('error');
-            setSnackbarMessage(response?.data?.message);
-             setSnackbarOpen(true);
-          
-          console.log('Error', response);
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+          console.log('Error', response?.data?.message);
     
           }
     //   await confirmRegister?.(data.email, data.code);
