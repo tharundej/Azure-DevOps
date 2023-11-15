@@ -19,7 +19,8 @@ import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
-
+import {useSnackbar} from '../../../src/components/snackbar' 
+import useMediaQuery from '@mui/material/useMediaQuery';
 const defaultFilters = {
   name: '',
   type: [],
@@ -48,7 +49,8 @@ function getStyles(name, personName, theme) {
 }
 export default function DeductionFilter({filterSearch,filterData}){
   const theme = useTheme();
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar();
   const [dropdown,setDropdown]=useState({
   })
 
@@ -163,11 +165,15 @@ export default function DeductionFilter({filterSearch,filterData}){
       try{
         data.companyID=localStorage?.getItem('companyID');
 
-        const response = await axios.post(baseUrl+`addDeductionDetails`,data).then(
+        const response = await axios.post(baseUrl+`/addDeductionDetails`,data).then(
           (successData)=> {
+            enqueueSnackbar(successData?.data?.message,{variant:'success'})
             console.log(successData,"Success")
+            handleClose()
           },
           (error)=>{
+            enqueueSnackbar(error?.data?.Message,{variant:'Error'})
+            handleClose()
             console.log(error,"error")
           }
         )
@@ -200,9 +206,18 @@ export default function DeductionFilter({filterSearch,filterData}){
     handleClickClose()
       
     }
-      const handleSearch=(e)=>{
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      }
+      },1000)
   
       const handleCancel = async()=>{
         setdropdowndeductiontype([]);
@@ -222,12 +237,15 @@ export default function DeductionFilter({filterSearch,filterData}){
         getEmployeesList()
       } 
       const getEmployeesList = () => {
-       
+       const data ={
+        companyID:localStorage?.getItem('companyID')
+       }
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
           // url: `http://192.168.1.56:3001/erp/getLoanEmployeeDetails`,
-          url:baseUrl + `getLoanEmployeeDetails`,
+          url:baseUrl + `/getLoanEmployeeDetails`,
+          data:data
         };
       
         axios.request(config).then((response) => {
@@ -294,28 +312,22 @@ export default function DeductionFilter({filterSearch,filterData}){
     )}
 
     {/* FIlter and Searchhh */}
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+    <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
+    <Grid item xs={12} md={8}>
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}} 
             />
             </Grid>
-            <Grid md={4} xs={4} item>
-                
-                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
-                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Deduction</Button>
-               </Grid>
-               <Grid>
-               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-               <Iconify icon="mi:filter"/>
+            <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+               
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>Add Deduction</Button>
+            
+               <Button onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+               <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
                </Button>
       </Grid>
                 </Grid>
- 
-      </Grid>
-         </Grid>
      {/* FILTER DIALOG */}
       <Dialog
         onClose={handleClickClose}

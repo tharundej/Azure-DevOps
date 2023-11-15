@@ -23,6 +23,7 @@ import { ASSETS_API } from 'src/config-global';
 import { useRouter } from 'src/routes/hooks';
 
 import { RouterLink } from 'src/routes/components'; 
+import SvgColor from 'src/components/svg-color/svg-color';
 
 // ----------------------------------------------------------------------
 
@@ -97,9 +98,9 @@ console.log(row,'row data')
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === 'active' && 'success') ||
-                      (row[ele.id] === 'pending' && 'warning') ||
-                      (row[ele.id] === 'banned' && 'error') ||
+                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
+                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
+                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
                       'default'
                     }
                   >
@@ -133,8 +134,8 @@ console.log(row,'row data')
                   popover.onClose();
                 }}
               >
-                <Iconify icon="solar:pen-bold" />
-                {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
+                <Iconify icon={item?.icon} />
+                {/* <SvgColor src={`item?.icon`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>

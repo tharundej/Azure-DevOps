@@ -12,18 +12,25 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
 
 export default function CreateProducts({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string(),
+    productName: Yup.string().required('Product Name is Required'),
+    productCategory: Yup.string().required('Product Category is Required'),
+    HsnId: Yup.string().required('HSN ID is Required'),
+    gstRate: Yup.number().required('GST Rate is Required'),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      ProductName: currentData?.ProductName || '',
-      ProductCategory: currentData?.ProductCategory || '',
-      hsnID: currentData?.hsnID || '',
+      companyId: currentData?.status || 'COMP1',
+      productName: currentData?.productName || '',
+      productCategory: currentData?.productCategory || '',
+      HsnId: currentData?.HsnId || '',
+      gstRate: currentData?.gstRate || '',
       status: currentData?.status || '',
     }),
     [currentData]
@@ -41,9 +48,12 @@ export default function CreateProducts({ currentData, handleClose }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    errors,
   } = methods;
   const values = watch();
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
   const statusOptions = ['Active', 'In Active'];
   const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
 
@@ -53,24 +63,44 @@ export default function CreateProducts({ currentData, handleClose }) {
     data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
-
-      const response = await instance.post('addProducts', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      const response = await createProductAPI(data);
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
     } catch (error) {
-      console.error(error);
+      console.log('error', error);
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        // Handle the case where the asset already exists
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        // Handle other errors
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Products</DialogTitle>
-
+        <DialogTitle>Add New Products</DialogTitle>
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}
@@ -82,10 +112,11 @@ export default function CreateProducts({ currentData, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="ProductName" label="Product Name" />
-            <RHFTextField name="ProductCategory" label="Product Category" />
-            <RHFTextField name="hsnID" label="HSN ID" />
-            
+            <RHFTextField name="productName" label="Product Name" />
+            <RHFTextField name="productCategory" label="Product Category" />
+            <RHFTextField name="HsnId" label="HSN ID" />
+            <RHFTextField name="gstRate" label="GST Rate" />
+
             <RHFAutocomplete
               name="status"
               id="status"

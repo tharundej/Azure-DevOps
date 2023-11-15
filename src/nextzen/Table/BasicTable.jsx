@@ -67,7 +67,7 @@ import {useSnackbar} from '../../components/snackbar';
  
 import SearchFilter from '../filterSearch/FilterSearch';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
-
+ 
 import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFilterSearch';
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
@@ -107,8 +107,8 @@ const defaultFilters = {
  
 // ----------------------------------------------------------------------
  
-const 
-BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
+const
+BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent,handleOpenModal}) => {
  
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -150,7 +150,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const getTableData = (payload) => {
     setLoading(false);
     let initialDefaultPayloadCopy =initialDefaultPayload;
-
+ 
     console.log(initialDefaultPayload,'initialDefaultPayload')
     if(payload){
       initialDefaultPayloadCopy = payload;
@@ -176,9 +176,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
-
+ 
          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
-
+ 
       },
       data:  initialDefaultPayload
     };
@@ -267,9 +267,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
     var payload ={
         "leave_id": rowdata?.leaveId,
         "emp_id": rowdata?.employeeId,
-        "status": event?.id,           
+        "status": event?.id,          
         "leave_type_id":rowdata?.leaveTypeId,
-        "duration": rowdata?.requestedDuration 
+        "duration": rowdata?.requestedDuration
     }
     console.log(payload,"requestedddbodyyy")
     const config = {
@@ -278,7 +278,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: baseUrl + `approveLeave`,
       url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
       data: payload
-    
+   
     }
     axios.request(config).then((response) => {
       console.log(response,"responsedata",response.data)
@@ -289,15 +289,15 @@ const [filterHeaders, setFilterHeaders]=useState([])
         enqueueSnackbar(error.message,{variant:'Error'})
         console.log(error);
       });
-    
+   
   }
  
  
   const handleEditRow = (rowData,eventData) => {
     console.log(rowData,"handleditt",eventData)
     onClickActions(rowData,eventData);
-    
-    
+   
+   
  
   }
  
@@ -317,12 +317,12 @@ const [filterHeaders, setFilterHeaders]=useState([])
     getTableData(payload)
     // getTableData(payload)
   }
-
+ 
   useEffect(()=>{
     getTableData(initialDefaultPayload);
      
   },[initialDefaultPayload])
-
+ 
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
     const payload = initialDefaultPayload;
@@ -370,7 +370,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
   const displayValue = selectedRange && isValidDate(selectedRange[0]) && isValidDate(selectedRange[1])
     ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
     : '';
-  
+ 
  
  
  
@@ -387,32 +387,32 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(payload,"updated payload data")
      getTableData(payload)
    
-    
+   
   }
   const handleFilterSearch = (searchTerm) => {
  
     console.log(searchTerm,"searched dataaaaaaaaaaa")
-  
+ 
    
-  
+ 
    
-  
+ 
       const payload = initialDefaultPayload;
-  
+ 
       setInitialDefaultPayload(prevPayload => ({
-  
+ 
         ...prevPayload,
-  
+ 
         search: searchTerm,
-  
+ 
         // Filter_Headers:
-  
+ 
        
-  
+ 
       }));
-  
+ 
       getTableData(payload)
-  
+ 
     }
  
      // sort
@@ -423,30 +423,30 @@ const [sortColumn, setSortColumn]=useState("")
 const handleSort = (field,order) => {
  console.log(order,"orderrrrrrrrrrrrr")
 // console.log(field,"for sorting .....")
-
+ 
 const payload = initialDefaultPayload;
-
+ 
   setSortColumn(field);
   setInitialDefaultPayload(prevPayload => ({
-
+ 
     ...prevPayload,
-
+ 
     sort: {
       key: order === "asc"? 1:0,
       orderBy: sortColumn
     }
-
+ 
    
   }));
   console.log(payload,field,"sortinglllllllllll")
  
-
-
-
+ 
+ 
+ 
 table.onSort(field);
 getTableData(payload)
 };
-
+ 
 const getRowActionsBasedOnStatus = (row) => {
   if (row?.status === 'pending' || row?.status===""|| row?.status==="Pending") {
     return rowActions
@@ -458,11 +458,10 @@ const getRowActionsBasedOnStatus = (row) => {
     return null
   }
 }
-
-
-
-
-  
+ 
+ 
+ 
+ 
   return (
     <>
      
@@ -488,15 +487,15 @@ const getRowActionsBasedOnStatus = (row) => {
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} onClickActions={onClickActions}/>}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
-       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}onClickActions={onClickActions}/>}
-       {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
-       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onClickActions={onClickActions}/>}
-
+       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onHandleOpen={handleOpenModal}  />}
+       {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+       {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
+ 
        {filterName==="DeductionFilter" && <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}/>}
        
         <Card>
-
+ 
        
           <TableContainer   sx={{ position: "relative", overflow: "unset", padding:'0px !important'  }}>
             <TableSelectedAction
@@ -519,7 +518,7 @@ const getRowActionsBasedOnStatus = (row) => {
             />
  
             <Scrollbar>
-            
+           
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
                 {TABLE_HEAD && <TableHeadCustom
                   order={table.order}
@@ -556,11 +555,11 @@ const getRowActionsBasedOnStatus = (row) => {
                           onSelectRow={() => table.onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
                           onEditRow={(event) => { handleEditRow
-                            
-                            
+                           
+                           
                             (row, event) }}
                           headerContent={TABLE_HEAD}
-                          rowActions={getRowActionsBasedOnStatus(row.status)}
+                          rowActions={getRowActionsBasedOnStatus(row)}
                         />
                        
  
@@ -648,7 +647,7 @@ function applyFilter({ inputData, comparator, filters }) {
 BasicTable.propTypes = {
   endpoint: PropTypes.string,
 };
-
+ 
 BasicTable.propTypes = {
   onClickActions:PropTypes.any,
 }
@@ -664,7 +663,8 @@ BasicTable.propTypes = {
   bodyData: PropTypes.func,
 };
 BasicTable.propTypes = {
-   rowActions: PropTypes.func
+   rowActions: PropTypes.func,
+   handleOpenModal:PropTypes.func
 };
 BasicTable.propTypes = {
   filterName: PropTypes.any
@@ -674,7 +674,7 @@ BasicTable.propTypes = {
 BasicTable.propTypes = {
   buttonFunction: PropTypes.any
 };
-
+ 
 BasicTable.propTypes ={
   deleteFunction:PropTypes.any,
   handleEditRowParent:PropTypes.any

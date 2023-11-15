@@ -28,15 +28,15 @@ import axios from 'axios';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-export default function SalaryStructureForm({ currentUserData}) {
-  const handleClose=()=>setOpen(false)
+export default function SalaryStructureForm({ openModal,currentUserData,handleClose}) {
+  // const handleClose=()=>setOpen(false)
   const [currentUser,setcurrentUser]=useState("")
   const [options,setOptions]=useState({})
   const [optionsValue,setOptionsValue]=useState({})
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(openModal);
   useEffect(()=>{
     const fetchDepartment=async()=>{
-      if(open){
+      if(openModal){
         try{
         
           const obj={
@@ -55,7 +55,7 @@ export default function SalaryStructureForm({ currentUserData}) {
 
     fetchDepartment();
     
-  },[open])
+  },[openModal])
  
    const handleOpen = () => setOpen(true);
 
@@ -129,17 +129,15 @@ export default function SalaryStructureForm({ currentUserData}) {
 
 
 
-
+  console.log(openModal,'openModal')
  
   return (
     <>
-      <Button onClick={handleOpen}  variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add SalaryStructure</Button>
+     
       <Dialog
         fullWidth
         maxWidth={false}
-        open={ open}
+        open={ openModal }
         onClose={handleClose}
         PaperProps={{
           sx: { maxWidth: 720 },
@@ -237,7 +235,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                   <Grid container >
               
               <Grid item xs={12} md={6}>
-              
+              {console.log(options,'options')}
                 <Autocomplete
                   disablePortal
                   id="departmentOptions"
@@ -387,7 +385,7 @@ export default function SalaryStructureForm({ currentUserData}) {
 
 SalaryStructureForm.propTypes = {
   currentUser: PropTypes.object,
-  openModal:PropTypes.bool,
+  openmodal:PropTypes.bool,
   type:PropTypes.string,
   handleClose:PropTypes.func
 };
