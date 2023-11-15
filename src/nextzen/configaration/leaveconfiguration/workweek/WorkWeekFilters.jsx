@@ -106,8 +106,8 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
     'Holiday'
   ];
 
-  const locationTypes = [
-    'infobell',
+  const locationName = [
+    'infobellit',
   
   ]
 
@@ -119,7 +119,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
-  const [dropdownLocations, setDropdownDesignationGradeName] = useState([]);
+  const [dropdownlocationName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownActions, setdropdownActions] = useState([]);
   const [dropdownDay, setdropdownDay] = useState([]);
 
@@ -133,7 +133,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
     {
-      field: 'locations',
+      field: 'locationName',
       options: [],
     },
     {
@@ -216,7 +216,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
       target: { value },
     } = event;
 
-    if (field === 'locations') {
+    if (field === 'locationName') {
       setDropdownDesignationGradeName(value);
       const obj = dropdown;
       obj[field] = value;
@@ -366,19 +366,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
                 </Grid>
                 <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel id="locations">Locations</InputLabel>
+                <InputLabel id="locationName">location Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownLocations}
-                    onChange={(e) => handleChangeDropDown(e, 'locations')}
-                    input={<OutlinedInput label="Locations" />}
+                    value={dropdownlocationName}
+                    onChange={(e) => handleChangeDropDown(e, 'locationName')}
+                    input={<OutlinedInput label="locationName" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {locationTypes.map((name) => (
+                    {locationName.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>

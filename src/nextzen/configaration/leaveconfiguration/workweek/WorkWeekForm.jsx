@@ -24,6 +24,7 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function WorkWeekForm({ currentUser}) {
   const [formData, setFormData] = useState({});
@@ -70,7 +71,7 @@ export default function WorkWeekForm({ currentUser}) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -100,6 +101,7 @@ export default function WorkWeekForm({ currentUser}) {
       getLocation();
     };
     fetchData();
+    
   }, []);
 
 
@@ -109,9 +111,9 @@ export default function WorkWeekForm({ currentUser}) {
     data.companyId=localStorage.getItem('companyID')
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
-
+    handleClose()
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
+      const response = await axios.post(baseUrl+'/addWorkWeek', data);
       console.log('sucess',response);
     } catch (error) {
       console.log('error', error);
@@ -157,7 +159,7 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle>Add Work Week</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}

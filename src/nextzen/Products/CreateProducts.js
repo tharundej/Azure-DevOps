@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateProducts({ currentData, handleClose }) {
+export default function CreateProducts({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
     productName: Yup.string().required('Product Name is Required'),
     productCategory: Yup.string().required('Product Category is Required'),
@@ -70,6 +70,7 @@ export default function CreateProducts({ currentData, handleClose }) {
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
+      getTableData()
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
