@@ -158,7 +158,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const ApiHitExperience=()=>{
     const obj={
-      companyId: "COMP5",
+      companyId: "COMP1",
       employeeId:localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -175,7 +175,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP5",
+      companyId: "COMP1",
       employeeId: localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -184,7 +184,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        onhandleClose()
+        props.nextStep();
+       props.handleCallSnackbar(response.data.message,"success")
+       console.log(response.data.message,'response.data.message')
       })
       .catch((error) => {
         console.log(error);
@@ -212,7 +214,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const handleSubmit = () => {
     const obj1={
-      companyId: "COMP5",
+      companyId: "COMP1",
   
       employeeId: localStorage.getItem("employeeId"),
   

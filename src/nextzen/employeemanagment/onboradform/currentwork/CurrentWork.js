@@ -52,6 +52,7 @@ import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
+  const router = useRouter();
 
   const currentUser=props.currentUser;
 
@@ -91,7 +92,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
 
   useImperativeHandle(ref,()=>({
-    childFunctionGeneral(){
+    childFunctionWork(){
      onSubmit();
       
     }
@@ -104,7 +105,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
-  const router = useRouter();
+  
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -134,6 +135,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     .then((response) => {
     
       console.log(JSON.stringify(response.data));
+      router.push(paths.dashboard.employee.root);
     
     })
     
@@ -423,35 +425,25 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,'general information');
 
-    try {
-      data.company_id = 'comp1';
-      data.company_name = 'DXC';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+                const obj=
+                {
 
-      
+                  ctc:parseInt(currentWorkData?.ctc,10),
+                  companyID:currentWorkData?.companyID,
+                  employeeID:localStorage.getItem('employeeIdCreated'),
+                  employmentType:currentWorkData?.employmentType,
+                  departmentID:currentWorkData?.departmentID?.departmentID,
+                  designationGradeID:currentWorkData?.designationGradeID?.designationGradeID,
+                  designationID:currentWorkData?.designationID?.designationID,
+                  locationID:currentWorkData?.locationID?.locationID,
+                  reportingManagerID:currentWorkData?.reportingManagerID?.managerID,
+                  roleID:currentWorkData?.roleID?.roleID
 
-      const response = await axios.post(`${baseUrl}/onBoarding`, data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+                }
+                ApiHitCurrentWork(obj);
+          console.log(currentWorkData,obj,'currentWorkData')
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
   });
 
   const handleDrop = useCallback(
