@@ -144,7 +144,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
       const response = await createAssetsAPI(data);
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
-      // handleClose(); // Close the dialog on success
+      handleClose(); // Close the dialog on success
       reset(); // Reset the form values
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
