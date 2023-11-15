@@ -13,7 +13,7 @@ import Statoury from './statoury/Statoury';
 
 import PreviousWork from './previouswork/PreviousWork';
 
-import Documents from "../../employeemanagment/employeeview/documents/Documets"
+import Documents from "../../employeemanagment/employeeview/documents/Document"
 
 const TABS = [
     {
