@@ -6,6 +6,7 @@ import FilesGrid from '../files/FilesGrid';
 import CreateEducation from '../employeeeducation/createeducation/CreateEducation';
 import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
 
 
 
@@ -30,7 +31,8 @@ const employeeData=[ {
 
 ]
 
-const PreviousWork = () => {
+const PreviousWork = ({employeeIDForApis}) => {
+  const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
 
@@ -104,8 +106,8 @@ const PreviousWork = () => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyId": "COMP5",
-      "employeeId": "NEWC19"
+      "companyId": "COMP1",
+      "employeeId": employeeIDForApis
   });
      
     const config = {
@@ -186,7 +188,8 @@ const PreviousWork = () => {
                             </Typography>
                            
 
-                        <FilesGrid dataFiltered={itm?.documents} />
+                        {/* <FilesGrid dataFiltered={itm?.documents} /> */}
+                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
 
                           </>}
                         </CardContent>
@@ -199,5 +202,7 @@ const PreviousWork = () => {
     </>
   )
 }
+
+
 
 export default PreviousWork

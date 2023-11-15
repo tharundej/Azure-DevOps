@@ -4,13 +4,9 @@ import { BasicTable } from '../../../Table/BasicTable';
 
 export default function WorkWeek() {
     const TABLE_HEAD = [
-      { id: 'monday', label: 'Monday', type: 'text' },
-      { id: 'tuesday', label: 'Tuesday', type: 'text' },
-      { id: 'wednesday', label: 'Wednesday', type: 'text' },
-      { id: 'thursday', label: 'Thursday', type: 'text' },
-      { id: 'friday', label: 'Friday', type: 'text' },
-      { id: 'saturday', label: 'Saturday', type: 'text' },
-      { id: 'sunday', label: 'Sunday', type: 'text' },
+      { id: 'day', label: 'Day', type: 'text' },
+      { id: 'action', label: 'Action', type: 'text' },
+      { id: 'location', label: 'Location', type: 'text' },
     ];
     const actions = [
       { name: 'View', icon: 'hh', path: 'jjj' },

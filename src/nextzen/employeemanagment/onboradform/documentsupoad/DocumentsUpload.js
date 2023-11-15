@@ -1,11 +1,75 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
-
-import { Grid,Box,Card ,Typography,Button} from '@mui/material'
+import axios from 'axios';
+import { Grid,Box,Card ,Typography,Button,  FormControl,
+  Select,
+  MenuItem,
+  InputLabel } from '@mui/material'
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
+
+  var [defaultValues,setDefaultValues]=useState([ {
+    fileType:'',
+    fileName:'',
+    fileContent:''
+}])
+
+
+
+  var handleCategoryChange = (e,index) => {
+    var { value, id } = e.target;
+    // var newObj = defaultValues;
+    
+
+    var newArray = [...defaultValues];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    console.log(newArray,'type changed')
+
+    
+    setDefaultValues(newArray);
+  };
+
+  var handleAddDocument=(index)=>{
+    var newArray = [...defaultValues];
+    var obj1={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+    newArray = [
+      ... newArray,
+      obj1,
+    ];
+    console.log(newArray,'new docs')
+
+    setDefaultValues(newArray);
+  }
+
+  var handleDeleteDocument=(index)=>{
+    var updatedItems = defaultValues.filter((item,index1) => index1 !== index);
+
+    var newArray = [...defaultValues];
+   
+    newArray =updatedItems
+   
+    console.log(newArray,'docs deleted')
+
+
+   setDefaultValues(newArray);
+  }
   useImperativeHandle(ref,()=>({
     childFunctionDocuments(){
-      onSubmit();
+      console.log('ggg')
+      const obj={
+        "companyId": "COMP1",
+        "employeeId": localStorage.getItem('employeeIdCreated'),
+        documents:defaultValues
+      }
+      onSubmit(obj);
 
 
 
@@ -14,40 +78,55 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     }
   }))
 
-  const onSubmit=()=>{
-    console.log(attachments);
+  var onSubmit=(data)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/addDocuments`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      props.nextStep()
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
-    const [attachments,setAttachments]=useState([]);
+    var [attachments,setAttachments]=useState([]);
 
-    const handleFileUpload = (event,index,field) => {
+    var handleFileUpload = (event,index) => {
         
-      const file = event.target.files[0];
-      // const { value, id } = e.target;
-      // const newObj = defaultValues;
+      var file = event.target.files[0];
+      // var { value, id } = e.target;
+      // var newObj = defaultValues;
 
-        const base64String=1;
-      const reader = new FileReader();
+        var base64String=1;
+      var reader = new FileReader();
 
       reader.onload = function(event) {
-      const base64String = event.target.result.split(',')[1];
+      var base64String = event.target.result.split(',')[1];
       console.log(base64String);
-      const newArray = [...attachments];
+      var newArray = [...defaultValues];
 
       newArray[index] = {
-        
+        ... newArray[index],
         fileName: file.name,
-        fileContent:base64String,
-        fileType:field
+        fileContent:base64String
       };
-      console.log(attachments,'newArraynewArraynewArra')
-      setAttachments(newArray);
+      console.log(newArray,'file uploaded')
+      setDefaultValues(newArray);
 
       // Now you can do something with the base64String, for example, send it to a server or store it in state.
       };
 
     reader.readAsDataURL(file);
-
-    //console.log(attachments[2]?.fileName)
       
 
       
@@ -60,21 +139,21 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     //   let newArray=attachments
 
 
-    //     const fileInput = event.target;
+    //     var fileInput = event.target;
       
-    //     const file = fileInput.files[0];
+    //     var file = fileInput.files[0];
       
       
       
     //     if (file) {
       
-    //       const reader = new FileReader();
+    //       var reader = new FileReader();
       
       
       
     //       reader.onload = function (e) {
       
-    //         const base64String = e.target.result;
+    //         var base64String = e.target.result;
       
     //         console.log('Base64 string:', base64String);
       
@@ -109,109 +188,100 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                 }}
               >
 
-               
-
-                   
-                    <Grid container flexDirection="column" alignItems="center" justifyContent="center" >
-
-                    <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                        <Grid item xs={12} md={6} >
-
-
-                        <Typography> Aadhar Card</Typography>
-                        </Grid>
-
-
-                        <Grid item xs={12} md={6}>
-                        <Grid item>
-
-                        <input
-                        id={`file-upload-input-aadhar`}
-                        type="file"
-                        accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                        onChange={(e)=>{ handleFileUpload(e,0,"Aadhar Card")}}
-                        style={{ display: 'none' }}
-
-                        />
-                        <label htmlFor= {`file-upload-input-aadhar`}>
-                        <Button variant="outlined" component="h6">
-                        Choose File
-                        </Button>
-                        </label>
-                        <Typography variant="body2" color="textSecondary">
-                        {attachments[0] ? `Selected File: ${attachments[0]?.fileName}` : 'No file selected'}
-                        </Typography>
-                        </Grid>
-                        </Grid>
-                        </Grid>
-
+                
+                   {defaultValues?.map((file,index)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                 <Grid item xs={12} md={6} >
 
-
-                <Typography> Pan Card</Typography>
+               
+                <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                    <Select
+                        label="Select a doc Type"
+                        value={file?.fileType}
+                        onChange={(e)=>{handleCategoryChange(e,index)}}
+                        name="Select a doc Type"
+                    >
+                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
+                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        
+                        {/* Add more categories here */}
+                    </Select>
+                    </FormControl>
                 </Grid>
 
-
                 <Grid item xs={12} md={6}>
-                <Grid item>
+                <Grid>
 
-                <input
-                id={`file-upload-input-pan`}
-                type="file"
-                accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                onChange={(e)=>{ handleFileUpload(e,1,"Pan Card")}}
-                style={{ display: 'none' }}
-
+                  <Grid item>
+                
+                  <input
+                   id={`file-upload-input-${index}`}
+                    type="file"
+                    accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                    style={{ display: 'none' }}
+                   
                 />
-                <label htmlFor= {`file-upload-input-pan`}>
-                <Button variant="outlined" component="h6">
-                Choose File
-                </Button>
+                <label htmlFor= {`file-upload-input-${index}`}>
+                    <Button variant="outlined" component="h6">
+                    Choose File
+                    </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
-                {attachments[1] ? `Selected File: ${attachments[1]?.fileName}` : 'No file selected'}
+                    {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
-                </Grid>
-                </Grid>
-                </Grid>
+                  </Grid>
+                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                  { index===0 &&
+                   
+                      <Button 
+                      onClick={()=>{
+                        handleAddDocument(index)
+                      }
+                       
+                        
+                       
+                        
 
-                {/* passport */}
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                      }
+                      >Add</Button>
+                   
 
-                   <Grid item xs={12} md={6} >
+                  }
+                   { index!==0 &&
+                    
+                      <Button 
+                      onClick={()=>{
+                        handleDeleteDocument(index)
+                      }
+                       
+                        
+                       
+                        
 
-               
-                  <Typography> Pass Port</Typography>
-                </Grid>
+                      }
+                      >Delete</Button>
+                    
 
-
-                <Grid item xs={12} md={6}>
-                <Grid item>
-                 
-                 <input
-                  id={`file-upload-input-passport`}
-                   type="file"
-                   accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                   onChange={(e)=>{ handleFileUpload(e,2,"Passport")}}
-                   style={{ display: 'none' }}
+                  }
+                  </Grid>
                   
-               />
-               <label htmlFor= {`file-upload-input-passport`}>
-                   <Button variant="outlined" component="h6">
-                   Choose File
-                   </Button>
-               </label>
-               <Typography variant="body2" color="textSecondary">
-                   {attachments[2] ? `Selected File: ${attachments[2]?.fileName}` : 'No file selected'}
-               </Typography>
-                 </Grid>
-                 </Grid>
+                  
                 </Grid>
+               
+                </Grid>
+               
+                   
 
-                </Grid>
+              </Grid>
+               ))}
+
+
+
+                   
+                    
                 
                 </Box>
 

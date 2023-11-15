@@ -664,8 +664,6 @@ const [sortColumn, setSortColumn]=useState("")
     console.log(payload,field,"sortinglllllllllll")
     
 
-  
-
   table.onSort(field); 
   getTableData(payload)
 };

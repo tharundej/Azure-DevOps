@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-import { MenuItem ,Stack,Paper,Grid,TextMaxLine,Box,Typography} from '@mui/material';
+import { MenuItem ,Stack,Paper,Grid,TextMaxLine,Box,Typography,Button} from '@mui/material';
 import Iconify from 'src/components/iconify';
 import FileThumbnail from 'src/components/file-thumbnail/file-thumbnail';
 
-const FileBox = ({file,onDelete,onSelect,sx}) => {
+const FileBox = ({file,onDelete,onEdit,sx,index}) => {
     console.log(file,'filefilefile')
     const popover = usePopover();
 
@@ -15,9 +15,14 @@ const FileBox = ({file,onDelete,onSelect,sx}) => {
                     <Grid item>
                  <FileThumbnail file={file?.type || " "} sx={{ width: 36, height: 36 }} />
                 </Grid>
-                {/* <Grid  item>
-                    123
-                </Grid> */}
+                <Grid item>
+                  <Button variant="outlined" color="primary" onClick={()=>{onEdit(index)}} >
+                    Edit
+                  </Button>
+                  <Button variant="outlined" color="secondary" onClick={()=>{onDelete(index)}} >
+                    Delete
+                  </Button>
+                </Grid>
       </Grid>
     );
 
@@ -83,7 +88,7 @@ export default FileBox;
 FileBox.propTypes = {
     file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     onDelete: PropTypes.func,
-    onSelect: PropTypes.func,
+    onEdit: PropTypes.func,
     
     sx: PropTypes.object,
   };

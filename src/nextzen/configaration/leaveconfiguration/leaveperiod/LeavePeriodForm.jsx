@@ -25,6 +25,8 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { Alert, Snackbar } from '@mui/material';
 
 export default function LeavePeriodForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -33,6 +35,9 @@ export default function LeavePeriodForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [formData, setFormData] = useState({});
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [selectedDates2, setSelectedDates2] = useState(dayjs());
@@ -111,13 +116,33 @@ export default function LeavePeriodForm({ currentUser }) {
 
     try {
       const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addLeavePeriod',
+        baseUrl+'/addLeavePeriod',
         data
       );
+      if(response?.data?.code===200  ){
+        setSnackbarSeverity('success');
+         setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+         handleClose()
+      
       console.log('sucess', response);
-    } catch (error) {
-      console.log('error', error);
-    }
+
+      }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+
+      }
+    
+  } catch (error) {
+    setSnackbarSeverity('error');
+    setSnackbarMessage('Error While Adding Leave Period. Please try again.');
+    setSnackbarOpen(true);
+   console.log('error', error);
+ }
   });
   const handleDateChanges = (date) => {
     setSelectedDates(date);
@@ -139,8 +164,29 @@ const leavePeriodNames=[
   {type:'Year'}
 ];
   console.log(formData, 'formdata for location');
+
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(true);
+  };
   return (
     <>
+    <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={6000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"

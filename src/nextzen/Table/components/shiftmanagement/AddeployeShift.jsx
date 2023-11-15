@@ -111,7 +111,6 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   useEffect(() => {
     getDepartment()
     getEmploye()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])

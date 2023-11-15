@@ -1,45 +1,31 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {TextField,MenuItem,Grid,Typography, DialogContent,Dialog,Button,Stack}from '@mui/material';
 import { _userList } from 'src/_mock';
-import { useState, useEffect } from 'react';
-import { Container } from '@mui/system';
-import { Dialog } from '@mui/material';
-import instance from 'src/api/BaseURL';
+import { useState , useCallback,useMemo,forwardRef} from 'react';
 import { BasicTable } from '../Table/BasicTable';
-import ReusableTabs from '../tabs/ReusableTabs';
 import SalaryAdvanceForm from './SalaryAdvaceForm';
-
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
-
+import { baseUrl } from '../global/BaseUrl';
+import axios from 'axios';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {useSnackbar} from '../../components/snackbar';
+import { RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import FormProvider from 'src/components/hook-form/form-provider';
 export default function SalaryAdvace() {
-   
+    const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
-
-        // {
+        {
     
-        //   id: "",
+          id: "employeeID",
     
-        //   label: "SL_NO",
+          label: "Employee Id",
+          minWidth:"8pc",
     
-        //   type: "text",
+          type: "text",
     
-        //   containesAvatar: false,
-    
-        //   secondaryText: "text",
-    
-        // },
+         
+        },
     
         { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
     
@@ -50,10 +36,10 @@ export default function SalaryAdvace() {
         { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
         { id: "PaidAmount", label: "paid Amount", width: "7pc", type: "text" },
         { id: "approverName", label: "Approver Name", width: 100, type: "text" },
-        { id: "commentStatus", label: "Comments", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "commentStatus", label: "User Comments", width: 100, type: "text" },
+        { id: "hrComments", label: "Approver Comments", width: 100, type: "text" },
         { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-    
+        { id: "status", label: "Status", width: 100,type: "badge"},
         // { id: '', width: 88 },
     
       ];
@@ -62,30 +48,33 @@ export default function SalaryAdvace() {
     
       const actions = [
     
-        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveLoanDetails"},
-        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveLoanDetails"},
+        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
+        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
     
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateLoanDetails" },
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
     
     
       ];
-
       const [showForm, setShowForm] = useState  (false);
-      const handleClose = () => setShowForm(false);
+      const [showApproveForm,setApproveForm]= useState(false);
+      const [showRejectForm,setRejectForm]= useState(false);
+      const [showEditForm,setShowEditForm]= useState(false);
+      const [commentsValue,setCommentsValue]=useState("");
+      const [rowData,setRowData] = useState();
+      const handleClose = () => {
+        setShowForm(false);
+        setShowEditForm(false);
+        setApproveForm(false);
+        setRejectForm(false);
+      };
       const handleTimeForm =()=>{
         setShowForm(true)
-        console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       } 
-      
-    
-      const[tableData,SetTableData] = useState({})
-      console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
-
   const defaultPayload={
-    "count": 10,
-    "page": 1,
-    "search": "COMP1",
-    "companyID": "COMP1",
+    "count": 5,
+    "page": 0,
+    "search": "",
+    "companyID":localStorage?.getItem('companyID'),
     "externalFilters": {
   "requestDate": {
    
@@ -111,10 +100,154 @@ export default function SalaryAdvace() {
       "orderBy": ""
     }
   }
+  const onClickActions=(rowdata,event)=>{
+   
+    if(event?.name==="Approve")
+    {
+      setRowData(rowdata)
+      setApproveForm(true)
+    }
+    else if(event?.name==="Reject"){
+      setRowData(rowdata)
+      setRejectForm(true)
+    }
+    else if (event?.name==="Edit"){
+      setRowData(rowdata)
+      setShowEditForm(true);
+    }
+  
+  }
+
+  const handleComments= (e)=>{
+    setCommentsValue(e.target.value);
+  }
+
+  const NewUserSchema = Yup.object().shape({
+    paymentStatus:Yup.string(),
+    salaryAdvanceID:Yup.number(),
+    paidAmount:Yup.number(),
+    hrComments:Yup.string(),
+    status:Yup.string(),
+    employeeID:Yup.string()
+  })
+ 
+  const defaultValues = useMemo(
+
+    () => ({ 
+      
+    paymentStatus:"",
+    salaryAdvanceID:0,
+    paidAmount:"",
+    hrComments:"",
+    status:"approved",
+    employeeID:localStorage?.getItem('employeeID'),
+    }),
+    []
+  );
+
+  const methods = useForm({
+    resolver: yupResolver(NewUserSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    watch,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const values = watch();
+  const apihit=(obj)=>{
+    const config = {
+      method: 'POST',
+      maxBodyLength:Infinity,
+      url: baseUrl + `/approveSalaryAdvance`,
+      data: obj
+    
+    }
+
+    axios.request(config).then((response) => {
+      enqueueSnackbar(response.data.message,{variant:'success'})
+      handleClose();
+    })
+      .catch((error) => {
+        enqueueSnackbar(error.message,{variant:'Error'})
+        handleClose();
+      });
+  }
+  const onSubmit = handleSubmit(async (data)=>{
+    data.salaryAdvanceID=rowData?.SalaryAdvanceID,
+  
+    console.log(data,'datadata');
+    try{
+      apihit(data)
+    }
+    catch (error){
+      console.error(error)
+    }
+  });
+
+
+  const handleEditSalary=()=>{
+   var payload = {
+      "salaryAdvanceID":rowData?.SalaryAdvanceID,
+      "requestAmount":parseInt(amountValue)
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    // url:  `http://192.168.0.111:3002/erp/updateSalaryAdvance`,
+    url: baseUrl + `/updateSalaryAdvance`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+    handleClose()
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+      handleClose()
+    });
+  
+  }
+   
+  const handleSalaryReject=()=>{
+    var payload =
+    {
+      "employeeID":localStorage?.getItem('employeeID'),
+      "salaryAdvanceID":rowData?.SalaryAdvanceID,
+      "paidAmount":rowData?.paidAmount,
+      "hrComments":commentsValue,
+      "status":"rejected",
+      "paymentStatus":rowData?.paymentStatus
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    url: baseUrl + `/approveSalaryAdvance`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+    });
+  
+  }
+const [amountValue,setAmountValue] = useState();
+  const handleChange = useCallback((event) => {
+    setAmountValue(event.target.value);
+  }, []);
       
   return (
     <>
-      {showForm && (
+      {(showForm) && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -128,20 +261,119 @@ export default function SalaryAdvace() {
  <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
       </Dialog>
     )}
-    <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
-  {/* <div>Content Here</div> */}
+      {(showEditForm) && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showEditForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 500 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+  <DialogContent>
+  <Grid container spacing={2}>
+     <Grid xs={12} md={12}>
+            <Grid sx={{padding:'8px'}}>
+              <Typography sx={{marginLeft:'5px'}}>
+                Edit Your Requested Amount 
+              </Typography>
+            </Grid>
+      </Grid>
+      <Grid  xs={12} md={12} sx={{marginLeft:5}}>
+      <TextField
+                
+                fullWidth
+                defaultValue={rowData?.requestAmount}
+                value={amountValue}
+                onChange={handleChange}
+                label="Amount"
+              />
+      </Grid>
+     </Grid>
+  </DialogContent>
+  <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+               <Button variant="contained" color="primary" onClick={handleEditSalary}>Apply</Button>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
+      </Dialog>
+    )}
 
-</Container>
+{(showApproveForm) && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showApproveForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 500 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+<FormProvider methods={methods} onSubmit={onSubmit}>
+    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
+        Approve Salary Request
+    </Typography>
+<DialogContent>
+<Grid sx={{marginTop:2}}>
+<RHFTextField name="paidAmount" label="Paid Amount"/>
+</Grid>
+
+<Grid sx={{marginTop:2}}>
+<RHFSelect name="paymentStatus" label="Payment Status">
+  <MenuItem value="credited">Credited</MenuItem>
+  <MenuItem value="debited">Debited</MenuItem>
+</RHFSelect>
+
+
+</Grid>
+<Grid sx={{marginTop:2}}>
+  <RHFTextField name="hrComments" label="Comments"/>
+</Grid>
+<Grid>
+
+  </Grid>
+<Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Approve Request</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} onClick={()=>setApproveForm(false)}>Cancel</Button>
+</DialogContent>
+</FormProvider>
+      </Dialog>
+    )}
+    {(showRejectForm) && (
+<Dialog
+fullWidth
+maxWidth={false}
+open={showRejectForm}
+onClose={handleClose}
+PaperProps={{
+  sx: { maxWidth: 500 , overflow:'hidden'},
+}}
+className="custom-dialog"  >
+<Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
+        Reject Salary Request
+    </Typography>
+<TextField 
+label="comments"
+placeholder='comments'
+onChange={(e)=>handleComments(e)}
+sx={{margin:2}}
+/>
+<div style={{display:"flex",justifyContent:"right",marginBottom:2}}>
+<Button variant="contained" color="primary" sx={{width:150,float:'right'}}  onClick={handleSalaryReject}>Reject Request</Button>
+<Button  onClick={()=>setRejectForm(false)}>Cancel</Button>
+</div>
+</Dialog>
+      )
+    }
     <BasicTable
-
 headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
-
 endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
 rowActions={actions}
 bodyData="data"
-
+onClickActions={onClickActions}
 />  
     </>
   );

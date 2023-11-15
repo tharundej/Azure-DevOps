@@ -161,7 +161,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   }
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('/SwapShift', data).then(
+      const response = await instance.post('/ ', data).then(
         (successData) => {
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})

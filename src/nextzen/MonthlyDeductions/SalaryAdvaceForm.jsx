@@ -36,40 +36,22 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { baseUrl } from '../global/BaseUrl';
 
 export default function SalaryAdvanceForm({ currentUser,handleClose }) {
-  
-  const [datesUsed, setDatesUsed] = useState({
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-    due_date: dayjs(new Date()),
-    // activity_name:[]
-  });
-  const [selectedActivity, setSelectedActivity] = useState([]);
-
-  const handleSelectChange = (event, values) => {
-    setSelectedActivity(values);
-  };
+ 
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    requestAmount: Yup.string(),
-    // start_date: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
+    requestAmount: Yup.number(),
     commentStatus: Yup.string(),
-   
-   
   });
 
   const defaultValues = useMemo(
     () => ({
    
         requestAmount: currentUser?.requestAmount || '',
-        start_date: currentUser?.start_date || '',
-        end_date: currentUser?.end_date || '',
-        due_date: currentUser?.due_date || '',
         commentStatus: currentUser?.commentStatus || '',
   
    
@@ -100,17 +82,20 @@ const [sendData, setSendData] = useState({
   const onSubmit = handleSubmit(async (data) => {
    
     try {
-      data.companyID = JSON.parse(JSON.stringify(localStorage.getItem('companyID'))),
-      data.employeeID = JSON.parse(JSON.stringify(localStorage.getItem('employeeID')));
+      data.companyID = localStorage.getItem('companyID'),
+      data.employeeID = localStorage.getItem('employeeID');
 
-      console.log(data, 'data111ugsghghh');
+      // data.companyID="COMP1",
+      // data.employeeID="info2"
 
-      const response = await instance.post('addSalaryAdvance', data).then(
+      const response = await instance.post(baseUrl+'/addSalaryAdvance', data).then(
         (successData) => {
-          console.log('sucess', successData);
+          enqueueSnackbar(successData?.data?.message,{variant:'success'})
+          handleClose()
         },
         (error) => {
-          console.log('lllll', error);
+          enqueueSnackbar(error?.data?.Message,{variant:'Error'})
+          handleClose()
         }
       );
 

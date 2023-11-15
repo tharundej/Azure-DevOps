@@ -55,12 +55,12 @@ export default function Swaprequest() {
     
     
         { id: "requestDate", label: "Request Date", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
         // { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
         { id: "startDate", label: "Start Date", width: 100, type: "text" },
         { id: "endDate", label: "End Date", width: 100, type: "text" },
         { id: "comment", label: "Comment", width: 100, type: "text" },
-    
+        
+        { id: "status", label: "Status", width: 100, type: "badge" },
         // { id: '', width: 88 }, 
     
       ];

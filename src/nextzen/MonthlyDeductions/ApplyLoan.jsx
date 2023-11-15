@@ -36,6 +36,7 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { baseUrl } from '../global/BaseUrl';
 export default function ApplyLoan({ currentUser,handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
     No_instalment: dayjs(new Date()),
@@ -96,27 +97,29 @@ const [sendData, setSendData] = useState({
   projectId : '',  
 })
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: ApplyLoan.jsx:93 ~ onSubmit ~ data:", data)
-    console.log('uyfgv');
 
     try {
     
-      data.companyID = "COMP1";
-      data.employeeID = "info7";
-
-      const response = await instance.post('addLoanDetails', data).then(
+      data.companyID = localStorage.getItem('companyID'),
+      data.employeeID = localStorage.getItem('employeeID')
+      
+      // data.companyID="comp1",
+      // data.employeeID="info1"
+      const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
-          console.log('sucess', successData);
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
           handleClose()
         },
         (error) => {
-          enqueueSnackbar(error?.data?.Message,{variant:'Error'})
-          console.log('lllll', error);
+          enqueueSnackbar("Previous Claim is Pending",{variant:'Error'})
+          handleClose()
         }
       );
 
-    } catch (error) {
+    } 
+    catch (error) {
+      console.log(error,"applyloanerror")
+      enqueueSnackbar(error?.Message,{variant:'Error'})
       console.error(error);
     }
   });

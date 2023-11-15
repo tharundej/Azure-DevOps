@@ -36,14 +36,14 @@ import * as Yup from 'yup';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
+const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis}) => {
 
   
   console.log(employeeData);
     const onSave=()=>{
      const obj={
-      companyId: "COMP5",
-      employeeId: "NEWC19",
+      companyId: "COMP1",
+      employeeId: employeeIDForApis,
       education:defaultValues
      }
       
@@ -499,6 +499,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
             </Grid>
           ))}
         </>
+            {defaultValues[0]?.documents?.length && 
           <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
@@ -509,7 +510,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint}) => {
         >
           Add Education
         </Button>
-        </Grid>
+        </Grid>}
         {/* <Button
           variant="contained"
           color="primary"
@@ -544,5 +545,6 @@ export default CreateEducation
 CreateEducation.propTypes = {
     open: PropTypes.string,
     onhandleClose:PropTypes.func,
-    employeeData:PropTypes.array
+    employeeData:PropTypes.array,
+    employeeIDForApis:PropTypes.string
   };

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { BasicTable } from '../../Table/BasicTable';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { Alert, Snackbar } from '@mui/material';
 
 export default function ExpenseClaimConfiguration() {
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false);
+  
   const TABLE_HEAD = [
-    { id: 'employee_name', label: 'Employee Name', type: 'text', minWidth:180 },
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth:180  },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth:180  },
     { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text', minWidth:180  },
@@ -17,7 +24,7 @@ export default function ExpenseClaimConfiguration() {
 
   const defaultPayload = {
     company_id: 'COMP2',
-    employee_id: 'ibm1',
+    // employee_id: 'ibm1',
     page: 0,
     count: 5,
     search: '',
@@ -68,6 +75,39 @@ export default function ExpenseClaimConfiguration() {
     });
   };
 
+  const onClickActions=(rowdata,event)=>{
+    if(event?.name==="Edit"){
+      handleEditAPICALL(rowdata,event)
+    }
+    else if(event?.name==="Delete"){
+      deleteFunction(rowdata,event)
+    }
+  }
+
+  const deleteFunction = async (rowdata,event)=>{
+    console.log("iam here ")
+    try{
+      console.log(rowdata,"rowData:::::")
+    const  data= {
+      "expense_configuration_id":JSON.parse( rowdata.expense_configuration_id,10),
+       
+      };
+      const response = await axios.post(baseUrl+'/deleteExpenseConfig',data);
+      if(response?.status===200){
+        setSnackbarSeverity('success');
+         setSnackbarMessage('Expense Configuration Deleted Succuessfully!');
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+      }
+    } catch (error) {
+       setSnackbarSeverity('error');
+       setSnackbarMessage('Error While Deleting Expense Configuration. Please try again.');
+       setSnackbarOpen(true);
+      console.log('error', error);
+    }
+  }
+
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
 
   useEffect(() => {
@@ -81,7 +121,30 @@ export default function ExpenseClaimConfiguration() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(true);
+  };
+
   return (
+    <>
+    <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={6000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
     <BasicTable
       headerData={TABLE_HEAD}
       endpoint="/getExpenseConfig"
@@ -89,6 +152,8 @@ export default function ExpenseClaimConfiguration() {
       rowActions={actions}
       filterName="ExpensiveClaimFilterSearch"
       buttonFunction={handleEdit}
+      onClickActions={onClickActions}
     />
+    </>
   );
 }
