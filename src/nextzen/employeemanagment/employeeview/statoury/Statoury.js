@@ -30,7 +30,7 @@ import StatouryForm  from '../../statoury/StatouryForm';
 
 // ----------------------------------------------------------------------
 
-export default function Statoury({  delivery, shippingAddress, payment }) {
+export default function Statoury({  delivery, shippingAddress, payment,employeeIDForApis }) {
   const employeeIDToCreate="info7"
   const [endpoint,setEndpoint]=useState("")
   const [statouryCreateOpen,setStatouryCreateOpen]=useState(false);
@@ -38,7 +38,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   const [dataToCreateOrEdit,setDataForCreateOrEdit]=useState({})
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
-      setEndpoint("updateStatutoryDetails");
+      setEndpoint("/updateStatutoryDetails");
       setDataForCreateOrEdit(employeeStatouryData)
       console.log('0p',dataToCreateOrEdit)
       setStatouryCreateOpen(true);
@@ -55,15 +55,16 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   const getEmployeeStattuory=()=>{
   
         let data1 = JSON.stringify({
-        "employeeID": "info7"
+        "employeeID": employeeIDForApis
         });
 
         let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getStatutoryDetailsEmployee',
+        url: `${baseUrl}/getStatutoryDetailsEmployee`,
         headers: { 
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+           
           'Content-Type': 'application/json'
         },
         data : data1
@@ -139,7 +140,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 
  const handleAddStatuory=()=>{
   setDataForCreateOrEdit(dataa)
-  setEndpoint("addStatutoryDetails");
+  setEndpoint("/addStatutoryDetails");
   
   setStatouryCreateOpen(true)
  }
@@ -466,32 +467,32 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
  
 
   const dataa= {
-    "companyID": "COMP5",
-    "employeeID": "info7",
-    "employeeName": "yukthi H",
-    "uan": 1,
-    "pfType": "TypeA",
-    "pfNumber": 1,
-    "esicNumber": 1,
-    "ptNumber": 1,
-    "lwfNumber": "1",
-    "panNumber": "1",
-    "aadharNumber": "1",
-    "passportNumber": "1",
-    "accountNumber": 0,
-    "accountHolderName": "1",
-    "bankName": "1",
-    "ifscCode": "11",
-    "bankBranch": "1"
+    "companyID": "",
+    "employeeID": "",
+    "employeeName": "",
+    "uan": undefined,
+    "pfType": "",
+    "pfNumber": undefined,
+    "esicNumber": undefined,
+    "ptNumber": undefined,
+    "lwfNumber": "",
+    "panNumber": "",
+    "aadharNumber": "",
+    "passportNumber": "",
+    "accountNumber": undefined,
+    "accountHolderName": "",
+    "bankName": "",
+    "ifscCode": "",
+    "bankBranch": ""
 }
 
 
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUser={dataa} endpoint={endpoint}/>
+    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={employeeStatouryData} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
 
-    {employeeStatouryData.accountHolderName==="" && 
+    {employeeStatouryData?.accountHolderName===""   && 
     
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
@@ -526,4 +527,5 @@ Statoury.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
+  employeeIDForApis:PropTypes.string
 };

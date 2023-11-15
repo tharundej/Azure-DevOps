@@ -67,7 +67,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
    
 
      const obj={
-      companyId: "COMP5",
+      companyId: "COMP1",
       employeeId: "NEWC19",
       experience:defaultValues
      }
@@ -84,7 +84,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint}) => {
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP5",
+      companyId: "COMP1",
       employeeId: "NEWC19",
       experience:defaultValues
      }

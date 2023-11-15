@@ -12,7 +12,7 @@ const Documets = () => {
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP5",
+      "companyId": "COMP1",
       "employeeId": "NEWC19",
       documents:[ {
           fileType:'',
@@ -33,7 +33,7 @@ const Documets = () => {
         console.log(documents,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP5",
+          "companyId": "COMP1",
           "employeeId": "NEWC19",
           documents:[documents?.documents[dataIndex]]
         }
@@ -47,7 +47,7 @@ const Documets = () => {
         
 
         let data = JSON.stringify({
-            "companyId": "COMP5",
+            "companyId": "COMP1",
             "employeeId": "NEWC19"
           });
            console.log(baseUrl,'baseUrl')
@@ -70,7 +70,7 @@ const Documets = () => {
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP5",
+              "companyId": "COMP1",
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)

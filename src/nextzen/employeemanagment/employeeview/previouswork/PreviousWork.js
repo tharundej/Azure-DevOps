@@ -106,7 +106,7 @@ const PreviousWork = () => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyId": "COMP5",
+      "companyId": "COMP1",
       "employeeId": "NEWC19"
   });
      

@@ -80,7 +80,7 @@ const EmployeeEducation = ({employeeIDForApis}) => {
 
    const ApiHit=()=>{
     let data = JSON.stringify({
-      "companyId": "COMP5",
+      "companyId": "COMP1",
       "employeeId": employeeIDForApis
     });
      

@@ -108,7 +108,7 @@ const defaultFilters = {
 // ----------------------------------------------------------------------
  
 const 
-BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent}) => {
+BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent,handleOpenModal}) => {
  
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -447,15 +447,17 @@ table.onSort(field);
 getTableData(payload)
 };
 
-const getRowActionsBasedOnStatus = (status) => {
-  if (status === 'pending' || status===""|| status==="Pending") {
+const getRowActionsBasedOnStatus = (row) => {
+  if (row?.status === 'pending' || row?.status===""|| row?.status==="Pending") {
     return rowActions
-  } 
-  else {
+  }
+  else if(!row?.status || row?.status === undefined){
+    return rowActions
+  }
+  else{
     return null
-  } 
+  }
 }
-
 
 
 
@@ -485,7 +487,7 @@ const getRowActionsBasedOnStatus = (status) => {
        {filterName === "LeavePeriodFilterSearch" && <LeavePeriodFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "LeaveTypeFilterSearch" && <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "SwapSearchFilter" && <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
-       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}  />}
+       {filterName === "SalaryStructureFilterSearch" && <SalaryStructureFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch} onHandleOpen={handleOpenModal}  />}
        {filterName === "WorkWeekFilterSearch" && <WorkWeekFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "CompoffFilterSearch" && <ComoffConfigFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
        {filterName === "holidaysFilterSearch" && <HolidaysFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} searchData={handleFilterSearch}/>}
@@ -661,7 +663,8 @@ BasicTable.propTypes = {
   bodyData: PropTypes.func,
 };
 BasicTable.propTypes = {
-   rowActions: PropTypes.func
+   rowActions: PropTypes.func,
+   handleOpenModal:PropTypes.func
 };
 BasicTable.propTypes = {
   filterName: PropTypes.any
