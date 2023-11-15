@@ -86,14 +86,15 @@ export default function CompoffApprove({ currentUser ,}) {
     { id: "approver_name", label: "Approver Name", width: 180, type: "text" },
     // { id: '', width: 88 },
   ]
-
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
 
 
   const defaultPayload={
 
   
     "employee_id":"",
-    "company_id":"COMP2",
+    "company_id":"COMP1",
     "page":0,
     "search":"",
     "count":5,

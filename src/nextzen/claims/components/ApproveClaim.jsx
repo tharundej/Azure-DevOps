@@ -108,11 +108,11 @@ export default function ApproveClaim({ currentUser }) {
     // { id: '', width: 88 },
   ]
 
-
+  
 
   const defaultPayload={
 
-    "companyId":"COMP2",
+    "companyId":"COMP1",
     "count":5,
     "page":0,
     "search":"",

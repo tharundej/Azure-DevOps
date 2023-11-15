@@ -96,13 +96,14 @@ export default function MyCompoff({ currentUser ,}) {
     // { id: '', width: 88 },
   ]
 
-
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
 
   const defaultPayload={
 
   
-    "employee_id":"",
-    "company_id":"COMP2",
+    "employee_id":employeeID,
+    "company_id":"COMP1",
     "page":0,
     "search":"",
     "count":5,
