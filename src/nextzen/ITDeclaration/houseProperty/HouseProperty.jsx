@@ -66,7 +66,11 @@ export default function HouseProperty() {
   var [attachedDocumment, setAttachedDocument] = useState([]);
   var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
   const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
-
+  var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
+  var [landLordDocs, setLandLordDocs] = useState([]);
+  var [rentDocs, setRentDocs] = useState([]);
+  const [landLordDeletedId , setLandLordDeletedID] = useState([])
+  const [rentDeletedId , setRentDeletedID] = useState([])
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -190,7 +194,84 @@ export default function HouseProperty() {
     fetchData();
     
   }, []);
+  const handleLandLordattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    landlord_file_name = fileData?.map((doc) => doc.fileName);
+    setLandlord_file_name(landlord_file_name);
+    landlord_file_content = fileData?.map((doc) => doc.fileContent);
+    setLandlord_file_content(landlord_file_content);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      landlordID: item.id ? item.id : 0,
+      landlordFileName: item.fileName,
+      landlordFileContent: item.fileContent,
+    }));
+    landLordDocs = transformedData;
+    setLandLordDocs(landLordDocs);
 
+    console.log(landLordDocs, 'landlordDocs');
+
+    console.error('Arrays must have the same length');
+    setOpenAttchementDilog(false);
+  };
+  const handleRentattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      ID: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    rentDocs = transformedData;
+    setRentDocs(rentDocs);
+
+    console.log(rentDocs, 'landlordDocs');
+    setOpenAttchementDilog(false);
+  };
+  console.log(rentDocs, 'landlordDocs');
+const handleLandLordDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(landLordDeletedId, "deletedelete")
+}
+const handleRentDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setRentDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(rentDeletedId, "deletedelete")
+}
+// handle edit
+const handleEdit = (rowData) => {
+  console.log(rowData ,"rowData");
+  setLandLordDocs(rowData.documents)
+  setFormData({
+    
+      propertyReference: null,
+      name_of_the_owners: '',
+      address: '',
+      panOfLenders: '',
+      loanAmount: '',
+      purposeOfLoan: '',
+      dateOfSanction: '2023-09-11',
+      interestPayable: '',
+      propertyOccupied: '',
+      shareOfInterest: '',
+      grossRentalIncome: '',
+      municipalTaxesPaid: '',
+    
+    // Add other fields as needed
+  });
+
+  // Set the attached documents if available
+  if (rowData.documents && rowData.documents.length > 0) {
+    setMedicalTableDataDoc([...rowData.documents]);
+  }
+};
   return (
     <div>
       <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -518,7 +599,9 @@ export default function HouseProperty() {
                 <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue}</TableCell>
                 <TableCell style={{ textAlign: 'center'}}>{row.annualPremium}</TableCell>
                 <TableCell style={{ textAlign: 'center'}}>{row.premiumConsideredForDeduction}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.action}</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>
+                      <Button onClick={() => handleEdit(row)}>Edit</Button>
+                    </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -529,7 +612,9 @@ export default function HouseProperty() {
           showAttachmentDilog={openAttachmentDilog}
           closeAttchementDilod={closeAttchementDilod}
           handleUploadattchmentFileName={handleUploadattchmentFileName}
-          handleUploadattchment={handleUploadattchment}
+          handleUploadattchment={handleLandLordattchment}
+          previousData={landLordDocs}
+          handleDeletedID = {handleLandLordDeletedID}
         />
       ) : null}
     </div>

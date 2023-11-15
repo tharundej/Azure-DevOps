@@ -29,7 +29,7 @@ import Snackbar from '@mui/material/Snackbar';
 import '../declarationDetails/DeclarationDetails.css';
 import MuiAlert from '@mui/material/Alert';
 import './LicPReimum.css';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+// import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 
 const Alert = React.forwardRef((props, ref) => (
@@ -54,6 +54,8 @@ const headings = [
 
 
 export default function LicPremium() {
+
+  const baseUrl = "http://192.168.1.56:3001/erp/"
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
   const treatmentTypes = [{ type: 'No' }, { type: 'Yes' }];
@@ -111,17 +113,100 @@ export default function LicPremium() {
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
+
+  // states to handle file Uploader component 
+  var [landLordDocs, setLandLordDocs] = useState([]);
+  var [rentDocs, setRentDocs] = useState([]);
+  var [fileName , setFileName] = useState([])
+  var [fileContent, setFileContent] = useState([])
+  const [selectedRowDocuments, setSelectedRowDocuments] = useState([]);
   const benak = () => {
     console.log('testing ');
   };
   const methods = useForm();
 
-  const attchementHandler = () =>{
+
+  // handling the file uploader compoent
+  const handleLandLordattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    fileName = fileData?.map((doc) => doc.fileName);
+    setFileName(fileName);
+    fileContent = fileData?.map((doc) => doc.fileContent);
+    setFileContent(fileContent);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      ID: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    landLordDocs = transformedData;
+    setLandLordDocs(landLordDocs);
+
+    console.log(landLordDocs, 'landlordDocs');
+
+    console.error('Arrays must have the same length');
+    setOpenAttchementDilog(false);
+  };
+  const handleRentattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      ID: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    rentDocs = transformedData;
+    setRentDocs(rentDocs);
+
+    console.log(rentDocs, 'landlordDocs');
+    setOpenAttchementDilog(false);
+  };
+  console.log(rentDocs, 'landlordDocs');
+const handleLandLordDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(landLordDeletedId, "deletedelete")
+}
+const handleRentDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setRentDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(rentDeletedId, "deletedelete")
+}
+
+// end of file uploader
+  const attchementHandler = (rowData) =>{
+    setSelectedRowDocuments(rowData.documents || []);
     setOpenAttchementDilog(true)
   }
   const closeAttchementDilod = () =>{
     setOpenAttchementDilog(false)
   }
+
+  //  new mehiod
+
+
+  const handleFormChange1 = (event, rowIndex) => {
+    const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
+
+    // Assuming formData is an array of objects
+    const updatedData = [...formData];
+    updatedData[rowIndex] = { ...updatedData[rowIndex], [name]: integerValue };
+    setFormData(updatedData);
+  };
+
+  const saveLicDetails = async (rowData) => {
+    // Assuming you have a function to save data for a specific row
+    // Adjust this function based on your actual implementation
+    console.log('Saving data for row:', rowData);
+  };
+  // new mehod end 
 
   const handleUploadattchment =(data)=>{
     attachedDocumment = data
@@ -178,12 +263,12 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
-    const payload = { companyId: 'COMP3', employeeId: 'wipr1' };
+    const payload = { "employeeID":"INFO21" };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +'getSingleLicPremium',
+      url: "https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLicPremiumDetails",
      
       headers: {
         Authorization:
@@ -262,44 +347,29 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
     
   }, [isreloading]);
 
+  const handleFormChange = (event, rowIndex) => {
+    const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
+ 
+    setPolicyData((prevData) => {
+       const newData = [...prevData];
+       newData[rowIndex] = { ...newData[rowIndex], [name]: integerValue };
+       return newData;
+    });
+ };
+ 
+
   const userId  =  5
   return (
     <div>
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-          {/* search and filter  */}
-          {/* <Grid
-            container
-            spacing={2}
-            alignItems="center"
-            justifyContent="flex-end"
-            direction="row"
-            style={{ marginBottom: '1rem' }}
-          >
-            <Grid item>
-              <TextField
-                sx={{ width: '20vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button className="button">Filter</Button>
-            </Grid>
-            <Grid item>
-              <Button className="button">Report</Button>
-            </Grid>
-          </Grid> */}
+  
+       
           {/* Row 1 */}
+          {policyData.length > 0 &&
+          policyData?.map((row, rowIndex) => (
+            <div key={rowIndex} style={{ marginTop: '2rem' }}>
 
           <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
@@ -309,8 +379,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 variant="outlined"
                 fullWidth
                 name="policyNumber"
-                value={formData.policyNumber}
-                onChange={handleChange}
+                value={row.policyNumber}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
@@ -337,8 +407,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 variant="outlined"
                 fullWidth
                 name="insuredPersonName"
-                value={formData.insuredPersonName}
-                onChange={handleChange}
+                value={row.insuredPersonName}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
           </Grid>
@@ -353,8 +423,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 fullWidth
                 type='number'
                 name="sumOfAssured"
-                value={formData.sumOfAssured}
-                onChange={handleChange}
+                value={row.sumOfAssured}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
             <Grid item xs={4}>
@@ -375,8 +445,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 variant="outlined"
                 fullWidth
                 name="premiumAmountForWhichProofAttachedNow"
-                value={formData.premiumAmountForWhichProofAttachedNow}
-                onChange={handleChange}
+                value={row.premiumAmountForWhichProofAttachedNow}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
           </Grid>
@@ -388,8 +458,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 variant="outlined"
                 fullWidth
                 name="premiumAmountFallInDue"
-                value={formData.premiumAmountFallInDue}
-                onChange={handleChange}
+                value={row.premiumAmountFallInDue}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
             <Grid item xs={4}>
@@ -398,8 +468,8 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 variant="outlined"
                 fullWidth
                 name="premiumConsiderForDeduction"
-                value={formData.premiumConsiderForDeduction}
-                onChange={handleChange}
+                value={row.premiumConsiderForDeduction}
+                onChange={(e) => handleFormChange(e, rowIndex)}
               />
             </Grid>
             <Grid item xs={4}>
@@ -466,7 +536,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                <Button className="button" onClick={attchementHandler}>Attchement</Button>
+                <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={saveLicDetals}>
@@ -495,8 +565,18 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
             </Grid>
             {/* Add more rows as needed */}
           </Grid>
-        </Grid>
+          <Button onClick={() => saveLicDetails(row)} style={{ marginTop: '1rem' }}>
+                Save
+              </Button>
+              {   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={selectedRowDocuments}
+          handleDeletedID = {handleLandLordDeletedID}/> : null}
 
+
+ 
+            </div>
+          ))}
+        </Grid>
+{/* 
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -539,7 +619,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> */}
       </FormProvider>
       <Snackbar
         open={snackbarOpen}
@@ -559,82 +639,10 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
         </Alert>
       </Snackbar>
       
-{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleUploadattchment}/> : null}
+{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={landLordDocs}
+          handleDeletedID = {handleLandLordDeletedID}/> : null}
 
-{/* {true?
-      <div>
-      <input type="file" multiple onChange={handleFileChange} />
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>
-            {file.name}{' '}
-            <button onClick={() => handleDelete(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        {/* Display base64 strings (for demonstration purposes) */}
-        {/* <ul>
-          {base64Strings.map((base64, index) => (
-            <li key={index}>{base64}</li>
-          ))}
-        </ul>
-      </div>
-    </div>: null}  */}
 
-{/* {(userId==5)?<>
-<div id="project-multidrawwer-div" style={{ display: 'flex' }}>
-                {viewImage
-                  ? images.map((i, index) => {
-                      return (
-                        <div style={{ display: 'flex', margin: '1rem' }}>
-                          <img id="img-delete-project-multidrawer" src={i} style={{ height: '50px', width: '70px' }} alt="hello" />
-                          <Iconify id="icon-delete-image"
-                            onClick={() => {
-                              deleteImage(index);
-                            }}
-                            icon={'typcn:delete'}
-                            sx={{ width: 16, height: 16, ml: 1, color: 'red' }}
-                          />
-                        </div>
-                      );
-                    })
-                  : null}
-              </div>
-              <br />
-<div id="project-input-tag-div" style={{ display: 'flex' ,marginTop:"10px" , marginBottom:"10px"}}>
-                  <label id="input-tag-project-multi-drawer" for="inputTag" style={{ cursor: 'pointer', display: 'flex' }}>
-                    <Iconify id="camera-icon" icon={'mdi:camera'} sx={{ width: 25, height: 25, ml: 2, color: '#ff7424' }} />
-                    &nbsp;
-                    <input
-                      style={{ display: 'none' }}
-                      accept="image/png, image/gif, image/jpeg"
-                      id="inputTag"
-                      type="file"
-                      onChange={(e) => {
-                        convertImage(e);
-                      }}
-                    />
-                  </label>
-               
-                  <br />
-         
-           <Button
-           id="upload-btn"
-           onClick={()=>UploadImages(2)}
-           
-           sx={{
-             '&:hover': {
-               backgroundColor: '#ffd796',
-             },
-             color: '#ff7424',
-             backgroundColor: '#ffd796',
-             marginLeft: '10px',
-           }}
-         >
-           Upload  
-         </Button>
-         </div></>:null} */}
  
     </div>
   );
