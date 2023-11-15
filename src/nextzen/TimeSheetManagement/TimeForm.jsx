@@ -126,7 +126,7 @@ const [currentProjectData ,setCurrentProjectData] = useState({})
 const [currentActivitytData ,setCurrentActivitytData] = useState({})
 console.log("🚀 ~ file: TimeForm.jsx:119 ~ TimeForm ~ projectDetails:", projectDetails)
 
-const PrName = projectDetails.map((item) => item.projectName);
+const PrName = projectDetails.map((item) => item.projectcdName);
 console.log("🚀 ~ file: TimeForm.jsx:123 ~ TimeForm ~ PrName:", PrName)
 
 const getProjectName = async ()=>{
@@ -138,13 +138,13 @@ const getProjectName = async ()=>{
     };
 
 
-    const response = await instance.post('listmanagersproject', data);
+    const response = await instance.post('/listmanagersproject', data);
 
     // Handle the response (e.g., check for success, update state, etc.)
     console.log('Response:', response.data.projectDetails);
 
     // Return or handle the response data as needed
-    setProjectDetails(response.data.Eployee_list)
+    setProjectDetails(response.data.data)
     return response.data;
   } catch (error) {
     // Handle any errors (e.g., network error, request failure, etc.)
@@ -168,7 +168,7 @@ const getActivityName = async ()=>{
     console.log('Response:', );
 
     // Return or handle the response data as needed
-    SetActivityData(response.data["Activity Names"])
+    SetActivityData(response.data.data)
     return response.data;
   } catch (error) {
     // Handle any errors (e.g., network error, request failure, etc.)
@@ -184,8 +184,8 @@ const getActivityName = async ()=>{
 
     try {
       data.company_id = 'COMP2';
-      data.activity_id =String( currentActivitytData.activity_id);;
-      data.projectId =String( currentProjectData.projectId);
+      data.activity_id =String( currentActivitytData.activityId);;
+      data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
       data.start_time = '2023-10-17 11:50:02.023';
       data.end_time = '2023-10-17 11:50:02.023';
@@ -243,7 +243,7 @@ const getActivityName = async ()=>{
             id="combo-box-demo"
             options={projectDetails}
             value={currentProjectData}
-            getOptionLabel={(option) => option.projectName}
+            getOptionLabel={(option) => option.projectcdName}
             onChange={(e,newvalue)=>{
              
              
@@ -270,7 +270,7 @@ const getActivityName = async ()=>{
             id="combo-box-demo"
             options={activityData}
             value={currentActivitytData}
-            getOptionLabel={(option) => option.activity_name}
+            getOptionLabel={(option) => option.activityName}
             onChange={(e,newvalue)=>{
              
              

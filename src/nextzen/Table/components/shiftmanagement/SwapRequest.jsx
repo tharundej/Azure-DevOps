@@ -44,20 +44,21 @@ export default function Swaprequest() {
     
         },
     
-        { id: "employee_shift_swap_id", label: "Employe Shift Swap ID", width: 180, type: "text" },
+        { id: "employeeShiftSwapId", label: "Employe Shift Swap ID", width: 180, type: "text" },
 
-        { id: "from_shift_group", label: "From Shift Group", width: 180, type: "text" },
+        { id: "employeeName", label: "Employee Name", width: 180, type: "text" },
+        { id: "fromShiftGroup", label: "From Shift Group", width: 180, type: "text" },
+        { id: "toShiftGroup", label: "To Shift Group", width: 180, type: "text" },
     
         // { id: "Shiftgroup_Name", label: "Shift Group Name", width: 220, type: "text" },
         // { id: "Date", label: "Date", width: 220, type: "text" },
     
-        { id: "employee_id", label: "Employee ID", width: 180, type: "text" },
     
-        { id: "request_date", label: "Request Date", width: 100, type: "text" },
+        { id: "requestDate", label: "Request Date", width: 100, type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
-        { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
-        { id: "start_date", label: "Start Date", width: 100, type: "text" },
-        { id: "end_date", label: "End Date", width: 100, type: "text" },
+        // { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
+        { id: "startDate", label: "Start Date", width: 100, type: "text" },
+        { id: "endDate", label: "End Date", width: 100, type: "text" },
         { id: "comment", label: "Comment", width: 100, type: "text" },
     
         // { id: '', width: 88 }, 
@@ -66,23 +67,20 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "company_id":"COMP2",
-      "employee_id":"ibm1",
+      "companyId":"COMP2",
+      "count":5,
       "page":0,
-      "count":3,
-      "Search":"r",
-      "externalFilters":{
-      "shift_name": "",
-      "shift_term": "",
-      "startdate":"",
-      "enddate":""
-   
-  },
-      "sort": {
-      "orderby": "shift_name",
-      "key": 0
-  } 
-   
+      "search":"",
+      "externalFilter":{
+      "requestDate":"",
+      "startDate":"",
+      "endDate":"",
+      "status":""
+  }, 
+      "sort":{
+      "key":0,
+      "order":""
+  }
   }
       const actions = [
     
@@ -128,10 +126,10 @@ export default function Swaprequest() {
     <BasicTable
 defaultPayload={defaultPayload}
 headerData={TABLE_HEAD}
-endpoint='/Swaprequest'
+endpoint='/getallSwapDetails'
 bodyData='data'
 rowActions={actions}
-filterName='MyShiftFilter'
+filterName='RequestSwapSerachFilter'
 />  
     </>
   );
