@@ -371,4 +371,3 @@ CalendarForm.propTypes = {
   currentEvent: PropTypes.object,
   onClose: PropTypes.func,
 };
-

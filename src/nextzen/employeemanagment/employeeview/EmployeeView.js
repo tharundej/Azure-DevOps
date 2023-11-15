@@ -13,6 +13,8 @@ import Statoury from './statoury/Statoury';
 
 import PreviousWork from './previouswork/PreviousWork';
 
+import Documents from "../../employeemanagment/employeeview/documents/Document"
+
 const TABS = [
     {
       value: 'About',
@@ -33,6 +35,11 @@ const TABS = [
       value: 'Statoury',
       label: 'Statoury',
       icon: <Iconify icon="mdi:card-account-details-star" width={24} />,
+    },
+    {
+      value: 'Documents',
+      label: 'Documents',
+      icon: <Iconify icon="et:documents" width={24} />,
     },
   ];
  

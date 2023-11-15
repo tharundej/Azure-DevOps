@@ -9,12 +9,17 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
+import Expenses from 'src/nextzen/expenses/Expenses';
 // ----------------------------------------------------------------------
 
 // employee Management
 
-const EmployeeManagementHome = lazy(() => import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome'));
-const EmployeeView = lazy(() => import('../../nextzen/employeemanagment/employeeview/EmployeeView'));
+const EmployeeManagementHome = lazy(() =>
+  import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome')
+);
+const EmployeeView = lazy(() =>
+  import('../../nextzen/employeemanagment/employeeview/EmployeeView')
+);
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -99,9 +104,9 @@ const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
 
-const PaySchedule = lazy(()=> import('src/nextzen/Payroll/payschedule/PaySchedule'))
+const PaySchedule = lazy(() => import('src/nextzen/Payroll/payschedule/PaySchedule'));
 
-const PayScheduleform = lazy(()=> import('src/nextzen/Payroll/payschedule/PayScheduleform'));
+const PayScheduleform = lazy(() => import('src/nextzen/Payroll/payschedule/PayScheduleform'));
 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
@@ -122,6 +127,17 @@ const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/e
 const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 
 const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfiguration'));
+
+// const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+// factory
+const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
+const VendorIndex = lazy(() => import('src/nextzen/vendor/Vendor'));
+const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
+const Assets = lazy(() => import('src/nextzen/assets/Assets'));
+const Products = lazy(() => import('src/nextzen/Products/Products'));
+const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
+const PurchaseOrder = lazy(() => import('src/nextzen/Purchase/PurchaseOrder/PurchaseOrder'));
+const Balancesheet = lazy(() => import('src/nextzen/balancesheet/BalanceSheet'));
 
 export const dashboardRoutes = [
   {
@@ -193,8 +209,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Leave />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -202,8 +216,6 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeSheet />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -211,8 +223,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Shift />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -220,8 +230,6 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeApprovals />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -229,11 +237,8 @@ export const dashboardRoutes = [
         children: [
           { element: <TimeProject />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
-
 
       {
         path: 'claims',
@@ -241,8 +246,6 @@ export const dashboardRoutes = [
           { element: <Claims />, index: true },
           { path: 'compoffapprove', element: <CompoffApprove /> },
           { path: 'mycompoff', element: <MyCompoff /> },
-          
-          
         ],
       },
 
@@ -251,9 +254,8 @@ export const dashboardRoutes = [
         children: [
           { element: <Payroll />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-          {path: 'payschedule',element:<PaySchedule/>},
-          {path:':id/payscheduleform',element:<PayScheduleform/>}
-          
+          { path: 'payschedule', element: <PaySchedule /> },
+          { path: ':id/payscheduleform', element: <PayScheduleform /> },
         ],
       },
       {
@@ -261,8 +263,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Itdeclaration />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -270,8 +270,6 @@ export const dashboardRoutes = [
         children: [
           { element: <MonthlyDeductions />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
 
@@ -280,8 +278,6 @@ export const dashboardRoutes = [
         children: [
           { element: <Appraisal />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
-        
-          
         ],
       },
       {
@@ -363,6 +359,87 @@ export const dashboardRoutes = [
       { path: 'kanban', element: <KanbanPage /> },
       { path: 'permission', element: <PermissionDeniedPage /> },
       { path: 'blank', element: <BlankPage /> },
+      {
+        path: 'factory',
+        children: [
+          {
+            element: <FactoryIndex />,
+            index: true,
+          },
+        ],
+      },
+	  {
+        path: 'expenses',
+        children: [
+          {
+            element: <Expenses />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'vendor',
+        children: [
+          {
+            element: <VendorIndex />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'materials',
+        children: [
+          {
+            element: <Materials />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'assets',
+        children: [
+          {
+            element: <Assets />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            element: <Products />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'customers',
+        children: [
+          {
+            element: <Customers />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'purchase',
+        children: [
+          { element: <PurchaseOrder />, index: true },
+          { path: 'order', element: <PurchaseOrder /> },
+          { path: 'invoice', element: <PurchaseOrder /> },
+          { path: 'payment', element: <PurchaseOrder /> },
+        ],
+      },
+      {
+        path: 'balancesheet',
+        children: [
+          {
+            element: <Balancesheet />,
+            index: true,
+          },
+        ],
+      },
     ],
   },
   {

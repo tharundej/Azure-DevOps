@@ -17,7 +17,7 @@ export default function SalaryAdvace() {
           label: "Employee Id",
           minWidth:"8pc",
     
-        //   type: "text",
+          type: "text",
     
          
         },
