@@ -73,7 +73,11 @@ export default function SalaryStructure() {
 
   useEffect(() => {
     if(editRowIds){
+
     const fetchLocations = async () => {
+      console.log('rainaa')
+
+
       
       const desgObj={
         companyID:'COMP1',
@@ -105,7 +109,6 @@ export default function SalaryStructure() {
         const departmentValue=funcDropDownValue(department,'departmentID',editRowIds?.departmentID)
         const desginationValue=funcDropDownValue(desgination,'designationID',editRowIds?.designationID)
         const desginationGradeValue=funcDropDownValue(desginationGrade,'designationGradeID',editRowIds?.designationGradeID)
-       
 
         const arrValue={
           
@@ -167,7 +170,7 @@ export default function SalaryStructure() {
 
       ApiHit(rowData.salaryStructureID)
 
-      // setOpenModalEdit(true);
+       setOpenModalEdit(true);
 
 
 

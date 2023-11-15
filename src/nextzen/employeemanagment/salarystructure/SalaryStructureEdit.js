@@ -40,6 +40,8 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
         setDropDownOptions(optionsEdit);
         setDropDownValue(optionsValueEdit);
         setcurrentUser(editRowIds)
+        console.log(optionsValueEdit,'optionsValueEditoptionsValueEdit')
+
     }
 
   },[optionsEdit,optionsValueEdit,editRowIds])
@@ -248,7 +250,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
                   <Grid container >
               
               <Grid item xs={12} md={6}>
-              {console.log(dropdownOptions,'ploooo')}
+              {console.log(dropdownValues,'ploooo')}
                 <Autocomplete
                   disablePortal
                   id="departmentOptions"

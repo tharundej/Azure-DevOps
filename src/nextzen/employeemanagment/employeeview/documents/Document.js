@@ -8,12 +8,12 @@ import DocumentsUpload from './uploaddocuments/UploadDocuments';
 
 import FileEditCreate from '../../../global/fileUploads/FileEditCreate'
 import { doc } from 'firebase/firestore';
-const Documets = () => {
+const Documets = ({employeeIDForApis}) => {
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
       "companyId": "COMP1",
-      "employeeId": "NEWC19",
+      "employeeId": employeeIDForApis,
       documents:[ {
           fileType:'',
           fileName:'',
@@ -34,7 +34,7 @@ const Documets = () => {
 
         const obj={
           "companyId": "COMP1",
-          "employeeId": "NEWC19",
+          "employeeId": employeeIDForApis,
           documents:[documents?.documents[dataIndex]]
         }
         console.log(obj,'edit obj')
@@ -48,7 +48,7 @@ const Documets = () => {
 
         let data = JSON.stringify({
             "companyId": "COMP1",
-            "employeeId": "NEWC19"
+            "employeeId":employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
           let config = {
@@ -71,7 +71,8 @@ const Documets = () => {
             obj={
               ...obj[0],
               "companyId": "COMP1",
-              "employeeId": "NEWC19",
+              "employeeId": employeeIDForApis
+              ,
             }
             setDocumentsData(obj)
 
