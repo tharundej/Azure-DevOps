@@ -506,49 +506,56 @@ const [stateOptions,setOptions]=useState([])
 
           <Grid>
 
+         
+
                <Grid>
+
+
             <Typography>Joining Date</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fjoiningDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fjoiningDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fjoiningDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fjoiningDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
+            <Grid container direction="row" spacing={2}>
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={12}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+              value={dates?.fjoiningDateFrom}
+              defaultValue={dayjs(new Date())}
+              onChange={(newValue) => {
+                setDates((prev) => ({
+                  ...prev,
+                  fjoiningDateFrom: newValue,
+                }));
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={12}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+              value={dates?.fjoiningDateTo}
+              defaultValue={dayjs(new Date())}
+              onChange={(newValue) => {
+                setDates((prev) => ({
+                  ...prev,
+                  fjoiningDateTo: newValue,
+                }));
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </Grid>
+          </Grid>
+            </Grid>
 
 
            <Grid marginTop={2}>
@@ -556,44 +563,47 @@ const [stateOptions,setOptions]=useState([])
             <Typography>DOB</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fDOBDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fDOBDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fDOBDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fDOBDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
+            <Grid container direction="row" spacing={2}>
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={12}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+              value={dates?.fDOBDateFrom}
+              defaultValue={dayjs(new Date())}
+              onChange={(newValue) => {
+                setDates((prev) => ({
+                  ...prev,
+                  fDOBDateFrom: newValue,
+                }));
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={12}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+              value={dates?.fDOBDateTo}
+              defaultValue={dayjs(new Date())}
+              onChange={(newValue) => {
+                setDates((prev) => ({
+                  ...prev,
+                  fDOBDateTo: newValue,
+                }));
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </Grid>
+    </Grid>
 
              
              </Grid>

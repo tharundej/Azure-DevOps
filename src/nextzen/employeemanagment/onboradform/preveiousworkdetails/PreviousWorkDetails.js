@@ -402,7 +402,35 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
 
             <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-             
+            <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
 
               <Grid md={6} xs={12} item>
                 <DatePicker
@@ -433,35 +461,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
                 />
                 
               </Grid>
-              <Grid md={6} xs={12} item>
-                <DatePicker
-                fullWidth
-                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
-                  onChange={(date) => {
-
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="End Date"
-                />
-                
-              </Grid>
+              
               
             </Grid>
            

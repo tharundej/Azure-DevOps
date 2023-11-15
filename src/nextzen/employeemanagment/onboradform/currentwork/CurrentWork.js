@@ -518,7 +518,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
               }))
               const obj={
                 companyID:'COMP1',
-                locationID:newvalue?.locationID
+               
               }
 
               ApiHitDepartment(obj)
