@@ -103,7 +103,7 @@ export default function ExpenseClaimForm({ currentUser }) {
     <>
      <Snackbar
     open={snackbarOpen}
-    autoHideDuration={7000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',
@@ -131,7 +131,7 @@ export default function ExpenseClaimForm({ currentUser }) {
        }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add ExpensiveConfig</DialogTitle>
+          <DialogTitle>Add Expensive Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}

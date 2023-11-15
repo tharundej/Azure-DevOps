@@ -26,6 +26,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { baseUrl } from '../../global/BaseUrl';
 
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
@@ -47,9 +48,9 @@ import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 
 export default function MyCompoff({ currentUser ,}) {
   const compoff_type = [
-    { code: '', label: '', phone: '' },
-    { code: 'AD', label: 'Encash Amount', id:0, phone: '376' },
-    { code: 'AD', label: 'Encash leave', id:1,phone: '376' },
+    { compensantory_configuration_id: null, compensantory_policies:""  },
+    {   compensantory_configuration_id: 11, compensantory_policies: "enchachment", id:0 },
+    {   compensantory_configuration_id: 12, compensantory_policies: "leave",  id:1},
    
 
   ]
@@ -95,13 +96,14 @@ export default function MyCompoff({ currentUser ,}) {
     // { id: '', width: 88 },
   ]
 
-
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
 
   const defaultPayload={
 
   
-    "employee_id":"",
-    "company_id":"COMP2",
+    "employee_id":employeeID,
+    "company_id":"COMP1",
     "page":0,
     "search":"",
     "count":5,
@@ -173,10 +175,57 @@ export default function MyCompoff({ currentUser ,}) {
   const [compoffId, setCompoffId]= useState();
   console.log(compoffId,"compoffId")
 
-  
+   // edit
+   const [editData, setEditData]=useState({
+  })
+
+  const handleEditChange = (field, value) => {
+    console.log(field,value,"sssssssss")
+    
+    setEditData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
+  const onSubmitEdit2 = async(editData, event) => {
+    
+    try {
+      event.preventDefault();
+      // editData.claim_type=editData?.claim_type?.label
+
+     console.log(editData,"editDataeditData1")
+      
+      const response = await axios.post(baseUrl+"/EditMyCompoff", editData).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  }
+
+  console.log(editData,"editDataeditData")
   const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
+
+      const updatedRowData = {
+        ...rowData,
+        company_id: 'COMP2',
+      };
+    
+      console.log("updatedRowData",updatedRowData)
+      setEditData(updatedRowData);
+
       if (eventData?.type === 'edit') {
         handleOpenEdit()
         console.log("kl")
@@ -260,7 +309,7 @@ export default function MyCompoff({ currentUser ,}) {
       company_id:currentUser?.company_id|| 'COMP2',
       employee_id:currentUser?.employee_id|| 'ibm2',
       // compensantory_configuration_id:currentUser?.compoffId|| 11,
-      compensantory_configuration_id:compoffId || currentUser?.compensantory_configuration || null,
+      compensantory_configuration_id:compoffId || currentUser?.compensantory_configuration || 9,
       start_date:currentUser?.start_date|| '2023-11-10',
       end_date:currentUser?.end_date|| '2023-11-10',
       approver_id: currentUser?.approver_id || 'ibm6',
@@ -304,7 +353,7 @@ export default function MyCompoff({ currentUser ,}) {
      
       console.log(data, 'formdata api in check');
 
-      const response = await axios.post('http://192.168.1.79:8080/appTest/AddMycompoffdetails', data).then(
+      const response = await axios.post(baseUrl+'/AddMycompoffdetails', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -354,6 +403,8 @@ export default function MyCompoff({ currentUser ,}) {
       console.error(error);
     }
   });
+
+ 
   
 
   return (
@@ -406,7 +457,7 @@ export default function MyCompoff({ currentUser ,}) {
                 label="Select Compoff Type"
                 options={compoff_type}
                 bindLabel="label"
-                getOptionLabel={(option) => option.label} // Use 'label' as the display label
+                getOptionLabel={(option) => option.compensantory_policies} // Use 'label' as the display label
                 isOptionEqualToValue={(option, value) => option === value}
 
                  // options={compoff_type}
@@ -423,7 +474,7 @@ export default function MyCompoff({ currentUser ,}) {
             id="combo-box-demo"
             options={compoff_type}
             // value={id}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.compensantory_policies}
             onChange={(e, newValue) => {
               if (newValue) {
                 setCompoffId(newValue.id);
@@ -501,7 +552,7 @@ export default function MyCompoff({ currentUser ,}) {
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods} onSubmit={onSubmit}>
+        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(editData, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
           <DialogTitle>Edit My Compoff</DialogTitle>
 
@@ -521,23 +572,20 @@ export default function MyCompoff({ currentUser ,}) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {/* <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect> */}
-
-              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              <RHFTextField name="reason" label="Employee Name" />
-              <RHFAutocomplete
+              
+            
+              <Autocomplete
                 name="type_oc_claim"
                 label="Select Compoff Type"
                 options={compoff_type}
                 bindLabel="label"
-                getOptionLabel={(option) => option.label} // Use 'label' as the display label
+                getOptionLabel={(option) => option.compensantory_policies} // Use 'label' as the display label
                 isOptionEqualToValue={(option, value) => option === value}
+                value={editData?.compensantory_policies|| null}  
+                 onChange={(event, newValue) => {console.log("newValue", newValue);handleEditChange('compensantory_policies', newValue)}}
+                renderInput={(params) => (
+                <TextField {...params} label="Claim Type" variant="outlined" />
+  )}
   
                
               />
@@ -545,17 +593,17 @@ export default function MyCompoff({ currentUser ,}) {
             
              
              
-              {/* <RHFTextField name="reason" label="comments" /> */}
-              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
+             
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
-                    // value={item?.to}
+                    value={ dayjs( editData['start_date'] || null)}
                     onChange={(newValue) => {
-                      // handleChangeDate(newValue, 'to');
+                      
+                      handleEditChange('start_date', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}
@@ -567,39 +615,21 @@ export default function MyCompoff({ currentUser ,}) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    // value={item?.to}
+                    value={ dayjs( editData['end_date'] || null)}
                     onChange={(newValue) => {
-                     // handleChangeDate(newValue, 'End');
+                      
+                      handleEditChange('end_date', formatDateToYYYYMMDD(newValue));
                     }}
+                    
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFAutocomplete
-                name="type_oc_claim"
-                label="Select Compoff Type"
-                options={compoff_type}
-                bindLabel="label"
-                getOptionLabel={(option) => option.label} // Use 'label' as the display label
-                isOptionEqualToValue={(option, value) => option === value}
-  
-               
-              />
-              <Grid sx={{ alignSelf: "flex-start" }}  >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Expire Date"
-                    // value={item?.to}
-                    onChange={(newValue) => {
-                     // handleChangeDate(newValue, 'End');
-                    }}
-                  />
-                  {/* </DemoContainer> */}
-                </LocalizationProvider>
-              </Grid>
-              <RHFTextField name="approverName" label="Approver Name" />
+
+              <RHFTextField name="reason" label="comments" />
+            
+             
+             
              
 
 
@@ -624,7 +654,7 @@ export default function MyCompoff({ currentUser ,}) {
 
 
       <SurendraBasicTable
-         endpoint="GetMycompoffdetails"
+         endpoint="/GetMycompoffdetails"
          defaultPayload={defaultPayload}
          headerData={TABLE_HEAD}
          rowActions={actions}

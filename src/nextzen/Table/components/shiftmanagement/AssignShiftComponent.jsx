@@ -93,9 +93,10 @@ export default function AssignShiftComponent() {
     
       const defaultPayload ={
         "cid": "COMP2",
+        "locationId":32,
         "search": "",
         "page": 1,
-        "count": 1,
+        "count": 10,
         "externalFilters": {
             "shift_term": "",
             "start_date": "",
@@ -103,7 +104,7 @@ export default function AssignShiftComponent() {
             "shift_name": ""
         },
         "sort": {
-            "key": 1,
+            "key": 0,
             "orderBy": ""
         }
     }

@@ -91,7 +91,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -158,7 +158,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     <>
     <Snackbar
     open={snackbarOpen}
-    autoHideDuration={7000}
+    autoHideDuration={4000}
     onClose={snackBarAlertHandleClose}
     anchorOrigin={{
       vertical: 'top',
@@ -175,7 +175,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px' }}
       >
-        Add ExpensiveConfig
+        Add Shift Config
       </Button>
       <Dialog
         fullWidth
@@ -187,7 +187,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add ExpensiveConfig</DialogTitle>
+          <DialogTitle>Add Shift Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}

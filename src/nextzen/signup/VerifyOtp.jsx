@@ -37,22 +37,28 @@ import { EmailInboxIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
-import { CardContent } from '@mui/material';
+import { CardContent, Snackbar } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
-
+import { useState } from 'react';
+import { Alert as MuiAlert } from '@mui/material';
 // ----------------------------------------------------------------------
 
 export default function VerifyOtp() {
   const router = useRouter();
-
+  const [errorMsg, setErrorMsg] = useState('');
   const searchParams = useSearchParams();
-
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const email = searchParams.get('email');
 
   const { confirmRegister, resendCodeRegister } = useAuthContext();
 
   const { countdown, counting, startCountdown } = useCountdownSeconds(60);
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const VerifySchemaSchema = Yup.object().shape({
     code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
   });
@@ -83,15 +89,30 @@ export default function VerifyOtp() {
         }
         const response = await axios.post(baseUrl+'/verifyRegisterOtp', payload);
         console.log(response?.data.code)
-        if(response?.data.code===200){
-            console.log('sucess')
-            router.push(paths.auth.jwt.createpassword);
+          if(response?.data?.code===200 ){
+            setSnackbarSeverity('success');
+             setSnackbarMessage('Email Sent Succuessfully!');
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+          router.push(paths.auth.jwt.createpassword);
+
           }
-        
+          if(response?.data?.code===400  ){
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response?.data?.message);
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+    
+          }
     //   await confirmRegister?.(data.email, data.code);
     //   router.push(paths.auth.jwt.login);
     } catch (error) {
-      console.error(error);
+      setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+       console.log('error', error);
     }
   });
 
@@ -184,6 +205,19 @@ export default function VerifyOtp() {
       {renderHead}
 
       {renderForm}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000} // Adjust the duration as needed
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error">
+          {errorMsg}
+        </MuiAlert>
+        </Snackbar>
     </FormProvider>
     </CardContent>
   );

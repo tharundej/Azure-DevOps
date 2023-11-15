@@ -306,7 +306,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
  }}
  className="custom-dialog"  
 >
- <AddEmployeShift currentUser={{}} />
+ <AddEmployeShift currentUser={{}} handleClose={handleClose}/>
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">
