@@ -33,7 +33,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 export default function RentDetails() {
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp/';
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
@@ -52,6 +52,10 @@ export default function RentDetails() {
 
     // Add more months as needed
   ]);
+
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
 
   const [isPreviousData, setIsPreviousData] = useState(false);
   const [reload, setReload] = useState(false);
@@ -104,17 +108,6 @@ export default function RentDetails() {
     setOpenAttchementDilog(false);
   };
 
-  const handleUploadattchmentForlandlord = (data) => {
-    landlord_file_content = data;
-    setLandlord_file_content(landlord_file_content);
-    console.log(landlord_file_content, data);
-  };
-  const handleUploadattchmentFileNameForLandloard = (data) => {
-    landlord_file_name = data;
-    setLandlord_file_name(landlord_file_name);
-    console.log(landlord_file_name, data);
-    setOpenAttchementDilogForLandLoard(false);
-  };
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
     if (event.target.value === 'Yes') {
@@ -247,8 +240,8 @@ const handleRentDeletedID = ( data)=>{
   var testing = name;
   const saveRentDetails = async () => {
     const payload = {
-      companyId: 'COMP1',
-      employeeId: 'ibm3',
+      companyId: cmpId,
+      employeeId: empId,
       financialYear: '2023-2024',
       nameOfLandlord: landLardName,
       addressOfLandlord: landLardAddress,
@@ -265,11 +258,10 @@ const handleRentDeletedID = ( data)=>{
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'addRentDeclarationDetails ',
+      url: baseUrl + '/addRentDeclarationDetails ',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-        'Content-Type': 'text/plain',
+        Authorization: token,
+          'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -298,8 +290,8 @@ const handleRentDeletedID = ( data)=>{
     const payload = {
       //  "company_id": rentDetailsData?.companyId,
       //  "employee_id": rentDetailsData?.employeeId,
-      companyId: 'COMP1',
-      employeeId: 'ibm3',
+      companyId: cmpId,
+      employeeId: empId,
       financialYear: rentDetailsData?.financialYear,
       nameOfLandlord: rentDetailsData?.nameOfLandlord,
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
@@ -311,8 +303,8 @@ const handleRentDeletedID = ( data)=>{
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
       landLordDocs: landLordDocs,
       rentDocs: rentDocs,
-      rentFilelds: rentFiledsIndex,
-      landlordFilelds: landlordFiledsIndex,
+      // rentFilelds: rentFiledsIndex,
+      // landlordFilelds: landlordFiledsIndex,
       landLordIds:landLordDeletedId,
       rentIds: rentDeletedId
     };
@@ -320,10 +312,9 @@ const handleRentDeletedID = ( data)=>{
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'updateRentDeclarationDetails ',
+      url: baseUrl + '/updateRentDeclarationDetails ',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
+        Authorization:token ,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -355,17 +346,16 @@ const handleRentDeletedID = ( data)=>{
 
   const getRentDetails = async () => {
     const payload = {
-      employeeId: 'ibm3',
+      employeeId: empId,
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + 'getRentDeclarationDetails',
+      url: baseUrl + '/getRentDeclarationDetails',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+        Authorization:token ,  
         'Content-Type': 'text/plain',
       },
       data: payload,

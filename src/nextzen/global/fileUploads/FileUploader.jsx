@@ -125,12 +125,13 @@ const mapFileDataArray = (data, idKey, nameKey, contentKey) => {
 React.useEffect(() => {
   if (previousData && previousData.length > 0) {
     // Check the condition (e.g., if fileName is present)
+    console.log(previousData , "'insidfe useEffeect ")
     const hasFileName = previousData[0].hasOwnProperty('fileName');
-
+const hasLandLord =previousData[0].hasOwnProperty('landlordID');
     // Map the file data dynamically based on the condition
     const fileDataArray = hasFileName
-      ? mapFileDataArray(previousData, 'id', 'fileName', 'fileContent')
-      : mapFileDataArray(previousData, 'landlordID', 'landlordFileName', 'landlordFileContent');
+      ? mapFileDataArray(previousData, 'ID', 'fileName', 'fileContent')
+      :hasLandLord ? mapFileDataArray(previousData, 'landlordID', 'landlordFileName', 'landlordFileContent') :  mapFileDataArray(previousData, 'id', 'fileName', 'fileContent');
 
     // Update the fileData state with the new array
     setFileData(fileDataArray);

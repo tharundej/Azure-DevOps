@@ -29,6 +29,7 @@ import MuiAlert from '@mui/material/Alert';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -48,7 +49,11 @@ const headings = [
 ];
 
 export default function MedicalPremium() {
-  const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
+  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
+   
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -68,11 +73,11 @@ export default function MedicalPremium() {
   const [medicalTableData, setMedicalTableData] = useState([]);
   const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
   const [formData, setFormData] = useState({
-    companyID: '',
-    employeeID: '',
+    companyID: cmpId,
+    employeeID: empId,
     type: '',
     policyNumber: '',
-    dateOfCommencementOfPolicy: '',
+    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
     insuredPersonName: '',
     relationshipType: '',
     payMode: '',
@@ -173,8 +178,8 @@ export default function MedicalPremium() {
 
   const saveMedicalDetails = async () => {
     const payload = {
-      companyID: 'COMP1',
-      employeeID: 'INFO21',
+      companyID: cmpId,
+      employeeID: empId,
       type: formData?.type,
       policyNumber: formData?.policyNumber,
       dateOfCommencementOfPolicy: '2023-10-15',
@@ -191,10 +196,10 @@ export default function MedicalPremium() {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'addMedicalInsuranceDetails',
+      url: baseUrl + '/addMedicalInsuranceDetails',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+        token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -248,10 +253,10 @@ export default function MedicalPremium() {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl +'updateMedicalInsuranceDetails',
-      url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails',
+      url: baseUrl+'/updateMedicalInsuranceDetails',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA ',
+       token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -278,17 +283,17 @@ export default function MedicalPremium() {
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: 'INFO42' };
+    const payload = { employeeId: empId };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
-      url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails',
+      url:baseUrl +'/getMedicalInsuranceDetails',
 
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA ',
+       token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -311,15 +316,15 @@ export default function MedicalPremium() {
   };
   console.log(medicalTableData, 'resultsreults');
   const getMedicalPremumDetailsDocs = async () => {
-    const payload = { employeeId: 'INFO21' };
+    const payload = { employeeId: empId };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'getMedicalInsuranceDocuments',
+      url: baseUrl + '/getMedicalInsuranceDocuments',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',
+         token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -460,7 +465,7 @@ export default function MedicalPremium() {
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
-          <Grid item container spacing={2} xs={8} style={{ marginTop: '1rem' }}>
+          <Grid item container spacing={2} xs={12} style={{ marginTop: '1rem' }}>
             {/* search and filter  */}
             {/* <Grid
             container
@@ -523,17 +528,19 @@ export default function MedicalPremium() {
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Commencement Of Policy Or Date Paid"
-                      value={dates?.start_date}
+                      value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
                       defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          start_date: newValue,
-                        }));
-                      }}
+    onChange={(newValue) => {
+      console.log(newValue)
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        dateOfCommencementOfPolicy: newValue,
+      }));
+    }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                
               </Grid>
             </Grid>
 
@@ -648,8 +655,8 @@ export default function MedicalPremium() {
           </Grid>
           {/* grid 1 end  */}
 
-          {/* grid 2 */}
-          <Grid item xs={4}>
+          {/* grid 2 for the table to keep left side  */}
+          {/* <Grid item xs={4}>
             <Grid
               item
               container
@@ -719,7 +726,7 @@ export default function MedicalPremium() {
                 <Divider style={{ backgroundColor: 'black' }} />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
           {/* grid 2 end  */}
         </Grid>
 
@@ -731,8 +738,8 @@ export default function MedicalPremium() {
                   <TableCell
                     key={index}
                     style={{
-                      backgroundColor: '#2196f3',
-                      color: 'white',
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
                       whiteSpace: 'nowrap', // Prevent text wrapping
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
