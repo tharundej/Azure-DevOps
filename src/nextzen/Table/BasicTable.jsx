@@ -570,7 +570,11 @@ const BasicTable = ({
             <AssetsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'ProductsHead' && (
-            <ProductsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <ProductsHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'CustomersHead' && (
             <CustomersHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
