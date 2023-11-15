@@ -83,7 +83,8 @@ useEffect(()=>{
   const holidayslist = (e) => {
     const payload = {
       // companyId: "C1"
-      companyId:localStorage.getItem('companyID')
+      companyId:localStorage.getItem('companyID'),
+      locationId:localStorage.getItem('locationID') 
     };
     const config = {
     method: 'POST',

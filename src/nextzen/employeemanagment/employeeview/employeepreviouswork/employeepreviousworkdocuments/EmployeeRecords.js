@@ -30,7 +30,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP5",
+      "companyId": "COMP1",
       "employeeId":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
@@ -61,7 +61,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
         console.log(endPointTopass,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP5",
+          "companyId": "COMP1",
           "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
@@ -100,7 +100,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
         
 
         let data = JSON.stringify({
-            "companyId": "COMP5",
+            "companyId": "COMP1",
             "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -123,7 +123,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP5",
+              "companyId": "COMP1",
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)

@@ -103,11 +103,11 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'fStatus',
+        field:'Status',
         options:[]
       },
       {
-        field:'fLeaveTypeName',
+        field:'leave_type_name',
         options:[]
       }
     ]
@@ -120,8 +120,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    fStatus: "",         // Add default value for "fStatus"
-    fLeaveTypeName: "",  // Add default value for "fLeaveTypeName"
+    Status: "",         // Add default value for "Status"
+    leave_type_name: "",  // Add default value for "leave_type_name"
   })
   function formDateDataStructure(){
     return new Promise((resolve) => {
@@ -146,8 +146,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     return new Promise((resolve) => {
      
       const arr1 = {
-        fStatus: "",
-        fLeaveTypeName: "",
+        Status: "",
+        leave_type_name: "",
       };
   
        dropdownFiledArray.forEach((item,index)=>{  
@@ -159,8 +159,8 @@ export default function LeaveFilter({filterSearch,filterData}){
         }
          
         })
-        arr1.fStatus = data.fStatus;
-        arr1.fLeaveTypeName = data.fLeaveTypeName;
+        arr1.Status = data.Status;
+        arr1.leave_type_name = data.leave_type_name;
         resolve(arr1)
         
     })
@@ -181,13 +181,13 @@ export default function LeaveFilter({filterSearch,filterData}){
         target: { value },
       } = event;
       
-      if(field==="fLeaveTypeName"){
+      if(field==="leave_type_name"){
         setDropdownLeaveType(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="fStatus"){
+      else if(field==="Status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
@@ -213,8 +213,8 @@ export default function LeaveFilter({filterSearch,filterData}){
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    fStatus: "",        
-    fLeaveTypeName: "",  
+    Status: "",        
+    leave_type_name: "",  
       })
       setOpen(false);
     }
@@ -394,14 +394,14 @@ export default function LeaveFilter({filterSearch,filterData}){
       <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="fStatus">status</InputLabel>
+                <InputLabel fullWidth id="Status">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'fStatus')}
+                  onChange={(e)=>handleChangeDropDown(e,'Status')}
                   input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
@@ -415,22 +415,22 @@ export default function LeaveFilter({filterSearch,filterData}){
                    </Grid>
                    <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="fLeaveTypeName">Leave Type</InputLabel>
+                <InputLabel fullWidth id="leave_type_name">Leave Type</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_2"
                   id="demo-multiple-status_2"
                   multiple
                   value={dropdownLeaveType}
-                  onChange={(e)=>handleChangeDropDown(e,'fLeaveTypeName')}
+                  onChange={(e)=>handleChangeDropDown(e,'leave_type_name')}
                   input={<OutlinedInput label="Leave Type" />}
                   MenuProps={MenuProps}
                 >
                  
  {leaveType?.map((status) => {
   return (
-                <MenuItem value={status.leave_Type_Name} key={status.leave_Type_ID}>
-                  {status.leave_Type_Name}
+                <MenuItem value={status.leaveTypeName} key={status.leaveTypeID}>
+                  {status.leaveTypeName}
                 </MenuItem>
   )
   })}

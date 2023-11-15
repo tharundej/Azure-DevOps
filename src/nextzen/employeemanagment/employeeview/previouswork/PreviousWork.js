@@ -31,7 +31,7 @@ const employeeData=[ {
 
 ]
 
-const PreviousWork = () => {
+const PreviousWork = ({employeeIDForApis}) => {
   const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
@@ -106,8 +106,8 @@ const PreviousWork = () => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyId": "COMP5",
-      "employeeId": "NEWC19"
+      "companyId": "COMP1",
+      "employeeId": employeeIDForApis
   });
      
     const config = {
@@ -202,5 +202,7 @@ const PreviousWork = () => {
     </>
   )
 }
+
+
 
 export default PreviousWork

@@ -17,7 +17,7 @@ export default function PendingLeaves(){
       const PendingApproved =  useCallback((e) => {
         setLoading(true);
         const payload = {
-          employee_id:"info1",
+          employee_id:localStorage?.getItem('employeeID'),
           flag:e
         }
         const config = {
