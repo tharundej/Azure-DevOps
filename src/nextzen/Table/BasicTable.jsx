@@ -516,28 +516,85 @@ const getRowActionsBasedOnStatus = (row) => {
                 </Tooltip>
               }
             />
- 
-            <Scrollbar>
-           
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
-                {TABLE_HEAD && <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData?.length}
-                  numSelected={table?.selected?.length}
-                  onSort={handleSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData?.map((row) => row.id)
-                    )
-                  }
-                  rowActions={rowActions || []}
-                />}
- 
-             
- 
+          )}
+
+          {filterName === 'DeductionFilter' && (
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {/* accounts  */}
+          {filterName === 'FactoryHead' && (
+            <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'VendorHead' && (
+            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'MaterialsHead' && (
+            <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'AssetsHead' && (
+            <AssetsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'ProductsHead' && (
+            <ProductsHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'CustomersHead' && (
+            <CustomersHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'PurchaseOrderHead' && (
+            <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'BalanceSheetHead' && (
+            <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {/* accounts  */}
+          <Card>
+            <TableContainer
+              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important' }}
+            >
+              <TableSelectedAction
+                dense={table.dense}
+                numSelected={table?.selected?.length}
+                rowCount={tableData?.length}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    tableData?.map((row) => row.id)
+                  )
+                }
+                action={
+                  <Tooltip title="Delete">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
+                      <Iconify icon="solar:trash-bin-trash-bold" />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+
+              <Scrollbar>
+                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                  {TABLE_HEAD && (
+                    <TableHeadCustom
+                      order={table.order}
+                      orderBy={table.orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={tableData?.length}
+                      numSelected={table?.selected?.length}
+                      onSort={handleSort}
+                      onSelectAllRows={(checked) =>
+                        table.onSelectAllRows(
+                          checked,
+                          tableData?.map((row) => row.id)
+                        )
+                      }
+                      rowActions={rowActions || []}
+                    />
+                  )}
+
+
                   <TableBody>
                  
                          
