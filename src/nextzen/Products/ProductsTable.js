@@ -8,18 +8,23 @@ import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
 import { getProductListAPI } from 'src/api/Accounts/Product';
-
+const serviceCall = (endpoint, payload) => {};
 const ProductsTable = () => {
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '/accept' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: '', endpoint: '' },
   ];
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      handleEditAPICALL(rowdata, event);
+    } else if (event?.name === 'view') {
+      handleViewAPICALL(rowdata, event);
+    } else if (event?.name === 'Delete') {
+      handleDeleteAPICALL(rowdata, event);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
   const ApiHit = async () => {
     try {
       const response = await getProductListAPI(defaultPayload);
@@ -32,13 +37,12 @@ const ProductsTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
-    count: 2,
+    count: 5,
     page: 1,
     search: '',
-    companyID: 'COMP2',
+    companyID: 'COMP1',
   };
   const [TABLE_HEAD, setTableHead] = useState([
     // { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
@@ -59,6 +63,7 @@ const ProductsTable = () => {
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
+        onClickActions={onClickActions}
         filterName="ProductsHead"
       />
     </>

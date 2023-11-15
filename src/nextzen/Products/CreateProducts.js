@@ -13,16 +13,20 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
 
 export default function CreateProducts({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string(),
+    productName: Yup.string().required('Product Name is Required'),
+    productCategory: Yup.string().required('Product Category is Required'),
+    HsnId: Yup.string().required('HSN ID is Required'),
+    gstRate: Yup.number().required('GST Rate is Required'),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      companyId: currentData?.status || 'COMP5',
+      companyId: currentData?.status || 'COMP1',
       productName: currentData?.productName || '',
       productCategory: currentData?.productCategory || '',
       HsnId: currentData?.HsnId || '',
@@ -62,9 +66,12 @@ export default function CreateProducts({ currentData, handleClose }) {
       const response = await createProductAPI(data);
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
-      handleClose(); // Close the dialog on success
       reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
     } catch (error) {
+      console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -87,8 +94,13 @@ export default function CreateProducts({ currentData, handleClose }) {
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Products</DialogTitle>
-
+        <DialogTitle>Add New Products</DialogTitle>
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}

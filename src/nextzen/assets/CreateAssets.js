@@ -144,8 +144,10 @@ export default function CreateAssets({ currentUser, handleClose }) {
       const response = await createAssetsAPI(data);
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
-      handleClose(); // Close the dialog on success
       reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
