@@ -182,13 +182,14 @@ export default function LeavePeriod({ currentUser }) {
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
+    data.leavePeriodType=valueSelected?.leavePeriodType?.type
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(baseUrl + '/addLeavePeriod', data);
+      const response = await axios.post(baseUrl + '/editLeavePeriod', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
@@ -249,6 +250,7 @@ export default function LeavePeriod({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(false);
   };
+  
   React.useEffect(() => {}, []);
   return (
     <>

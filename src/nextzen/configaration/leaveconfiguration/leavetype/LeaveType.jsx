@@ -301,12 +301,19 @@ export default function LeaveType({ currentUser }) {
                 value={editData?.upperCapLimit}
                 onChange={(e) => handleSelectChange('upperCapLimit', e.target.value)}
               />
-              <RHFAutocomplete
+              <Autocomplete
                 name="leaveTypeName"
                 label="Term Type"
-                options={leaveTypeNames.map((name) => name.type)}
-                value={editData?.leavePeriodType}
-                onChange={(e) => handleSelectChange('leavePeriodType', e.target.value)}
+                options={leaveTypeNames}
+                value={valueSelected?.leavePeriodType || null}
+                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
+                // isOptionEqualToValue={(option, value) => option.value === value}
+                onChange={(e, newValue) =>
+                  handleSelectChange('leavePeriodType', newValue || null)
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="leave Type Name" variant="outlined" />
+                )}
               />
               <RHFTextField
                 name="leaveTakeRange"
