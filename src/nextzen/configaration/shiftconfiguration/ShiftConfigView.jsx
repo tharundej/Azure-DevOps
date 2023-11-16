@@ -1,13 +1,31 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from '../../Table/BasicTable';
-import instance from 'src/api/BaseURL';
+
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert ,Snackbar} from '@mui/material';
-import { useState } from 'react';
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import { useCallback, useMemo, useState,useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormProvider from 'src/components/hook-form/form-provider';
+import { RHFAutocomplete } from 'src/components/hook-form';
+import { MobileTimePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { LoadingButton } from '@mui/lab';
 
-export default function ShiftConfigView() {
+export default function ShiftConfigView({currentUser}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -19,13 +37,30 @@ export default function ShiftConfigView() {
     { id: 'shiftTerm', label: 'Shift Term', type: 'text', minWidth: 180 },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: 180 },
   ];
-
+  const [editData, setEditData] = useState();
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [valueSelected, setValueSelected] = useState();
+  const [showEdit, setShowEdit] = useState(false);
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+  const [formData, setFormData] = useState({});
+  const handleCloseEdit = () => setOpenEdit(false);
   const onClickActions = (rowdata, event) => {
+    console.log(rowdata, event, 'CompoffAprrove from to basic table');
     if (event?.name === 'Edit') {
-      handleEditAPICALL(rowdata, event);
+      setEditData(rowdata);
+      setValueSelected(rowdata);
+      handleOpenEdit();
+      buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
+  };
+  const buttonFunction = (rowdata) => {
+    setShowEdit(true);
+    setEditData(rowdata);
+    console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
 
   const deleteFunction = async (rowdata, event) => {
@@ -50,7 +85,8 @@ export default function ShiftConfigView() {
       console.log('error', error);
     }
   };
-
+  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30')); // State for Start Time
+  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
   const actions = [
     { name: 'Edit', icon: 'hh', path: 'jjj', type: 'edit' },
     { name: 'Delete', icon: 'hh', path: 'jjj' },
@@ -75,6 +111,120 @@ export default function ShiftConfigView() {
     },
   };
 
+  const NewUserSchema1 = Yup.object().shape({
+    ShiftName: Yup.string(),
+    ShiftTerm: Yup.string(),
+  });
+
+  const defaultValues1 = useMemo(
+    () => ({
+      ShiftName: currentUser?.ShiftName ,
+      ShiftTerm: currentUser?.ShiftTerm ,
+    }),
+    [currentUser]
+  );
+
+  const methods1 = useForm({
+    resolver: yupResolver(NewUserSchema1),
+    defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
+  });
+
+  const {
+    setValue: setValue1,
+    handleSubmit: handleSubmit1,
+    formState: { isSubmitting: isSubmitting1 },
+    reset: reset1,
+  } = methods1;
+  const ShiftNames = [
+    { type:'General'},
+    { type:'Morning'},
+    { type:'AfterNoon'},
+    { type:'Night'},
+  ];
+  const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    reset1();
+  };
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+    console.log(name, selectedValue, selectedOption);
+    setFormData({
+      ...formData,
+      [name]: selectedValue,
+      locationID: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
+    });
+  };
+
+  const getLocation = async () => {
+    const payload = {
+      companyID: 'COMP1',
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl+'/locationOnboardingDepartment',
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response?.status === 200) {
+          const rowsData = response?.data?.data;
+          setLocationType(rowsData);
+          console.log(JSON.stringify(response?.data?.data), 'result');
+
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      getLocation();
+    };
+    fetchData();
+  }, []);
+  const onSubmit1 = handleSubmit1(async (data) => {
+    data.companyId = 'COMP2';
+    data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
+    data.endTime = endTime.format('HH:mm:ss'); // Append End Time
+    data.locationID = formData?.Location?.locationID;
+    data.shiftName=valueSelected?.shiftName?.type
+    data.shiftTerm=valueSelected?.shiftTerm?.type
+    data.shiftConfigId=valueSelected?.shiftConfigId
+    console.log('submitted data111', data);
+
+    try {
+      const response = await axios.post(baseUrl+'/editShitConfig', data);
+      if(response?.status===200){
+        handleClose();
+        setSnackbarSeverity('success');
+         setSnackbarMessage('Shift Configuration Added Succuessfully!');
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+      }
+    } catch (error) {
+      setOpen(true);
+       setSnackbarSeverity('error');
+       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+       setSnackbarOpen(true);
+      console.log('error', error);
+    }
+  });
+  const [locationType, setLocationType] = useState([]);
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
 
   React.useEffect(() => {
@@ -95,6 +245,17 @@ export default function ShiftConfigView() {
   setSnackbarOpen(false)
     setOpen(true);
   };
+  const handleSelectChange = (field, value) => {
+    // console.log('values:', value);
+    // console.log('event', event.target.value);
+    // setSelectedOption(value);
+    console.log(field, value, 'valllllllllll');
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   return (
     <>
     <Snackbar
@@ -110,6 +271,103 @@ export default function ShiftConfigView() {
       {snackbarMessage}
     </Alert>
   </Snackbar>
+  <Dialog
+        fullWidth
+        maxWidth={false}
+        open={openEdit}
+        onClick={handleOpen}
+        onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods1} onSubmit={onSubmit1}>
+          <DialogTitle>Edit Shift Config</DialogTitle>
+          <DialogContent>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <Autocomplete
+                freeSolo
+                placeholder="Press Enter to Add Custom"
+                label="Shift Name"
+                name="ShiftName"
+                value={valueSelected?.shiftName}
+                options={ShiftNames}
+                getOptionLabel={(option) => option.type }
+                onChange={(e, newValue) => handleSelectChange('shiftName', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Shift Name" variant="outlined" />
+                )}
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <MobileTimePicker
+                  label="Start Time"
+                  defaultValue={dayjs('2022-04-17T15:60')}
+                  onChange={(newValue) => setStartTime(newValue)}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <MobileTimePicker
+                  label="End Time"
+                  defaultValue={dayjs('2022-04-17T15:30')}
+                  onChange={(newValue) => setEndTime(newValue)}
+                />
+              </LocalizationProvider>
+              <Autocomplete
+                freeSolo
+                placeholder="Press Enter to Add Custom"
+                label="Shift Term"
+                name="ShiftTerm"
+                options={ShiftTerms}
+                value={valueSelected?.shiftTerm}
+                getOptionLabel={(option) => option.type }
+                onChange={(e, newValue) => handleSelectChange('shiftTerm', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Shift Term" variant="outlined" />
+                )}
+              />
+
+              <Autocomplete
+                disablePortal
+                name="Location"
+                id="combo-box-demo"
+                options={locationType?.map((employeepayType) => ({
+                  label: employeepayType.locationName,
+                  value: employeepayType.locationName,
+                  ...employeepayType,
+                }))}
+                value={valueSelected?.locationName}
+                onChange={(event, newValue, selectedOption) =>
+                  handleAutocompleteChange('Location', newValue, selectedOption)
+                }
+                renderInput={(params) => <TextField {...params} label="Location" />}
+              />
+            </Box>
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined"  onClick={handleCloseEdit}>
+              Cancel
+            </Button>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              loading={isSubmitting1}
+            >
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
     <BasicTable
       headerData={TABLE_HEAD}
       endpoint="/getALLShiftConfig"
@@ -121,3 +379,6 @@ export default function ShiftConfigView() {
     </>
   );
 }
+ShiftConfigView.propTypes = {
+  currentUser: PropTypes.object,
+};

@@ -126,6 +126,7 @@ export default function WorkWeek({ currentUser }) {
     data.locationID = formData?.Location?.locationID;
     data.day=valueSelected?.day?.type
     data.action=valueSelected?.action?.type
+    data.workweekID=valueSelected?.workweekID
     console.log('submitted data111', data);
     handleCloseEdit()
     try {
@@ -171,7 +172,7 @@ export default function WorkWeek({ currentUser }) {
 
   const [editData, setEditData] = useState();
 
-  const onclickActions = (rowdata, event) => {
+  const onClickActions = (rowdata, event) => {
     console.log(rowdata, event, 'CompoffAprrove from to basic table');
     if (event?.name === 'Edit') {
       setEditData(rowdata);
@@ -342,7 +343,7 @@ export default function WorkWeek({ currentUser }) {
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="WorkWeekFilterSearch"
-        onClickActions={onclickActions}
+        onClickActions={onClickActions}
       />
     </>
   );

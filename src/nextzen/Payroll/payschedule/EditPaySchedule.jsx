@@ -292,7 +292,7 @@
                 id="combo-box-demo"
                 options={employeepayTypes}
                 getOptionLabel={getOptionLabel}
-                value={valueSelected.employee_type} // Use tableEDitData or an empty string
+                value={valueSelected.employee_type||null} // Use tableEDitData or an empty string
                 onChange={handleForms}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Employee Type" />}
