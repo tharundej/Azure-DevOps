@@ -662,7 +662,7 @@ const BasicTable = ({
                             
                             (row, event) }}
                           headerContent={TABLE_HEAD}
-                          rowActions={getRowActionsBasedOnStatus(row.status)}
+                          rowActions={getRowActionsBasedOnStatus(row)}
                         />
                        
                         </>
@@ -780,4 +780,3 @@ BasicTable.propTypes ={
  
  
 export { BasicTable };
-
