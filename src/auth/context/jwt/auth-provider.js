@@ -236,6 +236,7 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
+    localStorage.clear();
     dispatch({
       type: 'LOGOUT',
     });
