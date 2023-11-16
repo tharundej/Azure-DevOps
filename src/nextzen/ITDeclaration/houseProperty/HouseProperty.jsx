@@ -52,22 +52,7 @@ export default function HouseProperty() {
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
   const token = localStorage.getItem('accessToken')
-  const sampleRows = [
-    {
-      sno: 1,
-      policyNumber: 'POL-001',
-      commencementDate: dayjs(new Date()).format('YYYY-MM-DD'),
-      nameRelationship: 'John Doe',
-      under80U: 'Yes',
-      under80DDB: 'No',
-      sumAssured: '$100,000',
-      premiumAmountAttached: '$50',
-      premiumAmountFallInDue: '$20',
-      annualPremium: '$500',
-      premiumConsideredForDeduction: '$200',
-      action: 'Edit',
-    },
-  ];
+
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
@@ -173,7 +158,7 @@ export default function HouseProperty() {
   };
   const addHousingProperity = useCallback(async () => {
     const payload = {
-      companyId: compId,
+      companyId: cmpId,
       employeeId: empId,
       financialYear: 2023,
       nameOfTheOwners: formData.name_of_the_owners,
@@ -183,7 +168,7 @@ export default function HouseProperty() {
       amountOfHousingloanTakenFromTheProperty: parseFloat(formData.amountOfHousingloanTakenFromTheProperty),
       purposeOfLoan: formData.purposeOfLoan,
       // dateOfSanctionOfLoan: formData.dateOfSanction,
-      dateOfSanctionOfLoan: "2006-01-02",
+      dateOfSanctionOfLoan: formData.dateOfSanction,
       interestPaybleOnYear: parseFloat(formData.interestPaybleOnYear),
       isPropertySelfOccupiedOrLetOut: formData.isPropertySelfOccupiedOrLetOu,
       ifJointPropertyThenEnterInterestRate: parseFloat(formData.ifJointPropertyThenEnterInterestRate),

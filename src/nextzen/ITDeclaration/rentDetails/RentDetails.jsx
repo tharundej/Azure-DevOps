@@ -26,6 +26,7 @@ import '../declarationDetails/DeclarationDetails.css';
 import MuiAlert from '@mui/material/Alert';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const Alert = React.forwardRef((props, ref) => (
@@ -33,7 +34,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 export default function RentDetails() {
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
@@ -248,7 +249,7 @@ const handleRentDeletedID = ( data)=>{
       data: updatedData,
       panOfTheLandlord: isPanValueThere,
       panNumber: panNumbers,
-      declarationReceivedFFromLandlord: true,
+      declarationReceivedFFromLandlord: declarationSelectedValue,
       fileName: attachedDocummentFileName,
       fileContent: attachedDocumment,
       landlordFileName: landlord_file_name,
@@ -297,8 +298,8 @@ const handleRentDeletedID = ( data)=>{
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
       panOfTheLandlord: rentDetailsData?.panOfTheLandlord,
-      //  "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord,
-      declarationReceivedFromLandlord: true,
+       declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
       landLordDocs: landLordDocs,

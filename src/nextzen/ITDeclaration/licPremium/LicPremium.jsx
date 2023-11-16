@@ -352,7 +352,7 @@ const handleRentDeletedID = ( data)=>{
       url: baseUrl +'/updateLicPremiumDetails',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA ',
+       toekn ,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -365,6 +365,7 @@ const handleRentDeletedID = ( data)=>{
           setSnackbarSeverity('success');
           setSnackbarMessage('Lic  Updated successfully!');
           setSnackbarOpen(true);
+          setIsEdit(false)
           console.log('success');
         }
       })
@@ -392,6 +393,7 @@ const handleRentDeletedID = ( data)=>{
       await getLicPremium();
     };
     fetchData();
+    setIsEdit(false)
     
   }, [isreloading]);
 
@@ -407,6 +409,7 @@ const handleRentDeletedID = ( data)=>{
  };
    // handle edit
    const handleEdit = (rowData) => {
+    setIsEdit(true)
     console.log(rowData ,"rowData");
     setLandLordDocs(rowData.documents)
     setFormData({
@@ -476,7 +479,32 @@ const handleRentDeletedID = ( data)=>{
    
     
   ]);
+  const handleSubmit = ()=>{
+    isEdit ? editcDetails() :saveLicDetals()
+  }
+  const handleCancle = ()=>{
+    setIsEdit(false)
+     setFormData({
+      companyId: cmpId,
+    companyName: '',
+    employeeId: empId,
+    employeeName: '',
+    financialYear: '2022-11-11',
+    policyNumber: '',
+    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForwhichProofAssured: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseases: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
+    });
 
+  }
   const userId  =  5
   return (
     <div>
@@ -665,12 +693,12 @@ const handleRentDeletedID = ( data)=>{
                 <Button className="button" onClick={attchementHandler}>Attchement</Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={editcDetails}>
+                <Button className="button" onClick={handleSubmit}>
                   Save
                 </Button>
               </Grid>
               <Grid item>
-                <Button className="button">Cancel</Button>
+                <Button className="button" onClick={handleCancle}>Cancel</Button>
               </Grid>
             </Grid>
             {/* Add more rows as needed */}

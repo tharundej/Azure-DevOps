@@ -97,6 +97,7 @@ export default function MedicalPremium() {
   var [rentDocs, setRentDocs] = useState([]);
   const [landLordDeletedId, setLandLordDeletedID] = useState([]);
   const [rentDeletedId, setRentDeletedID] = useState([]);
+  const [isEdit , setIsEdit] =useState(false)
   const methods = useForm();
 
   const attchementHandler = () => {
@@ -270,6 +271,7 @@ export default function MedicalPremium() {
           setSnackbarMessage('Medical Insurance  Updated successfully!');
           setSnackbarOpen(true);
           console.log('success');
+          
         }
       })
       .catch((error) => {
@@ -349,6 +351,7 @@ export default function MedicalPremium() {
 
   // handle edit
   const handleEdit = (rowData) => {
+    setIsEdit(true)
     console.log(rowData ,"rowData");
     setRentDocs(rowData.documents)
     setFormData({
@@ -388,30 +391,11 @@ export default function MedicalPremium() {
       getMedicalPremumDetailsDocs();
     };
     fetchData();
+    setIsEdit(false)
   }, [isreloading]);
 
   // handling documents
-  const handleLandLordattchment = (fileData) => {
-    console.log(fileData, 'getting from uploader ');
-    landlord_file_name = fileData?.map((doc) => doc.fileName);
-    setLandlord_file_name(landlord_file_name);
-    landlord_file_content = fileData?.map((doc) => doc.fileContent);
-    setLandlord_file_content(landlord_file_content);
-    // Create a new array to store the objects
-    const newArray = [];
-    const transformedData = fileData.map((item) => ({
-      landlordID: item.id ? item.id : 0,
-      landlordFileName: item.fileName,
-      landlordFileContent: item.fileContent,
-    }));
-    landLordDocs = transformedData;
-    setLandLordDocs(landLordDocs);
-
-    console.log(landLordDocs, 'landlordDocs');
-
-    console.error('Arrays must have the same length');
-    setOpenAttchementDilog(false);
-  };
+ 
   const handleRentattchment = (fileData) => {
     console.log(fileData, 'getting from uploader ');
     attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
@@ -432,17 +416,34 @@ export default function MedicalPremium() {
     setOpenAttchementDilog(false);
   };
   console.log(rentDocs, 'landlordDocs');
-  const handleLandLordDeletedID = (data) => {
-    console.log(data, 'delete');
-    setLandLordDeletedID((prevIDs) => [...prevIDs, data]);
-    console.log(landLordDeletedId, 'deletedelete');
-  };
+ 
   const handleRentDeletedID = (data) => {
     console.log(data, 'delete');
     setRentDeletedID((prevIDs) => [...prevIDs, data]);
     console.log(rentDeletedId, 'deletedelete');
   };
-  console.log(medicalTableDataDoc, 'doc', medicalTableDataDoc);
+
+  const handleSubmit = ()=>{
+    isEdit ? editMedicalDetails() :saveMedicalDetails()
+  }
+  const handleCancle = ()=>{
+    setIsEdit(false)
+     setFormData({
+      companyID: cmpId,
+      employeeID: empId,
+      type: '',
+      policyNumber: '',
+      dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+      insuredPersonName: '',
+      relationshipType: '',
+      payMode: '',
+      policyCitizenshipType: '',
+      amountOfPremium: '',
+      eligibleDeduction: '',
+      documents: [],
+    });
+
+  }
   return (
     <div>
       <Snackbar
@@ -642,12 +643,12 @@ export default function MedicalPremium() {
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button className="button" onClick={editMedicalDetails}>
+                  <Button className="button" onClick={handleSubmit}>
                     Save
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button className="button">Cancel</Button>
+                  <Button className="button" onClick={handleCancle}>Cancel</Button>
                 </Grid>
               </Grid>
             </Grid>
