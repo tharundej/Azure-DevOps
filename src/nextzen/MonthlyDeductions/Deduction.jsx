@@ -34,7 +34,7 @@ export default function Deduction() {
   ];
 
 const defaultPayload={
-    "count":4,
+    "count":5,
     "page":0,
     "search":"",
     "companyID":localStorage?.getItem('companyID'),

@@ -279,7 +279,7 @@ export default function SwapSearchFilter({filterData,filterOptions,searchData}){
  }}
  className="custom-dialog"  
 >
- <ShiftSwapForm currentUser={{}} />
+ <ShiftSwapForm currentUser={{}} handleClose={handleClose} />
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">

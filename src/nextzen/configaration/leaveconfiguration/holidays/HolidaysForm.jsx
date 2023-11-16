@@ -25,6 +25,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function HolidaysForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -76,7 +77,7 @@ export default function HolidaysForm({ currentUser }) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',

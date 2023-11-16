@@ -4,9 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import TextField from '@mui/material/TextField';
-
-import Chip from '@mui/material/Chip';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,75 +13,79 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import axios from 'axios';
 // utils
+import { fData } from 'src/utils/format-number';
 // routes
+import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // assets
+import { countries } from 'src/assets/data';
 // components
+import Label from 'src/components/label';
+
+import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
   RHFUploadAvatar,
   RHFAutocomplete,
-  RHFSelect,
 } from 'src/components/hook-form';
+import axios from 'axios';
 
-
-import { Autocomplete } from '@mui/lab';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
-import { Button } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function ShiftSwapForm({ currentUser }) {
+export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    // FromShiftGroup_Name1: dayjs(new Date()),
-    // ToShiftGroup_Name: dayjs(new Date()),
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
+    date_of_birth: dayjs(new Date()),
+    joining_date: dayjs(new Date()),
+    offer_date: dayjs(new Date()),
   });
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Select_Employe: Yup.string(),
-    FromShiftGroup_Name: Yup.string(),
-    ToShiftGroup_Name: Yup.string(),
-    FromShiftGroup_Name1: Yup.string().required('First Name is Required'),
-    Select_Employe1: Yup.string(),
-    ToShiftGroup_Name1: Yup.string(),
-    start_date: Yup.string(),
-    end_date: Yup.string(),
-
-
+    employee_id: Yup.string(),
+    Employe_Name: Yup.string(),
+    Project_Name: Yup.string(),
+    Activity_Name: Yup.string(),
+    Monday: Yup.string(),
+    Tuesday: Yup.string(),
+    Wednesday: Yup.string(),
+    Thursday: Yup.string(),
+    Friday: Yup.string(),
+    Saturday : Yup.string(),
+    Sunday: Yup.string(),
+    Total_hours: Yup.string(),
+    Comment: Yup.string(),
+   
   });
 
-  const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
-  const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
-  const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
-  const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
-  const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
-  const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
-  const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   const defaultValues = useMemo(
     () => ({
-
-      Select_Employe: currentUser?.Select_Employe || '',
-      FromShiftGroup_Name: currentUser?.FromShiftGroup_Name || '',
-      ToShiftGroup_Name: currentUser?.ToShiftGroup_Name || '',
-      FromShiftGroup_Name1: currentUser?.FromShiftGroup_Name1 || '',
-      Select_Employe1: currentUser?.Select_Employe1 || '',
-      ToShiftGroup_Name1: currentUser?.ToShiftGroup_Name1 || '',
-      start_date: currentUser?.start_date || '',
-      end_date: currentUser?.end_date || '',
-
-
-
+   
+      employee_id: currentUser?.employee_id || '',
+      Employe_Name: currentUser?.Employe_Name || '',
+      Project_Name: currentUser?.Project_Name || '',
+      Activity_Name: currentUser?.Activity_Name || '',
+      Monday: currentUser?.Monday || '',
+      Tuesday: currentUser?.Tuesday || '',
+      Wednesday: currentUser?.Wednesday || '',
+      Thursday: currentUser?.Thursday || '',
+      Friday: currentUser?.Friday || '',
+      Saturday: currentUser?.Saturday || '',
+      Sunday: currentUser?.Sunday || '',
+      Total_hours: currentUser?.Total_hours || '',
+      Comment: currentUser?.Comment || '',
+   
     }),
     [currentUser]
   );
@@ -106,46 +107,19 @@ export default function ShiftSwapForm({ currentUser }) {
   } = methods;
 
   const values = watch();
-
   useEffect(() => {
     getEmployeSwap()
   }, [])
-const Options = [
-  {id :"2" , name:"shift A"},
-  {id :"3" , name:"shift B"},
-  {id :"4" , name:"shift C"},
-]
 
+  const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
+  const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
+  const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
+  const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
+  const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
+  const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
+  const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
 
-  // Get Employe List 
   const getEmployeSwap = async () => {
-
-    // const data = JSON.stringify({
-    //   "company_id": "COMP2",
-    //   "from_shift_group": 2,
-    //   "to_shift_group": 4,
-    //   "search": ""
-    // });
-    // // const endpoint = 'GetSwpEmployee';
-    // const config = {
-    //   method: 'post',
-    //   maxBodyLength: Infinity,
-    //   url: `${instance}${'/GetSwapEmployee'}`,
-    //   // url:' http://192.168.1.79:8080/appTest/GetSwapEmployee',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   data, // Assuming you have a variable named 'data' defined earlier
-    // };
-
-    // axios.request(config)
-    //   .then((response) => {
-    //     console.log(JSON.stringify(response.data));
-    //     setEmployeSwapDetails(response.data.Data)
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     try{
    const data = JSON.stringify({
       "company_id": "COMP2",
@@ -155,6 +129,7 @@ const Options = [
     });
         const response = await instance.post('/GetSwapEmployee',data);
         setEmployeSwapDetails(response.data.Data)
+        
         console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
       }catch(error){
     console.error("Error", error);
@@ -162,45 +137,53 @@ const Options = [
       }
   }
 
+
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: ShiftSwapForm.jsx:166 ~ onSubmit ~ data:")
-    // try {
-    //   const data = {
-    //     employee_1: {
-    //       employee_shift_swap_id: FromShiftGroup_Name1,
-    //       new_shift_group_id: ToShiftGroup_Name,
-    //       employee_id: currentEmployeSwapData.employee_shift_swap_id,
-    //     },
-    //     employee_2: {
-    //       employee_shift_swap_id: FromShiftGroup_Name,
-    //       new_shift_group_id: ToShiftGroup_Name1,
-    //       employee_id: currentEmployeSwapData1.employee_shift_swap_id,
-    //     },
-    //     company_id: "COMP2",
-    //     start_date: datesUsed.start_date,
-    //     end_date: datesUsed.end_date,
-    //   };
-  
-    //   const response = await instance.post('SwapShift', data1);
-  
-    //   console.log('success', response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    console.log('uyfgv');
+
+    try {
+    
+  const data = {
+    "employee_1":{
+      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name),
+      "employee_id":"ibm4", //  currentEmployeSwapData1.employee_shift_swap_id
+    },
+    "employee_2":{
+      "employee_shift_swap_id":parseInt(FromShiftGroup_Name),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name1),
+      "employee_id":"ibm4"  //  currentEmployeSwapData1.employee_shift_swap_id
+    },
+    "company_id":"COMP2",
+    "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
+    "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
+    
+  }
+      console.log(data, 'data111ugsghghh');
+
+      const response = await instance.post('/SwapShift', data).then(
+        (successData) => {
+          handleClose()
+          enqueueSnackbar(response.data.message,{variant:'success'})
+
+          console.log('sucess', successData);
+        },
+        (error) => {
+          enqueueSnackbar(error.message,{variant:'Error'})
+
+          console.log('lllll', error);
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   });
-  
+  const Options = [
+    {id :"2" , name:"shift A"},
+    {id :"3" , name:"shift B"},
+    {id :"4" , name:"shift C"},
+  ]
 
-  
-
-
-
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-  ];
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -223,15 +206,7 @@ const Options = [
       }}
     >
 
-      {/* <RHFSelect name="FromShiftGroup_Name1" label="From Shift Group Name ">
-
-        <option value="2" >2</option>
-
-        <option value="3" >3</option>
-
-        <option value="4" >4</option>
-
-      </RHFSelect> */}
+   
       <Autocomplete
   // multiple
   disablePortal
@@ -258,7 +233,7 @@ const Options = [
     // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
  
   }}
-  // onChange={}
+
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
@@ -281,18 +256,10 @@ const Options = [
     );
     
    
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+   
  
   }}
-  // onChange={}
+ 
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
@@ -310,15 +277,7 @@ const Options = [
    
     setCurrentEmployeSwapData(newvalue
     )
-    // const obj={
-    //   // companyID:'COMP1',
-    //   project_id:newvalue?.project_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+   
  
   }}
   sx={{
@@ -367,15 +326,7 @@ const Options = [
         </Typography>
       </Stack>
       <br />
-      {/* <RHFSelect name="FromShiftGroup_Name" label="To Shift GroupName">
-
-        <option value="full_day" >Full Day</option>
-
-        <option value="first_half" >First Half</option>
-
-        <option value="second_half" >Second Half</option>
-
-      </RHFSelect> */}
+   
 
   <Autocomplete
   // multiple
@@ -392,18 +343,9 @@ const Options = [
     );
     
    
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
  
   }}
-  // onChange={}
+ 
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
@@ -424,18 +366,10 @@ const Options = [
     );
     
    
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+   
  
   }}
-  // onChange={}
+
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
@@ -452,15 +386,7 @@ const Options = [
    
     setCurrentEmployeSwapData1(newvalue
     )
-    // const obj={
-    //   // companyID:'COMP1',
-    //   project_id:newvalue?.project_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+  
  
   }}
   sx={{
@@ -468,39 +394,14 @@ const Options = [
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
 />
-      {/* <RHFSelect name="Select_Employe1" label="Select Employe">
-
-        <option value="full_day" >Full Day</option>
-
-        <option value="first_half" >First Half</option>
-
-        <option value="second_half" >Second Half</option>
-
-      </RHFSelect> */}
-
-      {/* <RHFSelect name="ToShiftGroup_Name1" label="To Shift GroupName">
-
-        <option value="full_day" >Full Day</option>
-
-        <option value="first_half" >First Half</option>
-
-        <option value="second_half" >Second Half</option>
-
-      </RHFSelect> */}
-
-
-
-
-
-
-
     </Box>
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
         {!currentUser ? 'Create User' : 'Swap Shift'}
       </LoadingButton>
-      <Button sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
+      {/* <Button type='submit'></Button> */}
+      <Button onClick={handleClose} sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
     </Stack>
   </Card>
 </Grid>
@@ -512,4 +413,5 @@ const Options = [
 
 ShiftSwapForm.propTypes = {
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

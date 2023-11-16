@@ -24,14 +24,15 @@ import { SentIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
-import { CardContent } from '@mui/material';
+import { Alert, CardContent, Snackbar } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
-
+import { useState } from 'react';
+import { Alert as MuiAlert } from '@mui/material';
 // ----------------------------------------------------------------------
 
 export default function AmplifyNewPasswordView() {
   const { newPassword, forgotPassword } = useAuthContext();
-
+  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -39,9 +40,15 @@ export default function AmplifyNewPasswordView() {
   const email = searchParams.get('email');
 
   const password = useBoolean();
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const { countdown, counting, startCountdown } = useCountdownSeconds(60);
-
+  const [open, setOpen] = useState(false);
   const VerifySchema = Yup.object().shape({
     // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -85,15 +92,30 @@ export default function AmplifyNewPasswordView() {
     }
     const response = await axios.post(baseUrl+'/newPassword', payload);
     console.log(response?.data.code)
-    if(response?.data.code===200){
-        console.log('sucess')
+    if(response?.data?.code===200 ){
+      setSnackbarSeverity('success');
+       setSnackbarMessage('Email Sent Succuessfully!');
+       setSnackbarOpen(true);
+    
+    console.log('sucess', response);
         router.push(paths.auth.jwt.login);
+      }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+
       }
       // await newPassword?.(data.email, data.code, data.password);
 
       // router.push(paths.auth.jwt.login);
     } catch (error) {
-      console.error(error);
+      setSnackbarSeverity('error');
+      setSnackbarMessage(response?.data?.message);
+      setSnackbarOpen(true);
+     console.log('error', error);
     }
   });
 
@@ -190,13 +212,36 @@ export default function AmplifyNewPasswordView() {
       </Stack>
     </>
   );
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
       {renderForm}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000} // Adjust the duration as needed
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+         <Alert
+            onClose={snackBarAlertHandleClose}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
     </FormProvider>
     </CardContent>
   );

@@ -36,6 +36,7 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { baseUrl } from '../global/BaseUrl';
 
 export default function SalaryAdvanceForm({ currentUser,handleClose }) {
  
@@ -84,13 +85,17 @@ const [sendData, setSendData] = useState({
       data.companyID = localStorage.getItem('companyID'),
       data.employeeID = localStorage.getItem('employeeID');
 
+      // data.companyID="COMP1",
+      // data.employeeID="info2"
 
-      const response = await instance.post('addSalaryAdvance', data).then(
+      const response = await instance.post(baseUrl+'/addSalaryAdvance', data).then(
         (successData) => {
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
+          handleClose()
         },
         (error) => {
           enqueueSnackbar(error?.data?.Message,{variant:'Error'})
+          handleClose()
         }
       );
 

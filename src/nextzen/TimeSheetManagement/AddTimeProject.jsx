@@ -142,7 +142,7 @@ console.log("🚀 ~ file: AddTimeProject.jsx:102 ~ AddTimeProject ~ reportingMan
 const getEmployeReport = async ()=>{
   try{
   const  data= {
-      company_id:'COMP1',
+      companyId:'COMP1',
      
     };
     const response = await instance.post('getReportingmanager',data);
@@ -156,8 +156,8 @@ throw error;
 let getEmployeList = async (props)=>{
   try{
   const  data= {
-      company_id:'COMP1',
-      reporting_manager_id:currentReportingData[0]?.employee_id,
+      companyId:'COMP1',
+      reportingManagerId:currentReportingData[0]?.employee_id,
     };
     data.reporting_manager_id =props;
     console.log("🚀 ~ file: AddTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
