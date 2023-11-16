@@ -107,6 +107,10 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
+      if (event.extendedProps.type === 'holiday') {
+        console.log('This is a holiday event. No action needed.');
+        return;
+      }
       console.log(event,"evnetsttss","idd",event.id)
       onOpenForm();
       setSelectEventId(event.id);
