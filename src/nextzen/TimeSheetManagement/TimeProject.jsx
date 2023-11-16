@@ -137,7 +137,7 @@ export default function TimeProject() {
       console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    "page": 60,
+    "page": 1,
     "count": 10,
     "search": "",
     "externalFilters": {
@@ -145,11 +145,11 @@ export default function TimeProject() {
         "endDate": "",
         "projectName": "",
         "status": "",
-        "activityName": ""
+        // "activityName": ""
     },
     "sort": {
         "key": 0,
-        "orderBy": ""
+        "orderBy": "project_id"
     }
 }
       

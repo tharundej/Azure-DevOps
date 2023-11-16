@@ -185,19 +185,22 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
     try {
     
       const data = {
-        shiftConfigurationId:3,
-        ShiftTerm:"weekly",
-        shiftGroupName:'shift D',
-        supervisorId:'ibm4',
-        departmentId: JSON.stringify (CurrentDepartmentData.departmentID),
-        designationId:JSON.stringify( CurrentDesignationData.designationID),
-        DesignationGradeId:"", //JSON.stringify(CurrentGradeData.designationGradeID),
-        companyId:'COMP2',
-        employeeId:["ibm8"]
+        shift_conf_id:editData.shift_conf_id,
+        // ShiftTerm:editData.shift_term,
+        shift_group_name:'shift D',
+        supervisorId:editData.supervisorId,
+        // departmentId: JSON.stringify (CurrentDepartmentData.departmentID),
+        // designationId:JSON.stringify( CurrentDesignationData.designationID),
+        // DesignationGradeId:"", //JSON.stringify(CurrentGradeData.designationGradeID),
+        cid:editData.cid,
+        start_date:'',
+        end_date:'',
+        esg_id:editData.esg_id,
+        // employeeId:["ibm8"]
       }
           console.log(data, 'data111ugsghghh');
     
-          const response = await instance.post('/addShiftDetails', data).then(
+          const response = await instance.post('/editAssignshift', data).then(
             (successData) => {
               enqueueSnackbar(response.data.message,{variant:'success'})
     
@@ -250,7 +253,7 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
     >
      
 
-<RHFSelect name="shiftGroupName" label="Shift Group Name " >
+<RHFSelect name="shift_group_name" label="Shift Group Name " >
 
 <option value="full_day" >Full Day</option>
 
@@ -259,9 +262,18 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
 <option value="second_half" >Second Half</option>
 
 </RHFSelect>
+<RHFSelect name="shift_conf_id" label="Shift Group Name " >
+
+<option value="1" >Full Day</option>
+
+<option value="2" >First Half</option>
+
+<option value="3" >Second Half</option>
+
+</RHFSelect>
 
 
-<RHFSelect name="Select_Shift" label="Select Shift">
+{/* <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>
 
@@ -269,7 +281,7 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
 
 <option value="second_half" >Second Half</option>
 
-</RHFSelect>
+</RHFSelect> */}
 
 
 {/* <RHFSelect name="departmentId" label="Select Department">
@@ -281,7 +293,7 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
 <option value="second_half" >Second Half</option>
 
 </RHFSelect> */}
-<Autocomplete
+{/* <Autocomplete
 disablePortal
 id="combo-box-demo"
 options={departmentData || []}
@@ -301,7 +313,7 @@ sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Department" />}
-/>
+/> */}
 {/* <RHFSelect name="designationId" label="Select Designation">
 
 <option value="full_day" >HR</option>
@@ -311,7 +323,9 @@ renderInput={(params) => <TextField {...params} label="Select Department" />}
 <option value="second_half" >Developer</option>
 
 </RHFSelect> */}
-<Autocomplete
+
+
+{/* <Autocomplete
 disablePortal
 id="combo-box-demo"
 options={designationData || []}
@@ -330,7 +344,10 @@ sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
-/>
+/> */}
+
+
+
 {/* <RHFSelect name="DesignationGradeId" label="Select Grade">
 
 <option value="full_day" >HR</option>
@@ -340,7 +357,10 @@ renderInput={(params) => <TextField {...params} label="Select Designation" />}
 <option value="second_half" >Developer</option>
 
 </RHFSelect> */}
-<Autocomplete
+
+
+
+{/* <Autocomplete
 disablePortal
 id="combo-box-demo"
 options={gradeData || []}
@@ -359,7 +379,7 @@ sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
-/>
+/> */}
 
 <Autocomplete
 
