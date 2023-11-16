@@ -83,7 +83,13 @@ export default function UserTableRow({
                 {ele.type === 'text' && (
                  
                   <ListItemText
-                    primary={row[ele.id] || <span style={{fontSize:30}}>-</span>}
+                    primary={row[ele.id] || <span   style={{
+                      // display: 'flex',
+                      // justifyContent: 'center',
+                      // alignItems: 'center',
+                      // height: '100%', // Adjust the height if needed
+                      fontSize: 30,
+                    }}>-</span>}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
                     primaryTypographyProps={{ typography: 'body2'}}
                     secondaryTypographyProps={{
