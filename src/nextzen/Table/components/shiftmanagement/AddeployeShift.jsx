@@ -278,7 +278,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     >
      
 
-<RHFSelect name="shiftGroupName" label="Shift Group Name ">
+{/* <RHFSelect name="shiftGroupName" label="Shift Group Name ">
 
 <option value="full_day" >Full Day</option>
 
@@ -286,9 +286,28 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 
 <option value="second_half" >Second Half</option>
 
-</RHFSelect>
+</RHFSelect> */}
+
+<Autocomplete
+disablePortal
+id="combo-box-demo"
+options={departmentData || []}
+value={CurrentDepartmentData?.departmentID}
+getOptionLabel={(option) => option.departmentName}
+onChange={(e,newvalue)=>{
 
 
+setCurrentDepartmentData(newvalue
+)
+getDesignation(newvalue)
+
+
+}}
+sx={{
+width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+}}
+renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
+/>
 <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>

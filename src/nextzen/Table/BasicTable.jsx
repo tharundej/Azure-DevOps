@@ -95,6 +95,7 @@ import WorkWeekFilters from '../configaration/leaveconfiguration/workweek/WorkWe
 import { baseUrl } from '../global/BaseUrl';
 import CompoffConfigurationTable from '../configaration/compoffconfiguration/CompoffConfigurationTable';
 import ComoffConfigFilters from '../configaration/compoffconfiguration/ComoffConfigFilters';
+import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
  
  
@@ -470,6 +471,7 @@ const getRowActionsBasedOnStatus = (row) => {
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
       {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
       {filterName === "TimeSearchFilter" && <TimeSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+      {filterName === "SwapRequestSearchFilter" && <SwapRequestSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "TimeProjectFilter" && <ProjectSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ApprovalSearchFilter" && <ApprovalSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
        {filterName === "ShiftRoastFilter" && <ShiftRoastFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
