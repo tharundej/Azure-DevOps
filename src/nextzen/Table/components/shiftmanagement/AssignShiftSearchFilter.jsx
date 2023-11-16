@@ -494,4 +494,4 @@ AssignShiftSearchFilter.propTypes={
           options: PropTypes.arrayOf(PropTypes.string)
         })
       ),
-}
+}   

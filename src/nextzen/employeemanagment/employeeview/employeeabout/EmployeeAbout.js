@@ -31,7 +31,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
+export default function EmployeeAbout({  delivery, shippingAddress, payment,employeeIDForApis }) {
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -131,7 +131,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": "info2"
+        "employeeID": employeeIDForApis
       });
        
       const config = {
@@ -200,7 +200,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} />
+    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>
@@ -541,7 +541,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
 
 
-  const renderPayment = (
+  const renderRole = (
     <>
     {console.log(dropDownvalue,'dropDownvaluedropDownvalue')}
       <CardHeader
@@ -552,14 +552,27 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
           </IconButton>
         }
       />
-      <Stack direction="row" alignItems="center" sx={{ p: 3, typography: 'body2' }}>
-        <Box component="span" sx={{ color: 'text.secondary', flexGrow: 1 }}>
-          Location :
-        </Box>
+       <Grid container spacing={20}>
 
-        {dropDownvalue?.locationValue?.locationName}
-      
-      </Stack>
+          <Grid item>
+          <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
+          <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+         Location
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {dropDownvalue?.locationValue?.locationName}
+          </Box>
+              
+
+          </Stack>
+          
+
+
+
+          </Stack>
+          </Grid>
+          </Grid>
     </>
   );
 
@@ -577,7 +590,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment }) {
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {renderPayment}
+      {renderRole}
     </Card>
   );
 }
@@ -587,4 +600,5 @@ EmployeeAbout.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
+  employeeIDForApis:PropTypes.string
 };

@@ -91,16 +91,24 @@ function getStyles(name, personName, theme) {
 
 export default function WorkWeekFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const departmentName = [
-    'HR',
+  const dayTypes = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
   ];
-  const designationName = [
-    'executive'
-  ]
+  const actionsTypes = [
+    'FullDay',
+    'HalfDay',
+    'Holiday'
+  ];
 
-  const designationGradeName = [
-    'senior',
-    'junior'
+  const locationName = [
+    'infobellit',
+  
   ]
 
   const [dropdown, setDropdown] = useState({});
@@ -111,9 +119,9 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
-  const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownlocationName, setDropdownDesignationGradeName] = useState([]);
+  const [dropdownActions, setdropdownActions] = useState([]);
+  const [dropdownDay, setdropdownDay] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -125,15 +133,15 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
 
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
     {
-      field: 'designation_grade_name',
+      field: 'locationName',
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'actions',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'day',
       options: [],
     },
   ]);
@@ -208,7 +216,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
       target: { value },
     } = event;
 
-    if (field === 'designation_grade_name') {
+    if (field === 'locationName') {
       setDropdownDesignationGradeName(value);
       const obj = dropdown;
       obj[field] = value;
@@ -218,13 +226,13 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
+    } else if (field === 'actions') {
+      setdropdownActions(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'day') {
+      setdropdownDay(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -296,7 +304,7 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',
@@ -310,19 +318,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="day">Day</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownDay}
+                    onChange={(e) => handleChangeDropDown(e, 'day')}
+                    input={<OutlinedInput label="Day" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {departmentName.map((name) => (
+                    {dayTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -332,19 +340,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
+                    <InputLabel id="actions">Actions</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
+                      value={dropdownActions}
+                      onChange={(e) => handleChangeDropDown(e, 'actions')}
+                      input={<OutlinedInput label="Actions" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {designationName.map((name) => (
+                      {actionsTypes.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -358,19 +366,19 @@ export default function WorkWeekFilters({ filterData, filterOptions ,filterSearc
                 </Grid>
                 <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
+                <InputLabel id="locationName">location Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
+                    value={dropdownlocationName}
+                    onChange={(e) => handleChangeDropDown(e, 'locationName')}
+                    input={<OutlinedInput label="locationName" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {designationGradeName.map((name) => (
+                    {locationName.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>

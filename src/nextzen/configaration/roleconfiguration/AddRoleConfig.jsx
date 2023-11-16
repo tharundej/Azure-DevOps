@@ -40,6 +40,7 @@ import { Alert, Button, Snackbar } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
@@ -158,7 +159,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+    url : baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',

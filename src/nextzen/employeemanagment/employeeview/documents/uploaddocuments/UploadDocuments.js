@@ -42,7 +42,7 @@ const   DocumentsUpload=({open,onHandleClose,documents})=> {
       reader.onload = function(event) {
       const base64String = event.target.result.split(',')[1];
       console.log(base64String);
-      const newArray = [...attachments];
+      const newArray = [...defaultValues];
 
       newArray[index] = {
         
@@ -50,8 +50,8 @@ const   DocumentsUpload=({open,onHandleClose,documents})=> {
         fileContent:base64String,
         fileType:field
       };
-      console.log(attachments,'newArraynewArraynewArra')
-      setAttachments(newArray);
+     
+      setDefaultValues(newArray);
 
       // Now you can do something with the base64String, for example, send it to a server or store it in state.
       };

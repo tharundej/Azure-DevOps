@@ -47,6 +47,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
+    startDate: dayjs(new Date()),
   });
   const router = useRouter();
 
@@ -144,7 +145,13 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     try {
     
   const data = {
-     
+    companyId:"COMP2",
+    employeeId:"ibm4",
+    fromShiftGroup:parseInt( FromShiftGroup_Name1),
+    toShiftGroup:parseInt (ToShiftGroup_Name),
+    startDate:formatDateToYYYYMMDD( datesUsed.startDate),
+    
+
   }
       console.log(data, 'data111ugsghghh');
 
@@ -193,8 +200,6 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
       }}
     >
 
-   
-   
       <Autocomplete
   // multiple hhs
   disablePortal
@@ -278,19 +283,19 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
           <DatePicker
             sx={{ width: '100%', paddingLeft: '3px' }}
             label="Start Date"
-            value={datesUsed?.start_date}
+            value={datesUsed?.startDate}
             defaultValue={dayjs(new Date())}
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
                 ...prev,
-                start_date: newValue,
+                startDate: newValue,
               }));
             }}
           />
         </DemoContainer>
       </LocalizationProvider>       
       
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
+         {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
           <DatePicker
             sx={{ width: '100%', paddingLeft: '3px' }}
@@ -305,7 +310,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
             }}
           />
         </DemoContainer>
-      </LocalizationProvider>
+      </LocalizationProvider> */}
 <RHFTextField name="comment" label="Comments " />
 
 

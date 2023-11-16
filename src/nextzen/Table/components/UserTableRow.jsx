@@ -23,6 +23,7 @@ import { ASSETS_API } from 'src/config-global';
 import { useRouter } from 'src/routes/hooks';
 
 import { RouterLink } from 'src/routes/components'; 
+import SvgColor from 'src/components/svg-color/svg-color';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,8 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
+  onHandleEditRow
+
 }) {
   const confirm = useBoolean();
 
@@ -46,11 +49,12 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
-
+console.log(row,'row data')
   
   return (
     <>
-      <TableRow hover selected={selected}>
+     
+      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
@@ -58,10 +62,12 @@ export default function UserTableRow({
           headerContent.map((ele) => (
             <>
               <TableCell
+              onClick={()=>onHandleEditRow(row?.employeeId)}
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
-                  width:ele.width || ''
+                  width:ele.width || '',
+                  cursor:'pointer'
                 }}
               >
                 {ele.containesAvatar && (
@@ -92,9 +98,9 @@ export default function UserTableRow({
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === 'active' && 'success') ||
-                      (row[ele.id] === 'pending' && 'warning') ||
-                      (row[ele.id] === 'banned' && 'error') ||
+                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
+                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
+                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
                       'default'
                     }
                   >
@@ -128,8 +134,8 @@ export default function UserTableRow({
                   popover.onClose();
                 }}
               >
-                <Iconify icon="solar:pen-bold" />
-                {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
+                <Iconify icon={item?.icon} />
+                {/* <SvgColor src={`item?.icon`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>
@@ -160,4 +166,6 @@ UserTableRow.propTypes = {
   selected: PropTypes.bool,
   headerContent: PropTypes.any,
   rowActions: PropTypes.any,
+  onHandleEditRow:PropTypes.any
+ 
 };

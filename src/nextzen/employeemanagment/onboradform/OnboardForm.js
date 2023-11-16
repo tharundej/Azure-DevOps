@@ -6,6 +6,7 @@ import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
 
@@ -49,7 +50,7 @@ export default function OnBoardForm() {
   const handleNext = () => {
 
     let returnResponse;
-    console.log('manoj0')
+    
     if(activeStep+1===1){
       console.log('11')
       childref.current.childFunctionGeneral();
@@ -72,17 +73,17 @@ export default function OnBoardForm() {
 
     }
 
-    else if(activeStep+1===5){
-     
-      childref.current.childFunctionExperience()
-
-    }
+   
 
 
     
  
     
   };
+
+  const handleSubmit=()=>{
+    childref.current.childFunctionWork()
+  }
   const handleNextIncrement=()=>{
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
@@ -174,9 +175,14 @@ const handleCallSnackbar=(message,severity)=>{
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
+              {activeStep+1!==5 &&
               <Button onClick={handleNext} sx={{ mr: 1 }}>
                 Save and Continue
-              </Button>
+              </Button>}
+              {activeStep+1===5 &&
+              <Button onClick={handleSubmit} sx={{ mr: 1 }}>
+                Submit
+              </Button>}
               {activeStep+1!==1 &&
               <Button onClick={handleNextIncrement} sx={{ mr: 1 }}>
                 Skip

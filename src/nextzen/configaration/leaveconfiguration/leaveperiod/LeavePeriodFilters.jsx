@@ -91,8 +91,9 @@ function getStyles(name, personName, theme) {
 
 export default function LeavePeriodFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const departmentName = [
-    'HR',
+  const leavePeriodTypes = [
+    'Financial Year',
+    'Year'
   ];
   const designationName = [
     'executive'
@@ -113,7 +114,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownleavePeriodType, setdropdownleavePeriodType] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -133,7 +134,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'leavePeriodType',
       options: [],
     },
   ]);
@@ -177,7 +178,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -223,8 +224,8 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'leavePeriodType') {
+      setdropdownleavePeriodType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -296,7 +297,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',
@@ -307,22 +308,22 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
             {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
            
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownleavePeriodType}
+                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                    input={<OutlinedInput label="Leave Period Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {departmentName.map((name) => (
+                    {leavePeriodTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -330,7 +331,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6} >
+              {/* <Grid item xs={6} >
                   <FormControl fullWidth>
                     <InputLabel id="designation_name">Designation Name</InputLabel>
                     <Select
@@ -355,8 +356,8 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
+                </Grid> */}
+                {/* <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
@@ -377,7 +378,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                     ))}
                   </Select>
               </FormControl>
-                   </Grid>
+                   </Grid> */}
             </Grid>
 
            

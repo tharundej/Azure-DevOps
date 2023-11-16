@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -23,6 +23,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { paths } from 'src/routes/paths';
 import Grid from '@mui/material/Grid';
 import { useRouter } from 'src/routes/hooks';
+import { baseUrl } from '../../global/BaseUrl';
 
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
@@ -107,11 +108,11 @@ export default function ApproveClaim({ currentUser }) {
     // { id: '', width: 88 },
   ]
 
-
+  
 
   const defaultPayload={
 
-    "companyId":"COMP2",
+    "companyId":"COMP1",
     "count":5,
     "page":0,
     "search":"",
@@ -259,7 +260,7 @@ const actions = [
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://localhost:8081/onboarding', data).then(
+      const response = await axios.post(baseUrl+'onboarding', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -306,6 +307,12 @@ const actions = [
  
 
   })
+
+  useEffect(()=>{
+    handle(approve);
+  },[approve])
+
+
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
@@ -317,7 +324,7 @@ const actions = [
               ...prevState,
               status: "Approve"
           }));
-          handle(approve);
+          // handle(approve);
           console.log(approve,"approve api")
 
            }
@@ -328,7 +335,8 @@ const actions = [
           ...prevState,
           status: "Reject"
       }));
-      
+      // handle(approve);
+      console.log(approve,"reject api")
 
     }
     }
@@ -350,7 +358,7 @@ const actions = [
        
         // console.log(data, 'formdata api in check');
   
-        const response = await axios.post('http://192.168.1.135:3001/erp/updateClaimStatus', approve).then(
+        const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
           (successData) => {
             console.log('sucess', successData);
           },
@@ -396,7 +404,7 @@ const actions = [
       
       <SurendraBasicTable
 
-      endpoint="getAllClaims"
+      endpoint="/getAllClaims"
       defaultPayload={defaultPayload}
       headerData={TABLE_HEAD}
       rowActions={actions}

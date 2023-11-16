@@ -90,18 +90,7 @@ function getStyles(name, personName, theme) {
 
 export default function ShiftConfigurationFilters({ filterData, filterOptions ,searchData}) {
   const theme = useTheme();
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
+
   const ShiftNames = [
     'general',
     'Morning',
@@ -112,7 +101,9 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     'weekly',
     'Monthly',
   ]
-
+  const locationName = [
+    'infobell'
+  ];
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -124,6 +115,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   const [dropdownShiftNameGradeName, setDropdownShiftNameGradeName] = useState([]);
   const [dropdownShiftName, setdropdownShiftName] = useState([]);
   const [dropdownShiftTerm, setdropdownShiftTerm] = useState([]);
+  const [dropdownLocation, setdropdownLocation] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -223,8 +215,8 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'shift_name') {
-      setDropdownStatus(value);
+    } else if (field === 'location') {
+      setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -307,7 +299,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}>
+        <DialogContent  sx={{minWidth:"300px"}}>
          
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
               <Grid item xs={6} marginTop="10px">
@@ -358,6 +350,58 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                     </Select>
                   </FormControl>
                 </Grid>
+                <Grid item xs={6} >
+                  <FormControl fullWidth>
+                    <InputLabel id="location">Location</InputLabel>
+                    <Select
+                    fullWidth
+                      labelId="demo-multiple-name-shift_name_1"
+                      id="demo-multiple-shift_name_1"
+                      multiple
+                      value={dropdownLocation}
+                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      input={<OutlinedInput label="Location" />}
+                      MenuProps={MenuProps}
+                    //   sx={{minWidth:'300px'}}
+                    >
+                      {locationName.map((name) => (
+                        <MenuItem
+                          key={name}
+                          value={name}
+                          style={getStyles(name, personName, theme)}
+                        >
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                  <FormControl fullWidth>
+                    <InputLabel id="location">Location</InputLabel>
+                    <Select
+                    fullWidth
+                      labelId="demo-multiple-name-shift_name_1"
+                      id="demo-multiple-shift_name_1"
+                      multiple
+                      value={dropdownLocation}
+                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      input={<OutlinedInput label="Location" />}
+                      MenuProps={MenuProps}
+                    //   sx={{minWidth:'300px'}}
+                    >
+                      {locationName.map((name) => (
+                        <MenuItem
+                          key={name}
+                          value={name}
+                          style={getStyles(name, personName, theme)}
+                        >
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
             </Grid>
 
            
@@ -365,13 +409,17 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
              
           
         </DialogContent>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+
         <Button
           onClick={() => {
             handleApply();
           }}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
         >
           Apply
         </Button>
+        </div>
       </BootstrapDialog>
     </>
   );

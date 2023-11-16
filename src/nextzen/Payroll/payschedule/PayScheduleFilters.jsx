@@ -88,7 +88,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions }) {
+export default function PayScheduleFilters({ filterData, filterOptions,searchData  }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -102,7 +102,14 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     'Virginia Andrews',
     'Kelly Snyder',
   ];
-
+  const employmentTypes=[
+    'Permanent',
+    'contract'
+  ];
+  const payscheduleTypes=[
+    '52-Once a week',
+    '26-Once in a two weeks',
+  ];  
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -112,8 +119,8 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownpayscheduleType, setdropdownpayscheduleType] = useState([]);
+  const [dropdownemploymentType, setdropdownemploymentType] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -129,11 +136,11 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'payscheduleType',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'employmentType',
       options: [],
     },
   ]);
@@ -177,7 +184,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -218,13 +225,13 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
+    } else if (field === 'payscheduleType') {
+      setdropdownpayscheduleType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'employmentType') {
+      setdropdownemploymentType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -297,24 +304,24 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}>
+        <DialogContent  sx={{minWidth:"300px"}}>
          
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="employmentType">Employee Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownemploymentType}
+                    onChange={(e) => handleChangeDropDown(e, 'employmentType')}
+                    input={<OutlinedInput label="Employee Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {names.map((name) => (
+                    {employmentTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -324,19 +331,19 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
+                    <InputLabel id="payscheduleType">Pay Schedule Type</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
+                      value={dropdownpayscheduleType}
+                      onChange={(e) => handleChangeDropDown(e, 'payscheduleType')}
+                      input={<OutlinedInput label="Pay Schedule Type" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {names.map((name) => (
+                      {payscheduleTypes.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -348,7 +355,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid  item xs={12} md={6}>
+                {/* <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
                   <Select
@@ -369,7 +376,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
                     ))}
                   </Select>
               </FormControl>
-                   </Grid>
+                   </Grid> */}
             </Grid>
 
            
@@ -377,13 +384,16 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
              
           
         </DialogContent>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Button
           onClick={() => {
             handleApply();
           }}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
         >
           Apply
         </Button>
+        </div>
       </BootstrapDialog>
     </>
   );
@@ -394,6 +404,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
 // }
 PayScheduleFilters.propTypes = {
   filterData: PropTypes.func,
+  searchData: PropTypes.any,
 };
 
 PayScheduleFilters.propTypes = {

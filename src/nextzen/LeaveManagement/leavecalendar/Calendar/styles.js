@@ -51,6 +51,7 @@ export const StyledCalendar = styled('div')(({ theme }) => ({
   // Event
   '& .fc .fc-event': {
     borderColor: 'transparent !important',
+    cursor:"pointer",
     backgroundColor: 'transparent !important',
     // backgroundColor:"red"
   },

@@ -91,11 +91,14 @@ function getStyles(name, personName, theme) {
 
 export default function LeaveTypeFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const departmentName = [
-    'HR',
+  const termTypes = [
+    'Custom Period',
+    'Fiscal Year'
   ];
-  const designationName = [
-    'executive'
+  const leaveTypeNames = [
+    'Sick Leave',
+    'CL',
+    'CL1'
   ]
 
   const designationGradeName = [
@@ -112,8 +115,8 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownDesignation, setdropdownDesignation] = useState([]);
-  const [dropdownDepartmentname, setdropdownDepartmentname] = useState([]);
+  const [dropdownleaveName, setdropdownleaveName] = useState([]);
+  const [dropdownTermtype, setdropdownTermtype] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -129,11 +132,11 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       options: [],
     },
     {
-      field: 'designation_name',
+      field: 'leaveTypeName',
       options: [],
     },
     {
-      field: 'department_name',
+      field: 'leavePeriodType',
       options: [],
     },
   ]);
@@ -177,7 +180,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -218,13 +221,13 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
+    } else if (field === 'leaveTypeName') {
+      setdropdownleaveName(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'department_name') {
-      setdropdownDepartmentname(value);
+    } else if (field === 'leavePeriodType') {
+      setdropdownTermtype(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -296,7 +299,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"500px"}}
+        <DialogContent  sx={{minWidth:"300px"}}
         //   style={{
         //     paddingTop: '20px',
         //     paddingRight: '17px',
@@ -310,19 +313,19 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="department_name">Department Name</InputLabel>
+                  <InputLabel id="leavePeriodType">Term Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownDepartmentname}
-                    onChange={(e) => handleChangeDropDown(e, 'department_name')}
-                    input={<OutlinedInput label="Department Name" />}
+                    value={dropdownTermtype}
+                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                    input={<OutlinedInput label="Term Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {departmentName.map((name) => (
+                    {termTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -332,19 +335,19 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
+                    <InputLabel id="leaveTypeName">Leave Name</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
+                      value={dropdownleaveName}
+                      onChange={(e) => handleChangeDropDown(e, 'leaveTypeName')}
+                      input={<OutlinedInput label="leave Type Name" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {designationName.map((name) => (
+                      {leaveTypeNames.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -357,7 +360,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
                   </FormControl>
                 </Grid>
                 <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
+                {/* <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
@@ -376,7 +379,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
                       </MenuItem>
                     ))}
                   </Select>
-              </FormControl>
+              </FormControl> */}
                    </Grid>
             </Grid>
 

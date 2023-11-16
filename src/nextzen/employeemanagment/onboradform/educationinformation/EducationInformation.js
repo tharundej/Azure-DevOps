@@ -41,8 +41,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
       stream:  '',
       university:  '',
       yearOfPassing: undefined,
-      documentData:'',
-      grade_type:'',
+      
+      gradeType:'',
       grade:undefined,
       documents:[
         {
@@ -69,8 +69,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
   const onSave=()=>{
     const obj={
-     companyId: "COMP5",
-     employeeId: "NEWC19",
+     companyId: "COMP1",
+     employeeId: localStorage.getItem('employeeIdCreated'),
      education:defaultValues
     }
 
@@ -79,7 +79,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
      let config = {
        method: 'post',
        maxBodyLength: Infinity,
-       url: `${baseUrl}${endpoint}`,
+       url: `${baseUrl}/addEducation`,
        headers: { 
          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
          'Content-Type': 'application/json'

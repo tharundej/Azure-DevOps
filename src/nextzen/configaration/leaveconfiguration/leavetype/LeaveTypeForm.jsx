@@ -28,6 +28,8 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import { Alert, Snackbar } from '@mui/material';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 export default function LeaveTypeForm({ currentUser}) {
   const [open, setOpen] = useState(false);
@@ -36,12 +38,15 @@ export default function LeaveTypeForm({ currentUser}) {
     setOpen(false);
     reset1();
   };
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
     LeaveName: Yup.string().required('Leave Name is Required'),
-    TotalNumberOfLeaves: Yup.number().required('Total Number Of Leaves is Required'),
-    TermType: Yup.string().required('Term Type is Required'),
-    ElUpperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
-    ElTakenRange: Yup.number().required('El Taken Range is Required'),
+    totalNumberLeave: Yup.number().required('Total Number Of Leaves is Required'),
+    leaveTypeName: Yup.string().required('Term Type is Required'),
+    upperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
+    leaveTakeRange: Yup.number().required('El Taken Range is Required'),
   });
 
   const [formData, setFormData] = useState({});
@@ -51,10 +56,10 @@ export default function LeaveTypeForm({ currentUser}) {
   const defaultValues1 = useMemo(
     () => ({
       LeaveName: currentUser?.LeaveName || null,
-      TotalNumberOfLeaves: currentUser?.TotalNumberOfLeaves || null,
-      TermType: currentUser?.TermType || null,
-      ElUpperCapLimit: currentUser?.ElUpperCapLimit || null,
-      ElTakenRange: currentUser?.ElTakenRange || null,
+      totalNumberLeave: currentUser?.totalNumberLeave || null,
+      leaveTypeName: currentUser?.leaveTypeName || null,
+      upperCapLimit: currentUser?.upperCapLimit || null,
+      leaveTakeRange: currentUser?.leaveTakeRange || null,
 
     }),
     [currentUser]
@@ -79,16 +84,38 @@ export default function LeaveTypeForm({ currentUser}) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId=localStorage.getItem('companyID')
-     data.startDate = formatDateToYYYYMMDD(selectedDates);
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post('https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addPaySchedule', data);
-      console.log('sucess',response);
-    } catch (error) {
-      console.log('error', error);
-    }
+      const response = await axios.post(
+        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addLeaveType',
+        data
+      );
+      if(response?.data?.code===200  ){
+        setSnackbarSeverity('success');
+         setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+         handleClose()
+      
+      console.log('sucess', response);
+
+      }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+
+      }
+    
+  } catch (error) {
+    setSnackbarSeverity('error');
+    setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+    setSnackbarOpen(true);
+   console.log('error', error);
+ }
   });
   // const getLocation = async () => {
   //   const payload = {
@@ -133,7 +160,7 @@ export default function LeaveTypeForm({ currentUser}) {
   const handleDateChanges = (date) => {
     setSelectedDates(date);
   };
-  const TermTypes=[
+  const leaveTypeNames=[
     {type:'Annual'},
     {type:'Month'}
   ]
@@ -147,8 +174,28 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     locationName: selectedOption?.locationName,
   });
 };
+const snackBarAlertHandleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+setSnackbarOpen(false)
+  setOpen(true);
+};
   return (
     <>
+     <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={4000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{margin:'20px'}}>Add Leave Type</Button>
@@ -190,7 +237,7 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
                 renderInput={(params) => <TextField {...params} label="Location" />}
               /> */}
                 <RHFTextField name="LeaveName" label="Leave Name"/>
-                <RHFTextField name="totalNumberOfLeaves" label="Total Number Of Leaves" />
+                <RHFTextField name="totalNumberLeave" label="Total Number Of Leaves" />
                 {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
@@ -201,9 +248,9 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
                   />
                 </DemoContainer>
               </LocalizationProvider> */}
-                <RHFTextField name="ElUpperCapLimit" label="EL Upper Cap Limit" />
-                <RHFAutocomplete name="TermType" label="Term Type" options={TermTypes.map((name)=>name.type)}/>
-                <RHFTextField name="ElTakenRange" label="EL Taken Range"/>
+                <RHFTextField name="upperCapLimit" label="EL Upper Cap Limit" />
+                <RHFAutocomplete name="leaveTypeName" label="Term Type" options={leaveTypeNames.map((name)=>name.type)}/>
+                <RHFTextField name="leaveTakeRange" label="Leave Take Range"/>
               </Box>
             </DialogContent>
 

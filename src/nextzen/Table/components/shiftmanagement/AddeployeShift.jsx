@@ -110,6 +110,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const values = watch();
   useEffect(() => {
     getDepartment()
+    getEmploye()
   }, [])
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
@@ -172,7 +173,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
       };
       const response = await instance.post('/onboardingDesignationGrade',data);
       setgradeData(response.data.data)
-      getEmploye()
+      
       console.log("🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
     }catch(error){
   console.error("Error", error);
@@ -194,7 +195,18 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   throw error;
     }
   }
+  const [currentEmployeData, setCurrentEmployeData] = useState([]);
+  const handleSelectEmployeChange = (event, values) => {
+    setCurrentEmployeData(values);
+     console.log("🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
+    //  setemployeeList ( currentEmployeData[0]?.employeeId);
+      
+    // setCommaSepaatedEmployeString(EmployeList.join(','))
+  };
 
+
+
+  
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
@@ -216,10 +228,10 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     
           const response = await instance.post('/addShiftDetails', data).then(
             (successData) => {
+              handleClose()
               enqueueSnackbar(response.data.message,{variant:'success'})
     
               console.log('sucess', successData);
-              handleClose()
             },
             (error) => {
               enqueueSnackbar(error.message,{variant:'Error'})
@@ -376,13 +388,13 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
 />
 
-<Autocomplete
+{/* <Autocomplete
 
 multiple
 
 id="Primary Skills"
 
-options={top100Films.map((option) => option.title)}
+options={employeData.map((option) => option.EmployeeName)}
 
 freeSolo
 
@@ -413,7 +425,39 @@ placeholder="Favorites"
 
 )}
 
-/>
+/> */}
+<Autocomplete
+            multiple
+            disablePortal
+            id="hfh"
+            options={employeData || []}
+            value={currentEmployeData}
+            getOptionLabel={(option) => option.EmployeeName}
+            // onChange={(e,newvalue)=>{
+             
+             
+            //   setCurrentEmployeData(newvalue
+                
+            //   );
+              
+             
+              // const obj={
+              //   companyId:'COMP1',
+              //   reporting_manager_id:newvalue?.employeeId
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            // }}
+            onChange={handleSelectEmployeChange}
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label=" Select employee" />}
+          />
     </Box>
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
