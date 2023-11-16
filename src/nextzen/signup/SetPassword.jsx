@@ -24,7 +24,7 @@ import { SentIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
-import { CardContent, Snackbar } from '@mui/material';
+import { Alert, CardContent, Snackbar } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
 import { useState } from 'react';
 import { Alert as MuiAlert } from '@mui/material';
@@ -48,7 +48,7 @@ export default function AmplifyNewPasswordView() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const { countdown, counting, startCountdown } = useCountdownSeconds(60);
-
+  const [open, setOpen] = useState(false);
   const VerifySchema = Yup.object().shape({
     // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -212,7 +212,13 @@ export default function AmplifyNewPasswordView() {
       </Stack>
     </>
   );
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <CardContent>
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -228,9 +234,13 @@ export default function AmplifyNewPasswordView() {
           horizontal: 'right',
         }}
       >
-        <MuiAlert onClose={handleSnackbarClose} severity="error">
-          {errorMsg}
-        </MuiAlert>
+         <Alert
+            onClose={snackBarAlertHandleClose}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
         </Snackbar>
     </FormProvider>
     </CardContent>
