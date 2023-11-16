@@ -149,7 +149,7 @@ export function useNavData() {
           {
             title:t('configurations'),
             path:paths.dashboard.configurations.root,
-            icon:ICONS.user,
+            icon:ICONS.g_configurations,
             children: [
               { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
               { title: t('Compoff Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
