@@ -63,6 +63,7 @@ export default function SalaryAdvace() {
       const [rowData,setRowData] = useState();
       const handleClose = () => {
         setShowForm(false);
+        setAmountValue();
         setShowEditForm(false);
         setApproveForm(false);
         setRejectForm(false);
@@ -70,11 +71,14 @@ export default function SalaryAdvace() {
       const handleTimeForm =()=>{
         setShowForm(true)
       } 
+      const roleID = localStorage?.getItem('roleID')
   const defaultPayload={
     "count": 5,
     "page": 0,
     "search": "",
     "companyID":localStorage?.getItem('companyID'),
+    "employeeID":localStorage?.getItem('employeeID'),
+    "roleID":localStorage?.getItem('roleID'),
     "externalFilters": {
   "requestDate": {
    
@@ -293,8 +297,9 @@ const [amountValue,setAmountValue] = useState();
       </Grid>
      </Grid>
   </DialogContent>
+  {console.log(amountValue,"amountvaluee")}
   <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-               <Button variant="contained" color="primary" onClick={handleEditSalary}>Apply</Button>
+               <Button variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditSalary}>Apply</Button>
                 <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
       </Dialog>

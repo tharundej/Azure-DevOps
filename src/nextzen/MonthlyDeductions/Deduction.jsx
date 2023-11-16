@@ -32,12 +32,14 @@ export default function Deduction() {
     { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
 
   ];
-
+const roleID = localStorage?.getItem('roleID')
 const defaultPayload={
     "count":5,
     "page":0,
     "search":"",
     "companyID":localStorage?.getItem('companyID'),
+    "employeeID":localStorage?.getItem('employeeID'),
+    "roleID":localStorage?.getItem('roleID'),
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",

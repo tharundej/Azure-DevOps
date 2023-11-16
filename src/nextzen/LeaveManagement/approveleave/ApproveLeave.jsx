@@ -45,10 +45,10 @@ export default function Approveleave(){
     //     "orderBy":"al.apply_date"
     // }
     // }
-
+const roleID = localStorage?.getItem('roleID')
     const defaultPayload={
-      "manager_id": "",
-      "role_id": 1,
+      "manager_id":localStorage?.getItem('employeeID'),
+      "role_id": parseInt(localStorage?.getItem('roleID')),
       "company_id": localStorage?.getItem('companyID'),
       "page": 0,
       "count": 10,

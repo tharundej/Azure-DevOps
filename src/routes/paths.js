@@ -177,7 +177,7 @@ export const paths = {
       // },
     },
     monthlydeductions: {
-      root: `${ROOTS.DASHBOARD}/monthlydeductions`,
+      root: `/monthlydeductions`,
     },
 
     appraisal: {

@@ -265,13 +265,13 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
-      {
-        path: 'monthlydeductions',
-        children: [
-          { element: <MonthlyDeductions />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
+      // {
+      //   path: 'monthlydeductions',
+      //   children: [
+      //     { element: <MonthlyDeductions />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //   ],
+      // },
 
       {
         path: 'appraisal',
@@ -479,5 +479,20 @@ export const dashboardRoutes = [
     children:[
       { element: <Leave />, index: true },
     ]
-  }
+  },
+  {
+    path: 'monthlydeductions',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <MonthlyDeductions />, index: true },
+    ],
+  },
 ];

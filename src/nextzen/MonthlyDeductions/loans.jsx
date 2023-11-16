@@ -62,6 +62,7 @@ export default function Loans() {
       const [commentsValue,setCommentsValue]=useState("");
       const handleClose = () => {
         setShowForm(false);
+        setAmountValue();
         setShowEditForm(false);
         setApproveForm(false);
         setRejectForm(false);
@@ -70,12 +71,14 @@ export default function Loans() {
         setShowForm(true)
        
       } 
-      
+    
   const defaultPayload={
     "count": 5,
     "page": 0,
     "search": "",
     "companyID": localStorage?.getItem('companyID'),
+    "employeeID":localStorage?.getItem('employeeID'),
+    "roleID":localStorage?.getItem('roleID'),
     "externalFilters": {
   "requestDate": {
    
@@ -296,7 +299,7 @@ export default function Loans() {
      </Grid>
   </DialogContent>
   <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-               <Button variant="contained" color="primary" onClick={handleEditLoan}>Apply</Button>
+               <Button variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditLoan}>Apply</Button>
                 <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
       </Dialog>
