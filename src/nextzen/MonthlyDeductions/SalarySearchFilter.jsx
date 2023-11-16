@@ -34,7 +34,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
@@ -83,7 +83,8 @@ function getStyles(name, personName, theme) {
 
 export default function SalarySearchFilter({filterSearch,filterData}){
   const theme = useTheme();
-  const names = [
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const names = [
     'Oliver Hansen',
     'Van Henry',
     'April Tucker',
@@ -270,9 +271,18 @@ export default function SalarySearchFilter({filterSearch,filterData}){
       setOpen(false);
     }
 
-    const handleSearch=(e)=>{
-      filterSearch(e?.target?.value)
-    }
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
+        filterSearch(e?.target?.value)
+      },1000)
 
     const ApproversList = () => {
       const payload = {
@@ -316,33 +326,34 @@ export default function SalarySearchFilter({filterSearch,filterData}){
  <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
       </Dialog>
     )}
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+        <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
+  <Grid item xs={12} md={8}>
+    <TextField
+      placeholder="Search...."
+      fullWidth
+      onChange={(e) => {
+        handleSearch(e);
+      }}
+    />
+  </Grid>
 
-            <TextField placeholder='Search....' 
-            fullWidth
-            onChange={e=>{handleSearch(e)}} 
+  <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+    <Button
+      variant="contained"
+      color="primary"
+      className="button"
+      onClick={handleTimeForm}
+      sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
+    >
+      Apply Salary Advance
+    </Button>
 
-            />
-            </Grid>
+    <Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+      <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
+    </Button>
+  </Grid>
+</Grid>
 
-            <Grid md={4} xs={4} item>
-                
-                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
-               <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Apply Salary Advance</Button>
-               </Grid>
-               <Grid>
-               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-               <Iconify icon="mi:filter"/>
-               </Button>
-      </Grid>
-
-                </Grid>
-
- 
-      </Grid>
-         </Grid>
      
       <Dialog
         onClose={handleClickClose}

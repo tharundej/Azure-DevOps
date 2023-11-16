@@ -21,8 +21,9 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { ASSETS_API } from 'src/config-global';
 // import UserQuickEditForm from './UserQuickEditForm';
 import { useRouter } from 'src/routes/hooks';
-
+import { styled } from '@mui/system'; 
 import { RouterLink } from 'src/routes/components'; 
+import SvgColor from 'src/components/svg-color/svg-color';
 
 // ----------------------------------------------------------------------
 
@@ -48,8 +49,6 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
-console.log(row,'row data')
-  
   return (
     <>
      
@@ -80,12 +79,19 @@ console.log(row,'row data')
                     sx={{ mr: 2 }}
                   />
                 )}
-
+ {console.log(row,"rowdataa")}
                 {ele.type === 'text' && (
+                 
                   <ListItemText
-                    primary={row[ele.id]}
+                    primary={row[ele.id] || <span   style={{
+                      // display: 'flex',
+                      // justifyContent: 'center',
+                      // alignItems: 'center',
+                      // height: '100%', // Adjust the height if needed
+                      fontSize: 30,
+                    }}>-</span>}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-                    primaryTypographyProps={{ typography: 'body2' }}
+                    primaryTypographyProps={{ typography: 'body2'}}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
@@ -97,9 +103,9 @@ console.log(row,'row data')
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === 'active' && 'success') ||
-                      (row[ele.id] === 'pending' && 'warning') ||
-                      (row[ele.id] === 'banned' && 'error') ||
+                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
+                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
+                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
                       'default'
                     }
                   >
@@ -133,8 +139,8 @@ console.log(row,'row data')
                   popover.onClose();
                 }}
               >
-                <Iconify icon="solar:pen-bold" />
-                {/* <SvgColor src={`item?.image`} sx={{ width: 1, height: 1 }} /> */}
+                <Iconify icon={item?.icon} />
+                {/* <SvgColor src={`item?.icon`} sx={{ width: 1, height: 1 }} /> */}
                 {item?.name }
               </MenuItem>
             </>
