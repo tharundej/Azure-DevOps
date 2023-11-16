@@ -120,6 +120,7 @@ export function AuthProvider({ children }) {
     // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
    const companyID = localStorage.setItem('companyID',response?.data?.companyID);
    const employeeID = localStorage.setItem('employeeID',response?.data?.employeeID);
+   const reportingManagerID = localStorage.setItem('reportingManagerID',response?.data?.reportingManagerID);
     const { accessToken, user } = response.data;
 
     setSession("1");

@@ -109,10 +109,13 @@ export default function ApproveClaim({ currentUser }) {
   ]
 
   
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
+  const companyID =localStorage.getItem('companyID');
 
   const defaultPayload={
 
-    "companyId":"COMP1",
+    "companyId":companyID,
     "count":5,
     "page":0,
     "search":"",
@@ -299,10 +302,10 @@ const actions = [
     // compensatoryRequestId:"1",
     //     status: "",
     //     utilisation: "1"
-    companyId:"COMP2",
-    employeeId:"ibm3",
-    expenseClaimId :"13" ,
-    approverManagerId:"ibm1",
+    companyId:companyID,
+    employeeId:"",
+    expenseClaimId :"" ,
+    approverManagerId:employeeID,
     status:""
  
 
@@ -318,11 +321,13 @@ const actions = [
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
       if (eventData?.type === 'status') {
-        // handle(approve);
+       
            if (eventData?.name === 'Approve'){
             setApprove(prevState => ({
               ...prevState,
-              status: "Approve"
+              status: "Approve",
+              expenseClaimId :rowData?.expenseClaimId,
+              employeeId:rowData?.EmployeeId,
           }));
           // handle(approve);
           console.log(approve,"approve api")
@@ -333,12 +338,15 @@ const actions = [
        else{
         setApprove(prevState => ({
           ...prevState,
-          status: "Reject"
+          status: "Reject",
+          expenseClaimId :rowData?.expenseClaimId,
+          employeeId:rowData?.EmployeeId,
       }));
       // handle(approve);
       console.log(approve,"reject api")
 
     }
+     handle(approve);
     }
   }
     
