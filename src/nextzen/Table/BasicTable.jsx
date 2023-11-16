@@ -780,4 +780,3 @@ BasicTable.propTypes ={
  
  
 export { BasicTable };
-
