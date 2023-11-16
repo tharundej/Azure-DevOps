@@ -15,11 +15,9 @@ const ProductsTable = () => {
     { name: 'Delete', icon: 'hh', id: 'delete', type: '', endpoint: '' },
   ];
   const onClickActions = (rowdata, event) => {
-    if (event?.name === 'Edit') {
+    if (event?.name === 'edit') {
       handleEditAPICALL(rowdata, event);
-    } else if (event?.name === 'view') {
-      handleViewAPICALL(rowdata, event);
-    } else if (event?.name === 'Delete') {
+    } else if (event?.name === 'delete') {
       handleDeleteAPICALL(rowdata, event);
     }
   };

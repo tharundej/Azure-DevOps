@@ -6,7 +6,7 @@ export const StatouryTable = () => {
   const [TABLE_HEAD, setTableHead] = React.useState([
     {
       id: 'employeeID',
-      label: ' Employee id',
+      label: ' Employee ID',
       type: 'text',
       containesAvatar: true,
 
@@ -15,11 +15,11 @@ export const StatouryTable = () => {
     },
    
     { id: 'employeeName', label: 'Employee name',  type: 'text', minWidth:'180px' },
-    { id: 'aadharNumber', label: 'Aadhar Number',  type: 'text', minWidth:'150px' },
-    { id: 'panNumber', label: 'Pan Number', type: 'text', minWidth:'180px' },
-    { id: 'uan', label: 'Uan Number', type: 'text', minWidth:'180px' },
+    { id: 'aadharNumber', label: 'Aadhaar Number',  type: 'text', minWidth:'150px' },
+    { id: 'panNumber', label: 'PAN Number', type: 'text', minWidth:'180px' },
+    { id: 'uan', label: 'UAN Number', type: 'text', minWidth:'180px' },
 
-    { id: 'accountHolderName', label: 'Account holder Name',  type: 'text',minWidth:'180px' },
+    { id: 'accountHolderName', label: 'Account Holder Name',  type: 'text',minWidth:'180px' },
     { id: 'passportNo', label: 'Passport Number',  type: 'text',minWidth:'180px' },
     { id: 'bankName', label: 'Bank Name',  type: 'text' },
     { id: 'accountNumber', label: 'Account Number',  type: 'text',minWidth:'180px' },
@@ -65,7 +65,7 @@ export const StatouryTable = () => {
   const actions = [
    
 
-    { name: 'Edit', icon: 'hh', id: 'edit' },
+   
 
    
   ];

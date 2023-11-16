@@ -124,6 +124,7 @@ import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 
 import Style from "../styles/Style.module.css";
+import { baseUrl } from '../global/BaseUrl';
 
  
 
@@ -247,7 +248,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims,
-      url: `http://192.168.1.199:3001/erp/${endpoint}`,
+      // url: `http://192.168.1.199:3001/erp/${endpoint}`,
+      url: baseUrl+`${endpoint}`,
+
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -401,7 +404,15 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
 
   }
-
+  const getRowActionsBasedOnStatus = (status) => {
+    if (status === 'pending' || status===""|| status==="Pending") {
+      return rowActions
+    } 
+    else {
+      return null
+    } 
+  }
+  
  
 
  
@@ -639,13 +650,20 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
 
   // sort 
+ 
   
 const [sortColumn, setSortColumn]=useState("")
+
+
+// useEffect(()=>{
+//   getTableData(payload)
+// },[sortColumn])
 
 
   const handleSort = (field,order) => {
   // console.log(order,"orderrrrrrrrrrrrr")
   // console.log(field,"for sorting .....")
+  
 
   const payload = initialDefaultPayload;
 
@@ -813,7 +831,7 @@ const [sortColumn, setSortColumn]=useState("")
 
                           headerContent={TABLE_HEAD}
 
-                          rowActions={rowActions || []}
+                          rowActions={getRowActionsBasedOnStatus(row.status)|| []}
 
                         />
 

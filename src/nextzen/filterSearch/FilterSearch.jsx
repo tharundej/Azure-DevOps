@@ -386,11 +386,11 @@ export default function SearchFilter({filterSearch,filterData}){
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="status">Status</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  
+                  id="Status"
                   multiple
                   value={dropdownstatus}
                   onChange={(e)=>handleChangeDropDown(e,'pfType')}

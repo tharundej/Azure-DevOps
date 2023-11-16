@@ -1,4 +1,4 @@
-/* .MuiButton-root{
+.MuiButton-root{
     border-radius: 8px;
     margin: 0px;
     margin-bottom: 0px;
@@ -10,7 +10,7 @@
     &:hover {
       background-color: black !important;
     } */
-/* } */
+}
 .MuiInputBase-input{
    height: 0.4em !important;
 }

@@ -15,6 +15,7 @@ import TimeForm from './TimeForm';
 import ReusableTabs from '../tabs/ReusableTabs';
 import './Time.css';
 import AddTimeProject from './AddTimeProject';
+import EditTimeProject from './EditTimeProject';
 
 const bull = (
   <Box
@@ -45,16 +46,16 @@ export default function TimeProject() {
     
         },
     
-        { id: "project_id", label: "Project Id", width: 180, type: "text" },
+        { id: "projectID", label: "Project Id", width: 180, type: "text" },
     
-        { id: "project_name", label: "Project Name", width: 220, type: "text" },
+        { id: "projectName", label: "Project Name", width: 220, type: "text" },
     
-        { id: "start_date", label: "Start Date", width: 180, type: "text" },
+        { id: "startDate", label: "Start Date", width: 180, type: "text" },
     
-        { id: "end_date", label: "End Date", width: 100, type: "text" },
-        { id: "due_date", label: "Due Date", width: 100, type: "text" },
+        { id: "endDate", label: "End Date", width: 100, type: "text" },
+        { id: "dueDate", label: "Due Date", width: 100, type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
-        { id: "activity_name", label: "Activity Name", width: 100, type: "text" },
+        { id: "activityName", label: "Activity Name", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -77,7 +78,30 @@ export default function TimeProject() {
         try{
           console.log(rowdata,"rowData:::::")
         const  data= {
-          project_id: JSON.stringify( rowdata.project_id),
+          projectId: JSON.stringify( rowdata.projectID),
+           
+          };
+          const response = await instance.post('deleteproject',data);
+          // setReportingManagerData(response.data.list)
+          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+        }catch(error){
+      console.error("Error", error);
+      throw error;
+        }
+      }
+
+      const [showEdit , setShowEdit] = useState(false)
+      const [tableEDitData , SetTableEditData] = useState({})
+      const handleEditClose = ()=> setShowEdit(false)
+      const handleEditAPICALL = async (rowdata,event) => {
+        console.log("🚀 ~ file: TimeProject.jsx:97 ~ handleEditAPICALL ~ rowdata:", rowdata)
+        setShowEdit(true)
+        SetTableEditData(rowdata)
+        console.log("iam here ")
+        try{
+          console.log(rowdata,"rowData:::::")
+        const  data= {
+          projectId: JSON.stringify( rowdata.projectId),
            
           };
           const response = await instance.post('deleteproject',data);
@@ -100,30 +124,7 @@ export default function TimeProject() {
     
       ];
     
-      const bodyContent = [
-    
-        {
-    
-          SL_NO: "1",
-    
-          project_id: "Aswin!23",
-    
-          project_name: "BellErp",
-    
-          start_date: "12/12/2023",
-    
-          end_date: "Coding",
-    
-          due_date: "2hour 40minutes",
-
-          activity_name: "122hour 40minutes",
-
-          status: "Approved",
-         
-    
-        },
-    
-      ];
+ 
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -136,51 +137,38 @@ export default function TimeProject() {
       console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    "page": 1,
-
+    "page": 60,
     "count": 10,
-
     "search": "",
-
     "externalFilters": {
-
-        "start_date": "",
-
-        "end_date": "",
-
-        "project_name": "",
-
+        "startDate": "",
+        "endDate": "",
+        "projectName": "",
         "status": "",
-
-        "activity_name": ""
-
+        "activityName": ""
     },
-
     "sort": {
-
         "key": 0,
-
-        "orderBy": "project_id"
-
+        "orderBy": ""
     }
-  }
+}
       
   return (
     <>
-      {/* {showForm && (
+      {showEdit && (
  <Dialog
  fullWidth
  maxWidth={false}
- open={showForm}
- onClose={handleClose}
+ open={showEdit}
+ onClose={handleEditClose}
  PaperProps={{
    sx: { maxWidth: 770 , overflow:'hidden'},
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}}handleClose={handleClose} />
+ <EditTimeProject currentUser={{}}handleClose={handleEditClose} tableEDitData={tableEDitData} />
       </Dialog>
-    )} */}
+    )}
 {/* <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/> */}
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
