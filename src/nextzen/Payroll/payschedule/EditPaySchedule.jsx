@@ -56,6 +56,9 @@
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
+    const handleOpenEdit = () => {
+      setOpenEdit(true);
+    };
     const handleClose1 = () => {
       setOpen(false);
       reset1();
@@ -68,6 +71,7 @@
     const [selectedOption, setSelectedOption] = useState(tableEDitData); // State to manage the selected option in Autocomplete
     const [autoCompleteChange, setAutoCompleteChange] = useState();
     const [valueSelected, setValueSelected] = useState(tableEDitData);
+    const [openEdit, setOpenEdit] = useState(false);
     console.log(valueSelected,'valueSelectedeeeeeeee')
   
     const handleSelectChange = (field,value) => {
@@ -75,6 +79,11 @@
       // console.log('event', event.target.value);
       // setSelectedOption(value);
       console.log(field,value,'valllllllllll')
+      if (value && value.type === 'Permanent') {
+        setTextFieldVisible(true);
+      } else {
+        setTextFieldVisible(false);
+      }
       setValueSelected((prevData)=>({
         ...prevData,
         [field]:value,
@@ -253,18 +262,11 @@
             {snackbarMessage}
           </Alert>
         </Snackbar>
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          sx={{ margin: '20px' }}
-        >
-          Edit PayRoll
-        </Button>
         <Dialog
           fullWidth
           maxWidth={false}
-          open={open}
+          open={openEdit}
+          onClick={handleOpenEdit}
           onClose={handleClose2}
           PaperProps={{
             sx: { maxWidth: 720 },
@@ -293,7 +295,7 @@
                 options={employeepayTypes}
                 getOptionLabel={getOptionLabel}
                 value={valueSelected.employee_type||null} // Use tableEDitData or an empty string
-                onChange={handleForms}
+                onChange={ (e,newValue)=>handleSelectChange('employee_type',newValue||null)}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Employee Type" />}
               />
@@ -391,7 +393,7 @@
                   isOptionEqualToValue={(option, value) => option.type === value.type}
                   getOptionSelected={(option, value) => option.type === value.type}
                   value={tableEDitData.employee_type} // Use tableEDitData or an empty string
-                  onChange={handleForms}
+                  onChange={ (e,newValue)=>handleSelectChange('employee_type',newValue||null)}
                   sx={{
                     width: 300,
                     margin: 'auto',
