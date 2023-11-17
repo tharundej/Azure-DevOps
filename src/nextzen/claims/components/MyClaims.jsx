@@ -68,7 +68,7 @@ export default function MyClaims({ currentUser ,}) {
     { code: 'AD', label: 'Hotel', value:2,  },
 
   ]
- 
+    
   // "claim_type": {
   //   "expense_configuration_id": 1,
   //    "expense_name": "hotel"
