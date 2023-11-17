@@ -91,7 +91,7 @@ const Documets = ({employeeIDForApis}) => {
   return (
     <>
     {/* <DocumentsUpload open={open} documents={documents} onHandleClose={handeleClose} /> */}
-    <FileEditCreate open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint="/updateDocs" type={type}/>
+    <FileEditCreate employeeIDForApis={employeeIDForApis} open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint="/updateDocs" type={type}/>
 
     <Grid container alignItems="center" justifyContent="flex-end" >
     <Button onClick={()=>{

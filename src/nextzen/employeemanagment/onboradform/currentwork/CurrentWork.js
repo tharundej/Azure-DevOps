@@ -304,7 +304,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitRoles=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+   
     
     });
     const config = {
