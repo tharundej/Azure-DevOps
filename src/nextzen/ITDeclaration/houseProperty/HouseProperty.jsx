@@ -157,6 +157,8 @@ export default function HouseProperty() {
     console.log(result, 'resultsreults');
   };
   const addHousingProperity = useCallback(async () => {
+
+    console.log(formData.dateOfSanction ,"")
     const payload = {
       companyId: cmpId,
       employeeId: empId,
@@ -416,11 +418,13 @@ const handleEdit = (rowData) => {
                   label="Date Of Sanction Of Loan"
                   value={dayjs(formData.dateOfSanction, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
                   // defaultValue={dayjs(new Date())}
+                  
 onChange={(newValue) => {
   console.log(newValue)
+  const formattedDate = dayjs(newValue).format('YYYY-MM-DD')
   setFormData((prevFormData) => ({
     ...prevFormData,
-    dateOfSanction: newValue,
+    dateOfSanction:formattedDate,
   }));
 }}
                 />

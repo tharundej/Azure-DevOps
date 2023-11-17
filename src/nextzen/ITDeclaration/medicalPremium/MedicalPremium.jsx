@@ -245,7 +245,7 @@ export default function MedicalPremium() {
           policyCitizenshipType: formData?.policyCitizenshipType,
           amountOfPremium: formData?.amountOfPremium,
           eligibleDeduction: formData?.eligibleDeduction,
-          documents: rentDocs,
+          documents: rentDocs ? rentDocs : [],
           oldFields:rentDeletedId
       
     };
@@ -533,9 +533,10 @@ export default function MedicalPremium() {
                       defaultValue={dayjs(new Date())}
     onChange={(newValue) => {
       console.log(newValue)
+      const formattedDate = dayjs(newValue).format('YYYY-MM-DD')
       setFormData((prevFormData) => ({
         ...prevFormData,
-        dateOfCommencementOfPolicy: newValue,
+        dateOfCommencementOfPolicy: formattedDate,
       }));
     }}
                     />

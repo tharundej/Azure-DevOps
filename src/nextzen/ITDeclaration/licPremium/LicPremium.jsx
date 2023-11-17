@@ -73,7 +73,7 @@ export default function LicPremium() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [selectedOption, setSelectedOption] = useState(''); // State to manage the selected option in Autocomplete
-  
+  const [isEdit , setIsEdit] =useState(false)
   const [files, setFiles] = useState([]);
   const [base64Strings, setBase64Strings] = useState([]);
 
@@ -352,7 +352,7 @@ const handleRentDeletedID = ( data)=>{
       url: baseUrl +'/updateLicPremiumDetails',
       headers: {
         Authorization:
-       toekn ,
+       token ,
         'Content-Type': 'text/plain',
       },
       data: payload,
