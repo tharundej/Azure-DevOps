@@ -243,8 +243,7 @@ export default function Holidays({ currentUser }) {
     data.locationID = formData?.Location?.locationID;
     data.holidayName=valueSelected?.holidayName
     data.repeatAnnualy=valueSelected?.repeatAnnualy?.type
-    data.holidayID=valueSelected?.holidayID
-    data.fulldayHalfday=valueSelected?.fulldayHalfday?.type
+
     console.log('submitted data111', data);
 
     try {

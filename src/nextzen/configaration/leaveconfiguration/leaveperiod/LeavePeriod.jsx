@@ -79,7 +79,7 @@ export default function LeavePeriod({ currentUser }) {
   ];
   const actions = [
     { name: 'Edit', icon: 'hh', path: 'jjj' },
-    // { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Delete', icon: 'hh', path: 'jjj' },
   ];
 
   const defaultPayload = {

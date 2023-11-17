@@ -47,7 +47,7 @@ export default function LeaveType({ currentUser }) {
   const [editData, setEditData] = useState();
   const [valueSelected, setValueSelected] = useState();
   const [showEdit, setShowEdit] = useState(false);
-  
+  const leaveTypeNames = [{ type: 'Annual' }, { type: 'Month' }];
   const TABLE_HEAD = [
     { id: 'leaveTypeName', label: 'Leave Name', type: 'text', minWidth: 180 },
     { id: 'totalNumberLeave', label: 'Total Number Of Leaves', type: 'text', minWidth: 180 },
@@ -84,8 +84,7 @@ export default function LeaveType({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [selectedDates, setSelectedDates] = useState(dayjs());
-const [leaveTypeNames,setLeaveTypeNames] = useState();
-const [leaveTypeData,setLeaveTypeData] = useState();
+
   const defaultValues1 = useMemo(
     () => ({
       LeaveName: currentUser?.LeaveName,
@@ -119,70 +118,14 @@ const [leaveTypeData,setLeaveTypeData] = useState();
     }));
   
   };
-  const desiredLeavePeriodName = valueSelected?.leavePeriodType; // This is the leave period name you want to find
-let desiredLeavePeriodID = null;
-
-// Find the leavePeriodID based on the leavePeriodName
-
-  for (let i = 0; i < leaveTypeData?.length; i++) {
-    if (leaveTypeData[i].leavePeriodName === desiredLeavePeriodName) {
-      desiredLeavePeriodID = leaveTypeData[i].leavePeriodID;
-      break; // Once found, exit the loop
-    }
-  }
-  const TypePeriodApi =async ()=>{
-  try {
-    const data = {
-      "companyID":"COMP1"
-  };
-    const response = await axios.post(baseUrl + '/leaveTypePeriodForLeave', data);
-    const demo = response?.data?.data.map(doc =>doc.leavePeriodName);
-    setLeaveTypeData(response?.data?.data)
-    console.log("try",demo)
-    if (response?.data?.code === 200) {
-      setSnackbarSeverity('success');
-      setSnackbarMessage(response?.data?.message);
-      setSnackbarOpen(true);
-      setLeaveTypeNames(demo)      
-      
-    } 
-    if (response?.data?.code === 400) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage(response?.data?.message);
-      setSnackbarOpen(true);
-
-      console.log('sucess', response);
-    }
-  }
-  catch (error) {
-    console.log("catach")
-    setSnackbarSeverity('error');
-    setSnackbarMessage('Unexpected Error . Please try again.');
-    setSnackbarOpen(true);
-    console.log('error', error);
-  }
-}
-
-console.log(valueSelected?.leavePeriodType ,"valueSelected?.leaveTypeName")
-
-
-console.log("Desired Leave Period ID:", desiredLeavePeriodID);
-console.log(leaveTypeData ,"leave Data ")
-
-  useEffect(()=>{
-    TypePeriodApi()
-  },[])
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
-    data.leaveTypeID=valueSelected?.leaveTypeID
-    // data.leavePeriodType=valueSelected.leavePeriodType
+    data.leavePeriodType=valueSelected.leavePeriodTypem
     data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
-    data.leavePeriodType=valueSelected.leavePeriodType?.type
-    data.leavePeriodID=desiredLeavePeriodID
+    data.leaveTypeName=valueSelected.leaveTypeName
     data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
     data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
-    data.leaveTypeName=valueSelected?.leaveTypeName
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
@@ -197,7 +140,7 @@ console.log(leaveTypeData ,"leave Data ")
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
+        setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
 
@@ -345,7 +288,7 @@ console.log(leaveTypeData ,"leave Data ")
                 label="Term Type"
                 options={leaveTypeNames}
                 value={valueSelected?.leavePeriodType || null}
-                 getOptionLabel={(option) => option} // Use 'label' as the display label
+                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
                 // isOptionEqualToValue={(option, value) => option.value === value}
                 onChange={(e, newValue) =>
                   handleSelectChange('leavePeriodType', newValue || null)

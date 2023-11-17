@@ -35,7 +35,6 @@ export default function ExpenseClaimView({ currentUser }) {
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
-  const [valueSelected, setValueSelected] = useState();
   const TABLE_HEAD = [
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth: 180 },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth: 180 },
@@ -43,12 +42,12 @@ export default function ExpenseClaimView({ currentUser }) {
     { id: 'designation_name', label: 'Designation Name', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj', endpoint: '/', type: 'edit' },
     { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'hh', path: 'jjj', endpoint: '/', type: 'edit' },
   ];
 
   const defaultPayload = {
-    company_id: 'COMP1',
+    company_id: 'COMP2',
     // employee_id: 'ibm1',
     page: 0,
     count: 5,
@@ -103,7 +102,6 @@ export default function ExpenseClaimView({ currentUser }) {
     if (event?.name === 'Edit') {
       setEditData(rowdata);
       handleOpenEdit();
-      setValueSelected(rowdata);
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
@@ -174,16 +172,11 @@ export default function ExpenseClaimView({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
-    data.expense_configuration_id=valueSelected?.expense_configuration_id
-    data.expense_name=valueSelected?.expense_name?.type
-    data.department_name=valueSelected?.department_name?.type
-    data.designation_name=valueSelected?.designation_name?.type
-    data.designation_grade_name=valueSelected?.designation_grade_name?.type
+    data.companyId = 'COMP2';
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
+      const response = await axios.post(baseUrl + '/', data);
       if (response?.data?.code === 200) {
         handleCloseEdit();
         setSnackbarSeverity('success');
@@ -191,17 +184,10 @@ export default function ExpenseClaimView({ currentUser }) {
         setSnackbarOpen(true);
         console.log('sucess', response);
       }
-      else if (response?.data?.code === 400) {
-        handleCloseEdit();
-        setSnackbarSeverity('errora');
-        setSnackbarMessage('Shift Configuration Added Succuessfully!');
-        setSnackbarOpen(true);
-        console.log('sucess', response);
-      }
     } catch (error) {
       setOpen(false);
       setSnackbarSeverity('error');
-      setSnackbarMessage('Unexpected Error. Please try again.');
+      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
       setSnackbarOpen(true);
       console.log('error', error);
     }
@@ -219,18 +205,7 @@ export default function ExpenseClaimView({ currentUser }) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const handleSelectChange = (field, value) => {
-    // console.log('values:', value);
-    // console.log('event', event.target.value);
-    // setSelectedOption(value);
-    console.log(field, value, 'valllllllllll');
-    setValueSelected((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  
-  };
-  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
+
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -269,7 +244,7 @@ export default function ExpenseClaimView({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Expensive Config</DialogTitle>
+          <DialogTitle>Add Expensive Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}
@@ -281,61 +256,29 @@ export default function ExpenseClaimView({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Autocomplete
+              <RHFAutocomplete
                 name="expense_name"
                 label="Expense Name"
-                options={expenseNames}
-                value={valueSelected?.expense_name||null}
-                getOptionLabel={(option) => option.type} // Use 'label' as the display label
-                // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('expense_name', newValue || null)
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="leave Type Name" variant="outlined" />
-                )}
+                options={expenseNames.map((name) => name.type)}
+                value={editData?.expense_name}
               />
-              <Autocomplete
+              <RHFAutocomplete
                 name="department_name"
                 label="Department Name"
-                options={departmentName}
-                value={valueSelected?.department_name||null}
-                getOptionLabel={(option) => option.type} // Use 'label' as the display label
-                // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('department_name', newValue || null)
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="department_name" variant="outlined" />
-                )}
+                options={departmentName.map((name) => name.type)}
+                value={editData?.department_name}
               />
-              <Autocomplete
+              <RHFAutocomplete
                 name="designation_name"
                 label="Designation Name"
-                options={designationName}
-                value={valueSelected?.designation_name||null}
-                getOptionLabel={(option) => option.type} // Use 'label' as the display label
-                // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('designation_name', newValue || null)
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="designation_name" variant="outlined" />
-                )}
+                options={designationName.map((name) => name.type)}
+                value={editData?.designation_name}
               />
-              <Autocomplete
+              <RHFAutocomplete
                 name="designation_grade_name"
                 label="Designation Grade Name"
-                options={designationGradeName}
-                value={valueSelected?.designation_grade_name||null}
-                getOptionLabel={(option) => option.type} // Use 'label' as the display label
-                // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('designation_grade_name', newValue || null)
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="designation_grade_name" variant="outlined" />
-                )}
+                options={designationGradeName.map((name) => name.type)}
+                value={editData?.designation_grade_name}
               />
             </Box>
           </DialogContent>
