@@ -92,7 +92,7 @@ const EmployeeView = () => {
       >
         <ProfileCover
           role="Hr Manager"
-          name="aa"
+          name="Name"
           avatarUrl={user?.photoURL}
           coverUrl="aaa"
         />

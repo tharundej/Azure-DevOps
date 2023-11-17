@@ -169,10 +169,10 @@ const handleCallSnackbar=(message,severity)=>{
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
-                onClick={handleBack}
+               // onClick={handleBack}
                 sx={{ mr: 1 }}
               >
-                Back
+                cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep+1!==5 &&

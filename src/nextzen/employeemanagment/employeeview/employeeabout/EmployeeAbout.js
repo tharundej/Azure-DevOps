@@ -116,7 +116,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
 
 
           setDropDownValue(arrValue);
-          console.log("arrValue", 'locationsdepartmentarr');
+          console.log(arrValue, 'locationsdepartmentarr');
          
           setLocations(locations);
           
@@ -208,7 +208,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Grid>
         <Grid item>
         <Iconify 
-        sx={{cursor: "pointer",color:'orange'}}
+        sx={{cursor: "pointer",color:'black'}}
           onClick={()=>{
             
             handleEdit()
@@ -218,7 +218,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Grid>
     </Grid>
      
-      <Grid container spacing={20}>
+      <Grid container spacing={{ xs: 10, sm: 10, lg: 20 ,md:5}}>
 
         <Grid item>
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
@@ -371,7 +371,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Department Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.departmentName}
+          {dropDownvalue?.departmentValue?.departmentName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -379,15 +379,15 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Designation
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.Designation}
+          {dropDownvalue?.desginationValue?.designationName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Grade Name
+          Desgination Grade Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.gradeName}
+          {dropDownvalue?.desginationGradeValue?.designationGradeName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -395,7 +395,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Working Location
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.workingLocation}
+           {dropDownvalue?.locationValue?.locationName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -403,7 +403,15 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Reporting Manager Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.reportingManagerName}
+          {dropDownvalue?.managerValue?.managerName}
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+          Role
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {dropDownvalue?.rolesValue?.roleName}
           </Box>
         </Stack>
        
@@ -434,7 +442,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         //   </IconButton>
         // }
       />
-       <Grid container spacing={20}>
+       <Grid container spacing={{ xs: 5, sm: 5, lg: 20 ,md:5}}>
 
                     <Grid item>
                     <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>

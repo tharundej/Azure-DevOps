@@ -34,7 +34,7 @@ const employmentTypeOptions=[
  
 ]
  
-const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint ,employeeIDForApis}) => {
+const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint ,employeeIDForApis,callApi}) => {
  
   const [type,setType]=useState({label:"Permanent",id:'1'})
  
@@ -191,6 +191,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            callApi();
+            onHandleClose();
           })
           .catch((error) => {
             console.log(error);
@@ -223,17 +225,17 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             columnGap={2}
             display="grid"
             marginTop={2}
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
+            // gridTemplateColumns={{
+            //   xs: 'repeat(1, 1fr)',
+            //   sm: 'repeat(2, 1fr)',
+            // }}
           >
  
           <Grid container   spacing={2} md={12} xs={12} lg={12}  >
  
         
  
-          <Grid md={6} xs={12} item>
+          <Grid md={6} xs={12} lg={6}item>
                   <TextField
                     fullWidth
                     type="number"
@@ -516,5 +518,6 @@ StatouryForm.propTypes = {
     currentUser:PropTypes.object,
     employeeIDToCreate:PropTypes.string,
     endpoint:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

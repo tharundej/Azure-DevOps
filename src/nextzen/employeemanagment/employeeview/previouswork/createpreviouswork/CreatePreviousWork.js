@@ -43,7 +43,7 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 import { doc } from 'firebase/firestore';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
-const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis}) => {
+const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
   
   const onSaveData=()=>{
@@ -63,6 +63,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
 
   }
+  const [defaultValues, setDefaultValues] = useState([]);
     const onSave=()=>{
    
 
@@ -71,7 +72,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
       employeeId: employeeIDForApis,
       experience:defaultValues
      }
-     console.log(obj);
+     
+
       
       const config = {
 
@@ -93,13 +95,15 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        onhandleClose()
+        onhandleClose();
+        callApi();
+        setDefaultValues([])
       })
       .catch((error) => {
         console.log(error);
+        setDefaultValues([])
       });
     }
-    const [defaultValues, setDefaultValues] = useState([]);
 
 
     useEffect(()=>{
@@ -573,5 +577,6 @@ PreviousWork.propTypes = {
     onhandleClose:PropTypes.func,
     employeeData:PropTypes.array,
     endpoint:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

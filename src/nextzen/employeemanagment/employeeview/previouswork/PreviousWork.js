@@ -77,22 +77,7 @@ const PreviousWork = ({employeeIDForApis}) => {
 
         }
     ]
-    const [employeeWork,setEmployeeWork] =useState([{
-      "companyName": "Newcomp22",
-      "employeeId": "NEWC19",
-      "previousCompanyName": "",
-      "designation": "",
-      "startDate": "",
-      "presentlyWorking": true,
-      "endDate": null,
-      "documents":[
-        {
-          fileType:'',
-          fileName:'',
-          fileContent:''
-      }
-    ]
-    }])
+    const [employeeWork,setEmployeeWork] =useState([])
     const [expanded, setExpanded] = useState(Array(employeeWork?.length).fill(false));
     const tabIndex=1;
 
@@ -106,8 +91,8 @@ const PreviousWork = ({employeeIDForApis}) => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyId": "COMP1",
-      "employeeId": employeeIDForApis
+      "companyID": "COMP1",
+      "employeeID": employeeIDForApis
   });
      
     const config = {
@@ -137,11 +122,11 @@ const PreviousWork = ({employeeIDForApis}) => {
      ApiHit();
      
    },[])
-
+   console.log(employeeIDForApis,'employeeIDForApis')
    
   return (
     <>
-      <CreatePreviousWork  employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+      <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
@@ -189,7 +174,7 @@ const PreviousWork = ({employeeIDForApis}) => {
                            
 
                         {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
+                        <EmployeeRecords onhandleClose={handleClose} callApi={callApi} employeeIDForApis={employeeIDForApis}docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
 
                           </>}
                         </CardContent>

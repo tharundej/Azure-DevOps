@@ -402,8 +402,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
 
             <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-            <Grid md={6} xs={12} lg={6} item>
+            <Grid md={12} xs={12} lg={12} item>
                 <DatePicker
+                md={12} xs={12} lg={12}
                 fullWidth
                   value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
                   onChange={(date) => {
