@@ -99,7 +99,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.productID ? 'Edit Products' : 'Add New Products'}</DialogTitle>
+        <DialogTitle>{currentData?.productID ? 'Edit' : 'Add New'} Products</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -138,7 +138,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
             {currentData?.productID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
