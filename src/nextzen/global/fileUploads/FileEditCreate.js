@@ -35,9 +35,10 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
     }
   },[documents])
     const onSaveData=()=>{
+      console.log(employeeIDForApis,'employeeIDForApis')
         if(type==="edit"){
            const obj={
-            "companyId": "COMP1",
+                "companyId": "COMP1",
                 "employeeId": employeeIDForApis,
                 "id":defaultValues[0].id,
 

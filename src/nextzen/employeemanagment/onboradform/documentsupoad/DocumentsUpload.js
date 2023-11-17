@@ -203,8 +203,9 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                         onChange={(e)=>{handleCategoryChange(e,index)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
-                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        <MenuItem value="aadhar">Aadhaar</MenuItem>
+                        <MenuItem value="pan-card">Pan Card</MenuItem>
+                        <MenuItem value="pass-port">Passport</MenuItem>
                         
                         {/* Add more categories here */}
                     </Select>
