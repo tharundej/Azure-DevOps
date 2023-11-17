@@ -422,7 +422,13 @@ const BasicTable = ({
   };
 
   const getRowActionsBasedOnStatus = (row) => {
-    if (row?.status === 'pending' || row?.status === '' || row?.status === 'Pending' || row?.status === 'Active' || row?.status === 'InActive') {
+    if (
+      row?.status === 'pending' ||
+      row?.status === '' ||
+      row?.status === 'Pending' ||
+      row?.status === 'Active' ||
+      row?.status === 'InActive'
+    ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
       return rowActions;
@@ -585,7 +591,11 @@ const BasicTable = ({
             />
           )}
           {filterName === 'CustomersHead' && (
-            <CustomersHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <CustomersHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'PurchaseOrderHead' && (
             <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />

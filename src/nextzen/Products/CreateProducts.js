@@ -138,7 +138,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
             {currentData?.productID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>

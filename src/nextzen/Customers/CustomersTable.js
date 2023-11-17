@@ -1,18 +1,54 @@
 import { useEffect, useState, useCallback } from 'react';
-
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import SnackBarComponent from '../global/SnackBarComponent';
+import { deleteCutomerApi } from 'src/api/Accounts/Customers';
+import CreateCustomers from './CreateCustomers';
 
 const CustomersTable = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
+  const [editShowForm, setEditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      setEditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = { customerId: rowdata?.customerId };
+      handleDeleteApiCall(deleteData);
+    }
+  };
+  const handleClose = () => {
+    setEditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      const response = await deleteCutomerApi(deleteData);
+      console.log('Delete Api Call', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const ApiHit = async () => {
@@ -27,13 +63,12 @@ const CustomersTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
     companyId: 'COMP1',
     page: 0,
     count: 10,
-    search: 'pr',
+    search: '',
     sort: {
       orderby: '',
       key: 0,
@@ -53,6 +88,26 @@ const CustomersTable = () => {
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        severity={severity}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateCustomers currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Dashboard: Customers</title>
       </Helmet>
@@ -63,6 +118,7 @@ const CustomersTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="CustomersHead"
+        onClickActions={onClickActions}
       />
     </>
   );

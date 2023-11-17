@@ -28,11 +28,11 @@ const AssetsTable = () => {
     { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
     { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
-  const [editShowForm, seteditShowForm] = useState(false);
+  const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
-      seteditShowForm(true);
+      setEditShowForm(true);
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
       const deleteData = { asset_id: rowdata.assetId };
@@ -40,7 +40,7 @@ const AssetsTable = () => {
     }
   };
   const handleClose = () => {
-    seteditShowForm(false);
+    setEditShowForm(false);
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
