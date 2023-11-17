@@ -17,7 +17,7 @@ import Iconify from 'src/components/iconify';
 import { baseUrl } from '../BaseUrl';
 import axios from 'axios';
 
-const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
+const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,employeeIDForApis})=> {
   
 
   var [defaultValues,setDefaultValues]=useState([])
