@@ -449,11 +449,15 @@ getTableData(payload)
 };
 
 const getRowActionsBasedOnStatus = (row) => {
-  if (row?.status === 'pending' || row?.status===""|| row?.status==="Pending") {
+  if (row?.status === 'pending' || row?.status===""|| row?.status==="Pending" || row?.status==="Inactive" || row?.status==="active") {
     return rowActions
   }
   else if(!row?.status || row?.status === undefined){
     return rowActions
+  }
+  else if(row?.status==='active' || row?.status==='Active'){
+    const filteredActions = rowActions?.filter(action => action.name === 'Edit' || action.name === 'View');
+    return filteredActions;
   }
   else{
     return null
