@@ -25,13 +25,13 @@ const ProductsTable = () => {
       const deleteData = {
         product_id: rowdata?.productID || 0,
       };
-      handleDeleteAPICALL(deleteData);
+      handleDeleteApiCall(deleteData);
     }
   };
   const handleClose = () => {
     seteditShowForm(false);
   };
-  const handleDeleteAPICALL = async (deleteData) => {
+  const handleDeleteApiCall = async (deleteData) => {
     try {
       console.log(deleteData, 'deleteData');
       const response = await DeleteProductAPI(deleteData);
@@ -71,7 +71,7 @@ const ProductsTable = () => {
   }, []);
   const defaultPayload = {
     count: 5,
-    page: 1,
+    page: 0,
     search: '',
     companyID: 'COMP1',
   };
@@ -81,7 +81,7 @@ const ProductsTable = () => {
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
     { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>

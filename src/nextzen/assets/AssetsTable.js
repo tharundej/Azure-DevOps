@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
 import axios from 'axios';
@@ -7,12 +7,52 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import { async } from '@firebase/util';
+import SnackBarComponent from '../global/SnackBarComponent';
+import CreateAssets from './CreateAssets';
+import { DeleteAssetsAPI } from 'src/api/Accounts/Assets';
 
 const AssetsTable = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
+  const [editShowForm, seteditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      seteditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = { asset_id: rowdata.assetId };
+      handleDeleteApiCall(deleteData);
+    }
+  };
+  const handleClose = () => {
+    seteditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteAssetsAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({
     dates: [
       {
@@ -34,8 +74,8 @@ const AssetsTable = () => {
   });
   const [bodyContent, setBodyContent] = useState([]);
   const defaultPayload = {
-    company_id: 'comp1',
-    page: 1,
+    company_id: 'COMP1',
+    page: 0,
     count: 5,
     search: '',
     externalFilters: {
@@ -49,7 +89,8 @@ const AssetsTable = () => {
       },
       asset_name: '',
       asset_type: '',
-      supplier_name: 'Supplier XYZ',
+      supplier_name: '',
+      location_name: '',
     },
     sort: {
       key: 1,
@@ -68,7 +109,6 @@ const AssetsTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
 
   const [TABLE_HEAD, setTableHead] = useState([
@@ -96,6 +136,26 @@ const AssetsTable = () => {
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+        severity={severity}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateAssets currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Accounting: Vendor</title>
       </Helmet>
@@ -106,6 +166,7 @@ const AssetsTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="AssetsHead"
+        onClickActions={onClickActions}
       />
     </>
   );
