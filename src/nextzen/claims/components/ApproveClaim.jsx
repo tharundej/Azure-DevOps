@@ -311,10 +311,6 @@ const actions = [
 
   })
 
-  useEffect(()=>{
-    handle(approve);
-  },[approve])
-
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
@@ -323,30 +319,36 @@ const actions = [
       if (eventData?.type === 'status') {
        
            if (eventData?.name === 'Approve'){
-            setApprove(prevState => ({
-              ...prevState,
-              status: "Approve",
-              expenseClaimId :rowData?.expenseClaimId,
-              employeeId:rowData?.EmployeeId,
-          }));
-          // handle(approve);
-          console.log(approve,"approve api")
+          //   setApprove(prevState => ({
+          //     ...prevState,
+          //     status: "Approve",
+          //     expenseClaimId :rowData?.expenseClaimId,
+          //     employeeId:rowData?.EmployeeId,
+          // }));
+          handle({...approve, ...{status: "Approve",
+          expenseClaimId :rowData?.expenseClaimId,
+          employeeId:rowData?.EmployeeId,}});
+       
 
            }
           
         
        else{
-        setApprove(prevState => ({
-          ...prevState,
-          status: "Reject",
-          expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,
-      }));
+      //   setApprove(prevState => ({
+      //     ...prevState,
+      //     status: "Reject",
+      //     expenseClaimId :rowData?.expenseClaimId,
+      //     employeeId:rowData?.EmployeeId,
+      // }));
       // handle(approve);
-      console.log(approve,"reject api")
+      handle({...approve, ...{status: "Reject",
+          expenseClaimId :rowData?.expenseClaimId,
+          employeeId:rowData?.EmployeeId,}});
+      
+     
 
     }
-     handle(approve);
+    
     }
   }
     

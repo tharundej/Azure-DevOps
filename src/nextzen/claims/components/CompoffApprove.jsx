@@ -167,31 +167,41 @@ const externalFilter = {
       if (eventData?.type === 'status') {
         // handle(approve);
            if (eventData?.name === 'Approve'){
-            setApprove(prevState => ({
-              ...prevState,
-              status: "Approve",
-              utilisation:`${rowData?.utilisation}`,
-              compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+          //   setApprove(prevState => ({
+          //     ...prevState,
+          //     status: "Approve",
+          //     utilisation:`${rowData?.utilisation}`,
+          //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
 
-          }));
+          // }));
           // handle(approve);
-          console.log(approve,"approve api")
+
+          handle({...approve, ...{status: "Approve",
+               utilisation:`${rowData?.utilisation}`,
+              compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+        }});
+         
 
            }
           
         
        else{
-        setApprove(prevState => ({
-          ...prevState,
-          status: "Reject",
-          utilisation:`${rowData?.utilisation}`,
-          compensatoryRequestId: `${rowData?.compensantory_request_id}`,
-      }));
+      //   setApprove(prevState => ({
+      //     ...prevState,
+      //     status: "Reject",
+      //     utilisation:`${rowData?.utilisation}`,
+      //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+      // }));
+      
+      handle({...approve, ...{status: "Reject",
+      utilisation:`${rowData?.utilisation}`,
+     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+}});
       
       // handle(approve);
     }
     }
-    handle(approve);
+    
   }
     
     else {
