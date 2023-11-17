@@ -34,7 +34,7 @@ export default function TimeProject() {
     
           id: "",
     
-          label: " SL_NO",
+          label: "Employee Id",
     
           type: "text",
     
