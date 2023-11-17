@@ -78,7 +78,7 @@ export default function Loans() {
     "search": "",
     "companyID": localStorage?.getItem('companyID'),
     "employeeID":localStorage?.getItem('employeeID'),
-    "roleID":localStorage?.getItem('roleID'),
+    "roleID":parseInt(localStorage?.getItem('roleID')),
     "externalFilters": {
   "requestDate": {
    
