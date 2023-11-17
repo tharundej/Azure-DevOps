@@ -141,7 +141,7 @@ const PreviousWork = ({employeeIDForApis}) => {
    
   return (
     <>
-      <CreatePreviousWork open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+      <CreatePreviousWork  employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
