@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { deleteCutomerApi } from 'src/api/Accounts/Customers';
 import CreateCustomers from './CreateCustomers';
@@ -27,13 +28,31 @@ const CustomersTable = () => {
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
-      const deleteData = { customerId: rowdata?.customerId };
-      handleDeleteApiCall(deleteData);
+      const deleteData = {
+        customerId: rowdata?.customerId || 0,
+        customerName: rowdata.customerName || '',
+      };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
     }
   };
   const handleClose = () => {
@@ -93,6 +112,13 @@ const CustomersTable = () => {
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
         snacbarMessage={snacbarMessage}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Customer"
+        message={`Are you sure you want to delete ${deleteData?.customerName}?`}
       />
       {editShowForm && (
         <Dialog

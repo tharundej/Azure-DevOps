@@ -11,6 +11,7 @@ import { async } from '@firebase/util';
 import SnackBarComponent from '../global/SnackBarComponent';
 import CreateAssets from './CreateAssets';
 import { DeleteAssetsAPI } from 'src/api/Accounts/Assets';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 const AssetsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -30,13 +31,28 @@ const AssetsTable = () => {
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
-      const deleteData = { asset_id: rowdata.assetId };
-      handleDeleteApiCall(deleteData);
+      const deleteData = { asset_id: rowdata.assetId || 0, assetsName: rowdata.assetsName || '' };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
     }
   };
   const handleClose = () => {
@@ -141,6 +157,13 @@ const AssetsTable = () => {
         onHandleCloseSnackbar={HandleCloseSnackbar}
         snacbarMessage={snacbarMessage}
         severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Assets"
+        message={`Are you sure you want to delete ${deleteData?.assetsName}?`}
       />
       {editShowForm && (
         <Dialog

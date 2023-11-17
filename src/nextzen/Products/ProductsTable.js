@@ -8,6 +8,7 @@ import { BasicTable } from '../Table/BasicTable';
 import { getProductListAPI, DeleteProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
 import CreateProducts from './CreateProducts';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 const ProductsTable = () => {
   const actions = [
@@ -16,7 +17,8 @@ const ProductsTable = () => {
   ];
   const [editShowForm, seteditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
-
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       seteditShowForm(true);
@@ -24,8 +26,22 @@ const ProductsTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         product_id: rowdata?.productID || 0,
+        productName: rowdata.productName,
       };
-      handleDeleteApiCall(deleteData);
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
     }
   };
   const handleClose = () => {
@@ -90,6 +106,13 @@ const ProductsTable = () => {
         onHandleCloseSnackbar={HandleCloseSnackbar}
         snacbarMessage={snacbarMessage}
         severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Product"
+        message={`Are you sure you want to delete ${deleteData?.productName}?`}
       />
       {editShowForm && (
         <Dialog
