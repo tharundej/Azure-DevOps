@@ -88,13 +88,13 @@ export default function CompoffApprove({ currentUser ,}) {
   ]
   const managerID =localStorage.getItem('reportingManagerID');
   const employeeID =localStorage.getItem('employeeID');
-
+  const companyID =localStorage.getItem('companyID');
 
   const defaultPayload={
 
   
     "employee_id":"",
-    "company_id":"COMP1",
+    "company_id":companyID,
     "page":0,
     "search":"",
     "count":5,
@@ -146,16 +146,19 @@ const externalFilter = {
 
   const [approve, setApprove]= React.useState({
 
-    compensatoryRequestId:"1",
+    compensatoryRequestId:"",
         status: "",
-        utilisation: "1"
+        utilisation: "",
+        companyId:companyID,
+        employeeId:employeeID,
+        managerId:managerID,
 
   })
 
 
-  useEffect(()=>{
-    handle(approve);
-  },[approve])
+  // useEffect(()=>{
+  //   handle(approve);
+  // },[approve])
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
@@ -164,25 +167,41 @@ const externalFilter = {
       if (eventData?.type === 'status') {
         // handle(approve);
            if (eventData?.name === 'Approve'){
-            setApprove(prevState => ({
-              ...prevState,
-              status: "Approve"
-          }));
+          //   setApprove(prevState => ({
+          //     ...prevState,
+          //     status: "Approve",
+          //     utilisation:`${rowData?.utilisation}`,
+          //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+
+          // }));
           // handle(approve);
-          console.log(approve,"approve api")
+
+          handle({...approve, ...{status: "Approve",
+               utilisation:`${rowData?.utilisation}`,
+              compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+        }});
+         
 
            }
           
         
        else{
-        setApprove(prevState => ({
-          ...prevState,
-          status: "Reject"
-      }));
+      //   setApprove(prevState => ({
+      //     ...prevState,
+      //     status: "Reject",
+      //     utilisation:`${rowData?.utilisation}`,
+      //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+      // }));
       
-
+      handle({...approve, ...{status: "Reject",
+      utilisation:`${rowData?.utilisation}`,
+     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+}});
+      
+      // handle(approve);
     }
     }
+    
   }
     
     else {
@@ -307,7 +326,7 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
-      enqueueSnackbar(response?.data?.message,{variant:'error'})
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
     }
