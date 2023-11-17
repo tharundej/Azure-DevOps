@@ -169,7 +169,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rState: currentUser?.rState ||'',
     rPincode: currentUser?.rPincode || undefined,
     
-    toggle: currentUser?.toggle || false,
+    toggle: currentUser?.toggle || true,
     }),
     [currentUser]
   );
