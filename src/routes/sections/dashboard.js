@@ -495,4 +495,20 @@ export const dashboardRoutes = [
       { element: <MonthlyDeductions />, index: true },
     ],
   },
+  {
+    path: 'timesheet',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <TimeSheet />, index: true },
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
 ];
