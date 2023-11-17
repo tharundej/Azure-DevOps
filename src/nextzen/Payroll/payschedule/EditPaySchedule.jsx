@@ -359,7 +359,7 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
             </DialogContent>
 
             <DialogActions>
-              <Button variant="outlined" onClick={handleClose2}>
+              <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
               <LoadingButton
@@ -422,7 +422,7 @@ export default function EditPaySchedule({ currentUser, handleClose, tableEDitDat
             </DialogContent>
 
             <DialogActions>
-              <Button variant="outlined" onClick={handleClose2}>
+              <Button variant="outlined"onClick={handleCloseEdit}>
                 Cancel
               </Button>
               <LoadingButton
