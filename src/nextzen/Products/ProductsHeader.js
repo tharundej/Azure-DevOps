@@ -38,7 +38,11 @@ const ProductsHead = ({ filterSearch, filterData, getTableData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateProducts currentData={{}} handleClose={handleClose} getTableData={getTableData} />
+          <CreateProducts
+            currentData={{}}
+            handleClose={handleClose}
+            getTableData={getTableData}
+          />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">

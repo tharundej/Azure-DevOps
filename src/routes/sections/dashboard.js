@@ -204,13 +204,13 @@ export const dashboardRoutes = [
         ],
       },
 
-      {
-        path: 'leave',
-        children: [
-          { element: <Leave />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
+      // {
+      //   path: 'leave',
+      //   children: [
+      //     { element: <Leave />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //   ],
+      // },
       {
         path: 'timesheet',
         children: [
@@ -464,5 +464,20 @@ export const dashboardRoutes = [
       // { path: 'reusetable', element: <ReuseTable /> },
       //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
     ],
+  },
+  {
+    path:'leave',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children:[
+      { element: <Leave />, index: true },
+    ]
   }
 ];

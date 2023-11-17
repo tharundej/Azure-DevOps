@@ -153,7 +153,7 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/itdeclaration`,
     },
     leave: {
-      root: `${ROOTS.DASHBOARD}/leave`,
+      root: `/leave`,
     },
 
     timesheet: {
