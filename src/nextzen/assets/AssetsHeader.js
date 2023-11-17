@@ -34,7 +34,7 @@ const AssetsHead = ({ filterSearch, filterData }) => {
           open={showForm}
           onClose={handleClose}
           PaperProps={{
-            sx: { maxWidth: 770},
+            sx: { maxWidth: 1000 },
           }}
           className="custom-dialog"
         >

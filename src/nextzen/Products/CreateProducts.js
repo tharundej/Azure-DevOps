@@ -12,7 +12,7 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createProductAPI } from 'src/api/Accounts/Product';
+import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
 
 export default function CreateProducts({ currentData, handleClose, getTableData }) {
@@ -26,12 +26,13 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
 
   const defaultValues = useMemo(
     () => ({
-      companyId: currentData?.status || 'COMP1',
+      productId: currentData?.productID || '',
+      companyId: currentData?.companyID || 'COMP1',
       productName: currentData?.productName || '',
       productCategory: currentData?.productCategory || '',
-      HsnId: currentData?.HsnId || '',
+      HsnId: currentData?.hsnID || '',
       gstRate: currentData?.gstRate || '',
-      status: currentData?.status || '',
+      status: currentData?.status || 'Active',
     }),
     [currentData]
   );
@@ -58,19 +59,22 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
     data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
-      const response = await createProductAPI(data);
+      let response = '';
+      if (currentData?.productID) {
+        response = await UpdateProductAPI(data);
+      } else {
+        response = await createProductAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      getTableData()
+      currentData?.productID ? '' : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
@@ -95,7 +99,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Products</DialogTitle>
+        <DialogTitle>{currentData?.productID ? 'Edit' : 'Add New'} Products</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -117,7 +121,6 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
             <RHFTextField name="productCategory" label="Product Category" />
             <RHFTextField name="HsnId" label="HSN ID" />
             <RHFTextField name="gstRate" label="GST Rate" />
-
             <RHFAutocomplete
               name="status"
               id="status"
@@ -135,8 +138,8 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.productID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
