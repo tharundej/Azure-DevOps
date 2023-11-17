@@ -266,6 +266,7 @@ return arr
         ShiftTerm:"weekly",
         shiftGroupName:CurrentShiftGroupNameData?.ShiftGroupName,
         supervisorId:'ibm4',
+        toggle: 1,
         departmentId: JSON.stringify (CurrentDepartmentData?.departmentID),
         designationId:JSON.stringify( CurrentDesignationData?.designationID),
         DesignationGradeId: CurrentGradeData?.designationGradeID !== '0' ? JSON.stringify(CurrentGradeData.designationGradeID) : '',

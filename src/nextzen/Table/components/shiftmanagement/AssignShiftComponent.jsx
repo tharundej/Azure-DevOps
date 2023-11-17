@@ -29,21 +29,7 @@ export default function AssignShiftComponent() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+
     
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     

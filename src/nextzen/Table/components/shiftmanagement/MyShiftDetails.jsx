@@ -28,21 +28,7 @@ export default function MyShiftDetails() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+        
     
         { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
 

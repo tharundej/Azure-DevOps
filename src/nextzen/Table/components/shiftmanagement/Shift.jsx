@@ -24,7 +24,8 @@ const Shift = () => {
     ]
   return (
     <>
-    <ReusableTabs tabContents={tabContents} tabLabels={tabLabels}/>
+    <ReusableTabs tabContents={tabContents} tabLabels={tabLabels} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
+    
     </>
   )
 }

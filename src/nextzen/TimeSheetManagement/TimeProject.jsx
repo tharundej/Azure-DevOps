@@ -30,21 +30,7 @@ export default function TimeProject() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+
     
         { id: "projectID", label: "Project Id", width: 180, type: "text" },
     
@@ -54,8 +40,8 @@ export default function TimeProject() {
     
         { id: "endDate", label: "End Date", width: 100, type: "text" },
         { id: "dueDate", label: "Due Date", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
         { id: "activityName", label: "Activity Name", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
         // { id: '', width: 88 },
     

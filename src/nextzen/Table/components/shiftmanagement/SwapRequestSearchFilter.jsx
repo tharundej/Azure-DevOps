@@ -86,16 +86,10 @@ function getStyles(name, personName, theme) {
 export default function SwapRequestSearchFilter({filterData,filterSearch}){
     const theme = useTheme();
     const names = [
-      'Oliver Hansen',
-      'Van Henry',
-      'April Tucker',
-      'Ralph Hubbard',
-      'Omar Alexander',
-      'Carlos Abbott',
-      'Miriam Wagner',
-      'Bradley Wilkerson',
-      'Virginia Andrews',
-      'Kelly Snyder',
+      'Approve',
+      'Reject',
+      'Pending',
+  
     ];
   
     const [dropdown,setDropdown]=useState({
@@ -303,7 +297,7 @@ export default function SwapRequestSearchFilter({filterData,filterSearch}){
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={6} xs={6} item>
+            <Grid md={8} xs={8} item>
  
             <TextField placeholder='Search....'
             fullWidth
@@ -312,15 +306,15 @@ export default function SwapRequestSearchFilter({filterData,filterSearch}){
             />
             </Grid>
  
-            <Grid md={6} xs={6} item>
+            <Grid md={4} xs={4} item>
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
-               <Grid item>  
+               {/* <Grid item>  
                <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Shift Swap</Button>
                </Grid>
                <Grid item  sx={{marginLeft:'4px'}}>  
                <Button variant='contained' color='primary' className="button" onClick={handleRequestForm}>Request Swap</Button>
-               </Grid>
+               </Grid> */}
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
                <Iconify icon="mi:filter"/>
@@ -372,7 +366,7 @@ export default function SwapRequestSearchFilter({filterData,filterSearch}){
                     format="yyyy-MM-dd"
                     margin="normal"
                     id="date-picker-inline"
-                    label="Swap Birth"
+                    label="Swap Date"
                   />
                 </Grid>
 
@@ -388,7 +382,7 @@ export default function SwapRequestSearchFilter({filterData,filterSearch}){
           multiple
           value={dropdownProjectName}
           onChange={(e) => handleChangeDropDown(e, 'status')}
-          input={<OutlinedInput label="Project Name" />}
+          input={<OutlinedInput label="Status" />}
           MenuProps={MenuProps}
         >
           {names.map((name) => (

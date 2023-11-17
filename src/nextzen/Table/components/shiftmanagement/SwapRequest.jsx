@@ -28,21 +28,7 @@ export default function Swaprequest() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+      
     
         { id: "employeeShiftSwapId", label: "Employe Shift Swap ID", width: 180, type: "text" },
 
@@ -102,7 +88,7 @@ export default function Swaprequest() {
     
   return (
     <>
-      {showForm && (
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -115,7 +101,7 @@ export default function Swaprequest() {
 >
  <AssignShift currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}

@@ -31,21 +31,7 @@ export default function ShiftRoast() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+   
     
         
         { id: "employee_id", label: "Employe Id", width: 180, type: "text" },

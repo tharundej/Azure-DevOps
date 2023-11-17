@@ -86,16 +86,10 @@ function getStyles(name, personName, theme) {
 export default function SwapSearchFilter({filterData,filterSearch}){
     const theme = useTheme();
     const names = [
-      'Oliver Hansen',
-      'Van Henry',
-      'April Tucker',
-      'Ralph Hubbard',
-      'Omar Alexander',
-      'Carlos Abbott',
-      'Miriam Wagner',
-      'Bradley Wilkerson',
-      'Virginia Andrews',
-      'Kelly Snyder',
+      'Approve',
+      'Reject',
+      'Pending',
+  
     ];
   
     const [dropdown,setDropdown]=useState({
@@ -372,7 +366,7 @@ export default function SwapSearchFilter({filterData,filterSearch}){
                     format="yyyy-MM-dd"
                     margin="normal"
                     id="date-picker-inline"
-                    label="Swap Birth"
+                    label="Swap Date"
                   />
                 </Grid>
 
@@ -388,7 +382,7 @@ export default function SwapSearchFilter({filterData,filterSearch}){
           multiple
           value={dropdownProjectName}
           onChange={(e) => handleChangeDropDown(e, 'status')}
-          input={<OutlinedInput label="Project Name" />}
+          input={<OutlinedInput label="Status" />}
           MenuProps={MenuProps}
         >
           {names.map((name) => (

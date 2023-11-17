@@ -112,13 +112,16 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   }, [])
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
+  const [ShiftGroupName,setShiftGroupName] =useState([])
   const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
   const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
   const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
   const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
-
+  useEffect(() => {
+    getShiftgroupName()
+  }, [])
   const getEmployeSwap = async () => {
     try{
    const data = JSON.stringify({
@@ -136,7 +139,21 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     throw error;
       }
   }
-
+  const getShiftgroupName= async (newvalue)=>{
+    try{
+    const  data= {
+      
+      companyId:'COMP1',
+       
+      };
+      const response = await instance.post('/getShiftGroupName',data);
+      setShiftGroupName(response.data.data)
+      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+    }catch(error){
+  console.error("Error", error);
+  throw error;
+    }
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');

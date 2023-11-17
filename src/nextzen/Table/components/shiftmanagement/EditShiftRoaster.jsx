@@ -44,12 +44,15 @@ import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
 export default function EditShiftRoaster({  currentUser , handleClose ,editData}) {
-  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData)
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData)
+ const [ TableDta ,SetTableData ] = useState([])
+ console.log("🚀 ~ file: EditShiftRoaster.jsx:54 ~ EditShiftRoaster ~ TableDta:", TableDta)
+ SetTableData(editData)
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -341,8 +344,8 @@ return arr
 disablePortal
 id="combo-box-dem"
 options={ShiftGroupName || []}
-// defaultValue={ editData?.shift_group_name || null }
-value={CurrentShiftGroupNameData?.employeeShiftGroupId}
+defaultValue={["aswin"]|| null }
+// value={CurrentShiftGroupNameData?.employeeShiftGroupId}
 getOptionLabel={(option) => option.ShiftGroupName}
 onChange={(e,newvalue)=>{
 
@@ -358,6 +361,7 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
 />
+
 {/* <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>
