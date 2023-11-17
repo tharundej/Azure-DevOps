@@ -165,6 +165,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
+      currentData?.assetId ? '' : getTableData();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
@@ -356,7 +357,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
             {currentData?.assetId ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>

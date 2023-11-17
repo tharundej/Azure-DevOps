@@ -12,10 +12,10 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createCustomerAPI } from 'src/api/Accounts/Customers';
+import { createCustomerAPI, updateCustomerAPI } from 'src/api/Accounts/Customers';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateCustomers({ currentData, handleClose }) {
+export default function CreateCustomers({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
     customer_name: Yup.string().required('Customer Name is Required'),
     customer_company_name: Yup.string().required('Customer Company Name is Required'),
@@ -36,22 +36,23 @@ export default function CreateCustomers({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      customer_name: currentData?.customer_name || '',
-      customer_company_name: currentData?.customer_company_name || '',
-      customer_email_id: currentData?.customer_email_id || '',
-      customer_phone_no: currentData?.customer_phone_no || '',
-      customer_address_line1: currentData?.customer_address_line1 || '',
+      customer_id: currentData?.customer_id || '',
+      customer_name: currentData?.customerName || '',
+      customer_company_name: currentData?.customerCompanyName || '',
+      customer_email_id: currentData?.customerEmailId || '',
+      customer_phone_no: currentData?.customerPhoneNo || '',
+      customer_address_line1: currentData?.customerAddress || '',
       customer_address_line2: currentData?.customer_address_line2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
       state_code: currentData?.state_code || '',
       country: currentData?.country || '',
       pincode: currentData?.pincode || '',
-      customer_gst_no: currentData?.customer_gst_no || '',
-      customer_pan_no: currentData?.customer_pan_no || '',
-      customer_tan_no: currentData?.customer_tan_no || '',
+      customer_gst_no: currentData?.customerGstNo || '',
+      customer_pan_no: currentData?.customerPanNo || '',
+      customer_tan_no: currentData?.customerTanNo || '',
       status: currentData?.status || '',
-      company_id: currentData?.company_id || 'COMP1',
+      company_id: currentData?.companyId || 'COMP1',
     }),
     [currentData]
   );
@@ -82,13 +83,19 @@ export default function CreateCustomers({ currentData, handleClose }) {
     data.status = selectedStatus;
     try {
       console.log('Create Cutomer Data', data);
-      const response = await createCustomerAPI(data);
+      let response = '';
+      if (currentData?.customerName) {
+        response = await updateCustomerAPI(data);
+      } else {
+        response = await createCustomerAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.Message, 'success');
       reset();
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
+      currentData?.customerName ? '' : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.Message, 'warning');
@@ -110,7 +117,7 @@ export default function CreateCustomers({ currentData, handleClose }) {
   return (
     <div className="modal-container">
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Customers</DialogTitle>
+        <DialogTitle>{currentData?.customerName ? 'Edit' : 'Add New'} Customers</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -159,8 +166,8 @@ export default function CreateCustomers({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.customerName ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
