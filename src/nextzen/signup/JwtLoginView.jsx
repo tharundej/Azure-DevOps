@@ -60,7 +60,7 @@ export default function JwtLoginView() {
 
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
-    defaultValues,
+     defaultValues,
   });
 
   const {
@@ -76,9 +76,10 @@ export default function JwtLoginView() {
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    
     try {
       await login?.(data.email, data.password);
-      // router.push(returnTo || PATH_AFTER_LOGIN);
+      router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       // reset();
@@ -101,11 +102,11 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
-      <Card sx={{ backgroundColor: '#cce9f0' }}>
+      <Card sx={{backgroundColor:'#cce9f0'}}>
         <CardContent>
-          <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
-          <Typography variant="body2">Password: Ramesha@123</Typography>
-        </CardContent>
+      <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
+      <Typography variant="body2">Password: 1234</Typography>
+      </CardContent>
       </Card>
     </Stack>
   );
@@ -131,14 +132,7 @@ export default function JwtLoginView() {
         }}
       />
 
-      <Link
-        component={RouterLink}
-        href={paths.auth.jwt.forgotpassword}
-        variant="body2"
-        color="inherit"
-        underline="always"
-        sx={{ alignSelf: 'flex-end' }}
-      >
+      <Link component={RouterLink} href={paths.auth.jwt.forgotpassword} variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
         Forgot password?
       </Link>
 
@@ -156,14 +150,19 @@ export default function JwtLoginView() {
   );
 
   return (
+    
     <FormProvider methods={methods} onSubmit={onSubmit}>
+       
       {renderHead}
 
       {/* <Alert severity="info" sx={{ mb: 3 }}>
         Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
       </Alert> */}
-
+      
+     
       {renderForm}
+
     </FormProvider>
+    
   );
 }

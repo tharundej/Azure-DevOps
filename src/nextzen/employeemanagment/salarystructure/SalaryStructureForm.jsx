@@ -109,7 +109,6 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      handleClose()
     })
     .catch((error) => {
       console.log(error);
@@ -235,7 +234,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
 
                   <Grid container >
               
-              <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+              <Grid item xs={12} md={6}>
               {console.log(options,'options')}
                 <Autocomplete
                   disablePortal
@@ -281,13 +280,13 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                  
                   
                   renderInput={(params) => <TextField {...params} label="Department"
-                  style={{ width: '100%' }} />}
+                  style={{ paddingLeft: '16px', width: '100%' }} />}
                 />
               </Grid>
                   </Grid>
 
                       <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -327,13 +326,13 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination"
-                        style={{  width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                       </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -356,7 +355,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                        style={{ width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                   </Grid>
