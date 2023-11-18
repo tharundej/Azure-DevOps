@@ -31,7 +31,7 @@ import StatouryForm  from '../../statoury/StatouryForm';
 // ----------------------------------------------------------------------
 
 export default function Statoury({  delivery, shippingAddress, payment,employeeIDForApis }) {
-  const employeeIDToCreate="info7"
+  const employeeIDToCreate=employeeIDForApis
   const [endpoint,setEndpoint]=useState("")
   const [statouryCreateOpen,setStatouryCreateOpen]=useState(false);
   const [employeeStatouryData,setEmployeeStatouryData]=useState({})
@@ -330,7 +330,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         </Grid>
     </Grid>
      
-      <Grid container spacing={20}>
+      <Grid container spacing={{ xs: 5, sm: 5, lg: 20 ,md:5}}>
 
         <Grid item>
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
@@ -404,7 +404,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
           Bank Account Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {employeeStatouryData?.accountNumber}
+          {employeeStatouryData?.bankAccountNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -492,7 +492,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={employeeStatouryData} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
+    <StatouryForm callApi={getEmployeeStattuory}open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={employeeStatouryData} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
 
     {employeeStatouryData?.accountHolderName===""   && 
     

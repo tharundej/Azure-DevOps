@@ -26,6 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
  
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
  
  
 const employmentTypeOptions=[
@@ -34,7 +35,7 @@ const employmentTypeOptions=[
  
 ]
  
-const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint ,employeeIDForApis}) => {
+const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint ,employeeIDForApis,callApi}) => {
  
   const [type,setType]=useState({label:"Permanent",id:'1'})
  
@@ -191,6 +192,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            callApi();
+            onHandleClose();
           })
           .catch((error) => {
             console.log(error);
@@ -215,7 +218,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       >
            <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* methods={methods} onSubmit={onSubmit} */}
-        <DialogTitle>Add Statoury</DialogTitle>
+        {/* <DialogTitle>Add Statoury</DialogTitle> */}
+        <ModalHeader heading={endpoint==="/updateStatutoryDetails" ?"Edit Statoury Details": "Create Statoury details"} />
  
         <DialogContent>
           <Box
@@ -223,17 +227,17 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             columnGap={2}
             display="grid"
             marginTop={2}
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
+            // gridTemplateColumns={{
+            //   xs: 'repeat(1, 1fr)',
+            //   sm: 'repeat(2, 1fr)',
+            // }}
           >
  
           <Grid container   spacing={2} md={12} xs={12} lg={12}  >
  
         
  
-          <Grid md={6} xs={12} item>
+          <Grid md={6} xs={12} lg={6}item>
                   <TextField
                     fullWidth
                     type="number"
@@ -499,7 +503,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
               Cancel
             </Button>
  
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+            <LoadingButton  variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -516,5 +520,6 @@ StatouryForm.propTypes = {
     currentUser:PropTypes.object,
     employeeIDToCreate:PropTypes.string,
     endpoint:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

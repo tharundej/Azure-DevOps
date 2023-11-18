@@ -15,9 +15,10 @@ import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
 import { baseUrl } from '../BaseUrl';
+import ModalHeader from '../../global/modalheader/ModalHeader'
 import axios from 'axios';
 
-const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,employeeIDForApis})=> {
+const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,type,employeeIDForApis})=> {
   
 
   var [defaultValues,setDefaultValues]=useState([])
@@ -35,9 +36,10 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
     }
   },[documents])
     const onSaveData=()=>{
+      console.log(employeeIDForApis,'employeeIDForApis')
         if(type==="edit"){
            const obj={
-            "companyId": "COMP1",
+                "companyId": "COMP1",
                 "employeeId": employeeIDForApis,
                 "id":defaultValues[0].id,
 
@@ -74,6 +76,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
             axios.request(config)
             .then((response) => {
             console.log(JSON.stringify(response.data));
+            onhandleClose();
+            callApi()
             })
             .catch((error) => {
             console.log(error);
@@ -103,6 +107,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
                 axios.request(config)
                 .then((response) => {
                 console.log(JSON.stringify(response.data));
+                callApi();
+                onhandleClose()
                 })
                 .catch((error) => {
                 console.log(error);
@@ -134,6 +140,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
         axios.request(config)
         .then((response) => {
         console.log(JSON.stringify(response.data));
+        callApi();
+        onhandleClose()
         })
         .catch((error) => {
         console.log(error);
@@ -276,6 +284,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type,emplo
                 sx: { maxWidth: 720 },
                 }}
             >
+
+              <ModalHeader heading={type==="create"?"Add Document":"Edit Documents"} />
          <DialogContent>
           
          <Grid xs={12} md={8}>
@@ -421,7 +431,8 @@ FileEditCreate.propTypes = {
     endpoint:PropTypes.string,
     docType:PropTypes.array,
     type:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };
 
   export default FileEditCreate;
