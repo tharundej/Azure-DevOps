@@ -34,9 +34,9 @@ export default function ShiftRoast() {
    
     
         
-        { id: "employee_id", label: "Employe Id", width: 180, type: "text" },
+        { id: "employee_id", label: "Employee Id", width: 180, type: "text" },
         
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
         
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
         

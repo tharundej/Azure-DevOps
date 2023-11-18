@@ -321,7 +321,7 @@ export default function ShiftRoasterFilter({filterData,filterSearch}){
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employe To Shift</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employee To Shift</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>

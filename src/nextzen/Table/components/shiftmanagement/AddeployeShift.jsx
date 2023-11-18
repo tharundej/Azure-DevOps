@@ -138,8 +138,17 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   console.log("🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:", employeData)
   const [CurrentGradeData,setCurrentGradeData] =useState({})
   console.log("🚀 ~ file: AddeployeShift.jsx:140 ~ AddEmployeShift ~ CurrentGradeData:", CurrentGradeData.designationGradeID)
-
-
+ const [SwitchValue , SetSwitchValue ] = useState('')
+  console.log("🚀 ~ file: AddeployeShift.jsx:142 ~ AddEmployeShift ~ SwitchValue:", SwitchValue)
+  // const handleToggleChange = ()=>{
+  //   setIsemployeLevel(!isemployeLevel) 
+  //   if (!isemployeLevel){
+  //     SetSwitchValue('0')
+  //   }  
+  //   if(isemployeLevel){
+  //     SetSwitchValue('1')
+  //   }
+  // }
   const getDepartment = async ()=>{
     try{
     const  data= {
@@ -219,6 +228,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   throw error;
     }
   }
+
   const getShiftName= async (newvalue)=>{
     try{
     const  data= {
@@ -235,6 +245,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   throw error;
     }
   }
+
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
@@ -262,16 +273,17 @@ return arr
     try {
     
       const data = {
-        shiftConfigurationId:parseInt( CurrentShiftNameData?.shiftConfigurationId),
-        ShiftTerm:"weekly",
-        shiftGroupName:CurrentShiftGroupNameData?.ShiftGroupName,
+        shiftConfigurationId: CurrentShiftNameData?.shiftConfigurationId !== undefined ? parseInt( CurrentShiftNameData?.shiftConfigurationId) : null,
+        // ShiftTerm:"weekly",
+        shiftGroupName: CurrentShiftGroupNameData?.ShiftGroupName !== undefined ? CurrentShiftGroupNameData?.ShiftGroupName : '',
         supervisorId:'ibm4',
-        toggle: 1,
-        departmentId: JSON.stringify (CurrentDepartmentData?.departmentID),
-        designationId:JSON.stringify( CurrentDesignationData?.designationID),
-        DesignationGradeId: CurrentGradeData?.designationGradeID !== '0' ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
-        companyId:'COMP2',
+        toggle:SwitchValue !== '' ? parseInt(SwitchValue) : 0,
+        departmentId:CurrentDepartmentData?.departmentID !== undefined ? JSON.stringify (CurrentDepartmentData?.departmentID) : '',
+        designationId:CurrentDesignationData?.designationID !== undefined ? JSON.stringify( CurrentDesignationData?.designationID) : '',
+        DesignationGradeId: CurrentGradeData?.designationGradeID !== undefined ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
+        companyId:'COMP1',
         employeeId:join(),
+        locationId:"30"
       }
           console.log(data, 'data111ugsghghh');
     
@@ -388,7 +400,14 @@ renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
 />
 
 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Switch checked={isemployeLevel} onChange={()=>{setIsemployeLevel(!isemployeLevel)}} />
+                  <Switch checked={isemployeLevel} 
+                  // onChange={handleToggleChange} 
+                  onChange={() => {
+                    setIsemployeLevel(!isemployeLevel);
+                    const newSwitchValue = isemployeLevel ? 0 : 1;
+                      SetSwitchValue(newSwitchValue);
+                  }}
+                  />
                   {!isemployeLevel ? <span>Select On Employee</span> : <span>Select On Department</span>}
                 </div>
 {/* <RHFSelect name="departmentId" label="Select Department">
@@ -494,7 +513,7 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Add  Employe To Shift'}
+        {!currentUser ? 'Create User' : 'Add  Employee To Shift'}
       </LoadingButton>
       <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
     </Stack>

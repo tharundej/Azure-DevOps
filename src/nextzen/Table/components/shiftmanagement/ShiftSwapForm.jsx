@@ -44,9 +44,9 @@ import instance from 'src/api/BaseURL';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    end_date: dayjs(new Date()),
+    start_date: dayjs(new Date()),
+    // offer_date: dayjs(new Date()),
   });
   const router = useRouter();
 
@@ -113,21 +113,27 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
+  const [ShiftName,setShiftName] =useState([]) 
   const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
   const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
   const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
   const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
+  console.log("🚀 ~ file: ShiftSwapForm.jsx:121 ~ ShiftSwapForm ~ ToShiftGroup_Name:", ToShiftGroup_Name)
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
     getShiftgroupName()
+    // getShiftName()
   }, [])
-  const getEmployeSwap = async () => {
-    try{
+  const getEmployeSwap = async ( toGroup,fromGroup) => {
+  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+
+   
+   try{
    const data = JSON.stringify({
       "company_id": "COMP2",
-      "from_shift_group": 2,
-      "to_shift_group": 3,
+      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
+      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
     });
         const response = await instance.post('/GetSwapEmployee',data);
@@ -138,6 +144,28 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     console.error("Error", error);
     throw error;
       }
+    }
+  }
+  const getEmployeSwap1 = async ( toGroup,fromGroup) => {
+  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+
+   
+   try{
+   const data = JSON.stringify({
+      "company_id": "COMP2",
+      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
+      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
+      "search": ""
+    });
+        const response = await instance.post('/GetSwapEmployee',data);
+        setEmployeSwapDetails(response.data.Data)
+        
+        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+      }catch(error){
+    console.error("Error", error);
+    throw error;
+      }
+    }
   }
   const getShiftgroupName= async (newvalue)=>{
     try{
@@ -155,6 +183,23 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     }
   }
 
+  // const getShiftName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:"COMP2",
+  //     locationId:32
+       
+  //     };
+  //     const response = await instance.post('/getShiftConfig',data);
+  //     setShiftName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
 
@@ -162,13 +207,13 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     
   const data = {
     "employee_1":{
-      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name),
+      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
       "employee_id":"ibm4", //  currentEmployeSwapData1.employee_shift_swap_id
     },
     "employee_2":{
-      "employee_shift_swap_id":parseInt(FromShiftGroup_Name),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name1),
+      "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
       "employee_id":"ibm4"  //  currentEmployeSwapData1.employee_shift_swap_id
     },
     "company_id":"COMP2",
@@ -178,7 +223,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   }
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('/ ', data).then(
+      const response = await instance.post('/SwapShift', data).then(
         (successData) => {
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
@@ -224,7 +269,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     >
 
    
-      <Autocomplete
+      {/* <Autocomplete
   // multiple
   disablePortal
   id="combo-box-demo"
@@ -255,10 +300,30 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
+/> */}
+<Autocomplete
+disablePortal
+id="combo-box-m"
+options={ShiftGroupName || []}
+value={FromShiftGroup_Name1?.employeeShiftGroupId}
+getOptionLabel={(option) => option.ShiftGroupName}
+onChange={(e,newvalue)=>{
+
+
+  setFromShiftGroup_Name1(newvalue)
+// getDesignation(newvalue)
+getEmployeSwap(newvalue, ToShiftGroup_Name)
+
+
+}}
+sx={{
+width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+}}
+renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
 />
 
 
-                      <Autocomplete
+                      {/* <Autocomplete
   // multiple
   disablePortal
   id="combo-box-demo"
@@ -281,6 +346,27 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
+/> */}
+
+<Autocomplete
+disablePortal
+id="combo--dem33"
+options={ShiftGroupName || []}
+value={ToShiftGroup_Name?.employeeShiftGroupId}
+getOptionLabel={(option) => option.ShiftGroupName}
+onChange={(e,newvalue)=>{
+
+
+  setToShiftGroup_Name(newvalue
+)
+// getDesignation(newvalue)
+getEmployeSwap(newvalue, FromShiftGroup_Name1)
+
+}}
+sx={{
+width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+}}
+renderInput={(params) => <TextField {...params} label="Select To Shift GRoup " />}
 />
 
       <Autocomplete
@@ -345,7 +431,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       <br />
    
 
-  <Autocomplete
+  {/* <Autocomplete
   // multiple
   disablePortal
   id="combo-box-demo"
@@ -367,8 +453,29 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="From Shift GroupName" />}
+/> */}
+
+<Autocomplete
+disablePortal
+id="cobo-box-dem"
+options={ShiftGroupName || []}
+value={FromShiftGroup_Name?.employeeShiftGroupId}
+getOptionLabel={(option) => option.ShiftGroupName}
+onChange={(e,newvalue)=>{
+
+
+  setFromShiftGroup_Name(newvalue
+)
+// getDesignation(newvalue)
+getEmployeSwap1(newvalue, ToShiftGroup_Name1)
+
+}}
+sx={{
+width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+}}
+renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
 />
-  <Autocomplete
+  {/* <Autocomplete
   // multiple
   disablePortal
   id="combo-box-demo"
@@ -391,6 +498,27 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
+/> */}
+
+<Autocomplete
+disablePortal
+id="combo-box-m"
+options={ShiftGroupName || []}
+value={ToShiftGroup_Name1?.employeeShiftGroupId}
+getOptionLabel={(option) => option.ShiftGroupName}
+onChange={(e,newvalue)=>{
+
+
+  setToShiftGroup_Name1(newvalue
+)
+// getDesignation(newvalue)
+
+getEmployeSwap1(newvalue, FromShiftGroup_Name)
+}}
+sx={{
+width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+}}
+renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
 />
          <Autocomplete
   disablePortal

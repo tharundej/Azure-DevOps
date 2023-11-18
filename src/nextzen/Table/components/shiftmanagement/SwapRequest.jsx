@@ -30,7 +30,7 @@ export default function Swaprequest() {
 
       
     
-        { id: "employeeShiftSwapId", label: "Employe Shift Swap ID", width: 180, type: "text" },
+        { id: "employeeShiftSwapId", label: "Employee Shift Swap ID", width: 180, type: "text" },
 
         { id: "employeeName", label: "Employee Name", width: 180, type: "text" },
         { id: "fromShiftGroup", label: "From Shift Group", width: 180, type: "text" },
@@ -70,11 +70,11 @@ export default function Swaprequest() {
   }
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        { name: "Approve", icon: "charm:circle-tick", path: "jjj", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
     
-        { name: "view", icon: "hh", path: "jjj" },
+        { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type: "serviceCall", endpoint: '/updateTimesheetStatus'},
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+    
     
       ];
     

@@ -315,7 +315,7 @@ return arr
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-   Add Employee Shift Here ...
+   Edit Employee Shift Here 
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -499,7 +499,7 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
       <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Add  Employe To Shift'}
+        {!currentUser ? 'Create User' : 'Add  Employee To Shift'}
       </LoadingButton>
       <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
     </Stack>
