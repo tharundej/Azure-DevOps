@@ -34,11 +34,13 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import './approvalsearchfilter.css'
+import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
-import CustomDateRangePicker from '../global/CustomDateRangePicker';
+import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
+import ShiftSwapForm from './ShiftSwapForm';
+import CreateSwapRequest from './CreateSwapRequest';
 
 
 
@@ -47,7 +49,7 @@ import CustomDateRangePicker from '../global/CustomDateRangePicker';
 const defaultFilters = {
   name: '',
   type: [],
-  startDate: null,
+  swap_date: null,
   endDate: null,
 };
 
@@ -81,7 +83,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ApprovalSearchFilter({filterData,filterSearch}){
+export default function SwapRequestSearchFilter({filterData,filterSearch}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -100,12 +102,31 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
   
     })
   
+    const [showForm, setShowForm] = useState  (false);
+    const handleClose = () => setShowForm(false);
+    const [showRequesForm, setShowRequestForm] = useState  (false);
+    const handleRequestClose = () => setShowRequestForm(false);
+
+    const handleTimeForm =()=>{
+      setShowForm(true)
+      console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+    }
+    const handleRequestForm =()=>{
+      setShowRequestForm(true)
+      console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
+    }
+
+    const [search, setSearch]=useState("");
+
+    const handleSearch = (searchTerm) => {
+      filterSearch(searchTerm.target.value)
+        };
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
     const [personName, setPersonName] = React.useState([]);
   
     const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
-    const [dropdownstatus,setDropdownStatus]=useState([])
+    const [dropdownshift_name,setDropdownStatus]=useState([])
     const [dropdownProjectName,setDropdownProjectName]=useState([])
     const [dropdownActivity,setdropdownActivity]=useState([])
     const [dropdownEmployeename,setdropdownEmployeename]=useState([])
@@ -123,55 +144,46 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
   
     const [dropdownFiledArray,setDropdownFiledArray]=useState(
       [
+
         {
           field:'status',
           options:[]
         },
-        {
-          field:'activity_name',
-          options:[]
-        },
-        {
-          field:'project_name',
-          options:[]
-        },
-        {
-          field:'employee_name',
-          options:[]
-        }
+  
       ]
     )
   
   
     const [datesSavedArray,setDatesSavedArray]=useState(["from_date","to_date","offer_date_from","offer_date_to"])
-    const [datesData,setDatesData]=useState([])
+    const [datesData,setDatesData]=useState('')
   
-    const [dates,setDates]=useState({
-      from_date:null,
-      to_date:null,
-   
+    const [Swapdates,setSwapdates]=useState()
+    const [CurrentUser,setcurrentUser]=useState({
+      swap_date: '',
     })
+    console.log("🚀 ~ file: SwapRequestSearchFilter.jsx:151 ~ SwapRequestSearchFilter ~ swap_date:", CurrentUser.swap_date)
+    console.log("🚀 ~ file: SwapRequestSearchFilter.jsx:144 ~ SwapRequestSearchFilter ~ Swapdates:", Swapdates)
   
     function formDateDataStructure(){
   
       return new Promise((resolve) => {
        
   
-        const arr1={};
-         datesFiledArray.forEach((item,index)=>{  
+        // const arr1={};
+        //  datesFiledArray.forEach((item,index)=>{  
            
-          arr1[item.field]={
-            from:formatDateToYYYYMMDD(dates[item?.from]),
-            to:formatDateToYYYYMMDD(dates[item?.to])
-          }
-          //  const obj={
-          //    filed_name:item?.field,
-          //    from:dates[item?.from],
-          //    to:dates[item?.to]
-          //  }  
-          //  arr1.push(obj);
-          })
-          setDatesData(arr1);
+        //   arr1[item.field]={
+        //     from:formatDateToYYYYMMDD(Swapdates[item?.from]),
+        //     to:formatDateToYYYYMMDD(Swapdates[item?.to])
+        //   }
+        //   //  const obj={
+        //   //    filed_name:item?.field,
+        //   //    from:Swapdates[item?.from],
+        //   //    to:Swapdates[item?.to]
+        //   //  }  
+        //   //  arr1.push(obj);
+        //   })
+          setDatesData(CurrentUser.swap_date);
           resolve(arr1)   
       })
       
@@ -188,15 +200,15 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
            
           if(dropdown[item.field]?.length>0){
             const arrayOfStrings = dropdown[item.field];
-            const commaSeparatedString = arrayOfStrings.join(', ');
+            const commaSeparatedString = arrayOfStrings.join(',');
             arr1[item.field]=commaSeparatedString;
           }
           
   
           //  const obj={
           //    filed_name:item?.field,
-          //    from:dates[item?.from],
-          //    to:dates[item?.to]
+          //    from:Swapdates[item?.from],
+          //    to:Swapdates[item?.to]
           //  }
           
            
@@ -228,30 +240,14 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
           target: { value },
         } = event;
         
-        if(field==="project_name"){
+        if(field==="status"){
           setDropdownProjectName(value)
           const obj=dropdown;
           obj[field]=value;
           setDropdown(obj);
         }
-        else if(field==="status"){
-          setDropdownStatus(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
-        else if(field==="activity_name"){
-          setdropdownActivity(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
-        else if(field==="employee_name"){
-            setdropdownEmployeename(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
+
+ 
       
   
           // On autofill we get a stringified value.
@@ -263,8 +259,10 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
   
       const handleApply = async()=>{
         setDatesData([]);
-       
+       console.log("swapp daaate",CurrentUser.swap_date)
+        // const data=await formDateDataStructure();
         const data1=await formWithDropdown();
+        data1.swap_date=CurrentUser?.swap_date
         filterData(data1);
         console.log(data1,';;;')
     
@@ -272,36 +270,65 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
       handleClickClose()
         
       }
-      const [search, setSearch]=useState("");
-      const handleClose = () => setShowForm(false);
-      const handleSearch = (searchTerm) => {
-        filterSearch(searchTerm.target.value)
-          };
+      
   
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
-
-            <TextField placeholder='Search....' 
+              {showForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <ShiftSwapForm currentUser={{}} handleClose={handleClose} />
+      </Dialog>
+    )}
+              {showRequesForm && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showRequesForm}
+ onClose={handleRequestClose}
+ PaperProps={{
+   sx: { maxWidth: 770 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+ <CreateSwapRequest currentUser={{}} handleClose={handleRequestClose} />
+      </Dialog>
+    )}
+ <Grid container alignItems="center" paddingBottom="10px">
+            <Grid md={6} xs={6} item>
+ 
+            <TextField placeholder='Search....'
             fullWidth
-            // onChange={handleSeacrch}
             onChange={e=>{handleSearch(e)}}
 
             />
             </Grid>
-
-            <Grid md={4} xs={4} item>
-                
-                <Grid >
-                <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
-      </Button>
-
-      </Stack>
+ 
+            <Grid md={6} xs={6} item>
+               
+                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+               <Grid item>  
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Shift Swap</Button>
+               </Grid>
+               <Grid item  sx={{marginLeft:'4px'}}>  
+               <Button variant='contained' color='primary' className="button" onClick={handleRequestForm}>Request Swap</Button>
+               </Grid>
+               <Grid sx={{marginLeft:'4px'}}>
+               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+               <Iconify icon="mi:filter"/>
+               </Button>
+      </Grid>
+ 
                 </Grid>
-
+ 
  
       </Grid>
          </Grid>
@@ -328,40 +355,39 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
             <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography>
      
 
-            <Grid container  spacing={2} >
-              <Grid item xs={6}>
-              <FormControl fullWidth>
-        <InputLabel id="employee_name">employe Name</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
-          multiple
-          value={dropdownEmployeename}
-          onChange={(e) => handleChangeDropDown(e, 'employee_name')}
-          input={<OutlinedInput label="Employee Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            <Grid container  spacing={1} >
+              <Grid item xs={12}>
+              <DatePicker
+                  fullWidth
+                    value={CurrentUser?.swap_date ? dayjs(CurrentUser?.swap_date).toDate() : null}
+                    onChange={(date) => {
+                      setcurrentUser(prev => ({
+                        ...prev,
+                        swap_date: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Swap Birth"
+                  />
                 </Grid>
-                <Grid item xs={6}>
+
+                </Grid>
+               
+                <Grid container marginTop={1}>
+                <Grid item xs={12}>
                 <FormControl fullWidth>
-        <InputLabel id="project_name">Project Name</InputLabel>
+        <InputLabel id="status">Status</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
+          labelId="demo-multiple-name-shift_name_1"
+          id="demo-multiple-shift_name_1"
           multiple
           value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'project_name')}
+          onChange={(e) => handleChangeDropDown(e, 'status')}
           input={<OutlinedInput label="Project Name" />}
           MenuProps={MenuProps}
         >
@@ -377,20 +403,17 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
         </Select>
       </FormControl>
                 </Grid>
-                </Grid>
-               
-                <Grid container marginTop={2}>
   {/* <Typography>Offer Date</Typography> */}
-  <Grid container spacing={2}>
+  {/* <Grid container spacing={2}>
     <Grid item xs={6}>
       <FormControl fullWidth>
-        <InputLabel id="activity_name">Activity Name</InputLabel>
+        <InputLabel id="shift_term">Shift Term</InputLabel>
         <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
+          labelId="demo-multiple-name-shift_name_1"
+          id="demo-multiple-shift_name_1"
           multiple
           value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'activity_name')}
+          onChange={(e) => handleChangeDropDown(e, 'shift_term')}
           input={<OutlinedInput label="Activity Name" />}
           MenuProps={MenuProps}
         >
@@ -406,46 +429,23 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
         </Select>
       </FormControl>
     </Grid>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Status</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_2"
-          id="demo-multiple-status_2"
-          multiple
-          value={dropdownstatus}
-          onChange={(e) => handleChangeDropDown(e, 'status')}
-          input={<OutlinedInput label="Status" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  </Grid>
+
+  </Grid> */}
 </Grid>
 
 
                 {/* <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <FormControl fullWidth > 
+                <InputLabel fullWidth id="shift_name">shift_name</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
                   multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="status" />}
+                  value={dropdownshift_name}
+                  onChange={(e)=>handleChangeDropDown(e,'shift_name')}
+                  input={<OutlinedInput label="shift_name" />}
                   MenuProps={MenuProps}
                 >
                   {names.map((name) => (
@@ -474,22 +474,21 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
     
 }
 
-// ApprovalSearchFilter.propTypes={
+// SwapRequestSearchFilter.propTypes={
 //     handleFilters: PropTypes.any,
 // }
-ApprovalSearchFilter.propTypes={
+SwapRequestSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
-ApprovalSearchFilter.propTypes={
+SwapRequestSearchFilter.propTypes={
   filterSearch: PropTypes.any,
 }
 
-
-ApprovalSearchFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
-}
+// SwapRequestSearchFilter.propTypes={
+//     filterOptions: PropTypes.arrayOf(
+//         PropTypes.shape({
+//           fieldName: PropTypes.string,
+//           options: PropTypes.arrayOf(PropTypes.string)
+//         })
+//       ),
+// }

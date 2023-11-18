@@ -129,7 +129,7 @@ headerData={TABLE_HEAD}
 endpoint='/getallSwapDetails'
 bodyData='data'
 rowActions={actions}
-filterName='RequestSwapSerachFilter'
+filterName='SwapRequestSearchFilter'
 />  
     </>
   );

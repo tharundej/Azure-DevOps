@@ -17,8 +17,7 @@ export default function BasicCard() {
       ]
   return (
     <>
-    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
-    <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/>
+    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
     </>
   );
 }
