@@ -87,7 +87,7 @@ const RoleAndResponsibility = () => {
 
   return (
     <div>
-      <h2>Role and Responsibility-- under constrution...</h2>
+      <h2>Role and Responsibility- under constrution...</h2>
       <Grid container marginTop="10px" spacing={2}>
                 <Grid item xs={12} md={3} lg={4}  >
                 {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
