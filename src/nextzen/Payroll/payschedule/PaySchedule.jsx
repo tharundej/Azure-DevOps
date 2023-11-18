@@ -40,6 +40,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { useForm } from 'react-hook-form';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
+import { parse } from 'date-fns';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -264,12 +265,22 @@ export default function PaySchedule({currentUser}) {
     setOpen(true);
   };
   const getOptionLabel = (employeepayType) => employeepayType.type;
-
+  const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employementType=valueSelected.employementType
+    data.company_id = 'COMP1';
+    data.employementType=valueSelected?.employementType,
+      data.payPcheduleType=valueSelected?.payPcheduleType?.type,
+      data.employementType=valueSelected?.employementType,
+      data.basicPayPercentage=JSON.parse(valueSelected?.basicPayPercentage,10),
+      data.daPercentage=JSON.parse(valueSelected?.daPercentage,10),
+      data.employeePfPercentage=JSON.parse(valueSelected?.employeePfPercentage,10),
+      data.employerPfPercentage=JSON.parse(valueSelected?.employerPfPercentage,10),
+      data.esicPercentage=JSON.parse(valueSelected?.esicPercentage,10),
+      data.hraPercentage=JSON.parse(valueSelected?.hraPercentage,10),
+      data.ltaPercentage=JSON.parse(valueSelected?.ltaPercentage,10),
+      data.tdsPercentage=JSON.parse(valueSelected?.tdsPercentage,10),
     console.log('valueSelectedaaaaaaaaaa', data);
 
-    data.company_id = 'COMP1';
 
     console.log(data, 'valueSelected111ugsghghh');
 
@@ -292,9 +303,9 @@ export default function PaySchedule({currentUser}) {
     console.log('data:', data);
     data.company_id = 'COMP1';
     // data.employee_type = valueSelected?.employementType;
-    data.employementType=valueSelected.employementType
+    data.employementType=valueSelected?.employementType
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
-
+    data.payPcheduleType=valueSelected?.payPcheduleType?.type
     console.log(data, 'data111ugsghghh');
 
     try {
@@ -324,8 +335,9 @@ export default function PaySchedule({currentUser}) {
       [field]: value,
     }));
   };
+  console.log(valueSelected, 'valllllllllll');
   const handleAutocompleteChange =(event,value)=>{
-    console.log(value, 'valllllllllll');
+    // console.log(value, 'valllllllllll');
     setSelectedOption(value);
     if (value && value.type === 'Permanent') {
       setTextFieldVisible(true);
@@ -385,29 +397,35 @@ export default function PaySchedule({currentUser}) {
               id="combo-box-demo"
               options={employeepayTypes}
               getOptionLabel={getOptionLabel}
-              value={selectedOption.employementType} // Use tableEDitData or an empty string
+              value={selectedOption?.employementType} // Use tableEDitData or an empty string
               onChange={handleAutocompleteChange}
               sx={{ width: 300, padding: '8px' }}
               renderInput={(params) => <TextField {...params} label="Employee Type" />}
             />
-                <RHFAutocomplete
+                <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  value={valueSelected.payScheduleType}
-                  options={payPcheduleTypes.map((payscheduleType) => payscheduleType.type)}
-                  onChange={(e) => handleSelectChange('payPcheduleType', e.target.value)}
+                  value={valueSelected?.payPcheduleType ||null}
+                  options={payPcheduleTypes}
+                  getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('payPcheduleType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Pay Pchedule Type" variant="outlined" />
+                  )}
                 />
                 <RHFTextField
                   name="basicPayPercentage"
                   label="Basic Pay %"
-                  value={valueSelected.basicPayPercentage}
+                  value={valueSelected?.basicPayPercentage}
                   onChange={(e) => handleSelectChange('basicPayPercentage', e.target.value)}
                 />
 
                 <RHFTextField
                   name="hraPercentage"
                   label="HRA %"
-                  value={valueSelected.hraPercentage}
+                  value={valueSelected?.hraPercentage}
                   onChange={(e) => handleSelectChange('hraPercentage', e.target.value)}
                 />
                 <RHFTextField name="daPercentage" label="DA %" value={valueSelected.daPercentage} 
@@ -416,31 +434,31 @@ export default function PaySchedule({currentUser}) {
                 <RHFTextField
                   name="employeePfPercentage"
                   label="Employee PF %"
-                  value={valueSelected.employeePfPercentage}
+                  value={valueSelected?.employeePfPercentage}
                   onChange={(e) => handleSelectChange('employeePfPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="employerPfPercentage"
                   label="Employer PF %"
-                  value={valueSelected.employerPfPercentage}
+                  value={valueSelected?.employerPfPercentage}
                   onChange={(e) => handleSelectChange('employerPfPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="ltaPercentage"
                   label="LTA %"
-                  value={valueSelected.ltaPercentage}
+                  value={valueSelected?.ltaPercentage}
                   onChange={(e) => handleSelectChange('ltaPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="esicPercentage"
                   label="ESIC %"
-                  value={valueSelected.esicPercentage}
+                  value={valueSelected?.esicPercentage}
                   onChange={(e) => handleSelectChange('esicPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="tdsPercentage"
                   label="TDS %"
-                  value={valueSelected.tdsPercentage}
+                  value={valueSelected?.tdsPercentage}
                   onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
                 />
               </Box>
@@ -481,17 +499,24 @@ export default function PaySchedule({currentUser}) {
               id="combo-box-demo"
               options={employeepayTypes}
               getOptionLabel={getOptionLabel}
-              value={selectedOption.employementType} // Use tableEDitData or an empty string
+              value={selectedOption?.employementType} // Use tableEDitData or an empty string
               onChange={handleAutocompleteChange}
               sx={{ width: 300, padding: '8px' }}
               renderInput={(params) => <TextField {...params} label="Employee Type" />}
             />
-              <RHFAutocomplete
-                name="payPcheduleType"
-                label="Pay Schedule Type"
-                options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
-                sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
-              />
+             <Autocomplete
+                  name="payScheduleType"
+                  label="Pay Schedule Type"
+                  value={valueSelected?.payPcheduleType ||null}
+                  options={payPcheduleTypes}
+                    getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('payPcheduleType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Pay Pchedule Type" variant="outlined" />
+                  )}
+                />
                   <RHFTextField
                     name="tdsPercentage"
                     label="TDS %"

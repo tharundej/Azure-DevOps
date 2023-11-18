@@ -111,12 +111,12 @@ export default function LeaveType({ currentUser }) {
     // console.log('values:', value);
     // console.log('event', event.target.value);
     // setSelectedOption(value);
-    console.log(field, value, 'valllllllllll');
+    
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-  
+    console.log(field, value, 'valllllllllll');
   };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
