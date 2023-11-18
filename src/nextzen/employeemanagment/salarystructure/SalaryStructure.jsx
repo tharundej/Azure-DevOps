@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useRef } from 'react';
+import React,{useState,useEffect} from 'react';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import SalaryStructureForm from './SalaryStructureForm';
@@ -8,7 +8,6 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 import SalaryStructureEdit from './SalaryStructureEdit';
 
 export default function SalaryStructure() {
-  const basicTableRef = useRef(null);
     const TABLE_HEAD = [
       { id: 'departmentName', label: 'Department Name', type: 'text',minWidth:'150px' },
       { id: 'designationName', label: 'Designation Name', type: 'text',minWidth:'150px' },
@@ -53,16 +52,10 @@ export default function SalaryStructure() {
   const[openModal,setOpenModal]=useState(false)
   const[type,setType]=useState("create")
 
-  const [options,setOptions]=useState("");
-  const [optionsValue,setOptionsValue]=useState("")
+  const [options,setOptions]=useState({});
+  const [optionsValue,setOptionsValue]=useState({})
 
-  const handleClose=()=>{
-    
-    setOpenModal(false);setOpenModalEdit(false)
-    if (basicTableRef.current && basicTableRef.current.refreshData) {
-      basicTableRef.current.getTableData(defaultPayload); // Call the refreshData function inside BasicTable
-    }
-  }
+  const handleClose=()=>{setOpenModal(false);setOpenModalEdit(false)}
   const [editRowIds,setEditRowIds]=useState("")
   const [openModalEdit,setOpenModalEdit]=useState("")
 
@@ -76,18 +69,13 @@ export default function SalaryStructure() {
     }
     return {};
   }
-  useEffect(()=>{
-    if(optionsValue){
-      setOpenModalEdit(true)
 
-    }
-  },[optionsValue])
 
   useEffect(() => {
     if(editRowIds){
 
     const fetchLocations = async () => {
-      
+      console.log('rainaa')
 
 
       
@@ -133,8 +121,9 @@ export default function SalaryStructure() {
 
 
         setOptionsValue(arrValue);
-        //console.log(arrValue, 'locationsdepartmentarr');
+        console.log(arrValue, 'locationsdepartmentarr');
 
+        setOpenModalEdit(true)
        
        
         
@@ -181,7 +170,7 @@ export default function SalaryStructure() {
 
       ApiHit(rowData.salaryStructureID)
 
-       // setOpenModalEdit(true);
+       setOpenModalEdit(true);
 
 
 
@@ -213,7 +202,7 @@ export default function SalaryStructure() {
     }, []);
     return (
       <>
-      <SalaryStructureEdit editRowIds={editRowIds} openModalEdit={openModalEdit} handleClose={handleClose}  optionsEdit={options} optionsValueEdit={optionsValue}/>
+      <SalaryStructureEdit editRowIds={editRowIds} openModalEdit={openModalEdit}handleClose={handleClose}  optionsEdit={options} optionsValueEdit={optionsValue}/>
         <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type} handleClose={handleClose}/>
         <BasicTable
           headerData={TABLE_HEAD}
@@ -223,7 +212,6 @@ export default function SalaryStructure() {
           filterName='SalaryStructureFilterSearch'
           onClickActions={onClickActions}
           handleOpenModal={handleOpenModal}
-          ref={basicTableRef}
         />
 
         </>

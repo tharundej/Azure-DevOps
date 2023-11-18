@@ -158,7 +158,7 @@ export const paths = {
     },
 
     timesheet: {
-      root: `${ROOTS.DASHBOARD}/timesheet`,
+      root: `/timesheet`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
@@ -178,7 +178,7 @@ export const paths = {
       // },
     },
     monthlydeductions: {
-      root: `${ROOTS.DASHBOARD}/monthlydeductions`,
+      root: `/monthlydeductions`,
     },
 
     appraisal: {
