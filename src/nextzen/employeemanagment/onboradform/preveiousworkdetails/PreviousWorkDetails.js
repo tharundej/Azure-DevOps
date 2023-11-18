@@ -404,6 +404,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
             <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
             <Grid md={12} xs={12} lg={12} item>
                 <DatePicker
+                className='MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root'
                 md={12} xs={12} lg={12}
                 fullWidth
                   value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
