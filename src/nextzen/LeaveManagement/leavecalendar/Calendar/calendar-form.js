@@ -72,6 +72,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     toDate:(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date()),
     
   });
+
+  console.log(datesUsed,"datesss")
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
     const selectedValue = data?.day_span;
@@ -86,8 +88,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       employeeId:localStorage.getItem('employeeID'),
       comments: data?.comments,
       applyDate: "",
-      fromDate:(selectedRange?.start)?selectedRange?.start:formatDateToYYYYMMDD(datesUsed?.fromDate),
-      toDate: (selectedRange?.end)?selectedRange?.end:formatDateToYYYYMMDD(datesUsed?.toDate),
+      fromDate:(datesUsed?.fromDate)?formatDateToYYYYMMDD(datesUsed?.fromDate):selectedRange?.start,
+      toDate:(datesUsed?.toDate)?formatDateToYYYYMMDD(datesUsed?.toDate):selectedRange?.end,
       status:data?.status,
       fullday:fulldayValue,
       firsthalf:firsthalfValue,

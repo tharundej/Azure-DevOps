@@ -108,6 +108,7 @@ export default function Approveleave(){
             { id: "startDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "endDate",label:"End Date",minWidth:"7pc",type:"text"},
             {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
+            {id: "approvedBy",label:"Approver Name",minWidth:"8pc",type:"text"},
             {id: 'status',label:'Status',minWidth:"8pc",type: "badge"}
             // { id: '', width: 88 },
 
