@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
-
 import Chip from '@mui/material/Chip';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -35,7 +34,6 @@ import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-
 export default function AddTimeProject({ currentUser,handleClose }) {
   const[commaSeparatedString,setCommaSepaatedString]=useState("")
   const[commaSepaatedEmployeString,setCommaSepaatedEmployeString]=useState("")
@@ -45,8 +43,6 @@ export default function AddTimeProject({ currentUser,handleClose }) {
     dueDate: dayjs(new Date()),
     // activityName:[]
   });
-
-
 useEffect(() => {
   getEmployeReport()
   // if (Array.isArray(currentReportingData) && currentReportingData.length > 0) {
@@ -55,42 +51,30 @@ useEffect(() => {
   //     getEmployeList();
   //   }
   // }
-
 }, [])
-
-
   const [activityName, setSelectedActivity] = useState([]);
   const [projectManager, setprojectManager] = useState([]);
   const [currentReportingData, setCurrentReportingData] = useState([]);
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const [employesListData,setEmployesListData]= useState([])
   const [EmployeList,setemployeeList]= useState([])
-  console.log("🚀 ~ file: AddTimeProject.jsx:66 ~ AddTimeProject ~ employesListData:", employesListData)
-  console.log("🚀 ~ file: AddTimeProject.jsx:56 ~ AddTimeProject ~ currentReportingData:", currentReportingData[0]?.employeeId)
   // const ReportingManager = currentReportingData.map()
   const handleSelectChange = (event, values) => {
     setSelectedActivity(values);
-      console.log("🚀 ~ file: AddTimeProject.jsx:72 ~ handleSelectChange ~ values:", values)
       
      setCommaSepaatedString(activityName.join(','))
   };
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
-     console.log("🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:", values)
-    //  setemployeeList ( currentEmployeData[0]?.employeeId);
-      
-    // setCommaSepaatedEmployeString(EmployeList.join(','))
   };
-
   const handleSelectRepoChange = async (event, values) => {
     setCurrentReportingData(values);
-    await getEmployeList(values[0].employeeId)
+    await getEmployeList(values[0]?.employeeId)
       
     // SetCommaSeparatedRepoString (values.join(','))
   };
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
   const NewUserSchema = Yup.object().shape({
     projectName: Yup.string(),
     // startDate: Yup.string(),
@@ -100,7 +84,6 @@ useEffect(() => {
    
    
   });
-
   const defaultValues = useMemo(
     () => ({
    
@@ -114,14 +97,10 @@ useEffect(() => {
     }),
     [currentUser]
   );
-
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-
-
-
   const {
     reset, 
     watch,
@@ -130,15 +109,11 @@ useEffect(() => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const values = watch();
 const [sendData, setSendData] = useState({
   projectId : '',  
 })
 const [reportingManager,setReportingManagerData]= useState([])
-console.log("🚀 ~ file: AddTimeProject.jsx:102 ~ AddTimeProject ~ reportingManager:", reportingManager)
-
-
 const getEmployeReport = async ()=>{
   try{
   const  data= {
@@ -147,50 +122,36 @@ const getEmployeReport = async ()=>{
     };
     const response = await instance.post('getReportingmanager',data);
     setReportingManagerData(response.data.list)
-    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
   }catch(error){
 console.error("Error", error);
 throw error;
   }
 }
 let getEmployeList = async (props)=>{
+ 
   try{
   const  data= {
       companyId:'COMP1',
       reportingManagerId:currentReportingData[0]?.employeeId,
     };
     data.reportingManagerId =props;
-    console.log("🚀 ~ file: AddTimeProject.jsx:149 ~ getEmployeList ~ data:", data)
     const response = await instance.post('employeereporting',data);
     setEmployesListData(response.data.list)
-    console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
-  }catch(error){
-console.error("Error", error);
-throw error;
+  }
+  catch(error)
+  {
+    throw error;
   }
 }
-
 const join=()=>{
   const arr=[];
   for(let i=0;i<currentEmployeData.length;i+=1){
     arr.push(currentEmployeData[i].employeeId);
   }
   
-  
-  // ["empl1","emp2","emp3"];
-  
-  console.log("🚀 ~ file: AddTimeProject.jsx:176 ~ join ~ commaSepaatedEmployeString:", commaSepaatedEmployeString)
-  console.log("🚀 ~ file: AddTimeProject.jsx:183 ~ join ~ arr:", arr)
   return arr;
-
-  // ["anil","aswin"]
-  // ["aswin,"]
 }
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:", data)
-    console.log('uyfgv');
-
     try {
       // data.companyId = '0001';
       // data.company_name = 'infbell';
@@ -199,29 +160,22 @@ const join=()=>{
       data.endDate = formatDateToYYYYMMDD(datesUsed?.endDate);
       data.startDate = formatDateToYYYYMMDD(datesUsed?.startDate);
       data.activityName = [commaSeparatedString];
-      data.projectManager =currentReportingData[0]?.employeeId;
+      data.projectManager=data?.projectManager?.employeeId
       data.companyId = "COMP2";
       data.employeeId =join();
       data.delete =   0;
-      
-
-      console.log(data, 'data111ugsghghh');
-
       const response = await instance.post('addProject', data).then(
         (successData) => {
-          console.log('sucess', successData);
           handleClose()
         },
         (error) => {
           console.log('lllll', error);
         }
       );
-
     } catch (error) {
       console.error(error);
     }
   });
-
  
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
@@ -234,26 +188,45 @@ const join=()=>{
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
-
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
               <Typography sx={{marginLeft:'5px'}}>
-                ADD YOUR  POJECT  HERE .....
+                ADD PROJECT
               </Typography>
             </Grid>
             <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={1}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="projectName" label=" Project Name  " />
-
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Grid container spacing={2}>
+            <Grid item md={6} xs={12}>
+                <RHFTextField name="projectName" label="Project Name" fullWidth/>
+              </Grid>
+                <Grid md={6} xs={12} item>
+                    <RHFTextField name="projectDescription" label="Project Description"/>
+                </Grid>
+            </Grid>
+<Grid container spacing={2}>
+   <Grid item md={6} xs={12}>
+   <RHFAutocomplete
+          name="projectManager"
+          label="Project Manager"
+          options={reportingManager}
+          getOptionLabel={(option) => option.firstName}
+          isOptionEqualtoValue={(option) => option.employeeId}
+          />    
+   </Grid>
+   <Grid item md={6} xs={12}>
+   <RHFAutocomplete
+          name="reportingManager"
+          label="Reporting Manager"
+          options={reportingManager}
+          getOptionLabel={(option) => option.firstName}
+          isOptionEqualtoValue={(option) => option.employeeId}
+          />
+   </Grid>
+</Grid>
+<Grid container spacing={2}>
+<Grid item md={6} xs={12}>
+    
+<LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -269,7 +242,9 @@ const join=()=>{
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+</Grid>
+                           <Grid item md={6} xs={12}>
+                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -285,7 +260,9 @@ const join=()=>{
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           </Grid>
+</Grid>
+                                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -300,11 +277,10 @@ const join=()=>{
                       }}
                     />
                   </DemoContainer>
-                </LocalizationProvider>
+                </LocalizationProvider> */}
                 
-                <RHFTextField name="status" label="status" />
-     <Grid md={10} xs={12} item>
-
+                {/* <RHFTextField name="status" label="status" /> */}
+     {/* <Grid md={10} xs={12} item>
      <Autocomplete
         multiple
         id="activityName"
@@ -326,44 +302,8 @@ const join=()=>{
           />
         )}
       />
-
-</Grid>
-<Grid md={10} xs={12} item>
-<Autocomplete
-            multiple
-            disablePortal
-            id="combo-box-demo1"
-            options={reportingManager || []}
-            value={currentReportingData}
-            getOptionLabel={(option) => option.firstName}
-            // onChange={(e,newvalue)=>{
-             
-             
-            //   setCurrentReportingData(newvalue
-                
-            //   );
-              
-             
-              // const obj={
-              //   companyId:'COMP1',
-              //   reporting_manager_id:newvalue?.employeeId
-              // }
- 
-              // ApiHitDepartment(obj)
-              // const timeStampCity = JSON.stringify(new Date().getTime());
-              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
-           
-            // }}
-            onChange={handleSelectRepoChange}
-            sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-            }}
-            renderInput={(params) => <TextField {...params} label="Project Manager" />}
-          />
-</Grid>
-
-<Grid md={10} xs={12} item>
+</Grid> */}
+{/* <Grid md={10} xs={12} item>
 <Autocomplete
             multiple
             disablePortal
@@ -396,10 +336,8 @@ const join=()=>{
             }}
             renderInput={(params) => <TextField {...params} label=" Select employee" />}
           />
-</Grid>
-
-              </Box>
-
+</Grid> */}
+            
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'save Project'}
@@ -414,7 +352,6 @@ const join=()=>{
     </div>
   );
 }
-
 AddTimeProject.propTypes = {
   currentUser: PropTypes.object,
   handleClose: PropTypes.func,
