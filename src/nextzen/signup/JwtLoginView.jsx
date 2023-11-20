@@ -104,9 +104,10 @@ export default function JwtLoginView() {
       </Stack>
       <Card sx={{backgroundColor:'#cce9f0'}}>
         <CardContent>
-      <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
-      <Typography variant="body2">Password: 1234</Typography>
-      </CardContent>
+        <Typography variant="body2">Manager Login Use Below Credentials</Typography>
+          <Typography variant="body2">Email: potter@howgarts.com</Typography>
+          <Typography variant="body2">Password: Potter@123</Typography>
+        </CardContent>
       </Card>
     </Stack>
   );

@@ -495,7 +495,8 @@ export default function ShiftRoasterFilter({filterData,filterSearch}){
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </BootstrapDialog>
     </>

@@ -1,26 +1,75 @@
-import { useEffect, useState, useCallback } from 'react';
-
+import { useEffect, useState } from 'react';
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-import { getProductListAPI } from 'src/api/Accounts/Product';
-const serviceCall = (endpoint, payload) => {};
+import { getProductListAPI, DeleteProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
+import CreateProducts from './CreateProducts';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+
 const ProductsTable = () => {
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '/accept' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: '', endpoint: '' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
+  const [editShowForm, seteditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const onClickActions = (rowdata, event) => {
-    if (event?.name === 'edit') {
-      handleEditAPICALL(rowdata, event);
-    } else if (event?.name === 'delete') {
-      handleDeleteAPICALL(rowdata, event);
+    if (event?.name === 'Edit') {
+      seteditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = {
+        product_id: rowdata?.productID || 0,
+        productName: rowdata.productName,
+      };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
     }
   };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    seteditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteProductAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const ApiHit = async () => {
@@ -38,7 +87,7 @@ const ProductsTable = () => {
   }, []);
   const defaultPayload = {
     count: 5,
-    page: 1,
+    page: 0,
     search: '',
     companyID: 'COMP1',
   };
@@ -48,10 +97,37 @@ const ProductsTable = () => {
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
     { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+        severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Product"
+        message={`Are you sure you want to delete ${deleteData?.productName}?`}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 770, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateProducts currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Dashboard: Products</title>
       </Helmet>

@@ -43,16 +43,12 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function EditShiftRoaster({  currentUser , handleClose ,editData}) {
+export default function EditShiftRoaster({  currentUser , setShowEdit ,handleClose, editData}) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
-  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData)
- const [ TableDta ,SetTableData ] = useState([])
- console.log("🚀 ~ file: EditShiftRoaster.jsx:54 ~ EditShiftRoaster ~ TableDta:", TableDta)
- SetTableData(editData)
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -315,7 +311,7 @@ return arr
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-   Edit Employee Shift Here 
+   Add Employee Shift Here ...
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -344,8 +340,7 @@ return arr
 disablePortal
 id="combo-box-dem"
 options={ShiftGroupName || []}
-defaultValue={["aswin"]|| null }
-// value={CurrentShiftGroupNameData?.employeeShiftGroupId}
+value={CurrentShiftGroupNameData?.employeeShiftGroupId}
 getOptionLabel={(option) => option.ShiftGroupName}
 onChange={(e,newvalue)=>{
 
@@ -361,7 +356,6 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
 />
-
 {/* <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>
@@ -497,13 +491,12 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
 
     </Box>
 
-    <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Add  Employee To Shift'}
-      </LoadingButton>
-      <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
-    </Stack>
-    
+            <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Save Employe To Shift'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
    
   </Card>
 </Grid>

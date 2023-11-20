@@ -31,7 +31,7 @@ export default function ShiftSwap() {
 
     
     
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
         { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
     
@@ -51,7 +51,7 @@ export default function ShiftSwap() {
       ];
     
      const defaultPayload = {
-      "company_id":"COMP2",
+      "company_id":localStorage.getItem('companyID'),
       "page":0,
       "search":"",
       "count": 5,
@@ -114,7 +114,7 @@ endpoint="/MyShiftSwap"
 bodyData='data'
 defaultPayload={defaultPayload}
 filterName="SwapSearchFilter"
-rowActions={actions}
+// rowActions={actions}
 
 />  
     </>

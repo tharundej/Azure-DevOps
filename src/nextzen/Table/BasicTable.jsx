@@ -107,10 +107,20 @@ const defaultFilters = {
  
  
 // ----------------------------------------------------------------------
- 
-const 
-BasicTable = ({ endpoint,onClickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,buttonFunction,deleteFunction,handleEditRowParent,handleOpenModal}) => {
- 
+
+const BasicTable = ({
+  endpoint,
+  onClickActions,
+  defaultPayload,
+  headerData,
+  rowActions,
+  bodyData,
+  filterName,
+  buttonFunction,
+  deleteFunction,
+  handleEditRowParent,
+  handleOpenModal,
+}) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
  
@@ -150,10 +160,10 @@ const [filterHeaders, setFilterHeaders]=useState([])
  
   const getTableData = (payload) => {
     setLoading(false);
-    let initialDefaultPayloadCopy =initialDefaultPayload;
+    let initialDefaultPayloadCopy = initialDefaultPayload;
 
-    console.log(initialDefaultPayload,'initialDefaultPayload')
-    if(payload){
+    console.log(initialDefaultPayload, 'initialDefaultPayload');
+    if (payload) {
       initialDefaultPayloadCopy = payload;
     }
     // let initialDefaultPayloadCopy =initialDefaultPayload;
@@ -177,9 +187,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
-
-         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
-
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
       },
       data:  initialDefaultPayload
     };
@@ -261,47 +270,43 @@ const [filterHeaders, setFilterHeaders]=useState([])
   );
  
   const handleDeleteRow = (event) => {
-    console.log(event)
-  }
- 
-  const approveLeave = (rowdata,event)=>{
-    var payload ={
-        "leave_id": rowdata?.leaveId,
-        "emp_id": rowdata?.employeeId,
-        "status": event?.id,           
-        "leave_type_id":rowdata?.leaveTypeId,
-        "duration": rowdata?.requestedDuration 
-    }
-    console.log(payload,"requestedddbodyyy")
+    console.log(event);
+  };
+
+  const approveLeave = (rowdata, event) => {
+    var payload = {
+      leave_id: rowdata?.leaveId,
+      emp_id: rowdata?.employeeId,
+      status: event?.id,
+      leave_type_id: rowdata?.leaveTypeId,
+      duration: rowdata?.requestedDuration,
+    };
+    console.log(payload, 'requestedddbodyyy');
     const config = {
       method: 'POST',
       maxBodyLength:Infinity,
       // url: baseUrl + `approveLeave`,
       url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
-      data: payload
-    
-    }
-    axios.request(config).then((response) => {
-      console.log(response,"responsedata",response.data)
-      enqueueSnackbar(response.data.message,{variant:'success'})
-      getTableData()
-    })
+      data: payload,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response, 'responsedata', response.data);
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+        getTableData();
+      })
       .catch((error) => {
         enqueueSnackbar(error.message,{variant:'Error'})
         console.log(error);
       });
-    
-  }
- 
- 
-  const handleEditRow = (rowData,eventData) => {
-    console.log(rowData,"handleditt",eventData)
-    onClickActions(rowData,eventData);
-    
-    
- 
-  }
- 
+  };
+
+  const handleEditRow = (rowData, eventData) => {
+    console.log(rowData, 'handleditt', eventData);
+    onClickActions(rowData, eventData);
+  };
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -317,12 +322,11 @@ const [filterHeaders, setFilterHeaders]=useState([])
     setInitialDefaultPayload(payload)
     getTableData(payload)
     // getTableData(payload)
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getTableData(initialDefaultPayload);
-     
-  },[initialDefaultPayload])
+  }, [initialDefaultPayload]);
 
   const onChangeRowsPerPageHandeler = (event) => {
     console.log(event)
@@ -367,17 +371,14 @@ const [filterHeaders, setFilterHeaders]=useState([])
   };
  
   const isValidDate = (date) => date instanceof Date && !Number.isNaN(date);
- 
-  const displayValue = selectedRange && isValidDate(selectedRange[0]) && isValidDate(selectedRange[1])
-    ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
-    : '';
-  
- 
- 
- 
-  const handleFIlterOptions=(data)=>{
-   
-    console.log(data,"filtered data")
+
+  const displayValue =
+    selectedRange && isValidDate(selectedRange[0]) && isValidDate(selectedRange[1])
+      ? `${selectedRange[0].toLocaleDateString()} - ${selectedRange[1].toLocaleDateString()}`
+      : '';
+
+  const handleFIlterOptions = (data) => {
+    console.log(data, 'filtered data');
     const payload = initialDefaultPayload;
     setInitialDefaultPayload(prevPayload => ({
       ...prevPayload,
@@ -448,21 +449,22 @@ table.onSort(field);
 getTableData(payload)
 };
 
-const getRowActionsBasedOnStatus = (row) => {
-  if (row?.status === 'pending' || row?.status===""|| row?.status==="Pending") {
-    return rowActions
-  }
-  else if(!row?.status || row?.status === undefined){
-    return rowActions
-  }
-  else{
-    return null
-  }
-}
+  const getRowActionsBasedOnStatus = (row) => {
+    if (
+      row?.status === 'pending' ||
+      row?.status === '' ||
+      row?.status === 'Pending' ||
+      row?.status === 'Active' ||
+      row?.status === 'InActive'
+    ) {
+      return rowActions;
+    } else if (!row?.status || row?.status === undefined) {
+      return rowActions;
+    } else {
+      return null;
+    }
+  };
 
-
-
-  
   return (
     <>
      
@@ -549,23 +551,19 @@ const getRowActionsBasedOnStatus = (row) => {
                      
                       .map((row) => (
                         <>
-                        <UserTableRow
-                          key={row.id}
-                          row={row}
-                          onHandleEditRow={(id)=>handleEditRowParent(id)}
-                          selected={table.selected.includes(row.id)}
-                          onSelectRow={() => table.onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={(event) => { handleEditRow
-                            
-                            
-                            (row, event) }}
-                          headerContent={TABLE_HEAD}
-                          rowActions={getRowActionsBasedOnStatus(row.status)}
-                        />
-                       
- 
- 
+                          <UserTableRow
+                            key={row.id}
+                            row={row}
+                            onHandleEditRow={(id) => handleEditRowParent(id)}
+                            selected={table.selected.includes(row.id)}
+                            onSelectRow={() => table.onSelectRow(row.id)}
+                            onDeleteRow={() => handleDeleteRow(row.id)}
+                            onEditRow={(event) => {
+                              handleEditRow(row, event);
+                            }}
+                            headerContent={TABLE_HEAD}
+                            rowActions={getRowActionsBasedOnStatus(row)}
+                          />
                         </>
                       ))}
        
@@ -674,13 +672,12 @@ BasicTable.propTypes = {
 // buttonFunction
  
 BasicTable.propTypes = {
-  buttonFunction: PropTypes.any
+  buttonFunction: PropTypes.any,
 };
 
-BasicTable.propTypes ={
-  deleteFunction:PropTypes.any,
-  handleEditRowParent:PropTypes.any
+BasicTable.propTypes = {
+  deleteFunction: PropTypes.any,
+  handleEditRowParent: PropTypes.any,
 };
- 
- 
+
 export { BasicTable };

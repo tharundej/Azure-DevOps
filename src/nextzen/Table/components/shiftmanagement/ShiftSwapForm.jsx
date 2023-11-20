@@ -131,7 +131,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
    try{
    const data = JSON.stringify({
-      "company_id": "COMP2",
+      "company_id": localStorage.getItem('companyID'),
       "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
       "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
@@ -152,7 +152,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
    try{
    const data = JSON.stringify({
-      "company_id": "COMP2",
+      "company_id":localStorage.getItem('companyID'),
       "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
       "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
@@ -171,7 +171,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     try{
     const  data= {
       
-      companyId:'COMP1',
+      companyId:localStorage.getItem('companyID'),
        
       };
       const response = await instance.post('/getShiftGroupName',data);
@@ -209,14 +209,14 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     "employee_1":{
       "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
       "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
-      "employee_id":"ibm4", //  currentEmployeSwapData1.employee_shift_swap_id
+      "employee_id":   currentEmployeSwapData.employee_shift_swap_id
     },
     "employee_2":{
       "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
       "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
-      "employee_id":"ibm4"  //  currentEmployeSwapData1.employee_shift_swap_id
+      "employee_id":  currentEmployeSwapData1.employee_shift_swap_id
     },
-    "company_id":"COMP2",
+    "company_id":localStorage.getItem('companyID'),
     "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
     "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
     
@@ -254,7 +254,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 <Grid xs={12} md={12}>
   <Grid sx={{ padding: '8px' }}>
     <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here ...
+      Employee Shift Swap Here
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -366,7 +366,7 @@ getEmployeSwap(newvalue, FromShiftGroup_Name1)
 sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
-renderInput={(params) => <TextField {...params} label="Select To Shift GRoup " />}
+renderInput={(params) => <TextField {...params} label="Select To Shift Group " />}
 />
 
       <Autocomplete
@@ -540,15 +540,14 @@ renderInput={(params) => <TextField {...params} label="Select From Shift Group N
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
 />
     </Box>
-
-    <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Swap Shift'}
-      </LoadingButton>
-      {/* <Button type='submit'></Button> */}
-      <Button onClick={handleClose} sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
-    </Stack>
+    <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Swap Shift'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
   </Card>
+
 </Grid>
 </Grid>
       </FormProvider>

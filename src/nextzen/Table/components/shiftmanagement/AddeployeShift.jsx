@@ -152,7 +152,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const getDepartment = async ()=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:localStorage.getItem('companyID'),
         locationID: 30,
        
       };
@@ -169,7 +169,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const getDesignation = async (newvalue)=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:localStorage.getItem('companyID'),
       departmentID: newvalue.departmentID,
        
       };
@@ -202,7 +202,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     try{
     const  data= {
       
-      companyiD:'COMP1',
+      companyiD:localStorage.getItem('companyID'),
        
       };
       const response = await instance.post('/getEmployeeIDDetails',data);
@@ -217,7 +217,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     try{
     const  data= {
       
-      companyId:'COMP1',
+      companyId:localStorage.getItem('companyID'),
        
       };
       const response = await instance.post('/getShiftGroupName',data);
@@ -233,7 +233,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     try{
     const  data= {
       
-      companyId:"COMP2",
+      companyId:localStorage.getItem('companyID'),
       locationId:32
        
       };
@@ -281,7 +281,7 @@ return arr
         departmentId:CurrentDepartmentData?.departmentID !== undefined ? JSON.stringify (CurrentDepartmentData?.departmentID) : '',
         designationId:CurrentDesignationData?.designationID !== undefined ? JSON.stringify( CurrentDesignationData?.designationID) : '',
         DesignationGradeId: CurrentGradeData?.designationGradeID !== undefined ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
-        companyId:'COMP1',
+        companyId:localStorage.getItem('companyID'),
         employeeId:join(),
         locationId:"30"
       }
@@ -304,6 +304,7 @@ return arr
           console.error(error);
         }
   });
+  
   // const Options = [
   //   {id :"2" , name:"shift A"},
   //   {id :"3" , name:"shift B"},
@@ -511,13 +512,13 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
 
     </Box>
 
-    <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Add  Employee To Shift'}
-      </LoadingButton>
-      <Button sx={{backgroundColor:"#d12317",ml:"5px"}}onClick={handleClose}>Cancel</Button>
-    </Stack>
-    
+   
+        <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Add Employee To Shift'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
    
   </Card>
 </Grid>

@@ -53,7 +53,7 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "companyId":"COMP2",
+      "companyId":localStorage.getItem('companyID'),
       "count":5,
       "page":0,
       "search":"",
@@ -68,15 +68,40 @@ export default function Swaprequest() {
       "order":""
   }
   }
-      const actions = [
+
+  const onClickActions=(rowdata,event) => {
+    console.log("🚀 ~ file: SwapRequest.jsx:73 ~ onClickActions ~ event:", event?.id)
     
-        { name: "Approve", icon: "charm:circle-tick", path: "jjj", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+  //   var payload ={
+  //     "project_id": rowdata?.projectId,
+  //     "employee_id": rowdata?.employeeId,
+  //     "status": parseInt( event?.id),          
+  //  }
+  // console.log(payload,"requestedddbodyyy")
+  // const config = {
+  //   method: 'POST',
+  //   maxBodyLength:Infinity,
+  //   url: baseUrl + `/updateTimesheetStatus`,
+  //   // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
+  //   data: payload
+ 
+  // }
+  // axios.request(config).then((response) => {
+  //   enqueueSnackbar(response.data.Message,{variant:'success'})
+  // })
+  //   .catch((error) => {
+  //     enqueueSnackbar(error.Message,{variant:'Error'})
+  //     console.log(error);
+  //   });
+ 
+  }
+  const actions = [
     
-        { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-    
-    
-    
-      ];
+    { name: "Approve",  icon: "charm:circle-tick", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+
+    { name: "Reject", icon: "charm:circle-cross", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
+
+  ];
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -115,6 +140,7 @@ headerData={TABLE_HEAD}
 endpoint='/getallSwapDetails'
 bodyData='data'
 rowActions={actions}
+onClickActions={onClickActions}
 filterName='SwapRequestSearchFilter'
 />  
     </>
