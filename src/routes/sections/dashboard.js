@@ -126,7 +126,7 @@ const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/e
 
 const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 
-const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfiguration'));
+const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfigTab'));
 
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory

@@ -18,7 +18,6 @@ export default function BasicCard() {
   return (
     <>
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
-    
     </>
   );
 }

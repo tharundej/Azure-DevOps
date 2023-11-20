@@ -320,7 +320,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
       </Grid>
          </Grid>
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -469,7 +469,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     
