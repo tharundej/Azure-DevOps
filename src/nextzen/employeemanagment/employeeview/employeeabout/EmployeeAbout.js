@@ -23,7 +23,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
@@ -79,7 +79,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         }
         try {
           const locations = await ApiHitLocations();
-          const department=await ApiHitDepartment(deptObj);
+          const department=await ApiHitDepartmentWithoutLocation();
           const desgination=await ApiHitDesgniation(desgObj)
           const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj)
           const roles= await ApiHitRoles()
