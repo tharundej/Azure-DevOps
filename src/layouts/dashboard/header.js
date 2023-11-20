@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import {Typography} from "@mui/material"
 // theme
 import { bgBlur } from 'src/theme/css';
 // hooks
@@ -25,9 +26,13 @@ import {
   NotificationsPopover,
 } from '../_common';
 
+import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 export default function Header({ onOpenNav }) {
+  const navigate = useLocation();
+  const currentPath = location.pathname;
+  const splicedPath = currentPath.slice(1);
   const theme = useTheme();
 
   const settings = useSettingsContext();
@@ -54,6 +59,18 @@ export default function Header({ onOpenNav }) {
 
       {/* <Searchbar /> */}
 
+     
+
+      <Stack
+      flexGrow={1}
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-end"
+      spacing={{ xs: 0.5, sm: 1 }}
+    >
+      <Typography style={{ color: '#3B82F6' }}>{splicedPath}</Typography>
+    </Stack>
+
       <Stack
         flexGrow={1}
         direction="row"
@@ -71,6 +88,12 @@ export default function Header({ onOpenNav }) {
 
         <AccountPopover />
       </Stack>
+
+      
+
+      
+
+      
     </>
   );
 

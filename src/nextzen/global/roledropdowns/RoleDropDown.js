@@ -91,9 +91,9 @@ const ApiHitDesgniationGrade = async (obj) => {
 
 const ApiHitRoles = async () => {
   try {
-    const data1 = JSON.stringify({
-      "companyID": "COMP1"
-    });
+    // const data1 = JSON.stringify({
+    //   "companyID": "COMP1"
+    // });
 
     const config = {
       method: 'post',
@@ -102,7 +102,7 @@ const ApiHitRoles = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      data: data1
+      //  data: data1
     };
 
     const response = await axios.request(config);

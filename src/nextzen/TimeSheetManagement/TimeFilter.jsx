@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function TimeSearchFilter({filterData,filterOptions}){
+export default function TimeSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -138,7 +138,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
   )
 
   const [showForm, setShowForm] = useState  (false);
-  const handleClose = () => setShowForm(false);
+ 
   const handleTimeForm =()=>{
     setShowForm(true)
     console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
@@ -268,6 +268,13 @@ export default function TimeSearchFilter({filterData,filterOptions}){
     handleClickClose()
       
     }
+    const [search, setSearch]=useState("");
+    const handleClose = () => setShowForm(false);
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
     
 
   
@@ -292,7 +299,7 @@ export default function TimeSearchFilter({filterData,filterOptions}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -475,6 +482,9 @@ export default function TimeSearchFilter({filterData,filterOptions}){
 // }
 TimeSearchFilter.propTypes={
     filterData: PropTypes.func,
+}
+TimeSearchFilter.propTypes={
+  searchData: PropTypes.any,
 }
 
 TimeSearchFilter.propTypes={

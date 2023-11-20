@@ -18,12 +18,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-import { createAssetsAPI, getLocationAPI } from '../../api/Accounts/Assets';
+import { createAssetsAPI, getLocationAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
 import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function CreateAssets({ currentUser, handleClose }) {
+export default function CreateAssets({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
     // locationId: Yup.string().required('location is Required'),
     assetsName: Yup.string().required('Asset Name is Required'),
@@ -45,30 +45,32 @@ export default function CreateAssets({ currentUser, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      locationId: currentUser?.locationId || '',
-      assetsName: currentUser?.assetsName || '',
-      assetsType: currentUser?.assetsType || '',
-      poNumber: currentUser?.poNumber || '',
-      poDate: currentUser?.poDate || '',
-      poValue: currentUser?.poValue || '',
-      invoiceNumber: currentUser?.invoiceNumber || '',
-      invoiceDate: currentUser?.invoiceDate || '',
-      assetsStartDate: currentUser?.assetsStartDate || '',
-      warrantyDate: currentUser?.warrantyDate || '',
-      supplierName: currentUser?.supplierName || '',
-      supplierEmailId: currentUser?.supplierEmailId || '',
-      supplierContactNumber: currentUser?.supplierContactNumber || '',
-      expiryDate: currentUser?.expiryDate || '',
-      lapseOfWarrantyDate: currentUser?.lapseOfWarrantyDate || '',
-      amount: currentUser?.amount || '',
-      gstAmount: currentUser?.gstAmount || '',
-      totalAmount: currentUser?.totalAmount || '',
-      assetsCondition: currentUser?.assetsCondition || '',
-      updatedDate: currentUser?.updatedDate || '',
-      deleteBit: currentUser?.deleteBit || 0,
-      companyId: currentUser?.companyId || 'COMP1',
+      assetsId: currentData?.assetId || '',
+      locationId: currentData?.locationId || '',
+      assetsName: currentData?.assetsName || '',
+      assetsType: currentData?.assetsType || '',
+      poNumber: currentData?.poNumber || '',
+      poDate: currentData?.poDate || '',
+      poValue: currentData?.poValue || '',
+      invoiceNumber: currentData?.invoiceNo || '',
+      invoiceDate: currentData?.Invoice_date || '',
+      assetsStartDate: currentData?.startDate || '',
+      warrantyDate: currentData?.warrantyDate || '',
+      supplierName: currentData?.supplierName || '',
+      supplierEmailId: currentData?.supplierEmail || '',
+      supplierContactNumber: currentData?.supplierContact || '',
+      expiryDate: currentData?.expiryDate || '',
+      lapseOfWarrantyDate: currentData?.lapseOfWarrantyDate || '',
+      amount: currentData?.amount || '',
+      gstAmount: currentData?.gstAmount || '',
+      totalAmount: currentData?.totalAmount || '',
+      assetsCondition: currentData?.assetCondition || '',
+      updatedDate: currentData?.updatedDate || '',
+      deleteBit: currentData?.deleteBit || 0,
+      companyId: currentData?.companyId || 'COMP1',
+      operationalDays: currentData?.operationalDays || '',
     }),
-    [currentUser]
+    [currentData]
   );
 
   const methods = useForm({
@@ -103,13 +105,19 @@ export default function CreateAssets({ currentUser, handleClose }) {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const [datesUsed, setDatesUsed] = useState({
-    poDate: dayjs(new Date()),
-    invoiceDate: dayjs(new Date()),
-    assetsStartDate: dayjs(new Date()),
-    warrantyDate: dayjs(new Date()),
-    expiryDate: dayjs(new Date()),
-    lapseOfWarrantyDate: dayjs(new Date()),
-    updatedDate: dayjs(new Date()),
+    poDate: defaultValues?.poDate ? dayjs(defaultValues?.poDate) : dayjs(new Date()),
+    invoiceDate: defaultValues?.invoiceDate ? dayjs(defaultValues?.invoiceDate) : dayjs(new Date()),
+    assetsStartDate: defaultValues?.assetsStartDate
+      ? dayjs(defaultValues?.assetsStartDate)
+      : dayjs(new Date()),
+    warrantyDate: defaultValues?.warrantyDate
+      ? dayjs(defaultValues?.warrantyDate)
+      : dayjs(new Date()),
+    expiryDate: defaultValues?.expiryDate ? dayjs(defaultValues?.expiryDate) : dayjs(new Date()),
+    lapseOfWarrantyDate: defaultValues?.lapseOfWarrantyDate
+      ? dayjs(defaultValues?.lapseOfWarrantyDate)
+      : dayjs(new Date()),
+    updatedDate: defaultValues?.updatedDate ? dayjs(defaultValues?.updatedDate) : dayjs(new Date()),
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +126,10 @@ export default function CreateAssets({ currentUser, handleClose }) {
         const response = await getLocationAPI(data);
         console.log('location success', response);
         setLocationsOptions(response);
+        const defaultLocation = response.find(
+          (location) => location.locationID === defaultValues.locationId
+        );
+        setSelectedLocation(defaultLocation || response[0]);
       } catch (error) {
         setErrorMessage(error.message);
         console.log('API request failed:', error.message);
@@ -125,7 +137,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
     };
 
     fetchData();
-  }, []);
+  }, [defaultValues.locationId]);
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddAssets ~ onSubmit ~ data:', data);
@@ -141,13 +153,19 @@ export default function CreateAssets({ currentUser, handleClose }) {
     data.updatedDate = formatDateToYYYYMMDD(datesUsed?.updatedDate);
     try {
       console.log(data, 'data111ugsghghh');
-      const response = await createAssetsAPI(data);
+      let response = '';
+      if (currentData?.assetId) {
+        response = await updateAssetsAPI(data);
+      } else {
+        response = await createAssetsAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
+      currentData?.assetId ? '' : getTableData();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
@@ -172,7 +190,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Assets</DialogTitle>
+        <DialogTitle>{currentData?.assetId ? 'Edit' : 'Add New'} Assets</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -187,7 +205,7 @@ export default function CreateAssets({ currentUser, handleClose }) {
             marginTop={2}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              sm: 'repeat(3, 1fr)',
             }}
           >
             <RHFAutocomplete
@@ -339,8 +357,8 @@ export default function CreateAssets({ currentUser, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.assetId ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -349,6 +367,6 @@ export default function CreateAssets({ currentUser, handleClose }) {
 }
 
 CreateAssets.propTypes = {
-  currentUser: PropTypes.object,
+  currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

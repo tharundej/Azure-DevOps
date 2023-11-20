@@ -152,6 +152,29 @@ useEffect(()=>{
     />
   );
   const timezone = "Asia/Kolkata";
+console.log(overallEvents,"overallevents")
+
+const eventsExistOnDate = (date, overallEvents) => {
+  // Filter events to find if any event matches the provided date
+  const eventsOnDate = overallEvents?.filter(event => {
+    const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
+    return eventStartDate === date;
+  }) || []; // Set a default empty array if overallEvents is undefined
+
+  return eventsOnDate.length > 0; // Return true if events exist, false otherwise
+};
+
+const selectAllowCallback = (selectInfo) => {
+  const today = new Date().toISOString().split('T')[0]; // Get current date
+  const selectedDate = selectInfo.startStr.split('T')[0]; // Get selected date
+
+  // Check if the selected date is before today and events exist on that date
+  if (selectedDate < today && !eventsExistOnDate(selectedDate)) {
+    return false; // Disallow selection for past dates without events
+  }
+
+  return true; // Allow date selection for other cases
+};
 
   return (
  <>
@@ -193,6 +216,7 @@ useEffect(()=>{
               initialDate={date}
               initialView={view}
               eventDisplay="block"
+              selectAllow={selectAllowCallback}
               events={overallEvents}
               eventContent={renderEventContent}
               headerToolbar={false}

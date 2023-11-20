@@ -64,6 +64,7 @@ export default function ShiftRoast() {
         
         { id: "start_date", label: " Start Date", width: 100, type: "text" },
         { id: "end_date", label: "End Date", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
         // { id: '', width: 88 },
     
       ];
