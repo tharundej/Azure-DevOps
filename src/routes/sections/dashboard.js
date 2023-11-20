@@ -10,6 +10,7 @@ import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 import Expenses from 'src/nextzen/expenses/Expenses';
+import PurchaseInvoice from 'src/nextzen/Purchase/PurchaseInvoice/PurchaseInvoice';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -427,7 +428,7 @@ export const dashboardRoutes = [
         children: [
           { element: <PurchaseOrder />, index: true },
           { path: 'order', element: <PurchaseOrder /> },
-          { path: 'invoice', element: <PurchaseOrder /> },
+          { path: 'invoice', element: <PurchaseInvoice /> },
           { path: 'payment', element: <PurchaseOrder /> },
         ],
       },
