@@ -88,7 +88,8 @@ export default function EmployeeTable() {
   },[])
 
   const defaultPayload={
- 
+    employeeID: "INFO75",
+    roleID:3,
     "count": 5,
      
     "page": 0,
