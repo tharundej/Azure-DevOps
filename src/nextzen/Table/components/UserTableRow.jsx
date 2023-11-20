@@ -65,6 +65,7 @@ export default function UserTableRow({
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
+                  height:1,
                   cursor:'pointer'
                 }}
               >

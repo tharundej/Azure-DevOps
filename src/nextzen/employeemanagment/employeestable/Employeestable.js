@@ -88,13 +88,14 @@ export default function EmployeeTable() {
   },[])
 
   const defaultPayload={
- 
+    employeeID: "INFO75",
+    roleID:2,
     "count": 5,
      
     "page": 0,
      
     "search": "",
-    "fcompanyID": "COMP1",
+    "companyID": "COMP1",
      
     "externalFilters": {
     "fMaritalStatus":"",

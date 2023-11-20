@@ -189,7 +189,19 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
         currentUser.employeeID= employeeIDForApis
        
 
-        console.log(data,'ll')
+        console.log(currentUser,userdropDownvalue,'userdropDownvalue')
+        const obj={
+          ...currentUser,
+          departmentID:userdropDownvalue?.departmentValue?.departmentID || "",
+          desginationGradeID:userdropDownvalue?.desginationGradeValue?.desginationGradeID || "",
+          desginationID:userdropDownvalue?.desginationValue?.desginationID || "",
+          locationID:userdropDownvalue?.locationValue?.locationID || "",
+          managerID:userdropDownvalue?.managerValue?.managerID || "",
+          roleID:userdropDownvalue?.rolesValue?.roleID || "",
+
+
+
+        }
     
         try {
          
@@ -198,10 +210,10 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
             maxBodyLength: Infinity,
             url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA', 
               'Content-Type': 'application/json', 
             },
-            data : currentUser
+            data : obj
           };
            
           axios.request(config)
@@ -263,29 +275,27 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                     
                       var newArr = { ...userdropDownvalue };
                       newArr.locationValue=newvalue;
-                      newArr.departmentValue=undefined;
-                      newArr.desginationValue=undefined
-                      newArr.desginationGradeValue=undefined
+                     
                       
                       console.log(newArr)
                      
-                      try{
-                        const deptObj={
-                          companyID:'COMP1',
-                          locationID:newvalue?.locationID
-                        }
-                        const department=await ApiHitDepartment(deptObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.departmentOptions=department;
-                        optionsArr.desginationGradeOptions=[];
-                        optionsArr.desginationOptions=[];
-                        console.log(optionsArr,'optionsArroptionsArr')
-                        setUserDropDownOptions(optionsArr)
+                      // try{
+                      //   const deptObj={
+                      //     companyID:'COMP1',
+                      //     locationID:newvalue?.locationID
+                      //   }
+                      //   const department=await ApiHitDepartment(deptObj);
+                      //   var optionsArr={...userdropDownOptions};
+                      //   optionsArr.departmentOptions=department;
+                      //   optionsArr.desginationGradeOptions=[];
+                      //   optionsArr.desginationOptions=[];
+                      //   console.log(optionsArr,'optionsArroptionsArr')
+                      //   setUserDropDownOptions(optionsArr)
 
-                      }
-                      catch(error){
+                      // }
+                      // catch(error){
                         
-                      }
+                      // }
 
                      
                       
@@ -370,11 +380,11 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                       try{
                         const desgGradeObj={
                           companyID:'COMP1',
-                          desginationID:newvalue?.desginationID
+                          designationID:newvalue?.designationID
                         }
                         const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
                         var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationGradeOptions=desdesginationGradegination;
+                        optionsArr.desginationGradeOptions=desginationGrade;
                         
                         
                        
