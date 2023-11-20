@@ -28,30 +28,25 @@ import axios from 'axios';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
 export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClose,optionsEdit,optionsValueEdit}) {
   // const handleClose=()=>setOpen(false)
 
   console.log(optionsEdit,optionsValueEdit,'optionsValueEdit')
-  const [dropdownOptions,setDropDownOptions]=useState("");
-  const [dropdownValues,setDropDownValue]=useState("")
-  const [currentUser,setcurrentUser]=useState("")
+  const [dropdownOptions,setDropDownOptions]=useState();
+  const [dropdownValues,setDropDownValue]=useState()
+  const [currentUser,setcurrentUser]=useState()
   useEffect(()=>{
-    if( openModalEdit){
-      setDropDownValue((prevValue) => ({
-        ...prevValue,
-        departmentValue: optionsValueEdit?.departmentValue,
-        desginationValue: optionsValueEdit?.desginationValue,
-        desginationGradeValue: optionsValueEdit?.desginationGradeValue,
-      }));
-  
+    if(optionsValueEdit && optionsValueEdit && editRowIds){
         setDropDownOptions(optionsEdit);
-        
+        setDropDownValue(optionsValueEdit);
         setcurrentUser(editRowIds)
         console.log(optionsValueEdit,'optionsValueEditoptionsValueEdit')
 
     }
 
-  },[openModalEdit])
+  },[optionsEdit,optionsValueEdit,editRowIds])
 
   const [options,setOptions]=useState({})
   const [optionsValue,setOptionsValue]=useState({})
@@ -167,7 +162,8 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Edit Salary Structure</DialogTitle>
+           
+            <ModalHeader heading="Edit Salary Structure" />
             <DialogContent>
               <Box
                 rowGap={3}

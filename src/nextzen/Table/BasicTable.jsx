@@ -790,4 +790,7 @@ BasicTable.propTypes = {
   handleEditRowParent: PropTypes.any,
 };
 
+
+
 export { BasicTable };
+

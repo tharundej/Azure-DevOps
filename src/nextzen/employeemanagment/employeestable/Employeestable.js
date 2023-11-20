@@ -24,7 +24,7 @@ export default function EmployeeTable() {
   const actions = [
 
     
-   
+    { name: "View", icon: "hh", id: 'view' }
     
   ];
 
@@ -88,7 +88,8 @@ export default function EmployeeTable() {
   },[])
 
   const defaultPayload={
- 
+    employeeID: "INFO75",
+    roleID:3,
     "count": 5,
      
     "page": 0,
@@ -159,24 +160,24 @@ export default function EmployeeTable() {
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
     { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
     { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
-    { id: 'religion', label: 'Religion',  type: 'text', minWidth:'180px' },
+    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
     { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
     { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
 
 
     { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'p AddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'p AddressLine2',  type: 'text', minWidth:'180px' },
+    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
+    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
     { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
     { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
     { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
+    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
+    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
     { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
     { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
     { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
 
-    { id: 'roleName', label: 'Role Name',  type: 'text', minWidth:'180px' }
+    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
    
     
   ]);
