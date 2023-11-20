@@ -106,6 +106,7 @@ import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 const defaultFilters = {
@@ -115,6 +116,7 @@ const defaultFilters = {
 };
 
 // ----------------------------------------------------------------------
+
 
 const BasicTable = ({
   endpoint,
@@ -449,6 +451,7 @@ const BasicTable = ({
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
+             {filterName === "SwapRequestSearchFilter" && <SwapRequestSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />

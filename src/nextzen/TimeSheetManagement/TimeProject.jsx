@@ -58,6 +58,7 @@ export default function TimeProject() {
         { id: "dueDate", label: "Due Date",  minWidth: '7pc', type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
         { id: "activityName", label: "Activity Name", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
         // { id: '', width: 88 },
     

@@ -12,6 +12,7 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
 import EditShiftRoaster from './EditShiftRoaster';
+import { enqueueSnackbar } from 'notistack';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -29,21 +30,7 @@ export default function AssignShiftComponent() {
    
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+
     
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
@@ -51,10 +38,10 @@ export default function AssignShiftComponent() {
     
         { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "end_time", label: "End time", width: 100, type: "text" },
+        { id: "end_time", label: "End Time", width: 100, type: "text" },
         { id: "start_date", label: "Start Date", width: 100, type: "text" },
         { id: "end_date", label: "End Date", width: 100, type: "text" },
-        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
+        { id: "shift_term", label: "Shift Term", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -68,6 +55,7 @@ export default function AssignShiftComponent() {
         if(event?.name==="Edit"){
           handleEditAPICALL(rowdata,event)
         }
+
         else if(event?.name==="Delete"){
           handleDeleteAPICALL(rowdata,event)
         }
@@ -98,10 +86,8 @@ export default function AssignShiftComponent() {
     
       const actions = [
     
-        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-        { name: "Delete", icon: "hh", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
-    
-
+        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},    
+        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/deleteproject'},
     
       ];
     
@@ -135,7 +121,7 @@ export default function AssignShiftComponent() {
  <Dialog
  fullWidth
  maxWidth={false}
- open={showEdit}
+ open={open}
  onClose={handleClose}
  PaperProps={{
    sx: { maxWidth: 770 , overflow:'hidden'},
@@ -160,8 +146,8 @@ bodyData='data'
 defaultPayload={defaultPayload}
 
 filterName='AssignShiftFilter'
-rowActions={actions}
 onClickActions={onClickActions}
+rowActions={actions}
 
 />  
     </>
