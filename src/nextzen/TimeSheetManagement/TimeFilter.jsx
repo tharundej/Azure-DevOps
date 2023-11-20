@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function TimeSearchFilter({filterData,filterSearch}){
+export default function TimeSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -271,7 +271,9 @@ export default function TimeSearchFilter({filterData,filterSearch}){
     const [search, setSearch]=useState("");
     const handleClose = () => setShowForm(false);
     const handleSearch = (searchTerm) => {
-              filterSearch(searchTerm.target.value);
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
         };
     
 
@@ -297,7 +299,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -320,7 +322,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
       </Grid>
          </Grid>
      
-      <Dialog
+      <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -469,7 +471,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
-    </Dialog>
+    </BootstrapDialog>
     </>
     )
     
@@ -482,14 +484,14 @@ TimeSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 TimeSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
 
-// TimeSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+TimeSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

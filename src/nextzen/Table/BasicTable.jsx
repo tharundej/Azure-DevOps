@@ -103,9 +103,6 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
-import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
-import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
-import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 const defaultFilters = {
@@ -253,7 +250,7 @@ const BasicTable = ({
     filters,
   });
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 50;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -606,15 +603,6 @@ const BasicTable = ({
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-           {filterName === 'DepartmentFilterSearch' && (
-            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )}
-          {filterName === 'DesignationFilterSearch' && (
-            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )}
-           {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )}
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -640,7 +628,7 @@ const BasicTable = ({
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }}>
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
@@ -793,4 +781,6 @@ BasicTable.propTypes = {
 
 
 export { BasicTable };
+
+
 

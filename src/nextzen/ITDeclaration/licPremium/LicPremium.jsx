@@ -29,10 +29,8 @@ import Snackbar from '@mui/material/Snackbar';
 import '../declarationDetails/DeclarationDetails.css';
 import MuiAlert from '@mui/material/Alert';
 import './LicPReimum.css';
-// import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
-import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -50,19 +48,12 @@ const headings = [
   'Sum Assured',
   'Premium Amount For Which Proofs Attached Now',
   'Premium Amout Fall In Due',
-  // "Annual Premuium ",
   'Premium Considered For Deduction',
   'Action',
 ];
 
 
 export default function LicPremium() {
-
- 
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-  // const cmpName =localStorage.getItem('accessToken')
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
   const treatmentTypes = [{ type: 'No' }, { type: 'Yes' }];
@@ -73,29 +64,46 @@ export default function LicPremium() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [selectedOption, setSelectedOption] = useState(''); // State to manage the selected option in Autocomplete
-  const [isEdit , setIsEdit] =useState(false)
+  
   const [files, setFiles] = useState([]);
   const [base64Strings, setBase64Strings] = useState([]);
+
+  const sampleRows = [
+    {
+      sno: 1,
+      policyNumber: 'POL-001',
+      commencementDate: dayjs(new Date()).format('YYYY-MM-DD'),
+      nameRelationship: 'John Doe',
+      sumAssured: '$100,000',
+      premiumAmountAttached: '$50',
+      premiumAmountFallInDue: '$20',
+      annualPremium: '$500',
+      premiumConsideredForDeduction: '$200',
+    },
+    // Add more sample rows as needed
+  ];
+
+ 
 
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
   const [formData, setFormData] = useState({
-    companyId: cmpId,
-    companyName: '',
-    employeeId: empId,
-    employeeName: '',
+    companyId: 'COMP3',
+    companyName: 'wipro',
+    employeeId: 'wipr1',
+    employeeName: 'rameshav',
     financialYear: '2022-11-11',
     policyNumber: '',
-    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+    dateOfCommencementOfPolicy: '2022-11-11',
     insuredPersonName: '',
     sumOfAssured: '',
     relationship: '',
-    premiumAmountForwhichProofAssured: '',
+    premiumAmountForWhichProofAttachedNow: '',
     premiumAmountFallInDue: '',
     premiumConsiderForDeduction: '',
-    treatmentForSpecifiedDiseases: '',
+    treatmentForSpecifiedDiseas: '',
     doesTheInjuredPersonHaveDisability: '',
     fileName: [],
     fileContent: [],
@@ -103,98 +111,17 @@ export default function LicPremium() {
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
-
-  // states to handle file Uploader component 
-  var [landLordDocs, setLandLordDocs] = useState([]);
-  const [landLordDeletedId, setLandLordDeletedID] = useState([]);
-  var [rentDocs, setRentDocs] = useState([]);
-  var [fileName , setFileName] = useState([])
-  var [fileContent, setFileContent] = useState([])
- 
+  const benak = () => {
+    console.log('testing ');
+  };
   const methods = useForm();
 
-
-  // handling the file uploader compoent
-  const handleLandLordattchment = (fileData) => {
-    console.log(fileData, 'getting from uploader ');
-    fileName = fileData?.map((doc) => doc.fileName);
-    setFileName(fileName);
-    fileContent = fileData?.map((doc) => doc.fileContent);
-    setFileContent(fileContent);
-    // Create a new array to store the objects
-    const newArray = [];
-    const transformedData = fileData.map((item) => ({
-      id: item.id ? item.id : 0,
-      fileName: item.fileName,
-      fileContent: item.fileContent,
-    }));
-    landLordDocs = transformedData;
-    setLandLordDocs(landLordDocs);
-
-    console.log(landLordDocs, 'landlordDocs');
-
-    console.error('Arrays must have the same length');
-    setOpenAttchementDilog(false);
-  };
-  const handleRentattchment = (fileData) => {
-    console.log(fileData, 'getting from uploader ');
-    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
-    setAttachedDocumentFileName(attachedDocummentFileName);
-    attachedDocumment = fileData?.map((doc) => doc.fileContent);
-    setAttachedDocument(attachedDocumment);
-    // Create a new array to store the objects
-    const newArray = [];
-    const transformedData = fileData.map((item) => ({
-      ID: item.id ? item.id : 0,
-      fileName: item.fileName,
-      fileContent: item.fileContent,
-    }));
-    rentDocs = transformedData;
-    setRentDocs(rentDocs);
-
-    console.log(rentDocs, 'landlordDocs');
-    setOpenAttchementDilog(false);
-  };
-  console.log(rentDocs, 'landlordDocs');
-const handleLandLordDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(landLordDeletedId, "deletedelete")
-}
-const handleRentDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setRentDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(rentDeletedId, "deletedelete")
-}
-
-// end of file uploader
-  const attchementHandler = (rowData) =>{
-    // setSelectedRowDocuments(rowData.documents || []);
+  const attchementHandler = () =>{
     setOpenAttchementDilog(true)
   }
   const closeAttchementDilod = () =>{
     setOpenAttchementDilog(false)
   }
-
-  //  new mehiod
-
-
-  const handleFormChange1 = (event, rowIndex) => {
-    const { name, value } = event.target;
-    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
-
-    // Assuming formData is an array of objects
-    const updatedData = [...formData];
-    updatedData[rowIndex] = { ...updatedData[rowIndex], [name]: integerValue };
-    setFormData(updatedData);
-  };
-
-  const saveLicDetails = async (rowData) => {
-    // Assuming you have a function to save data for a specific row
-    // Adjust this function based on your actual implementation
-    console.log('Saving data for row:', rowData);
-  };
-  // new mehod end 
 
   const handleUploadattchment =(data)=>{
     attachedDocumment = data
@@ -251,16 +178,16 @@ const handleRentDeletedID = ( data)=>{
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
-    const payload = { "employeeID":empId };
+    const payload = { companyId: 'COMP3', employeeId: 'wipr1' };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +"/getLicPremiumDetails",
+      url: baseUrl +'getSingleLicPremium',
      
       headers: {
         Authorization:
-          token,
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -289,10 +216,10 @@ const handleRentDeletedID = ( data)=>{
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +'/addLicPremium',
+      url: baseUrl +'addLicPremium',
       headers: {
         Authorization:
-         token,
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
         'Content-Type': 'text/plain',
       },
       data: formData,
@@ -318,67 +245,6 @@ const handleRentDeletedID = ( data)=>{
       });
     //  console.log(result, 'resultsreults');
   };
-  const editcDetails = async () => {
-    console.log(" i am calling fine info042" , formData)
-    const payload = {
-      
-      
-                  licPremiumID: formData.licPremiumID,
-                  companyID: formData.companyId,
-                  employeeID: formData.employeeId,
-                  employeeName: formData.employeeName,
-                  financialYear: formData.financialYear,
-                  policyNumber: formData.policyNumber,
-                  dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
-                  insuredPersonName: formData.insuredPersonName,
-                  sumOfAssured:parseFloat (formData.sumOfAssured),
-                  relationship: formData.relationship,
-                  premiumAmountForwhichProofAssured: parseFloat(formData.premiumAmountForwhichProofAssured),
-                  premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
-                  premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
-                  treatmentForSpecifiedDiseaseses: parseInt(formData.treatmentForSpecifiedDiseases),
-                  doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
-                  documents :landLordDocs,
-                  oldFields:landLordDeletedId
-          
-      
-    };
-    console.log(payload ,"payloaddd")
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'updateMedicalInsuranceDetails',
-      url: baseUrl +'/updateLicPremiumDetails',
-      headers: {
-        Authorization:
-       token ,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic  Updated successfully!');
-          setSnackbarOpen(true);
-          setIsEdit(false)
-          console.log('success');
-        }
-      })
-      .catch((error) => {
-        setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Lic Updating. Please try again.');
-        setSnackbarOpen(true);
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -393,129 +259,47 @@ const handleRentDeletedID = ( data)=>{
       await getLicPremium();
     };
     fetchData();
-    setIsEdit(false)
     
   }, [isreloading]);
 
-  const handleFormChange = (event, rowIndex) => {
-    const { name, value } = event.target;
-    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
- 
-    setPolicyData((prevData) => {
-       const newData = [...prevData];
-       newData[rowIndex] = { ...newData[rowIndex], [name]: integerValue };
-       return newData;
-    });
- };
-   // handle edit
-   const handleEdit = (rowData) => {
-    setIsEdit(true)
-    console.log(rowData ,"rowData");
-    setLandLordDocs(rowData.documents)
-    setFormData({
-      licPremiumID:rowData.licPremiumID,
-      companyId: rowData.companyID,
-    companyName: rowData.companyName,
-    employeeId: rowData.employeeID,
-    employeeName: rowData.employeeName,
-    financialYear: rowData.financialYear,
-    policyNumber: rowData.policyNumber,
-    dateOfCommencementOfPolicy: rowData.dateOfCommencementOfPolicy,
-    insuredPersonName: rowData.insuredPersonName,
-    sumOfAssured: rowData.sumOfAssured,
-    relationship: rowData.relationship,
-    premiumAmountForwhichProofAssured: rowData.premiumAmountForwhichProofAssured,
-    premiumAmountFallInDue: rowData.premiumAmountFallInDue,
-    premiumConsiderForDeduction: rowData.premiumConsiderForDeduction,
-    treatmentForSpecifiedDiseases: rowData.treatmentForSpecifiedDiseases,
-    doesTheInjuredPersonHaveDisability: rowData.doesTheInjuredPersonHaveDisability,
- 
-      // Add other fields as needed
-    });
-
-    // Set the attached documents if available
-    // if (rowData.documents && rowData.documents.length > 0) {
-    //   setMedicalTableDataDoc([...rowData.documents]);
-    // }
-  };
-
-  //basic table 
-  const [TABLE_HEAD,setTableHead] =useState( [
-    {
-      id: 'employeeId',
-      label: 'Employee ID',
-      type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
-      secondaryText: 'name',
-    },
-    { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
-    { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
-    { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'emailID', label: 'Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
-    { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
-    { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
-    { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
-    { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
-    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
-    { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
-    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
-
-
-    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
-    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
-    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
-    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
-    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
-
-    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
-   
-    
-  ]);
-  const handleSubmit = ()=>{
-    isEdit ? editcDetails() :saveLicDetals()
-  }
-  const handleCancle = ()=>{
-    setIsEdit(false)
-     setFormData({
-      companyId: cmpId,
-    companyName: '',
-    employeeId: empId,
-    employeeName: '',
-    financialYear: '2022-11-11',
-    policyNumber: '',
-    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-    insuredPersonName: '',
-    sumOfAssured: '',
-    relationship: '',
-    premiumAmountForwhichProofAssured: '',
-    premiumAmountFallInDue: '',
-    premiumConsiderForDeduction: '',
-    treatmentForSpecifiedDiseases: '',
-    doesTheInjuredPersonHaveDisability: '',
-    fileName: [],
-    fileContent: [],
-    });
-
-  }
   const userId  =  5
   return (
     <div>
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-  
-       
+          {/* search and filter  */}
+          {/* <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            justifyContent="flex-end"
+            direction="row"
+            style={{ marginBottom: '1rem' }}
+          >
+            <Grid item>
+              <TextField
+                sx={{ width: '20vw' }}
+                // value={filters.name}
+                // onChange={handleFilterName}
+                placeholder="Search..."
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                  border: 'none',
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <Button className="button">Filter</Button>
+            </Grid>
+            <Grid item>
+              <Button className="button">Report</Button>
+            </Grid>
+          </Grid> */}
           {/* Row 1 */}
-          {/* {policyData.length > 0 &&
-          policyData?.map((row, rowIndex) => (
-            <div key={rowIndex} style={{ marginTop: '2rem' }}> */}
 
           <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
@@ -526,7 +310,6 @@ const handleRentDeletedID = ( data)=>{
                 fullWidth
                 name="policyNumber"
                 value={formData.policyNumber}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
             </Grid>
@@ -536,15 +319,14 @@ const handleRentDeletedID = ( data)=>{
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Date Of Commencement Of Policy"
-                    value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
+                    value={dates?.start_date}
                     defaultValue={dayjs(new Date())}
-  onChange={(newValue) => {
-    console.log(newValue)
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      dateOfCommencementOfPolicy: newValue,
-    }));
-  }}
+                    onChange={(newValue) => {
+                      setDates((prev) => ({
+                        ...prev,
+                        start_date: newValue,
+                      }));
+                    }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -556,7 +338,6 @@ const handleRentDeletedID = ( data)=>{
                 fullWidth
                 name="insuredPersonName"
                 value={formData.insuredPersonName}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
             </Grid>
@@ -573,7 +354,6 @@ const handleRentDeletedID = ( data)=>{
                 type='number'
                 name="sumOfAssured"
                 value={formData.sumOfAssured}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
             </Grid>
@@ -594,9 +374,8 @@ const handleRentDeletedID = ( data)=>{
                 label="Premium Amount For Which Proof Attched Now "
                 variant="outlined"
                 fullWidth
-                name="premiumAmountForwhichProofAssured"
-                value={formData.premiumAmountForwhichProofAssured}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
+                name="premiumAmountForWhichProofAttachedNow"
+                value={formData.premiumAmountForWhichProofAttachedNow}
                 onChange={handleChange}
               />
             </Grid>
@@ -610,7 +389,6 @@ const handleRentDeletedID = ( data)=>{
                 fullWidth
                 name="premiumAmountFallInDue"
                 value={formData.premiumAmountFallInDue}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
             </Grid>
@@ -621,24 +399,23 @@ const handleRentDeletedID = ( data)=>{
                 fullWidth
                 name="premiumConsiderForDeduction"
                 value={formData.premiumConsiderForDeduction}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
             </Grid>
             <Grid item xs={4}>
               <Autocomplete
                 disablePortal
-                name="treatmentForSpecifiedDiseases"
+                name="treatmentForSpecifiedDiseas"
                 id="combo-box-demo"
                 options={treatmentTypes.map((employeepayType) => employeepayType.type)}
-                value={formData?.treatmentForSpecifiedDiseaseses === "1"
+                value={formData?.treatmentForSpecifiedDiseas === 1
                   ? 'Yes'
-                  : formData.treatmentForSpecifiedDiseases === "0"
+                  : formData.treatmentForSpecifiedDiseas === 0
                   ? 'No'
-                  : formData.treatmentForSpecifiedDiseases
+                  : formData.treatmentForSpecifiedDiseas
             }
                 onChange={(event, newValue) =>
-                  handleAutocompleteChange('treatmentForSpecifiedDiseases', newValue)
+                  handleAutocompleteChange('treatmentForSpecifiedDiseas', newValue)
                 }
                 // sx={{ width: 300 }}
                 renderInput={(params) => (
@@ -655,9 +432,9 @@ const handleRentDeletedID = ( data)=>{
                 name="doesTheInjuredPersonHaveDisability"
                 id="combo-box-demo"
                 options={pinjuredPersonDisability.map((employeepayType) => employeepayType.type)}
-                value={formData?.doesTheInjuredPersonHaveDisability === "1"
+                value={formData?.doesTheInjuredPersonHaveDisability === 1
                   ? 'Yes'
-                  : formData.doesTheInjuredPersonHaveDisability === "0"
+                  : formData.doesTheInjuredPersonHaveDisability === 0
                   ? 'No'
                   : formData.doesTheInjuredPersonHaveDisability
             }
@@ -689,16 +466,15 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
                 <Button className="button" onClick={attchementHandler}>Attchement</Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={handleSubmit}>
+                <Button className="button" onClick={saveLicDetals}>
                   Save
                 </Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={handleCancle}>Cancel</Button>
+                <Button className="button">Cancel</Button>
               </Grid>
             </Grid>
             {/* Add more rows as needed */}
@@ -719,16 +495,6 @@ const handleRentDeletedID = ( data)=>{
             </Grid>
             {/* Add more rows as needed */}
           </Grid>
-          {/* <Button onClick={() => saveLicDetails(row)} style={{ marginTop: '1rem' }}>
-                Save
-              </Button> */}
-              {/* {   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={selectedRowDocuments}
-          handleDeletedID = {handleLandLordDeletedID}/> : null}
- */}
-
- 
-            {/* </div>
-          ))} */}
         </Grid>
 
         <TableContainer component={Paper}>
@@ -739,8 +505,8 @@ const handleRentDeletedID = ( data)=>{
                   <TableCell
                     key={index}
                     style={{
-                      backgroundColor: '#F4F6F8',
-                      color: '#637381',
+                      backgroundColor: '#2196f3',
+                      color: 'white',
                       whiteSpace: 'nowrap', // Prevent text wrapping
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -752,26 +518,23 @@ const handleRentDeletedID = ( data)=>{
               </TableRow>
             </TableHead>
             <TableBody>
-              {policyData?.length > 0 &&
+              {policyData.length > 0 &&
                 policyData?.map((row, rowIndex) => (
                   <TableRow key={rowIndex}>
                     <TableCell style={{ textAlign: 'center'}}>{rowIndex + 1}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.policyNumber ?row.policyNumber : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.dateOfCommencementOfPolicy  ?row.policyNumber : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.employeeName  ?row.employeeName : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.relationship  ?row.relationship : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName ?row.insuredPersonName : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.treatmentForSpecifiedDiseaseses ?row.treatmentForSpecifiedDiseaseses === "0" ? "N0": "Yes" : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.doesTheInjuredPersonHaveDisability ?row.doesTheInjuredPersonHaveDisability=== "0" ? "N0": "Yes"  : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.sumOfAssured ?row.sumOfAssured : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountForwhichProofAssured ?row.premiumAmountForwhichProofAssured : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue ?row.premiumAmountFallInDue : "-"}</TableCell>
-                    {/* <TableCell style={{ textAlign: 'center'}}>{row.annualPremium ?row.annualPremium : "-"}</TableCell> */}
-                    <TableCell style={{ textAlign: 'center'}}>{row.premiumConsiderForDeduction ?row.premiumConsiderForDeduction : "-"}</TableCell>
-                  
-                    <TableCell style={{ textAlign: 'center' }}>
-                      <Button onClick={() => handleEdit(row)}>Edit</Button>
-                    </TableCell>
+                    <TableCell>{row.dateOfCommencementOfPolicy}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.employeeName}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.relationship}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.treatmentForSpecifiedDiseas}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.doesTheInjuredPersonhavedisability}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.sumOfAssured}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountForWhichProofAttachedNow}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.annualPremium}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.premiumConsiderForDeduction}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.action}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -796,14 +559,83 @@ const handleRentDeletedID = ( data)=>{
         </Alert>
       </Snackbar>
       
-{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={landLordDocs}
-          handleDeletedID = {handleLandLordDeletedID}/> : null}
+{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleUploadattchment}/> : null}
 
+{/* {true?
+      <div>
+      <input type="file" multiple onChange={handleFileChange} />
+      <ul>
+        {files.map((file, index) => (
+          <li key={index}>
+            {file.name}{' '}
+            <button onClick={() => handleDelete(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      <div>
+        {/* Display base64 strings (for demonstration purposes) */}
+        {/* <ul>
+          {base64Strings.map((base64, index) => (
+            <li key={index}>{base64}</li>
+          ))}
+        </ul>
+      </div>
+    </div>: null}  */}
 
-{/* <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
-
-rowActions={actions} filterName="EmployeeFilterSearch"  handleEditRowParent={handleEditRowParent}
- /> */}
+{/* {(userId==5)?<>
+<div id="project-multidrawwer-div" style={{ display: 'flex' }}>
+                {viewImage
+                  ? images.map((i, index) => {
+                      return (
+                        <div style={{ display: 'flex', margin: '1rem' }}>
+                          <img id="img-delete-project-multidrawer" src={i} style={{ height: '50px', width: '70px' }} alt="hello" />
+                          <Iconify id="icon-delete-image"
+                            onClick={() => {
+                              deleteImage(index);
+                            }}
+                            icon={'typcn:delete'}
+                            sx={{ width: 16, height: 16, ml: 1, color: 'red' }}
+                          />
+                        </div>
+                      );
+                    })
+                  : null}
+              </div>
+              <br />
+<div id="project-input-tag-div" style={{ display: 'flex' ,marginTop:"10px" , marginBottom:"10px"}}>
+                  <label id="input-tag-project-multi-drawer" for="inputTag" style={{ cursor: 'pointer', display: 'flex' }}>
+                    <Iconify id="camera-icon" icon={'mdi:camera'} sx={{ width: 25, height: 25, ml: 2, color: '#ff7424' }} />
+                    &nbsp;
+                    <input
+                      style={{ display: 'none' }}
+                      accept="image/png, image/gif, image/jpeg"
+                      id="inputTag"
+                      type="file"
+                      onChange={(e) => {
+                        convertImage(e);
+                      }}
+                    />
+                  </label>
+               
+                  <br />
+         
+           <Button
+           id="upload-btn"
+           onClick={()=>UploadImages(2)}
+           
+           sx={{
+             '&:hover': {
+               backgroundColor: '#ffd796',
+             },
+             color: '#ff7424',
+             backgroundColor: '#ffd796',
+             marginLeft: '10px',
+           }}
+         >
+           Upload  
+         </Button>
+         </div></>:null} */}
+ 
     </div>
   );
 }

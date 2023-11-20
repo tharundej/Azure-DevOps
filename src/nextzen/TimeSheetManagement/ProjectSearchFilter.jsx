@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ProjectSearchFilter({filterData,filterSearch}){
+export default function ProjectSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -141,7 +141,9 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
   const handleClose = () => setShowForm(false);
 
   const handleSearch = (searchTerm) => {
-    filterSearch(searchTerm.target.value)
+    setSearch(searchTerm)
+      searchData(search)
+      console.log(searchTerm,"search ........")
       };
 
   const [datesSavedArray,setDatesSavedArray]=useState(["start_date","end_date","offer_date_from","offer_date_to"])
@@ -295,7 +297,7 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
- onChange={e=>{handleSearch(e)}}
+ onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -482,14 +484,14 @@ ProjectSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 ProjectSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
 
-// ProjectSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+ProjectSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}
