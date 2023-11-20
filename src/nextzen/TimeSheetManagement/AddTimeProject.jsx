@@ -332,7 +332,7 @@ const join=()=>{
 <Autocomplete
             multiple
             disablePortal
-            id="combo-box-demo1"
+            id="combo-box-demo"
             options={reportingManager || []}
             value={currentReportingData}
             getOptionLabel={(option) => option.firstName}

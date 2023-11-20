@@ -29,30 +29,36 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const headings = [
   'S.No',
-  'Property Reference',
-  'Name Of The Owners',
-  'Address Of Property',
-  'Pan Of Lenders',
-  'Loan Amount',
-  'Purpose Of Loan',
-  'Date Of Sanction Of Loan',
-  'Interest Payable',
-  'Property Occupied',
-  'Share Of Interest',
-  "Gross Rental Income",
-  'Municipal Taxes Paid',
+  'Policy Number',
+  'Commencement Date',
+  'Name Ralationship',
+  'Under 80U',
+  'Under 80DDB',
+  'Sum Assured',
+  'Premium Amount For Which Proofs Attached Now',
+  'Premium AMout Fall In Due',
+  'Annual Premium',
+  'Premium Considered For Deduction',
   'Action',
 ];
 
 export default function HouseProperty() {
-
-  // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
-  const [reload ,setREload] = useState(false)
- 
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-
+  const sampleRows = [
+    {
+      sno: 1,
+      policyNumber: 'POL-001',
+      commencementDate: dayjs(new Date()).format('YYYY-MM-DD'),
+      nameRelationship: 'John Doe',
+      under80U: 'Yes',
+      under80DDB: 'No',
+      sumAssured: '$100,000',
+      premiumAmountAttached: '$50',
+      premiumAmountFallInDue: '$20',
+      annualPremium: '$500',
+      premiumConsideredForDeduction: '$200',
+      action: 'Edit',
+    },
+  ];
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
@@ -60,12 +66,7 @@ export default function HouseProperty() {
   var [attachedDocumment, setAttachedDocument] = useState([]);
   var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
   const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
-  var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
-  var [landLordDocs, setLandLordDocs] = useState([]);
-  var [rentDocs, setRentDocs] = useState([]);
-  const [landLordDeletedId , setLandLordDeletedID] = useState([])
-  const [rentDeletedId , setRentDeletedID] = useState([])
-  const [housingData, sethousingData] = useState([]);
+
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -101,19 +102,36 @@ export default function HouseProperty() {
     setFormData({ ...formData, [name]: value });
   };
 
-
+  const handleSubmit = async () => {
+    const payload = {
+      company_id: 'comp1',
+      employee_id: 'Info1',
+      financial_year: 2023,
+      property_reference_sl_no: formData.propertyReference,
+      address_of_property: formData.address,
+      pan_of_the_landers: formData.panOfLenders,
+      amount_of_housingloan_taken_from_the_property: parseFloat(formData.loanAmount),
+      purpose_of_loan: formData.purposeOfLoan,
+      date_of_sanction_of_loan: formData.dateOfSanction,
+      interest_payble_on_year: parseFloat(formData.interestPayable),
+      is_property_self_occupied_or_let_out: formData.propertyOccupied,
+      if_joint_property_then_enter_interest_rate: parseFloat(formData.shareOfInterest),
+      gross_rental_amount: parseFloat(formData.grossRentalIncome),
+      muncipal_tax_paid: formData.municipalTaxesPaid,
+    };
+  };
   const [formData, setFormData] = useState({
-    propertyReferenceSlNo: null,
+    propertyReference: null,
     name_of_the_owners: '',
-    addressOfProperty: '',
-    panOfTheLanders: '',
-    amountOfHousingloanTakenFromTheProperty: '',
+    address: '',
+    panOfLenders: '',
+    loanAmount: '',
     purposeOfLoan: '',
-    dateOfSanction: dayjs().format('YYYY-MM-DD'),
-    interestPaybleOnYear: '',
-    isPropertySelfOccupiedOrLetOu: '',
-    ifJointPropertyThenEnterInterestRate: '',
-    grossRentalAmount: '',
+    dateOfSanction: '2023-09-11',
+    interestPayable: '',
+    propertyOccupied: '',
+    shareOfInterest: '',
+    grossRentalIncome: '',
     municipalTaxesPaid: '',
   });
 
@@ -121,73 +139,34 @@ export default function HouseProperty() {
   // console.log(payload);
 
   // You can make an axios request here to send the data to your server.
-  const getHousePRoterty = async () => {
-    const payload = {
-      "companyId": cmpId,
-      "employeeId": empId,
-      "financialYear":2023
-  };
 
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl+'getMedicalInsuranceDetails',
-      url: baseUrl +'/getHousingProperty',
-
-      headers: {
-        Authorization:
-       token,  'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          sethousingData(rowsData);
-          console.log(JSON.stringify(response?.data), 'resultMedical');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    console.log(result, 'resultsreults');
-  };
   const addHousingProperity = useCallback(async () => {
-
-    console.log(formData.dateOfSanction ,"")
     const payload = {
-      companyId: cmpId,
-      employeeId: empId,
+      companyId: 'comp1',
+      employeeId: 'Info1',
       financialYear: 2023,
       nameOfTheOwners: formData.name_of_the_owners,
-      propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
-      addressOfProperty: formData.addressOfProperty,
-      panOfTheLanders: formData.panOfTheLanders,
-      amountOfHousingloanTakenFromTheProperty: parseFloat(formData.amountOfHousingloanTakenFromTheProperty),
+      propertyReferenceSlNo: parseFloat(formData.propertyReference),
+      addressOfProperty: formData.address,
+      panOfTheLanders: formData.panOfLenders,
+      amountOfHousingloanTakenFromTheProperty: parseFloat(formData.loanAmount),
       purposeOfLoan: formData.purposeOfLoan,
-      // dateOfSanctionOfLoan: formData.dateOfSanction,
       dateOfSanctionOfLoan: formData.dateOfSanction,
-      interestPaybleOnYear: parseFloat(formData.interestPaybleOnYear),
-      isPropertySelfOccupiedOrLetOut: formData.isPropertySelfOccupiedOrLetOu,
-      ifJointPropertyThenEnterInterestRate: parseFloat(formData.ifJointPropertyThenEnterInterestRate),
-      grossRentalAmount: parseFloat(formData.grossRentalAmount),
-      muncipalTaxPaid: parseFloat(formData.municipalTaxesPaid),
-      documents:landLordDocs,
-      oldFields:landLordDeletedId
+      interestPaybleOnYear: parseFloat(formData.interestPayable),
+      isPropertySelfOccupiedOrLetOut: formData.propertyOccupied,
+      ifJointPropertyThenEnterInterestRate: parseFloat(formData.shareOfInterest),
+      grossRentalAmount: parseFloat(formData.grossRentalIncome),
+      muncipalTaxPaid: formData.municipalTaxesPaid,
     };
    
-console.log(payload ,"payload")
+
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + '/housingProperty',
+      url: baseUrl + 'housingProperty',
       headers: {
         Authorization:
-         token,
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -198,106 +177,20 @@ console.log(payload ,"payload")
         if (response.status === 200) {
           const rowsData = response?.data?.data?.rows;
           console.log(JSON.stringify(response.data), 'dataaaa');
-          setREload(!reload)
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [formData ,landLordDocs]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await addHousingProperity();
-  //   };
-  //   fetchData();
-    
-  // }, []);
+  }, [formData]);
   useEffect(() => {
     const fetchData = async () => {
-      await getHousePRoterty();
+      await addHousingProperity();
     };
     fetchData();
     
-  }, [reload]);
-  const handleLandLordattchment = (fileData) => {
-    console.log(fileData, 'getting from uploader ');
-    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
-    setAttachedDocumentFileName(attachedDocummentFileName);
-    attachedDocumment = fileData?.map((doc) => doc.fileContent);
-    setAttachedDocument(attachedDocumment);
-    // Create a new array to store the objects
-    const newArray = [];
-    const transformedData = fileData.map((item) => ({
-      id: item.id ? item.id : 0,
-      fileName: item.fileName,
-      fileContent: item.fileContent,
-    }));
-    landLordDocs = transformedData;
-    setLandLordDocs(landLordDocs);
+  }, []);
 
-    console.log(landLordDocs, 'landlordDocs');
-
-    console.error('Arrays must have the same length');
-    setOpenAttchementDilog(false);
-  };
-  const handleRentattchment = (fileData) => {
-    console.log(fileData, 'getting from uploader ');
-    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
-    setAttachedDocumentFileName(attachedDocummentFileName);
-    attachedDocumment = fileData?.map((doc) => doc.fileContent);
-    setAttachedDocument(attachedDocumment);
-    // Create a new array to store the objects
-    const newArray = [];
-    const transformedData = fileData.map((item) => ({
-      ID: item.id ? item.id : 0,
-      fileName: item.fileName,
-      fileContent: item.fileContent,
-    }));
-    rentDocs = transformedData;
-    setRentDocs(rentDocs);
-
-    console.log(rentDocs, 'landlordDocs');
-    setOpenAttchementDilog(false);
-  };
-  console.log(rentDocs, 'landlordDocs');
-const handleLandLordDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(landLordDeletedId, "deletedelete")
-}
-const handleRentDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setRentDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(rentDeletedId, "deletedelete")
-}
-// handle edit
-const handleEdit = (rowData) => {
-  console.log(rowData ,"rowData1234");
-  setLandLordDocs(rowData.documents)
-  setFormData({
-     employeeId:rowData.employeeId,
-     companyId:rowData.companyId,
-      propertyReferenceSlNo: rowData.propertyReferenceSlNo,
-      name_of_the_owners: rowData.nameOfTheOwners,
-      addressOfProperty: rowData.addressOfProperty,
-      panOfTheLanders: rowData.panOfTheLanders,
-      amountOfHousingloanTakenFromTheProperty: rowData.amountOfHousingloanTakenFromTheProperty,
-      purposeOfLoan: rowData.purposeOfLoan,
-      dateOfSanction: rowData.dateOfSanction,
-      interestPaybleOnYear: rowData.interestPaybleOnYear,
-      isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOu,
-      ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
-      grossRentalAmount: rowData.grossRentalAmount,
-      municipalTaxesPaid: rowData.muncipalTaxPaid,
-    
-    // Add other fields as needed
-  });
-
-  // Set the attached documents if available
-  if (rowData.documents && rowData.documents.length > 0) {
-    setLandLordDocs([...rowData.documents]);
-  }
-};
   return (
     <div>
       <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -339,8 +232,8 @@ const handleEdit = (rowData) => {
             {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
             <TextField
               label="Property Reference Sl.No(Enter 1,2,3 Etc) "
-              name="propertyReferenceSlNo"
-              value={formData.propertyReferenceSlNo}
+              name="propertyReference"
+              value={formData.propertyReference}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -358,11 +251,11 @@ const handleEdit = (rowData) => {
             />
           </Grid>
           <Grid item xs={4}>
-            {/* <Typography >addressOfProperty Of The Property </Typography> */}
+            {/* <Typography >Address Of The Property </Typography> */}
             <TextField
               label="Address Of The Property "
-              name="addressOfProperty"
-              value={formData.addressOfProperty}
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -377,8 +270,8 @@ const handleEdit = (rowData) => {
             {/* <Typography >PAN Of The Lender(S)</Typography> */}
             <TextField
               label="PAN Of The Lender(S)"
-              name="panOfTheLanders"
-              value={formData.panOfTheLanders}
+              name="panOfLenders"
+              value={formData.panOfLenders}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -388,8 +281,8 @@ const handleEdit = (rowData) => {
             {/* <Typography >Amount Of Housing loan Taken For The Property</Typography> */}
             <TextField
               label="Amount Of Housing loan Taken For The Property"
-              name="amountOfHousingloanTakenFromTheProperty"
-              value={formData.amountOfHousingloanTakenFromTheProperty}
+              name="loanAmount"
+              value={formData.loanAmount}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -416,17 +309,14 @@ const handleEdit = (rowData) => {
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
                   label="Date Of Sanction Of Loan"
-                  value={dayjs(formData.dateOfSanction, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
-                  // defaultValue={dayjs(new Date())}
-                  
-onChange={(newValue) => {
-  console.log(newValue)
-  const formattedDate = dayjs(newValue).format('YYYY-MM-DD')
-  setFormData((prevFormData) => ({
-    ...prevFormData,
-    dateOfSanction:formattedDate,
-  }));
-}}
+                  value={dates?.start_date}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDates((prev) => ({
+                      ...prev,
+                      start_date: newValue,
+                    }));
+                  }}
                 />
               </DemoContainer>
             </LocalizationProvider>
@@ -435,8 +325,8 @@ onChange={(newValue) => {
             {/* <Typography >Intrest Payable On Housing Loan For The Year</Typography> */}
             <TextField
               label="Intrest Payable On Housing Loan For The Year"
-              name="interestPaybleOnYear"
-              value={formData.interestPaybleOnYear}
+              name="interestPayable"
+              value={formData.interestPayable}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -446,8 +336,8 @@ onChange={(newValue) => {
             {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
             <TextField
               label="Is The Property Self Occupied Or Let out?[See Notebelow]"
-              name="isPropertySelfOccupiedOrLetOu"
-              value={formData.isPropertySelfOccupiedOrLetOu}
+              name="propertyOccupied"
+              value={formData.propertyOccupied}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -460,8 +350,8 @@ onChange={(newValue) => {
             {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
             <TextField
               label="IF Joint Property, Then Enter The Share Of Intrest[%]"
-              name="ifJointPropertyThenEnterInterestRate"
-              value={formData.ifJointPropertyThenEnterInterestRate}
+              name="shareOfInterest"
+              value={formData.shareOfInterest}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -471,8 +361,8 @@ onChange={(newValue) => {
             {/* <Typography >Gross Rental Income</Typography> */}
             <TextField
               label="Gross Rental Income"
-              name="grossRentalAmount"
-              value={formData.grossRentalAmount}
+              name="grossRentalIncome"
+              value={formData.grossRentalIncome}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -602,8 +492,8 @@ onChange={(newValue) => {
                 <TableCell
                   key={index}
                   style={{
-                    backgroundColor: '#F4F6F8',
-                    color: '#637381',
+                    backgroundColor: '#2196f3',
+                    color: 'white',
                     whiteSpace: 'nowrap', // Prevent text wrapping
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -615,23 +505,20 @@ onChange={(newValue) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {housingData?.length > 0 && housingData?.map((row, rowIndex) => (
+            {sampleRows.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell style={{ textAlign: 'center'}}>{rowIndex + 1}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.propertyReferenceSlNo? row.propertyReferenceSlNo: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.nameOfTheOwners? row.nameOfTheOwners: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.addressOfProperty? row.addressOfProperty: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.panOfTheLanders? row.panOfTheLanders: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.amountOfHousingloanTakenFromTheProperty? row.amountOfHousingloanTakenFromTheProperty: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.purposeOfLoan? row.purposeOfLoan: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.dateOfSanctionOfLoan? row.dateOfSanctionOfLoan: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.interestPaybleOnYear? row.interestPaybleOnYear: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.isPropertySelfOccupiedOrLetOu? row.isPropertySelfOccupiedOrLetOu: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.ifJointPropertyThenEnterInterestRate? row.ifJointPropertyThenEnterInterestRate: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.grossRentalAmount? row.grossRentalAmount: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.muncipalTaxPaid? row.muncipalTaxPaid: "-"}</TableCell>  <TableCell style={{ textAlign: 'center' }}>
-                      <Button onClick={() => handleEdit(row)}>Edit</Button>
-                    </TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.sno}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.commencementDate}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.nameRelationship}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.under80U}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.under80DDB}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.sumAssured}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountAttached}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.annualPremium}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.premiumConsideredForDeduction}</TableCell>
+                <TableCell style={{ textAlign: 'center'}}>{row.action}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -642,9 +529,7 @@ onChange={(newValue) => {
           showAttachmentDilog={openAttachmentDilog}
           closeAttchementDilod={closeAttchementDilod}
           handleUploadattchmentFileName={handleUploadattchmentFileName}
-          handleUploadattchment={handleLandLordattchment}
-          previousData={landLordDocs}
-          handleDeletedID = {handleLandLordDeletedID}
+          handleUploadattchment={handleUploadattchment}
         />
       ) : null}
     </div>

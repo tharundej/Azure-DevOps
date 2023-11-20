@@ -391,6 +391,12 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
+       const obj={
+        companyID:'COMP1',
+       
+      }
+
+      ApiHitDepartment(obj)
        
     },[])
   const NewUserSchema = Yup.object().shape({
@@ -517,12 +523,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 ...prev,
                 locationID:newvalue
               }))
-              const obj={
-                companyID:'COMP1',
-               
-              }
-
-              ApiHitDepartment(obj)
+             
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
               // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
