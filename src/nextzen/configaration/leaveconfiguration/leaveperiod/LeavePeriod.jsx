@@ -282,7 +282,7 @@ export default function LeavePeriod({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Leave Period</DialogTitle>
+          <DialogTitle>Edit Leave Period</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}

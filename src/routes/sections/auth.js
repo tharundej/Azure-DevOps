@@ -29,6 +29,7 @@ const VerifyOtp=lazy(()=>import('src/nextzen/signup/VerifyOtp'));
 const CreatePassword = lazy(()=>import('src/nextzen/signup/CreatePassword'));
 const ForgotPassword = lazy(()=>import('src/nextzen/signup/ForgotPassword'));
 const SetPassword = lazy(()=>import('src/nextzen/signup/SetPassword'));
+const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
 const Otpforgotpassword= lazy(()=>import('src/nextzen/signup/Otp-forgotpassword'));
 // FIREBASE
 const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
@@ -134,7 +135,15 @@ const authJwt = {
     },
     {path:'setpassword',
       element:(
+       
         <SetPassword/>
+
+      )
+    },
+    {
+      path:'changepassword',
+      element:(
+        <ChangePassword/>
       )
     },
     {

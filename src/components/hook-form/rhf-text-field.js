@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
-export default function RHFTextField({ name, helperText, type, ...other }) {
+export default function RHFTextField({ name, helperText, type,maxLength, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -20,9 +20,13 @@ export default function RHFTextField({ name, helperText, type, ...other }) {
           type={type}
           value={type === 'number' && field.value === 0 ? '' : field.value}
           onChange={(event) => {
-            if (type === 'number') {
+            if (event.target.value.length > maxLength) {
+              // do nothing
+            }
+            else if (type === 'number') {
               field.onChange(Number(event.target.value));
-            } else {
+            }
+            else {
               field.onChange(event.target.value);
             }
           }}
@@ -40,4 +44,5 @@ RHFTextField.propTypes = {
   helperText: PropTypes.object,
   name: PropTypes.string,
   type: PropTypes.string,
+  maxLength:PropTypes.number
 };
