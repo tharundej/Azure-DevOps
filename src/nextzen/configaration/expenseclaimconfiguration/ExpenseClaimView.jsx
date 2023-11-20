@@ -47,7 +47,7 @@ export default function ExpenseClaimView({ currentUser }) {
   ];
 
   const defaultPayload = {
-    company_id: 'COMP2',
+    company_id: 'COMP1',
     // employee_id: 'ibm1',
     page: 0,
     count: 5,
