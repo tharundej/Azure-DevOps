@@ -104,7 +104,7 @@ export default function MyClaims({ currentUser ,}) {
     {
       id: "employeename",
       label: " Employee Name",
-      width: 180,
+      width: 200,
       type: "text",
       containesAvatar: false,
 
@@ -113,8 +113,8 @@ export default function MyClaims({ currentUser ,}) {
     { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
     { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
     { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "expense_date", label: "Expense Date", width: 200, type: "text" },
+    { id: "approver_name", label: "Approver Name", width: 200, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
