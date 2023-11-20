@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
-  InputLabel } from '@mui/material'
+  InputLabel,Stack } from '@mui/material'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
@@ -176,8 +176,8 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     //   }
   return (
     <>
-         <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
+         <Grid style={{ paddingTop: '20px' }} xs={12} md={8}>
+            <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -203,8 +203,9 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                         onChange={(e)=>{handleCategoryChange(e,index)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
-                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        <MenuItem value="aadhar">Aadhaar</MenuItem>
+                        <MenuItem value="pan-card">Pan Card</MenuItem>
+                        <MenuItem value="pass-port">Passport</MenuItem>
                         
                         {/* Add more categories here */}
                     </Select>
@@ -246,7 +247,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                         
 
                       }
-                      >Add</Button>
+                      >Add Files</Button>
                    
 
                   }
@@ -285,7 +286,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                 
                 </Box>
 
-              </Card>
+              </Stack>
             </Grid>
 
     </>

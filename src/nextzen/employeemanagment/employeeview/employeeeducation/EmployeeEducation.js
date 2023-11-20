@@ -13,8 +13,6 @@ const employeeData=[ {
     stream:  '',
     university:  '',
     yearOfPassing: undefined,
-    documentData:'',
-    grade_type:'',
     grade:undefined,
     documents:[
       {
@@ -116,7 +114,7 @@ const EmployeeEducation = ({employeeIDForApis}) => {
   return (
     <>
     
-      <CreateEducation open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
+      <CreateEducation callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
@@ -165,7 +163,7 @@ const EmployeeEducation = ({employeeIDForApis}) => {
                           <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
 
                         {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} />
+                        <EmployeeRecords callApi={ApiHit} docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} />
                        
 
                           </>}

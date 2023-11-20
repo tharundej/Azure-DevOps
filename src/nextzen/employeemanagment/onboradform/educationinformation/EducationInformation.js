@@ -14,7 +14,7 @@ import {
     InputLabel,
     Autocomplete,
     Chip,
-    Typography,
+    Typography,Stack
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -312,8 +312,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
     <>
 
 
-<Card sx={{paddingTop:'20px'}}>
-      <form style={{ padding: '4px' }}>
+      <Stack sx={{paddingTop:'20px'}}>
+      <form >
         <>
           {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
@@ -361,29 +361,31 @@ const   EducationInformation=forwardRef((props,ref)=> {
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
+              <Grid md={6} xs={12} item>
                 <TextField
-                    fullWidth
-                    // type="number"
-                    name="gradeType"
-                    label="Grade Type "
-                    id="university"
-                   
-                     value={item?.gradeType}
-                    onChange={(e) => {
-                      handleChange(e, index, 'gradeType');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+                  fullWidth
+                  name="gradeType"
+                  label="Grade Type"
+                  id="gradeType"
+                  variant="outlined"
+                  value={item?.gradeType}
+                  onChange={(e) => {
+                    handleChange(e, index, 'gradeType');
+                  }}
+                  select // Indicates that this is a Select component
+                >
+                  <MenuItem value="cgpa">CGPA</MenuItem>
+                  <MenuItem value="percentage">Percentage</MenuItem>
+                </TextField>
+              </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
                      type="number"
                     name="grade"
-                    label="grade"
+                    label="Grade"
                     id="yearOfPassing"
-                   
+                   placeholder='80, 8.9...'
                      value={item?.grade}
                     onChange={(e) => {
                       handleChange(e, index, 'grade');
@@ -538,7 +540,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
           Submit
         </Button> */}
       </form>
-             </Card>
+             </Stack>
 
     </>
   );

@@ -404,6 +404,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
             <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
             <Grid md={6} xs={12} lg={6} item>
                 <DatePicker
+                sx={{width:'100%'}}
+                className='MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root'
+                md={12} xs={12} lg={6}
                 fullWidth
                   value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
                   onChange={(date) => {
@@ -432,8 +435,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
                 
               </Grid>
 
-              <Grid md={6} xs={12} item>
+              <Grid md={6} xs={12} lg={6} item>
                 <DatePicker
+                sx={{width:'100%'}}
                 fullWidth
                   value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
                   onChange={(date) => {

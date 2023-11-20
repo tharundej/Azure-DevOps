@@ -67,6 +67,7 @@ console.log(row,'row data')
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
+                  height:"0.2px",
                   cursor:'pointer'
                 }}
               >

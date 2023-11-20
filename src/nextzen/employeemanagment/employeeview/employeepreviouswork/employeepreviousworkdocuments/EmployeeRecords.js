@@ -25,13 +25,13 @@ const styles = {
 
 import FileEditCreate from 'src/nextzen/global/fileUploads/FileEditCreate';
 
-const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
+const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) => {
   const [endPointTopass,setEndpointTOPass]=useState("dcocs")
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP1",
-      "employeeId":employeeIDForApis,
+      "companyID": "COMP1",
+      "employeeID":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
           fileType:'',
@@ -137,11 +137,15 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
     const [isHovered, setHovered] = React.useState(false);
 
     // const docType=["Aadhar Card","Pan Card","Passport"]
+    useEffect(()=>{
+    console.log(employeeIDForApis,'employeeIDForApis')
+
+    },[employeeIDForApis])
 
   return (
     <>
     {/* <DocumentsUpload open={open} documents={documents} onHandleClose={handeleClose} /> */}
-    <FileEditCreate open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint={endPointTopass} type={type}/>
+    <FileEditCreate employeeIDForApis={employeeIDForApis} open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint={endPointTopass} type={type}/>
 
     {/* <Grid container alignItems="center" justifyContent="flex-end" >
     <Button onClick={()=>{
@@ -173,6 +177,7 @@ EmployeeRecords.PropTypes={
     docsData: PropTypes.obj,
     docType:PropTypes.array,
     endpoint:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
     
 }

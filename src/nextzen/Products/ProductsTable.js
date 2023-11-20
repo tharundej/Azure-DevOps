@@ -8,6 +8,7 @@ import { BasicTable } from '../Table/BasicTable';
 import { getProductListAPI, DeleteProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
 import CreateProducts from './CreateProducts';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 const ProductsTable = () => {
   const actions = [
@@ -16,7 +17,8 @@ const ProductsTable = () => {
   ];
   const [editShowForm, seteditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
-
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       seteditShowForm(true);
@@ -24,14 +26,28 @@ const ProductsTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         product_id: rowdata?.productID || 0,
+        productName: rowdata.productName,
       };
-      handleDeleteAPICALL(deleteData);
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
     }
   };
   const handleClose = () => {
     seteditShowForm(false);
   };
-  const handleDeleteAPICALL = async (deleteData) => {
+  const handleDeleteApiCall = async (deleteData) => {
     try {
       console.log(deleteData, 'deleteData');
       const response = await DeleteProductAPI(deleteData);
@@ -71,7 +87,7 @@ const ProductsTable = () => {
   }, []);
   const defaultPayload = {
     count: 5,
-    page: 1,
+    page: 0,
     search: '',
     companyID: 'COMP1',
   };
@@ -81,7 +97,7 @@ const ProductsTable = () => {
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
     { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -90,6 +106,13 @@ const ProductsTable = () => {
         onHandleCloseSnackbar={HandleCloseSnackbar}
         snacbarMessage={snacbarMessage}
         severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Product"
+        message={`Are you sure you want to delete ${deleteData?.productName}?`}
       />
       {editShowForm && (
         <Dialog
