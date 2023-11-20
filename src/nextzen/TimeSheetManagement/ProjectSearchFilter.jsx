@@ -243,7 +243,7 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}}handleClose={handleClose} />
+ <AddTimeProject handleClose={handleClose} />
       </Dialog>
     )}
 <Grid container alignItems="center" paddingBottom="10px">

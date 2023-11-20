@@ -15,6 +15,7 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 // routes
@@ -27,6 +28,7 @@ import FormProvider, {
   RHFTextField,
   RHFUploadAvatar,
   RHFAutocomplete,
+  RHFSelect,
 } from 'src/components/hook-form';
 import axios from 'axios';
 import instance  from 'src/api/BaseURL';
@@ -34,52 +36,31 @@ import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-export default function AddTimeProject({ currentUser,handleClose }) {
-  const[commaSeparatedString,setCommaSepaatedString]=useState("")
-  const[commaSepaatedEmployeString,setCommaSepaatedEmployeString]=useState("")
+import { baseUrl } from '../global/BaseUrl';
+export default function AddTimeProject({ handleClose }) {
+ 
   const [datesUsed, setDatesUsed] = useState({
-    startDate: dayjs(new Date()),
-    endDate: dayjs(new Date()),
-    dueDate: dayjs(new Date()),
-    // activityName:[]
+    startDate: '',
+    endDate: '',
+    actualStartDate:'',
+    actualEndDate:''
   });
 useEffect(() => {
-  getEmployeReport()
-  // if (Array.isArray(currentReportingData) && currentReportingData.length > 0) {
-  //   const firstemployeeId = currentReportingData[0].employeeId;
-  //   if (firstemployeeId !== 0) {
-  //     getEmployeList();
-  //   }
-  // }
+  getEmployeReport(),
+  getLocation()
+ 
 }, [])
-  const [activityName, setSelectedActivity] = useState([]);
-  const [projectManager, setprojectManager] = useState([]);
-  const [currentReportingData, setCurrentReportingData] = useState([]);
-  const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const [employesListData,setEmployesListData]= useState([])
-  const [EmployeList,setemployeeList]= useState([])
-  // const ReportingManager = currentReportingData.map()
-  const handleSelectChange = (event, values) => {
-    setSelectedActivity(values);
-      
-     setCommaSepaatedString(activityName.join(','))
-  };
-  const handleSelectEmployeChange = (event, values) => {
-    setCurrentEmployeData(values);
-  };
-  const handleSelectRepoChange = async (event, values) => {
-    setCurrentReportingData(values);
-    await getEmployeList(values[0]?.employeeId)
-      
-    // SetCommaSeparatedRepoString (values.join(','))
-  };
+ const [locationList,setLocationList] = useState([])
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const NewUserSchema = Yup.object().shape({
     projectName: Yup.string(),
-    // startDate: Yup.string(),
-    // endDate: Yup.string(),
-    // dueDate: Yup.string().required('First Name is Required'),
+    startDate: Yup.string(),
+    endDate: Yup.string(),
+    actualStartDate:Yup.string(),
+    actualEndDate:Yup.string(),
+    projectDescription:Yup.string(),
     status: Yup.string(),
    
    
@@ -87,15 +68,17 @@ useEffect(() => {
   const defaultValues = useMemo(
     () => ({
    
-        projectName: currentUser?.projectName || '',
-        startDate: currentUser?.startDate || '',
-        endDate: currentUser?.endDate || '',
-        dueDate: currentUser?.dueDate || '',
-        status: currentUser?.status || '',
+        projectName:'',
+        startDate:'',
+        endDate: '',
+        status:'',
+        actualStartDate:'',
+        actualEndDate:'',
+        projectDescription:''
   
    
     }),
-    [currentUser]
+    []
   );
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -110,20 +93,18 @@ useEffect(() => {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-const [sendData, setSendData] = useState({
-  projectId : '',  
-})
+
 const [reportingManager,setReportingManagerData]= useState([])
 const getEmployeReport = async ()=>{
-  try{
+  try
+  {
   const  data= {
-      companyId:'COMP1',
-     
+      companyId:'COMP1'
     };
     const response = await instance.post('getReportingmanager',data);
     setReportingManagerData(response.data.list)
-  }catch(error){
-console.error("Error", error);
+  }
+  catch(error){
 throw error;
   }
 }
@@ -132,7 +113,7 @@ let getEmployeList = async (props)=>{
   try{
   const  data= {
       companyId:'COMP1',
-      reportingManagerId:currentReportingData[0]?.employeeId,
+      reportingManagerId:'',
     };
     data.reportingManagerId =props;
     const response = await instance.post('employeereporting',data);
@@ -143,26 +124,19 @@ let getEmployeList = async (props)=>{
     throw error;
   }
 }
-const join=()=>{
-  const arr=[];
-  for(let i=0;i<currentEmployeData.length;i+=1){
-    arr.push(currentEmployeData[i].employeeId);
-  }
-  
-  return arr;
-}
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // data.companyId = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"companyId": "0001"+"company_name": "infbell",
-      data.endDate = formatDateToYYYYMMDD(datesUsed?.endDate);
-      data.startDate = formatDateToYYYYMMDD(datesUsed?.startDate);
-      data.projectManager=data?.projectManager?.employeeId
-      data.companyId = "COMP2";
-      data.employeeId =join();
-      data.delete =   0;
-      const response = await instance.post('addProject', data).then(
+   
+      data.endDate = datesUsed?.endDate;
+      data.startDate = datesUsed?.startDate;
+      data.actualStartDate=datesUsed?.actualStartDate;
+      data.actualEndDate=datesUsed?.actualEndDate;
+      data.projectManager=data?.projectManager?.employeeId;
+      data.reportingManager= data?.reportingManager?.employeeId;
+      data.locationId = selectedLocationID,
+      data.companyId = "COMP1";
+      const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/addProject', data).then(
         (successData) => {
           handleClose()
         },
@@ -174,6 +148,32 @@ const join=()=>{
       console.error(error);
     }
   });
+  const [selectedLocationID, setSelectedLocationID] = useState(null); 
+  const handleLocationSelection = (selectedOption) => {
+    if (selectedOption) {
+      setSelectedLocationID(selectedOption.locationID); 
+     
+    }
+  };
+
+  console.log(selectedLocationID,"selectedlocationID")
+  const getLocation=()=>{
+    const data={
+      "companyID":"COMP1"
+    }
+     const config={
+      method:'POST',
+      maxBodyLength:Infinity,
+      url:baseUrl + '/locationOnboardingDepartment',
+      data:data
+     }
+     axios.request(config).then((response)=>{
+      setLocationList(response?.data?.data)
+     })
+     .catch((error)=>{
+      console.log(error)
+     })
+  }
  
   return (
     <div style={{ paddingTop: '20px' }}>
@@ -181,19 +181,27 @@ const join=()=>{
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
-              <Typography variant="subtitle2" sx={{marginLeft:'5px'}}>
+              <Typography variant="subtitle2" sx={{textAlign:'center'}}>
                 ADD PROJECT
               </Typography>
             </Grid>
             <Card sx={{ p: 1 }}>
             <Grid container spacing={2}>
-            <Grid item md={6} xs={12}>
+             <Grid item md={6} xs={12}>
                 <RHFTextField name="projectName" label="Project Name" fullWidth/>
               </Grid>
-                <Grid md={6} xs={12} item>
-                    <RHFTextField name="projectDescription" label="Project Description"/>
-                </Grid>
+               <Grid item md={6} xs={12}>
+               <RHFAutocomplete
+          name="locationId"
+          label="Location"
+          options={locationList}
+          getOptionLabel={(option) => option.locationName}
+          isOptionEqualtoValue={(option) => option.locationId}
+          onChange={(event, selectedOption) => handleLocationSelection(selectedOption)}
+          />  
+               </Grid>
             </Grid>
+          
 <Grid container spacing={2}>
    <Grid item md={6} xs={12}>
    <RHFAutocomplete
@@ -214,7 +222,12 @@ const join=()=>{
           />
    </Grid>
 </Grid>
-<Grid container spacing={2}>
+<Grid container sx={{mt:1}}>
+            <Grid md={12} xs={12} item>
+                    <RHFTextField name="projectDescription" label="Project Description"/>
+                </Grid>
+            </Grid>
+<Grid container spacing={2} >
 <Grid item md={6} xs={12}>
     
 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -222,12 +235,12 @@ const join=()=>{
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Start date"
-                      value={datesUsed?.startDate}
+                      value={datesUsed?.startDate?dayjs(datesUsed?.startDate):null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          startDate: newValue,
+                          startDate: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -240,12 +253,52 @@ const join=()=>{
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="End date"
-                      value={datesUsed?.endDate}
+                      value={datesUsed?.endDate?dayjs(datesUsed?.endDate):null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          date_of_birth: newValue,
+                          endDate: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                           </Grid>
+</Grid>
+
+<Grid container spacing={2}>
+<Grid item md={6} xs={12}>
+    
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Actual Start date"
+                      value={datesUsed?.actualStartDate?dayjs(datesUsed?.actualStartDate):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          actualStartDate: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+</Grid>
+                           <Grid item md={6} xs={12}>
+                           <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Actual End date"
+                      value={datesUsed?.actualEndDate?dayjs(datesUsed?.actualEndDate):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          actualEndDate: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -269,6 +322,5 @@ const join=()=>{
   );
 }
 AddTimeProject.propTypes = {
-  currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };
