@@ -126,7 +126,7 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%' }} >
-      <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+        
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -172,7 +172,7 @@ const handleCallSnackbar=(message,severity)=>{
                // onClick={handleBack}
                 sx={{ mr: 1 }}
               >
-                cancel
+                Cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep+1!==5 &&
@@ -183,10 +183,10 @@ const handleCallSnackbar=(message,severity)=>{
               <Button onClick={handleSubmit} sx={{ mr: 1 }}>
                 Submit
               </Button>}
-              {activeStep+1!==1 &&
+              {(activeStep+1!==1 && activeStep+1!==5)&&(
               <Button onClick={handleNextIncrement} sx={{ mr: 1 }}>
                 Skip
-              </Button>
+              </Button>)
               }
               
              

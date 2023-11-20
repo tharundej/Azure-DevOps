@@ -28,6 +28,8 @@ import axios from 'axios';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
 export default function SalaryStructureForm({ openModal,currentUserData,handleClose}) {
   // const handleClose=()=>setOpen(false)
   const [currentUser,setcurrentUser]=useState("")
@@ -43,7 +45,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
             departmentOptions:await ApiHitDepartmentWithoutLocation(),
           }
           setOptions(obj)
-          console.log(obj,'objjjjjj')
+          
         }
         catch(error){
   
@@ -144,8 +146,10 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
         }}
 
       >  
+
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add SalaryStructure</DialogTitle>
+            <ModalHeader heading="Add Salary Structure" />
+            {/* <DialogTitle>Add SalaryStructure</DialogTitle> */}
             <DialogContent>
               <Box
                 rowGap={3}
@@ -368,7 +372,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                 Cancel
               </Button>
               <Button
-               
+               sx={{backgroundColor:'#3B82F6'}}
                 variant="contained"
                 onClick={onSubmit1}
                
@@ -377,7 +381,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
               </Button>
             </DialogActions>
           </FormProvider>
-        )}
+       
       </Dialog>
     </>
   );
