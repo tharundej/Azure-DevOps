@@ -342,7 +342,9 @@ const formData= new FormData();
 const values = watch();
   const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
+
   // handleClose()
+
 //  data?.expense_date= selectedDate;
 data.expense_date = selectedDate;
 
@@ -458,7 +460,7 @@ console.log(editData,"editData")
  
 
   const onSubmitEdit2 = async(editData, event) => {
-   
+
 
     if(editData?.type_oc_claim=== "Medical" ||"medical"){
       editData.expense_config_id = 2

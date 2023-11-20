@@ -21,7 +21,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { ASSETS_API } from 'src/config-global';
 // import UserQuickEditForm from './UserQuickEditForm';
 import { useRouter } from 'src/routes/hooks';
-import { styled } from '@mui/system'; 
+
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
 
@@ -49,6 +49,8 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
+console.log(row,'row data')
+  
   return (
     <>
      
@@ -80,19 +82,12 @@ export default function UserTableRow({
                     sx={{ mr: 2 }}
                   />
                 )}
- {console.log(row,"rowdataa")}
+
                 {ele.type === 'text' && (
-                 
                   <ListItemText
-                    primary={row[ele.id] || <span   style={{
-                      // display: 'flex',
-                      // justifyContent: 'center',
-                      // alignItems: 'center',
-                      // height: '100%', // Adjust the height if needed
-                      fontSize: 30,
-                    }}>-</span>}
+                    primary={row[ele.id]}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-                    primaryTypographyProps={{ typography: 'body2'}}
+                    primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
