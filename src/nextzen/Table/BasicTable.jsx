@@ -102,6 +102,7 @@ import AssetsHead from '../assets/AssetsHeader';
 import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
+import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
@@ -599,6 +600,9 @@ const BasicTable = ({
           )}
           {filterName === 'PurchaseOrderHead' && (
             <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+          {filterName === 'PurchaseInvoiceHead' && (
+            <PurchaseInvoiceHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
