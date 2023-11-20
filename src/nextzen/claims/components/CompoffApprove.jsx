@@ -124,8 +124,8 @@ const externalFilter = {
 }
 
   const actions = [
-    { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-    { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+    { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+    { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
     // { name: "eerr", icon: "hh", path: "jjj" },
   ];
   const bodyContent = [
@@ -279,12 +279,12 @@ console.log(defaultValues,"defaultValues")
 
       const response = await axios.post(baseUrl+'/q', data).then(
         (successData) => {
-          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
           console.log('success', successData);
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -294,7 +294,7 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
-      enqueueSnackbar(response?.data?.message,{variant:'error'})
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
       console.error(error);
     }
   });
@@ -316,7 +316,7 @@ console.log(defaultValues,"defaultValues")
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
