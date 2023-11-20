@@ -145,8 +145,8 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     try {
     
   const data = {
-    companyId:localStorage.getItem('companyID'),
-    employeeId:localStorage.getItem('employeeID'),
+    companyId:localStorage.getItem("companyID"),
+    employeeId:"ibm4",
     fromShiftGroup:parseInt( FromShiftGroup_Name1),
     toShiftGroup:parseInt (ToShiftGroup_Name),
     startDate:formatDateToYYYYMMDD( datesUsed.startDate),

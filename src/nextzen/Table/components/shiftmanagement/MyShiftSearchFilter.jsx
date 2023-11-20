@@ -89,12 +89,12 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
         //   to:'applyDateto'
         // },
         {
-          field:'startdate',
+          field:'startDate',
           from:'fromDatefrom',
           to:'fromDateto'
         },
         {
-          field:'enddate',
+          field:'endDate',
           from:'toDatefrom',
           to:'toDateto'
         }

@@ -52,15 +52,19 @@ export default function ShiftSwap() {
     
      const defaultPayload = {
       "company_id":localStorage.getItem('companyID'),
+      "location_id":32,
       "page":0,
-      "search":"",
-      "count": 5,
+      "Search":"",
+      "count": 10,
       "externalFilters":{
       "status": "",
-      "swap_date": ""
-  } , 
+      "swap_date": {
+           "from": "",
+          "to": ""
+      }
+  } ,
       "sort": {
-      "orderby": "employee_name",
+      "orderby": "",
       "key": 0
   } 
    

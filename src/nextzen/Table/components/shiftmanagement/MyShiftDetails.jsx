@@ -53,17 +53,23 @@ export default function MyShiftDetails() {
       "company_id":localStorage.getItem('companyID'),
       "employee_id":localStorage.getItem('employeeID'),
       "page":0,
-      "count":3,
+      "count":10,
       "Search":"r",
       "externalFilters":{
       "shift_name": "",
       "shift_term": "",
-      "startdate":"",
-      "enddate":""
+        "startDate": {
+              "from": "",
+              "to": ""
+          },
+          "endDate": {
+              "from": "",
+              "to": ""
+          }
    
   },
       "sort": {
-      "orderby": "shift_name",
+      "orderby": "",
       "key": 0
   } 
    

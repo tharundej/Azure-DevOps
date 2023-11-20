@@ -209,12 +209,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     "employee_1":{
       "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
       "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
-      "employee_id":   currentEmployeSwapData.employee_shift_swap_id
+      "employee_id":   currentEmployeSwapData?.employee_shift_swap_id ? currentEmployeSwapData?.employee_shift_swap_id : '',
     },
     "employee_2":{
       "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
       "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
-      "employee_id":  currentEmployeSwapData1.employee_shift_swap_id
+      "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
     },
     "company_id":localStorage.getItem('companyID'),
     "start_date": formatDateToYYYYMMDD (datesUsed.start_date),

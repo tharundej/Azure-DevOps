@@ -234,7 +234,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     const  data= {
       
       companyId:localStorage.getItem('companyID'),
-      locationId:32
+      locationId:30
        
       };
       const response = await instance.post('/getShiftConfig',data);
