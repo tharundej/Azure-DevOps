@@ -240,9 +240,9 @@ const getActivityName = async ()=>{
                 <RHFTextField name="employee_id" label="Employe id  " />
                 <Autocomplete
             disablePortal
-            id="combo-box-demo"
-            options={projectDetails}
-            value={currentProjectData}
+            id="cobo-box-demo"
+            options={projectDetails || []}
+            value={currentProjectData.projectId}
             getOptionLabel={(option) => option.projectcdName}
             onChange={(e,newvalue)=>{
              
@@ -267,9 +267,9 @@ const getActivityName = async ()=>{
           />
                 <Autocomplete
             disablePortal
-            id="combo-box-demo"
-            options={activityData}
-            value={currentActivitytData}
+            id="combo-box-dmo"
+            options={activityData || []}
+            value={currentActivitytData.activityId}
             getOptionLabel={(option) => option.activityName}
             onChange={(e,newvalue)=>{
              

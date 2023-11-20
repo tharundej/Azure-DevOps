@@ -270,7 +270,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
       designationID:(optionsValue?.desginationValue?.designationID)?.toString()|| ""
     }
     // const data = await formWithDropdown();
-    // console.log(toString(optionsValue?.departmentValue?.departmentID),'filterss')
+    console.log(toString(optionsValue?.departmentValue?.departmentID),'filterss')
     filterData(obj);
     // console.log(optionsValue, 'optionsValue');
 
@@ -279,7 +279,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
   };
   const handleSearch = (searchTerm) => {
      
-    searchData(searchTerm?.target?.value)
+    searchData(searchTerm)
     console.log(searchTerm,"search ........")
     };
   return (
@@ -288,11 +288,11 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         container
         spacing={2}
         alignItems="center"
-        // justifyContent="flex-end"
+        justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '1rem' }}
       >
-        <Grid item   md={8} xs={12} >
+        <Grid item  md={8} xs={8}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -300,17 +300,15 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
           />
           
         </Grid>
-        <Grid md={4} xs={12}  item>
-          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
-            <Grid  item>
-            <Button 
+        <Grid item>
+        <Button 
         onClick={onHandleOpen} 
          variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add SalaryStructure</Button>
-
-            </Grid>
-            <Grid item  >
+        sx={{margin:'20px'}}>Add SalaryStructure</Button>
+       {/* <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type}/> */}
+       </Grid>
+        <Grid item  md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -320,11 +318,6 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
             </Stack>
           </Grid>
         </Grid>
-          </Grid>
-      
-       {/* <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type}/> */}
-       </Grid>
-       
       </Grid>
 
       <Dialog
@@ -358,7 +351,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 
                   <Grid container >
               
-              <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+              <Grid item xs={12} md={6}>
               
                 <Autocomplete
                   disablePortal
@@ -404,13 +397,13 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                  
                   
                   renderInput={(params) => <TextField {...params} label="Department"
-                  style={{  width: '100%' }} />}
+                  style={{ paddingLeft: '16px', width: '100%' }} />}
                 />
               </Grid>
                   </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -450,13 +443,13 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination"
-                        style={{  width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                       </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -479,7 +472,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                        style={{ width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                   </Grid>

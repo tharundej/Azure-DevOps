@@ -20,6 +20,11 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 
 const DeclarationDetails = () => {
+
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
+  console.log(empId ,"emp")
   const [data, setData] = useState();
   const [reloading, setReloading] = useState(false);
 
@@ -53,31 +58,23 @@ const DeclarationDetails = () => {
 
   const getDeclarationsList = async () => {
     const payload = {
-      employeeid: 'Info1',
+      employeeId: empId,
 
-      companyid: 'comp1',
+      companyId: cmpId,
 
-      financialyear: 2019,
+      financialYear: 2023,
 
-      rowsperpage: 6,
+      rowsPerPage: 10,
 
-      pagenum: 1,
+      PageNum: 0,
 
-      filterby: [],
-
-      sortOrder: [],
-
-      orderBy: [],
-
-      search: '',
     };
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'getDeclarations',
+      url: baseUrl + '/getDeclarations',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
+        Authorization:token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -111,23 +108,22 @@ const DeclarationDetails = () => {
     }));
     console.log(newArray, 'newarray');
     const payload = {
-      employee_id: 'Info1',
+      employeeId: empId,
 
-      company_id: 'comp1',
+      companyId: cmpId,
 
-      financial_year: 2019,
+      financialYear: 2023,
 
       records: newArray,
     };
 
     const config = {
-      method: 'put',
+      method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+ 'updateDeclarations',
+      url: baseUrl+ '/updateDeclarations',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
-        'Content-Type': 'text/plain',
+        Authorization:token,
+           'Content-Type': 'text/plain',
       },
       data: payload,
     };

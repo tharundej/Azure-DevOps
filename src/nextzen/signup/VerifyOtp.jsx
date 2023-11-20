@@ -2,13 +2,15 @@
 
 // export default function VerifyOtp  ()  {
 //   return (
-
-//     <div>
-
+    
+//     <div>   
+   
+   
 //     <h1>haaaadghhhhhhhhhhhhhhhhhhhhhhi</h1>
 //    </div>
 //   )
 
+  
 // }
 
 import * as Yup from 'yup';
@@ -20,7 +22,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import  Grid  from '@mui/material/Grid';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // routes
@@ -35,7 +37,7 @@ import { EmailInboxIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
-import { Alert, CardContent, Snackbar } from '@mui/material';
+import { CardContent, Snackbar } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
 import { useState } from 'react';
 import { Alert as MuiAlert } from '@mui/material';
@@ -47,7 +49,6 @@ export default function VerifyOtp() {
   const searchParams = useSearchParams();
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [open, setOpen] = useState(false);
   const email = searchParams.get('email');
 
   const { confirmRegister, resendCodeRegister } = useAuthContext();
@@ -82,34 +83,36 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const payload = {
-        jwtTokenString: localStorage.getItem('jwt_access_token'),
-        otp: data.code,
-      };
-      const response = await axios.post(baseUrl + '/verifyRegisterOtp', payload);
-      console.log(response?.data.code);
-      if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Email Sent Succuessfully!');
-        setSnackbarOpen(true);
+        const payload ={
+            "jwtTokenString" : localStorage.getItem('jwt_access_token'),
+            "otp":data.code
+        }
+        const response = await axios.post(baseUrl+'/verifyRegisterOtp', payload);
+        console.log(response?.data.code)
+          if(response?.data?.code===200 ){
+            setSnackbarSeverity('success');
+             setSnackbarMessage('Email Sent Succuessfully!');
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+          router.push(paths.auth.jwt.createpassword);
 
-        console.log('sucess', response);
-        router.push(paths.auth.jwt.createpassword);
-      }
-      if (response?.data?.code === 400 ||401) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-      //   await confirmRegister?.(data.email, data.code);
-      //   router.push(paths.auth.jwt.login);
+          }
+          if(response?.data?.code===400  ){
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response?.data?.message);
+             setSnackbarOpen(true);
+          
+          console.log('sucess', response);
+    
+          }
+    //   await confirmRegister?.(data.email, data.code);
+    //   router.push(paths.auth.jwt.login);
     } catch (error) {
       setSnackbarSeverity('error');
-      setSnackbarMessage('An Unexcepted Error Occuried!');
-      setSnackbarOpen(true);
-      console.log('error', error);
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+       console.log('error', error);
     }
   });
 
@@ -117,24 +120,10 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
-      const payload = {
-        jwtTokenString: localStorage.getItem('jwt_access_token'),
-      };
-      const response = await axios.post(baseUrl + '/resendOtp', payload);
-      if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Email Sent Succuessfully!');
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-      if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
+      const payload= {
+       jwtTokenString: localStorage.getItem('jwt_access_token')}
+      const response = await axios.post(baseUrl+'/resendOtp',payload)
+      
     } catch (error) {
       console.error(error);
     }
@@ -152,7 +141,7 @@ export default function VerifyOtp() {
       <RHFCode name="code" />
 
       <LoadingButton
-        sx={{ width: '80px' }}
+        sx={{width:'80px'}}
         size="large"
         type="submit"
         variant="contained"
@@ -193,24 +182,18 @@ export default function VerifyOtp() {
       </Link>
     </Stack>
   );
-  const snackBarAlertHandleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-    setOpen(false);
-  };
+
   const renderHead = (
     <>
       <EmailInboxIcon sx={{ height: 96 }} />
 
-      <Stack spacing={1} sx={{ my: 5 }}>
-        <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-          <Typography variant="h3">Please check your email!</Typography>
+      <Stack spacing={1} sx={{  my: 5 }}>
+        <Grid container  flexDirection="column" justifyContent='center' alignItems='center'>
+        <Typography variant="h3">Please check your email!</Typography>
 
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Please enter the OTP to Verify and Create your Password.
-          </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        Please enter the OTP to Verify and Create your Password.
+        </Typography>
         </Grid>
       </Stack>
     </>
@@ -218,28 +201,24 @@ export default function VerifyOtp() {
 
   return (
     <CardContent>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        {renderHead}
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      {renderHead}
 
-        {renderForm}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={4000} // Adjust the duration as needed
-          onClose={snackBarAlertHandleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          <Alert
-            onClose={snackBarAlertHandleClose}
-            severity={snackbarSeverity}
-            sx={{ width: '100%' }}
-          >
-            {snackbarMessage}
-          </Alert>
+      {renderForm}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000} // Adjust the duration as needed
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error">
+          {errorMsg}
+        </MuiAlert>
         </Snackbar>
-      </FormProvider>
+    </FormProvider>
     </CardContent>
   );
 }
