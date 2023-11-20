@@ -44,7 +44,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
-export default function AddRoleConfig({ currentUser }) {
+export default function AddRoleConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
@@ -450,7 +450,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       <Dialog
         fullWidth
         maxWidth={false}
-        open={true}
+        open={openAddRoleConfig}
         onClose={()=> {console.log("hi")}}
         PaperProps={{
           sx: { maxWidth: 720 },
@@ -597,17 +597,17 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={()=> {console.log("hi")}}>
-              Cancel
+            <Button variant="outlined" onClick={()=> {handleCloseAddRoleDilog()}}>
+              Close
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={()=> {console.log("hi")}}
               loading={()=> {console.log("hi")}}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
           </DialogActions>
         </FormProvider>
       </Dialog>

@@ -1,6 +1,6 @@
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -48,9 +48,15 @@ export default function FileUploader({
   closeAttchementDilod,
   handleUploadattchmentFileName,
   handleUploadattchment,
-  previousData
+  previousData,
+  handleDeletedID
 }) {
   console.log(previousData ,"previousData")
+  useEffect(()=>{
+    if(previousData){
+      console.log(previousData)
+    }
+  },[previousData])
   // var [previousData , setPreviousData]  = useState([])
   const userId = 5;
   var [images, setImages] = React.useState([]);
@@ -61,25 +67,81 @@ export default function FileUploader({
   const [trainingData, setTrainingData] = React.useState('');
   const [fileNames, setFileNames] = React.useState([]);
   console.log('photoss');
-  React.useEffect(() => {
-    //   setShown(shown)
-    if(previousData)
-    {
-      // Extracting landlordFileName into a separate array
-const landlordFileNames = previousData.map(doc => doc.landlordFileName);
 
-// Extracting landlordFileContent into a separate array
-const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
+  const [fileData , setFileData] = useState([])
+//   React.useEffect(() => {
+//     //   setShown(shown)
+//     if(previousData)
+//     {
+//       // Extracting landlordFileName into a separate array
+// const landlordFileNames = previousData.map(doc => doc.landlordFileName);
 
-      // setPreviousData(previousData)
-      setViewImage(true)
-      images = previousData
-      setImages(landlordFileContents)
-      setFileNames(landlordFileNames)
-      console.log(images ,"imagesimagesimages")
-    }
-    setOpen(showAttachmentDilog);
-  }, [showAttachmentDilog]);
+// // Extracting landlordFileContent into a separate array
+// const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
+//   // Extracting landlordFileName, landlordFileContent, and landlordID into separate arrays
+//   // const landlordFileNames = previousData.map(doc => doc.landlordFileName);
+//   // const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
+//   const landlordIDs = previousData.map(doc => doc.landlordID);
+
+//   // Create an array of objects with id, fileName, and fileContent
+//   const fileDataArray = landlordFileNames.map((fileName, index) => ({
+//     id: landlordIDs[index], // assuming landlordID is the id
+//     fileName: fileName,
+//     fileContent: landlordFileContents[index]
+//   }));
+
+//     // Update the fileData state with the new array
+//     setFileData(fileDataArray);
+
+
+//       // setPreviousData(previousData)
+//       setViewImage(true)
+//       images = previousData
+//       setImages(landlordFileContents)
+//       setFileNames(landlordFileNames)
+//       console.log(images ,"imagesimagesimages")
+//     }
+//     setOpen(showAttachmentDilog);
+//   }, [showAttachmentDilog]);
+
+const mapFileDataArray = (data, idKey, nameKey, contentKey) => {
+  // Extracting filenames into a separate array
+  const fileNames = data.map(doc => doc[nameKey]);
+
+  // Extracting file contents into a separate array
+  const fileContents = data.map(doc => doc[contentKey]);
+
+  // Extracting ids into a separate array
+  const ids = data.map(doc => doc[idKey]);
+
+  // Create an array of objects with id, fileName, and fileContent
+  return fileNames.map((fileName, index) => ({
+    id: ids[index],
+    fileName: fileName,
+    fileContent: fileContents[index]
+  }));
+};
+
+React.useEffect(() => {
+  if (previousData && previousData.length > 0) {
+    // Check the condition (e.g., if fileName is present)
+    console.log(previousData , "'insidfe useEffeect ")
+    const hasFileName = previousData[0].hasOwnProperty('fileName');
+const hasLandLord =previousData[0].hasOwnProperty('landlordID');
+    // Map the file data dynamically based on the condition
+    const fileDataArray = hasFileName
+      ? mapFileDataArray(previousData, 'ID', 'fileName', 'fileContent')
+      :hasLandLord ? mapFileDataArray(previousData, 'landlordID', 'landlordFileName', 'landlordFileContent') :  mapFileDataArray(previousData, 'id', 'fileName', 'fileContent');
+
+    // Update the fileData state with the new array
+    setFileData(fileDataArray);
+    setViewImage(true)
+    // Other code...
+  }
+
+  setOpen(showAttachmentDilog);
+}, [showAttachmentDilog]);
+
   React.useEffect(() => {
     //   setShown(shown)
     //    getTrainingBatch()
@@ -118,30 +180,53 @@ const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
       // Add the file name to the fileNames state
       setFileNames([...fileNames, e.target.files[0].name]);
 
+  // Create a new object with fileName and fileContent
+  const newFileObject = {
+    fileName: e.target.files[0].name,
+    fileContent: parts[1],
+  };
 
+  // Create a new array by merging the previous data with the new object
+  const newFileData = [...fileData, newFileObject];
+
+  // Update the state with the new array
+  setFileData(newFileData);
 
       setViewImage(true);
     });
   };
+
+  console.log(fileData ,"fileData")
   const UploadImages = async (e) => {
-    if (images.length === 0) {
+    if (fileData?.length === 0) {
       alert('No Document Is Selected To Upload.');
       throw new Error('No Document Is Selected To Upload.');
     }
-
-    handleUploadattchment(images ,fileNames);
-    handleUploadattchmentFileName(fileNames);
+console.log(fileData ,"fileDatat in upload")
+    // handleUploadattchment1(images ,fileNames);
+    handleUploadattchment(fileData);
+    // handleUploadattchmentFileName(fileData);
+    closeAttchementDilod()
   };
 
   //   Method to delete the images that is selected
 
   const deleteImage = (index) => {
-   
+    // Create a copy of the current fileData array
+  const newFileData = [...fileData];
+
+  // Remove the element at the specified index
+  
+console.log(newFileData[index].id, "deleted file id ")
+handleDeletedID(newFileData[index].id)
+  newFileData.splice(index, 1);
+  // Update the state with the new array
+  setFileData(newFileData);
     images.splice(index, 1);
     setImages([...images]);
     console.log(images.length ,images)
   };
-
+console.log(fileData ,"deleted file")
   return (
     <div>
       <Dialog
@@ -185,12 +270,12 @@ const landlordFileContents = previousData.map(doc => doc.landlordFileContent);
                       style={{ display: 'flex', flexDirection: 'column' }}
                     >
                       {viewImage
-                        ? images?.map((image, index) => (
+                        ? fileData?.map((file, index) => (
                             <div
                               key={index}
                               style={{ marginLeft: '5px', color: '#000', marginBottom: '10px' }}
                             >
-                              {fileNames[index]}
+                              {file.fileName}
                               <Iconify
                                 id="icon-delete-image"
                                 onClick={() => deleteImage(index)}
@@ -266,4 +351,5 @@ FileUploader.propTypes = {
   photos: PropTypes.array.isRequired,
   setPhotos: PropTypes.func.isRequired,
   batch: PropTypes.string.isRequired,
+  handleUploadattchment: PropTypes.func.isRequired,
 };

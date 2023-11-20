@@ -88,13 +88,13 @@ export default function CompoffApprove({ currentUser ,}) {
   ]
   const managerID =localStorage.getItem('reportingManagerID');
   const employeeID =localStorage.getItem('employeeID');
-
+  const companyID =localStorage.getItem('companyID');
 
   const defaultPayload={
 
   
     "employee_id":"",
-    "company_id":"COMP1",
+    "company_id":companyID,
     "page":0,
     "search":"",
     "count":5,
@@ -124,8 +124,8 @@ const externalFilter = {
 }
 
   const actions = [
-    { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-    { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+    { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+    { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
     // { name: "eerr", icon: "hh", path: "jjj" },
   ];
   const bodyContent = [
@@ -146,16 +146,19 @@ const externalFilter = {
 
   const [approve, setApprove]= React.useState({
 
-    compensatoryRequestId:"1",
+    compensatoryRequestId:"",
         status: "",
-        utilisation: "1"
+        utilisation: "",
+        companyId:companyID,
+        employeeId:employeeID,
+        managerId:managerID,
 
   })
 
 
-  useEffect(()=>{
-    handle(approve);
-  },[approve])
+  // useEffect(()=>{
+  //   handle(approve);
+  // },[approve])
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
@@ -164,25 +167,41 @@ const externalFilter = {
       if (eventData?.type === 'status') {
         // handle(approve);
            if (eventData?.name === 'Approve'){
-            setApprove(prevState => ({
-              ...prevState,
-              status: "Approve"
-          }));
+          //   setApprove(prevState => ({
+          //     ...prevState,
+          //     status: "Approve",
+          //     utilisation:`${rowData?.utilisation}`,
+          //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+
+          // }));
           // handle(approve);
-          console.log(approve,"approve api")
+
+          handle({...approve, ...{status: "Approve",
+               utilisation:`${rowData?.utilisation}`,
+              compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+        }});
+         
 
            }
           
         
        else{
-        setApprove(prevState => ({
-          ...prevState,
-          status: "Reject"
-      }));
+      //   setApprove(prevState => ({
+      //     ...prevState,
+      //     status: "Reject",
+      //     utilisation:`${rowData?.utilisation}`,
+      //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+      // }));
       
-
+      handle({...approve, ...{status: "Reject",
+      utilisation:`${rowData?.utilisation}`,
+     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+}});
+      
+      // handle(approve);
     }
     }
+    
   }
     
     else {
@@ -260,12 +279,12 @@ console.log(defaultValues,"defaultValues")
 
       const response = await axios.post(baseUrl+'/q', data).then(
         (successData) => {
-          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
           console.log('success', successData);
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -275,7 +294,7 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
-      enqueueSnackbar(response?.data?.message,{variant:'error'})
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
       console.error(error);
     }
   });
@@ -297,7 +316,7 @@ console.log(defaultValues,"defaultValues")
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -307,7 +326,7 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
-      enqueueSnackbar(response?.data?.message,{variant:'error'})
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
     }

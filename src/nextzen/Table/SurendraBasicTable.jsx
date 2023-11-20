@@ -365,7 +365,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 72;
 
  
 

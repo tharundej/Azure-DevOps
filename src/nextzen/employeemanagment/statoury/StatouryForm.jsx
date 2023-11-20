@@ -26,6 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
  
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
  
  
 const employmentTypeOptions=[
@@ -217,7 +218,8 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       >
            <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* methods={methods} onSubmit={onSubmit} */}
-        <DialogTitle>Add Statoury</DialogTitle>
+        {/* <DialogTitle>Add Statoury</DialogTitle> */}
+        <ModalHeader heading={endpoint==="/updateStatutoryDetails" ?"Edit Statoury Details": "Create Statoury details"} />
  
         <DialogContent>
           <Box
@@ -501,7 +503,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
               Cancel
             </Button>
  
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+            <LoadingButton  variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>
