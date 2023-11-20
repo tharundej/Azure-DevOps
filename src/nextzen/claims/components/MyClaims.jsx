@@ -104,7 +104,7 @@ export default function MyClaims({ currentUser ,}) {
     {
       id: "employeename",
       label: " Employee Name",
-      width: 200,
+      width: 180,
       type: "text",
       containesAvatar: false,
 
@@ -113,8 +113,8 @@ export default function MyClaims({ currentUser ,}) {
     { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
     { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
     { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 200, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 200, type: "text" },
+    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
+    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -209,7 +209,7 @@ const handleClick=()=>{
 
     // { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
     // { name: "View", icon: "hh", id: 'view', type: "edit", function: {handleOpen }},
-    { name: "Edit", icon: "solar:pen-bold", id: 'edit',type: "edit", },
+    { name: "Edit", icon: "hh", id: 'edit',type: "edit", },
     // { name: "Delete", icon: "hh", id: 'delete' },
   ];
   const style = {
@@ -342,9 +342,6 @@ const formData= new FormData();
 const values = watch();
   const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
-
-  // handleClose()
-
 //  data?.expense_date= selectedDate;
 data.expense_date = selectedDate;
 
@@ -376,15 +373,11 @@ data.expense_date = selectedDate;
     console.log(formData, 'formdata api in check');
     // baseUrl+`${endpoint}`
     const response = await axios.post(baseUrl+"/applyClaim", formDataForRequest).then(
-      (response) => {
+      (successData) => {
         console.log('sucess', successData);
-        handleClose()
-        // enqueueSnackbar(response?.message,{variant:'success'})
       },
       (error) => {
         console.log('lllll', error);
-        handleClose()
-        // enqueueSnackbar(response?.message,{variant:'error'})
       }
     );
 
@@ -395,8 +388,6 @@ data.expense_date = selectedDate;
     // console.info('DATA', data);
   } catch (error) {
     console.error(error);
-    handleClose()
-    // enqueueSnackbar(response?.message,{variant:'error'})
   }
 });
   // for upload docmunt
@@ -461,7 +452,6 @@ console.log(editData,"editData")
 
   const onSubmitEdit2 = async(editData, event) => {
 
-
     if(editData?.type_oc_claim=== "Medical" ||"medical"){
       editData.expense_config_id = 2
     }
@@ -485,22 +475,17 @@ console.log(editData,"editData")
       const response = await axios.post(baseUrl+"/EditMyClaims", editData).then(
         (successData) => {
           console.log('sucess', successData);
-          handleCloseEdit()
-          // enqueueSnackbar(response?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
-          handleCloseEdit()
-          // enqueueSnackbar(response?.message,{variant:'error'})
         }
       );
 
       
     } catch (error) {
-      handleCloseEdit()
-      // alert("api hit not done")
+
+      alert("api hit not done")
       console.error(error);
-      // enqueueSnackbar(response?.message,{variant:'error'})
     }
   }
   const onSubmitEdit =  handleSubmit(async(editData) => {
