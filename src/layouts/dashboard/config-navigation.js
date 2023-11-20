@@ -464,10 +464,10 @@ export function useNavData() {
           },
           {
             title: t('purchase'),
-            path: paths.dashboard.purchase.root,
+            path: paths.dashboard.purchase.purchaseOrder,
             icon: ICONS.g_purchases,
             children: [
-              { title: t('purchase'), path: paths.dashboard.purchase.purchaseOrder },
+              { title: t('purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
               { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
               { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
             ],

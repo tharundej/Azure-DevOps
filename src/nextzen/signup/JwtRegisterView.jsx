@@ -89,10 +89,10 @@ export default function JwtRegisterView() {
     lastName: Yup.string()
       .required('Last name is required')
       .matches(/^[A-Za-z\s]+$/, 'Last name must contain only letters and spaces'),
-    securityQ1: Yup.string().required('Security Question required'),
-    securityA1: Yup.string().required('Answer required'),
-    securityQ2: Yup.string().required('Security Question required'),
-    securityA2: Yup.string().required('Answer required'),
+    // securityQ1: Yup.string().required('Security Question required'),
+    // securityA1: Yup.string().required('Answer required'),
+    // securityQ2: Yup.string().required('Security Question required'),
+    // securityA2: Yup.string().required('Answer required'),
   });
 
   const defaultValues = {
@@ -107,10 +107,10 @@ export default function JwtRegisterView() {
     firstName: '',
     middleName: '',
     lastName: '',
-    securityQ1: '',
-    securityA1: '',
-    securityQ2: '',
-    securityA2: '',
+    // securityQ1: '',
+    // securityA1: '',
+    // securityQ2: '',
+    // securityA2: '',
   };
 
   const methods = useForm({
@@ -151,10 +151,10 @@ export default function JwtRegisterView() {
         data.firstName,
         data.middleName,
         data.lastName,
-        data.securityQ1,
-        data.securityA1,
-        data.securityQ2,
-        data.securityA2
+        // data.securityQ1,
+        // data.securityA1,
+        // data.securityQ2,
+        // data.securityA2
       );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
@@ -205,20 +205,20 @@ export default function JwtRegisterView() {
 
   const companyTypes = [{ type: 'Public' }, { type: 'Private' }];
 
-  const securityQuestions1 = [
-    { question: 'What is your mother maiden name?' },
-    { question: 'What is your favorite childhood pet name?' },
-    { question: 'What is your favorite book or author?' },
-    { question: 'In what city were you born?' },
-    { question: 'What is your favorite food or dish?' },
-  ];
-  const securityQuestions2 = [
-    { question: 'What is your mother maiden name?' },
-    { question: 'What is your favorite childhood pet name?' },
-    { question: 'What is your favorite book or author?' },
-    { question: 'In what city were you born?' },
-    { question: 'What is your favorite food or dish?' },
-  ];
+  // const securityQuestions1 = [
+  //   { question: 'What is your mother maiden name?' },
+  //   { question: 'What is your favorite childhood pet name?' },
+  //   { question: 'What is your favorite book or author?' },
+  //   { question: 'In what city were you born?' },
+  //   { question: 'What is your favorite food or dish?' },
+  // ];
+  // const securityQuestions2 = [
+  //   { question: 'What is your mother maiden name?' },
+  //   { question: 'What is your favorite childhood pet name?' },
+  //   { question: 'What is your favorite book or author?' },
+  //   { question: 'In what city were you born?' },
+  //   { question: 'What is your favorite food or dish?' },
+  // ];
 
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -230,13 +230,13 @@ export default function JwtRegisterView() {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="cin" label="CIN" />
+                  <RHFTextField name="cin" label="CIN" maxLength={21}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="companyName" label="Company Name" />
+                  <RHFTextField name="companyName" label="Company Name"/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="companyRegistrationNo" label="Company Registration No" />
+                  <RHFTextField name="companyRegistrationNo" label="Company Registration No" maxLength={21}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -270,7 +270,7 @@ export default function JwtRegisterView() {
                   <RHFTextField name="emailId" label="Email" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="phoneNo" label="Phone No" />
+                  <RHFTextField name="phoneNo" label="Phone No" maxLength={10}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <RHFTextField name="firstName" label="First Name" />
@@ -281,7 +281,7 @@ export default function JwtRegisterView() {
                 <Grid item xs={12} md={4}>
                   <RHFTextField name="lastName" label="Last Name" />
                 </Grid>
-                <Grid item xs={12} md={12}>
+                {/* <Grid item xs={12} md={12}>
                   <RHFAutocomplete
                     name="securityQ1"
                     label="Security Question-1"
@@ -304,7 +304,7 @@ export default function JwtRegisterView() {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <RHFTextField name="securityA2" label="Security answer" />
-                </Grid>
+                </Grid> */}
               </Grid>
             </CardContent>
             <CardActions>

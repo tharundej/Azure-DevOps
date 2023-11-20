@@ -31,7 +31,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import GeneralForminfo from './GeneralForminfo';
 import PayScheduleform from './PayScheduleform';
-import { useState ,useMemo,useEffect,useCallback} from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EditPaySchedule from './EditPaySchedule';
@@ -49,7 +49,7 @@ const bull = (
   </Box>
 );
 
-export default function PaySchedule({currentUser}) {
+export default function PaySchedule({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -62,7 +62,7 @@ export default function PaySchedule({currentUser}) {
     setOpen(false);
     reset1();
   };
-  
+
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -70,13 +70,13 @@ export default function PaySchedule({currentUser}) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text', minWidth: 140 },
-    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 180 },
+    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 140 },
     { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text', minWidth: 120 },
     { id: 'hraPercentage', label: 'HRA %', type: 'text', minWidth: 100 },
     { id: 'daPercentage', label: 'DA %', type: 'text', minWidth: 100 },
     { id: 'ltaPercentage', label: 'LTA %', type: 'text', minWidth: 100 },
-    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 140 },
-    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 140 },
+    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 100 },
+    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 100 },
     { id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth: 100 },
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
   ];
@@ -265,24 +265,27 @@ export default function PaySchedule({currentUser}) {
     setOpen(true);
   };
   const getOptionLabel = (employeepayType) => employeepayType.type;
-  const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
+  // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.company_id = 'COMP1';
-    data.employementType=valueSelected?.employementType,
-      data.payPcheduleType=valueSelected?.payPcheduleType?.type,
-      data.employementType=valueSelected?.employementType,
-      data.basicPayPercentage=JSON.parse(valueSelected?.basicPayPercentage,10),
-      data.daPercentage=JSON.parse(valueSelected?.daPercentage,10),
-      data.employeePfPercentage=JSON.parse(valueSelected?.employeePfPercentage,10),
-      data.employerPfPercentage=JSON.parse(valueSelected?.employerPfPercentage,10),
-      data.esicPercentage=JSON.parse(valueSelected?.esicPercentage,10),
-      data.hraPercentage=JSON.parse(valueSelected?.hraPercentage,10),
-      data.ltaPercentage=JSON.parse(valueSelected?.ltaPercentage,10),
-      data.tdsPercentage=JSON.parse(valueSelected?.tdsPercentage,10),
+    data.companyID = 'COMP1';
+    // (data.employementType = valueSelected?.employementType?.type),
+   
+    (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
+      (data.employementType = valueSelected?.employementType),
+      (data.basicPayPercentage = JSON.parse(valueSelected?.basicPayPercentage, 10)),
+      (data.daPercentage = JSON.parse(valueSelected?.daPercentage, 10)),
+      (data.employeePfPercentage = JSON.parse(valueSelected?.employeePfPercentage, 10)),
+      (data.employerPfPercentage = JSON.parse(valueSelected?.employerPfPercentage, 10)),
+      (data.esicPercentage = JSON.parse(valueSelected?.esicPercentage, 10)),
+      (data.hraPercentage = JSON.parse(valueSelected?.hraPercentage, 10)),
+      (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
+      (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
+      (data.payScheduleId = valueSelected?.payScheduleId);
+      (data.employementType = valueSelected?.employementType?.type),
+      (data.payPcheduleType=valueSelected?.payPcheduleType?.type)
     console.log('valueSelectedaaaaaaaaaa', data);
 
-
-    console.log(data, 'valueSelected111ugsghghh');
+    console.log(valueSelected?.employementType?.type, 'abc');
 
     try {
       const response = await axios.post(baseUrl + '/editPaySchedule', data);
@@ -293,7 +296,6 @@ export default function PaySchedule({currentUser}) {
         setSnackbarOpen(true);
 
         console.log('sucess', response);
-      
       }
     } catch (error) {
       console.error(error);
@@ -301,11 +303,12 @@ export default function PaySchedule({currentUser}) {
   });
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
-    data.company_id = 'COMP1';
-    // data.employee_type = valueSelected?.employementType;
-    data.employementType=valueSelected?.employementType
+    data.companyID = 'COMP1';
+    data.employementType = valueSelected?.employementType?.type;
+    // (data.employementType = valueSelected?.employementType?.type),
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
-    data.payPcheduleType=valueSelected?.payPcheduleType?.type
+    data.payPcheduleType = valueSelected?.payPcheduleType?.type;
+    data.payScheduleId = valueSelected?.payScheduleId;
     console.log(data, 'data111ugsghghh');
 
     try {
@@ -329,22 +332,38 @@ export default function PaySchedule({currentUser}) {
   const handleSelectChange = (field, value) => {
     // console.log('values:', value);
     // console.log('event', event.target.value);
-   
+
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
   console.log(valueSelected, 'valllllllllll');
-  const handleAutocompleteChange =(event,value)=>{
-    // console.log(value, 'valllllllllll');
+  const handleAutocompleteChange = (field, value) => {
+    console.log(field, 'field');
     setSelectedOption(value);
-    if (value && value.type === 'Permanent') {
-      setTextFieldVisible(true);
-    } else {
-      setTextFieldVisible(false);
+    if (value) {
+      if (value.type === 'Permanent' ) {
+        setTextFieldVisible(true);
+        const updatedValueSelected = { ...valueSelected };
+
+        // Update the employementType property with the new value
+        updatedValueSelected.employementType = value;
+
+        // Set the updated object as the new state
+        setValueSelected(updatedValueSelected);
+      } else if (value.type === 'Contract') {
+        setTextFieldVisible(false);
+        const updatedValueSelected = { ...valueSelected };
+
+        // Update the employementType property with the new value
+        updatedValueSelected.employementType = value;
+
+        // Set the updated object as the new state
+        setValueSelected(updatedValueSelected);
+      }
     }
-  }
+  };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   return (
     <>
@@ -379,7 +398,7 @@ export default function PaySchedule({currentUser}) {
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <DialogTitle>Edit PayRoll</DialogTitle>
-            
+
             <DialogContent>
               <Box
                 rowGap={3}
@@ -392,20 +411,20 @@ export default function PaySchedule({currentUser}) {
                 }}
               >
                 <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption?.employementType} // Use tableEDitData or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                  onChange={handleAutocompleteChange}
+                  sx={{ width: 300, padding: '8px' }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
                 <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  value={valueSelected?.payPcheduleType ||null}
+                  value={valueSelected?.payPcheduleType || null}
                   options={payPcheduleTypes}
                   getOptionLabel={(option) => option.type}
                   onChange={(e, newValue) =>
@@ -428,8 +447,11 @@ export default function PaySchedule({currentUser}) {
                   value={valueSelected?.hraPercentage}
                   onChange={(e) => handleSelectChange('hraPercentage', e.target.value)}
                 />
-                <RHFTextField name="daPercentage" label="DA %" value={valueSelected.daPercentage} 
-                onChange={(e) => handleSelectChange('daPercentage', e.target.value)}
+                <RHFTextField
+                  name="daPercentage"
+                  label="DA %"
+                  value={valueSelected.daPercentage}
+                  onChange={(e) => handleSelectChange('daPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="employeePfPercentage"
@@ -481,7 +503,7 @@ export default function PaySchedule({currentUser}) {
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
             <DialogTitle>Edit PayRoll</DialogTitle>
-            
+
             <DialogContent>
               <Box
                 rowGap={3}
@@ -494,22 +516,22 @@ export default function PaySchedule({currentUser}) {
                 }}
               >
                 <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption?.employementType} // Use tableEDitData or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
-             <Autocomplete
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                  onChange={handleAutocompleteChange}
+                  sx={{ width: 300, padding: '8px' }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
+                <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  value={valueSelected?.payPcheduleType ||null}
+                  value={valueSelected?.payPcheduleType || null}
                   options={payPcheduleTypes}
-                    getOptionLabel={(option) => option.type}
+                  getOptionLabel={(option) => option.type}
                   onChange={(e, newValue) =>
                     handleSelectChange('payPcheduleType', newValue || null)
                   }
@@ -517,14 +539,13 @@ export default function PaySchedule({currentUser}) {
                     <TextField {...params} label="Pay Pchedule Type" variant="outlined" />
                   )}
                 />
-                  <RHFTextField
-                    name="tdsPercentage"
-                    label="TDS %"
-                    value={valueSelected?.tdsPercentage}
-                    onChange={(e) => handleSelectChange("tdsPercentage", e.target.value)}
-                    sx={{ width: '100%' }} 
-                  />
-                
+                <RHFTextField
+                  name="tdsPercentage"
+                  label="TDS %"
+                  value={valueSelected?.tdsPercentage}
+                  onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
+                  sx={{ width: '100%' }}
+                />
               </Box>
             </DialogContent>
 

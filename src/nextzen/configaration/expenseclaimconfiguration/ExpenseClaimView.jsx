@@ -176,7 +176,7 @@ export default function ExpenseClaimView({ currentUser }) {
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(baseUrl + '/', data);
+      const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
       if (response?.data?.code === 200) {
         handleCloseEdit();
         setSnackbarSeverity('success');

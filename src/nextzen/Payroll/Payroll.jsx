@@ -1,8 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import * as Yup from 'yup';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import Iconify from 'src/components/iconify';
@@ -76,21 +75,7 @@ export default function BasicCard(currentUser) {
     setShow(false);
     setPayRunView(value);
   };
-  const [value, setValue1] = useState(0);
 
-  const handleChange = (event, newValue, changeOfTab) => {
-    setValue1(newValue);
-    if (typeof changeOfTab === 'function') {
-      changeOfTab(newValue);
-    }
-    setPayRunView(1);
-  };
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
   const changeOfTabHandeler = () => {
     setPayRunView(1);
   };
@@ -201,60 +186,16 @@ export default function BasicCard(currentUser) {
   const handleFilters = (data) => {
     console.log(data);
   };
-  function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
 
   return (
-    // <ReusableTabs
-    //   tabLabels={tabLabels}
-    //   tabContents={tabContents}
-    //   handleCreatePayrun={handleCreatePayrun}
-    //   changeOfTab={changeOfTabHandeler}
-    //   tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
-    // />
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          textColor="#3B82F6"
-          indicatorColor="#3B82F6"
-          aria-label="secondary tabs example"
-        >
-          <Tab label="Pay Schedule" {...a11yProps(0)} />
-          <Tab label="Pay Run" {...a11yProps(1)} />
-          <Tab label="Pay Schedule History" {...a11yProps(2)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        <PaySchedule />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} />}
-        {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)} />}
-        {payRunView === 3 && <CalculateEarningsAndDeductions />}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <CalculateEarningsAndDeductions />
-      </CustomTabPanel>
-    </Box>
+  
+      <ReusableTabs
+        tabLabels={tabLabels}
+        tabContents={tabContents}
+        handleCreatePayrun={handleCreatePayrun}
+        changeOfTab={changeOfTabHandeler}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
+      />
   );
 }
 BasicCard.prototype = {
