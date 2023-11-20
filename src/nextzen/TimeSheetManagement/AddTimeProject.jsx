@@ -156,10 +156,8 @@ const join=()=>{
       // data.companyId = '0001';
       // data.company_name = 'infbell';
       // const FinalDal=data+"companyId": "0001"+"company_name": "infbell",
-      data.dueDate = formatDateToYYYYMMDD(datesUsed?.dueDate);
       data.endDate = formatDateToYYYYMMDD(datesUsed?.endDate);
       data.startDate = formatDateToYYYYMMDD(datesUsed?.startDate);
-      data.activityName = [commaSeparatedString];
       data.projectManager=data?.projectManager?.employeeId
       data.companyId = "COMP2";
       data.employeeId =join();
@@ -177,24 +175,17 @@ const join=()=>{
     }
   });
  
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-  ];
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
             <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'5px'}}>
+              <Typography variant="subtitle2" sx={{marginLeft:'5px'}}>
                 ADD PROJECT
               </Typography>
             </Grid>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 1 }}>
             <Grid container spacing={2}>
             <Grid item md={6} xs={12}>
                 <RHFTextField name="projectName" label="Project Name" fullWidth/>
@@ -262,87 +253,12 @@ const join=()=>{
                 </LocalizationProvider>
                            </Grid>
 </Grid>
-                                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Due Date"
-                      value={datesUsed?.dueDate}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          dueDate: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider> */}
-                
-                {/* <RHFTextField name="status" label="status" /> */}
-     {/* <Grid md={10} xs={12} item>
-     <Autocomplete
-        multiple
-        id="activityName"
-        options={top100Films.map((option) => option.title)}
-        freeSolo
-        onChange={handleSelectChange} // Attach the handleSelectChange function
-        value={activityName} // Pass the selected values
-        renderTags={(value1, getTagProps) =>
-          value1.map((option, index1) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="filled"
-            label="Activity Name"
-            placeholder="Favorites"
-          />
-        )}
-      />
-</Grid> */}
-{/* <Grid md={10} xs={12} item>
-<Autocomplete
-            multiple
-            disablePortal
-            id="hfh"
-            options={employesListData || []}
-            value={currentEmployeData}
-            getOptionLabel={(option) => option.firstName}
-            // onChange={(e,newvalue)=>{
-             
-             
-            //   setCurrentEmployeData(newvalue
-                
-            //   );
-              
-             
-              // const obj={
-              //   companyId:'COMP1',
-              //   reporting_manager_id:newvalue?.employeeId
-              // }
- 
-              // ApiHitDepartment(obj)
-              // const timeStampCity = JSON.stringify(new Date().getTime());
-              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
-           
-            // }}
-            onChange={handleSelectEmployeChange}
-            sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-            }}
-            renderInput={(params) => <TextField {...params} label=" Select employee" />}
-          />
-</Grid> */}
-            
+
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'save Project'}
+                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
+                save Project
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}} onClick={handleClose}>Cancel</Button>
+                <Button sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
              
             </Card>
