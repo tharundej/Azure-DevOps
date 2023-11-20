@@ -303,11 +303,32 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          console.log('success',response);
           setISReloading(!isreloading);
+          setFormData({
+            companyId: cmpId,
+            companyName: '',
+            employeeId: empId,
+            employeeName: '',
+            financialYear: '2022-11-11',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            sumOfAssured: '',
+            relationship: '',
+            premiumAmountForwhichProofAssured: '',
+            premiumAmountFallInDue: '',
+            premiumConsiderForDeduction: '',
+            treatmentForSpecifiedDiseases: '',
+            doesTheInjuredPersonHaveDisability: '',
+            fileName: [],
+            fileContent: [],
+          })
           setSnackbarSeverity('success');
-          setSnackbarMessage('Lic details saved successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-          console.log('success');
+
+         
         }
       })
       .catch((error) => {
@@ -360,19 +381,52 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic  Updated successfully!');
-          setSnackbarOpen(true);
-          setIsEdit(false)
-          console.log('success');
+     
+
+          if(response.data.status === 200){
+            console.log('success',response);
+            setISReloading(!isreloading);
+            setSnackbarSeverity('success');
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            setIsEdit(false)
+          }
+          else if(response.data.status === 400){
+            console.log('success',response);
+            setISReloading(!isreloading);
+            setSnackbarSeverity('error');
+           
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            // setIsEdit(false)
+          }
+         
+          
         }
-      })
+      )
       .catch((error) => {
         setOpen(true);
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error Lic Updating. Please try again.');
+        setSnackbarMessage(response.message   );
         setSnackbarOpen(true);
         console.log(error);
       });
@@ -730,7 +784,7 @@ const handleRentDeletedID = ( data)=>{
             {/* </div>
           ))} */}
         </Grid>
-
+{policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -776,7 +830,7 @@ const handleRentDeletedID = ( data)=>{
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> :null}
       </FormProvider>
       <Snackbar
         open={snackbarOpen}

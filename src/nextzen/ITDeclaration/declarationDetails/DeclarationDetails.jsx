@@ -64,7 +64,7 @@ const DeclarationDetails = () => {
 
       financialYear: 2023,
 
-      rowsPerPage: 10,
+      rowsPerPage: rowsPerPage,
 
       PageNum: 0,
 
