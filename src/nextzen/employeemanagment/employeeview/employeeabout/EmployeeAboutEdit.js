@@ -35,7 +35,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocation
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
@@ -219,6 +219,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            ApiHit()
           })
           .catch((error) => {
             console.log(error);
@@ -967,6 +968,7 @@ EmployeeAboutEdit.propTypes = {
     userlocation:PropTypes.object,
     dropDownOptions:PropTypes.array,
     dropDownvalue:PropTypes.array,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    ApiHit:PropTypes.func
 
   };
