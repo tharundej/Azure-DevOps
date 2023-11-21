@@ -577,7 +577,11 @@ const BasicTable = ({
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'VendorHead' && (
-            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <VendorHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'MaterialsHead' && (
             <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
