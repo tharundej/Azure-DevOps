@@ -35,7 +35,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocation
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
@@ -219,6 +219,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            ApiHit()
           })
           .catch((error) => {
             console.log(error);
@@ -749,7 +750,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   />
                   </Grid>
 
-                  <Grid container marginTop="10px" >
+                
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               
@@ -798,9 +799,8 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{  width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
-            <Grid container marginTop="10px">
-              <Grid item xs={12} md={6}>
+            
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
               {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                 <Autocomplete
                   disablePortal
@@ -845,10 +845,10 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+           
 
-            <Grid container marginTop="10px" >
-              <Grid item xs={12} md={6}>
+           
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
                
                 <Autocomplete
                   disablePortal
@@ -891,10 +891,10 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+           
 
-            <Grid container marginTop="10px">
-              <Grid item xs={12} md={6}>
+          
+              <Grid item xs={12} md={6} paddingLeft='16px'>
               
                 <Autocomplete
                   disablePortal
@@ -920,7 +920,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+            
              </Grid>
 
             
@@ -950,7 +950,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+            <LoadingButton type="submit" variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -968,6 +968,7 @@ EmployeeAboutEdit.propTypes = {
     userlocation:PropTypes.object,
     dropDownOptions:PropTypes.array,
     dropDownvalue:PropTypes.array,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    ApiHit:PropTypes.func
 
   };
