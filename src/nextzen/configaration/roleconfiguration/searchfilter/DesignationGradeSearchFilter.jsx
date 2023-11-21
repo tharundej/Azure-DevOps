@@ -422,17 +422,40 @@ export default function DesignationGradeSearchFilter({
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
+        xs={12} md={12} lg={12}
+
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item md={3} xs={3}>
           <TextField
             placeholder="Search...."
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
+        {/* <Grid item  md={8} xs={8} direction="row" >
+      <AddDepartmentConfig />
+       <AddDesignationConfig/>
+       <AddDesignationConfig />
+       </Grid> */}
+        <Grid item  container spacing={0} alignItems="flex-end"    xs={8} md={8} lg={8}
+      // justifyContent="space-around"
+      >
+   
+        <Grid item xs={4}>
+          <AddDepartmentConfig />
+        </Grid>
+    
+        <Grid item xs={4}>
+          <AddDesignationConfig />
+        </Grid>
 
-        <Grid item md={4} xs={4}>
+        <Grid item xs={4}>
+          <AddDesignationGradeConfig />
+
+        </Grid>
+      </Grid>
+        <Grid item md={1} xs={1}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
@@ -442,6 +465,8 @@ export default function DesignationGradeSearchFilter({
           </Grid>
         </Grid>
       </Grid>
+
+{/*       
       <Grid item  container spacing={0} alignItems="flex-end" 
       // justifyContent="space-around"
       >
@@ -449,7 +474,7 @@ export default function DesignationGradeSearchFilter({
         <Grid item xs={3}>
           <AddDepartmentConfig />
         </Grid>
-        {/* {  departmentLength && departmentLength > 0 ? */}
+    
         <Grid item xs={4}>
           <AddDesignationConfig />
         </Grid>
@@ -458,7 +483,7 @@ export default function DesignationGradeSearchFilter({
           <AddDesignationGradeConfig />
 
         </Grid>
-      </Grid>
+      </Grid> */}
       <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
@@ -535,7 +560,12 @@ export default function DesignationGradeSearchFilter({
                 renderInput={(params) => <TextField {...params} label="Department" />}
               />
 
-              <Autocomplete
+            
+
+            
+            </Grid>
+            <Grid item xs={6} >
+            <Autocomplete
                 disablePortal
                 name="Designation"
                 id="combo-box-demo"
@@ -550,8 +580,9 @@ export default function DesignationGradeSearchFilter({
                 }
                 renderInput={(params) => <TextField {...params} label="Designation " />}
               />
-
-              <Autocomplete
+                </Grid>
+            <Grid  item xs={12} md={6}>
+            <Autocomplete
                 disablePortal
                 name="DesignationGrade"
                 id="combo-box-demo"
@@ -567,55 +598,7 @@ export default function DesignationGradeSearchFilter({
                 }
                 renderInput={(params) => <TextField {...params} label="Designation Grade " />}
               />
-            </Grid>
-            {/* <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {designationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid> */}
-            {/* <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {designationGradeName.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl>
-                   </Grid> */}
+                   </Grid>
           </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -627,8 +610,7 @@ export default function DesignationGradeSearchFilter({
             style={{
               width: '80px',
               marginBottom: '1rem',
-              backgroundColor: 'black',
-              color: 'white',
+              color:'white',backgroundColor:'#3B82F6'
             }}
           >
             Apply

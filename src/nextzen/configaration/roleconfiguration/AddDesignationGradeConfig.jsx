@@ -456,9 +456,9 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{ margin: '20px',color:'white',backgroundColor:'#3B82F6' }}
       >
-        Add Designation Grade
+        Designation Grade
       </Button>
       <Dialog
         fullWidth

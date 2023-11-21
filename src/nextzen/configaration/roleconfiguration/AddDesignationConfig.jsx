@@ -459,9 +459,10 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         variant="contained"
         onClose={handleClose}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+      
+        sx={{ margin: '20px' ,color:'white',backgroundColor:'#3B82F6'}}
       >
-        Add Designation working
+        Designation
       </Button>
       <Dialog
         fullWidth

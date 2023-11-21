@@ -48,6 +48,18 @@ const headings = [
   'Action',
 ];
 
+const cardHeadings = [
+  'Total Decduction U/S 80D',
+  'Overal Deduction',
+
+];
+
+const cardData = [
+  { name: 'Self Spouse & Child', value: '1' },
+  { name: 'Parent(s)', value: '2' },
+  { name: 'Total Deduction', value: '3' },
+];
+
 export default function MedicalPremium() {
   // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
    
@@ -148,6 +160,28 @@ export default function MedicalPremium() {
     let calculatedEligibleDeduction = integerValue;
 
     // Check if amountOfPremium is greater than 2500
+    // if (name === 'amountOfPremium' && integerValue > 25000) {
+    //   calculatedEligibleDeduction = 25000;
+    // }
+
+    
+
+    setFormData({
+      ...formData,
+      [name]: integerValue,
+      // eligibleDeduction: calculatedEligibleDeduction,
+    });
+
+    // setFormData({ ...formData, [name]: integerValue });
+
+    console.log(formData);
+  };
+  const handleChangeForAmoutDeduction = (event) => {
+    const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
+    let calculatedEligibleDeduction = integerValue;
+
+    // Check if amountOfPremium is greater than 2500
     if (name === 'amountOfPremium' && integerValue > 25000) {
       calculatedEligibleDeduction = 25000;
     }
@@ -162,7 +196,6 @@ export default function MedicalPremium() {
 
     console.log(formData);
   };
-
   const handleAutocompleteChange = (name, selectedValue) => {
     let mappedValue;
 
@@ -518,7 +551,7 @@ export default function MedicalPremium() {
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
-          <Grid item container spacing={2} xs={12} style={{ marginTop: '1rem' }}>
+          <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
             {/* search and filter  */}
             {/* <Grid
             container
@@ -580,7 +613,7 @@ export default function MedicalPremium() {
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Date Of Commencement Of Policy Or Date Paid"
+                      label=" Commencement Of Policy/Paid Date"
                       value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
                       defaultValue={dayjs(new Date())}
     onChange={(newValue) => {
@@ -663,7 +696,7 @@ export default function MedicalPremium() {
                   fullWidth
                   name="amountOfPremium"
                   value={formData.amountOfPremium}
-                  onChange={handleChange}
+                  onChange={handleChangeForAmoutDeduction}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -671,10 +704,11 @@ export default function MedicalPremium() {
                   label="Eligible Deduction"
                   variant="outlined"
                   fullWidth
-                  // disabled
+                  disabled
                   name="eligibleDeduction"
                   value={formData.eligibleDeduction}
-                  onChange={handleChange}
+                  style={{ background: '#e9e6e'}}
+                  // onChange={handleChange}
                 />
               </Grid>
             </Grid>
@@ -710,77 +744,47 @@ export default function MedicalPremium() {
           {/* grid 1 end  */}
 
           {/* grid 2 for the table to keep left side  */}
-          {/* <Grid item xs={4}>
-            <Grid
-              item
-              container
-              xs={12}
-              spacing={2}
-              alignItems="center"
-              justifyContent="center"
-              direction="column"
-              style={{ marginBottom: '1rem', marginTop: '1rem' }}
-            >
-              <Grid xs={6}>
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{
-                    padding: '10px',
-                    backgroundColor: '#2196f3',
-                    color: 'white',
-                    border: 'none',
-                  }}
-                >
-                  <Grid item xs={6}>
-                    Total Decduction U/S 80D
-                  </Grid>
-                  <Grid item xs={6}>
-                    Overal Deduction
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{ backgroundColor: '#f0eded', padding: '10px' }}
-                >
-                  <Grid item xs={6}>
-                    Self Spouse & Child
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid item container xs={12} style={{ padding: '10px' }}>
-                  <Grid item xs={6}>
-                    Parent(s)
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{ backgroundColor: '#f0eded', padding: '10px' }}
-                >
-                  <Grid item xs={6}>
-                    Total Deduction
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-              </Grid>
-            </Grid>
-          </Grid> */}
+          <Grid item xs={12} lg={4} md={4} 
+          style={{ marginBottom: '1rem', marginTop: '1.5rem' }}>
+         
+        <TableContainer component={Paper} style={{ overflowX: 'hidden' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {cardHeadings.map((heading, index) => (
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
+                      whiteSpace: 'nowrap', // Prevent text wrapping
+                      // overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+             
+                 
+                  {cardData.map((row, index) => (
+                    <TableRow key={index}>
+                       <TableCell style={{ textAlign: 'center' }}>{row.name}</TableCell>
+                       <TableCell style={{ textAlign: 'center' }}>{row.value}</TableCell>
+                     
+                    </TableRow>
+                  ))}
+                </TableBody>
+                  
+             
+          
+          </Table>
+        </TableContainer> 
+            
+          </Grid>
           {/* grid 2 end  */}
         </Grid>
 {medicalTableData?.length > 0?
@@ -831,7 +835,7 @@ export default function MedicalPremium() {
             </TableBody>
           </Table>
         </TableContainer> : null}
-        <Grid
+        {/* <Grid
           item
           container
           xs={12}
@@ -889,7 +893,7 @@ export default function MedicalPremium() {
             </Grid>
             <Divider style={{ backgroundColor: 'black' }} />
           </Grid>
-        </Grid>
+        </Grid> */}
       </FormProvider>
       {openAttachmentDilog ? (
         <FileUploader
