@@ -557,7 +557,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
             <Autocomplete
               disablePortal
               name="Designation"
-              id="combo-box-demo"
+              id="Designation"
               options={designationType?.map((employeepayType) => ({
                 label: employeepayType.designationName,
                 value: employeepayType.designationName,
