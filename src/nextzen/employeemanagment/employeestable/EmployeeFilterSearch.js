@@ -520,7 +520,7 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -540,7 +540,7 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
 
       {/* To Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -569,7 +569,7 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -589,7 +589,7 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
 
       {/* To Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -618,7 +618,7 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid container direction="row">
       {/* From Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -638,7 +638,7 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
 
       {/* To Date */}
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={12} lg={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -671,7 +671,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={6}>
+                  <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -696,8 +696,8 @@ const [stateOptions,setOptions]=useState([])
                 </Select>
               </FormControl>
                    </Grid>
-
-                   <Grid marginTop="10px" xs={12} md={6}>
+                    
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
@@ -723,7 +723,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Marital Status</InputLabel>
                 <Select
@@ -750,7 +750,7 @@ const [stateOptions,setOptions]=useState([])
                    </Grid>
 
                    {/* Blood Group */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Blood Group</InputLabel>
                 <Select
@@ -776,7 +776,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
                    {/* State */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -807,7 +807,7 @@ const [stateOptions,setOptions]=useState([])
 
                      <Grid  >
               
-                  <Grid item xs={12} md={6} lg={12} marginTop="10px">
+                  <Grid item xs={12} md={12} lg={6} marginTop="10px">
               
                 <Autocomplete
                   disablePortal
@@ -857,8 +857,8 @@ const [stateOptions,setOptions]=useState([])
                 />
                       </Grid>
                      </Grid>
-                     <Grid container >
-                <Grid item xs={12} md={6} lg={12}  marginTop="10px">
+                    
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                 {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                   <Autocomplete
                     disablePortal
@@ -903,10 +903,10 @@ const [stateOptions,setOptions]=useState([])
                     style={{  width: '100%' }} />}
                   />
                 </Grid>
-                     </Grid>
+                     
 
                      <Grid container >
-                <Grid item xs={12} md={6} lg={12}  marginTop="10px">
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                  
                   <Autocomplete
                     disablePortal
@@ -952,7 +952,7 @@ const [stateOptions,setOptions]=useState([])
                       </Grid>
 
                       <Grid container >
-                <Grid item xs={12} md={6} lg={12}  marginTop="10px">
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                 
                   <Autocomplete
                     disablePortal
@@ -981,7 +981,7 @@ const [stateOptions,setOptions]=useState([])
               </Grid>
 
               <Grid container >
-                <Grid item xs={12} md={6} lg={12} marginTop="10px">
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
                 
                   <Autocomplete
                     disablePortal
@@ -1011,7 +1011,7 @@ const [stateOptions,setOptions]=useState([])
 
 
               <Grid container >
-                <Grid item xs={12} md={6} lg={12} marginTop="10px">
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
                 
                   <Autocomplete
                     disablePortal

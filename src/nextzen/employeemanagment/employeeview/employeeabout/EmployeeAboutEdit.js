@@ -749,7 +749,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   />
                   </Grid>
 
-                  <Grid container marginTop="10px" >
+                
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               
@@ -798,9 +798,8 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{  width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
-            <Grid container marginTop="10px">
-              <Grid item xs={12} md={6}>
+            
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
               {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                 <Autocomplete
                   disablePortal
@@ -845,10 +844,10 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+           
 
-            <Grid container marginTop="10px" >
-              <Grid item xs={12} md={6}>
+           
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
                
                 <Autocomplete
                   disablePortal
@@ -891,10 +890,10 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+           
 
-            <Grid container marginTop="10px">
-              <Grid item xs={12} md={6}>
+          
+              <Grid item xs={12} md={6} paddingLeft='16px'>
               
                 <Autocomplete
                   disablePortal
@@ -920,7 +919,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                   style={{ width: '100%' }} />}
                 />
               </Grid>
-            </Grid>
+            
              </Grid>
 
             
@@ -950,7 +949,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+            <LoadingButton type="submit" variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>

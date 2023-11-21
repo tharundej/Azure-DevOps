@@ -221,15 +221,16 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           console.log(response.data.empID,'nithinnn')
           localStorage.setItem("employeeIdCreated",response.data?.empID)
           
-          props.nextStep();
+          
           props.handleCallSnackbar(response.data.message,"success")
-          console.log(response.data.message,'response.data.message')
+         
+          props.nextStep();
         })
         .catch((error) => {
           console.log(error);
           setopenSnackBar(true);
           setseveritySnackbar("warning");
-          setmessageSnackbar("User Alredy Present")
+          setmessageSnackbar("Something Wrong")
         });
 
   }
