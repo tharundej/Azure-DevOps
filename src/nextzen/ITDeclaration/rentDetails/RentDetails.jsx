@@ -308,126 +308,124 @@ const correctedData = data
     rentAmount: entry.rentAmount !== '' ? parseInt(entry.rentAmount, 10) : null,
     submittedAmount: entry.submittedAmount !== '' ? parseInt(entry.submittedAmount, 10) : null,
   }));
-var name = medicalTableDataDoc.map(item => item.landlordFileName)
-console.log(name , "name ")
-  var testing = name
- const saveRentDetails = async () => {
- const payload = 
-  {
-    "companyId": "COMP1",
-    "employeeId": "ibm3",
-    "financialYear": "2023-2024",
-    "nameOfLandlord": landLardName,
-    "addressOfLandlord": landLardAddress,
-    "data": updatedData ,
-    "panOfTheLandlord": isPanValueThere,
-    "panNumber": panNumbers,
-    "declarationReceivedFFromLandlord": true,
-    "fileName": attachedDocummentFileName,
-    "fileContent" :attachedDocumment,
-    "landlordFileName" :landlord_file_name,
-    "landlordFileContent" : landlord_file_content
-  }
-  
+  var name = medicalTableDataDoc.map((item) => item.landlordFileName);
+  console.log(name, 'name ');
+  var testing = name;
+  const saveRentDetails = async () => {
+    const payload = {
+      companyId: cmpId,
+      employeeId: empId,
+      financialYear: '2023-2024',
+      nameOfLandlord: landLardName,
+      addressOfLandlord: landLardAddress,
+      data: updatedData,
+      panOfTheLandlord: isPanValueThere,
+      panNumber: panNumbers,
+      declarationReceivedFFromLandlord: declarationSelectedValue == "Yes" ? true : false,
+      fileName: attachedDocummentFileName,
+      fileContent: attachedDocumment,
+      landlordFileName: landlord_file_name,
+      landlordFileContent: landlord_file_content,
+    };
 
-  const config = {
- method: 'post',
-    maxBodyLength: Infinity,
-    url: baseUrl + 'addRentDeclarationDetails ',
-    headers: {
-      Authorization:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-      'Content-Type': 'text/plain',
-    },
-    data: payload,
-  };
-  const result = await axios
-    .request(config)
-    .then((response) => {
-      if (response.status === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Rent details saved successfully!');
-        setSnackbarOpen(true);
-        setReload(!reload)
-        console.log("success")
-      }
-
-    })
-    .catch((error) => {
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl + '/addRentDeclarationDetails ',
+      headers: {
+        Authorization: token,
+          'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.data.status === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setReload(!reload);
      
-      setOpen(true);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error saving rent details. Please try again.');
-      setSnackbarOpen(true);
-      console.log(error);
-});
-//  console.log(result, 'resultsreults');
+        }else    if (response.data.status === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
+        }
+      })
+      .catch((error) => {
+        setOpen(true);
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error saving rent details. Please try again.');
+        setSnackbarOpen(true);
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
 
-};
+  const editRentDetails = async () => {
+    const payload = {
+      //  "company_id": rentDetailsData?.companyId,
+      //  "employee_id": rentDetailsData?.employeeId,
+      companyId: cmpId,
+      employeeId: empId,
+      financialYear: rentDetailsData?.financialYear,
+      nameOfLandlord: rentDetailsData?.nameOfLandlord,
+      addressOfLandlord: rentDetailsData?.addressOfLandlord,
+      data: updatedData,
+      panOfTheLandlord: rentDetailsData?.panOfTheLandlord,
+       declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      // declarationReceivedFromLandlord: true,
+      panNumber: panNumbers,
+      //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
+      landLordDocs: landLordDocs,
+      rentDocs: rentDocs,
+      // rentFilelds: rentFiledsIndex,
+      // landlordFilelds: landlordFiledsIndex,
+      landLordIds:landLordDeletedId,
+      rentIds: rentDeletedId
+    };
 
-
-
-const editRentDetails = async () => {
-  const payload = 
-   {
-    //  "company_id": rentDetailsData?.companyId,
-    //  "employee_id": rentDetailsData?.employeeId,
-    "companyId": "COMP1",
-    "employeeId" :"ibm3",
-     "financialYear": rentDetailsData?.financialYear,
-     "nameOfLandlord": rentDetailsData?.nameOfLandlord,
-     "addressOfLandlord": rentDetailsData?.addressOfLandlord,
-     "data": updatedData ,
-     "panOfTheLandlord": rentDetailsData?.panOfTheLandlord,
-    //  "declarationReceivedFromLandlord": rentDetailsData?.declarationReceivedFromLandlord, 
-    "declarationReceivedFFromLandlord": true,
-    "panNumber": panNumbers,
-    //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
-    "landLordDocs":  medicalTableDataDoc,
- "rentDocs" : [] ,
- "rentFilelds":rentFiledsIndex,
-"landlordFilelds":landlordFiledsIndex
-
-}
-   
- 
-   const config = {
-  method: 'post',
-     maxBodyLength: Infinity,
-     url: baseUrl + 'updateRentDeclarationDetails ',
-     headers: {
-       Authorization:
-         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-       'Content-Type': 'text/plain',
-     },
-     data: payload,
-   };
-   const result = await axios
-     .request(config)
-     .then((response) => {
-       if (response.status === 200) {
-         // const rowsData = response?.data?.data?.rows;
-         // console.log(JSON.stringify(response.data));
-         // setData(rowsData);
-         setOpen(true);
-         
-         <Snackbar open={open} autoHideDuration={6000} />
-         console.log("success")
-         setReload(!reload)
-       }
- 
-     })
-     .catch((error) => {
-      setOpen(true);
-      <Snackbar open={open} autoHideDuration={6000} onClose={snackBarAlertHandleClose}>
-      <Alert onClose={snackBarAlertHandleClose} severity="success" sx={{ width: '100%' }}>
-        This is a success message!
-      </Alert>
-    </Snackbar>
-       console.log(error  ,"hello" ,open);
- });
- 
- };
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl + '/updateRentDeclarationDetails ',
+      headers: {
+        Authorization:token ,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        console.log("success" ,response)
+        if (response.data.status === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setReload(!reload);
+     
+        }else    if (response.data.status === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
+        }
+      })
+      .catch((error) => {
+        setOpen(true);
+        <Snackbar open={open} autoHideDuration={6000} onClose={snackBarAlertHandleClose}>
+          <Alert onClose={snackBarAlertHandleClose} severity="success" sx={{ width: '100%' }}>
+            This is a success message!
+          </Alert>
+        </Snackbar>;
+        console.log(error, 'hello', open);
+      });
+  };
 
  const getRentDetails = async () => {
   const payload = {  

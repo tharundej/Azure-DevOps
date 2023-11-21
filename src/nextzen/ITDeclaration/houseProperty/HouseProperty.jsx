@@ -26,6 +26,14 @@ import './houseProperty.css';
 import axios from 'axios';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+
+
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
 
 const headings = [
   'S.No',
@@ -66,7 +74,23 @@ export default function HouseProperty() {
   var [attachedDocumment, setAttachedDocument] = useState([]);
   var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
   const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
-
+  var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
+  var [landLordDocs, setLandLordDocs] = useState([]);
+  var [rentDocs, setRentDocs] = useState([]);
+  const [landLordDeletedId , setLandLordDeletedID] = useState([])
+  const [rentDeletedId , setRentDeletedID] = useState([])
+  const [housingData, sethousingData] = useState([]);
+   // State for Snackbar
+   const [snackbarOpen, setSnackbarOpen] = useState(false);
+   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+   const [snackbarMessage, setSnackbarMessage] = useState('');
+   const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    // setOpen(false);
+  };
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -141,6 +165,8 @@ export default function HouseProperty() {
   // You can make an axios request here to send the data to your server.
 
   const addHousingProperity = useCallback(async () => {
+
+    console.log(formData.dateOfSanction ,"date ")
     const payload = {
       companyId: 'comp1',
       employeeId: 'Info1',
@@ -174,11 +200,37 @@ export default function HouseProperty() {
     axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data?.rows;
-          console.log(JSON.stringify(response.data), 'dataaaa');
+    console.log("success" , response ,response.data.message)
+          if (response.data.code === 201 || 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setREload(!reload)
+            setFormData({
+              propertyReferenceSlNo: null,
+    name_of_the_owners: '',
+    addressOfProperty: '',
+    panOfTheLanders: '',
+    amountOfHousingloanTakenFromTheProperty: '',
+    purposeOfLoan: '',
+    dateOfSanction: dayjs().format('YYYY-MM-DD'),
+    interestPaybleOnYear: '',
+    isPropertySelfOccupiedOrLetOu: '',
+    ifJointPropertyThenEnterInterestRate: '',
+    grossRentalAmount: '',
+    municipalTaxesPaid: '',
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -189,10 +241,105 @@ export default function HouseProperty() {
     };
     fetchData();
     
-  }, []);
+  }, [reload]);
+  const handleLandLordattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      id: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    landLordDocs = transformedData;
+    setLandLordDocs(landLordDocs);
 
+    console.log(landLordDocs, 'landlordDocs');
+
+    console.error('Arrays must have the same length');
+    setOpenAttchementDilog(false);
+  };
+  const handleRentattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      ID: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    rentDocs = transformedData;
+    setRentDocs(rentDocs);
+
+    console.log(rentDocs, 'landlordDocs');
+    setOpenAttchementDilog(false);
+  };
+  console.log(rentDocs, 'landlordDocs');
+const handleLandLordDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(landLordDeletedId, "deletedelete")
+}
+const handleRentDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setRentDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(rentDeletedId, "deletedelete")
+}
+// handle edit
+const handleEdit = (rowData) => {
+  console.log(rowData ,"rowData1234");
+  setLandLordDocs(rowData.documents)
+  setFormData({
+     employeeId:rowData.employeeId,
+     companyId:rowData.companyId,
+      propertyReferenceSlNo: rowData.propertyReferenceSlNo,
+      name_of_the_owners: rowData.nameOfTheOwners,
+      addressOfProperty: rowData.addressOfProperty,
+      panOfTheLanders: rowData.panOfTheLanders,
+      amountOfHousingloanTakenFromTheProperty: rowData.amountOfHousingloanTakenFromTheProperty,
+      purposeOfLoan: rowData.purposeOfLoan,
+      dateOfSanction: rowData.dateOfSanctionOfLoan,
+      interestPaybleOnYear: rowData.interestPaybleOnYear,
+      isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOu,
+      ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
+      grossRentalAmount: rowData.grossRentalAmount,
+      municipalTaxesPaid: rowData.muncipalTaxPaid,
+    
+    // Add other fields as needed
+  });
+
+  // Set the attached documents if available
+  if (rowData.documents && rowData.documents.length > 0) {
+    setLandLordDocs([...rowData.documents]);
+  }
+};
   return (
     <div>
+       <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Grid container spacing={2} style={{ marginTop: '1rem' }}>
         {/* search ad filter  */}
         {/* <Grid
@@ -483,7 +630,7 @@ export default function HouseProperty() {
           {/* Add more rows as needed */}
         </Grid>
       </Grid>
-
+{housingData?.length > 0  ?
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -523,7 +670,7 @@ export default function HouseProperty() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> : null}
       {openAttachmentDilog ? (
         <FileUploader
           showAttachmentDilog={openAttachmentDilog}

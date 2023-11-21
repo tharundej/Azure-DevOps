@@ -229,14 +229,42 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic details saved successfully!');
-          setSnackbarOpen(true);
-          console.log('success');
+       
+          if (response.data.code === 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setISReloading(!isreloading);
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Lic details. Please try again.');
@@ -245,6 +273,101 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       });
     //  console.log(result, 'resultsreults');
   };
+  const editcDetails = async () => {
+    console.log(" i am calling fine info042" , formData)
+    const payload = {
+      
+      
+                  licPremiumID: formData.licPremiumID,
+                  companyID: formData.companyId,
+                  employeeID: formData.employeeId,
+                  employeeName: formData.employeeName,
+                  financialYear: formData.financialYear,
+                  policyNumber: formData.policyNumber,
+                  dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
+                  insuredPersonName: formData.insuredPersonName,
+                  sumOfAssured:parseFloat (formData.sumOfAssured),
+                  relationship: formData.relationship,
+                  premiumAmountForwhichProofAssured: parseFloat(formData.premiumAmountForwhichProofAssured),
+                  premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
+                  premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
+                  treatmentForSpecifiedDiseaseses: parseInt(formData.treatmentForSpecifiedDiseases),
+                  doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
+                  documents :landLordDocs,
+                  oldFields:landLordDeletedId
+          
+      
+    };
+    console.log(payload ,"payloaddd")
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'updateMedicalInsuranceDetails',
+      url: baseUrl +'/updateLicPremiumDetails',
+      headers: {
+        Authorization:
+       token ,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+     
+        console.log(response , "success")
+          if(response.data.status === 200){
+          
+            console.log('success',response);
+            setISReloading(!isreloading);
+            setSnackbarSeverity('success');
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            setIsEdit(false)
+          }
+          else if(response.data.status === 400){
+            console.log('success',response);
+            // setISReloading(!isreloading);
+            setSnackbarSeverity('error');
+           
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            // setIsEdit(false)
+          }
+         
+          
+        }
+      )
+      .catch((error) => {
+        setOpen(true);
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response.message   );
+        setSnackbarOpen(true);
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -496,7 +619,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
             {/* Add more rows as needed */}
           </Grid>
         </Grid>
-
+{policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -539,7 +662,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> :null}
       </FormProvider>
       <Snackbar
         open={snackbarOpen}
