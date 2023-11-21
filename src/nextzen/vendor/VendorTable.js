@@ -7,95 +7,37 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import { getVendorListAPI } from 'src/api/Accounts/Vendor';
 
 const VendorTable = () => {
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
-  const [filterOptions, setFilterOptions] = useState({
-    dates: [
-      {
-        display: 'Established Date',
-        field_name: 'EstablishedDate',
-      },
-      {
-        display: 'Operational Date',
-        field_name: 'OperationalDate',
-      },
-    ],
-    dropdowns: [
-      {
-        display: 'Status',
-        options: ['active', 'inactive'],
-        field_name: 'status',
-      },
-      
-    ],
-  });
+  const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
     count: 5,
     page: 1,
   });
-  const ApiHit = () => {
-    const data1 = body_for_employee;
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/vendorDetails',
-      // headers: {
-      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      // },
-      data: data1,
-    };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setBodyContent(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const ApiHit = async () => {
+    try {
+      const response = await getVendorListAPI(defaultPayload);
+      console.log('location success', response);
+    } catch (error) {
+      console.log('API request failed:', error.message);
+    }
   };
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
-    externalFilters: {
-      fMaritalStatus: '',
-      fBloodGroup: '',
-      fPState: '',
-      fPEmployementType: '',
-      fPdepartmentName: '',
-      fPDesignation: '',
-      fPDesignationGrade: '',
-      fWorkingLocation: '',
-      fjoiningDate: {
-        from: '',
-        to: '',
-      },
-      fDOB: {
-        from: '',
-        to: '',
-      },
-      fofferDate: {
-        from: '',
-        to: '',
-      },
-    },
-    sort: {
-      key: 1,
-      orderBy: 'VendorName',
-    },
+    companyID: 'COMP1',
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },

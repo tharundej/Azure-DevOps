@@ -36,18 +36,18 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
 
   const defaultValues = useMemo(
     () => ({
-      customer_id: currentData?.customer_id || '',
+      customer_id: currentData?.customerId || '',
       customer_name: currentData?.customerName || '',
       customer_company_name: currentData?.customerCompanyName || '',
       customer_email_id: currentData?.customerEmailId || '',
       customer_phone_no: currentData?.customerPhoneNo || '',
-      customer_address_line1: currentData?.customerAddress || '',
-      customer_address_line2: currentData?.customer_address_line2 || '',
+      customer_address_line1: currentData?.customerAddressesLine1 || '',
+      customer_address_line2: currentData?.customerAddressesLine2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
-      state_code: currentData?.state_code || '',
+      state_code: currentData?.stateCode || '',
       country: currentData?.country || '',
-      pincode: currentData?.pincode || '',
+      pincode: currentData?.pinCode || '',
       customer_gst_no: currentData?.customerGstNo || '',
       customer_pan_no: currentData?.customerPanNo || '',
       customer_tan_no: currentData?.customerTanNo || '',

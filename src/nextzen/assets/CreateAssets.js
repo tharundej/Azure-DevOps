@@ -18,10 +18,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-import { createAssetsAPI, getLocationAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
+import { createAssetsAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
 import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { getLocationAPI } from 'src/api/Accounts/Common';
 
 export default function CreateAssets({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({

@@ -22,7 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function CreateVendor({ currentData, handleClose, getTableData }) {
+export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
     vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
     vendorName: Yup.string().required('vendor Name is Required'),
@@ -148,7 +148,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.vendorID ? 'Edit' : 'Add New'} Vendor</DialogTitle>
+        <DialogTitle>{currentData?.vendorID ? 'Edit' : 'Add New'} Vendor Material</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -243,7 +243,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   );
 }
 
-CreateVendor.propTypes = {
+CreateVendorMaterials.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

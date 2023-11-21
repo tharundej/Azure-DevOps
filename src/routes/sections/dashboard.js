@@ -10,6 +10,7 @@ import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 import Expenses from 'src/nextzen/expenses/Expenses';
+import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -114,19 +115,31 @@ const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
 
-const Configaration = lazy(()=> import('../../nextzen/configaration/Configaration'));
+const Configaration = lazy(() => import('../../nextzen/configaration/Configaration'));
 
-const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
+const LeaveConfiguration = lazy(() =>
+  import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration')
+);
 
-const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView'));
+const CompoffConfiguration = lazy(() =>
+  import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView')
+);
 
-const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
+const AppraisalConfiguration = lazy(() =>
+  import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration')
+);
 
-const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+const ExpensClaimConfiguration = lazy(() =>
+  import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration')
+);
 
-const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+const ShiftConfiguration = lazy(() =>
+  import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration')
+);
 
-const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfigTab'));
+const RoleConfiguration = lazy(() =>
+  import('../../nextzen/configaration/roleconfiguration/RoleConfiguration')
+);
 
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
@@ -180,7 +193,7 @@ export const dashboardRoutes = [
       //     { path: ':id/edit', element: <Edits /> },
       //     { path: 'userneweditform', element: <UserNewEditForm1 /> },
       //     { path: 'onboardform', element: <OnBoardForm />},
-          
+
       //     { path: 'employeeview', element: <EmployeeView />},
       //     //  { path: ':id/edit', element: <Edits /> },
       //     // { path: 'reusetable', element: <ReuseTable /> },
@@ -281,17 +294,18 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path:'configurations',
-        children:[
+        path: 'configurations',
+        children: [
           {
-            element: <Configaration/>,index:true
+            element: <Configaration />,
+            index: true,
           },
-          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
-          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
-          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
-          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
-          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
-          {path:'roleconfiguration',element:<RoleConfiguration/>},
+          { path: 'leaveconfiguration', element: <LeaveConfiguration /> },
+          { path: 'compoffconfiguration', element: <CompoffConfiguration /> },
+          { path: 'appraisalconfiguration', element: <AppraisalConfiguration /> },
+          { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
+          { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
+          { path: 'roleconfiguration', element: <RoleConfiguration /> },
         ],
       },
       {
@@ -368,7 +382,7 @@ export const dashboardRoutes = [
           },
         ],
       },
-	  {
+      {
         path: 'expenses',
         children: [
           {
@@ -380,10 +394,9 @@ export const dashboardRoutes = [
       {
         path: 'vendor',
         children: [
-          {
-            element: <VendorIndex />,
-            index: true,
-          },
+          { element: <VendorIndex />, index: true },
+          { path: 'vendor', element: <VendorIndex /> },
+          { path: 'vendormaterials', element: <VendorMaterials /> },
         ],
       },
       {
@@ -457,16 +470,16 @@ export const dashboardRoutes = [
       { element: <EmployeeManagementHome />, index: true },
       { path: ':id/edit', element: <Edits /> },
       { path: 'userneweditform', element: <UserNewEditForm1 /> },
-      { path: 'onboardform', element: <OnBoardForm />},
-      
-      { path: ':id/employeeview', element: <EmployeeView />},
+      { path: 'onboardform', element: <OnBoardForm /> },
+
+      { path: ':id/employeeview', element: <EmployeeView /> },
       //  { path: ':id/edit', element: <Edits /> },
       // { path: 'reusetable', element: <ReuseTable /> },
       //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
     ],
   },
   {
-    path:'leave',
+    path: 'leave',
     element: (
       <AuthGuard>
         <DashboardLayout>
