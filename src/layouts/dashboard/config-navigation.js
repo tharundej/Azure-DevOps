@@ -147,17 +147,34 @@ export function useNavData() {
             icon: ICONS.g_appraisal,
           },
           {
-            title:t('configurations'),
-            path:paths.dashboard.configurations.root,
-            icon:ICONS.g_configurations,
+            title: t('configurations'),
+            path: paths.dashboard.configurations.root,
+            icon: ICONS.g_configurations,
             children: [
-              { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
-              { title: t('Compoff Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
-               { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-               { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
-               { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
-               { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
-
+              {
+                title: t('Leave Configuration'),
+                path: paths.dashboard.configurations.leaveconfiguration,
+              },
+              {
+                title: t('Compoff Configuration'),
+                path: paths.dashboard.configurations.compoffconfiguration,
+              },
+              {
+                title: t('Appraisal Configuration'),
+                path: paths.dashboard.configurations.appraisalconfiguration,
+              },
+              {
+                title: t('Expense Claim Configuration'),
+                path: paths.dashboard.configurations.expenseclaimconfiguration,
+              },
+              {
+                title: t('Shift Configuration'),
+                path: paths.dashboard.configurations.shiftconfiguration,
+              },
+              {
+                title: t('Role Configuration'),
+                path: paths.dashboard.configurations.roleconfiguration,
+              },
             ],
           },
           // {
@@ -246,8 +263,6 @@ export function useNavData() {
       //     //     { title: t('edit'), path: paths.dashboard.product.demo.edit },
       //     //   ],
       //     // },
-
-         
 
       //     // INVOICE
       //     // {
@@ -446,6 +461,10 @@ export function useNavData() {
             title: t('vendor'),
             path: paths.dashboard.vendor.vendor,
             icon: ICONS.g_vendor,
+            children: [
+              { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
+              { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
+            ],
           },
           {
             title: t('materials'),

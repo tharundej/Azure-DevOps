@@ -103,6 +103,7 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 const defaultFilters = {
@@ -572,6 +573,13 @@ const BasicTable = ({
           )}
           {filterName === 'VendorHead' && (
             <VendorHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'VendorMaterialsHead' && (
+            <VendorMaterialsHeader
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               getTableData={getTableData}
