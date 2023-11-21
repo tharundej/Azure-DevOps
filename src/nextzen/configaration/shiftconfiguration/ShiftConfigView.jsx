@@ -16,7 +16,7 @@ export default function ShiftConfigView() {
     { id: 'shiftName', label: 'Shift Name', type: 'text', minWidth: 180 },
     { id: 'startTime', label: 'Start Time', type: 'text', minWidth: 180 },
     { id: 'endTime', label: 'End Time', type: 'text', minWidth: 180 },
-    { id: 'shiftTerm', label: 'Shift Term', type: 'text', minWidth: 180 },
+    // { id: 'shiftTerm', label: 'Shift Term', type: 'text', minWidth: 180 },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: 180 },
   ];
 
@@ -52,8 +52,8 @@ export default function ShiftConfigView() {
   };
 
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj', type: 'edit' },
-    { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj', type: 'edit' },
+    // { name: 'Delete', icon: 'hh', path: 'jjj' },
   ];
 
   const defaultPayload = {
@@ -64,7 +64,6 @@ export default function ShiftConfigView() {
     page: 0,
     limit: 5,
     externalFilters: {
-      shiftTerm: '',
       shiftName: '',
       startTime: '',
       endTime: '',
