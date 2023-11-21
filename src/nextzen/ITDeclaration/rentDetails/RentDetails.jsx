@@ -1,42 +1,42 @@
-
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    TextField,
-    TablePagination,
-    Grid,Button,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Radio,
-    RadioGroup,
-    Typography,
-    FormControlLabel,
-    Autocomplete,
-  } from '@mui/material';
-  import Snackbar from '@mui/material/Snackbar';
- import '../declarationDetails/DeclarationDetails.css';
- import MuiAlert from '@mui/material/Alert';
- import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  TablePagination,
+  Grid,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+  FormControlLabel,
+  Autocomplete,
+} from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import '../declarationDetails/DeclarationDetails.css';
+import MuiAlert from '@mui/material/Alert';
+import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
-
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
 export default function RentDetails() {
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
-
-  const baseUrl = "https://xql1qfwp-3001.inc1.devtunnels.ms/erp/"
+  // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
     { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
@@ -50,94 +50,89 @@ export default function RentDetails() {
     { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
     { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
-  
-   
+
     // Add more months as needed
   ]);
 
-  const [isPreviousData , setIsPreviousData ] =useState(false)
-  const [reload , setReload] = useState(false)
-var [landLardName , setLandLardName] = useState("")
-var [landLardAddress , setLandLardAddress] = useState("")
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
+
+  const [isPreviousData, setIsPreviousData] = useState(false);
+  const [reload, setReload] = useState(false);
+  var [landLardName, setLandLardName] = useState('');
+  var [landLardAddress, setLandLardAddress] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedValue, setSelectedValue] = useState('');
-var [isShowPannumber , setIsShowPanNumber] = useState(false)
-const [isPanValueThere  , setIsPanValueThere] = useState(false)
-const [isPanValueNumber  , setIsPanValueNumber] = useState('')
-const [declarationSelectedValue ,setSeclarationSelectedValue]= useState('')
- var [isShowDeclaration , setIsShowDeclaration] = useState(false)
- const [isShowUpload , setIsShowUpload] = useState(false)
- const [open, setOpen] = useState(true);
- var [panNumbers, setPanNumbers] = useState(['', '', '']); // Initialize with three empty strings
+  var [isShowPannumber, setIsShowPanNumber] = useState(false);
+  const [isPanValueThere, setIsPanValueThere] = useState(false);
+  const [isPanValueNumber, setIsPanValueNumber] = useState('');
+  const [declarationSelectedValue, setSeclarationSelectedValue] = useState('');
+  var [isShowDeclaration, setIsShowDeclaration] = useState(false);
+  const [isShowUpload, setIsShowUpload] = useState(false);
+  const [open, setOpen] = useState(true);
+  var [panNumbers, setPanNumbers] = useState(['', '', '']); // Initialize with three empty strings
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
-const [rentDetailsData , setRendDetailsData] = useState([])
+  const [rentDetailsData, setRendDetailsData] = useState([]);
 
-const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
+  const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
   const handlePanNumberChange = (index) => (event) => {
     const newPanNumbers = [...panNumbers];
     newPanNumbers[index] = event.target.value;
     setPanNumbers(newPanNumbers);
   };
-  const [openAttachmentDilogForLandLoard , setOpenAttchementDilogForLandLoard] = useState(false)
-var [attachedDocumment ,setAttachedDocument] = useState([])
-var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
-var [landlord_file_content ,setLandlord_file_content] = useState([])
-var [landlord_file_name ,setLandlord_file_name] = useState([])
-const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
-var [landlordFiledsIndex ,setLandlordFieldsIndex] = useState([])
-var [rentFiledsIndex ,setRentFieldsIndex] = useState([])
-const handleUploadattchment =(data)=>{
-   attachedDocumment = data
-  setAttachedDocument(attachedDocumment)
-  console.log(attachedDocumment ,data)
-}
-const handleUploadattchmentFileName =(data)=>{
-  attachedDocummentFileName = data
-  setAttachedDocumentFileName(attachedDocummentFileName)
-  console.log(attachedDocummentFileName ,data)
-  setOpenAttchementDilog(false)
-}
-
-const handleUploadattchmentForlandlord =(data)=>{
-  landlord_file_content = data
-  setLandlord_file_content(landlord_file_content)
- console.log(landlord_file_content ,data)
-}
-const handleUploadattchmentFileNameForLandloard =(data)=>{
-  landlord_file_name = data
-  setLandlord_file_name(landlord_file_name)
-  console.log(landlord_file_name ,data)
-  setOpenAttchementDilogForLandLoard(false)
-}
-  const handleChange = (event) => {
-  setSelectedValue(event.target.value);
-    if(event.target.value === "Yes"){
-      setIsShowPanNumber(true)
-      setIsPanValueThere(true)
-      setIsShowDeclaration(false)
-    }else if(event.target.value === "No"){
-      setIsPanValueThere(false)
-      setIsShowPanNumber(false)
-      setIsShowDeclaration(true)
-    }
-    console.log( isShowPannumber , panNumbers , "handle pan change")
-   
-    console.log(event.target.value)
+  const [openAttachmentDilogForLandLoard, setOpenAttchementDilogForLandLoard] = useState(false);
+  var [attachedDocumment, setAttachedDocument] = useState([]);
+  var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
+  var [landlord_file_content, setLandlord_file_content] = useState([]);
+  var [landlord_file_name, setLandlord_file_name] = useState([]);
+  const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
+  var [landlordFiledsIndex, setLandlordFieldsIndex] = useState([]);
+  var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
+  var [landLordDocs, setLandLordDocs] = useState([]);
+  var [rentDocs, setRentDocs] = useState([]);
+  const [landLordDeletedId , setLandLordDeletedID] = useState([])
+  const [rentDeletedId , setRentDeletedID] = useState([])
+  const handleUploadattchment = (data) => {
+    attachedDocumment = data;
+    setAttachedDocument(attachedDocumment);
+    console.log(attachedDocumment, data);
+  };
+  const handleUploadattchmentFileName = (data) => {
+    attachedDocummentFileName = data;
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    console.log(attachedDocummentFileName, data);
+    setOpenAttchementDilog(false);
   };
 
-  const handleChangeDeclaration = (event) =>{
-    setSeclarationSelectedValue(event.target.value)
-    if(event.target.value === "Yes"){
-      setIsShowUpload(true)
-    }else if(event.target.value === "No"){
-      setIsShowUpload(false)
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+    if (event.target.value === 'Yes') {
+      setIsShowPanNumber(true);
+      setIsPanValueThere(true);
+      setIsShowDeclaration(false);
+    } else if (event.target.value === 'No') {
+      setIsPanValueThere(false);
+      setIsShowPanNumber(false);
+      setIsShowDeclaration(true);
     }
+    console.log(isShowPannumber, panNumbers, 'handle pan change');
 
-  }
+    console.log(event.target.value);
+  };
+
+  const handleChangeDeclaration = (event) => {
+    setSeclarationSelectedValue(event.target.value);
+    if (event.target.value === 'Yes') {
+      setIsShowUpload(true);
+    } else if (event.target.value === 'No') {
+      setIsShowUpload(false);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -149,11 +144,10 @@ const handleUploadattchmentFileNameForLandloard =(data)=>{
   };
 
   const handleRoleChange = (index, newValue) => {
-     
     const newData = [...data];
     newData[index].city_type = newValue;
     setData(newData);
-    console.log(newData)
+    console.log(newData);
   };
 
   const handleRentAmountChange = (index) => (event) => {
@@ -167,141 +161,75 @@ const handleUploadattchmentFileNameForLandloard =(data)=>{
     newData[index].submittedAmount = event.target.value;
     setData(newData);
   };
-   
- const handleLandloardNameChange = (e) =>{
-  setLandLardName(e.target.value)
- }
 
- const handleLandloardAddressChange = (e) =>{
-  setLandLardAddress(e.target.value)
- }
- 
- const handlePanShowMethod = (event) =>{
+  const handleLandloardNameChange = (e) => {
+    setLandLardName(e.target.value);
+  };
 
- }
- const snackBarAlertHandleClose = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
-  }
-setSnackbarOpen(false)
-  setOpen(false);
-};
+  const handleLandloardAddressChange = (e) => {
+    setLandLardAddress(e.target.value);
+  };
 
-// const handleUploadattchment1 = (files, fileNames) => {
-//   console.log(files, fileNames, "getting from uploader ");
-
-//   // Create a new array to store the objects
-//   const newArray = [];
-
-//   // Ensure both arrays have the same length
-//   if (files.length === fileNames.length) {
-//     for (var i = 0; i < files.length; i++) {
-//       // Check if landlordFileName already exists in prevFormData
-//       const existsInPrevFormData = prevFormData.some(
-//         (item) => item.landlordFileName === fileNames[i]
-//       );
-
-//       // If it doesn't exist, add it to the newArray
-//       if (!existsInPrevFormData) {
-//         var obj = {
-//           landlordFileContent: files[i],
-//           landlordFileName: fileNames[i]
-//         };
-//         newArray.push(obj);
-//       }
-//     }
-
-//     // Update medicalTableDataDoc by merging with the existing array of objects
-//     setMedicalTableDataDoc((prevFormData) => ([
-//       ...prevFormData,
-//       ...newArray
-//     ]));
-
-//     console.log(medicalTableDataDoc, "updated");
-//     setOpenAttchementDilog(false);
-//   } else {
-//     console.error("Arrays must have the same length");
-//     setOpenAttchementDilog(false);
-//   }
-// };
-
-
-const handleUploadattchment1 = (files, fileNames) => {
-  console.log(files, fileNames, "getting from uploader ");
-
-  // Create a new array to store the objects
-  const newArray = [];
-
-  // Ensure both arrays have the same length
-  if (files.length === fileNames.length) {
-    for (var i = 0; i < files.length; i++) {
-      // Check if landlordFileName already exists in newArray
-      const existsInNewArray = newArray.some(
-        (item) => item.landlordFileName === fileNames[i]
-      );
-
-      // If it doesn't exist, add it to the newArray
-      if (!existsInNewArray) {
-        var obj = {
-          landlordFileContent: files[i],
-          landlordFileName: fileNames[i]
-        };
-        newArray.push(obj);
-      }
+  const handlePanShowMethod = (event) => {};
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
 
-    // Update medicalTableDataDoc by merging with the existing array of objects
-    setMedicalTableDataDoc((prevFormData) => ([
-      ...prevFormData,
-      ...newArray
-    ]));
+  const handleLandLordattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    landlord_file_name = fileData?.map((doc) => doc.fileName);
+    setLandlord_file_name(landlord_file_name);
+    landlord_file_content = fileData?.map((doc) => doc.fileContent);
+    setLandlord_file_content(landlord_file_content);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      landlordID: item.id ? item.id : 0,
+      landlordFileName: item.fileName,
+      landlordFileContent: item.fileContent,
+    }));
+    landLordDocs = transformedData;
+    setLandLordDocs(landLordDocs);
 
-    console.log(medicalTableDataDoc, "updated");
+    console.log(landLordDocs, 'landlordDocs');
+
+    console.error('Arrays must have the same length');
     setOpenAttchementDilog(false);
-  } else {
-    console.error("Arrays must have the same length");
+  };
+  const handleRentattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      ID: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    rentDocs = transformedData;
+    setRentDocs(rentDocs);
+
+    console.log(rentDocs, 'landlordDocs');
     setOpenAttchementDilog(false);
-  }
-};
-
-// const handleUploadattchment1 = (files, fileNames) => {
-
-//   landlord_file_name = fileNames
-//   setLandlord_file_name(landlord_file_name)
-//   landlord_file_content = files
-//   setLandlord_file_content(landlord_file_content)
-//   console.log(files, fileNames, "getting from uploader ");
-
-//   const newArray = [];
-//   if (files.length === fileNames.length) {
-//     for (var i = 0; i < files.length; i++) {
-//       var obj = {
-//         landlordFileContent: files[i],
-//         landlordFileName: fileNames[i]
-//       };
-//       newArray.push(obj);
-//     }
-//     setMedicalTableDataDoc((prevFormData) => ([
-//       // ...prevFormData,
-//       ...newArray
-//     ]));
-
-//     console.log(medicalTableDataDoc, "updated");
-//     setOpenAttchementDilog(false)
-//   } else {
-//     console.error("Arrays must have the same length");
-//     setOpenAttchementDilog(false)
-//   }
-// };
-const correctedData = data
-  .filter((entry) => entry.city_type !== '' && entry.rentAmount !== '' && entry.submittedAmount !== '')
-  .map((entry) => ({
-    month: entry.month,
-    cityType: entry.city_type,
-    rentAmount: parseFloat(entry.rentAmount),
-    submittedAmount: parseFloat(entry.submittedAmount),
-  }));
-
+  };
+  console.log(rentDocs, 'landlordDocs');
+const handleLandLordDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(landLordDeletedId, "deletedelete")
+}
+const handleRentDeletedID = ( data)=>{
+  console.log(data , "delete")
+  setRentDeletedID( (prevIDs) => [...prevIDs, data])
+  console.log(rentDeletedId, "deletedelete")
+}
   const updatedData = data?.map((entry) => ({
     month: entry.month,
     city_type: entry.city_type,
@@ -427,134 +355,136 @@ const correctedData = data
       });
   };
 
- const getRentDetails = async () => {
-  const payload = {  
-  "employeeId" :"ibm3" };
+  const getRentDetails = async () => {
+    const payload = {
+      employeeId: empId,
+    };
 
-  const config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    // url: baseUrl +'getSingleLicPremium',
-    url : baseUrl + "getRentDeclarationDetails",
-    headers: {
-      Authorization:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-      'Content-Type': 'text/plain',
-    },
-    data: payload,
-  };
-  const result = await axios
-    .request(config)
-    .then((response) => {
-      if (response.status === 200) {
-        const rowsData = response?.data?.data;
-        if(rowsData !== null || undefined){
-          setIsPreviousData(true)
-          
-        }
-        console.log(rowsData)
-        setRendDetailsData(rowsData);
-        setLandLardName(response?.data?.data?.nameOfLandlord)
-        setLandLardAddress(response?.data?.data?.addressOfLandlord)
-        setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord) 
-        setIsShowPanNumber(response?.data?.data?.panOfTheLandlord) 
-        setSelectedValue(response?.data?.data?.panOfTheLandlord? "Yes" : "No")
-        response?.data?.data?.panOfTheLandlord ? setSelectedValue(response?.data?.data?.panOfTheLandlord)  : ""
-        setPanNumbers( response?.data?.data?.pan_number == undefined || null ?['', '', ''] :response?.data?.data?.pan_number  ) 
-    rentFiledsIndex =   setRentFieldsIndex(rowsData.landLordDocs.map(doc => doc.ID))
-landlordFiledsIndex =rowsData.landLordDocs.map(doc => doc.landlordID)
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/getRentDeclarationDetails',
+      headers: {
+        Authorization:token ,  
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          if (rowsData !== null || undefined) {
+            setIsPreviousData(true);
+          }
+          console.log(rowsData);
+          setRendDetailsData(rowsData);
+          setLandLardName(response?.data?.data?.nameOfLandlord);
+          setLandLardAddress(response?.data?.data?.addressOfLandlord);
+          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
+          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
+          setSelectedValue(response?.data?.data?.panOfTheLandlord ? 'Yes' : 'No');
+          response?.data?.data?.panOfTheLandlord
+            ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
+            : '';
+          setPanNumbers(
+            response?.data?.data?.pan_number == undefined || null
+              ? ['', '', '']
+              : response?.data?.data?.pan_number
+          );
+          rentFiledsIndex = setRentFieldsIndex(rowsData.landLordDocs.map((doc) => doc.ID));
+          landlordFiledsIndex = rowsData.landLordDocs.map((doc) => doc.landlordID);
+          console.log(response?.data?.data?.landLordDocs ? rowsData?.landLordDocs : [] ,"response?.data?.data?.landLordDocs ? landLordDocsresponse?.data?.data?.landLordDocs : []")
+setLandLordDocs(rowsData?.landLordDocs ? rowsData?.landLordDocs : [] )
+setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
+          console.log(rowsData?.landLordDocs);
+          setLandlordFieldsIndex(landlordFiledsIndex);
+          console.log(
+            landLardName,
+            landLardAddress,
+            isShowDeclaration,
+            isShowPannumber,
+            panNumbers,
+            response?.data?.data?.pan_number,
+            landlordFiledsIndex,
+            rentFiledsIndex,
+            rentDocs ,
+            landLordDocs
+          );
 
-console.log(rowsData?.landLordDocs)
-        setLandlordFieldsIndex(landlordFiledsIndex)
-        console.log(landLardName , landLardAddress ,isShowDeclaration ,isShowPannumber ,panNumbers ,response?.data?.data?.pan_number ,landlordFiledsIndex , rentFiledsIndex )
+          setData((prevData) => {
+            return prevData.map((existingMonth) => {
+              const matchingMonth = rowsData?.data?.find(
+                (apiMonth) => apiMonth.month === existingMonth.month
+              );
 
-        setData(prevData => {
-          return prevData.map(existingMonth => {
-            const matchingMonth = rowsData?.data?.find(apiMonth => apiMonth.month === existingMonth.month);
-      
-            if (matchingMonth) {
-              // If the month exists in the API response, update the data
-              return {
-                ...existingMonth,
-                city_type: matchingMonth.cityType,
-                rentAmount: matchingMonth.rentAmount,
-                submittedAmount: matchingMonth.submittedAmount
-              };
-            }
-      
-            // If the month doesn't exist in the API response, keep the existing data
-            return existingMonth;
+              if (matchingMonth) {
+                // If the month exists in the API response, update the data
+                return {
+                  ...existingMonth,
+                  city_type: matchingMonth.cityType,
+                  rentAmount: matchingMonth.rentAmount,
+                  submittedAmount: matchingMonth.submittedAmount,
+                };
+              }
+
+              // If the month doesn't exist in the API response, keep the existing data
+              return existingMonth;
+            });
           });
-        });
-        console.log(JSON.stringify(response?.data?.data), 'result');
+          console.log(JSON.stringify(response?.data?.data), 'result');
 
-        console.log(response);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  //  console.log(result, 'resultsreults');
-};
-console.log(rentDetailsData , "rentDetailsDatarentDetailsData" , isPreviousData ,"previousData" ,panNumbers)
-const attchementHandler = () =>{
-  setOpenAttchementDilog(true)
-}
-const landloardDeclarationAttachment = () =>{
-  setOpenAttchementDilogForLandLoard(true)
-}
-const closeAttchementDilod = () =>{
-  setOpenAttchementDilog(false)
-}
-const closeLandLordAttchementDilod = () =>{
-  setOpenAttchementDilogForLandLoard(false)
-}
- console.log(data, 'resultsreults');
-useEffect(() => {
-  const fetchData = async () => {
-    getRentDetails();
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
   };
-  fetchData();
-  
-}, [reload]);
+  console.log(
+    rentDetailsData,
+    'rentDetailsDatarentDetailsData',
+    isPreviousData,
+    'previousData',
+    panNumbers
+  );
+  const attchementHandler = () => {
+    setOpenAttchementDilog(true);
+  };
+  const landloardDeclarationAttachment = () => {
+    setOpenAttchementDilogForLandLoard(true);
+  };
+  const closeAttchementDilod = () => {
+    setOpenAttchementDilog(false);
+  };
+  const closeLandLordAttchementDilod = () => {
+    setOpenAttchementDilogForLandLoard(false);
+  };
+  console.log(data, 'resultsreults');
+  useEffect(() => {
+    const fetchData = async () => {
+      getRentDetails();
+    };
+    fetchData();
+  }, [reload]);
 
+  const handleEditOrsave = () => {
+    rentDetailsData?.addressOfLandlord !== undefined ? editRentDetails() : saveRentDetails();
+  };
+    // useEffect to handle changes in landLordDocs
+    useEffect(() => {
+      console.log('Updated landLordDocs:', landLordDocs);
+      // You can perform additional actions here when landLordDocs changes
+    }, [landLordDocs]);
 
-const handleEditOrsave = ()=>{
-  (rentDetailsData?.addressOfLandlord !== undefined  )?editRentDetails() :  saveRentDetails()
- 
-}
+  console.log(landLordDocs , rentDocs ,"dcuments")
 
-const [rentDocs, setRentDocs] = useState([
-  {  },
-]);
-
-const [landLordDocs, setLandLordDocs] = useState([
-  {  },
-]);
-const handleUploadattchmentForlandlord2 = () => {
-  // Assuming attachedDocummentFileName and attachedDocumment are arrays of strings
-  const newAttachments = attachedDocummentFileName.map((fileName, index) => ({
-    landlordID: index, // or use Date.now() if you want unique IDs
-    landlordFileName: fileName,
-    landlordFileContent: attachedDocumment[index] || '', // Assuming attachedDocumment is an array
-  }));
-
-  setLandLordDocs((prevLandLordDocs) => {
-    // Ensure prevLandLordDocs is not undefined
-    const updatedLandLordDocs = prevLandLordDocs || [];
-    return [...updatedLandLordDocs, ...newAttachments];
-  });
-
-  // Assuming you want to close the dialog after uploading
-  setOpenAttchementDilogForLandLoard(false);
-};
-
-console.log(rentDetailsData?.addressOfLandlord ,"rentDetailsData?.length")
-console.log(landLordDocs ,"documnents" ,attachedDocummentFileName ,"attachedDocummentFileName",attachedDocumment)
-  console.log(data ,"datadatadata")
-    return (
-        <div>
-          {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
+  return (
+    <div>
+      {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
            <Grid item>
              <TextField
               sx={{ width: '20vw' }}
@@ -578,15 +508,31 @@ console.log(landLordDocs ,"documnents" ,attachedDocummentFileName ,"attachedDocu
             <Button className="button">Report</Button>
           </Grid>
         </Grid> */}
-        <Grid item container xs={12} spacing={2} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
+      <Grid
+        item
+        container
+        xs={12}
+        spacing={2}
+        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
+      >
         <Grid item xs={6}>
-      
-          <TextField label="Name Of The Landloard " value={landLardName} variant="outlined" fullWidth  onChange={handleLandloardNameChange}/>
+          <TextField
+            label="Name Of The Landloard "
+            value={landLardName}
+            variant="outlined"
+            fullWidth
+            onChange={handleLandloardNameChange}
+          />
         </Grid>
-       
+
         <Grid item xs={6}>
-         
-          <TextField label="Address Of The Landloard" value={landLardAddress} variant="outlined" fullWidth  onChange={handleLandloardAddressChange}/>
+          <TextField
+            label="Address Of The Landloard"
+            value={landLardAddress}
+            variant="outlined"
+            fullWidth
+            onChange={handleLandloardAddressChange}
+          />
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
@@ -611,14 +557,12 @@ console.log(landLordDocs ,"documnents" ,attachedDocummentFileName ,"attachedDocu
               >
                 <TableCell style={{ padding: '4px !important' }}>{row.month}</TableCell>
                 <TableCell style={{ width: '150px' }}>
-                <Autocomplete
-          value={row.city_type}
-          onChange={(event, newValue) => handleRoleChange(index, newValue)}
-          options={['Metro', 'Non-Metro']}
-          renderInput={(params) => (
-            <TextField {...params} label="Select" />
-          )}
-        />
+                  <Autocomplete
+                    value={row.city_type}
+                    onChange={(event, newValue) => handleRoleChange(index, newValue)}
+                    options={['Metro', 'Non-Metro']}
+                    renderInput={(params) => <TextField {...params} label="Select" />}
+                  />
                 </TableCell>
                 <TableCell>
                   <TextField
@@ -639,98 +583,123 @@ console.log(landLordDocs ,"documnents" ,attachedDocummentFileName ,"attachedDocu
           </TableBody>
         </Table>
       </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-         <Grid container spacing={2}
-          // alignItems="center" 
-          direction="row" style={{ marginBottom: "1rem" }}>
-      <Grid item container xs={4} spacing={2} 
-      alignItems="center"
-       justifyContent="space-evenly" direction="row" style={{ marginBottom: "1rem", height: "60px" }}>
-        <Grid item><Button className="button" onClick={attchementHandler}>Attachment</Button></Grid> 
-        <Grid item alignItems="center">
-          <Button className="button" onClick={handleEditOrsave}>Save</Button>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={2} xs={8} alignItems="center" justifyContent="flex-end" direction="column" style={{ marginBottom: "1rem" }}>
-        {/* Text and Radio Buttons in a single line */}
-        <Grid item container direction="row" alignItems="center">
-          <Typography component="span" marginLeft='10px' style={{color: '#7D7878', fontSize: '0.9rem'}}>
-            Whether PAN Of The Landlord Available  &nbsp;: &nbsp;
-          </Typography>
-          <RadioGroup
-            aria-label="options"
-            name="options"
-            value={selectedValue}
-            onChange={handleChange}
-            row // align radio buttons horizontally
-          >
-            <FormControlLabel
-              value="Yes"
-              control={<Radio />}
-              label="Yes"
-            />
-            <FormControlLabel
-              value="No"
-              control={<Radio />}
-              label="No"
-            />
-          </RadioGroup>
-        </Grid>
-
-        {isShowPannumber ?
-          <Grid item container direction="column" alignItems="center" spacing={2}>
-                {panNumbers &&  panNumbers?.map((value, index) => (
-      <TextField
-        key={index}
-        label={`If Yes PAN ${index + 1} Number`}
-        variant="outlined"
-        onChange={handlePanNumberChange(index)}
-        value={value}
-        style={{ marginBottom: "10px" }}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    ))}
-           
+      <Grid
+        container
+        spacing={2}
+        // alignItems="center"
+        direction="row"
+        style={{ marginBottom: '1rem' }}
+      >
+        <Grid
+          item
+          container
+          xs={4}
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-evenly"
+          direction="row"
+          style={{ marginBottom: '1rem', height: '60px' }}
+        >
+          <Grid item>
+            <Button className="button" onClick={attchementHandler}>
+              Attachment
+            </Button>
           </Grid>
-          : null}
-        {isShowDeclaration ?
-         <> <Grid item container direction="row" alignItems="center">
-            <Typography component="span" marginLeft='10px'style={{color: '#7D7878',  fontSize: '0.9rem'}}>
-              If No, Whether Whether Declaration Received From Landlord  &nbsp;: &nbsp;
+          <Grid item alignItems="center">
+            <Button className="button" onClick={handleEditOrsave}>
+              Save
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid
+          container
+          spacing={2}
+          xs={8}
+          alignItems="center"
+          justifyContent="flex-end"
+          direction="column"
+          style={{ marginBottom: '1rem' }}
+        >
+          {/* Text and Radio Buttons in a single line */}
+          <Grid item container direction="row" alignItems="center">
+            <Typography
+              component="span"
+              marginLeft="10px"
+              style={{ color: '#7D7878', fontSize: '0.9rem' }}
+            >
+              Whether PAN Of The Landlord Available &nbsp;: &nbsp;
             </Typography>
             <RadioGroup
               aria-label="options"
               name="options"
-              value={declarationSelectedValue}
-              onChange={handleChangeDeclaration}
+              value={selectedValue}
+              onChange={handleChange}
               row // align radio buttons horizontally
             >
-              <FormControlLabel
-                value="Yes"
-                control={<Radio />}
-                label="Yes"
-              />
-              <FormControlLabel
-                value="No"
-                control={<Radio />}
-                label="No"
-              />
+              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="No" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid>
-           {isShowUpload ? <Grid item><Button className="button" onClick={landloardDeclarationAttachment}>Declaration Attachment</Button></Grid> : null}</>
-          : null}
 
+          {isShowPannumber ? (
+            <Grid item container direction="column" alignItems="center" spacing={2}>
+              {panNumbers &&
+                panNumbers?.map((value, index) => (
+                  <TextField
+                    key={index}
+                    label={`If Yes PAN ${index + 1} Number`}
+                    variant="outlined"
+                    onChange={handlePanNumberChange(index)}
+                    value={value}
+                    style={{ marginBottom: '10px' }}
+                  />
+                ))}
+            </Grid>
+          ) : null}
+          {isShowDeclaration ? (
+            <>
+              {' '}
+              <Grid item container direction="row" alignItems="center">
+                <Typography
+                  component="span"
+                  marginLeft="10px"
+                  style={{ color: '#7D7878', fontSize: '0.9rem' }}
+                >
+                  If No, Whether Whether Declaration Received From Landlord &nbsp;: &nbsp;
+                </Typography>
+                <RadioGroup
+                  aria-label="options"
+                  name="options"
+                  value={declarationSelectedValue}
+                  onChange={handleChangeDeclaration}
+                  row // align radio buttons horizontally
+                >
+                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                </RadioGroup>
+              </Grid>
+              {isShowUpload ? (
+                <Grid item>
+                  <Button className="button" onClick={landloardDeclarationAttachment}>
+                    Declaration Attachment
+                  </Button>
+                </Grid>
+              ) : null}
+            </>
+          ) : null}
+        </Grid>
       </Grid>
-    </Grid>
-    <Snackbar
+      <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={snackBarAlertHandleClose}
@@ -739,15 +708,35 @@ console.log(landLordDocs ,"documnents" ,attachedDocummentFileName ,"attachedDocu
           horizontal: 'center',
         }}
       >
-        <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
 
-{   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleUploadattchment} /> : null}
-{   openAttachmentDilogForLandLoard?   <FileUploader showAttachmentDilog = { openAttachmentDilogForLandLoard} closeAttchementDilod = {closeLandLordAttchementDilod} handleUploadattchmentFileName ={handleUploadattchment} handleUploadattchment ={handleUploadattchment1} previousData= {rentDetailsData? rentDetailsData?.landLordDocs : null}/> : null}
-
-        </div>
-      );
+      {openAttachmentDilog ? (
+        <FileUploader
+          showAttachmentDilog={openAttachmentDilog}
+          closeAttchementDilod={closeAttchementDilod}
+          handleUploadattchmentFileName={handleUploadattchmentFileName}
+          handleUploadattchment={handleRentattchment}
+          handleDeletedID = {handleRentDeletedID}
+          previousData={rentDocs}
+        />
+      ) : null}
+      {openAttachmentDilogForLandLoard ? (
+        <FileUploader
+          showAttachmentDilog={openAttachmentDilogForLandLoard}
+          closeAttchementDilod={closeLandLordAttchementDilod}
+          handleUploadattchmentFileName={handleUploadattchment}
+          handleUploadattchment={handleLandLordattchment}
+          previousData={landLordDocs}
+          handleDeletedID = {handleLandLordDeletedID}
+        />
+      ) : null}
+    </div>
+  );
 }
-
