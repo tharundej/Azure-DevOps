@@ -33,11 +33,11 @@ export default function ShiftSwap() {
     
         { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
-        { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "from_shift_name", label: "Old Shift Name", width: 180, type: "text" },
     
         // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "to_shift_name", label: "New Shift Name", width: 220, type: "text" },
         { id: "start_date", label: "Swap Date", width: 220, type: "text" },
-        { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
         // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     

@@ -92,16 +92,22 @@ export default function AssignShiftComponent() {
       ];
     
       const defaultPayload ={
-        "cid": "COMP2",
-        "locationId":32,
+        "cid": localStorage.getItem("companyID"),
+        "locationId": 30,
         "search": "",
         "page": 1,
         "count": 10,
         "externalFilters": {
-            "shift_term": "",
-            "start_date": "",
-            "end_date": "",
-            "shift_name": ""
+            "shiftName": "",
+            "shiftTerm": "",
+            "startDate": {
+                "from": "",
+                "to": ""
+            },
+            "endDate": {
+                "from": "",
+                "to": ""
+            }
         },
         "sort": {
             "key": 0,

@@ -34,43 +34,49 @@ export default function ShiftRoast() {
    
     
         
-        { id: "employee_id", label: "Employee Id", width: 180, type: "text" },
+        { id: "shift_group_name", label: "Shift Group Name", width: 180, type: "text" },
         
-        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
         
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "start_time", label: "Start Time", width: 180, type: "text" },
+        { id: "start_time", label: "Employees", width: 180, type: "badge" },
         
-        { id: "end_time", label: "End Time", width: 100, type: "text" },
-        { id: "shift_term", label: "Shift Term", width: 100, type: "text" },
-        { id: "shift_group", label: "Shift Group", width: 220, type: "text" },
-        { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
+        { id: "end_time", label: "Department", width: 100, type: "text" },
+        { id: "shift_term", label: "Designation", width: 100, type: "text" },
+        { id: "shift_group", label: "Grade", width: 220, type: "text" },
+        // { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
         
-        { id: "start_date", label: " Start Date", width: 100, type: "text" },
-        { id: "end_date", label: "End Date", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "badge" },
+        // { id: "start_date", label: " Start Date", width: 100, type: "text" },
+        // { id: "end_date", label: "End Date", width: 100, type: "text" },
+        // { id: "status", label: "Status", width: 100, t ype: "badge" },
         // { id: '', width: 88 },
     
       ];
     
       const defaultPayload={
-        "company_id":localStorage.getItem('companyID'),
-        "page":0,
-        "search":"ram",
-        "externalFilters":{
-          "shift_name":"",
-          "shift_term":"",
-          "shift_group":"",
-          "supervisor_name":""
+        "cid":localStorage.getItem('companyID'),
+        "locationId": 32,
+        "search": "",
+        "page": 1,
+        "count": 10,
+        "externalFilters": {
+            "shiftName": "",
+            "shiftTerm": "",
+            "startDate": {
+                "from": "",
+                "to": ""
+            },
+            "endDate": {
+                "from": "",
+                "to": ""
+            }
         },
-        "count":6,
-       "sort":{
-          "key":0,
-          "orderBy":""
+        "sort": {
+            "key": 0,
+            "orderBy": ""
         }
-      }
+    }
     
       const actions = [
     

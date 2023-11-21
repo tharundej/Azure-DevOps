@@ -123,7 +123,8 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
-
+//validation
+const [shiftNameError, setShiftNameError] = useState(false);
   const [departmentData,setDepartmentData] =useState([])
   const [CurrentDepartmentData,setCurrentDepartmentData] =useState({})
   const [CurrentShiftGroupNameData,setCurrentShiftGroupNameData] =useState({})
@@ -140,15 +141,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   console.log("🚀 ~ file: AddeployeShift.jsx:140 ~ AddEmployeShift ~ CurrentGradeData:", CurrentGradeData.designationGradeID)
  const [SwitchValue , SetSwitchValue ] = useState('')
   console.log("🚀 ~ file: AddeployeShift.jsx:142 ~ AddEmployeShift ~ SwitchValue:", SwitchValue)
-  // const handleToggleChange = ()=>{
-  //   setIsemployeLevel(!isemployeLevel) 
-  //   if (!isemployeLevel){
-  //     SetSwitchValue('0')
-  //   }  
-  //   if(isemployeLevel){
-  //     SetSwitchValue('1')
-  //   }
-  // }
+
   const getDepartment = async ()=>{
     try{
     const  data= {
@@ -275,7 +268,8 @@ return arr
       const data = {
         shiftConfigurationId: CurrentShiftNameData?.shiftConfigurationId !== undefined ? parseInt( CurrentShiftNameData?.shiftConfigurationId) : null,
         // ShiftTerm:"weekly",
-        shiftGroupName: CurrentShiftGroupNameData?.ShiftGroupName !== undefined ? CurrentShiftGroupNameData?.ShiftGroupName : '',
+        shiftGroupName: CurrentShiftGroupNameData?.ShiftGroupName !== undefined ? CurrentShiftGroupNameData?.ShiftGroupName : CurrentShiftGroupNameData,
+        shiftGroupNameId: CurrentShiftGroupNameData?.employeeShiftGroupId !== undefined ? parseInt(CurrentShiftGroupNameData?.employeeShiftGroupId) : 0 ,
         supervisorId:'ibm4',
         toggle:SwitchValue !== '' ? parseInt(SwitchValue) : 0,
         departmentId:CurrentDepartmentData?.departmentID !== undefined ? JSON.stringify (CurrentDepartmentData?.departmentID) : '',
@@ -286,7 +280,10 @@ return arr
         locationId:"30"
       }
           console.log(data, 'data111ugsghghh');
-    
+          if (CurrentShiftNameData?.shiftConfigurationId === undefined) {
+            // Display an error or prevent submission
+            alert('Please select a shift name.');
+          } else {
           const response = await instance.post('/addShiftDetails', data).then(
             (successData) => {
               handleClose()
@@ -300,23 +297,12 @@ return arr
               console.log('lllll', error);
             }
           );
-        } catch (error) {
+        } }catch (error) {
           console.error(error);
         }
   });
   
-  // const Options = [
-  //   {id :"2" , name:"shift A"},
-  //   {id :"3" , name:"shift B"},
-  //   {id :"4" , name:"shift C"},
-  // ]
-  // const top100Films = [
-  //   { title: 'The Shawshank Redemption', year: 1994 },
-  //   { title: 'The Godfather', year: 1972 },
-  //   { title: 'The Godfather: Part II', year: 1974 },
-  //   { title: 'The Dark Knight', year: 2008 },
-  //   { title: '12 Angry Men', year: 1957 },
-  // ];
+
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -352,6 +338,7 @@ return arr
 
 <Autocomplete
 disablePortal
+freeSolo
 id="combo-box-dem"
 options={ShiftGroupName || []}
 value={CurrentShiftGroupNameData?.employeeShiftGroupId}
@@ -385,19 +372,23 @@ id="combo-box-dem33"
 options={ShiftName || []}
 value={CurrentShiftNameData?.shiftConfigurationId}
 getOptionLabel={(option) => option.shiftName}
+
 onChange={(e,newvalue)=>{
 
 
 setCurrentShiftNameData(newvalue
 )
 // getDesignation(newvalue)
-
+setShiftNameError(newvalue === null);
 
 }}
 sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
-renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
+renderInput={(params) => <TextField {...params}  
+          error={shiftNameError}
+helperText={shiftNameError ? 'Please select a shift name.' : ''} 
+label="Select Shift  Name" />}
 />
 
 <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -44,8 +44,8 @@ import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
 export default function EditShiftRoaster({  currentUser , setShowEdit ,handleClose, editData}) {
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData )
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
@@ -311,7 +311,7 @@ return arr
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-   Add Employee Shift Here ...
+  Edit Employee Shift Here ...
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>

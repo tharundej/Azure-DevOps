@@ -200,7 +200,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
       }}
     >
 
-      <Autocomplete
+      {/* <Autocomplete
   // multiple hhs
   disablePortal
   id="combo-box-demo"
@@ -231,7 +231,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
-/>
+/> */}
 
 
                       <Autocomplete
