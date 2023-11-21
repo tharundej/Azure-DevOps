@@ -56,7 +56,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const statusOptions = ['Active', 'In Active'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
 
   const onSubmit = handleSubmit(async (data) => {
     data.status = selectedStatus;

@@ -12,27 +12,68 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
+import { createVendorAPI, updateVendorAPI } from 'src/api/Accounts/Vendor';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import formatDateToYYYYMMDD from '../global/GetDateFormat';
 
-export default function CreateVendor({ currentUser, handleClose }) {
+export default function CreateVendor({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string(),
+    vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
+    vendorName: Yup.string().required('vendor Name is Required'),
+    vendorPhoneNo: Yup.number().required('vendor Phone No is Required'),
+    vendorEmailID: Yup.string().required('vendor Email ID is Required'),
+    address1: Yup.string().required('Address 1 is Required'),
+    address2: Yup.string(),
+    city: Yup.string().required('City is Required'),
+    state: Yup.string().required('State is Required'),
+    stateCode: Yup.number(),
+    country: Yup.string().required('country is Required'),
+    pincode: Yup.number().required('pincode is Required'),
+    vendorPANNo: Yup.string().required('vendorPANNo is Required'),
+    vendorGSTNo: Yup.string().required('vendorGSTNo is Required'),
+    vendorTANNo: Yup.string(),
+    vendorBankName: Yup.string().required('vendorBankName is Required'),
+    vendorAccountHolderName: Yup.string().required('vendorAccountHolderName is Required'),
+    vendorBankAccountNo: Yup.number().required('vendorBankAccountNo is Required'),
+    vendorBankIFSCCode: Yup.string().required('vendorBankIFSCCode is Required'),
+    bankBranchName: Yup.string().required('bankBranchName is Required'),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      emailID: currentUser?.emailID || '',
-      phoneNo: currentUser?.phoneNo || '',
-      address: currentUser?.address || '',
-      bankName: currentUser?.bankName || '',
-      nameAsPerBank: currentUser?.nameAsPerBank || '',
-      accountNo: currentUser?.accountNo || '',
-      ifscCode: currentUser?.ifscCode || '',
-      bankBranchName: currentUser?.bankBranchName || '',
-      status: currentUser?.status || '',
+      vendorID: currentData?.vendorID || 0,
+      companyID: currentData?.companyID || 'COMP1',
+      vendorCompanyName: currentData?.vendorCompanyName || '',
+      vendorName: currentData?.vendorName || '',
+      vendorPhoneNo: currentData?.vendorPhoneNo || '',
+      vendorEmailID: currentData?.vendorEmailID || '',
+      address1: currentData?.address1 || '',
+      address2: currentData?.address2 || '',
+      city: currentData?.city || '',
+      state: currentData?.state || '',
+      stateCode: currentData?.stateCode || '',
+      country: currentData?.country || '',
+      pincode: currentData?.pincode || '',
+      vendorPANNo: currentData?.vendorPANNo || '',
+      vendorGSTNo: currentData?.vendorGSTNo || '',
+      vendorTANNo: currentData?.vendorTANNo || '',
+      vendorBankName: currentData?.vendorBankName || '',
+      vendorAccountHolderName: currentData?.vendorAccountHolderName || '',
+      vendorBankAccountNo: currentData?.vendorBankAccountNo || '',
+      vendorBankIFSCCode: currentData?.vendorBankIFSCCode || '',
+      bankBranchName: currentData?.bankBranchName || '',
+      onboardingDate: currentData?.onboardingDate || '',
+      offboardingDate: currentData?.offboardingDate || '',
+      status: currentData?.status || 'Active',
     }),
-    [currentUser]
+    [currentData]
   );
 
   const methods = useForm({
@@ -47,39 +88,73 @@ export default function CreateVendor({ currentUser, handleClose }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    errors,
   } = methods;
   const values = watch();
-
-  const statusOptions = ['Active', 'Inactive'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
-  const handleStatusChange = (event, newValue) => {
-    setSelectedStatus(newValue);
-  };
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [datesUsed, setDatesUsed] = useState({
+    onboardingDate: defaultValues?.onboardingDate
+      ? dayjs(defaultValues?.onboardingDate)
+      : dayjs(new Date()),
+    offboardingDate: defaultValues?.offboardingDate
+      ? dayjs(defaultValues?.offboardingDate)
+      : dayjs(new Date()),
+  });
+  const statusOptions = ['Active', 'In Active'];
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
+  console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
     data.status = selectedStatus;
+    data.onboardingDate = formatDateToYYYYMMDD(datesUsed?.onboardingDate);
+    data.offboardingDate = formatDateToYYYYMMDD(datesUsed?.offboardingDate);
     try {
       console.log(data, 'data111ugsghghh');
-
-      const response = await instance.post('addFactory', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      let response = '';
+      if (currentData?.vendorID) {
+        response = await updateVendorAPI(data);
+      } else {
+        response = await createVendorAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      currentData?.vendorID ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      console.log('error', error);
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        // Handle the case where the asset already exists
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        // Handle other errors
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Vendor</DialogTitle>
-
+        <DialogTitle>{currentData?.vendorID ? 'Edit' : 'Add New'} Vendor</DialogTitle>
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}
@@ -88,29 +163,68 @@ export default function CreateVendor({ currentUser, handleClose }) {
             marginTop={2}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              sm: 'repeat(4, 1fr)',
             }}
           >
-            <RHFTextField name="vendorname" label="Vendor Name" />
-            <RHFTextField name="factoryname" label="Factory Name" />
-            <RHFTextField name="phoneNo" label="Phone No" />
-            <RHFTextField name="emailID" label="Email ID" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="panno" label="PAN No" />
-            <RHFTextField name="gstno" label="GST No" />
-            <RHFTextField name="bankName" label="Bank Name" />
-            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
-            <RHFTextField name="accountNo" label="Account No" />
-            <RHFTextField name="ifscCode" label="IFSC Code" />
-            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFTextField name="vendorCompanyName" label="Vendor Company Names" />
+            <RHFTextField name="vendorName" label="vendor Name" />
+            <RHFTextField name="vendorPhoneNo" label="Vendor Phone No" />
+            <RHFTextField name="vendorEmailID" label="Vendor Email Id" />
+            <RHFTextField name="address1" label="Address 1" />
+            <RHFTextField name="address2" label="Address 2" />
+            <RHFTextField name="city" label="city" />
+            <RHFTextField name="state" label="state" />
+            <RHFTextField name="stateCode" label="stateCode" />
+            <RHFTextField name="country" label="country" />
+            <RHFTextField name="pincode" label="pincode" />
+            <RHFTextField name="vendorPANNo" label="vendorPANNo" />
+            <RHFTextField name="vendorGSTNo" label="vendorGSTNo" />
+            <RHFTextField name="vendorTANNo" label="vendorTANNo" />
+            <RHFTextField name="vendorBankName" label="vendorBankName" />
+            <RHFTextField name="vendorAccountHolderName" label="vendorAccountHolderName" />
+            <RHFTextField name="vendorBankAccountNo" label="vendorBankAccountNo" />
+            <RHFTextField name="vendorBankIFSCCode" label="vendorBankIFSCCode" />
+            <RHFTextField name="bankBranchName" label="bankBranchName" />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="on boarding Date"
+                  value={datesUsed?.onboardingDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      onboardingDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="off boarding Date"
+                  value={datesUsed?.offboardingDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      offboardingDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <RHFAutocomplete
               name="status"
-              id="status-autocomplete"
+              id="status"
               options={statusOptions || []}
               value={selectedStatus}
               onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Select Status" variant="outlined" />
+                <TextField {...params} label="Select status Type" variant="outlined" />
               )}
             />
           </Box>
@@ -120,8 +234,8 @@ export default function CreateVendor({ currentUser, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.vendorID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -130,6 +244,6 @@ export default function CreateVendor({ currentUser, handleClose }) {
 }
 
 CreateVendor.propTypes = {
-  currentUser: PropTypes.object,
+  currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };
