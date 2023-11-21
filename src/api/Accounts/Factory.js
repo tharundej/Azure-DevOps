@@ -12,7 +12,7 @@ export const createFactoryAPI = async (requestBody) => {
 };
 export const getFactoryListAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`listFactory`, requestBody, apiHeaders);
+    const response = await instance.post(`getallLocation`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data.data;
   } catch (error) {
@@ -22,7 +22,7 @@ export const getFactoryListAPI = async (requestBody) => {
 };
 export const updateFactoryAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`editFactory`, requestBody, apiHeaders);
+    const response = await instance.post(`editLocation`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {

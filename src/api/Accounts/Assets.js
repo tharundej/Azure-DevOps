@@ -10,7 +10,6 @@ export const createAssetsAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
-
 export const getAssetsListAPI = async (requestBody) => {
   try {
     const response = await instance.post(`listassets`, requestBody, apiHeaders);
