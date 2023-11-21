@@ -33,9 +33,9 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       companyID: currentData?.companyID || 'COMP1',
       locationName: currentData?.locationName || '',
       locationPhone: currentData?.locationPhone || '',
-      locationEmailID: currentData?.locationEmailID || '',
-      locationAddressLine1: currentData?.locationAddressLine1 || '',
-      locationAddressLine2: currentData?.locationAddressLine2 || '',
+      locationEmailID: currentData?.locationEmailid || '',
+      locationAddressLine1: currentData?.addressLine1 || '',
+      locationAddressLine2: currentData?.addressLine2 || '',
       locationCity: currentData?.locationCity || '',
       locationPincode: currentData?.locationPincode || '',
       locationState: currentData?.locationState || '',
@@ -71,7 +71,8 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
         console.log('location success', response);
         const stateNames = response.map((stateObj) => stateObj.state);
         setLocationsOptions(stateNames);
-        const defaultLocation = response.find((state) => state === defaultValues.locationState);
+        console.log('defaultValues.locationState', defaultValues.locationState);
+        const defaultLocation = defaultValues.locationState;
         setSelectedLocation(defaultLocation || stateNames[0]);
       } catch (error) {
         setErrorMessage(error.message);
@@ -100,7 +101,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
         response = await createFactoryAPI(data);
       }
       console.log('Create success', response);
-      handleCallSnackbar(response.Message, 'success');
+      handleCallSnackbar(response.message, 'success');
       reset();
       setTimeout(() => {
         handleClose(); // Close the dialog on success
@@ -180,7 +181,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             {currentData?.locationName ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
