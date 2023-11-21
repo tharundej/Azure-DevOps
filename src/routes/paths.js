@@ -125,12 +125,12 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       },
     },
-    employee:{
+    employee: {
       root: `/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-       onboardform: `/employeemanagementhome/onboardform`,
-       userview: (id) => `/employeemanagementhome/${id}/employeeview`,
-      
+      onboardform: `/employeemanagementhome/onboardform`,
+      userview: (id) => `/employeemanagementhome/${id}/employeeview`,
+
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
@@ -184,18 +184,16 @@ export const paths = {
     appraisal: {
       root: `${ROOTS.DASHBOARD}/appraisal`,
     },
-    
-      configurations:{
-        root:`${ROOTS.DASHBOARD}/configurations`,
-        leaveconfiguration: `${ROOTS.DASHBOARD}/configurations/leaveconfiguration`,
-        compoffconfiguration: `${ROOTS.DASHBOARD}/configurations/compoffconfiguration`,
-        appraisalconfiguration: `${ROOTS.DASHBOARD}/configurations/appraisalconfiguration`,
+
+    configurations: {
+      root: `${ROOTS.DASHBOARD}/configurations`,
+      leaveconfiguration: `${ROOTS.DASHBOARD}/configurations/leaveconfiguration`,
+      compoffconfiguration: `${ROOTS.DASHBOARD}/configurations/compoffconfiguration`,
+      appraisalconfiguration: `${ROOTS.DASHBOARD}/configurations/appraisalconfiguration`,
       expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configurations/expenseclaimconfiguration`,
       shiftconfiguration: `${ROOTS.DASHBOARD}/configurations/shiftconfiguration`,
       roleconfiguration: `${ROOTS.DASHBOARD}/configurations/roleconfiguration`,
-      },
-    
-
+    },
 
     // configaration:{
     //   root:`${ROOTS.DASHBOARD}/configaration`,
@@ -273,6 +271,7 @@ export const paths = {
     },
     vendor: {
       vendor: `${ROOTS.DASHBOARD}/vendor`,
+      vendormaterials: `${ROOTS.DASHBOARD}/vendor/vendormaterials`,
     },
     materials: {
       materials: `${ROOTS.DASHBOARD}/materials`,
@@ -291,8 +290,8 @@ export const paths = {
       purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/nvoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
     },
-    balancesheet:{
-      balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,
+    balancesheet: {
+      balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
   },
 };
