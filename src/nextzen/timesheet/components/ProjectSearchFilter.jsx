@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useState,useEffect,useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Dialog,Grid,Button,TextField,useMediaQuery,Stack,Card,DialogTitle,Typography,DialogContent,FormControl,InputLabel,MenuItem,Select,OutlinedInput } from '@mui/material';
+import { Dialog,Grid,Button,TextField,useMediaQuery,Chip,Stack,Card,DialogTitle,Typography,DialogContent,FormControl,InputLabel,MenuItem,Select,OutlinedInput, Autocomplete } from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
 import { useTheme } from '@mui/material/styles';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -31,6 +31,7 @@ const ProjectSearchFilter = ({filterSearch,filterData}) =>{
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [showProject,setShowProject]=useState(false);
+    const [showAssignEmployee,setShowAssignEmployee]=useState(false);
     const [showFilter,setShowFilter]=useState(false);
     const [datesData,setDatesData]=useState([])
     const [dropdown,setDropdown]=useState({})
@@ -174,7 +175,8 @@ const [projectManager,setProjectManagers] = useState([])
 const [selectedLocationID, setSelectedLocationID] = useState(null); 
 const [employesListData,setEmployesListData]= useState([])
 const [locationList,setLocationList] = useState([])
-
+const [hasFetchedData, setHasFetchedData] = useState(false);
+const [projectId,setProjectID]= useState()
 useEffect(() => {
   getLocation()
 }, [])
@@ -224,18 +226,17 @@ const [datesUsed, setDatesUsed] = useState({
 const handleLocationSelection = (selectedOption) => {
   if (selectedOption) {
     setSelectedLocationID(selectedOption.locationID); 
-    fetchReportingManagers()
   }
 };
 const projectManagersData= {
   companyId:'COMP1',
-  locationId:parseInt(selectedLocationID),
+  locationId:'',
   roleId:6
 };
 
 const reportingManagersData={
   companyId:'COMP1',
-  locationId:parseInt(selectedLocationID),
+  locationId:'',
   roleId:7
 }
 const getReportingManagers = async (requestData) => {
@@ -247,12 +248,13 @@ const getReportingManagers = async (requestData) => {
   }
 }
 const fetchReportingManagers = async () => {
-console.log('reportingmangersfetch')
   try {
+    reportingManagersData.locationId = parseInt(selectedLocationID) || null;
     const reportingManagersData1 = await getReportingManagers(reportingManagersData);
-    setReportingManagerData(reportingManagersData1?.data?.data)
+    setReportingManagerData(reportingManagersData1)
+    projectManagersData.locationId = parseInt(selectedLocationID) || null;
     const reportingManagersData2 = await getReportingManagers(projectManagersData);
-    setProjectManagers(reportingManagersData2?.data?.data)
+    setProjectManagers(reportingManagersData2)
   } 
   catch (error) {
     console.error(error);
@@ -304,10 +306,37 @@ const onSubmit = handleSubmit(async (data) => {
 
 const handleClose=()=>{
     setShowProject(false);
-    setShowFilter(false)
+    setShowFilter(false);
+    setShowAssignEmployee(false);
 }
   
-  
+if (selectedLocationID !== null && !hasFetchedData) {
+  fetchReportingManagers();
+  setHasFetchedData(true); // Update the state to mark that data has been fetched
+}
+
+// const roleID = localStorage?.getItem('roleID')
+const [selectedIds, setSelectedIds] = useState([]);
+const employeesList =[
+  {id:'30',firstName:'Harsha Priya'},
+  {id:'31',firstName:'Harsha'},
+  {id:'32',firstName:'Harsh'},
+  {id:'33',firstName:'Hars'},
+  {id:'34',firstName:'Har'},
+  {id:'35',firstName:'Ha'},
+  {id:'36',firstName:'H'},
+  {id:'37',firstName:'Priya'},
+  {id:'38',firstName:'Kondamuru'},
+  {id:'39',firstName:'Kondamuru Harsha Priya'},
+]
+
+const handleProject=(event)=>{
+    setProjectID(event.target.value)
+}
+
+
+
+console.log(selectedIds,"selectedIDSSS")
   return (
         <> 
 {
@@ -564,7 +593,7 @@ const handleClose=()=>{
     />
   </Grid>
   <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
-    <Button
+    {/* {(roleID==2)?<Button
       variant="contained"
       color="primary"
       className="button"
@@ -572,7 +601,16 @@ const handleClose=()=>{
       sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
     >
       Add project
+    </Button>: */}
+    <Button   
+    variant="contained"
+    color="primary"
+    className="button"
+    onClick={()=>setShowAssignEmployee(true)}
+    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>
+    Assign Employees
     </Button>
+    {/* } */}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
     </Button>
@@ -738,6 +776,76 @@ const handleClose=()=>{
      </Dialog>
     )
 }
+
+
+{
+  showAssignEmployee && (
+    <Dialog
+    onClose={handleClose}
+    aria-labelledby="customized-dialog-title"
+     open={showAssignEmployee}
+     PaperProps={{
+        sx: { width: 770, overflow:'hidden'},
+      }}
+      >
+            <DialogTitle>Assign Employees to Project</DialogTitle>
+        <Grid sx={{p:2,overflow: 'hidden'}}>
+          {/* <Typography variant='subtitle2'>{projectId?'Project':'Select Project'}</Typography> */}
+          <FormControl fullWidth sx={{marginBottom:2}}>
+  <InputLabel>Project</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={projectId}
+    label='Project'
+    onChange={handleProject}
+  >
+      <MenuItem value="1"> Project1</MenuItem>
+              <MenuItem value="2">Project1</MenuItem>
+              <MenuItem value="3">Project1</MenuItem>
+              <MenuItem value="4">Project1</MenuItem>
+              <MenuItem value="5">Project1</MenuItem>
+              <MenuItem value="6">Project1</MenuItem>
+  </Select>
+ 
+<Autocomplete
+ sx={{ marginTop:2 }}
+fullWidth
+      multiple
+      limitTags={2}
+      id="multiple-limit-tags"
+      options={employeesList} 
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+        <Chip
+          label={option.firstName}
+          {...getTagProps({ index })}
+          style={{ backgroundColor: 'white', color:'black' }}
+        />
+        ))
+            }
+      getOptionLabel={(option) => option.firstName}
+      getOptionSelected={(option, value) => option.id === value.id}
+      onChange={(event, newValue) => {
+        setSelectedIds(newValue.map((option) => option.id));
+      }}
+      value={employeesList.filter((option) => selectedIds.includes(option.id))}
+      renderInput={(params) => (
+<TextField {...params} label="Employees" placeholder="Employees" sx={{maxHeight:500}}/>
+      )}
+     
+    />
+
+</FormControl>
+
+<Button sx={{float:'right'}}>Assign</Button>
+<Button sx={{float:'right',right:10}}>Cancel</Button>
+      
+        </Grid>
+    </Dialog>
+  )
+}
+
 
 
         </>
