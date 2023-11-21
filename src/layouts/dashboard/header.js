@@ -29,10 +29,25 @@ import {
 import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
+const headerMap = new Map();
+headerMap.set('leave','Leave');
+headerMap.set('employeemanagementhome','Employee Management')
+headerMap.set('timesheet','Time Sheet')
+
+
 export default function Header({ onOpenNav }) {
+  function getLastWordAfterSlash(path) {
+    // Split the path by '/'
+    const pathParts = path.split('/');
+  
+    // Get the last non-empty part
+    const lastPart = pathParts.filter(part => part !== '').pop();
+  
+    return lastPart || null; // Return the last part or null if there is none
+  }
   const navigate = useLocation();
   const currentPath = location.pathname;
-  const splicedPath = currentPath.slice(1);
+  const splicedPath = getLastWordAfterSlash(currentPath);
   const theme = useTheme();
 
   const settings = useSettingsContext();
@@ -68,7 +83,8 @@ export default function Header({ onOpenNav }) {
       justifyContent="flex-end"
       spacing={{ xs: 0.5, sm: 1 }}
     >
-      <Typography style={{ color: '#3B82F6' }}>{splicedPath}</Typography>
+      <Typography style={{ color: '#3B82F6' }}>{headerMap.get(splicedPath)
+      }</Typography>
     </Stack>
 
       <Stack
