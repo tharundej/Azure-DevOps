@@ -73,8 +73,8 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
-import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
 import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
+import ProjectSearchFilter from '../timesheet/components/ProjectSearchFilter';
 import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
@@ -453,12 +453,13 @@ const BasicTable = ({
           {filterName === 'TimeSearchFilter' && (
             <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-          {filterName === 'TimeProjectFilter' && (
+           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
+        
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
