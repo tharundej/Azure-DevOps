@@ -249,7 +249,7 @@ const handleRentDeletedID = ( data)=>{
       data: updatedData,
       panOfTheLandlord: isPanValueThere,
       panNumber: panNumbers,
-      declarationReceivedFFromLandlord: declarationSelectedValue,
+      declarationReceivedFFromLandlord: declarationSelectedValue == "Yes" ? true : false,
       fileName: attachedDocummentFileName,
       fileContent: attachedDocumment,
       landlordFileName: landlord_file_name,
@@ -269,12 +269,18 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.data.status === 200) {
           setSnackbarSeverity('success');
-          setSnackbarMessage('Rent details saved successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
-          console.log('success');
+     
+        }else    if (response.data.status === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
       })
       .catch((error) => {
@@ -323,15 +329,19 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          // const rowsData = response?.data?.data?.rows;
-          // console.log(JSON.stringify(response.data));
-          // setData(rowsData);
-          setOpen(true);
-
-          <Snackbar open={open} autoHideDuration={6000} />;
-          console.log('success');
+        console.log("success" ,response)
+        if (response.data.status === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
           setReload(!reload);
+     
+        }else    if (response.data.status === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
       })
       .catch((error) => {

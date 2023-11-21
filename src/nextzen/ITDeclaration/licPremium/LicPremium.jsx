@@ -302,35 +302,42 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          console.log('success',response);
-          setISReloading(!isreloading);
-          setFormData({
-            companyId: cmpId,
-            companyName: '',
-            employeeId: empId,
-            employeeName: '',
-            financialYear: '2022-11-11',
-            policyNumber: '',
-            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-            insuredPersonName: '',
-            sumOfAssured: '',
-            relationship: '',
-            premiumAmountForwhichProofAssured: '',
-            premiumAmountFallInDue: '',
-            premiumConsiderForDeduction: '',
-            treatmentForSpecifiedDiseases: '',
-            doesTheInjuredPersonHaveDisability: '',
-            fileName: [],
-            fileContent: [],
-          })
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
-
-         
+       
+          if (response.data.code === 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setISReloading(!isreloading);
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Lic details. Please try again.');
@@ -382,8 +389,9 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
      
-
+        console.log(response , "success")
           if(response.data.status === 200){
+          
             console.log('success',response);
             setISReloading(!isreloading);
             setSnackbarSeverity('success');
@@ -412,7 +420,7 @@ const handleRentDeletedID = ( data)=>{
           }
           else if(response.data.status === 400){
             console.log('success',response);
-            setISReloading(!isreloading);
+            // setISReloading(!isreloading);
             setSnackbarSeverity('error');
            
             setSnackbarMessage(response.data.message);

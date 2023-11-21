@@ -208,12 +208,34 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
+       
+        if (response.data.code === 200) {
           setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance details saved successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-          console.log('success');
+          
+          setISReloading(!isreloading);
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: '',
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     
+        }else    if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
       })
       .catch((error) => {
@@ -265,14 +287,44 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
+       
+
+        if (response.data.code === 200) {
           setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance  Updated successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-          console.log('success');
           
+          setISReloading(!isreloading);
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: '',
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     
+        }else    if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
+        // if (response.data. === 200) {
+        //   setISReloading(!isreloading);
+        //   setSnackbarSeverity('success');
+        //   setSnackbarMessage('Medical Insurance  Updated successfully!');
+        //   setSnackbarOpen(true);
+        //   console.log('success');
+          
+        // }
       })
       .catch((error) => {
         setOpen(true);
@@ -731,7 +783,7 @@ export default function MedicalPremium() {
           </Grid> */}
           {/* grid 2 end  */}
         </Grid>
-
+{medicalTableData?.length > 0?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -778,7 +830,7 @@ export default function MedicalPremium() {
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> : null}
         <Grid
           item
           container

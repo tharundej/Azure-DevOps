@@ -470,16 +470,16 @@ export default function DesignationGradeSearchFilter({ filterData, filterOptions
   <Grid item xs={4}>
     <AddDepartmentConfig />
   </Grid>
-  {  departmentLength && departmentLength > 0 ?
+  {/* {  departmentLength && departmentLength > 0 ? */}
   <Grid item xs={4}>
     <AddDesignationConfig />
   </Grid>
-  : null}
-  {designationtLength && designationtLength >0 ?
+ 
+ 
   <Grid item xs={4}>
     <AddDesignationGradeConfig />
   </Grid>
-  : null}
+
 </Grid>
       <BootstrapDialog
         onClose={handleClickClose}
