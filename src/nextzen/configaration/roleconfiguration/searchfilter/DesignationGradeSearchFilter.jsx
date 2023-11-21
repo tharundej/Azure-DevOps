@@ -442,15 +442,11 @@ export default function DesignationGradeSearchFilter({
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        item
-        container
-        md={6}
-        xs={12}
-        alignItems="center"
-        // justifyContent="space-between"
+      <Grid item  container spacing={0} alignItems="flex-end" 
+      // justifyContent="space-around"
       >
-        <Grid item xs={4}>
+   
+        <Grid item xs={3}>
           <AddDepartmentConfig />
         </Grid>
         {/* {  departmentLength && departmentLength > 0 ? */}
@@ -458,8 +454,9 @@ export default function DesignationGradeSearchFilter({
           <AddDesignationConfig />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <AddDesignationGradeConfig />
+
         </Grid>
       </Grid>
       <BootstrapDialog

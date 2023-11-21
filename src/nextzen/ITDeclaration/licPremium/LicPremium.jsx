@@ -752,7 +752,7 @@ const handleRentDeletedID = ( data)=>{
             >
               <Grid item>
                 {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                <Button className="button" onClick={attchementHandler}>Attchement</Button>
+                <Button className="button" onClick={attchementHandler}>Attachment</Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleSubmit}>

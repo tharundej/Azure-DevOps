@@ -692,7 +692,7 @@ export default function MedicalPremium() {
               >
                 <Grid item>
                   <Button className="button" onClick={attchementHandler}>
-                    Attchement
+                    Attachment
                   </Button>
                 </Grid>
                 <Grid item>

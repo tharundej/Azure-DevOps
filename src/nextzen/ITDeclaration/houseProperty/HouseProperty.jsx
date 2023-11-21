@@ -623,7 +623,7 @@ onChange={(newValue) => {
           >
             <Grid item>
               <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
-                Attchement 
+                Attachment 
               </Button>
             </Grid>
             <Grid item>
