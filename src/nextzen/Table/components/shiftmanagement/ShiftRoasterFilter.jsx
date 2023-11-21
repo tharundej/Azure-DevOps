@@ -82,7 +82,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,searchData}){
+export default function ShiftRoasterFilter({filterData,filterSearch}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -106,9 +106,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
     const [search, setSearch]=useState("");
 
     const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
+      filterSearch(searchTerm.target.value)
         };
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
@@ -314,7 +312,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e.target.value)}}
+            onChange={e=>{handleSearch(e)}}
  
             />
             </Grid>
@@ -323,7 +321,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employe To Shift</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employee To Shift</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
@@ -497,7 +495,8 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </BootstrapDialog>
     </>
@@ -512,7 +511,7 @@ ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
 }
 ShiftRoasterFilter.propTypes={
-  searchData: PropTypes.any,
+  filterSearch: PropTypes.any,
 }
 
 ShiftRoasterFilter.propTypes={

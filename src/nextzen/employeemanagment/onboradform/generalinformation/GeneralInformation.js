@@ -93,7 +93,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     middleName: Yup.string(),
     lastName: Yup.string().required("Last name is required"),
     email: Yup.string().required("Email is required"),
-    contactNumber: Yup.number().required("Contact Number is required"),
+    contactNumber: Yup.number()
+    .required("Contact Number is required")
+    .integer("Contact Number must be an integer")
+    .test(
+        "len",
+        "Contact Number must be exactly 10 digits",
+        (val) => val && val.toString().length === 10
+    ),
     emergencyContactNumber: Yup.number(),
     dateOfBirth: Yup.string(),
     fatherName: Yup.string(),
@@ -169,7 +176,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rState: currentUser?.rState ||'',
     rPincode: currentUser?.rPincode || undefined,
     
-    toggle: currentUser?.toggle || false,
+    toggle: currentUser?.toggle || true,
     }),
     [currentUser]
   );
@@ -376,8 +383,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="middleName" label="Middle Name " />
                 <RHFTextField name="lastName" label="Last Name* " />
                 <RHFTextField name="email" label="Email Id* " />
-                <RHFTextField name="contactNumber" label="Contact Number* " />
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number " />
+                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -394,10 +401,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                <RHFTextField name="fatherName" label="Father Name " />
-                <RHFTextField name="motherName" label="Mother Name " />
-                <RHFTextField name="maritalStatus" label="Martial Status " />
-                <RHFTextField name="nationality" label="Nationality " />
+                <RHFTextField name="fatherName" label="Father Name" />
+                <RHFTextField name="motherName" label="Mother Name" />
+                <RHFTextField name="maritalStatus" label="Martial Status" />
+                <RHFTextField name="nationality" label="Nationality" />
                 <RHFTextField name="religion" label="Religion " />
                 <RHFTextField name="bloodGroup" label="Blood Group " />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -438,17 +445,19 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />
                 <RHFTextField name="pCity" label="City " />
                 <RHFTextField name="pState" label="State " />
-                <RHFTextField name="pPincode" label="Pincode " />
+                <RHFTextField name="pPincode" label="Pincode" type="number" maxLength={6}  />
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Switch checked={isSameAsPermanent} onChange={()=>{setIsSameAsPermanent(!isSameAsPermanent)}} />
-                  <span>Same As Permanent Address</span>
+                  <Typography variant="h6" style={{ color: 'Black' }}>
+                    Same As Permanent Address
+                  </Typography>
                 </div>
                 { !isSameAsPermanent && <>
                 <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
                 <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
                 <RHFTextField name="rCity" label="Resendial City " />
                 <RHFTextField name="rState" label="Resendial State " />
-                <RHFTextField name="rPincode" label="Resendial Pincode" />
+                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} />
                 </>
                 }
            

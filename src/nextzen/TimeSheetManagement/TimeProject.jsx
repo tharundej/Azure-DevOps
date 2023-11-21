@@ -34,7 +34,8 @@ export default function TimeProject() {
     
           id: "",
     
-          label: " SL_NO",
+          label: "Manager Id",
+          minWidth: '7pc',
     
           type: "text",
     
@@ -45,17 +46,19 @@ export default function TimeProject() {
           secondaryText: "text",
     
         },
+        { id: "managerName", label: "Project Manager", minWidth: '8pc', type: "text" },
     
-        { id: "projectID", label: "Project Id", width: 180, type: "text" },
+        { id: "projectID", label: "Project Id", minWidth: '5pc', type: "text" },
     
-        { id: "projectName", label: "Project Name", width: 220, type: "text" },
+        { id: "projectName", label: "Project Name",  minWidth: '8pc', type: "text" },
+        { id: "employeesAssigned", label: "Employees Assigned",  minWidth: '5pc', type: "text" },
+        { id: "startDate", label: "Start Date",  minWidth: '7pc', type: "text" },
     
-        { id: "startDate", label: "Start Date", width: 180, type: "text" },
-    
-        { id: "endDate", label: "End Date", width: 100, type: "text" },
-        { id: "dueDate", label: "Due Date", width: 100, type: "text" },
+        { id: "endDate", label: "End Date", minWidth: '7pc', type: "text" },
+        { id: "dueDate", label: "Due Date",  minWidth: '7pc', type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
         { id: "activityName", label: "Activity Name", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
         // { id: '', width: 88 },
     
@@ -116,11 +119,11 @@ export default function TimeProject() {
 
       const actions = [
     
-        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
+        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "view", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
+        { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "Delete", icon: "hh", id: "1", type: "serviceCall", endpoint: '/deleteproject'},
+        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "3", type: "serviceCall", endpoint: '/deleteproject'},
     
       ];
     
@@ -129,15 +132,11 @@ export default function TimeProject() {
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
         setShowForm(true)
-        console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       } 
       
-    
-      const[tableData,SetTableData] = useState({})
-      console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    "page": 60,
+    "page": 1,
     "count": 10,
     "search": "",
     "externalFilters": {
@@ -145,11 +144,11 @@ export default function TimeProject() {
         "endDate": "",
         "projectName": "",
         "status": "",
-        "activityName": ""
+        // "activityName": ""
     },
     "sort": {
         "key": 0,
-        "orderBy": ""
+        "orderBy": "project_id"
     }
 }
       

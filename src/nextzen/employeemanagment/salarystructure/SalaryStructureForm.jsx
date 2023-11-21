@@ -28,6 +28,8 @@ import axios from 'axios';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
 export default function SalaryStructureForm({ openModal,currentUserData,handleClose}) {
   // const handleClose=()=>setOpen(false)
   const [currentUser,setcurrentUser]=useState("")
@@ -43,7 +45,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
             departmentOptions:await ApiHitDepartmentWithoutLocation(),
           }
           setOptions(obj)
-          console.log(obj,'objjjjjj')
+          
         }
         catch(error){
   
@@ -109,7 +111,6 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      handleClose()
     })
     .catch((error) => {
       console.log(error);
@@ -145,8 +146,10 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
         }}
 
       >  
+
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add SalaryStructure</DialogTitle>
+            <ModalHeader heading="Add Salary Structure" />
+            {/* <DialogTitle>Add SalaryStructure</DialogTitle> */}
             <DialogContent>
               <Box
                 rowGap={3}
@@ -235,7 +238,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
 
                   <Grid container >
               
-              <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+              <Grid item xs={12} md={6}>
               {console.log(options,'options')}
                 <Autocomplete
                   disablePortal
@@ -281,13 +284,13 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                  
                   
                   renderInput={(params) => <TextField {...params} label="Department"
-                  style={{ width: '100%' }} />}
+                  style={{ paddingLeft: '16px', width: '100%' }} />}
                 />
               </Grid>
                   </Grid>
 
                       <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -327,13 +330,13 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination"
-                        style={{  width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                       </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+                    <Grid item xs={12} md={6}>
                     
                       <Autocomplete
                         disablePortal
@@ -356,7 +359,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                        style={{ width: '100%' }} />}
+                        style={{ paddingLeft: '16px', width: '100%' }} />}
                       />
                     </Grid>
                   </Grid>
@@ -369,7 +372,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                 Cancel
               </Button>
               <Button
-               
+               sx={{backgroundColor:'#3B82F6'}}
                 variant="contained"
                 onClick={onSubmit1}
                
@@ -378,7 +381,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
               </Button>
             </DialogActions>
           </FormProvider>
-        )}
+       
       </Dialog>
     </>
   );

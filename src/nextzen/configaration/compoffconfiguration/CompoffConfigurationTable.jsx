@@ -48,8 +48,8 @@ export default function CompoffConfigurationTable({currentUser}) {
       { id: 'amount', label: 'Amount', type: 'text' , minWidth:180},
     ];
     const actions = [
-      { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
-      { name: 'Delete', icon: 'hh', path: 'jjj' },
+      { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' ,endpoint:'/'},
+      { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj' },
     ];
     // const bodyContent = [
     //   {

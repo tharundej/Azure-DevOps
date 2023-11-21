@@ -15,6 +15,8 @@ import PreviousWork from './previouswork/PreviousWork';
 
 import Documents from "../../employeemanagment/employeeview/documents/Document"
 
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+
 const TABS = [
     {
       value: 'About',
@@ -45,11 +47,20 @@ const TABS = [
  
 
 const EmployeeView = () => {
+
+
+
+  const [openSnackbar,setOpenSnackbar]=useState(false);
+  const [snacbarMessage,setSnacbarMessage]=useState("");
+  const [severity,setSeverity]=useState("")      
+
   const params = useParams();
   const { id } = params;
 
 
-
+  const HandleCloseSnackbar=()=>{
+    setOpenSnackbar(false);
+  }
 
 
 
@@ -68,10 +79,17 @@ const EmployeeView = () => {
     const handleSearchFriends = useCallback((event) => {
       setSearchFriends(event.target.value);
     }, []);
+    const handleCallSnackbar=(message,severity)=>{
+      setOpenSnackbar(true);
+      setSnacbarMessage(message);
+      setSeverity(severity);
+    }
   
   return (
     <div>
          <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+  <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+
       {/* <CustomBreadcrumbs
         heading="Profile"
         links={[
@@ -92,7 +110,7 @@ const EmployeeView = () => {
       >
         <ProfileCover
           role="Hr Manager"
-          name="aa"
+          name="Name"
           avatarUrl={user?.photoURL}
           coverUrl="aaa"
         />
@@ -121,11 +139,11 @@ const EmployeeView = () => {
         </Tabs>
       </Card>
 
-      {currentTab === 'About' && <EmployeeAbout employeeIDForApis={id} />}
+      {currentTab === 'About' && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
 
-      {currentTab === 'Education' && <EmployeeEducation   employeeIDForApis={id}  />}
-      {currentTab==='Experience' && <PreviousWork  employeeIDForApis={id}  />}
-      {currentTab==='Documents' && <Documents  employeeIDForApis={id}  />}
+      {currentTab === 'Education' && <EmployeeEducation handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
+      {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
+      {currentTab==='Documents' && <Documents handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
     
       {/* // {currentTab === 'friends' && (
       //   <ProfileFriends
@@ -135,7 +153,7 @@ const EmployeeView = () => {
       //   />
       // )} */}
 
-      {currentTab === 'Statoury' && <Statoury   employeeIDForApis={id}  />}
+      {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
     </Container>
 
 

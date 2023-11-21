@@ -17,6 +17,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
+    Stack
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -35,11 +36,13 @@ import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis}) => {
+const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
+  const [defaultValues, setDefaultValues] = useState([]);
   
-  console.log(employeeData);
+  
     const onSave=()=>{
      const obj={
       companyId: "COMP1",
@@ -62,17 +65,19 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        setDefaultValues([])
+        callApi()
         onhandleClose()
       })
       .catch((error) => {
         console.log(error);
       });
     }
-    const [defaultValues, setDefaultValues] = useState([]);
 
 
     useEffect(()=>{
       if(employeeData){
+        console.log(employeeData,'employeeData')
       setDefaultValues(employeeData)
 
 
@@ -84,7 +89,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
         stream:  '',
         university:  '',
         yearOfPassing: undefined,
-        document_data:'',
+       
         gradeType:'',
         grade:undefined,
         documents:[
@@ -290,11 +295,12 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     PaperProps={{
       sx: { maxWidth: 720 },
     }}
-  >
+  >  <ModalHeader heading="Add Education"/>
 
             <DialogContent>
 
-            <Card sx={{paddingTop:'20px'}}>
+            <Stack sx={{paddingTop:'20px'}}>
+            
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -343,34 +349,39 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                <TextField
-                    fullWidth
-                    // type="number"
-                    name="gradeType"
-                    label="Grade Type "
-                    id="university"
-                   
-                     value={item?.gradeType}
-                    onChange={(e) => {
-                      handleChange(e, index, 'gradeType');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+              <Grid md={6} xs={12} item>
+      <TextField
+        fullWidth
+        select  // Use 'select' to render a dropdown
+        name="gradeType"
+        label="Grade Type"
+        id="gradeType"
+        value={item?.gradeType}
+        onChange={(e) => handleChange(e, index, 'gradeType')}
+        variant="outlined"
+      >
+        {/* Define the dropdown options */}
+        <MenuItem value="cgpa">CGPA</MenuItem>
+        <MenuItem value="percentage">Percentage</MenuItem>
+      </TextField>
+              </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
                      type="number"
                     name="grade"
-                    label="grade"
+                    label="Grade"
                     id="yearOfPassing"
+                    placeholder='80,8,..'
                    
                      value={item?.grade}
                     onChange={(e) => {
                       handleChange(e, index, 'grade');
                     }}
                     variant="outlined"
+                    inputProps={{
+                      step: 'any',  // Allow any decimal number
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -463,7 +474,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                         
 
                       }
-                      >Add</Button>
+                      >Add Files</Button>
                    
 
                   }
@@ -503,7 +514,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
           <Grid container alignItems="center" justifyContent="end">
         <Button
           variant="contained"
-          color="primary"
+          sx={{backgroundColor:"#3B82F6"}}
           onClick={() => {
             handleAdd();
           }}
@@ -521,7 +532,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
           Submit
         </Button> */}
       </form>
-             </Card>
+             </Stack>
 
 
 
@@ -532,7 +543,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}>
+            <LoadingButton type="submit" variant="contained" onClick={onSave}  sx={{backgroundColor:"#3B82F6"}}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -546,5 +557,6 @@ CreateEducation.propTypes = {
     open: PropTypes.string,
     onhandleClose:PropTypes.func,
     employeeData:PropTypes.array,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

@@ -68,6 +68,7 @@ export const paths = {
       forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
+      changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -157,7 +158,7 @@ export const paths = {
     },
 
     timesheet: {
-      root: `${ROOTS.DASHBOARD}/timesheet`,
+      root: `/timesheet`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
@@ -177,7 +178,7 @@ export const paths = {
       // },
     },
     monthlydeductions: {
-      root: `${ROOTS.DASHBOARD}/monthlydeductions`,
+      root: `/monthlydeductions`,
     },
 
     appraisal: {

@@ -6,11 +6,10 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
-import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
 
 
 function EmployeeManagementHome  () {
-    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
+    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure'];
   const tabContents = [
     <div>
 
@@ -21,9 +20,6 @@ function EmployeeManagementHome  () {
     </div>,
     <div>
       <SalaryStructure/>
-    </div>,
-    <div>
-      <RoleAndResponsiblity/>
     </div>
   ];
   const [TABLE_HEAD,setTableHead] =React.useState( [

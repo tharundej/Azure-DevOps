@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+
 import { Autocomplete,TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
@@ -304,7 +305,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitRoles=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+   
     
     });
     const config = {
@@ -390,12 +391,6 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
-       const obj={
-        companyID:'COMP1',
-       
-      }
-
-      ApiHitDepartment(obj)
        
     },[])
   const NewUserSchema = Yup.object().shape({
@@ -473,7 +468,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
          
 
           <Grid xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
+            <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -522,14 +517,19 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 ...prev,
                 locationID:newvalue
               }))
-             
+              const obj={
+                companyID:'COMP1',
+               
+              }
+
+              ApiHitDepartment(obj)
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
               // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Location" />}
           />
@@ -561,7 +561,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Department" />}
           />
@@ -595,7 +595,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Desgniation" />}
           />
@@ -623,7 +623,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Desgination Grade" />}
           />
@@ -650,7 +650,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Select Role" />}
           />
@@ -677,7 +677,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Assign Manager" />}
           />
@@ -700,7 +700,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                
               </Box>
             
-              <Button
+              {/* <Button
               alignItems="flex-end" sx={{ mt: 3 }}
               onClick={()=>{
                 console.log(currentWorkData?.reportingManagerID,'currentWorkData')
@@ -723,11 +723,11 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                  ApiHitCurrentWork(obj)
               }}>
                 Submit
-              </Button>
+              </Button> */}
            
 
              
-            </Card>
+            </Stack>
           </Grid>
         </Grid>
       </FormProvider>
