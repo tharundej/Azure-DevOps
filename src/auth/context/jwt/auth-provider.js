@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useReducer, useCallback, useMemo, useState } from 'react';
+import { useEffect, useReducer, useCallback, useMemo, useState ,useContext} from 'react';
 // utils
 import axios, { endpoints } from 'src/utils/axios';
 import dayjs from 'dayjs';
@@ -12,6 +12,7 @@ import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
 import { Alert,Snackbar } from '@mui/material';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import { da } from 'date-fns/locale';
 
@@ -61,6 +62,7 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
+  const {setUser}=useContext(UserContext)
   const [state, dispatch] = useReducer(reducer, initialState);
   const [OptVerify, setOptVerify] = useState(false);
   const router = useRouter();
@@ -127,6 +129,9 @@ export function AuthProvider({ children }) {
     // console.log(data, 'data ......');
     try {
       const response = await axios.post(baseUrl + '/loginUser', data);
+      const obj=response?.data
+      
+      setUser(obj)
 
       //  const response = await axios.post(endpoints.auth.login, data);
       // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)

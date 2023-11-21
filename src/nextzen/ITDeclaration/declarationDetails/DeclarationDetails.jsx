@@ -17,15 +17,37 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import './DeclarationDetails.css';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
 
+
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
 const DeclarationDetails = () => {
+
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
+  console.log(empId ,"emp")
   const [data, setData] = useState();
   const [reloading, setReloading] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+   // State for Snackbar
+   const [snackbarOpen, setSnackbarOpen] = useState(false);
+   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+   const [snackbarMessage, setSnackbarMessage] = useState('');
+   const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    // setOpen(false);
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -53,31 +75,23 @@ const DeclarationDetails = () => {
 
   const getDeclarationsList = async () => {
     const payload = {
-      employeeid: 'Info1',
+      employeeId: empId,
 
-      companyid: 'comp1',
+      companyId: cmpId,
 
-      financialyear: 2019,
+      financialYear: 2023,
 
-      rowsperpage: 6,
+      rowsPerPage: rowsPerPage,
 
-      pagenum: 1,
+      PageNum: 0,
 
-      filterby: [],
-
-      sortOrder: [],
-
-      orderBy: [],
-
-      search: '',
     };
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + 'getDeclarations',
+      url: baseUrl + '/getDeclarations',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
+        Authorization:token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -104,6 +118,8 @@ const DeclarationDetails = () => {
     fetchData();
     
   }, [reloading]);
+
+
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({
       configId: item.configId,
@@ -111,32 +127,40 @@ const DeclarationDetails = () => {
     }));
     console.log(newArray, 'newarray');
     const payload = {
-      employee_id: 'Info1',
+      employeeId: empId,
 
-      company_id: 'comp1',
+      companyId: cmpId,
 
-      financial_year: 2019,
+      financialYear: 2023,
 
       records: newArray,
     };
 
     const config = {
-      method: 'put',
+      method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+ 'updateDeclarations',
+      url: baseUrl+ '/updateDeclarations',
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc1OTksInJhbmRvbSI6MjAxOX0.jcut3PMaM8Sem9s6tB5Llsp1dcii2dxJwaU2asmn-Zc',
-        'Content-Type': 'text/plain',
+        Authorization:token,
+           'Content-Type': 'text/plain',
       },
       data: payload,
     };
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.data.code === 200) {
           setReloading(!reloading);
           console.log(JSON.stringify(response.data));
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          console.log("response", response)
+        }
+        else if(response.data.code === 400){
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
         }
       })
       .catch((error) => {
@@ -146,7 +170,23 @@ const DeclarationDetails = () => {
 
   return (
     <div>
-     
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>

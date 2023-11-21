@@ -35,7 +35,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocation
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
-const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
@@ -219,6 +219,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            ApiHit()
           })
           .catch((error) => {
             console.log(error);
@@ -261,178 +262,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
 
-             <Grid container >
-              
-                <Grid item xs={12} md={6}>
-                
-                  <Autocomplete
-                    disablePortal
-                    id="locationsOptions"
-                    options={userdropDownOptions?.locationsOptions || []}
-                    value={userdropDownvalue?.locationValue}
-                    getOptionLabel={(option) => option?.locationName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.locationValue=newvalue;
-                     
-                      
-                      console.log(newArr)
-                     
-                      // try{
-                      //   const deptObj={
-                      //     companyID:'COMP1',
-                      //     locationID:newvalue?.locationID
-                      //   }
-                      //   const department=await ApiHitDepartment(deptObj);
-                      //   var optionsArr={...userdropDownOptions};
-                      //   optionsArr.departmentOptions=department;
-                      //   optionsArr.desginationGradeOptions=[];
-                      //   optionsArr.desginationOptions=[];
-                      //   console.log(optionsArr,'optionsArroptionsArr')
-                      //   setUserDropDownOptions(optionsArr)
-
-                      // }
-                      // catch(error){
-                        
-                      // }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }
-                    
-                  }
-
-                   
-                    
-                    renderInput={(params) => <TextField {...params} label="Location"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container >
-                <Grid item xs={12} md={6}>
-                {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
-                  <Autocomplete
-                    disablePortal
-                    id="departmentName"
-                    options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
-
-                    value={userdropDownvalue?.departmentValue}
-
-                    getOptionLabel={(option) => option.departmentName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.departmentValue=newvalue;
-                      newArr.desginationValue=undefined;
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgObj={
-                          companyID:'COMP1',
-                          departmentID:newvalue?.departmentID
-                        }
-                        const desgination=await ApiHitDesgniation(desgObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationOptions=desgination;
-                        optionsArr.desginationGradeOptions=[];
-                        
-                       
-                        setUserDropDownOptions(optionsArr)
-
-                      }
-                      catch(error){
-                        
-                      }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Department"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container >
-                <Grid item xs={12} md={6}>
-                 
-                  <Autocomplete
-                    disablePortal
-                    id="Desgination"
-                    options={userdropDownOptions?.desginationOptions  || []}
-                    value={userdropDownvalue?.desginationValue}
-                    getOptionLabel={(option) => option.designationName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.desginationValue=newvalue;
-                    
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgGradeObj={
-                          companyID:'COMP1',
-                          designationID:newvalue?.designationID
-                        }
-                        const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationGradeOptions=desginationGrade;
-                        
-                        
-                       
-                        setUserDropDownOptions(optionsArr)
-
-                      }
-                      catch(error){
-                        
-                      }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Desgination"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container >
-                <Grid item xs={12} md={6}>
-                
-                  <Autocomplete
-                    disablePortal
-                    id="DesginationGrade"
-                    options={userdropDownOptions?.desginationGradeOptions  || []}
-                    value={userdropDownvalue?.desginationGradeValue}
-                    getOptionLabel={(option) => option.designationGradeName}
-
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.desginationGradeValue=newvalue;
-                    
-                    
-                      
-                    
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="DesginationGrade"
-                    style={{ paddingLeft: '16px', width: '100%' }} />}
-                  />
-                </Grid>
-              </Grid>
+            
              <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
@@ -580,7 +410,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                     format="yyyy-MM-dd"
                     margin="normal"
                     id="date-picker-inline"
-                    label="Date Of Birth"
+                    label="Joining Date"
                   />
                   
                 </Grid>
@@ -601,7 +431,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                     format="yyyy-MM-dd"
                     margin="normal"
                     id="date-picker-inline"
-                    label="Date Of Birth"
+                    label="Offer Date"
                   />
                   
                 </Grid>
@@ -919,6 +749,178 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
                     }}
                   />
                   </Grid>
+
+                
+              
+              <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="locationsOptions"
+                  options={userdropDownOptions?.locationsOptions || []}
+                  value={userdropDownvalue?.locationValue}
+                  getOptionLabel={(option) => option?.locationName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.locationValue=newvalue;
+                   
+                    
+                    console.log(newArr)
+                   
+                    // try{
+                    //   const deptObj={
+                    //     companyID:'COMP1',
+                    //     locationID:newvalue?.locationID
+                    //   }
+                    //   const department=await ApiHitDepartment(deptObj);
+                    //   var optionsArr={...userdropDownOptions};
+                    //   optionsArr.departmentOptions=department;
+                    //   optionsArr.desginationGradeOptions=[];
+                    //   optionsArr.desginationOptions=[];
+                    //   console.log(optionsArr,'optionsArroptionsArr')
+                    //   setUserDropDownOptions(optionsArr)
+
+                    // }
+                    // catch(error){
+                      
+                    // }
+
+                   
+                    
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Location"
+                  style={{  width: '100%' }} />}
+                />
+              </Grid>
+            
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
+              {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
+                <Autocomplete
+                  disablePortal
+                  id="departmentName"
+                  options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
+
+                  value={userdropDownvalue?.departmentValue}
+
+                  getOptionLabel={(option) => option.departmentName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.departmentValue=newvalue;
+                    newArr.desginationValue=undefined;
+                    newArr.desginationGradeValue=undefined
+                    
+                    console.log(newArr)
+                   
+                    try{
+                      const desgObj={
+                        companyID:'COMP1',
+                        departmentID:newvalue?.departmentID
+                      }
+                      const desgination=await ApiHitDesgniation(desgObj);
+                      var optionsArr={...userdropDownOptions};
+                      optionsArr.desginationOptions=desgination;
+                      optionsArr.desginationGradeOptions=[];
+                      
+                     
+                      setUserDropDownOptions(optionsArr)
+
+                    }
+                    catch(error){
+                      
+                    }
+
+                   
+                    
+                    setUserDropDownValue(newArr)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Department"
+                  style={{ width: '100%' }} />}
+                />
+              </Grid>
+           
+
+           
+              <Grid item xs={12} md={6} lg={6} paddingLeft='16px'>
+               
+                <Autocomplete
+                  disablePortal
+                  id="Desgination"
+                  options={userdropDownOptions?.desginationOptions  || []}
+                  value={userdropDownvalue?.desginationValue}
+                  getOptionLabel={(option) => option.designationName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.desginationValue=newvalue;
+                  
+                    newArr.desginationGradeValue=undefined
+                    
+                    console.log(newArr)
+                   
+                    try{
+                      const desgGradeObj={
+                        companyID:'COMP1',
+                        designationID:newvalue?.designationID
+                      }
+                      const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                      var optionsArr={...userdropDownOptions};
+                      optionsArr.desginationGradeOptions=desginationGrade;
+                      
+                      
+                     
+                      setUserDropDownOptions(optionsArr)
+
+                    }
+                    catch(error){
+                      
+                    }
+
+                   
+                    
+                    setUserDropDownValue(newArr)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Desgination"
+                  style={{ width: '100%' }} />}
+                />
+              </Grid>
+           
+
+          
+              <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="DesginationGrade"
+                  options={userdropDownOptions?.desginationGradeOptions  || []}
+                  value={userdropDownvalue?.desginationGradeValue}
+                  getOptionLabel={(option) => option.designationGradeName}
+
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.desginationGradeValue=newvalue;
+                  
+                  
+                    
+                  
+
+                   
+                    
+                    setUserDropDownValue(newArr)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="DesginationGrade"
+                  style={{ width: '100%' }} />}
+                />
+              </Grid>
+            
              </Grid>
 
             
@@ -948,7 +950,7 @@ const EmployeeAboutEdit = ({open,handleEditClose,currentUserData,userlocation,dr
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+            <LoadingButton type="submit" variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -966,6 +968,7 @@ EmployeeAboutEdit.propTypes = {
     userlocation:PropTypes.object,
     dropDownOptions:PropTypes.array,
     dropDownvalue:PropTypes.array,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    ApiHit:PropTypes.func
 
   };

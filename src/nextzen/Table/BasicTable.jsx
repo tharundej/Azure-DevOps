@@ -102,7 +102,13 @@ import AssetsHead from '../assets/AssetsHeader';
 import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
-import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
+import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
+// import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+// import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
+// import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
+// import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 const defaultFilters = {
@@ -602,6 +608,15 @@ const BasicTable = ({
           )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+           {filterName === 'DepartmentFilterSearch' && (
+            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+          {filterName === 'DesignationFilterSearch' && (
+            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+            {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>

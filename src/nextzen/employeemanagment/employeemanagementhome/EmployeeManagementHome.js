@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 
@@ -8,8 +8,12 @@ import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
 import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
 
+import UserContext from 'src/nextzen/context/user/UserConext';
+
 
 function EmployeeManagementHome  () {
+  const {user}=useContext(UserContext)
+  console.log(user,'from contest')
     const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
   const tabContents = [
     <div>
