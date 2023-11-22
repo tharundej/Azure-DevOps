@@ -45,7 +45,7 @@ const CustomersHead = ({ filterSearch, filterData, getTableData }) => {
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Customers Details</Typography>
+          {/* <Typography variant="h4">Customers Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
