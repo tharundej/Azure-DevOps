@@ -135,6 +135,15 @@ export function AuthProvider({ children }) {
 
       //  const response = await axios.post(endpoints.auth.login, data);
       // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
+      const companyID = localStorage.setItem('companyID', response?.data?.companyID);
+      const employeeID = localStorage.setItem('employeeID', response?.data?.employeeID);
+      const departmentID = localStorage.setItem('departmentID', response?.data?.departmentID);
+      const designationGradeID = localStorage.setItem('designationGradeID', response?.data?.designationGradeID);
+      const designationID = localStorage.setItem('designationID', response?.data?.designationID);
+      const locationID = localStorage.setItem('locationID', response?.data?.locationID);
+      const reportingManagerID = localStorage.setItem('reportingManagerID', response?.data?.reportingManagerID);
+      const roleID = localStorage.setItem('roleID', response?.data?.roleID);
+      const userName = localStorage.setItem('userName', response?.data?.userName);
       const { accessToken, user } = response.data;
       console.log(response?.data.statusCode, 'response');
       if (response?.data?.statusCode === 200) {
