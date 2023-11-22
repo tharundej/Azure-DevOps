@@ -76,9 +76,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
  
 
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    date_of_birth: '',
+    joining_date: "",
+    offer_date: "",
   });
   const router = useRouter();
 
@@ -243,9 +243,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.companyName = 'infobell';
 
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offerDate = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joiningDate = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.dateOfBirth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      data.offerDate = (datesUsed?.offer_date);
+      data.joiningDate = (datesUsed?.joining_date);
+      data.dateOfBirth = (datesUsed?.date_of_birth);
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
@@ -386,61 +386,56 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="email" label="Email Id* " />
                 <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+               
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
+                    
+                      value={datesUsed?.date_of_birth ? dayjs(datesUsed?.date_of_birth).toDate() : null}
+                      
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          date_of_birth: newValue,
+                          date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
+                 
                 <RHFTextField name="fatherName" label="Father Name" />
                 <RHFTextField name="motherName" label="Mother Name" />
                 <RHFTextField name="maritalStatus" label="Martial Status" />
                 <RHFTextField name="nationality" label="Nationality" />
                 <RHFTextField name="religion" label="Religion " />
                 <RHFTextField name="bloodGroup" label="Blood Group " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Offer Date"
-                      value={datesUsed?.date_of_birth}
+                      value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          offer_date: newValue,
+                          offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                 
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Joining Date"
-                      value={datesUsed?.date_of_birth}
+                      value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,
-                          joining_date: newValue,
+                          joining_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
+                
                 
                 <RHFTextField name="pAddressLine1" label="Permanent Address Line1 " />
                 <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />
