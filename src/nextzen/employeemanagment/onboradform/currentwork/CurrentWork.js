@@ -136,7 +136,13 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     .then((response) => {
     
       console.log(JSON.stringify(response.data));
-      router.push(paths.dashboard.employee.root);
+      if(response.data.code===400){
+        props.handleCallSnackbar(response.data.message,'warning')
+      }
+      else{
+        router.push(paths.dashboard.employee.root);
+      }
+      
     
     })
     
@@ -391,6 +397,12 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
+       const obj={
+        companyID:'COMP1',
+       
+      }
+
+      ApiHitDepartment(obj)
        
     },[])
   const NewUserSchema = Yup.object().shape({
@@ -517,12 +529,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 ...prev,
                 locationID:newvalue
               }))
-              const obj={
-                companyID:'COMP1',
-               
-              }
-
-              ApiHitDepartment(obj)
+             
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
               // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")

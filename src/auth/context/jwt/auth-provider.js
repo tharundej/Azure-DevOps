@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useReducer, useCallback, useMemo,useState } from 'react';
+import { useEffect, useReducer, useCallback, useMemo, useState ,useContext} from 'react';
 // utils
 import axios, { endpoints } from 'src/utils/axios';
 import dayjs from 'dayjs';
@@ -11,6 +11,8 @@ import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
+import { Alert,Snackbar } from '@mui/material';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import { da } from 'date-fns/locale';
 
@@ -60,14 +62,25 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
+  const {setUser}=useContext(UserContext)
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [OptVerify,setOptVerify]=useState(false);
+  const [OptVerify, setOptVerify] = useState(false);
   const router = useRouter();
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+  const [open, setOpen] = useState(false);
+
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // State to control Snackbar visibility
+
   const initialize = useCallback(async () => {
     try {
       const accessToken = localStorage.getItem(STORAGE_KEY);
 
-      if (accessToken ) {
+      if (accessToken) {
         setSession(accessToken);
 
         // const response = await axios.get(endpoints.auth.me);
@@ -114,36 +127,49 @@ export function AuthProvider({ children }) {
     };
 
     // console.log(data, 'data ......');
+    try {
+      const response = await axios.post(baseUrl + '/loginUser', data);
+      const obj=response?.data
+      localStorage.setItem("userDetails",JSON.stringify(obj))
+      setUser(obj)
 
-     const response = await axios.post( baseUrl + "/loginUser" , data);
-    //  const response = await axios.post(endpoints.auth.login, data);
-    // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
-   const companyID = localStorage.setItem('companyID',response?.data?.companyID);
-   const employeeID = localStorage.setItem('employeeID',response?.data?.employeeID);
-    const { accessToken, user } = response.data;
-
-    setSession("1");
-
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user: {
-          ...user,
-          accessToken,
-        },
-      },
-    });
+      //  const response = await axios.post(endpoints.auth.login, data);
+      // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
+      const { accessToken, user } = response.data;
+      console.log(response?.data.statusCode, 'response');
+      if (response?.data?.statusCode === 200) {
+        setSession(accessToken);
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            user: {
+              ...user,
+              accessToken,
+            },
+          },
+        });
+      } else if (response?.data?.statusCode === 400 ||401) {
+        console.log(response?.data?.message, 'diapley error');
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error(error);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('An unexpected error occurred'); 
+      setSnackbarOpen(true);
+    }
   }, []);
   const [datesUsed, setDatesUsed] = useState({
     date: dayjs(new Date()),
   });
   // REGISTER
-  const register = useCallback(async (cin, companyName, companyRegistrationNo,companyDateOfIncorporation,companyCeoName,companyType,emailId,phoneNo,firstName,middleName,lastName,securityQ1,securityA1,securityQ2,securityA2) => {
-    console.log('hiiii')
-    const data = {
-      cin, 
-      companyName, 
-      companyRegistrationNo, 
+  const register = useCallback(
+    async (
+      cin,
+      companyName,
+      companyRegistrationNo,
       companyDateOfIncorporation,
       companyCeoName,
       companyType,
@@ -156,36 +182,52 @@ export function AuthProvider({ children }) {
       securityA1,
       securityQ2,
       securityA2
-    };
+    ) => {
+      console.log('hiiii');
+      const data = {
+        cin,
+        companyName,
+        companyRegistrationNo,
+        companyDateOfIncorporation,
+        companyCeoName,
+        companyType,
+        emailId,
+        phoneNo,
+        firstName,
+        middleName,
+        lastName,
+        securityQ1,
+        securityA1,
+        securityQ2,
+        securityA2,
+      };
       console.log(data, 'data ......');
-     const response = await axios.post(baseUrl+'/signup', data);
-    // const response = await axios.post(endpoints.auth.register, data);
+      const response = await axios.post(baseUrl + '/signup', data);
+      // const response = await axios.post(endpoints.auth.register, data);
 
-    console.log(response)
-    if(!response?.data?.data?.jwt){
-      console.log('failed')
-      return
-    }
-    const  accessToken  = response?.data?.data?.jwt;
-    console.log(accessToken,'accessssss')
-    localStorage.setItem('jwt_access_token',accessToken);
-    // sessionStorage.setItem(STORAGE_KEY, accessToken);
-    // dispatch({
-    //   type: 'REGISTER',
-    //   payload: {
-    //     user: {
-    //       ...user,
-    //       accessToken,
-    //     },
-    //   },
-    // });
-    
-    <AmplifyNewPasswordView emailId={data.emailId}/>
-  }, []);
+      console.log(response);
+      if (!response?.data?.data?.jwt) {
+        console.log('failed');
+        return;
+      }
+      const accessToken = response?.data?.data?.jwt;
+      console.log(accessToken, 'accessssss');
+      localStorage.setItem('jwt_access_token', accessToken);
+      // sessionStorage.setItem(STORAGE_KEY, accessToken);
+      // dispatch({
+      //   type: 'REGISTER',
+      //   payload: {
+      //     user: {
+      //       ...user,
+      //       accessToken,
+      //     },
+      //   },
+      // });
 
-
-
-
+      <AmplifyNewPasswordView emailId={data.emailId} />;
+    },
+    []
+  );
 
   // LOGOUT
   const logout = useCallback(async () => {
@@ -216,8 +258,35 @@ export function AuthProvider({ children }) {
     }),
     [login, logout, register, state.user, status]
   );
-
-  return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
+  return (
+    <>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>{' '}
+    </>
+  );
 }
 
 AuthProvider.propTypes = {

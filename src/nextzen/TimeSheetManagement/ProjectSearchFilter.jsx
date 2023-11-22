@@ -1,56 +1,33 @@
 import PropTypes, { element } from 'prop-types';
-
 import React,{ useEffect, useState,useCallback } from 'react';
-
 import { styled } from '@mui/system';
-
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
-
 import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
-
 import Iconify from 'src/components/iconify/iconify';
-
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import dayjs from 'dayjs';
-
 import Dialog from '@mui/material/Dialog';
-
 import DialogTitle from '@mui/material/DialogTitle';
-
 import { Today } from '@mui/icons-material';
-
-
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
-
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
 import AddTimeProject from './AddTimeProject';
-
-
-
-
 const defaultFilters = {
   name: '',
   type: [],
   startDate: null,
   endDate: null,
 };
-
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
@@ -70,7 +47,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-
   
 function getStyles(name, personName, theme) {
   return {
@@ -80,46 +56,41 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
-
 export default function ProjectSearchFilter({filterData,filterSearch}){
   const theme = useTheme();
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
-
+ 
   const [dropdown,setDropdown]=useState({
-
   })
   const [showForm, setShowForm] = useState  (false);
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
-  const [personName, setPersonName] = React.useState([]);
-
-  const [dropdownEmployemtType,setDropdownEmployemtType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
-  const [dropdownProjectName,setDropdownProjectName]=useState([])
-  const [dropdownActivity,setdropdownActivity]=useState([])
-
+  const [dropdownProjectmanager,setDropdownProjectManager]= useState([])
+  const [dropdownReportingmanager,setDropdownReportingManager]= useState([])
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'date_activity',
-        from:'start_date',
-        to:'end_date'
+        field:'ProjectStartDate',
+        from:'startDatefrom',
+        to:'startDateto'
       },
-    
+      {
+        field:'ProjectEndDate',
+        from:'endDatefrom',
+        to:'endDateto'
+      },
+      {
+        field:'actualStartDate',
+        from:'actualStartfrom',
+        to:'actualStartto'
+      },
+      {
+        field:'actualEndDate',
+        from:'actualEndfrom',
+        to:'actualEndto'
+      },
     ]
   )
-
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
@@ -127,63 +98,60 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
         options:[]
       },
       {
-        field:'activity_name',
+        field:'reportingManager',
         options:[]
       },
       {
-        field:'project_name',
+        field:'projectManager',
         options:[]
       }
     ]
   )
-
-  const [search, setSearch]=useState("");
+ 
   const handleClose = () => setShowForm(false);
-
-  const handleSearch = (searchTerm) => {
-    filterSearch(searchTerm.target.value)
-      };
-
-  const [datesSavedArray,setDatesSavedArray]=useState(["start_date","end_date","offer_date_from","offer_date_to"])
+  const debounce = (func, delay) => {
+    let debounceTimer;
+    return function () {
+      const context = this;
+      const args = arguments;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+  };
+    const handleSearch=debounce((e)=>{
+      filterSearch(e?.target?.value)
+    },1000)
   const [datesData,setDatesData]=useState([])
-
   const [dates,setDates]=useState({
-    start_date:null,
-    end_date:null,
+    startDatefrom:null,
+    startDateto:null,
+    endDatefrom:null,
+    endDateto:null,
+    actualStartfrom:null,
+    actualStartto:null,
+    actualEndfrom:null,
+    actualEndto:null
  
   })
-
   function formDateDataStructure(){
-
     return new Promise((resolve) => {
      
-
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
          
         arr1[item.field]={
-          from:formatDateToYYYYMMDD(dates[item?.from]),
-          to:formatDateToYYYYMMDD(dates[item?.to])
+          from:dates[item?.from],
+          to:dates[item?.to]
         }
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }  
-        //  arr1.push(obj);
         })
         setDatesData(arr1);
         resolve(arr1)   
     })
     
-
   }
-
   function formWithDropdown(data){
-
     return new Promise((resolve) => {
      
-
       const arr1={};
        dropdownFiledArray.forEach((item,index)=>{  
          
@@ -193,16 +161,6 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
           data[item.field]=commaSeparatedString;
         }
         
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
          
         })
         // setDatesData(arr1);
@@ -210,10 +168,8 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
         
     })
     
-
   }
   
-
     const [open,setOpen]=useState(false);
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
@@ -222,57 +178,57 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
     const handleClickClose=()=>{
       setOpen(false)
     }
-
-
     const handleChangeDropDown = (event,field) => {
       const {
         target: { value },
       } = event;
-      
-      if(field==="project_name"){
-        setDropdownProjectName(value)
-        const obj=dropdown;
-        obj[field]=value;
-        setDropdown(obj);
-      }
-      else if(field==="status"){
+      if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="activity_name"){
-        setdropdownActivity(value)
+      else if(field==="projectManager"){
+        setDropdownProjectManager(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-    
-
-        // On autofill we get a stringified value.
-        
-      
-        console.log(value);
-     // console.log( typeof value === 'string' ? value.split(',') : value,)
+      else if(field==="reportingManager"){
+        setDropdownReportingManager(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
     };
-
     const handleApply = async()=>{
       setDatesData([]);
       const data = await formDateDataStructure();
       
       const data1=await formWithDropdown(data);
       filterData(data);
-      console.log(data,';;;')
-  
-    //   filterData(data);
-    handleClickClose()
+      handleClickClose()
       
     }
     
     const handleTimeForm =()=>{
       setShowForm(true)
-      console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
     } 
+    const handleCancel = async()=>{
+      setDropdownStatus([]);
+      setDropdownReportingManager([]);
+      setDropdownProjectManager([]);
+      setDates({
+    startDatefrom:"",
+    startDateto:"",
+    endDatefrom:"",
+    endDateto:"",
+    actualStartfrom:"",
+    actualStartto:"",
+    actualEndfrom:"",
+    actualEndto:""
+      })
+    }
   
     return (
         <>
@@ -287,7 +243,7 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  }}
  className="custom-dialog"  
 >
- <AddTimeProject currentUser={{}}handleClose={handleClose} />
+ <AddTimeProject handleClose={handleClose} />
       </Dialog>
     )}
 <Grid container alignItems="center" paddingBottom="10px">
@@ -295,7 +251,7 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
- onChange={e=>{handleSearch(e)}}
+ onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -317,30 +273,22 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  
       </Grid>
          </Grid>
-
          
      
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-
       >
         
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
-
         <DialogContent sx={{mt:0,paddingBottom:0}}>
-
           
-
           <Grid>
-
-                <Grid>
-            <Typography> Date Activity</Typography>
-     
-
+      <Grid>
+            <Typography>Project Start Date</Typography>
             <Grid container flexDirection="row">
               <Grid item>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -348,12 +296,12 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.start_date}
+                      value={dates?.startDatefrom?dayjs(dates?.startDatefrom):null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          start_date: newValue,
+                          startDatefrom: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
@@ -366,75 +314,179 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.end_date}
+                      value={dates?.startDateto?dayjs(dates?.startDateto):null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          end_date: newValue,
+                          startDateto: newValue?formatDateToYYYYMMDD(newValue):"",
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
+            </Grid>
+       </Grid>
+       <Grid container flexDirection="row" sx={{marginTop:2}}>
+       <Typography>Project End Date</Typography>
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.endDatefrom?dayjs(dates?.endDatefrom):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          endDatefrom: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.endDateto?dayjs(dates?.endDateto):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          endDateto: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                 </Grid>
-                <Grid container marginTop={2}>
-  {/* <Typography>Offer Date</Typography> */}
-  <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Project Name</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_1"
-          id="demo-multiple-status_1"
-          multiple
-          value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'project_name')}
-          input={<OutlinedInput label="Project Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="status">Activity Name</InputLabel>
-        <Select
-          labelId="demo-multiple-name-status_2"
-          id="demo-multiple-status_2"
-          multiple
-          value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'activity_name')}
-          input={<OutlinedInput label="Activity Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  </Grid>
-</Grid>
-
-
+       </Grid>
+       <Grid container flexDirection="row" sx={{marginTop:2}}>
+       <Typography>Actual Start Date</Typography>
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.actualStartfrom?dayjs(dates?.actualStartfrom):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          actualStartfrom: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.actualStartto?dayjs(dates?.actualStartto):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          actualStartto: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+       </Grid>
+       <Grid container flexDirection="row" sx={{marginTop:2}}>
+       <Typography>Actual End Date</Typography>
+              <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="From Date"
+                      value={dates?.actualEndfrom?dayjs(dates?.actualEndfrom):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          actualEndfrom: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+                <Grid item>
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="To Date"
+                      value={dates?.actualEndto?dayjs(dates?.actualEndto):null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        setDates((prev) => ({
+                          ...prev,
+                          actualEndto: newValue?formatDateToYYYYMMDD(newValue):"",
+                        }));
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                </Grid>
+       </Grid>
+       <Grid>
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Reporting Manager</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  value={dropdownReportingmanager}
+                  multiple
+                  onChange={(e)=>handleChangeDropDown(e,'reportingManager')}
+                  input={<OutlinedInput label="Reporting Manager" />}
+                  MenuProps={MenuProps}
+                >
+                 <MenuItem value="notStarted">Not Started</MenuItem>
+                 <MenuItem value="inProgress">InProgress</MenuItem>
+                 <MenuItem value="completed">Completed</MenuItem>
+                </Select>
+              </FormControl>
+                   </Grid>
+      </Grid>
+      <Grid>
+                  <Grid marginTop="10px" xs={12} md={6}>
+                <FormControl fullWidth >
+                <InputLabel fullWidth id="status">Project Manager</InputLabel>
+                <Select
+                fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownProjectmanager}
+                  onChange={(e)=>handleChangeDropDown(e,'projectManager')}
+                  input={<OutlinedInput label="Project Manager" />}
+                  MenuProps={MenuProps}
+                >
+                 <MenuItem value="notStarted">Not Started</MenuItem>
+                 <MenuItem value="inProgress">InProgress</MenuItem>
+                 <MenuItem value="completed">Completed</MenuItem>
+                </Select>
+              </FormControl>
+                   </Grid>
+                </Grid>
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
@@ -449,47 +501,26 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
                   input={<OutlinedInput label="status" />}
                   MenuProps={MenuProps}
                 >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
+                 <MenuItem value="notStarted">Not Started</MenuItem>
+                 <MenuItem value="inProgress">InProgress</MenuItem>
+                 <MenuItem value="completed">Completed</MenuItem>
                 </Select>
               </FormControl>
                    </Grid>
                 </Grid>
                </Grid>
-
-
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
-   
-    </BootstrapDialog>
+         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Reset</Button></div>
+    </Dialog>
     </>
     )
     
 }
-
-// ProjectSearchFilter.propTypes={
-//     handleFilters: PropTypes.any,
-// }
 ProjectSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 ProjectSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
-
-// ProjectSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }

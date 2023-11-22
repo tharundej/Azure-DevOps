@@ -52,8 +52,6 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import AddDepartmentConfig from '../AddDepartmentConfig';
 
-
-
 const defaultFilters = {
   name: '',
   type: [],
@@ -90,20 +88,17 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function DeparrtmentSearchFilter({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function DeparrtmentSearchFilter({
+  filterData,
+  filterOptions,
+  filterSearch,
+  searchData,
+}) {
   const theme = useTheme();
-  const leavePeriodTypes = [
-    'Financial Year',
-    'Year'
-  ];
-  const designationName = [
-    'executive'
-  ]
+  const leavePeriodTypes = ['Financial Year', 'Year'];
+  const designationName = ['executive'];
 
-  const designationGradeName = [
-    'senior',
-    'junior'
-  ]
+  const designationGradeName = ['senior', 'junior'];
 
   const [dropdown, setDropdown] = useState({});
 
@@ -153,7 +148,6 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
     to_date: null,
   });
 
-  
   function formDateDataStructure() {
     return new Promise((resolve) => {
       const arr1 = {};
@@ -249,13 +243,12 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+    searchData(searchTerm);
+    console.log(searchTerm, 'search ........');
+  };
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
@@ -263,21 +256,19 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
-        <TextField
+        <Grid item md={8} xs={8}>
+          <TextField
             placeholder="Search...."
-             fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          
         </Grid>
-        <Grid item  md={2} xs={2}>
-       <AddDepartmentConfig/>
-       </Grid>
-        <Grid item  md={2} xs={2}>
-        <Grid>
+        <Grid item md={2} xs={2}>
+          <AddDepartmentConfig />
+        </Grid>
+        <Grid item md={2} xs={2}>
+          <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
@@ -299,41 +290,53 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"300px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
+        <DialogContent
+          sx={{ minWidth: '300px' }}
+          //   style={{
+          //     paddingTop: '20px',
+          //     paddingRight: '17px',
+          //     paddingBottom: '44px',
+          //     paddingLeft: '44px',
+          //   }}
         >
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
-                  <Select
+          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
+
+          <Grid
+            container
+            spacing={1}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
+            item
+          >
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
+                <Select
                   fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownleavePeriodType}
-                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
-                    input={<OutlinedInput label="Leave Period Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {leavePeriodTypes.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              {/* <Grid item xs={6} >
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownleavePeriodType}
+                  onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                  input={<OutlinedInput label="Leave Period Type" />}
+                  MenuProps={MenuProps}
+                  // sx={{minWidth:'300px'}}
+                >
+                  {leavePeriodTypes.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* <Grid item xs={6} >
                   <FormControl fullWidth>
                     <InputLabel id="designation_name">Designation Name</InputLabel>
                     <Select
@@ -359,7 +362,7 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
                     </Select>
                   </FormControl>
                 </Grid> */}
-                {/* <Grid  item xs={12} md={6}>
+            {/* <Grid  item xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
@@ -381,23 +384,23 @@ export default function DeparrtmentSearchFilter({ filterData, filterOptions ,fil
                   </Select>
               </FormControl>
                    </Grid> */}
-            </Grid>
-
-           
-            
-             
-          
+          </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+          <Button
+            onClick={() => {
+              handleApply();
+            }}
+            // variant="outlined"
+            style={{
+              width: '80px',
+              marginBottom: '1rem',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            Apply
+          </Button>
         </div>
       </BootstrapDialog>
     </>

@@ -80,7 +80,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MyShiftSearchFilter({filterData,filterSearch}){
+export default function MyShiftSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -101,9 +101,11 @@ export default function MyShiftSearchFilter({filterData,filterSearch}){
 
   const [search, setSearch]=useState("");
 
-  const handleSearch = (searchTerm) => {
-    filterSearch(searchTerm.target.value)
-      };
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
 
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
@@ -278,7 +280,7 @@ export default function MyShiftSearchFilter({filterData,filterSearch}){
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
-            onChange={(e) => handleSearch(e)}
+            onChange={(e) => handleSearch(e.target.value)}
 
             />
             </Grid>
@@ -459,15 +461,12 @@ export default function MyShiftSearchFilter({filterData,filterSearch}){
 MyShiftSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
-MyShiftSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
-}
 
-// MyShiftSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+MyShiftSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

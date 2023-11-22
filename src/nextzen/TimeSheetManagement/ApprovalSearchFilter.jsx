@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ApprovalSearchFilter({filterData,filterSearch}){
+export default function ApprovalSearchFilter({filterData,filterOptions,searchData}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -275,7 +275,9 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
       const [search, setSearch]=useState("");
       const handleClose = () => setShowForm(false);
       const handleSearch = (searchTerm) => {
-        filterSearch(searchTerm.target.value)
+        setSearch(searchTerm)
+          searchData(search)
+          console.log(searchTerm,"search ........")
           };
   
     return (
@@ -286,7 +288,7 @@ export default function ApprovalSearchFilter({filterData,filterSearch}){
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
 
             />
             </Grid>
@@ -481,7 +483,7 @@ ApprovalSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 ApprovalSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
 
 

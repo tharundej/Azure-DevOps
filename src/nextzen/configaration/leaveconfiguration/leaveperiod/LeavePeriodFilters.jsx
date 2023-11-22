@@ -260,8 +260,9 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
         justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
+        lg={12} md={12} xs={12}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item lg={8} md={6} xs={4}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -269,10 +270,10 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={2}>
        <LeavePeriodForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            

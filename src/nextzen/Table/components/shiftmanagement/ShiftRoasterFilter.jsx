@@ -82,7 +82,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterSearch}){
+export default function ShiftRoasterFilter({filterData,filterOptions,searchData}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -106,7 +106,9 @@ export default function ShiftRoasterFilter({filterData,filterSearch}){
     const [search, setSearch]=useState("");
 
     const handleSearch = (searchTerm) => {
-      filterSearch(searchTerm.target.value)
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
         };
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
@@ -312,7 +314,7 @@ export default function ShiftRoasterFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -510,7 +512,7 @@ ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
 }
 ShiftRoasterFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
 
 ShiftRoasterFilter.propTypes={

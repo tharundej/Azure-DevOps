@@ -55,7 +55,7 @@ export default function MasterDetails(){
         
           <Grid item>
            
-          <Button className="button">Attchement</Button>
+          <Button className="button">Attachment</Button>
           </Grid>
           <Grid item>
             <Button className="button">Save</Button>

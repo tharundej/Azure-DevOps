@@ -764,7 +764,7 @@ const handleExpandClick = (rowId) => {
 
             <Scrollbar>
 
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
+              <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom

@@ -26,7 +26,22 @@ import './houseProperty.css';
 import axios from 'axios';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import AppTopAuthors from 'src/sections/overview/app/app-top-authors';
+import { _mock } from 'src/_mock';
 
+
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
+export const _appAuthors = [...Array(3)].map((_, index) => ({
+  id: _mock.id(index),
+  name: _mock.fullName(index),
+  // avatarUrl: _mock.image.avatar(index),
+  totalFavorites: _mock.number.nativeL(index),
+}));
 const headings = [
   'S.No',
   'Property Reference',
@@ -66,6 +81,17 @@ export default function HouseProperty() {
   const [landLordDeletedId , setLandLordDeletedID] = useState([])
   const [rentDeletedId , setRentDeletedID] = useState([])
   const [housingData, sethousingData] = useState([]);
+   // State for Snackbar
+   const [snackbarOpen, setSnackbarOpen] = useState(false);
+   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+   const [snackbarMessage, setSnackbarMessage] = useState('');
+   const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    // setOpen(false);
+  };
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -158,7 +184,7 @@ export default function HouseProperty() {
   };
   const addHousingProperity = useCallback(async () => {
 
-    console.log(formData.dateOfSanction ,"")
+    console.log(formData.dateOfSanction ,"date ")
     const payload = {
       companyId: cmpId,
       employeeId: empId,
@@ -195,12 +221,37 @@ console.log(payload ,"payload")
     axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data?.rows;
-          console.log(JSON.stringify(response.data), 'dataaaa');
-          setREload(!reload)
+    console.log("success" , response ,response.data.message)
+          if (response.data.code === 201 || 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setREload(!reload)
+            setFormData({
+              propertyReferenceSlNo: null,
+    name_of_the_owners: '',
+    addressOfProperty: '',
+    panOfTheLanders: '',
+    amountOfHousingloanTakenFromTheProperty: '',
+    purposeOfLoan: '',
+    dateOfSanction: dayjs().format('YYYY-MM-DD'),
+    interestPaybleOnYear: '',
+    isPropertySelfOccupiedOrLetOu: '',
+    ifJointPropertyThenEnterInterestRate: '',
+    grossRentalAmount: '',
+    municipalTaxesPaid: '',
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -283,7 +334,7 @@ const handleEdit = (rowData) => {
       panOfTheLanders: rowData.panOfTheLanders,
       amountOfHousingloanTakenFromTheProperty: rowData.amountOfHousingloanTakenFromTheProperty,
       purposeOfLoan: rowData.purposeOfLoan,
-      dateOfSanction: rowData.dateOfSanction,
+      dateOfSanction: rowData.dateOfSanctionOfLoan,
       interestPaybleOnYear: rowData.interestPaybleOnYear,
       isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOu,
       ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
@@ -298,9 +349,27 @@ const handleEdit = (rowData) => {
     setLandLordDocs([...rowData.documents]);
   }
 };
+
   return (
     <div>
-      <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+       <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Grid container spacing={2} style={{ marginTop: '1rem' }} direction="row" xs={12} lg={12} md={12}>
         {/* search ad filter  */}
         {/* <Grid
           container
@@ -334,7 +403,8 @@ const handleEdit = (rowData) => {
           </Grid>
         </Grid> */}
         {/* Row 1 */}
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={8} lg={8} md={8} spacing={2}>
+        <Grid  item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
             <TextField
@@ -372,7 +442,7 @@ const handleEdit = (rowData) => {
 
         {/* Row 2 */}
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12}spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >PAN Of The Lender(S)</Typography> */}
             <TextField
@@ -408,7 +478,7 @@ const handleEdit = (rowData) => {
           </Grid>
         </Grid>
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4} style={{ paddingTop: '9px' }}>
             {/* <Typography >Date Of Sanction Of Loan</Typography> */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -455,7 +525,7 @@ onChange={(newValue) => {
           </Grid>
         </Grid>
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
             <TextField
@@ -490,65 +560,64 @@ onChange={(newValue) => {
             />
           </Grid>
         </Grid>
+        </Grid>
+      
 
         {/* card */}
 
         <Grid
           item
           container
-          xs={12}
+          xs={4} lg={4} md={4}
           spacing={2}
           alignItems="center"
           justifyContent="center"
           direction="row"
-          style={{ marginBottom: '1rem', marginTop: '1rem' }}
+          style={{ marginBottom: '1rem' }}
         >
           <Paper elevation={3} style={{ marginTop: '1rem' }}>
             <Paper
               elevation={0}
               style={{
                 padding: '10px',
-                backgroundColor: '#2196f3',
-                color: 'white',
+                backgroundColor: '#F4F6F8',
+                color: '#637381',
                 border: 'none',
               }}
             >
               <Typography>Housing Property Calculation</Typography>
             </Paper>
             <Paper elevation={0} style={{ border: 'none' }}>
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{  padding: '10px' , fontSize :"0.9rem" }}>
                 Gross Rental Income
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>Less : Municipal Taxes Paid</Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Municipal Taxes Paid</Typography>
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Balance
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>Less : Standard Deduction 30%</Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Standard Deduction 30%</Typography>
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Less : Intest On Housing Loan
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Net Income(loss) From House Property
               </Typography>
             </Paper>
           </Paper>
         </Grid>
-        {/* Add more rows as needed */}
-
-        {/* Add more rows as needed */}
-
-        {/* My buttons  */}
-
+        {/* <Grid xs={12} md={6} lg={4}>
+          <AppTopAuthors title="Top Authors" list={_appAuthors} />
+        </Grid> */}
         <Grid item container xs={12} spacing={2}>
           <Grid
             item
@@ -562,7 +631,7 @@ onChange={(newValue) => {
           >
             <Grid item>
               <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
-                Attchement 
+                Attachment 
               </Button>
             </Grid>
             <Grid item>
@@ -587,13 +656,13 @@ onChange={(newValue) => {
             style={{ marginBottom: '1rem' }}
           >
             <Grid item>
-              <Typography> Total Premium : 0</Typography>
+              <Typography> Total Premium :{housingData?.length} </Typography>
             </Grid>
           </Grid>
           {/* Add more rows as needed */}
         </Grid>
       </Grid>
-
+{housingData?.length > 0  ?
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -636,7 +705,7 @@ onChange={(newValue) => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> : null}
       {openAttachmentDilog ? (
         <FileUploader
           showAttachmentDilog={openAttachmentDilog}

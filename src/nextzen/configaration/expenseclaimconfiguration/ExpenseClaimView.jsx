@@ -42,12 +42,12 @@ export default function ExpenseClaimView({ currentUser }) {
     { id: 'designation_name', label: 'Designation Name', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Delete', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj', endpoint: '/', type: 'edit' },
+    // { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj', endpoint: '/', type: 'edit' },
   ];
 
   const defaultPayload = {
-    company_id: 'COMP2',
+    company_id: 'COMP1',
     // employee_id: 'ibm1',
     page: 0,
     count: 5,
@@ -92,10 +92,30 @@ export default function ExpenseClaimView({ currentUser }) {
       },
       data: payload,
     };
-
+    try{
     axios.request(config).then((response) => {
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
       console.log(response?.data);
     });
+  }
+  catch (error) {
+    setSnackbarSeverity('error');
+    setSnackbarMessage('Error While Editing. Please try again.');
+    setSnackbarOpen(true);
+    console.log(' ', error);
+  }
   };
 
   const onClickActions = (rowdata, event) => {
@@ -170,28 +190,65 @@ export default function ExpenseClaimView({ currentUser }) {
   const designationGradeName = [{ type: 'senior' }, { type: 'junior' }];
   const expenseNames = [{ type: 'Medical' }, { type: 'Travel' }];
   //   const values = watch();
-
-  const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP2';
-    console.log('submitted data111', data);
-
+  const onSubmitEdit2 = async (editData, event) => {
     try {
-      const response = await axios.post(baseUrl + '/', data);
+      event.preventDefault();
+      // editData.claim_type=editData?.claim_type?.label
+      const payload={
+        "expense_configuration_id":JSON.parse(editData?.expense_configuration_id,10),
+            "expense_name": editData?.expense_name?.type,
+            "company_id": "COMP2",
+            "department_name":  editData?.department_name?.type,
+            "designation_name":  editData?.designation_name?.type,
+            "designation_grade_name":  editData?.designation_grade_name?.type,
+      }
+      console.log(payload,'payload')
+      const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
       if (response?.data?.code === 200) {
         handleCloseEdit();
         setSnackbarSeverity('success');
-        setSnackbarMessage('Shift Configuration Added Succuessfully!');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
+        console.log('sucess', response);
+        handleCloseEdit();
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
         console.log('sucess', response);
       }
     } catch (error) {
-      setOpen(false);
       setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+      setSnackbarMessage('Error While Editing. Please try again.');
       setSnackbarOpen(true);
-      console.log('error', error);
+      handleCloseEdit();
+      console.log(' ', error);
     }
-  });
+  };
+
+  // const onSubmit1 = handleSubmit1(async (data) => {
+  //   data.companyId = 'COMP2';
+  //   console.log('submitted data111', data);
+
+  //   try {
+  //     const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
+  //     if (response?.data?.code === 200) {
+  //       handleCloseEdit();
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage('Shift Configuration Added Succuessfully!');
+  //       setSnackbarOpen(true);
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setOpen(false);
+  //     setSnackbarSeverity('error');
+  //     setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+  //     setSnackbarOpen(true);
+  //     console.log('error', error);
+  //   }
+  // });
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
 
   useEffect(() => {
@@ -213,7 +270,17 @@ export default function ExpenseClaimView({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(true);
   };
-
+  const handleSelectChange = (field, value) => {
+    // console.log('values:', value);
+    // console.log('event', event.target.value);
+    // setSelectedOption(value);
+    console.log(field, value, 'valllllllllll');
+    setEditData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  console.log(editData, 'valueeeeeeeeeeeeeeeeeeee');
   return (
     <>
       <Snackbar
@@ -243,8 +310,8 @@ export default function ExpenseClaimView({ currentUser }) {
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Expensive Config</DialogTitle>
+        <FormProvider methods={methods1} onSubmit={(event) => onSubmitEdit2(editData, event)}>
+          <DialogTitle>Edit Expensive Config</DialogTitle>
           <DialogContent>
             <Box
               rowGap={3}
@@ -256,29 +323,47 @@ export default function ExpenseClaimView({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFAutocomplete
+              <Autocomplete
                 name="expense_name"
                 label="Expense Name"
-                options={expenseNames.map((name) => name.type)}
+                options={expenseNames}
+                getOptionLabel={(option) => option.type}
                 value={editData?.expense_name}
+                onChange={(e, newValue) => handleSelectChange('expense_name', newValue || null)}
+                sx={{ width: 300, padding: '8px' }}
+                renderInput={(params) => <TextField {...params} label="Expense Name" />}
               />
-              <RHFAutocomplete
+              <Autocomplete
                 name="department_name"
                 label="Department Name"
-                options={departmentName.map((name) => name.type)}
+                options={departmentName}
+                getOptionLabel={(option) => option.type}
                 value={editData?.department_name}
+                onChange={(e, newValue) => handleSelectChange('department_name', newValue || null)}
+                sx={{ width: 300, padding: '8px' }}
+                renderInput={(params) => <TextField {...params} label="Department Name" />}
               />
-              <RHFAutocomplete
+              <Autocomplete
                 name="designation_name"
                 label="Designation Name"
-                options={designationName.map((name) => name.type)}
+                options={designationName}
+                getOptionLabel={(option) => option.type}
                 value={editData?.designation_name}
+                onChange={(e, newValue) => handleSelectChange('designation_name', newValue || null)}
+                sx={{ width: 300, padding: '8px' }}
+                renderInput={(params) => <TextField {...params} label="Designation Name" />}
               />
-              <RHFAutocomplete
+              <Autocomplete
                 name="designation_grade_name"
                 label="Designation Grade Name"
-                options={designationGradeName.map((name) => name.type)}
+                options={designationGradeName}
+                getOptionLabel={(option) => option.type}
                 value={editData?.designation_grade_name}
+                onChange={(e, newValue) =>
+                  handleSelectChange('designation_grade_name', newValue || null)
+                }
+                sx={{ width: 300, padding: '8px' }}
+                renderInput={(params) => <TextField {...params} label="Designation Grade Name" />}
               />
             </Box>
           </DialogContent>
@@ -290,7 +375,7 @@ export default function ExpenseClaimView({ currentUser }) {
             <LoadingButton
               type="submit"
               variant="contained"
-              onClick={onSubmit1}
+               onClick={(event) => onSubmitEdit2(editData, event)}
               loading={isSubmitting1}
             >
               Save

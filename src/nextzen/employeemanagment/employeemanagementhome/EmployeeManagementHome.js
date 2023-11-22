@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 
@@ -6,10 +6,15 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
+import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
+
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 function EmployeeManagementHome  () {
-    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure'];
+  const {user}=useContext(UserContext)
+  console.log(user,'from contest')
+    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
   const tabContents = [
     <div>
 
@@ -20,6 +25,9 @@ function EmployeeManagementHome  () {
     </div>,
     <div>
       <SalaryStructure/>
+    </div>,
+    <div>
+      <RoleAndResponsiblity/>
     </div>
   ];
   const [TABLE_HEAD,setTableHead] =React.useState( [
