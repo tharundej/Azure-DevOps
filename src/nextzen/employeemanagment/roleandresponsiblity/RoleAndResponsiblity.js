@@ -6,11 +6,14 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {Autocomplete,Grid,TextField } from '@mui/material'
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import axios from 'axios';
 
 
 const RoleAndResponsibility = () => {
     const [userdropDownOptions,setUserDropDownOptions]=useState('')
     const [userdropDownvalue ,setUserDropDownValue]=useState("")
+    const[groupname,setGroupname]=useState("")
     useEffect(() => {
      
         const fetchLocations = async () => {
@@ -43,6 +46,7 @@ const RoleAndResponsibility = () => {
         // Convert camel case to space-separated with capitalization
         return label.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (str) => str.toUpperCase());
       };
+      const [pageNames,setPageNames]=useState({})
   const [checkedState, setCheckedState] = useState({
     employeeManagement: {
       mainHeading: false,
@@ -80,10 +84,63 @@ const RoleAndResponsibility = () => {
     }));
   };
 
+  const ApiHitSavePages=(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/setGroups`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   const handleSave = () => {
+    const obj={
+      groupName:groupname,
+      companyId:'COMP1',
+      pages:checkedState
+    }
+    ApiHitSavePages(obj)
     console.log(checkedState);
     // You can perform other actions here based on the state
   };
+
+const APiHitGetList=()=>{
+  let data = '';
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: `${baseUrl}/getAllPages`,
+  headers: { 
+    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
+  },
+  data : data
+};
+
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+  setCheckedState(response.data.data)
+})
+.catch((error) => {
+  console.log(error);
+});
+}
+  useEffect(()=>{
+    APiHitGetList()
+  },[])
 
   return (
     <div>
@@ -91,119 +148,24 @@ const RoleAndResponsibility = () => {
       <Grid container marginTop="10px" spacing={2}>
                 <Grid item xs={12} md={3} lg={4}  >
                 {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
-                  <Autocomplete
-                    disablePortal
-                    id="departmentName"
-                    options={userdropDownOptions?.departmentOptions || []}
+                  <TextField
+                  label="Group Name"
+                  id="groupname"
+                  value={groupname}
+                  onChange={(e)=>{
+                      setGroupname(e?.target?.value)
+                  }} >
 
-                    value={userdropDownvalue?.departmentValue}
-
-                    getOptionLabel={(option) => option.departmentName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.departmentValue=newvalue;
-                      newArr.desginationValue=undefined;
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgObj={
-                          companyID:'COMP1',
-                          departmentID:newvalue?.departmentID
-                        }
-                        const desgination=await ApiHitDesgniation(desgObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationOptions=desgination;
-                        optionsArr.desginationGradeOptions=[];
-                        
-                        setUserDropDownOptions(optionsArr)
-                      }
-                      catch(error){                    
-                      }
-                     setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Department"
-                    style={{  width: '100%' }} />}
-                  />
+                  </TextField>
                 </Grid>
 
-                <Grid item xs={12} md={3} lg={4}  >
-                 
-                  <Autocomplete
-                    disablePortal
-                    id="Desgination"
-                    options={userdropDownOptions?.desginationOptions  || []}
-                    value={userdropDownvalue?.desginationValue}
-                    getOptionLabel={(option) => option.designationName}
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.desginationValue=newvalue;
-                    
-                      newArr.desginationGradeValue=undefined
-                      
-                      console.log(newArr)
-                     
-                      try{
-                        const desgGradeObj={
-                         
-                          desginationID:newvalue?.designationID
-                        }
-                        const desdesginationGradegination=await ApiHitDesgniationGrade(desgGradeObj);
-                        var optionsArr={...userdropDownOptions};
-                        optionsArr.desginationGradeOptions=desdesginationGradegination;
-                        
-                        
-                       
-                        setUserDropDownOptions(optionsArr)
-
-                      }
-                      catch(error){
-                        
-                      }
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Desgination"
-                    style={{  width: '100%' }} />}
-                  />
-                </Grid>
-
-                <Grid item xs={12} md={3} lg={4}  >
                 
-                  <Autocomplete
-                    disablePortal
-                    id="DesginationGrade"
-                    options={userdropDownOptions?.desginationGradeOptions  || []}
-                    value={userdropDownvalue?.desginationGradeValue}
-                    getOptionLabel={(option) => option.designationGradeName}
-
-                    onChange={async(e, newvalue) => {
-                    
-                      var newArr = { ...userdropDownvalue };
-                      newArr.desginationGradeValue=newvalue;
-                    
-                    
-                      
-                    
-
-                     
-                      
-                      setUserDropDownValue(newArr)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="DesginationGrade"
-                    style={{ width: '100%' }} />}
-                  />
-                </Grid>
 
 
             </Grid>
       <FormGroup>
-        {Object.entries(checkedState).map(([group, values], index) => (
+        {checkedState && 
+        Object.entries(checkedState).map(([group, values], index) => (
           <Box key={index}>
             <FormControlLabel
               control={
@@ -217,7 +179,7 @@ const RoleAndResponsibility = () => {
               label={`${formatLabel(group)}`}
             />
             {values.mainHeading &&
-              Object.keys(values).map((key) =>
+             Object.keys(values).map((key) =>
                 key !== 'mainHeading' ? (
                   <FormControlLabel
                     key={key}

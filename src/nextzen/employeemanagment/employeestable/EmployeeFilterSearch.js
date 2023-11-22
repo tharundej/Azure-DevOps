@@ -250,12 +250,12 @@ const [stateOptions,setOptions]=useState([])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joiningDateFrom:undefined,
-    joiningDateTo:undefined,
-    offerDateFrom:undefined,
-    offerDateTo:undefined,
-    fofferDateFrom:undefined,
-    fofferDateTo:undefined
+    joiningDateFrom:"",
+    joiningDateTo:"",
+    offerDateFrom:"",
+    offerDateTo:"",
+    fofferDateFrom:"",
+    fofferDateTo:""
   })
 
   function formDateDataStructure(){
@@ -267,8 +267,8 @@ const [stateOptions,setOptions]=useState([])
        datesFiledArray.forEach((item,index)=>{  
          if(dates[item?.from]!==undefined){
                 arr1[item.field]={
-                from:formatDateToYYYYMMDD(dates[item?.from]),
-              to:formatDateToYYYYMMDD(dates[item?.to])
+                from:(dates[item?.from]),
+                  to:(dates[item?.to] || "")
               }
        
            }
@@ -278,7 +278,7 @@ const [stateOptions,setOptions]=useState([])
 
             arr1[item.field]={
               from:"",
-            to:""
+                to:""
             }
            }
          
@@ -436,6 +436,7 @@ const [stateOptions,setOptions]=useState([])
       
       filterData(data);
       // call parent function and pass it
+      handleClickClose()
       
       
     }
@@ -521,42 +522,42 @@ const [stateOptions,setOptions]=useState([])
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="From Date"
-              value={dates?.fjoiningDateFrom}
-              defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              
+              value={dates?.fjoiningDateFrom ? dayjs(dates?.fjoiningDateFrom).toDate() : null}
+              
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fjoiningDateFrom: newValue,
+                 
+                  fjoiningDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+         
       </Grid>
 
       {/* To Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="To Date"
-              value={dates?.fjoiningDateTo}
+             
+              value={dates?.fjoiningDateTo ? dayjs(dates?.fjoiningDateTo).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fjoiningDateTo: newValue,
+                 
+                  fjoiningDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+          
       </Grid>
           </Grid>
             </Grid>
@@ -570,42 +571,42 @@ const [stateOptions,setOptions]=useState([])
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="From Date"
-              value={dates?.fDOBDateFrom}
+              
+              value={dates?.fDOBDateFrom ? dayjs(dates?.fDOBDateFrom).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fDOBDateFrom: newValue,
+                
+                  fDOBDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+         
       </Grid>
 
       {/* To Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+       
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="To Date"
-              value={dates?.fDOBDateTo}
+            
+              value={dates?.fDOBDateTo ? dayjs(dates?.fDOBDateTo).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fDOBDateTo: newValue,
+                 
+                  fDOBDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+        
       </Grid>
     </Grid>
 
@@ -619,42 +620,42 @@ const [stateOptions,setOptions]=useState([])
             <Grid container direction="row">
       {/* From Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+       
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="From Date"
-              value={dates?.fofferDateFrom}
+             
+              value={dates?.fofferDateFrom ? dayjs(dates?.fofferDateFrom).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fofferDateFrom: newValue,
+                  
+                  fofferDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+        
       </Grid>
 
       {/* To Date */}
       <Grid item xs={12} md={12} lg={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="To Date"
-              value={dates?.fofferDateTo}
+            
+              value={dates?.fofferDateTo ? dayjs(dates?.fofferDateTo).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fofferDateTo: newValue,
+                 
+                  fofferDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+         
       </Grid>
     </Grid>
 
@@ -1046,7 +1047,22 @@ const [stateOptions,setOptions]=useState([])
 
            </Grid>
          </DialogContent>
+         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2}>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Button onClick={()=>{
+          setDates({
+            joiningDateFrom:"",
+            joiningDateTo:"",
+            offerDateFrom:"",
+            offerDateTo:"",
+            fofferDateFrom:"",
+            fofferDateTo:""
+          });
+
+
+          
+         }}>Reset</Button>
+         </Grid>
    
     </Dialog>
     </>
