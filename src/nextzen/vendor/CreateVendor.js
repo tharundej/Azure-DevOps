@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -21,6 +21,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { getStateAPI } from 'src/api/Accounts/Common';
 
 export default function CreateVendor({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
@@ -31,8 +32,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
     address1: Yup.string().required('Address 1 is Required'),
     address2: Yup.string(),
     city: Yup.string().required('City is Required'),
-    state: Yup.string().required('State is Required'),
-    stateCode: Yup.number(),
+    state: Yup.string(),
     country: Yup.string().required('country is Required'),
     pincode: Yup.number().required('pincode is Required'),
     vendorPANNo: Yup.string().required('vendorPANNo is Required'),
@@ -58,7 +58,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
       address2: currentData?.address2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
-      stateCode: currentData?.stateCode || '',
+      stateCode: currentData?.stateCode || null,
       country: currentData?.country || '',
       pincode: currentData?.pincode || '',
       vendorPANNo: currentData?.vendorPANNo || '',
@@ -75,7 +75,6 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
     }),
     [currentData]
   );
-
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
@@ -91,6 +90,30 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
     errors,
   } = methods;
   const values = watch();
+
+  const [locationsOptions, setLocationsOptions] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = { companyID: 'COMP1' };
+      try {
+        const response = await getStateAPI(data);
+        console.log('location success', response);
+        const stateNames = response.map((stateObj) => stateObj.state);
+        setLocationsOptions(stateNames);
+        console.log('defaultValues.state', defaultValues.state);
+        const defaultLocation = defaultValues.state;
+        setSelectedLocation(defaultLocation || stateNames[0]);
+      } catch (error) {
+        setErrorMessage(error.message);
+        console.log('API request failed:', error.message);
+      }
+    };
+
+    fetchData();
+  }, [defaultValues.state]);
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -107,6 +130,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
     data.status = selectedStatus;
+    data.state = selectedLocation;
     data.onboardingDate = formatDateToYYYYMMDD(datesUsed?.onboardingDate);
     data.offboardingDate = formatDateToYYYYMMDD(datesUsed?.offboardingDate);
     try {
@@ -173,8 +197,17 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
             <RHFTextField name="address1" label="Address 1" />
             <RHFTextField name="address2" label="Address 2" />
             <RHFTextField name="city" label="city" />
-            <RHFTextField name="state" label="state" />
-            <RHFTextField name="stateCode" label="stateCode" />
+            <RHFAutocomplete
+              name="state"
+              id="location-autocomplete"
+              options={locationsOptions || []}
+              value={selectedLocation}
+              onChange={(event, newValue) => setSelectedLocation(newValue)}
+              getOptionLabel={(option) => option} // Adjust property based on your API response
+              renderInput={(params) => (
+                <TextField {...params} label="Select Location State" variant="outlined" />
+              )}
+            />
             <RHFTextField name="country" label="country" />
             <RHFTextField name="pincode" label="pincode" />
             <RHFTextField name="vendorPANNo" label="vendorPANNo" />

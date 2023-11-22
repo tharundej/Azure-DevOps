@@ -467,19 +467,13 @@ export function useNavData() {
             ],
           },
           {
-            title: t('materials'),
-            path: paths.dashboard.materials.materials,
-            icon: ICONS.g_materials,
-          },
-          {
             title: t('products'),
             path: paths.dashboard.products.products,
             icon: ICONS.g_products,
-          },
-          {
-            title: t('customers'),
-            path: paths.dashboard.customers.customers,
-            icon: ICONS.g_customers,
+            children: [
+              { title: t('Product Details'), path: paths.dashboard.products.products },
+              { title: t('Customer'), path: paths.dashboard.products.customers },
+            ],
           },
           {
             title: t('purchase'),

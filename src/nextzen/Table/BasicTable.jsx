@@ -433,6 +433,7 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
+      row?.status === 'active' ||
       row?.status === 'InActive'
     ) {
       return rowActions;
