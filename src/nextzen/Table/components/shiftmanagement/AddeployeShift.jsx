@@ -336,27 +336,8 @@ return arr
 
 </RHFSelect> */}
 
-<Autocomplete
-disablePortal
-freeSolo
-id="combo-box-dem"
-options={ShiftGroupName || []}
-value={CurrentShiftGroupNameData?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
+<RHFTextField   name="shiftGroupName" label="Shift Group Name " />   
 
-
-setCurrentShiftGroupNameData(newvalue
-)
-// getDesignation(newvalue)
-
-
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
-/>
 {/* <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>

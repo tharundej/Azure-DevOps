@@ -34,17 +34,17 @@ export default function ShiftRoast() {
    
     
         
-        { id: "shift_group_name", label: "Shift Group Name", width: 180, type: "text" },
+        { id: "shiftGroupName", label: "Shift Group Name", width: 180, type: "text" },
         
         
-        { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
+        { id: "shiftName", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "start_time", label: "Employees", width: 180, type: "badge" },
+        { id: "", label: "Employees", width: 180, type: "badge" },
         
-        { id: "end_time", label: "Department", width: 100, type: "text" },
-        { id: "shift_term", label: "Designation", width: 100, type: "text" },
-        { id: "shift_group", label: "Grade", width: 220, type: "text" },
+        { id: "departmentName", label: "Department", width: 100, type: "text" },
+        { id: "designationName", label: "Designation", width: 100, type: "text" },
+        { id: "gradeName", label: "Grade", width: 220, type: "text" },
         // { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
         
         // { id: "start_date", label: " Start Date", width: 100, type: "text" },
@@ -153,7 +153,7 @@ headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 filterName="ShiftRoastFilter"
 bodyData='data'
-endpoint='/ShiftRoaster'
+endpoint='/getAssignshift'
 rowActions={actions}
 onClickActions={onClickActions}
 
