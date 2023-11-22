@@ -64,8 +64,8 @@ export default function WorkWeek({ currentUser }) {
     { id: 'locationName', label: 'Location', type: 'text', minWidth: 280 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
-    { name: 'View', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'View', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = {
     count: 5,

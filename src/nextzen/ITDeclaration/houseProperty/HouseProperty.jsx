@@ -28,13 +28,20 @@ import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import AppTopAuthors from 'src/sections/overview/app/app-top-authors';
+import { _mock } from 'src/_mock';
 
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
-
+export const _appAuthors = [...Array(3)].map((_, index) => ({
+  id: _mock.id(index),
+  name: _mock.fullName(index),
+  // avatarUrl: _mock.image.avatar(index),
+  totalFavorites: _mock.number.nativeL(index),
+}));
 const headings = [
   'S.No',
   'Property Reference',
@@ -342,6 +349,7 @@ const handleEdit = (rowData) => {
     setLandLordDocs([...rowData.documents]);
   }
 };
+
   return (
     <div>
        <Snackbar
@@ -361,7 +369,7 @@ const handleEdit = (rowData) => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+      <Grid container spacing={2} style={{ marginTop: '1rem' }} direction="row" xs={12} lg={12} md={12}>
         {/* search ad filter  */}
         {/* <Grid
           container
@@ -395,7 +403,8 @@ const handleEdit = (rowData) => {
           </Grid>
         </Grid> */}
         {/* Row 1 */}
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={8} lg={8} md={8} spacing={2}>
+        <Grid  item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
             <TextField
@@ -433,7 +442,7 @@ const handleEdit = (rowData) => {
 
         {/* Row 2 */}
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12}spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >PAN Of The Lender(S)</Typography> */}
             <TextField
@@ -469,7 +478,7 @@ const handleEdit = (rowData) => {
           </Grid>
         </Grid>
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4} style={{ paddingTop: '9px' }}>
             {/* <Typography >Date Of Sanction Of Loan</Typography> */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -516,7 +525,7 @@ onChange={(newValue) => {
           </Grid>
         </Grid>
 
-        <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
             <TextField
@@ -551,65 +560,64 @@ onChange={(newValue) => {
             />
           </Grid>
         </Grid>
+        </Grid>
+      
 
         {/* card */}
 
         <Grid
           item
           container
-          xs={12}
+          xs={4} lg={4} md={4}
           spacing={2}
           alignItems="center"
           justifyContent="center"
           direction="row"
-          style={{ marginBottom: '1rem', marginTop: '1rem' }}
+          style={{ marginBottom: '1rem' }}
         >
           <Paper elevation={3} style={{ marginTop: '1rem' }}>
             <Paper
               elevation={0}
               style={{
                 padding: '10px',
-                backgroundColor: '#2196f3',
-                color: 'white',
+                backgroundColor: '#F4F6F8',
+                color: '#637381',
                 border: 'none',
               }}
             >
               <Typography>Housing Property Calculation</Typography>
             </Paper>
             <Paper elevation={0} style={{ border: 'none' }}>
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{  padding: '10px' , fontSize :"0.9rem" }}>
                 Gross Rental Income
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>Less : Municipal Taxes Paid</Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Municipal Taxes Paid</Typography>
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Balance
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>Less : Standard Deduction 30%</Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Standard Deduction 30%</Typography>
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ backgroundColor: '#f0eded', padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Less : Intest On Housing Loan
               </Typography>
-              <Divider style={{ backgroundColor: 'black' }} />
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px' }}>
+              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
                 Net Income(loss) From House Property
               </Typography>
             </Paper>
           </Paper>
         </Grid>
-        {/* Add more rows as needed */}
-
-        {/* Add more rows as needed */}
-
-        {/* My buttons  */}
-
+        {/* <Grid xs={12} md={6} lg={4}>
+          <AppTopAuthors title="Top Authors" list={_appAuthors} />
+        </Grid> */}
         <Grid item container xs={12} spacing={2}>
           <Grid
             item
@@ -623,7 +631,7 @@ onChange={(newValue) => {
           >
             <Grid item>
               <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
-                Attchement 
+                Attachment 
               </Button>
             </Grid>
             <Grid item>
@@ -648,7 +656,7 @@ onChange={(newValue) => {
             style={{ marginBottom: '1rem' }}
           >
             <Grid item>
-              <Typography> Total Premium : 0</Typography>
+              <Typography> Total Premium :{housingData?.length} </Typography>
             </Grid>
           </Grid>
           {/* Add more rows as needed */}

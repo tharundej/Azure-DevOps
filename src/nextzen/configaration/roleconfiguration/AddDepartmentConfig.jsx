@@ -450,7 +450,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
 
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px' }}>Add Department </Button>
+        sx={{margin:'20px' ,color:'white',backgroundColor:'#3B82F6'}}>Department </Button>
       <Dialog
         fullWidth
         maxWidth={false}

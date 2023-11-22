@@ -43,8 +43,8 @@ export default function Holidays({ currentUser }) {
     { id: 'locationName', label: 'Locations', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
-    { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
   ];
   // const bodyContent = [
   //   {

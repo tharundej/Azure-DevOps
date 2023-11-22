@@ -40,9 +40,10 @@ import { useAuthContext } from 'src/auth/hooks';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat'
+import { borderColor } from '@mui/system';
 // ----------------------------------------------------------------------
 const StyledContainer = styled('div')({
-  background: 'url("/assets/background/overlay_3.jpg")',
+  background: 'url("/assets/background/office-supplies.jpg")',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   minHeight: '100vh',
@@ -70,18 +71,19 @@ export default function JwtRegisterView() {
     .required('CIN is required')
   .matches(/^[\dA-Z]+$/, 'CIN should only contain uppercase letters and digits')
   .test('len', 'CIN should be exactly 21 characters long', (val) => val && val.length === 21),
-    companyName: Yup.string().required('Compnay name required'),
+    companyName: Yup.string().required('Compnay Name required').matches(/^[A-Za-z\s]+$/, 'Compnay Name must contain only letters and spaces'),
     companyRegistrationNo: Yup.number().required('Company Registration Number is required'),
-    companyCeoName: Yup.string().required('CEO name required'),
+    companyCeoName: Yup.string().required('Company Ceo Name is required')
+    .matches(/^[A-Za-z\s]+$/, 'Company Ceo Name must contain only letters and spaces'),
     companyType: Yup.string().required('Compnay type required'),
     emailId: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
     // companyDateOfIncorporation: Yup.string().required('Date of corporation is required'),
-    phoneNo: Yup.string()
-    .required('Phone No is required')
-    .length(10, 'Phone No must be exactly 10 digits')
-    .matches(/^[1-9]\d*$/, 'Phone No should only contain numbers and cannot start from 0'),
+    phoneNo:  Yup.number()
+    .required('Phone No is Required')
+    .typeError("Field should only contain numbers")
+    .test('non-zero-start', 'Number should not start with 0', (value) => value > 0),
     firstName: Yup.string()
       .required('First name is required')
       .matches(/^[A-Za-z\s]+$/, 'First name must contain only letters and spaces'),
@@ -116,6 +118,7 @@ export default function JwtRegisterView() {
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
     defaultValues,
+    mode: 'onChange'
   });
 
   const {
@@ -226,22 +229,24 @@ export default function JwtRegisterView() {
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         
         <Box sx={{ flexGrow: 1 }}>
-          <Card sx={{ minWidth: 275, background: '#ffffffc9' }}>
-            <CardContent>
+          {/* <Card sx={{ minWidth: 275, background: '#ffffffc9' }}> */}
+            <Stack>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="cin" label="CIN" maxLength={21}/>
+                  <RHFTextField name="cin" label="CIN" maxLength={21}  color="secondary" focused />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="companyName" label="Company Name"/>
+                  <RHFTextField name="companyName" label="Company Name"  color="secondary" focused/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="companyRegistrationNo" label="Company Registration No" maxLength={21}/>
+                  <RHFTextField name="companyRegistrationNo" label="Company Registration No"  color="secondary" focused maxLength={21}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
+        
                     <DemoContainer components={['DatePicker']}>
                       <DatePicker
+                       
                         sx={{ width: '100%', paddingLeft: '3px' }}
                         label="Company Date of Incorporation"
                         // value={datesUsed.date_of_incorporation || dayjs(new Date())}
@@ -257,29 +262,30 @@ export default function JwtRegisterView() {
                   </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="companyCeoName" label="Company Ceo Name" />
+                  <RHFTextField name="companyCeoName" label="Company Ceo Name"  color="secondary" focused maxLength={50} />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <RHFAutocomplete
                     name="companyType"
                     label="Company Type"
                     options={companyTypes.map((companyType) => companyType.type)}
+                    color="secondary" focused
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="emailId" label="Email" />
+                  <RHFTextField name="emailId" label="Email"  color="secondary" focused />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="phoneNo" label="Phone No" maxLength={10}/>
+                  <RHFTextField name="phoneNo" label="Phone No" maxLength={10}  color="secondary" focused/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="firstName" label="First Name" />
+                  <RHFTextField name="firstName" label="First Name"  color="secondary" focused maxLength={20}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="middleName" label="Middle Name" />
+                  <RHFTextField name="middleName" label="Middle Name"  color="secondary" focused maxLength={20}/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <RHFTextField name="lastName" label="Last Name" />
+                  <RHFTextField name="lastName" label="Last Name"  color="secondary" focused maxLength={20}/>
                 </Grid>
                 {/* <Grid item xs={12} md={12}>
                   <RHFAutocomplete
@@ -306,7 +312,7 @@ export default function JwtRegisterView() {
                   <RHFTextField name="securityA2" label="Security answer" />
                 </Grid> */}
               </Grid>
-            </CardContent>
+            </Stack>
             <CardActions>
               <LoadingButton
                 // fullWidth
@@ -320,7 +326,7 @@ export default function JwtRegisterView() {
                 Create account
               </LoadingButton>
             </CardActions>
-          </Card>
+          {/* </Card> */}
         </Box>
       </Stack>
     </FormProvider>
@@ -328,7 +334,7 @@ export default function JwtRegisterView() {
 
   return (
     <StyledContainer>
-      <div style={{ backgroundColor: '#ffffffba', height: '100%' }}>
+      <div style={{ backgroundColor: '', height: '100%' }}>
         {renderHead}
 
         {renderForm}

@@ -78,8 +78,8 @@ export default function LeavePeriod({ currentUser }) {
     { id: 'endDate', label: 'End date', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
-    { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj' },
   ];
 
   const defaultPayload = {
