@@ -42,6 +42,8 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
     // expiryDate: Yup.date().required('Expiry Date is Required'),
     // lapseOfWarrantyDate: Yup.date().required('Lapse Of Warranty Date is Required'),
     totalAmount: Yup.number().positive().required('Total Amount is Required'),
+    quantity: Yup.number().positive(),
+    model: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -70,6 +72,8 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       deleteBit: currentData?.deleteBit || 0,
       companyId: currentData?.companyId || 'COMP1',
       operationalDays: currentData?.operationalDays || '',
+      quantity: currentData?.quantity || 1,
+      model: currentData?.model || '',
     }),
     [currentData]
   );
@@ -206,7 +210,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
             marginTop={2}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              sm: 'repeat(3, 1fr)',
+              sm: 'repeat(4, 1fr)',
             }}
           >
             <RHFAutocomplete
@@ -231,6 +235,8 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 <TextField {...params} label="Assets type *" variant="outlined" />
               )}
             />
+            <RHFTextField name="quantity" label="Quantity *" />
+            <RHFTextField name="model" label="Model *" />
             <RHFTextField name="poNumber" label="PO Number *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>

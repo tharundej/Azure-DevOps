@@ -5,9 +5,13 @@ import { Helmet } from 'react-helmet-async';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-import { DeleteVendorMaterialAPI, getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
+import {
+  DeleteVendorMaterialAPI,
+  getVendorMaterialListAPI,
+} from 'src/api/Accounts/VendorMaterials';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import CreateVendorMaterials from './CreateVendorMaterials';
 
 const VendorMaterialsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -33,6 +37,7 @@ const VendorMaterialsTable = () => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log(rowdata,'rorrrrrr')
     } else if (event?.name === 'Delete') {
       const deleteData = { id: rowdata.id || 0, title: rowdata.materialName || '' };
       setDeleteData(deleteData);
@@ -146,7 +151,7 @@ const VendorMaterialsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateVendor currentData={editModalData} handleClose={handleClose} />
+          <CreateVendorMaterials currentData={editModalData} handleClose={handleClose} />
         </Dialog>
       )}
       <Helmet>

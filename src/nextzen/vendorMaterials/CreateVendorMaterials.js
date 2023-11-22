@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,7 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
-import { createVendorAPI, updateVendorAPI } from 'src/api/Accounts/Vendor';
+import { createVendorAPI, getVendorListAPI, updateVendorAPI } from 'src/api/Accounts/Vendor';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,11 +22,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
+import { async } from '@firebase/util';
 
 export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
-    hsnId: Yup.string().required('HSN ID is Required'),
+    hsnId: Yup.number().required('HSN ID is Required'),
     materialType: Yup.string().required('Material Type is Required'),
     gstRate: Yup.number().required('GST Rate is Required'),
     status: Yup.string(),
@@ -34,7 +35,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
-      vendorID: currentData?.vendorID || 0,
+      vendorID: currentData?.vendorId || 0,
       companyID: currentData?.companyID || 'COMP1',
       materialName: currentData?.materialName || '',
       hsnId: currentData?.hsnId || '',
@@ -62,6 +63,34 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     errors,
   } = methods;
   const values = watch();
+  const [vendorOptions, setVendorOptions] = useState([]);
+  const [selectedVendor, setSelectedVendor] = useState();
+  const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    const fetchVendor = async () => {
+      const data = {
+        companyID: 'COMP1',
+        count: 10,
+        sort: {
+          key: 1,
+          orderBy: 'vendor_name',
+        },
+      };
+      try {
+        const response = await getVendorListAPI(data);
+        setVendorOptions(response);
+        console.log('currentData.vendorID', currentData.vendorID);
+        setSelectedVendor(
+          defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
+        );
+      } catch (error) {
+        setErrorMessage(error.message);
+        console.log('API request failed:', error.message);
+      }
+    };
+    fetchVendor();
+  }, []);
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -76,17 +105,18 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     { value: 0, label: 'In Active' },
   ];
   const [selectedStatus, setSelectedStatus] = useState(
-    defaultValues.status || statusOptions[0].value
+    defaultValues?.status == 'Active' ? 1 : 0 || statusOptions[0].value
   );
   console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
     data.status = selectedStatus;
+    data.vendorID = `${selectedVendor}`;
     data.operationalDate = formatDateToYYYYMMDD(datesUsed?.operationalDate);
     data.closeDate = formatDateToYYYYMMDD(datesUsed?.closeDate);
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
-      if (currentData?.vendorID) {
+      if (currentData?.id) {
         response = await updateVendorMaterialAPI(data);
       } else {
         response = await createVendorMaterialAPI(data);
@@ -97,7 +127,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.vendorID ? '' : getTableData();
+      currentData?.id ? '' : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
@@ -122,7 +152,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.vendorID ? 'Edit' : 'Add New'} Vendor Material</DialogTitle>
+        <DialogTitle>{currentData?.id ? 'Edit' : 'Add New'} Vendor Material</DialogTitle>
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -140,6 +170,18 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               sm: 'repeat(2, 1fr)',
             }}
           >
+            <RHFAutocomplete
+              name="vendorID"
+              id="vendorID"
+              options={vendorOptions || []}
+              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
+              onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
+              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
+              renderInput={(params) => (
+                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+              )}
+            />
+
             <RHFTextField name="materialName" label="Material Names" />
             <RHFTextField name="hsnId" label="HSN ID" />
             <RHFTextField name="materialType" label="Material Type" />
@@ -194,7 +236,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
           </Button>
 
           <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
-            {currentData?.vendorID ? 'Update' : 'Save'}
+            {currentData?.id ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
