@@ -60,7 +60,7 @@ export default function UserTableRow({
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>{onHandleEditRow(row?.employeename), console.log(row?.employeename,"row?.Id")}}
+              onClick={()=>onHandleEditRow(row?.employeeId)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
@@ -111,7 +111,8 @@ export default function UserTableRow({
                       'default'
                     }
                   >
-                    {row[ele.id]}
+                    {row[ele.id] ? row[ele.id].toString():"False"}
+                   
                   </Label>
                 )}
               </TableCell>
