@@ -43,7 +43,7 @@ const VendorMaterialsHeader = ({ filterSearch, filterData, getTableData }) => {
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Vendor Material</Typography>
+          {/* <Typography variant="h4">Vendor Material</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
