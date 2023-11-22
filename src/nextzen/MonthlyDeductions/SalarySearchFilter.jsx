@@ -1,6 +1,6 @@
 import PropTypes, { element } from 'prop-types';
 
-import React,{ useEffect, useState,useCallback } from 'react';
+import React,{ useEffect, useState,useCallback , useContext} from 'react';
 
 import { styled } from '@mui/system';
 
@@ -35,31 +35,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-
-import CustomDateRangePicker from '../global/CustomDateRangePicker';
-
 import SalaryAdvanceForm from './SalaryAdvaceForm';
 import { baseUrl } from '../global/BaseUrl';
+import UserContext from '../context/user/UserConext';
 
 
-const defaultFilters = {
-  name: '',
-  type: [],
-  startDate: null,
-  endDate: null,
-};
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-      overflow:"hidden"
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-  }));
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -71,32 +53,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
   };
 
-  
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 export default function SalarySearchFilter({filterSearch,filterData}){
+  const {user} = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
-
+   
   const [dropdown,setDropdown]=useState({
 
   })
@@ -286,15 +247,13 @@ export default function SalarySearchFilter({filterSearch,filterData}){
 
     const ApproversList = () => {
       const payload = {
-        // companyID: "COMP1"
-        companyID:localStorage?.getItem('companyID')
+        companyID:(user?.companyID)?user?.companyID:'',
       }
      
       const config = {
         method: 'POST',
         maxBodyLength: Infinity,
         url: baseUrl + `/getApproverDetailsSalaryDetails`,
-        // url: `http://192.168.1.56:3001/erp/getApproverDetailsSalaryDetails`,
         data:  payload
       };
     
@@ -349,7 +308,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
     </Button>
 
     <Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
-      <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
+      <Iconify icon="mi:filter" /> Filters
     </Button>
   </Grid>
 </Grid>
@@ -359,25 +318,26 @@ export default function SalarySearchFilter({filterSearch,filterData}){
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-
+        PaperProps={{
+          sx:{maxWidth:500}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setOpen(false)} />
         </DialogTitle>
 
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
 
           
 
-          <Grid>
+          <Grid container>
 
-                <Grid>
+                <Grid container flexDirection="row">
             <Typography> Requested Date </Typography>
-     
-
             <Grid container flexDirection="row">
-              <Grid item>
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -395,7 +355,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -415,12 +375,10 @@ export default function SalarySearchFilter({filterSearch,filterData}){
                 </Grid>
               </Grid>
               </Grid>
-                <Grid sx={{marginTop:2}}>
+        <Grid container flexDirection="row" sx={{marginTop:2}}>
             <Typography> Paid Date </Typography>
-     
-
             <Grid container flexDirection="row">
-              <Grid item>
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -438,7 +396,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -456,11 +414,11 @@ export default function SalarySearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
+            </Grid>
+        </Grid>
               
-              <Grid>
-              <Grid marginTop="10px" xs={12} md={6}>
+              <Grid container flexDirection="row" spacing={1}>
+              <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="approverName">Approver Name</InputLabel>
                 <Select
@@ -482,10 +440,8 @@ export default function SalarySearchFilter({filterSearch,filterData}){
   })}
                 </Select>
               </FormControl>
-                   </Grid>
               </Grid>
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+              <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">status</InputLabel>
                 <Select
@@ -504,11 +460,11 @@ export default function SalarySearchFilter({filterSearch,filterData}){
                     <MenuItem value="rejected">Rejected</MenuItem>
                 </Select>
               </FormControl>
-                   </Grid>
-                </Grid>
+              </Grid>
+            </Grid>
 
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+                <Grid container flexDirection="row">
+                  <Grid marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">Payment Status</InputLabel>
                 <Select
@@ -535,7 +491,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
            
          </DialogContent>
          <div style={{marginBottom:16,marginTop:3}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+         <Button sx={{float:'right',right:15}} variant="outlined" onClick={()=>{handleCancel()}}>Cancel</Button></div>
     </Dialog>
     </>
     )

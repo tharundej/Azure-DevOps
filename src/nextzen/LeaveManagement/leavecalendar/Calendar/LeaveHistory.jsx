@@ -1,6 +1,6 @@
 import { baseUrl } from "src/nextzen/global/BaseUrl";
 import formatDateToYYYYMMDD from "src/nextzen/global/GetDateFormat";
-import { useState,useEffect } from "react";
+import { useState,useEffect, useContext } from "react";
 import {Card,OutlinedInput,FormControl,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
 import { LoadingScreen } from "src/components/loading-screen";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -10,7 +10,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Iconify from "src/components/iconify";
 import dayjs from 'dayjs';
 import axios from 'axios';
+import UserContext from "src/nextzen/context/user/UserConext";
 export default function History(){
+  const {user} = useContext(UserContext)
     const [historyData,setHistoryData] = useState();
     const [leaveType,SetLeaveType]= useState();
     const [loading,setLoading] = useState(false);
@@ -26,15 +28,13 @@ export default function History(){
       };
       const getLeaveType = () => {
         const payload = {
-            // companyId: "C1"
-            companyId:localStorage.getItem('companyID')
+            companyId:(user?.companyID)?user?.companyID:''
         }
        
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
           url: baseUrl + `/getLeaveType`,
-          // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
           data:  payload
         };
       
@@ -87,7 +87,7 @@ export default function History(){
     const LeaveHistory = () => {
         setLoading(true);
         const payload = {
-          "employeeId": localStorage?.getItem('employeeID'),
+          "employeeId":(user?.employeeID)?user?.employeeID:'',
           "search": "",
           "Page": 1,
           "Count": 7,
@@ -114,7 +114,6 @@ export default function History(){
         method: 'POST',
         maxBodyLength: Infinity,
         url: baseUrl+ `/getLeaveHistory`,
-        // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLeaveHistory`,
         data:  payload
         }
       axios.request(config).then((response) => {

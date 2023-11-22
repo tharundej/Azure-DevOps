@@ -1,10 +1,11 @@
-import { useMemo, useState,useEffect } from 'react';
+import { useMemo, useState,useEffect, useContext } from 'react';
 import useSWR, { mutate } from 'swr';
 
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // utils
 import { fetcher, endpoints } from 'src/utils/axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 // ----------------------------------------------------------------------
@@ -12,19 +13,15 @@ import { fetcher, endpoints } from 'src/utils/axios';
 const ApplyLeave = baseUrl + '/applyLeave';
 const URL = baseUrl+'/appliedLeaveList';
 
-// const ApplyLeave =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/applyLeave`;
-// const URL =`https://qx41jxft-3001.inc1.devtunnels.ms/erp/appliedLeaveList`
-
-console.log(localStorage.getItem('companyID'),'localStorage.getItem')
-const options = {
-  companyId: localStorage.getItem('companyID'),
-   employeeId:localStorage.getItem('employeeID')
-  // companyId: "C1",
-  //  employeeId:"E1"
-}
 
 
 export function useGetEvents() {
+  const {user} = useContext(UserContext)
+
+    const options = {
+      companyId: (user?.companyID)?user?.companyID:'',
+      employeeId:(user?.employeeID)?user?.employeeID:''
+    }
 
   const { data, isLoading, error, isValidating } = useSWR([URL,options] ,fetcher);
 
@@ -32,7 +29,6 @@ export function useGetEvents() {
     const events = data?.map((event) => ({
       ...event,
     }));
-console.log(events,"eventsssss")
     return {
       events: events || [],
       eventsLoading: isLoading,
@@ -46,7 +42,11 @@ console.log(events,"eventsssss")
 
 // ----------------------------------------------------------------------
 
-export async function createEvent(eventData) {
+export async function createEvent(eventData,user) {
+  const options = {
+    companyId: (user?.companyID)?user?.companyID:'',
+    employeeId:(user?.employeeID)?user?.employeeID:''
+  }
   try {
     const response = await axios.post(ApplyLeave, eventData);
     // Check the response for errors and throw an error if needed.
@@ -108,8 +108,11 @@ export async function updateEvent(eventData) {
 
 // ----------------------------------------------------------------------
 
-export async function deleteEvent(leaveId,employeeId) {
-  console.log(leaveId,"deletee",employeeId)
+export async function deleteEvent(leaveId,employeeId,user) {
+    const options = {
+      companyId: (user?.companyID)?user?.companyID:'',
+      employeeId:(user?.employeeID)?user?.employeeID:''
+    }
   /**
    * Work on server
    */
@@ -118,7 +121,7 @@ export async function deleteEvent(leaveId,employeeId) {
     LeaveId:JSON.stringify(parseInt(leaveId))
    };
    try{
- const response =  await axios.post(`http://192.168.1.199:3001/erp/deletLeaveRequest`, data);
+ const response =  await axios.post(baseUrl+`/deletLeaveRequest`, data);
  if (response.data.success === false) {
   throw new Error(response.data.message);
  }

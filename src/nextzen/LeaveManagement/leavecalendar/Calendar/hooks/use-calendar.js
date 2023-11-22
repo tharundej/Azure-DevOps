@@ -85,7 +85,6 @@ export default function useCalendar() {
 
   const onSelectRange = useCallback(
     (arg) => {
-      console.log(arg,"arggg")
       if (calendarEl) {
         const calendarApi = calendarEl.getApi();
         calendarApi.unselect();
@@ -108,17 +107,14 @@ export default function useCalendar() {
     (arg) => {
       const { event } = arg;
       if (event.extendedProps.type === 'holiday') {
-        console.log('This is a holiday event. No action needed.');
         return;
       }
-      console.log(event,"evnetsttss","idd",event.id)
       onOpenForm();
       setSelectEventId(event.id);
     },
     [onOpenForm]
   );
 
-  console.log(selectEventId,"selectedeventttid")
 
   const onResizeEvent = useCallback((arg, updateEvent) => {
     const { event } = arg;

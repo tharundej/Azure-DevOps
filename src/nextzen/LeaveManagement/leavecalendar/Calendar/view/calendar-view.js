@@ -5,7 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import axios from 'axios';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -30,6 +30,8 @@ import CalendarToolbar from '../calendar-toolbar';
 import CalendarFilters from '../calendar-filters';
 import CalendarFiltersResult from '../calendar-filters-result';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 const defaultFilters = {
   colors: [],
@@ -41,6 +43,7 @@ export default function CalendarView() {
  //----------------Calendar -------------------
   
   const theme = useTheme();
+  const {user} = useContext(UserContext)
   const settings = useSettingsContext();
   const smUp = useResponsive('up', 'sm');
   const openFilters = useBoolean();
@@ -83,13 +86,12 @@ useEffect(()=>{
   const holidayslist = (e) => {
     const payload = {
       // companyId: "C1"
-      companyId:localStorage.getItem('companyID'),
-      locationId:localStorage.getItem('locationID') 
+      companyId:(user?.companyID)?user?.companyID:'',
+      locationId:(user?.locationID)?user?.locationID:''
     };
     const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/holidayList`,
     url:baseUrl + `/holidayList`,
     data:  payload
     }
@@ -101,7 +103,6 @@ useEffect(()=>{
     });
   };
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
-   console.log(selectEventId,"selevctedeventt",currentEvent,"selectedrangee",selectedRange)
   useEffect(() => {
     onInitialView();
   }, [onInitialView]);
@@ -152,7 +153,6 @@ useEffect(()=>{
     />
   );
   const timezone = "Asia/Kolkata";
-console.log(overallEvents,"overallevents")
 
 const eventsExistOnDate = (date, overallEvents) => {
   // Filter events to find if any event matches the provided date
@@ -252,16 +252,17 @@ const selectAllowCallback = (selectInfo) => {
           exit: theme.transitions.duration.shortest - 80,
         }}
       >
-        <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> 
-          {(currentEvent?.leaveId && currentEvent?.leaveStatus==="pending") ? 'Delete Event' :(currentEvent?.leaveId && currentEvent?.leaveStatus==="approved")?"View Request": 'Leave Request'}</>}
+        {/* <DialogTitle sx={{ minHeight: 76 }}> */}
+        {openForm && <ModalHeader 
+        heading={(currentEvent?.leaveId && currentEvent?.leaveStatus==="pending") ? 'Delete Event' :(currentEvent?.leaveId && currentEvent?.leaveStatus==="approved")?"View Request": 'Leave Request'}
+        />}
         <CalendarForm
           currentEvent={currentEvent}
           colorOptions={CALENDAR_COLOR_OPTIONS}
           selectedRange={selectedRange}
           onClose={onCloseForm}
         />
-        </DialogTitle>
+        {/* </DialogTitle> */}
       </Dialog>
       </>
   );
