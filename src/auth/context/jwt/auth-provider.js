@@ -130,7 +130,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await axios.post(baseUrl + '/loginUser', data);
       const obj=response?.data
-      
+      localStorage.setItem("userDetails",JSON.stringify(obj))
       setUser(obj)
 
       //  const response = await axios.post(endpoints.auth.login, data);

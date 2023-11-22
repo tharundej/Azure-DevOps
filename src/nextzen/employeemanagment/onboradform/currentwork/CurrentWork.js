@@ -136,7 +136,13 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     .then((response) => {
     
       console.log(JSON.stringify(response.data));
-      router.push(paths.dashboard.employee.root);
+      if(response.data.code===400){
+        props.handleCallSnackbar(response.data.message,'warning')
+      }
+      else{
+        router.push(paths.dashboard.employee.root);
+      }
+      
     
     })
     

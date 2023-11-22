@@ -1,4 +1,4 @@
-import { useEffect,useState,useCallback } from 'react';
+import { useEffect,useState,useCallback, useContext } from 'react';
 
 
 import { Helmet } from 'react-helmet-async';
@@ -17,6 +17,7 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 
 import axios from 'axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 export default function EmployeeTable() {
@@ -87,9 +88,11 @@ export default function EmployeeTable() {
    
   },[])
 
+  const {user}=useContext(UserContext)
+
   const defaultPayload={
-    employeeID: "INFO75",
-    roleID:2,
+    employeeID: user?.employeeID,
+    roleID:user?.roleID,
     "count": 5,
      
     "page": 0,

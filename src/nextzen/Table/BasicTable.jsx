@@ -73,8 +73,8 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
-import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
 import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
+import ProjectSearchFilter from '../timesheet/components/ProjectSearchFilter';
 import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
@@ -102,6 +102,9 @@ import AssetsHead from '../assets/AssetsHeader';
 import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
+import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
+import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 // import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 // import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 // import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
@@ -453,12 +456,13 @@ const BasicTable = ({
           {filterName === 'TimeSearchFilter' && (
             <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-          {filterName === 'TimeProjectFilter' && (
+           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
+        
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -606,15 +610,15 @@ const BasicTable = ({
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-           {/* {filterName === 'DepartmentFilterSearch' && (
+           {filterName === 'DepartmentFilterSearch' && (
             <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {filterName === 'DesignationFilterSearch' && (
             <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
-           {filterName === 'DesignationGradeFilterSearch' && (
+            {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )} */}
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer

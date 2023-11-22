@@ -29,10 +29,52 @@ import {
 import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
+const headerMap = new Map();
+headerMap.set('leave','Leave');
+headerMap.set('employeemanagementhome','Employee Management')
+headerMap.set('timesheet','Time Sheet Management')
+headerMap.set('Shift','Shift management')
+headerMap.set('claims','Claims')
+headerMap.set('payroll','Payroll')
+headerMap.set('itdeclaration','IT Declaration')
+headerMap.set('monthlydeductions','Monthly Additions and Deductions')
+headerMap.set('appraisal','Appraisal Management')
+headerMap.set('leaveconfiguration','Leave Configuration')
+headerMap.set('appraisalconfiguration','Appraisal Configuration ')
+headerMap.set('expenseclaimconfiguration','Expenseclaim Configuration ')
+headerMap.set('shiftconfiguration','Shift Configuration ')
+headerMap.set('roleconfiguration','Role Configuration ')
+headerMap.set('factory','Factory')
+headerMap.set('assets','Assets')
+headerMap.set('vendor','Vendor')
+headerMap.set('materials','Materials')
+headerMap.set('products','Products')
+headerMap.set('customers','Customers')
+headerMap.set('order','Purchase Order')
+headerMap.set('payment','Purchase Payment')
+headerMap.set('invoice','Purchase Invoice')
+
+headerMap.set('expenses','Expenses ')
+headerMap.set('balancesheet','Balancesheet')
+
+
+
+
 export default function Header({ onOpenNav }) {
+  function getLastWordAfterSlash(path) {
+    // Split the path by '/'
+    const pathParts = path.split('/');
+    
+    // Get the last non-empty part
+    const lastPart = pathParts.filter(part => part !== '').pop();
+    console.log(lastPart,'currentPath')
+  
+    return lastPart || null; // Return the last part or null if there is none
+  }
   const navigate = useLocation();
   const currentPath = location.pathname;
-  const splicedPath = currentPath.slice(1);
+  
+  const splicedPath = getLastWordAfterSlash(currentPath);
   const theme = useTheme();
 
   const settings = useSettingsContext();
@@ -68,7 +110,8 @@ export default function Header({ onOpenNav }) {
       justifyContent="flex-end"
       spacing={{ xs: 0.5, sm: 1 }}
     >
-      <Typography style={{ color: '#3B82F6' }}>{splicedPath}</Typography>
+      <Typography style={{ color: '#3B82F6' }}>{headerMap.get(splicedPath)
+      }</Typography>
     </Stack>
 
       <Stack
