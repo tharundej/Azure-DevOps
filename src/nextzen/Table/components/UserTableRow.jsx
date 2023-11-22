@@ -62,7 +62,8 @@ console.log(row,'row data')
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row?.employeeId)}
+              onClick={()=>{onHandleEditRow(row?.employeename), console.log(row?.employeename,"row?.Id")}}
+              
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',

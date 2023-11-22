@@ -8,7 +8,7 @@ import TimeSheetApproval from './components/TimeSheetApproval';
 
 
 export default function BasicCard() {
-      const tabLabels = ["Projects" , "My Timesheet" , "Approvals"]
+      const tabLabels = ["Projects" , "My Timesheet" , "Timesheet Approvals"]
       const tabContents = [
         <div> <Project /> </div>,
         <div> <MyTimeSheet/> </div>,
