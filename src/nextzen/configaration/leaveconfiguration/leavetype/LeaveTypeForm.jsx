@@ -210,7 +210,7 @@ setSnackbarOpen(false)
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+            <DialogTitle sx={{alignItems:'center',justifyContent:'center',display:'flex'}}>Add Leave Type</DialogTitle>
             <DialogContent>
               <Box
                 rowGap={3}

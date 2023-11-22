@@ -250,22 +250,8 @@ export const dashboardRoutes = [
         ],
       },
 
-      {
-        path: 'payroll',
-        children: [
-          { element: <Payroll />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-          { path: 'payschedule', element: <PaySchedule /> },
-          { path: ':id/payscheduleform', element: <PayScheduleform /> },
-        ],
-      },
-      {
-        path: 'itdeclaration',
-        children: [
-          { element: <Itdeclaration />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
+      
+     
       // {
       //   path: 'monthlydeductions',
       //   children: [
@@ -281,20 +267,7 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
-      {
-        path:'configurations',
-        children:[
-          {
-            element: <Configaration/>,index:true
-          },
-          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
-          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
-          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
-          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
-          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
-          {path:'roleconfiguration',element:<RoleConfiguration/>},
-        ],
-      },
+     
       {
         path: 'product',
         children: [
@@ -497,6 +470,23 @@ export const dashboardRoutes = [
     ],
   },
   {
+    path:'payroll',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Payroll />, index: true },
+       { path: 'payschedule', element: <PaySchedule /> },
+      // { path: ':id/payscheduleform', element: <PayScheduleform /> },
+    ],
+  },
+  {
     path: 'TimeSheetManagement',
     element: (
       <AuthGuard>
@@ -509,6 +499,45 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <TimeSheetManagement />, index: true },
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path:'configurations',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children:[
+      {
+        element: <Configaration/>,index:true
+      },
+      {path:'leaveconfiguration',element:<LeaveConfiguration/>},
+      {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+      {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
+      {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
+      {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+      {path:'roleconfiguration',element:<RoleConfiguration/>},
+    ],
+  },
+  {
+    path: 'itdeclaration',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclaration />, index: true },
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },
