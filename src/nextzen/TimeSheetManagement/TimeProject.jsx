@@ -32,30 +32,23 @@ export default function TimeProject() {
 
         {
     
-          id: "",
+          id: "projectId",
     
-          label: " SL_NO",
+          label: "Project Id",
+          minWidth: '5pc',
     
           type: "text",
     
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
         },
-    
-        { id: "projectID", label: "Project Id", width: 180, type: "text" },
-    
-        { id: "projectName", label: "Project Name", width: 220, type: "text" },
+        { id: "projectManager", label: "Project Manager", minWidth: '7pc', type: "text" },
+        { id: "reportingManager", label: "Reporting Manager", minWidth: '7pc', type: "text" },
     
         { id: "startDate", label: "Start Date", width: 180, type: "text" },
     
-        { id: "endDate", label: "End Date", width: 100, type: "text" },
-        { id: "dueDate", label: "Due Date", width: 100, type: "text" },
+        { id: "endDate", label: "End Date", minWidth: '6pc', type: "text" },
+        { id: "actualstartDate", label: "Actual Start Date",  minWidth: '6pc', type: "text" },
+        { id: "actualendDate", label: "Actual End Date",  minWidth: '6pc', type: "text" },
         { id: "status", label: "Status", width: 100, type: "text" },
-        { id: "activityName", label: "Activity Name", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -74,16 +67,13 @@ export default function TimeProject() {
       }
 
       const handleDeleteAPICALL = async (rowdata,event)=>{
-        console.log("iam here ")
         try{
-          console.log(rowdata,"rowData:::::")
         const  data= {
           projectId: JSON.stringify( rowdata.projectID),
            
           };
           const response = await instance.post('deleteproject',data);
           // setReportingManagerData(response.data.list)
-          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
         }catch(error){
       console.error("Error", error);
       throw error;
@@ -94,19 +84,15 @@ export default function TimeProject() {
       const [tableEDitData , SetTableEditData] = useState({})
       const handleEditClose = ()=> setShowEdit(false)
       const handleEditAPICALL = async (rowdata,event) => {
-        console.log("🚀 ~ file: TimeProject.jsx:97 ~ handleEditAPICALL ~ rowdata:", rowdata)
         setShowEdit(true)
         SetTableEditData(rowdata)
-        console.log("iam here ")
         try{
-          console.log(rowdata,"rowData:::::")
         const  data= {
           projectId: JSON.stringify( rowdata.projectId),
            
           };
           const response = await instance.post('deleteproject',data);
           // setReportingManagerData(response.data.list)
-          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
         }catch(error){
       console.error("Error", error);
       throw error;
@@ -137,15 +123,13 @@ export default function TimeProject() {
       console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
-    "page": 60,
-    "count": 10,
+    "page": 0,
+    "count": 5,
     "search": "",
     "externalFilters": {
         "startDate": "",
         "endDate": "",
-        "projectName": "",
         "status": "",
-        "activityName": ""
     },
     "sort": {
         "key": 0,
@@ -169,13 +153,7 @@ export default function TimeProject() {
  <EditTimeProject currentUser={{}}handleClose={handleEditClose} tableEDitData={tableEDitData} />
       </Dialog>
     )}
-{/* <hr style={ {height:'2px',margin:"20px",backgroundColor:"blac"}}/> */}
-    <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
-  {/* <div>Content Here</div> */}
-  {/* <Button className="button" onClick={handleTimeForm}>Add Project</Button> */}
-{/* <Button className="button">Filter</Button>
-<Button className="button">Report</Button> */}
-</Container>
+
     <BasicTable
 
 headerData={TABLE_HEAD}
