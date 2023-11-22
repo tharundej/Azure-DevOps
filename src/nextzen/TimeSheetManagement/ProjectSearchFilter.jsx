@@ -251,7 +251,7 @@ export default function ProjectSearchFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
- onChange={e=>{handleSearch(e)}}
+ onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
@@ -522,5 +522,5 @@ ProjectSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 ProjectSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }

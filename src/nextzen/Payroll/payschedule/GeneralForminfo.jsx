@@ -43,9 +43,9 @@ export default function GeneralForminfo({ currentUser }) {
     daPercentage: Yup.number().required('DA is Required'),
     employeePfPercentage: Yup.number().required('Employee PF is Required'),
     employerPfPercentage: Yup.number().required('Employer PF is Required'),
-    ltaPercentage: Yup.number().required('LTA is Required'),
-    esicPercentage: Yup.number().required('esic is Required'),
-    tdsPercentage: Yup.number().required('TDS is Required'),
+    ltaPercentage: Yup.number(),
+    esicPercentage: Yup.number(),
+    tdsPercentage: Yup.number(),
   });
 
   const NewUserSchema2 = Yup.object().shape({
@@ -61,9 +61,9 @@ export default function GeneralForminfo({ currentUser }) {
       daPercentage: currentUser?.daPercentage || null,
       employeePfPercentage: currentUser?.employeePfPercentage || null,
       employerPfPercentage: currentUser?.employerPfPercentage || null,
-      ltaPercentage: currentUser?.ltaPercentage || null,
-      esicPercentage: currentUser?.esicPercentage || null,
-      tdsPercentage: currentUser?.tdsPercentage || null,
+      ltaPercentage: currentUser?.ltaPercentage ,
+      esicPercentage: currentUser?.esicPercentage ,
+      tdsPercentage: currentUser?.tdsPercentage ,
     }),
     [currentUser]
   );

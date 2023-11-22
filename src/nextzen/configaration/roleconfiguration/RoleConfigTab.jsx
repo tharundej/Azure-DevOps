@@ -18,7 +18,7 @@ const bull = (
   </Box>
 );
 // 'Department', 'Designation ',
-const tabLabels = [ 'Designation Grade' ,"Role"];
+const tabLabels = [ 'Designation Grade' ];
   const tabContents = [
     // <div>
     //    <DepartmentConfig/> 
@@ -30,7 +30,7 @@ const tabLabels = [ 'Designation Grade' ,"Role"];
       <DesignationGradeConfig/>
     </div>,
     <div>
-     <RoleConfiguration/>
+     {/* <RoleConfiguration/> */}
     </div>
   ];
 

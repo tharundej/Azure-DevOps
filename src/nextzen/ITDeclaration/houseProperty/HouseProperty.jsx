@@ -26,6 +26,14 @@ import './houseProperty.css';
 import axios from 'axios';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+
+
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
 
 const headings = [
   'S.No',
@@ -66,6 +74,17 @@ export default function HouseProperty() {
   const [landLordDeletedId , setLandLordDeletedID] = useState([])
   const [rentDeletedId , setRentDeletedID] = useState([])
   const [housingData, sethousingData] = useState([]);
+   // State for Snackbar
+   const [snackbarOpen, setSnackbarOpen] = useState(false);
+   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+   const [snackbarMessage, setSnackbarMessage] = useState('');
+   const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    // setOpen(false);
+  };
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -158,7 +177,7 @@ export default function HouseProperty() {
   };
   const addHousingProperity = useCallback(async () => {
 
-    console.log(formData.dateOfSanction ,"")
+    console.log(formData.dateOfSanction ,"date ")
     const payload = {
       companyId: cmpId,
       employeeId: empId,
@@ -195,12 +214,37 @@ console.log(payload ,"payload")
     axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data?.rows;
-          console.log(JSON.stringify(response.data), 'dataaaa');
-          setREload(!reload)
+    console.log("success" , response ,response.data.message)
+          if (response.data.code === 201 || 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setREload(!reload)
+            setFormData({
+              propertyReferenceSlNo: null,
+    name_of_the_owners: '',
+    addressOfProperty: '',
+    panOfTheLanders: '',
+    amountOfHousingloanTakenFromTheProperty: '',
+    purposeOfLoan: '',
+    dateOfSanction: dayjs().format('YYYY-MM-DD'),
+    interestPaybleOnYear: '',
+    isPropertySelfOccupiedOrLetOu: '',
+    ifJointPropertyThenEnterInterestRate: '',
+    grossRentalAmount: '',
+    municipalTaxesPaid: '',
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -283,7 +327,7 @@ const handleEdit = (rowData) => {
       panOfTheLanders: rowData.panOfTheLanders,
       amountOfHousingloanTakenFromTheProperty: rowData.amountOfHousingloanTakenFromTheProperty,
       purposeOfLoan: rowData.purposeOfLoan,
-      dateOfSanction: rowData.dateOfSanction,
+      dateOfSanction: rowData.dateOfSanctionOfLoan,
       interestPaybleOnYear: rowData.interestPaybleOnYear,
       isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOu,
       ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
@@ -300,6 +344,23 @@ const handleEdit = (rowData) => {
 };
   return (
     <div>
+       <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Grid container spacing={2} style={{ marginTop: '1rem' }}>
         {/* search ad filter  */}
         {/* <Grid
@@ -593,7 +654,7 @@ onChange={(newValue) => {
           {/* Add more rows as needed */}
         </Grid>
       </Grid>
-
+{housingData?.length > 0  ?
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -636,7 +697,7 @@ onChange={(newValue) => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> : null}
       {openAttachmentDilog ? (
         <FileUploader
           showAttachmentDilog={openAttachmentDilog}

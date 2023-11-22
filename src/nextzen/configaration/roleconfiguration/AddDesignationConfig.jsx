@@ -52,6 +52,9 @@ export default function AddDesignationConfig({ currentUser ,handleCloseAddRoleDi
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -164,7 +167,7 @@ setHitGetDepartment(!hitGetDepartment)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":"COMP1"
+        "companyID":cmpId
     }
   
     const config = {
@@ -175,7 +178,7 @@ setHitGetDepartment(!hitGetDepartment)
     url : baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+       token ,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -200,7 +203,7 @@ setHitGetDepartment(!hitGetDepartment)
     const payload = 
    
     {
-        "companyID":"COMP1",
+        "companyID":cmpId,
         "departmentName": formData?.department,
         "locationID": formData?.Location?.locationID
     }
@@ -209,11 +212,10 @@ setHitGetDepartment(!hitGetDepartment)
     method: 'post',
        maxBodyLength: Infinity,
     //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDepartment',
+    url : baseUrl +  '/addDepartment',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+        token , 'Content-Type': 'text/plain',
        },
        data: payload,
      };
@@ -244,7 +246,7 @@ setHitGetDepartment(!hitGetDepartment)
    const getDepartment = async () => {
     const payload =
     {
-        "companyID": "COMP1",
+        "companyID": cmpId,
         
     }
   
@@ -256,7 +258,7 @@ setHitGetDepartment(!hitGetDepartment)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+       token ,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -283,7 +285,7 @@ setHitGetDepartment(!hitGetDepartment)
    
     
     {
-        "companyID": "COMP1",
+        "companyID": cmpId,
         "departmentID" : formData?.Department?.departmentID,
         "designationName": formData?.designation,
     }
@@ -295,8 +297,7 @@ setHitGetDepartment(!hitGetDepartment)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignation',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+        token,  'Content-Type': 'text/plain',
        },
        data: payload,
      };
@@ -327,7 +328,7 @@ setHitGetDepartment(!hitGetDepartment)
    const getDesignation = async () => {
     const payload =
     {
-        "companyID":"COMP1",
+        "companyID":cmpId,
         "departmentID":formData?.Department?.departmentID,
     }
   
@@ -336,10 +337,10 @@ setHitGetDepartment(!hitGetDepartment)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
+    url : baseUrl + '/onboardingDesignation',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
+       token ,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -366,7 +367,7 @@ setHitGetDepartment(!hitGetDepartment)
    
     
     {
-        "companyID": "COMP1",
+        "companyID": cmpId,
         "designationID" : formData?.Designation?.designationID,
         "designationGradeName": formData?.designationGrade,
     }
@@ -375,11 +376,10 @@ setHitGetDepartment(!hitGetDepartment)
     method: 'post',
        maxBodyLength: Infinity,
     //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
+    url : baseUrl +'/addDesignationGrade',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+        token , 'Content-Type': 'text/plain',
        },
        data: payload,
      };

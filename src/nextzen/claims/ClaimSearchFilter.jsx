@@ -123,7 +123,7 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
    
 
     
-;  const [badgeContent, setBadgeContent] = useState(0);
+;  const [badgeContent, setBadgeContent] = useState(false);
 
     const handleSearch = (searchTerm) => {
  
@@ -260,7 +260,8 @@ const handleFieldChange = (fieldtype,field, value) => {
 const handleReset = () => {
   // Handle reset logic here
   setSelectedFields({});
-  setIsBlinking(false)
+  // setIsBlinking(false)
+  setBadgeContent(false)
   onClose();
 };
 const blinkAnimation = keyframes`
@@ -280,8 +281,9 @@ const [isBlinking, setIsBlinking] = useState(false);
 const handleApply=()=>{
  
     filterData(selectedFields)
+    setBadgeContent(true)
     // setBadgeContent((prevContent) => prevContent + 1);
-    setIsBlinking(true);
+    // setIsBlinking(true);
     onClose();
     // setSelectedFields(dialogPayload);
     
@@ -318,15 +320,29 @@ console.log(selectedFields,"selectedFields 2nd method")
             <Grid md={2} xs={2} item>
 
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="error" variant="dot" anchorOrigin={{
+                vertical: 'up',
+                horizontal: 'left',
+              }} >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
         {/* <Badge badgeContent={""} color="error"  anchorOrigin={{
     vertical: 'up',
     horizontal: 'left',
-  }} > */}
-            <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{ backgroundColor: "grey",  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
+  }} >
+            <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
            <Iconify icon="mi:filter"/>
            Filters
       </Button>
-      {/* </Badge > */}
+      </Badge > */}
 
       </Stack>
       </Grid>
@@ -389,12 +405,12 @@ console.log(selectedFields,"selectedFields 2nd method")
       ))}
      {/* </Grid> */}
      
-      <Grid container justifyContent="flex-end"  marginBottom={3} >
+      <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
       {/* <Badge badgeContent={badgeContent} color="error"> */}
-      <Button variant="outlined" onClick={handleReset}>
+      <Button sx={{margin:"2px"}} variant="outlined" onClick={handleReset}>
             Reset
           </Button>
-      <Button variant='outlined'  onClick={handleApply}>apply</Button>
+      <Button variant='outlined' sx={{margin:"2px"}} onClick={handleApply}>apply</Button>
       {/* </Badge> */}
 
       </Grid >

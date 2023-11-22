@@ -111,11 +111,8 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   useEffect(() => {
     getDepartment()
     getEmploye()
-    getShiftgroupName()
-    getShiftName()
   }, [])
-  const [isemployeLevel,setIsemployeLevel]=useState(false)
-  
+
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
   const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
@@ -126,18 +123,12 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
 
   const [departmentData,setDepartmentData] =useState([])
   const [CurrentDepartmentData,setCurrentDepartmentData] =useState({})
-  const [CurrentShiftGroupNameData,setCurrentShiftGroupNameData] =useState({})
-  const [CurrentShiftNameData,setCurrentShiftNameData] =useState({})
   const [designationData,setDesignationData] =useState([])
   const [CurrentDesignationData,setCurrentDesignationData] =useState({})
   const [gradeData,setgradeData] =useState([])
   const [employeData,setEmployeData] =useState([])
-  const [ShiftGroupName,setShiftGroupName] =useState([])
-  const [ShiftName,setShiftName] =useState([])
-  console.log("🚀 ~ file: AddeployeShift.jsx:134 ~ AddEmployeShift ~ ShiftGroupName:", ShiftGroupName)
   console.log("🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:", employeData)
   const [CurrentGradeData,setCurrentGradeData] =useState({})
-  console.log("🚀 ~ file: AddeployeShift.jsx:140 ~ AddEmployeShift ~ CurrentGradeData:", CurrentGradeData.designationGradeID)
 
 
   const getDepartment = async ()=>{
@@ -204,37 +195,6 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   throw error;
     }
   }
-  const getShiftgroupName= async (newvalue)=>{
-    try{
-    const  data= {
-      
-      companyId:'COMP1',
-       
-      };
-      const response = await instance.post('/getShiftGroupName',data);
-      setShiftGroupName(response.data.data)
-      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
-    }catch(error){
-  console.error("Error", error);
-  throw error;
-    }
-  }
-  const getShiftName= async (newvalue)=>{
-    try{
-    const  data= {
-      
-      companyId:"COMP2",
-      locationId:32
-       
-      };
-      const response = await instance.post('/getShiftConfig',data);
-      setShiftName(response.data.data)
-      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
-    }catch(error){
-  console.error("Error", error);
-  throw error;
-    }
-  }
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
@@ -244,15 +204,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     // setCommaSepaatedEmployeString(EmployeList.join(','))
   };
 
-  
 
-  const join =()=>{
-    const arr= []
-    for (let i=0;i<currentEmployeData.length;i++){
-      arr.push(currentEmployeData[i].employeeID)
-    }
-return arr
-  }
 
   
 
@@ -262,15 +214,15 @@ return arr
     try {
     
       const data = {
-        shiftConfigurationId:parseInt( CurrentShiftNameData?.shiftConfigurationId),
+        shiftConfigurationId:3,
         ShiftTerm:"weekly",
-        shiftGroupName:CurrentShiftGroupNameData?.ShiftGroupName,
+        shiftGroupName:'shift D',
         supervisorId:'ibm4',
-        departmentId: JSON.stringify (CurrentDepartmentData?.departmentID),
-        designationId:JSON.stringify( CurrentDesignationData?.designationID),
-        DesignationGradeId: CurrentGradeData?.designationGradeID !== '0' ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
+        departmentId: JSON.stringify (CurrentDepartmentData.departmentID),
+        designationId:JSON.stringify( CurrentDesignationData.designationID),
+        DesignationGradeId:"", //JSON.stringify(CurrentGradeData.designationGradeID),
         companyId:'COMP2',
-        employeeId:join(),
+        employeeId:["ibm8"]
       }
           console.log(data, 'data111ugsghghh');
     
@@ -291,18 +243,18 @@ return arr
           console.error(error);
         }
   });
-  // const Options = [
-  //   {id :"2" , name:"shift A"},
-  //   {id :"3" , name:"shift B"},
-  //   {id :"4" , name:"shift C"},
-  // ]
-  // const top100Films = [
-  //   { title: 'The Shawshank Redemption', year: 1994 },
-  //   { title: 'The Godfather', year: 1972 },
-  //   { title: 'The Godfather: Part II', year: 1974 },
-  //   { title: 'The Dark Knight', year: 2008 },
-  //   { title: '12 Angry Men', year: 1957 },
-  // ];
+  const Options = [
+    {id :"2" , name:"shift A"},
+    {id :"3" , name:"shift B"},
+    {id :"4" , name:"shift C"},
+  ]
+  const top100Films = [
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'The Godfather', year: 1972 },
+    { title: 'The Godfather: Part II', year: 1974 },
+    { title: 'The Dark Knight', year: 2008 },
+    { title: '12 Angry Men', year: 1957 },
+  ];
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -326,7 +278,7 @@ return arr
     >
      
 
-{/* <RHFSelect name="shiftGroupName" label="Shift Group Name ">
+<RHFSelect name="shiftGroupName" label="Shift Group Name ">
 
 <option value="full_day" >Full Day</option>
 
@@ -334,29 +286,10 @@ return arr
 
 <option value="second_half" >Second Half</option>
 
-</RHFSelect> */}
-
-<Autocomplete
-disablePortal
-id="combo-box-dem"
-options={ShiftGroupName || []}
-value={CurrentShiftGroupNameData?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
+</RHFSelect>
 
 
-setCurrentShiftGroupNameData(newvalue
-)
-// getDesignation(newvalue)
-
-
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
-/>
-{/* <RHFSelect name="Select_Shift" label="Select Shift">
+<RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>
 
@@ -364,32 +297,9 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
 
 <option value="second_half" >Second Half</option>
 
-</RHFSelect> */}
-<Autocomplete
-disablePortal
-id="combo-box-dem33"
-options={ShiftName || []}
-value={CurrentShiftNameData?.shiftConfigurationId}
-getOptionLabel={(option) => option.shiftName}
-onChange={(e,newvalue)=>{
+</RHFSelect>
 
 
-setCurrentShiftNameData(newvalue
-)
-// getDesignation(newvalue)
-
-
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
-/>
-
-<div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Switch checked={isemployeLevel} onChange={()=>{setIsemployeLevel(!isemployeLevel)}} />
-                  {!isemployeLevel ? <span>Select On Employee</span> : <span>Select On Department</span>}
-                </div>
 {/* <RHFSelect name="departmentId" label="Select Department">
 
 <option value="full_day" >Full Day</option>
@@ -399,7 +309,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
 <option value="second_half" >Second Half</option>
 
 </RHFSelect> */}
-{!isemployeLevel && <Autocomplete
+<Autocomplete
 disablePortal
 id="combo-box-demo"
 options={departmentData || []}
@@ -418,7 +328,7 @@ sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Department" />}
-/>}
+/>
 {/* <RHFSelect name="designationId" label="Select Designation">
 
 <option value="full_day" >HR</option>
@@ -428,10 +338,9 @@ renderInput={(params) => <TextField {...params} label="Select Department" />}
 <option value="second_half" >Developer</option>
 
 </RHFSelect> */}
-{!isemployeLevel && 
 <Autocomplete
 disablePortal
-id="combo-box-demo3"
+id="combo-box-demo"
 options={designationData || []}
 value={CurrentDesignationData?.designationID}
 getOptionLabel={(option) => option.designationName}
@@ -449,8 +358,15 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
 />
-}
-{!isemployeLevel && 
+{/* <RHFSelect name="DesignationGradeId" label="Select Grade">
+
+<option value="full_day" >HR</option>
+
+<option value="first_half" >Manager</option>
+
+<option value="second_half" >Developer</option>
+
+</RHFSelect> */}
 <Autocomplete
 disablePortal
 id="combo-box-demo"
@@ -462,17 +378,54 @@ onChange={(e,newvalue)=>{
 
 setCurrentGradeData(newvalue
 )
-
+// getGrade(newvalue)
 
 
 }}
 sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
-renderInput={(params) => <TextField {...params} label="Select Grade" />}
+renderInput={(params) => <TextField {...params} label="Select Designation" />}
 />
+
+{/* <Autocomplete
+
+multiple
+
+id="Primary Skills"
+
+options={employeData.map((option) => option.EmployeeName)}
+
+freeSolo
+
+
+renderTags={(value1, getTagProps) =>
+
+value1.map((option, index1) => (
+
+<Chip variant="outlined" label={option} {...getTagProps({ index1 })} />
+
+))
+
 }
-{isemployeLevel && 
+
+renderInput={(params) => (
+
+<TextField
+
+{...params}
+
+variant="filled"
+
+label="Select Employe"
+
+placeholder="Favorites"
+
+/>
+
+)}
+
+/> */}
 <Autocomplete
             multiple
             disablePortal
@@ -480,15 +433,31 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
             options={employeData || []}
             value={currentEmployeData}
             getOptionLabel={(option) => option.EmployeeName}
-            
+            // onChange={(e,newvalue)=>{
+             
+             
+            //   setCurrentEmployeData(newvalue
+                
+            //   );
+              
+             
+              // const obj={
+              //   companyId:'COMP1',
+              //   reporting_manager_id:newvalue?.employeeId
+              // }
+ 
+              // ApiHitDepartment(obj)
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+           
+            // }}
             onChange={handleSelectEmployeChange}
             sx={{
               width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label=" Select employee" />}
           />
-}
-
     </Box>
 
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>

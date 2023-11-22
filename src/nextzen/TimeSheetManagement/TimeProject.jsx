@@ -43,9 +43,7 @@ export default function TimeProject() {
         { id: "projectManager", label: "Project Manager", minWidth: '7pc', type: "text" },
         { id: "reportingManager", label: "Reporting Manager", minWidth: '7pc', type: "text" },
     
-        { id: "projectName", label: "Project Name",  minWidth: '8pc', type: "text" },
-        { id: "employeesAssigned", label: "Employees Assigned",  minWidth: '5pc', type: "text" },
-        { id: "startDate", label: "Start Date",  minWidth: '7pc', type: "text" },
+        { id: "startDate", label: "Start Date", width: 180, type: "text" },
     
         { id: "endDate", label: "End Date", minWidth: '6pc', type: "text" },
         { id: "actualstartDate", label: "Actual Start Date",  minWidth: '6pc', type: "text" },
@@ -104,11 +102,11 @@ export default function TimeProject() {
 
       const actions = [
     
-        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
+        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall", endpoint: '/approveLeave'},
+        { name: "view", icon: "hh", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
     
-        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "3", type: "serviceCall", endpoint: '/deleteproject'},
+        { name: "Delete", icon: "hh", id: "1", type: "serviceCall", endpoint: '/deleteproject'},
     
       ];
     
@@ -117,8 +115,12 @@ export default function TimeProject() {
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
         setShowForm(true)
+        console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       } 
       
+    
+      const[tableData,SetTableData] = useState({})
+      console.log("🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:", tableData)
 
   const defaultPayload={
     "page": 0,
@@ -131,7 +133,7 @@ export default function TimeProject() {
     },
     "sort": {
         "key": 0,
-        "orderBy": "project_id"
+        "orderBy": ""
     }
 }
       

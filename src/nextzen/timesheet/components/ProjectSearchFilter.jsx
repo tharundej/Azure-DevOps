@@ -178,7 +178,9 @@ const [locationList,setLocationList] = useState([])
 const [hasFetchedData, setHasFetchedData] = useState(false);
 const [projectId,setProjectID]= useState()
 useEffect(() => {
-  getLocation()
+  if(showProject){
+    getLocation()
+  }
 }, [])
 
 const [datesUsed, setDatesUsed] = useState({
@@ -308,6 +310,9 @@ const handleClose=()=>{
     setShowProject(false);
     setShowFilter(false);
     setShowAssignEmployee(false);
+    setProjectID();
+    setSelectedIds();
+    setSelectedLocationID();
 }
   
 if (selectedLocationID !== null && !hasFetchedData) {
@@ -788,7 +793,7 @@ console.log(selectedIds,"selectedIDSSS")
         sx: { width: 770, overflow:'hidden'},
       }}
       >
-            <DialogTitle>Assign Employees to Project</DialogTitle>
+            <DialogTitle sx={{paddingBottom:0}}>Assign Employees to Project</DialogTitle>
         <Grid sx={{p:2,overflow: 'hidden'}}>
           {/* <Typography variant='subtitle2'>{projectId?'Project':'Select Project'}</Typography> */}
           <FormControl fullWidth sx={{marginBottom:2}}>
@@ -801,11 +806,11 @@ console.log(selectedIds,"selectedIDSSS")
     onChange={handleProject}
   >
       <MenuItem value="1"> Project1</MenuItem>
-              <MenuItem value="2">Project1</MenuItem>
-              <MenuItem value="3">Project1</MenuItem>
-              <MenuItem value="4">Project1</MenuItem>
-              <MenuItem value="5">Project1</MenuItem>
-              <MenuItem value="6">Project1</MenuItem>
+              <MenuItem value="2">Project2</MenuItem>
+              <MenuItem value="3">Project3</MenuItem>
+              <MenuItem value="4">Project4</MenuItem>
+              <MenuItem value="5">Project5</MenuItem>
+              <MenuItem value="6">Project6</MenuItem>
   </Select>
  
 <Autocomplete
