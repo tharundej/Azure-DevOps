@@ -497,7 +497,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path: 'TimeSheetManagement',
+    path: 'timesheetmanagement',
     element: (
       <AuthGuard>
         <DashboardLayout>

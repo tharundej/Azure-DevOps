@@ -158,7 +158,7 @@ export const paths = {
     },
 
     timesheet: {
-      root: `/TimeSheetManagement`,
+      root: `/timesheetmanagement`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
