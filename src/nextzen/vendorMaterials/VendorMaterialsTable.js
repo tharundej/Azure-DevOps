@@ -1,19 +1,70 @@
 import { useEffect, useState, useCallback } from 'react';
-
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-import { getVendorListAPI } from 'src/api/Accounts/Vendor';
+import { DeleteVendorMaterialAPI, getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
+import SnackBarComponent from '../global/SnackBarComponent';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 const VendorMaterialsTable = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
     { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
+  const [editShowForm, setEditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      setEditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = { id: rowdata.id || 0, title: rowdata.materialName || '' };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    setEditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteVendorMaterialAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
@@ -23,7 +74,7 @@ const VendorMaterialsTable = () => {
 
   const ApiHit = async () => {
     try {
-      const response = await getVendorListAPI(defaultPayload);
+      const response = await getVendorMaterialListAPI(defaultPayload);
       console.log('location success', response);
     } catch (error) {
       console.log('API request failed:', error.message);
@@ -71,16 +122,44 @@ const VendorMaterialsTable = () => {
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+        severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Vendor Material"
+        message={`Are you sure you want to delete ${deleteData?.title}?`}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateVendor currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Accounting: Vendor Material</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getMaterialss"
+        endpoint="/getMaterials"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="VendorMaterialsHead"
+        onClickActions={onClickActions}
       />
     </>
   );

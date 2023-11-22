@@ -68,7 +68,7 @@ export const paths = {
       forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
-      changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
+      changepassword: `${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -273,17 +273,12 @@ export const paths = {
       vendor: `${ROOTS.DASHBOARD}/vendor`,
       vendormaterials: `${ROOTS.DASHBOARD}/vendor/vendormaterials`,
     },
-    materials: {
-      materials: `${ROOTS.DASHBOARD}/materials`,
-    },
     assets: {
       assets: `${ROOTS.DASHBOARD}/assets`,
     },
     products: {
       products: `${ROOTS.DASHBOARD}/products`,
-    },
-    customers: {
-      customers: `${ROOTS.DASHBOARD}/customers`,
+      customers: `${ROOTS.DASHBOARD}/products/customers`,
     },
     purchase: {
       purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,

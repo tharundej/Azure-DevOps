@@ -62,7 +62,6 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   useEffect(() => {
     const fetchData = async () => {
       const data = { companyID: 'COMP1' };

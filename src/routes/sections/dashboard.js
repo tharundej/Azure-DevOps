@@ -145,7 +145,6 @@ const RoleConfiguration = lazy(() =>
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
 const VendorIndex = lazy(() => import('src/nextzen/vendor/Vendor'));
-const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
 const Assets = lazy(() => import('src/nextzen/assets/Assets'));
 const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
@@ -400,15 +399,6 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path: 'materials',
-        children: [
-          {
-            element: <Materials />,
-            index: true,
-          },
-        ],
-      },
-      {
         path: 'assets',
         children: [
           {
@@ -420,19 +410,9 @@ export const dashboardRoutes = [
       {
         path: 'products',
         children: [
-          {
-            element: <Products />,
-            index: true,
-          },
-        ],
-      },
-      {
-        path: 'customers',
-        children: [
-          {
-            element: <Customers />,
-            index: true,
-          },
+          { element: <Products />, index: true, },
+          { path: 'products', element: <Products /> },
+          { path: 'customers', element: <Customers /> },
         ],
       },
       {
