@@ -25,6 +25,7 @@ import AppCurrentDownload from '../app-current-download';
 import AppTopInstalledCountries from '../app-top-installed-countries';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import PunchINOutCard from 'src/nextzen/dashboard/PunchInOut/PunchINOutCard';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +53,8 @@ export default function OverviewAppView() {
         </Grid>
 
         <Grid xs={12} md={4}>
-          <AppFeatured list={_appFeatured} />
+          {/* <AppFeatured list={_appFeatured} /> */}
+          <PunchINOutCard />
         </Grid>
 
         <Grid xs={12} md={4}>

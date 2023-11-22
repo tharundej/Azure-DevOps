@@ -35,13 +35,13 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocation
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
-const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
   useEffect(()=>{
     if(dropDownOptions){
-     
+     console.log(dropDownOptions,'dropDownOptions')
       setUserDropDownOptions(dropDownOptions)
       
     }
@@ -193,10 +193,10 @@ const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userloca
         const obj={
           ...currentUser,
           departmentID:userdropDownvalue?.departmentValue?.departmentID || "",
-          desginationGradeID:userdropDownvalue?.desginationGradeValue?.desginationGradeID || "",
-          desginationID:userdropDownvalue?.desginationValue?.desginationID || "",
+          designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID || "",
+          designationID:userdropDownvalue?.desginationValue?.designationID || "",
           locationID:userdropDownvalue?.locationValue?.locationID || "",
-          managerID:userdropDownvalue?.managerValue?.managerID || "",
+          reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
           roleID:userdropDownvalue?.rolesValue?.roleID || "",
 
 
@@ -219,6 +219,7 @@ const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userloca
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            handleCallSnackbar(response.data.message,'success');
             ApiHit()
           })
           .catch((error) => {
@@ -233,7 +234,7 @@ const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userloca
     <>
 
         <Helmet>
-        <title> Dashboard: myclaims</title>
+        <title> Dashboard: Update Employee Details</title>
       </Helmet>
       <Dialog
         fullWidth
@@ -920,6 +921,102 @@ const EmployeeAboutEdit = ({ApiHit,open,handleEditClose,currentUserData,userloca
                   style={{ width: '100%' }} />}
                 />
               </Grid>
+
+              <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="manager"
+                options={userdropDownOptions?.managerOptions || []}
+                value={userdropDownvalue?.managerValue}
+                getOptionLabel={(option) => option?.managerName}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.managerValue=newvalue;
+                 
+                  
+                  console.log(newArr)
+                 
+                  // try{
+                  //   const deptObj={
+                  //     companyID:'COMP1',
+                  //     locationID:newvalue?.locationID
+                  //   }
+                  //   const department=await ApiHitDepartment(deptObj);
+                  //   var optionsArr={...userdropDownOptions};
+                  //   optionsArr.departmentOptions=department;
+                  //   optionsArr.desginationGradeOptions=[];
+                  //   optionsArr.desginationOptions=[];
+                  //   console.log(optionsArr,'optionsArroptionsArr')
+                  //   setUserDropDownOptions(optionsArr)
+
+                  // }
+                  // catch(error){
+                    
+                  // }
+
+                 
+                  
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Assign Manager"
+                style={{  width: '100%' }} />}
+              />
+              </Grid>
+
+              <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="role"
+                options={userdropDownOptions?.rolesOptions || []}
+                value={userdropDownvalue?.rolesValue}
+                getOptionLabel={(option) => option?.roleName}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.rolesValue=newvalue;
+                 
+                  
+                  console.log(newArr)
+                 
+                  // try{
+                  //   const deptObj={
+                  //     companyID:'COMP1',
+                  //     locationID:newvalue?.locationID
+                  //   }
+                  //   const department=await ApiHitDepartment(deptObj);
+                  //   var optionsArr={...userdropDownOptions};
+                  //   optionsArr.departmentOptions=department;
+                  //   optionsArr.desginationGradeOptions=[];
+                  //   optionsArr.desginationOptions=[];
+                  //   console.log(optionsArr,'optionsArroptionsArr')
+                  //   setUserDropDownOptions(optionsArr)
+
+                  // }
+                  // catch(error){
+                    
+                  // }
+
+                 
+                  
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Role"
+                style={{  width: '100%' }} />}
+              />
+              </Grid>
             
              </Grid>
 
@@ -969,6 +1066,7 @@ EmployeeAboutEdit.propTypes = {
     dropDownOptions:PropTypes.array,
     dropDownvalue:PropTypes.array,
     employeeIDForApis:PropTypes.string,
-    ApiHit:PropTypes.func
+    ApiHit:PropTypes.func,
+    handleCallSnackbar:PropTypes.func
 
   };

@@ -55,8 +55,8 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
   const [defaultValues, setDefaultValues] = useState([
     {
       previousCompanyName: '',
-      startDate: dayjs(new Date()),
-      endDate: dayjs(new Date()),
+      startDate: "",
+      endDate:"",
       employementType: '',
       primarySkills: [],
       
