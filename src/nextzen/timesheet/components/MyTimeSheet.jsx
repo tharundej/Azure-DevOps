@@ -196,7 +196,47 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
   });
 
    // edit dialog form data
-   const [timesheetData, setTimesheetData] = useState();
+   const [timesheetData, setTimesheetData] = useState({
+    timesheetId: '',
+    flag :3,
+    companyId: companyID,
+    employeeId: employeeID,
+    employeeName: '',
+    projectId: '1',
+    activityId: '2',
+    startTime: '',
+    endTime: '',
+    monday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    tuesday: {
+      hours: '',
+      task: '',
+      comments: "",
+    },
+    wednesday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    thursday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    friday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    saturday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+  });
 console.log(timesheetData,"timesheetData1222")
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -224,13 +264,24 @@ console.log(timesheetData,"timesheetData1222")
   };
 
   const onSubmitEdit2 = async(timesheetData, event) => {
+    const newId = timesheetData?.timeSheetId ;
+    console.log(newId,"newId")
+
+    const updateTimesheetId = (newId) => {
+      // Convert newId to a string before updating the state
+      setTimesheetData((prevData) => ({
+        ...prevData,
+        timesheetId: String(newId),
+      }));
+    };
 
    
     
     console.log(timesheetData,"editDataeditData222")
     try {
       event.preventDefault();
-      // timesheetData.claim_type=timesheetData?.claim_type?.label
+
+      //  timesheetData?.timesheetData="28"
 
      console.log(timesheetData,"editDataeditData")
       
@@ -250,7 +301,7 @@ console.log(timesheetData,"timesheetData1222")
       console.error(error);
     }
   }
-
+console.log(timesheetData,"vvvvvvvvvvv")
   // mui modal related
   const [open, setOpenEdit] = useState(false);
   const handleOpen = () => {
@@ -267,11 +318,12 @@ console.log(timesheetData,"timesheetData1222")
       
       const updatedRowData = {
         ...rowData,
-        company_id: 'COMP2',
-        flag: null,
+        flag:3,
+        // company_id: 'COMP2',
+       
       };
     
-      console.log("updatedRowData",updatedRowData)
+     
       setTimesheetData(updatedRowData);
 
       if (eventData?.type === 'edit') {
@@ -294,6 +346,7 @@ console.log(timesheetData,"timesheetData1222")
 
       }
     }
+// edit
 
 
      
@@ -301,7 +354,7 @@ console.log(timesheetData,"timesheetData1222")
     <>
    {/* <h1>hello</h1> */}
   
-   {/* <Dialog
+   <Dialog
 fullWidth
 maxWidth={false}
 open={open}
@@ -385,7 +438,7 @@ PaperProps={{
                   pattern: '[0-9]', 
                   maxLength: 2, 
                 }}
-                value={timesheetData.monday.hours}
+                value={timesheetData?.monday?.hours}
                 onChange={handleDayInputChange('monday', 'hours')}
                 />
                 </Grid>
@@ -393,7 +446,7 @@ PaperProps={{
                 <TextField 
                  label="Monday Task" 
                  fullWidth
-                value={timesheetData.monday.task}
+                value={timesheetData?.monday?.task}
                 onChange={handleDayInputChange('monday', 'task')}
                 />
                 </Grid>
@@ -401,7 +454,7 @@ PaperProps={{
                 <TextField 
                  label="Monday Comments"
                  fullWidth
-                value={timesheetData.monday.comments}
+                value={timesheetData?.monday?.comments}
                 onChange={handleDayInputChange('monday', 'comments')}
                  />
                 </Grid>
@@ -421,21 +474,21 @@ PaperProps={{
                   pattern: '[0-9]', 
                   maxLength: 2, 
                 }}
-                value={timesheetData.tuesday.hours}
+                value={timesheetData?.tuesday?.hours}
                 onChange={handleDayInputChange('tuesday', 'hours')}
                  />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField  label="Tuesday Task" 
                 fullWidth
-                value={timesheetData.tuesday.task}
+                value={timesheetData?.tuesday?.task}
                 onChange={handleDayInputChange('tuesday', 'task')}
                 />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField  label="Tuesday Comments" 
                 fullWidth
-                value={timesheetData.tuesday.comments}
+                value={timesheetData?.tuesday?.comments}
                 onChange={handleDayInputChange('tuesday', 'comments')}
                 />
                 </Grid>
@@ -453,21 +506,21 @@ PaperProps={{
                   pattern: '[0-9]', 
                   maxLength: 2, 
                 }}
-                value={timesheetData.wednesday.hours}
+                value={timesheetData?.wednesday?.hours}
                 onChange={handleDayInputChange('wednesday', 'hours')}
                 />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField name="wednesdayTask" label="Wednesday Task" 
                 fullWidth
-                value={timesheetData.wednesday.task}
+                value={timesheetData?.wednesday?.task}
                 onChange={handleDayInputChange('wednesday', 'task')}
                 />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField label="Wednesday Comments"
                  fullWidth
-                 value={timesheetData.wednesday.comments}
+                 value={timesheetData?.wednesday?.comments}
                  onChange={handleDayInputChange('wednesday', 'comments')}
                 />
                 </Grid>
@@ -485,14 +538,14 @@ PaperProps={{
                   pattern: '[0-9]', 
                   maxLength: 2, 
                 }}
-                 value={timesheetData.thursday.hours}
+                 value={timesheetData?.thursday?.hours}
                  onChange={handleDayInputChange('thursday', 'hours')}
                 />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField  label="Thursday Task" 
                   fullWidth
-                  value={timesheetData.thursday.task}
+                  value={timesheetData?.thursday?.task}
                   onChange={handleDayInputChange('thursday', 'task')}
                 
                 />
@@ -500,7 +553,7 @@ PaperProps={{
                 <Grid item sm={4}>
                 <TextField label="Thursday Comments" 
                 fullWidth
-                value={timesheetData.thursday.comments}
+                value={timesheetData?.thursday?.comments}
                 onChange={handleDayInputChange('thursday', 'comments')}
                 />
                 </Grid>
@@ -518,14 +571,14 @@ PaperProps={{
                   pattern: '[0-9]', 
                   maxLength: 2, 
                 }}
-                value={timesheetData.friday.hours}
+                value={timesheetData?.friday?.hours}
                 onChange={handleDayInputChange('friday', 'hours')}
                 />
                 </Grid>
                 <Grid item sm={4}>
                 <TextField name="fridayTask" label="Friday Task" 
                 fullWidth
-                value={timesheetData.friday.task}
+                value={timesheetData?.friday?.task}
                 onChange={handleDayInputChange('friday', 'task')}
                 
                 />
@@ -533,7 +586,7 @@ PaperProps={{
                 <Grid item sm={4}>
                 <TextField  label="Friday Comments"
                 fullWidth
-                value={timesheetData.friday.comments}
+                value={timesheetData?.friday?.comments}
                 onChange={handleDayInputChange('friday', 'comments')}
                 />
                 </Grid>
@@ -558,7 +611,7 @@ PaperProps={{
       
         </DialogContent>
       </FormProvider>
-      </Dialog> */}
+      </Dialog>
    
  <BasicTable
  defaultPayload={defaultPayload}

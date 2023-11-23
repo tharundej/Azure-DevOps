@@ -177,7 +177,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       //   manager_id: 'info7',
       //   // Other data properties as needed
       // };
-      const response = await axios.post("https://898vmqzh-3001.inc1.devtunnels.ms/erp/workweeklist").then(
+      const response = await axios.post(baseUrl+"/workweeklist").then(
         (response) => {
           // console.log('sucesswwwwoo', response);
           setTimeSheetWeek(response?.data)
@@ -248,8 +248,8 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
 
   // add dialog form data
   const [timesheetData, setTimesheetData] = useState({
-    timesheetId: '',
-    flag: null,
+    timesheetId: null,
+    
     companyId: companyID,
     employeeId: employeeID,
     employeeName: '',
@@ -481,7 +481,7 @@ PaperProps={{
   <Autocomplete
     id="cobo-box-demo"
     options={timeSheetWeek || []}
-    getOptionLabel={(option) => option?.workWeekNo.toString()}
+    getOptionLabel={(option) => option?.workWeekNo}
     value={timeSheetWeek?.[0]?.workWeekNo} // Set the default selected value as per your requirement
     onChange={(e, newValue) => {
       if (newValue) {
