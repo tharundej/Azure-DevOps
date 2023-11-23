@@ -10,7 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Paper,Autocomplete
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 // import { makeStyles } from '@mui/styles';
@@ -30,6 +30,7 @@ import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import AppTopAuthors from 'src/sections/overview/app/app-top-authors';
 import { _mock } from 'src/_mock';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -85,6 +86,21 @@ export default function HouseProperty() {
    const [snackbarOpen, setSnackbarOpen] = useState(false);
    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+   const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+   const financialYears = [];
+   for (let year = startYear; year <= endYear; year++) {
+     financialYears.push(`${year}-${year + 1}`);
+   }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+  };
    const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -370,41 +386,21 @@ const handleEdit = (rowData) => {
         </Alert>
       </Snackbar>
       <Grid container spacing={2} style={{ marginTop: '1rem' }} direction="row" xs={12} lg={12} md={12}>
-        {/* search ad filter  */}
-        {/* <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          justifyContent="flex-end"
-          direction="row"
-          style={{ marginBottom: '1rem' }}
-        >
-          <Grid item>
-            <TextField
-              sx={{ width: '20vw' }}
-              // value={filters.name}
-              // onChange={handleFilterName}
-              placeholder="Search..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-                border: 'none',
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <Button className="button">Filter</Button>
-          </Grid>
-          <Grid item>
-            <Button className="button">Report</Button>
-          </Grid>
-        </Grid> */}
+     
         {/* Row 1 */}
-        <Grid item container xs={8} lg={8} md={8} spacing={2}>
+        <Grid item container xs={12} lg={8} md={8} spacing={2}>
         <Grid  item container xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4} >
+
+          <Autocomplete
+        id="financialYear"
+        options={financialYears}
+        value={selectedYear}
+        onChange={handleYearChange}
+        renderInput={(params) => <TextField {...params} label="Financial Year" />}
+      />
+
+          </Grid>
           <Grid item xs={4}>
             {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
             <TextField
@@ -427,7 +423,14 @@ const handleEdit = (rowData) => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+         
+        </Grid>
+
+        {/* Row 2 */}
+
+        <Grid item container xs={12} lg={12} md={12}spacing={2}>
+
+        <Grid item xs={4}>
             {/* <Typography >addressOfProperty Of The Property </Typography> */}
             <TextField
               label="Address Of The Property "
@@ -438,11 +441,6 @@ const handleEdit = (rowData) => {
               fullWidth
             />
           </Grid>
-        </Grid>
-
-        {/* Row 2 */}
-
-        <Grid item container xs={12} lg={12} md={12}spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >PAN Of The Lender(S)</Typography> */}
             <TextField
@@ -465,10 +463,14 @@ const handleEdit = (rowData) => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+        
+        </Grid>
+
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
+        <Grid item xs={4}>
             {/* <Typography >PurPose Of Loan</Typography> */}
             <TextField
-              label="PurPose Of Loan"
+              label="Purpose Of Loan"
               name="purposeOfLoan"
               value={formData.purposeOfLoan}
               onChange={handleChange}
@@ -476,9 +478,6 @@ const handleEdit = (rowData) => {
               fullWidth
             />
           </Grid>
-        </Grid>
-
-        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4} style={{ paddingTop: '9px' }}>
             {/* <Typography >Date Of Sanction Of Loan</Typography> */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -512,7 +511,11 @@ onChange={(newValue) => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+         
+        </Grid>
+
+        <Grid item container xs={12} lg={12} md={12} spacing={2}>
+        <Grid item xs={4}>
             {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
             <TextField
               label="Is The Property Self Occupied Or Let out?[See Notebelow]"
@@ -523,9 +526,6 @@ onChange={(newValue) => {
               fullWidth
             />
           </Grid>
-        </Grid>
-
-        <Grid item container xs={12} lg={12} md={12} spacing={2}>
           <Grid item xs={4}>
             {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
             <TextField
@@ -548,7 +548,10 @@ onChange={(newValue) => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+          
+        </Grid>
+        <Grid item xs={12} lg={12} md={12} spacing={2}>
+        <Grid item xs={4}>
             {/* <Typography >Less : MUnicipal Taxes Paid :</Typography> */}
             <TextField
               label="Less : Municipal Taxes Paid"
@@ -561,14 +564,10 @@ onChange={(newValue) => {
           </Grid>
         </Grid>
         </Grid>
-      
-
-        {/* card */}
-
         <Grid
           item
           container
-          xs={4} lg={4} md={4}
+          xs={12} lg={4} md={4}
           spacing={2}
           alignItems="center"
           justifyContent="center"
@@ -615,9 +614,7 @@ onChange={(newValue) => {
             </Paper>
           </Paper>
         </Grid>
-        {/* <Grid xs={12} md={6} lg={4}>
-          <AppTopAuthors title="Top Authors" list={_appAuthors} />
-        </Grid> */}
+      
         <Grid item container xs={12} spacing={2}>
           <Grid
             item
@@ -630,9 +627,14 @@ onChange={(newValue) => {
             style={{ marginBottom: '1rem' }}
           >
             <Grid item>
-              <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
+              {/* <Button className="button" onClick={() => setOpenAttchementDilog(true)}>
                 Attachment 
-              </Button>
+              </Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
             </Grid>
             <Grid item>
               <Button className="button" onClick={addHousingProperity}>

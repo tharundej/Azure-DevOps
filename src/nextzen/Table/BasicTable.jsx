@@ -195,7 +195,7 @@ const BasicTable = ({
       url: baseUrl + `${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
@@ -251,7 +251,7 @@ const BasicTable = ({
   const [filters, setFilters] = useState(defaultFilters);
   // const dataFiltered = tableData.slice(startIndex, endIndex);
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: tableData || [],
     // console.log(inputData,"inputData checkingggggggggggg"),
     comparator: getComparator(table?.order, table?.orderBy),
     filters,
@@ -731,8 +731,10 @@ const BasicTable = ({
 function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
-
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  var stabilizedThis;
+  
+  if(inputData)
+  stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
