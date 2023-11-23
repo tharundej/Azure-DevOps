@@ -250,7 +250,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                  
                <Button 
-                 sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
+                 sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
                 variant='contained' 
                 color='primary'
                  className="button" 

@@ -19,6 +19,7 @@ import instance from 'src/api/BaseURL';
 import { LoadingButton } from '@mui/lab';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import {useSnackbar} from '../../../components/snackbar';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -31,6 +32,7 @@ const MenuProps = {
 };
 const ProjectSearchFilter = ({filterSearch,filterData}) =>{
     const theme = useTheme();
+    const {enqueueSnackbar} = useSnackbar();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [showProject,setShowProject]=useState(false);
     const [showAssignEmployee,setShowAssignEmployee]=useState(false);
@@ -287,7 +289,8 @@ const getEmployeesList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager',
+    // url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager',
+    url:baseUrl + '/getEmployeesForProjectManager',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -308,7 +311,8 @@ const getProjectsList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForProjectManager',
+    // url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForProjectManager',
+  url:baseUrl + '/getProjectsForProjectManager',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -332,12 +336,14 @@ const onSubmit = handleSubmit(async (data) => {
       data.companyId = "COMP1";
       const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/addProject', data).then(
         (successData) => {
+          enqueueSnackbar(successData.data.message,{variant:'success'})
           handleClose()
           reset()
         },
         (error) => {
+          enqueueSnackbar(error.data.message,{variant:'error'})
             reset()
-          console.log('lllll', error);
+          console.log('erro', error);
         }
       );
     } catch (error) {
@@ -349,8 +355,8 @@ const handleClose=()=>{
     setShowProject(false);
     setShowFilter(false);
     setShowAssignEmployee(false);
-    setProjectID();
-    setSelectedIds();
+    // setProjectID();
+    // setSelectedIds();
     setSelectedLocationID();
 }
   
@@ -362,20 +368,8 @@ if (selectedLocationID !== null && !hasFetchedData) {
 // const roleID = localStorage?.getItem('roleID')
 const roleID = 5;
 const [selectedIds, setSelectedIds] = useState([]);
-const employeesList =[
-  {id:'30',firstName:'Harsha Priya'},
-  {id:'31',firstName:'Harsha'},
-  {id:'32',firstName:'Harsh'},
-  {id:'33',firstName:'Hars'},
-  {id:'34',firstName:'Har'},
-  {id:'35',firstName:'Ha'},
-  {id:'36',firstName:'H'},
-  {id:'37',firstName:'Priya'},
-  {id:'38',firstName:'Kondamuru'},
-  {id:'39',firstName:'Kondamuru Harsha Priya'},
-]
-
 const handleProject=(event)=>{
+  console.log(event,"event")
     setProjectID(event.target.value)
 }
 
@@ -405,6 +399,31 @@ useEffect(() => {
     getEmployeesList()
   }
 }, [showProject, showAssignEmployee])
+
+const AssignEmployees =()=>{   
+  const data ={
+    "projectID": projectId?.projectID,
+    "employeeIDs": selectedIds,
+    "projectName": projectId?.projectName
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/assignEmpsToProjects',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    console.log(response,"responseee")
+    enqueueSnackbar(response?.data?.message,{variant:'success'})
+   })
+   .catch((error)=>{
+    console.log(error)
+    enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+  
+   })
+}
+
+
 
   return (
         <> 
@@ -685,7 +704,7 @@ useEffect(() => {
     color="primary"
     className="button"
     onClick={()=>setShowAssignEmployee(true)}
-    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>
+    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
     </Button>:null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
@@ -870,7 +889,7 @@ useEffect(() => {
     onChange={handleProject}
   >
      {projectsList.map((option) => (
-            <MenuItem value={option.projectID}>
+            <MenuItem value={option}>
               {option.projectName}
             </MenuItem>
           ))}
@@ -882,7 +901,7 @@ useEffect(() => {
   multiple
   limitTags={2}
   id="multiple-limit-tags"
-  options={employesListData}
+  options={employesListData && employesListData?.length ? employesListData : []}
   renderTags={(value, getTagProps) =>
     value.map((option, index) => (
       <Chip
@@ -892,7 +911,7 @@ useEffect(() => {
       />
     ))
   }
-  getOptionLabel={(option) => option.employeeName}
+  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
   getOptionSelected={(option, value) => option.employeeID === value.employeeID}
   onChange={(event, newValue) => {
     setSelectedIds(newValue.map((option) => option.employeeID));
@@ -906,7 +925,7 @@ useEffect(() => {
 
 </FormControl>
 
-<Button sx={{float:'right'}} variant="contained" color="primary">Assign</Button>
+<Button sx={{float:'right'}} variant="contained" color="primary" onClick={AssignEmployees}>Assign</Button>
 <Button sx={{float:'right',right:10}} variant="outlined" onClick={handleClose}>Cancel</Button>
       
         </Grid>

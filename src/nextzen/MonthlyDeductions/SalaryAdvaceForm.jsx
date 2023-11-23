@@ -64,12 +64,12 @@ const [sendData, setSendData] = useState({
           handleClose()
         },
         (error) => {
-          enqueueSnackbar(error?.data?.Message,{variant:'Error'})
+          enqueueSnackbar(error?.data?.Message,{variant:'error'})
           handleClose()
         }
       );
     } catch (error) {
-      enqueueSnackbar(error,{variant:'Error'})
+      enqueueSnackbar(error,{variant:'error'})
       console.error(error);
     }
   });

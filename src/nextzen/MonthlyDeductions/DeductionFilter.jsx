@@ -320,7 +320,7 @@ export default function DeductionFilter({filterSearch,filterData}){
             </Grid>
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>Add Deduction</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>Add Deduction</Button>
             
                <Button onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
                <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
