@@ -241,17 +241,24 @@ export const dashboardRoutes = [
         ],
       },
 
+     
+
       {
-        path: 'claims',
+        path: 'payroll',
         children: [
-          { element: <Claims />, index: true },
-          { path: 'compoffapprove', element: <CompoffApprove /> },
-          { path: 'mycompoff', element: <MyCompoff /> },
+          { element: <Payroll />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+          { path: 'payschedule', element: <PaySchedule /> },
+          { path: ':id/payscheduleform', element: <PayScheduleform /> },
         ],
       },
-
-      
-     
+      {
+        path: 'itdeclaration',
+        children: [
+          { element: <Itdeclaration />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+        ],
+      },
       // {
       //   path: 'monthlydeductions',
       //   children: [
@@ -267,7 +274,20 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
-     
+      {
+        path:'configurations',
+        children:[
+          {
+            element: <Configaration/>,index:true
+          },
+          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
+          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
+          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
+          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+          {path:'roleconfiguration',element:<RoleConfiguration/>},
+        ],
+      },
       {
         path: 'product',
         children: [
@@ -470,40 +490,6 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path:'payroll',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <Payroll />, index: true },
-       { path: 'payschedule', element: <PaySchedule /> },
-      // { path: ':id/payscheduleform', element: <PayScheduleform /> },
-    ],
-  },
-  {
-    path:'payroll',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <Payroll />, index: true },
-       { path: 'payschedule', element: <PaySchedule /> },
-      // { path: ':id/payscheduleform', element: <PayScheduleform /> },
-    ],
-  },
-  {
     path: 'timesheetmanagement',
     element: (
       <AuthGuard>
@@ -520,30 +506,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path:'configurations',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children:[
-      {
-        element: <Configaration/>,index:true
-      },
-      {path:'leaveconfiguration',element:<LeaveConfiguration/>},
-      {path:'compoffconfiguration',element:<CompoffConfiguration/>},
-      {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
-      {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
-      {path:'shiftconfiguration',element:<ShiftConfiguration/>},
-      {path:'roleconfiguration',element:<RoleConfiguration/>},
-    ],
-  },
-  {
-    path: 'itdeclaration',
+    path: 'claims',
     element: (
       <AuthGuard>
         <DashboardLayout>
@@ -554,8 +517,9 @@ export const dashboardRoutes = [
       </AuthGuard>
     ),
     children: [
-      { element: <Itdeclaration />, index: true },
-      // { path: 'profile', element: <UserProfilePage /> },
+      { element: <Claims />, index: true },
+      { path: 'compoffapprove', element: <CompoffApprove /> },
+      { path: 'mycompoff', element: <MyCompoff /> },
     ],
   },
 ];

@@ -12,7 +12,11 @@ import {useSnackbar} from '../../components/snackbar';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+import ModalHeader from '../global/modalheader/ModalHeader';
 export default function SalaryAdvace() {
+  const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
         {
@@ -71,14 +75,13 @@ export default function SalaryAdvace() {
       const handleTimeForm =()=>{
         setShowForm(true)
       } 
-      const roleID = localStorage?.getItem('roleID')
   const defaultPayload={
     "count": 5,
     "page": 0,
     "search": "",
-    "companyID":localStorage?.getItem('companyID'),
-    "employeeID":localStorage?.getItem('employeeID'),
-    "roleID":parseInt(localStorage?.getItem('roleID')),
+    "companyID":(user?.companyID)?user?.companyID:'',
+    "employeeID":(user?.employeeID)?user?.employeeID:'',
+    "roleID":(user?.roleID)?user?.roleID:'',
     "externalFilters": {
   "requestDate": {
    
@@ -144,7 +147,7 @@ export default function SalaryAdvace() {
     paidAmount:"",
     hrComments:"",
     status:"approved",
-    employeeID:localStorage?.getItem('employeeID'),
+    employeeID:(user?.employeeID)?user?.employeeID:'',
     }),
     []
   );
@@ -183,9 +186,8 @@ export default function SalaryAdvace() {
       });
   }
   const onSubmit = handleSubmit(async (data)=>{
-    data.salaryAdvanceID=rowData?.SalaryAdvanceID,
-  
-    console.log(data,'datadata');
+    data.salaryAdvanceID=rowData?.SalaryAdvanceID
+
     try{
       apihit(data)
     }
@@ -203,7 +205,6 @@ export default function SalaryAdvace() {
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    // url:  `http://192.168.0.111:3002/erp/updateSalaryAdvance`,
     url: baseUrl + `/updateSalaryAdvance`,
     data: payload
   
@@ -222,7 +223,7 @@ export default function SalaryAdvace() {
   const handleSalaryReject=()=>{
     var payload =
     {
-      "employeeID":localStorage?.getItem('employeeID'),
+      "employeeID":(user?.employeeID)?user?.employeeID:'',
       "salaryAdvanceID":rowData?.SalaryAdvanceID,
       "paidAmount":rowData?.paidAmount,
       "hrComments":commentsValue,
@@ -262,7 +263,7 @@ const [amountValue,setAmountValue] = useState();
  }}
  className="custom-dialog"  
 >
- <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
+ <SalaryAdvanceForm handleClose={handleClose} />
       </Dialog>
     )}
       {(showEditForm) && (
@@ -276,16 +277,11 @@ const [amountValue,setAmountValue] = useState();
  }}
  className="custom-dialog"  
 >
+    <ModalHeader heading="Edit Request"/>
   <DialogContent>
   <Grid container spacing={2}>
-     <Grid xs={12} md={12}>
-            <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'5px'}}>
-                Edit Your Requested Amount 
-              </Typography>
-            </Grid>
-      </Grid>
-      <Grid  xs={12} md={12} sx={{marginLeft:5}}>
+    
+      <Grid  xs={12} md={12} sx={{marginLeft:5,marginTop:2}}>
       <TextField
                 
                 fullWidth
@@ -297,10 +293,9 @@ const [amountValue,setAmountValue] = useState();
       </Grid>
      </Grid>
   </DialogContent>
-  {console.log(amountValue,"amountvaluee")}
   <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-               <Button variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditSalary}>Apply</Button>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+  <Button  sx={{mr:"4px"}} onClick={handleClose} variant="outlined">Cancel</Button>
+               <Button variant="contained" sx={{marginRight:2}} color="primary" disabled={amountValue===undefined || 0} onClick={handleEditSalary}>Apply</Button>
               </Stack>
       </Dialog>
     )}
@@ -317,21 +312,21 @@ const [amountValue,setAmountValue] = useState();
  className="custom-dialog"  
 >
 <FormProvider methods={methods} onSubmit={onSubmit}>
-    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Approve Salary Request
-    </Typography>
+    <ModalHeader heading="Approve Request"/>
 <DialogContent>
-<Grid sx={{marginTop:2}}>
+<Grid container flexDirection="row" spacing={2}>
+<Grid item md={6} xs={12}>
 <RHFTextField name="paidAmount" label="Paid Amount"/>
 </Grid>
 
-<Grid sx={{marginTop:2}}>
+<Grid item xs={12} md={6}>
 <RHFSelect name="paymentStatus" label="Payment Status">
   <MenuItem value="credited">Credited</MenuItem>
   <MenuItem value="debited">Debited</MenuItem>
 </RHFSelect>
 
 
+</Grid>
 </Grid>
 <Grid sx={{marginTop:2}}>
   <RHFTextField name="hrComments" label="Comments"/>
@@ -340,7 +335,7 @@ const [amountValue,setAmountValue] = useState();
 
   </Grid>
 <Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Approve Request</Button>
-<Button sx={{float:"right",right:10,marginTop:2}} onClick={()=>setApproveForm(false)}>Cancel</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={()=>setApproveForm(false)}>Cancel</Button>
 </DialogContent>
 </FormProvider>
       </Dialog>
@@ -354,19 +349,17 @@ onClose={handleClose}
 PaperProps={{
   sx: { maxWidth: 500 , overflow:'hidden'},
 }}
-className="custom-dialog"  >
-<Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Reject Salary Request
-    </Typography>
+className="custom-dialog">
+     <ModalHeader heading="Reject Request"/>
 <TextField 
 label="comments"
 placeholder='comments'
 onChange={(e)=>handleComments(e)}
 sx={{margin:2}}
 />
-<div style={{display:"flex",justifyContent:"right",marginBottom:2}}>
-<Button variant="contained" color="primary" sx={{width:150,float:'right'}}  onClick={handleSalaryReject}>Reject Request</Button>
-<Button  onClick={()=>setRejectForm(false)}>Cancel</Button>
+<div style={{display:"flex",justifyContent:"right",marginBottom:4}}>
+<Button  onClick={()=>setRejectForm(false)} sx={{marginRight:2}} variant="outlined">Cancel</Button>
+<Button variant="contained" color="primary" sx={{float:'right',right:5}}  onClick={handleSalaryReject}>Reject</Button>
 </div>
 </Dialog>
       )

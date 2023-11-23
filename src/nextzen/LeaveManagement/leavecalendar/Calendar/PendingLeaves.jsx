@@ -1,11 +1,12 @@
 import {Card,CardContent,Typography,IconButton} from '@mui/material';
-import {useState,useEffect,useCallback} from 'react';
+import {useState,useEffect,useCallback, useContext} from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 import Iconify from 'src/components/iconify';
+import UserContext from 'src/nextzen/context/user/UserConext';
 export default function PendingLeaves(){
-   
+   const {user} = useContext(UserContext)
     const [listData,setListData] = useState();
     const [loading,setLoading] = useState(false);
     const [pending,setPending] = useState(Array(listData?.response?.length).fill(false));
@@ -17,7 +18,7 @@ export default function PendingLeaves(){
       const PendingApproved =  useCallback((e) => {
         setLoading(true);
         const payload = {
-          employee_id:localStorage?.getItem('employeeID'),
+          employee_id:(user?.employeeID)?user?.employeeID:'',
           flag:e
         }
         const config = {

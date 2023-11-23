@@ -1,13 +1,15 @@
 import * as React from 'react';
-import {Card,CardActions,CardContent,Button,Typography,Dialog,DialogContent} from '@mui/material';
 import { _userList } from 'src/_mock';
 import { useState, useCallback } from 'react';
 import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
 import {useSnackbar} from '../../components/snackbar';
 import axios from 'axios';
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
 export default function Deduction() {
    const {enqueueSnackbar} = useSnackbar()
+   const {user} = useContext(UserContext)
   const TABLE_HEAD = [
     {
 
@@ -37,9 +39,9 @@ const defaultPayload={
     "count":5,
     "page":0,
     "search":"",
-    "companyID":localStorage?.getItem('companyID'),
-    "employeeID":localStorage?.getItem('employeeID'),
-    "roleID":parseInt(localStorage?.getItem('roleID')),
+    "companyID":(user?.companyID)?user?.companyID:'',
+    "employeeID":(user?.employeeID)?user?.employeeID:'',
+    "roleID":(user?.roleID)?user?.roleID:'',
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",
