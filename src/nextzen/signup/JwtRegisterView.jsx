@@ -3,6 +3,7 @@ import test from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { alpha, useTheme } from '@mui/material/styles';
 // @mui
 import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -29,6 +30,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
+import Logo from 'src/components/logo';
 // routes
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -50,9 +52,12 @@ const StyledContainer = styled('div')({
   backgroundPosition: 'center',
   minHeight: '100vh',
 });
+import { bgGradient } from 'src/theme/css';
 
 export default function JwtRegisterView() {
   const { register } = useAuthContext();
+  const theme = useTheme();
+
 
   const [datesUsed, setDatesUsed] = useState({
     companyDateOfIncorporation: new Date(),
@@ -69,6 +74,8 @@ export default function JwtRegisterView() {
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
+    
+
     cin: Yup.string()
       .required('CIN is Required')
       .matches(/^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/, {
@@ -211,7 +218,17 @@ export default function JwtRegisterView() {
     }
   });
 
-  const renderHead = (
+  const renderHead = (<>
+
+
+    <Logo
+      sx={{
+        zIndex: 9,
+        position: 'absolute',
+        m: { xs: 2, md: 5 },
+      }}
+    />
+ 
     <Stack spacing={2} sx={{ mb: 5, position: 'relative', alignItems: 'center' }}>
       <Typography variant="h4">Register</Typography>
 
@@ -223,6 +240,7 @@ export default function JwtRegisterView() {
         </Link>
       </Stack>
     </Stack>
+    </>
   );
 
   const renderTerms = (

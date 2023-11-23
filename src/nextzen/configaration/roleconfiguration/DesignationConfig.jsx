@@ -32,6 +32,7 @@ import AddRoleConfig from './AddRoleConfig';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import AddDesignationConfig from './AddDesignationConfig';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -207,7 +208,8 @@ export default function DesignationConfig() {
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Edit Designation Config</DialogTitle>
+          
+          <ModalHeader  heading="Edit Designation Config"/>
           <DialogContent>
             <Box
               rowGap={3}

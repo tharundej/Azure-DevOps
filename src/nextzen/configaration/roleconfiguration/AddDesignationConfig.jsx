@@ -41,6 +41,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
 
 
 
@@ -199,49 +201,7 @@ setHitGetDepartment(!hitGetDepartment)
       });
     //  console.log(result, 'resultsreults');
   };
-  const AddDepartment = async () => {
-    const payload = 
-   
-    {
-        "companyID":cmpId,
-        "departmentName": formData?.department,
-        "locationID": formData?.Location?.locationID
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : baseUrl +  '/addDepartment',
-       headers: {
-         Authorization:
-        token , 'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Department Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Department Adding. Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+ 
 
    const getDepartment = async () => {
     const payload =
@@ -304,13 +264,19 @@ setHitGetDepartment(!hitGetDepartment)
      const result = await axios
        .request(config)
        .then((response) => {
-         if (response.status === 200) {
+         if (response.data.code === 200) {
            setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
+           setSnackbarMessage(response.data.message);
            setSnackbarOpen(true);
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
-         }
+         }else  if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setHitGetDepartment(!hitGetDepartment)
+          console.log("success")
+        }
    
        })
        .catch((error) => {
@@ -362,50 +328,7 @@ setHitGetDepartment(!hitGetDepartment)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignationGrade = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": cmpId,
-        "designationID" : formData?.Designation?.designationID,
-        "designationGradeName": formData?.designationGrade,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : baseUrl +'/addDesignationGrade',
-       headers: {
-         Authorization:
-        token , 'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+
   useEffect(() => {
     console.log("i m calling in useEffect ")
     const fetchData = async () => {
@@ -417,6 +340,7 @@ setHitGetDepartment(!hitGetDepartment)
   }, []);
 
   useEffect(() => {
+    console.log("i m calling in useEffect2222 ")
     const fetchData = async () => {
       getDepartment();
       getDesignation()
@@ -475,7 +399,9 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Designation Config</DialogTitle>
+         
+
+          <ModalHeader  heading="Designation Config"/>
           <DialogContent>
             <Box
               rowGap={3}

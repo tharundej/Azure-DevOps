@@ -7,6 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const   DocumentsUpload=({open,onHandleClose,documents})=> {
     
@@ -156,9 +157,10 @@ const   DocumentsUpload=({open,onHandleClose,documents})=> {
 
                         />
                         <label htmlFor= {`file-upload-input-aadhar`}>
-                        <Button variant="outlined" component="h6">
-                        Choose File
-                        </Button>
+                        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                         </label>
                         <Typography variant="body2" color="textSecondary">
                             {console.log(defaultValues,'defaultValuesdefaultValues')}

@@ -60,7 +60,8 @@ export default function UserTableRow({
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row?.employeeId)}
+              onClick={()=>onHandleEditRow(row)}
+              
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
@@ -104,13 +105,16 @@ export default function UserTableRow({
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
+                      (row[ele.id] === ('approved' || 'Approved' ) && 'success') ||
                       (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
                       (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
+                      (row[ele.id] === ('true' || 'True' ) && 'success') ||
+                      (row[ele.id] === ('false' || 'False') && 'warning') ||
                       'default'
                     }
                   >
-                    {row[ele.id]}
+                    {row[ele.id] ? row[ele.id].toString():"False"}
+                   
                   </Label>
                 )}
               </TableCell>

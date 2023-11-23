@@ -487,7 +487,24 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path: 'TimeSheetManagement',
+    path:'payroll',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Payroll />, index: true },
+       { path: 'payschedule', element: <PaySchedule /> },
+      // { path: ':id/payscheduleform', element: <PayScheduleform /> },
+    ],
+  },
+  {
+    path: 'timesheetmanagement',
     element: (
       <AuthGuard>
         <DashboardLayout>
