@@ -87,7 +87,7 @@ useEffect(()=>{
     const payload = {
       // companyId: "C1"
       companyId:(user?.companyID)?user?.companyID:'',
-      locationId:(user?.locationID)?user?.locationID:''
+      locationId:(user?.locationID)?JSON.stringify(parseInt(user?.locationID)):''
     };
     const config = {
     method: 'POST',
