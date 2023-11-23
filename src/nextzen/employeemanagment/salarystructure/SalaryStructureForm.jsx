@@ -97,7 +97,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
   //   const values = watch();
 
   const ApiHit=(data)=>{
-    console.log(data,'ApiHitdata')
+   
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
