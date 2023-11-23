@@ -25,12 +25,9 @@ import CustomDateRangePicker from '../global/CustomDateRangePicker';
 import ApplyLoan from './ApplyLoan';
 import { baseUrl } from '../global/BaseUrl';
 import useMediaQuery from '@mui/material/useMediaQuery';
-const defaultFilters = {
-  name: '',
-  type: [],
-  startDate: null,
-  endDate: null,
-};
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -42,16 +39,9 @@ const defaultFilters = {
     },
   };
   
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 export default function LoanSearchFilter({filterSearch,filterData}){
   const theme = useTheme();
+  const {user} = useContext(UserContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const [dropdown,setDropdown]=useState({
@@ -128,10 +118,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
           const commaSeparatedString = arrayOfStrings.join(',');
           data[item.field]=commaSeparatedString;
         }
-        
-         
         })
-        // setDatesData(arr1);
         resolve(arr1)
         
     })
@@ -219,8 +206,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
 
       const ApproversList = () => {
         const payload = {
-          // companyID: "COMP1"
-          companyID:localStorage?.getItem('companyID')
+          companyID:(user?.companyID)?user?.companyID:'',
         }
        
         const config = {
@@ -273,7 +259,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                   Apply Loan
                 </Button>
                <Button  onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
-               <Iconify icon="mi:filter"/>{isMobile?"Filters":null}
+               <Iconify icon="mi:filter"/>Filters
                </Button>
       </Grid>
                 </Grid>
@@ -282,18 +268,21 @@ export default function LoanSearchFilter({filterSearch,filterData}){
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx:{maxWidth:500}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setOpen(false)} />
         </DialogTitle>
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
           
-          <Grid>
-            <Typography> Request Date </Typography>
-                <Grid>
+          <Grid container>
             <Grid container flexDirection="row">
-              <Grid item>
+            <Typography> Request Date </Typography>
+            <Grid container flexDirection="row">
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -311,7 +300,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -329,13 +318,13 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
-                <Grid sx={{marginTop:2}}>
+            </Grid>
+           </Grid>
+          <Grid container flexDirection="row" sx={{marginTop:2}}>
             <Typography> Paid Date </Typography>
      
             <Grid container flexDirection="row">
-              <Grid item>
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -353,7 +342,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -371,11 +360,11 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
+              </Grid>
+          </Grid>
            
-                <Grid>
-                <Grid marginTop="10px" xs={12} md={6}>
+                <Grid container flexDirection="row" spacing={1}>
+                <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="approverName">Approver Name</InputLabel>
                 <Select
@@ -398,7 +387,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                 </Select>
               </FormControl>
                    </Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+                <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">status</InputLabel>
                 <Select
@@ -417,10 +406,10 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                     <MenuItem value="rejected">Rejected</MenuItem>
                 </Select>
               </FormControl>
-                   </Grid>
                 </Grid>
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+                </Grid>
+                <Grid container flexDirection="row">
+                  <Grid marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">Payment Status</InputLabel>
                 <Select
@@ -444,7 +433,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
            
          </DialogContent>
          <div style={{marginBottom:16,marginTop:3}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+         <Button sx={{float:'right',right:15}} variant="outlined" onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </Dialog>
     </>

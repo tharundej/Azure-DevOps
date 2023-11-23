@@ -1,7 +1,7 @@
 import PropTypes, { element } from 'prop-types';
-import React,{ useEffect, useState,useCallback } from 'react';
+import React,{ useEffect, useState,useCallback, useContext } from 'react';
 import axios from 'axios';
-import { styled } from '@mui/system';
+import { maxWidth, styled } from '@mui/system';
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
@@ -22,6 +22,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import UserContext from '../context/user/UserConext';
 const defaultFilters = {
   name: '',
   type: [],
@@ -49,18 +51,18 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   };
 export default function LeaveFilter({filterSearch,filterData}){
   const theme = useTheme();
+  const {user} = useContext(UserContext)
+  console.log(user,"userdetailss")
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
     const payload = {
-        // companyId: "C1"
-        companyId:localStorage.getItem('companyID')
+        companyId:(user?.companyID)?user?.companyID:""
     }
    
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
       url: baseUrl + `/getLeaveType`,
-      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
       data:  payload
     };
   
@@ -245,7 +247,7 @@ export default function LeaveFilter({filterSearch,filterData}){
             <Grid md={4} xs={4} item>
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
+           <Iconify icon="mi:filter"/>Filter
       </Button>
       </Stack>
       </Grid>
@@ -255,19 +257,22 @@ export default function LeaveFilter({filterSearch,filterData}){
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx:{maxWidth:500}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={handleCancel} />
         </DialogTitle>
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
           
-          <Grid>
-                <Grid>
+          <Grid container>
+        <Grid container flexDirection="row">
             <Typography>Apply Date</Typography>
-     
             <Grid container flexDirection="row">
-              <Grid item>
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -285,7 +290,7 @@ export default function LeaveFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -303,14 +308,12 @@ export default function LeaveFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
-             <Grid sx={{marginTop:2}}>
-
+            </Grid>
+        </Grid>
+        <Grid container flexDirection="row" sx={{marginTop:2}}>
              <Typography>Start Date</Typography>
-     
-     <Grid container flexDirection="row">
-       <Grid item>
+            <Grid container flexDirection="row">
+             <Grid item md={6} xs={12}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
@@ -327,8 +330,8 @@ export default function LeaveFilter({filterSearch,filterData}){
              />
            </DemoContainer>
          </LocalizationProvider>
-         </Grid>
-         <Grid item>
+             </Grid>
+             <Grid item md={6} xs={12}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
@@ -345,15 +348,15 @@ export default function LeaveFilter({filterSearch,filterData}){
              />
            </DemoContainer>
          </LocalizationProvider>
-         </Grid>
-         </Grid>
-         </Grid>
-      <Grid sx={{marginTop:2}}>
+             </Grid>
+            </Grid>
+        </Grid>
+      <Grid container flexDirection="row" sx={{marginTop:2}}>
 
       <Typography>End Date</Typography>
      
      <Grid container flexDirection="row">
-       <Grid item>
+       <Grid item md={6} xs={12}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
@@ -371,7 +374,7 @@ export default function LeaveFilter({filterSearch,filterData}){
            </DemoContainer>
          </LocalizationProvider>
          </Grid>
-         <Grid item>
+         <Grid item md={6} xs={12}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
@@ -391,8 +394,8 @@ export default function LeaveFilter({filterSearch,filterData}){
          </Grid>
          </Grid>
          </Grid>
-      <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+      <Grid container flexDirection="row" spacing={1}>
+                  <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">status</InputLabel>
                 <Select
@@ -413,7 +416,7 @@ export default function LeaveFilter({filterSearch,filterData}){
                 </Select>
               </FormControl>
                    </Grid>
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="leave_type_name">Leave Type</InputLabel>
                 <Select
@@ -442,8 +445,8 @@ export default function LeaveFilter({filterSearch,filterData}){
                </Grid>
            
          </DialogContent>
-       <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+       <div style={{marginBottom:12,marginTop:4}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} variant="outlined" onClick={()=>{handleCancel()}}>Reset</Button></div>
     </Dialog>
     </>
     )
