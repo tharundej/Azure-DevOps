@@ -28,7 +28,7 @@ import Stack from '@mui/material/Stack';
 import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
 
-const MyTimeSheet = ({currentUser}) => {
+const MyTimeSheet = ({currentUser,filterSearch}) => {
     const TABLE_HEAD = [
 
         // {
