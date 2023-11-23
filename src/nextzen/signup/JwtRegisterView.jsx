@@ -282,8 +282,7 @@ export default function JwtRegisterView() {
                     </span>
                   }
                   maxLength={21}
-                  color="secondary"
-                  focused
+                 
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -294,8 +293,7 @@ export default function JwtRegisterView() {
                       Company Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                 
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -306,8 +304,7 @@ export default function JwtRegisterView() {
                       Registration No<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                 
                   maxLength={8}
                   type="number"
                 />
@@ -340,8 +337,7 @@ export default function JwtRegisterView() {
                       CEO Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                 
                   maxLength={50}
                   type="text"
                 />
@@ -355,8 +351,7 @@ export default function JwtRegisterView() {
                     </span>
                   }
                   options={companyTypes.map((companyType) => companyType.type)}
-                  color="secondary"
-                  focused
+                 
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -367,8 +362,7 @@ export default function JwtRegisterView() {
                       Email<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                 
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -380,8 +374,7 @@ export default function JwtRegisterView() {
                     </span>
                   }
                   maxLength={10}
-                  color="secondary"
-                  focused
+                 
                   type="number"
                 />
               </Grid>
@@ -393,8 +386,7 @@ export default function JwtRegisterView() {
                       First Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                 
                   maxLength={30}
                   type="text"
                 />
@@ -403,8 +395,7 @@ export default function JwtRegisterView() {
                 <RHFTextField
                   name="middleName"
                   label="Middle Name"
-                  color="secondary"
-                  focused
+                 
                   maxLength={30}
                   type="text"
                 />
@@ -417,8 +408,7 @@ export default function JwtRegisterView() {
                       Last Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  color="secondary"
-                  focused
+                  
                   maxLength={30}
                   type="text"
                 />

@@ -226,6 +226,7 @@ const leavePeriodNames=[
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
                     value={selectedDates2}
+                    // value={null}
                     onChange={handleDateChanges2}
                   />
                 </DemoContainer>
