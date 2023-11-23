@@ -408,6 +408,7 @@ export default function DesignationGradeSearchFilter({
 
   console.log(formData, 'data in the form ');
   useEffect(() => {
+    console.log("calling in filter folder")
     const fetchData = async () => {
       getDesignationGrade();
       getDepartment();

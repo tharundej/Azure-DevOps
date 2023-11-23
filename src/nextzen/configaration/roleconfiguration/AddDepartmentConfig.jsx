@@ -41,6 +41,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
@@ -218,13 +219,19 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
      const result = await axios
        .request(config)
        .then((response) => {
-         if (response.status === 200) {
+         if (response.data.code === 200) {
            setSnackbarSeverity('success');
-           setSnackbarMessage('Department Added successfully!');
+           setSnackbarMessage(response.data.message);
            setSnackbarOpen(true);
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
-         }
+         }else  if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setHitGetDepartment(!hitGetDepartment)
+          console.log("success")
+        }
    
        })
        .catch((error) => {
@@ -275,50 +282,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignation = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": cmpId,
-        "departmentID" : formData?.Department?.departmentID,
-        "designationName": formData?.designation,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url :baseUrl + '/addDesignation',
-       headers: {
-         Authorization:
-        token ,'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+  
 
    const getDesignation = async () => {
     const payload =
@@ -356,50 +320,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignationGrade = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": cmpId,
-        "designationID" : formData?.Designation?.designationID,
-        "designationGradeName": formData?.designationGrade,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url :baseUrl +  '/addDesignationGrade',
-       headers: {
-         Authorization:
-        token , 'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+ 
   useEffect(() => {
     const fetchData = async () => {
       getLocation();
@@ -462,7 +383,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider methods={methods1} onSubmit={onSubmit1} >
-          <DialogTitle>Department Config</DialogTitle>
+          <ModalHeader  heading="Department Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -476,8 +397,6 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               }}
             >
         
-        
-           
               <TextField
                 label="Department "
                 name="department"
@@ -487,115 +406,11 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 fullWidth
               />
          
-           
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={locationType?.map((employeepayType) => ({
-                label: employeepayType.locationName,
-                value: employeepayType.locationName,
-                ...employeepayType,
-              }))}
-              value={formData.Location}
-              onChange={(event, newValue, selectedOption) =>
-                handleAutocompleteChange('Location', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              /> */}
          
           
               <Button  onClick={onSubmit1}>Add</Button>
         
-          {/* Row 2 */}
-
-         
-      
-          
-              {/* <Autocomplete
-                disablePortal
-                name="Department"
-                id="combo-box-demo"
-                options={departmentType?.map((department) => ({
-                    label: department.departmentName,
-                    value: department.departmentName,
-                    ...department,
-                  }))}
-                value={formData.Department}
-                onChange={(event, newValue ,selectedOption) => handleDesignationChange('Department', newValue ,selectedOption)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Department" />}
-              />
-            */}
-         
-              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
-
-              {/* <TextField
-                label="Designation"
-                name="designation"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              /> */}
-          
-
-{/*        
-              <Button onClick={AddDesignation}>Add</Button>
-              
-           */}
-
-         
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={designationType?.map((employeepayType) => ({
-                label: employeepayType.designationName,
-                value: employeepayType.designationName,
-                ...employeepayType,
-              }))}
-              value={formData.Designation}
-              onChange={(event, newValue, selectedOption) =>
-                handleDesignationGradeChange('Designation', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Designation " />}
-              />
-          
-              <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-          
-              <Button onClick={AddDesignationGrade}>Add</Button>
-          */}
-
-          {/*       
-        <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
-        <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-         */}
-          {/* <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-            style={{ marginBottom: '1rem', textAlign: 'center' }}
-          >
-            <Grid item xs={2}>
-              <Button className="button">Save</Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button className="button">Cancel</Button>
-            </Grid>
-          </Grid> */}
-      
+    
               
             </Box>
           </DialogContent>
