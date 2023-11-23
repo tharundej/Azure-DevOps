@@ -409,11 +409,10 @@ const AssignEmployees =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/assignEmpsToProjects',
+    url:baseUrl+'/assignEmpsToProjects',
     data:data
    }
    axios.request(config).then((response)=>{
-    console.log(response,"responseee")
     enqueueSnackbar(response?.data?.message,{variant:'success'})
    })
    .catch((error)=>{
