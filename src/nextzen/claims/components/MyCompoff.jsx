@@ -405,11 +405,7 @@ export default function MyCompoff({ currentUser ,}) {
         }
       );
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
+     
     } catch (error) {
 
       // alert("api hit not done")
