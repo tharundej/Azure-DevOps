@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 import { fData } from 'src/utils/format-number';
@@ -92,7 +93,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     firstName: Yup.string().required("First name is required"),
     middleName: Yup.string(),
     lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().required("Email is required"),
+   
     contactNumber: Yup.number()
     .required("Contact Number is required")
     .integer("Contact Number must be an integer")
@@ -122,7 +123,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rState: Yup.string(),
     rPincode: Yup.number(),
    
-    toggle: Yup.bool()
+    toggle: Yup.bool(),
+
+    companyEmail: Yup.string(),
+    // gender: Yup.string(),
+    personalEmail: Yup.string().required("Email is required"),
+    
     // first_name: Yup.string().required('First Name is required'),
 
     // middle_name: Yup.string().required('Middle Name is required'),
@@ -149,11 +155,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
    
     companyID: currentUser?.companyID ||'',
     companyName: currentUser?.companyName ||'',
-    
+     
     firstName: currentUser?.firstName ||'',
+   
     middleName: currentUser?.middleName ||'',
     lastName: currentUser?.lastName ||'',
-    email: currentUser?.email ||'',
+   
     contactNumber: currentUser?.contactNumber ||undefined,
     emergencyContactNumber: currentUser?.emergencyContactNumber || undefined,
     dateOfBirth: currentUser?.dateOfBirth ||'',
@@ -177,6 +184,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rPincode: currentUser?.rPincode || undefined,
     
     toggle: currentUser?.toggle || true,
+
+    personalEmail: currentUser?.personalEmail ||'',
+   //  gender:currentUser?.gender|| "Male",
+    companyEmail: currentUser?.companyEmail ||'',
     }),
     [currentUser]
   );
@@ -246,6 +257,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.offerDate = (datesUsed?.offer_date);
       data.joiningDate = (datesUsed?.joining_date);
       data.dateOfBirth = (datesUsed?.date_of_birth);
+       data.gender=data?.gender?.label|| ""
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
@@ -299,6 +311,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     },
     [setValue]
   );
+
+  const genderOptions=[
+    {label:'Male'},
+    {label:'Female'}
+  ]
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -383,7 +400,20 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="firstName" label="First Name* " />
                 <RHFTextField name="middleName" label="Middle Name " />
                 <RHFTextField name="lastName" label="Last Name* " />
-                <RHFTextField name="email" label="Email Id* " />
+                <RHFTextField name="companyEmail" label="Company Email" />
+                <RHFTextField name="personalEmail" label="Personal Email" />
+                <RHFAutocomplete
+                name="gender"
+                label="gender"
+                options={genderOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+              />
                 <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
                
