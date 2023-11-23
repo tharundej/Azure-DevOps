@@ -73,8 +73,8 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
-import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
 import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
+import ProjectSearchFilter from '../timesheet/components/ProjectSearchFilter';
 import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
@@ -110,6 +110,7 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
 
 const defaultFilters = {
   name: '',
@@ -194,7 +195,7 @@ const BasicTable = ({
       url: baseUrl + `${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
+     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
@@ -250,7 +251,7 @@ const BasicTable = ({
   const [filters, setFilters] = useState(defaultFilters);
   // const dataFiltered = tableData.slice(startIndex, endIndex);
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: tableData || [],
     // console.log(inputData,"inputData checkingggggggggggg"),
     comparator: getComparator(table?.order, table?.orderBy),
     filters,
@@ -454,14 +455,15 @@ const BasicTable = ({
         >
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
-            <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-          {filterName === 'TimeProjectFilter' && (
+           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
+        
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -729,8 +731,10 @@ const BasicTable = ({
 function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
-
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  var stabilizedThis;
+  
+  if(inputData)
+  stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);

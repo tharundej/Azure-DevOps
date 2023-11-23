@@ -82,10 +82,10 @@ export default function PaySchedule({ currentUser }) {
   ];
 
   const actions = [
-    { name: 'Edit', icon: 'hh', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
+    { name: 'Edit', icon: 'solar:pen-bold', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
     {
       name: 'Delete',
-      icon: 'hh',
+      icon: 'solar:trash-bin-trash-bold',
       path: 'jjj',
       type: 'serviceCall',
       endpoint: '/updateTimesheetStatus',
@@ -301,6 +301,84 @@ export default function PaySchedule({ currentUser }) {
       console.error(error);
     }
   });
+  // const onSubmitEdit1 = async (valueSelected, event) => {
+  //   console.log(valueSelected,'editData')
+  //   try {
+  //     event.preventDefault();
+  //     const payload={
+  //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
+  //       "companyId":'COMP1',
+  //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
+  //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
+  //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
+  //       'employementType':JSON.parse(valueSelected?.employementType?.type,10),
+  //       'employerPfPercentage':JSON.parse(valueSelected?.employerPfPercentage,10),
+  //       'esicPercentage':JSON.parse(valueSelected?.esicPercentage,10),
+  //       'hraPercentage':JSON.parse(valueSelected?.hraPercentage,10),
+  //       'ltaPercentage':JSON.parse(valueSelected?.ltaPercentage,10),
+  //       'payPcheduleType':JSON.parse(valueSelected?.payPcheduleType?.type,10),
+  //       'payScheduleId':JSON.parse(valueSelected?.payScheduleId,10),
+  //     }
+  //     console.log(payload,'payloada')
+  //     const response = await axios.post(baseUrl + '/editPaySchedule',payload);
+  //     console.log(response,'response')
+  //     if (response?.data?.code === 200 || 201) {
+  //       handleClose();
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+
+  //       console.log('sucess', response);
+  //     }
+  //     else if(response?.data?.code ===400 || 401) {
+  //       handleClose();
+  //       setSnackbarSeverity('error');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setOpen(true);
+  //     setSnackbarSeverity('error');
+  //     // setSnackbarMessage(response?.data?.message);
+  //     setSnackbarOpen(true);
+  //     console.log('error', error);
+  //   }
+  // };
+  const onSubmitEdit2 = async (valueSelected, event) => {
+    console.log(valueSelected,'editData')
+    try {
+      event.preventDefault();
+      const payload={
+        "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
+        "companyId":'COMP1',
+      }
+      console.log(payload,'payload')
+      const response = await axios.post(baseUrl + '/editPaySchedule', payload);
+      if (response?.data?.code === 200 || 201) {
+        handleClose();
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+      else if(response?.data?.code ===400 || 401) {
+        handleClose();
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setOpen(true);
+      setSnackbarSeverity('error');
+      // setSnackbarMessage(response?.data?.message);
+      setSnackbarOpen(true);
+      console.log('error', error);
+    }
+  };
+
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
     data.companyID = 'COMP1';
@@ -501,7 +579,7 @@ export default function PaySchedule({ currentUser }) {
             </DialogActions>
           </FormProvider>
         ) : (
-          <FormProvider methods={methods2} onSubmit={onSubmit2}>
+          <FormProvider methods={methods2} onSubmit={(event) => onSubmitEdit2(valueSelected, event)}>
             <DialogTitle>Edit PayRoll</DialogTitle>
 
             <DialogContent>
@@ -556,8 +634,8 @@ export default function PaySchedule({ currentUser }) {
               <LoadingButton
                 type="submit"
                 variant="contained"
-                onClick={onSubmit2}
-                loading={isSubmitting2}
+                onClick={(event) => onSubmitEdit2(valueSelected, event)}
+                 loading={isSubmitting2}
               >
                 Save
               </LoadingButton>

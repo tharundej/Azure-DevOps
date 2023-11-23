@@ -43,13 +43,13 @@ export default function ShiftConfigurationForm({ currentUser }) {
   const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
   const NewUserSchema1 = Yup.object().shape({
     ShiftName: Yup.string().required('Shift Name is Required'),
-    ShiftTerm: Yup.string().required('Shift Term is Required'),
+    // ShiftTerm: Yup.string().required('Shift Term is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
       ShiftName: currentUser?.ShiftName || null,
-      ShiftTerm: currentUser?.ShiftTerm || null,
+      // ShiftTerm: currentUser?.ShiftTerm || null,
     }),
     [currentUser]
   );
@@ -71,7 +71,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
     { type:'AfterNoon'},
     { type:'Night'},
   ];
-  const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
+  // const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
 
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(name, selectedValue, selectedOption);
@@ -220,13 +220,13 @@ export default function ShiftConfigurationForm({ currentUser }) {
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>
-              <RHFAutocomplete
+              {/* <RHFAutocomplete
                 freeSolo
                 placeholder="Press Enter to Add Custom"
                 label="Shift Term"
                 name="ShiftTerm"
                 options={ShiftTerms.map((ShiftTerm) => ShiftTerm.type)}
-              />
+              /> */}
 
               <Autocomplete
                 disablePortal
