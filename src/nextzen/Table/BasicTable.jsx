@@ -108,6 +108,8 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
+import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
+import PurchasePaymentHead from '../Purchase/PurchasePayment/PurchasePaymentHeader';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 
 const defaultFilters = {
@@ -117,7 +119,6 @@ const defaultFilters = {
 };
 
 // ----------------------------------------------------------------------
-
 
 const BasicTable = ({
   endpoint,
@@ -453,7 +454,12 @@ const BasicTable = ({
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
-             {filterName === "SwapRequestSearchFilter" && <SwapRequestSearchFilter  filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />}
+          {filterName === 'SwapRequestSearchFilter' && (
+            <SwapRequestSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
+          )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -617,19 +623,49 @@ const BasicTable = ({
             />
           )}
           {filterName === 'PurchaseOrderHead' && (
-            <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <PurchaseOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchaseInvoiceHead' && (
+            <PurchaseInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchasePaymentHead' && (
+            <PurchasePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-           {filterName === 'DepartmentFilterSearch' && (
-            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DepartmentFilterSearch' && (
+            <DeparrtmentSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {filterName === 'DesignationFilterSearch' && (
-            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <DesignationSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
-           {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {/* accounts  */}
           <Card>
@@ -806,7 +842,4 @@ BasicTable.propTypes = {
   handleEditRowParent: PropTypes.any,
 };
 
-
-
 export { BasicTable };
-

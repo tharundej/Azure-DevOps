@@ -8,29 +8,19 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import instance from 'src/api/BaseURL';
-
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
-import { createVendorAPI, getVendorListAPI, updateVendorAPI } from 'src/api/Accounts/Vendor';
-import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
-import { async } from '@firebase/util';
+import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
 
 export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
     hsnId: Yup.number().required('HSN ID is Required'),
     materialType: Yup.string().required('Material Type is Required'),
-    gstRate: Yup.number().required('GST Rate is Required'),
-    status: Yup.string(),
+    gstRate: Yup.string(),
+    materialPrice: Yup.number(),
   });
 
   const defaultValues = useMemo(
@@ -41,9 +31,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       hsnId: currentData?.hsnId || '',
       materialType: currentData?.materialType || '',
       gstRate: currentData?.gstRate || '',
-      operationalDate: currentData?.operationalDate || '',
-      closeDate: currentData?.closeDate || '',
-      status: currentData?.status || 'Active',
+      materialPrice: currentData?.materialPrice || 0,
     }),
     [currentData]
   );
@@ -65,21 +53,17 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const values = watch();
   const [vendorOptions, setVendorOptions] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState();
+  const [taxsOptions, setTaxsOptions] = useState([]);
+  const [selectedTaxs, setSelectedTaxs] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchVendor = async () => {
-      const data = {
-        companyID: 'COMP1',
-        count: 10,
-        sort: {
-          key: 1,
-          orderBy: 'vendor_name',
-        },
-      };
+      const data = { companyID: 'COMP1' };
       try {
-        const response = await getVendorListAPI(data);
+        const response = await getVendorAPI(data);
         setVendorOptions(response);
-        console.log('currentData.vendorID', currentData.vendorID);
+        console.log('currentData.vendorID', currentData.vendorId);
+        console.log('currentData.vend', defaultValues.vendorID );
         setSelectedVendor(
           defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
         );
@@ -88,31 +72,27 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
         console.log('API request failed:', error.message);
       }
     };
+    const fetchTaxs = async () => {
+      try {
+        const response = await getTaxs();
+        console.log('Tax responce:', response);
+        setTaxsOptions(response);
+        setSelectedTaxs(defaultValues.gstRate || (response.length > 0 ? response[0].value : null));
+      } catch (error) {
+        console.log('Tax API Error', error);
+      }
+    };
     fetchVendor();
+    fetchTaxs();
   }, []);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const [datesUsed, setDatesUsed] = useState({
-    operationalDate: defaultValues?.operationalDate
-      ? dayjs(defaultValues?.operationalDate)
-      : dayjs(new Date()),
-    closeDate: defaultValues?.closeDate ? dayjs(defaultValues?.closeDate) : dayjs(new Date()),
-  });
-  const statusOptions = [
-    { value: 1, label: 'Active' },
-    { value: 0, label: 'In Active' },
-  ];
-  const [selectedStatus, setSelectedStatus] = useState(
-    defaultValues?.status == 'Active' ? 1 : 0 || statusOptions[0].value
-  );
   console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
-    data.status = selectedStatus;
     data.vendorID = `${selectedVendor}`;
-    data.operationalDate = formatDateToYYYYMMDD(datesUsed?.operationalDate);
-    data.closeDate = formatDateToYYYYMMDD(datesUsed?.closeDate);
+    data.gstRate = selectedTaxs;
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
@@ -185,47 +165,15 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
             <RHFTextField name="materialName" label="Material Names" />
             <RHFTextField name="hsnId" label="HSN ID" />
             <RHFTextField name="materialType" label="Material Type" />
-            <RHFTextField name="gstRate" label="GST Rate" />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="on boarding Date"
-                  value={datesUsed?.operationalDate}
-                  defaultValue={dayjs(new Date())}
-                  onChange={(newValue) => {
-                    setDatesUsed((prev) => ({
-                      ...prev,
-                      operationalDate: newValue,
-                    }));
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="off boarding Date"
-                  value={datesUsed?.closeDate}
-                  defaultValue={dayjs(new Date())}
-                  onChange={(newValue) => {
-                    setDatesUsed((prev) => ({
-                      ...prev,
-                      closeDate: newValue,
-                    }));
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
+            <RHFTextField name="materialPrice" label="Material Price" />
             <RHFAutocomplete
-              name="status"
-              id="status"
-              options={statusOptions || []}
-              value={statusOptions.find((option) => option.value === selectedStatus) || null}
-              onChange={(event, newValue) => setSelectedStatus(newValue ? newValue.value : null)}
+              name="gstRate"
+              id="gstRate"
+              options={taxsOptions || []}
+              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              onChange={(event, newValue) => setSelectedTaxs(newValue ? newValue.value : null)}
               renderInput={(params) => (
-                <TextField {...params} label="Select status Type" variant="outlined" />
+                <TextField {...params} label="Select Tax" variant="outlined" />
               )}
             />
           </Box>
