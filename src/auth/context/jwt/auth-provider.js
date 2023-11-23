@@ -120,9 +120,9 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email, password) => {
+  const login = useCallback(async (companyEmail, password) => {
     const data = {
-      email,
+      companyEmail,
       password,
     };
 

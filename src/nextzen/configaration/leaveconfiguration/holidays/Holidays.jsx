@@ -25,7 +25,7 @@ import { LoadingButton } from '@mui/lab';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from 'rsuite';
+import Button from '@mui/material/Button';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
@@ -321,6 +321,7 @@ export default function Holidays({ currentUser }) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Holiday Date"
+                    minDate={dayjs()}
                     // value={editData?.holidayDate}
                     onChange={handleDateChanges}
                   />
@@ -368,6 +369,7 @@ export default function Holidays({ currentUser }) {
           </DialogContent>
 
           <DialogActions>
+           
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>

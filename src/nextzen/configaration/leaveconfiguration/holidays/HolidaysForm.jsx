@@ -178,7 +178,9 @@ export default function HolidaysForm({ currentUser }) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Holiday Date"
-                    value={selectedDates}
+                    // value={selectedDates}
+                    value={null}
+                    minDate={dayjs()}
                     onChange={handleDateChanges}
                   />
                 </DemoContainer>
