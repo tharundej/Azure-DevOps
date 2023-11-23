@@ -54,6 +54,7 @@ import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import axios from 'axios';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import AddTaxSectionConfig from 'src/nextzen/configaration/taxSectionConfiguration/AddTaxSectionConfig';
 
 const defaultFilters = {
   name: '',
@@ -424,7 +425,7 @@ export default function HrFilter({
 
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item md={6} xs={6}>
           <TextField
             placeholder="Search...."
             fullWidth
@@ -432,8 +433,10 @@ export default function HrFilter({
           />
         </Grid>
      
-       
-        <Grid item md={4} xs={4}>
+        <Grid item xs={4} msd={4}>
+         <AddTaxSectionConfig />
+        </Grid>
+        <Grid item md={2} xs={2}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
@@ -443,6 +446,7 @@ export default function HrFilter({
           </Grid>
         </Grid>
       </Grid>
+      
 
 {/*       
       <Grid item  container spacing={0} alignItems="flex-end" 

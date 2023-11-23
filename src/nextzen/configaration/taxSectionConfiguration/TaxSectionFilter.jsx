@@ -425,15 +425,15 @@ export default function TaxSectionFilter({
 
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item md={3} xs={3}>
+        <Grid item md={8} xs={8}>
           <TextField
             placeholder="Search...."
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-        <Grid item  md={8} xs={8} direction="row" >
-     <AddTaxSectionConfig />
+        <Grid item  md={3} xs={3} direction="row" >
+     <AddTaxSectionConfig /> working
        </Grid>
     
         <Grid item md={1} xs={1}>
@@ -442,6 +442,7 @@ export default function TaxSectionFilter({
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
+              
             </Stack>
           </Grid>
         </Grid>

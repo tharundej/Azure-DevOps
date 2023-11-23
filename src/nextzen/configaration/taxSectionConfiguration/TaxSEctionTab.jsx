@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
-import TAxSectionConfig from './TAxSectionConfig';
+import TAxSectionConfig from './TaxSectionConfig';
 
 
 
@@ -16,7 +16,7 @@ const bull = (
   </Box>
 );
 // 'Department', 'Designation ',
-const tabLabels = [ 'Designation Grade' ];
+const tabLabels = [ 'Tax Section' ];
   const tabContents = [
 
     <div>

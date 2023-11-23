@@ -58,6 +58,7 @@ const headings = [
 
 
 export default function LicPremium() {
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
  
   const empId = localStorage.getItem('employeeID')
@@ -88,7 +89,7 @@ export default function LicPremium() {
     companyName: '',
     employeeId: empId,
     employeeName: '',
-    financialYear: selectedYear,
+    financialYear:  selectedYear?.financialYear,
     policyNumber: '',
     dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
     insuredPersonName: '',
@@ -128,6 +129,11 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
    const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      financialYear: value?.financialYear,
+    }));
+   
   };
 
   // handling the file uploader compoent
@@ -268,7 +274,8 @@ const handleRentDeletedID = ( data)=>{
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
-    const payload = { "employeeID":empId };
+    const payload = { "employeeID":empId,
+    financialYear: selectedYear?.financialYear, };
 
     const config = {
       method: 'post',
@@ -331,7 +338,7 @@ const handleRentDeletedID = ( data)=>{
               companyName: '',
               employeeId: empId,
               employeeName: '',
-              financialYear: selectedYear,
+              financialYear:  selectedYear?.financialYear,
               policyNumber: '',
               dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
               insuredPersonName: '',
@@ -417,7 +424,7 @@ const handleRentDeletedID = ( data)=>{
               companyName: '',
               employeeId: empId,
               employeeName: '',
-              financialYear: selectedYear,
+              financialYear:   selectedYear?.financialYear,
               policyNumber: '',
               dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
               insuredPersonName: '',
@@ -583,7 +590,16 @@ const handleRentDeletedID = ( data)=>{
     fetchData();
     
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      await getLicPremium();
+    };
+    fetchData();
+    setIsEdit(false)
+    
+  }, [selectedYear?.financialYear]);
 
+  console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
       <FormProvider {...methods}>

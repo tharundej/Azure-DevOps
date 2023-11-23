@@ -46,12 +46,12 @@ export default function TAxSectionConfig() {
   const TABLE_HEAD = [
   
  
-    { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
+    { id: 'taxsection', label: 'Tax Section', width: 180, type: 'text' },
 
 
-    { id: 'designationName', label: 'Designation Name', width: 180, type: 'text' },
+    { id: 'taxscheme', label: 'Tax Scheme', width: 180, type: 'text' },
     
-    { id: 'designationGradeName', label: 'Designation Grade Name', width: 220, type: 'text' },
+    { id: 'limit', label: 'Limit', width: 220, type: 'text' },
 
    
     // { id: '', width: 88 },
@@ -232,42 +232,34 @@ export default function TAxSectionConfig() {
               }}
             >
      <TextField
-                label="Department "
-                name="department"
+                label="Tax Section "
+                name="taxsection"
                 value={valueSelected?.departmentName ||  null}
                 onChange={(e, newValue) =>
-                  handleSelectChange('departmentName', newValue ,e || null)
+                  handleSelectChange('taxsection', newValue ,e || null)
                 }
                 variant="outlined"
                 fullWidth
               />
 
               <TextField
-                label="Designation"
-                name="designation"
+                label="Tax Scheme "
+                name="taxscheme"
                 value={valueSelected?.designationName || null}
                 onChange={(e, newValue) =>
-                  handleSelectChange('designationName', newValue  ,e|| null)
+                  handleSelectChange('tacscheme', newValue  ,e|| null)
                 }
                 variant="outlined"
                 fullWidth
               />
           
 
-       
-              
-              
-          
-
-         
-           
-          
               <TextField
-                label="Designation Grade"
-                name="designationGrade"
+                label="Limit "
+                name="limit"
                 value={valueSelected?.designationGradeName || null}
                  onChange={(e, newValue) =>
-                  handleSelectChange('designationGradeName', newValue , e|| null)
+                  handleSelectChange('limit', newValue , e|| null)
                 }
                 variant="outlined"
                 fullWidth
@@ -296,7 +288,7 @@ export default function TAxSectionConfig() {
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} />
+    
       <Container
         sx={{
           display: 'flex',
@@ -319,7 +311,7 @@ export default function TAxSectionConfig() {
         bodyData="data"
         rowActions={actions}
         onClickActions={onClickActions}
-        filterName="DesignationGradeFilterSearch"
+        filterName="HrTabFilter"
       />
     </>
   );

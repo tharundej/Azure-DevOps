@@ -140,6 +140,9 @@ const ShiftConfiguration = lazy(() =>
 const RoleConfiguration = lazy(() =>
   import('../../nextzen/configaration/roleconfiguration/RoleConfigTab')
 );
+const TaxSectionConfiguration = lazy(() =>
+  import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
+);
 
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
@@ -596,6 +599,9 @@ export const dashboardRoutes = [
       { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
 
       { path: 'roleconfiguration', element: <RoleConfiguration /> },
-    ],
-  },
+
+   { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
+  
+  ],
+},
 ];

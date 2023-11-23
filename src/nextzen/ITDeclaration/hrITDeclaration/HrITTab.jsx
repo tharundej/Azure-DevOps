@@ -286,7 +286,7 @@ export default function HrITTab() {
 
        
       
-          <Button onClick={updateDepartment}>Update</Button>
+          <Button onClick={updateDepartment}>Approve</Button>
             </Box>
           </DialogContent>
  
@@ -305,7 +305,7 @@ export default function HrITTab() {
           </DialogActions>
         </FormProvider>
       </Dialog>
-      {/* <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} /> */}
+   
       <Container
         sx={{
           display: 'flex',
