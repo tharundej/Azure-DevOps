@@ -32,6 +32,9 @@ export default function ExpenseClaimView({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [departmentOptions,setDepartmentOptions]=useState([])
+const [desginationOptions,setDesginationptions]=useState([])
+const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
@@ -62,6 +65,97 @@ export default function ExpenseClaimView({ currentUser }) {
       key: 0,
     },
   };
+  const ApiHitDepartment = (obj) => {
+    const config = {
+      method: 'post',
+
+      maxBodyLength: Infinity,
+
+      url: `${baseUrl}/onboardingDepartment`,
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      data: obj,
+    };
+
+    axios
+      .request(config)
+
+      .then((response) => {
+        // console.log(JSON.stringify(response?.data));
+        setDepartmentOptions(response?.data?.data || []);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const ApiHitDesgniation = (obj) => {
+    const config = {
+      method: 'post',
+
+      maxBodyLength: Infinity,
+
+      url: `${baseUrl}/onboardingDesignation`,
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      data: obj,
+    };
+
+    axios
+      .request(config)
+
+      .then((response) => {
+        // console.log(JSON.stringify(response?.data));
+        setDesginationptions(response?.data?.data || []);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const ApiHitDesgniationGrade = (obj) => {
+    const config = {
+      method: 'post',
+
+      maxBodyLength: Infinity,
+
+      url: `${baseUrl}/onboardingDesignationGrade`,
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      data: obj,
+    };
+
+    axios
+      .request(config)
+
+      .then((response) => {
+        // console.log(JSON.stringify(response?.data));
+        setDesginationGradeOptions(response?.data?.data || []);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(()=>{
+    const obj={
+     companyID:'COMP1',
+   }
+   ApiHitDepartment(obj)
+   ApiHitDesgniation(obj)
+   ApiHitDesgniationGrade()
+ },[])
 
   const handleEdit = (rowData) => {
     rowData.company_id = 'COMP2';
@@ -92,30 +186,29 @@ export default function ExpenseClaimView({ currentUser }) {
       },
       data: payload,
     };
-    try{
-    axios.request(config).then((response) => {
-      if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        console.log('sucess', response);
-      }
-      if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+    try {
+      axios.request(config).then((response) => {
+        if (response?.data?.code === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          console.log('sucess', response);
+        }
+        if (response?.data?.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
 
-        console.log('sucess', response);
-      }
-      console.log(response?.data);
-    });
-  }
-  catch (error) {
-    setSnackbarSeverity('error');
-    setSnackbarMessage('Error While Editing. Please try again.');
-    setSnackbarOpen(true);
-    console.log(' ', error);
-  }
+          console.log('sucess', response);
+        }
+        console.log(response?.data);
+      });
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Editing. Please try again.');
+      setSnackbarOpen(true);
+      console.log(' ', error);
+    }
   };
 
   const onClickActions = (rowdata, event) => {
@@ -133,28 +226,28 @@ export default function ExpenseClaimView({ currentUser }) {
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
 
-  const deleteFunction = async (rowdata, event) => {
-    console.log('iam here ');
-    try {
-      console.log(rowdata, 'rowData:::::');
-      const data = {
-        expense_configuration_id: JSON.parse(rowdata.expense_configuration_id, 10),
-      };
-      const response = await axios.post(baseUrl + '/deleteExpenseConfig', data);
-      if (response?.status === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Expense Configuration Deleted Succuessfully!');
-        setSnackbarOpen(true);
+  // const deleteFunction = async (rowdata, event) => {
+  //   console.log('iam here ');
+  //   try {
+  //     console.log(rowdata, 'rowData:::::');
+  //     const data = {
+  //       expense_configuration_id: JSON.parse(rowdata.expense_configuration_id, 10),
+  //     };
+  //     const response = await axios.post(baseUrl + '/deleteExpenseConfig', data);
+  //     if (response?.status === 200) {
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage('Expense Configuration Deleted Succuessfully!');
+  //       setSnackbarOpen(true);
 
-        console.log('sucess', response);
-      }
-    } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Expense Configuration. Please try again.');
-      setSnackbarOpen(true);
-      console.log('error', error);
-    }
-  };
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setSnackbarSeverity('error');
+  //     setSnackbarMessage('Error While Deleting Expense Configuration. Please try again.');
+  //     setSnackbarOpen(true);
+  //     console.log('error', error);
+  //   }
+  // };
 
   const NewUserSchema1 = Yup.object().shape({
     expense_name: Yup.string(),
@@ -194,15 +287,15 @@ export default function ExpenseClaimView({ currentUser }) {
     try {
       event.preventDefault();
       // editData.claim_type=editData?.claim_type?.label
-      const payload={
-        "expense_configuration_id":JSON.parse(editData?.expense_configuration_id,10),
-            "expense_name": editData?.expense_name?.type,
-            "company_id": "COMP2",
-            "department_name":  editData?.department_name?.type,
-            "designation_name":  editData?.designation_name?.type,
-            "designation_grade_name":  editData?.designation_grade_name?.type,
-      }
-      console.log(payload,'payload')
+      const payload = {
+        expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
+        expense_name: editData?.expense_name?.type,
+        company_id: 'COMP2',
+        department_name: editData?.department_name?.type,
+        designation_name: editData?.designation_name?.type,
+        designation_grade_name: editData?.designation_grade_name?.type,
+      };
+      console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
       if (response?.data?.code === 200) {
         handleCloseEdit();
@@ -375,7 +468,7 @@ export default function ExpenseClaimView({ currentUser }) {
             <LoadingButton
               type="submit"
               variant="contained"
-               onClick={(event) => onSubmitEdit2(editData, event)}
+              onClick={(event) => onSubmitEdit2(editData, event)}
               loading={isSubmitting1}
             >
               Save

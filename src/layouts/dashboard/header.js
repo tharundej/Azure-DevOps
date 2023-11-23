@@ -32,7 +32,7 @@ import { useLocation } from 'react-router-dom';
 const headerMap = new Map();
 headerMap.set('leave','Leave');
 headerMap.set('employeemanagementhome','Employee Management')
-headerMap.set('timesheet','Time Sheet Management')
+headerMap.set('timesheetmanagement','Time Sheet Management')
 headerMap.set('Shift','Shift management')
 headerMap.set('claims','Claims')
 headerMap.set('payroll','Payroll')
@@ -110,7 +110,7 @@ export default function Header({ onOpenNav }) {
       justifyContent="flex-end"
       spacing={{ xs: 0.5, sm: 1 }}
     >
-      <Typography style={{ color: '#3B82F6' }}>{headerMap.get(splicedPath)
+      <Typography style={{ color: 'black' }} component='span' variant='h5'>{headerMap.get(splicedPath)
       }</Typography>
     </Stack>
 

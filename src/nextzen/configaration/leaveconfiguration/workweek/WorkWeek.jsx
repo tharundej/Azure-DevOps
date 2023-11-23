@@ -19,6 +19,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 export default function WorkWeek({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
@@ -269,7 +270,7 @@ export default function WorkWeek({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Work Week</DialogTitle>
+        <ModalHeader heading="Edit Work Week" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -325,14 +326,22 @@ export default function WorkWeek({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

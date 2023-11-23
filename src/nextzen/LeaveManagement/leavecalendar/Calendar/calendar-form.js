@@ -193,6 +193,7 @@ const getLeaveList = () => {
 
     .catch((error) => {
       console.log(error);
+      setLoader(false);
     });
 }
 
@@ -220,6 +221,7 @@ const AvailableLeaves = () => {
 
     .catch((error) => {
       console.log(error);
+      setLoader(false);
     });
 }
 

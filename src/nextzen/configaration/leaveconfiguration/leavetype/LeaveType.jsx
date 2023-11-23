@@ -27,6 +27,7 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeaveType({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -252,7 +253,7 @@ export default function LeaveType({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Leave Type</DialogTitle>
+        <ModalHeader heading="Edit Leave Type" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -310,14 +311,21 @@ export default function LeaveType({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit1}
+             type="submit"
+             >Save
+             </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

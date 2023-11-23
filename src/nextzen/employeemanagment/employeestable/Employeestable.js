@@ -202,7 +202,7 @@ export default function EmployeeTable() {
   const handleEditRowParent = useCallback(
     (id) => {
       console.log('called',paths.dashboard.employee.userview(id))
-      router.push(paths.dashboard.employee.userview(id));
+      router.push(paths.dashboard.employee.userview(id?.employeeId));
     },
     [router]
     

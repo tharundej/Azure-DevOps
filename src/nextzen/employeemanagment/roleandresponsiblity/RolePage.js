@@ -6,6 +6,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import {
   ApiHitDepartment,
   ApiHitDesgniation,
@@ -18,18 +23,8 @@ import {
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
-import RolePage from './RolePage';
 
-const RoleAndResponsibility = () => {
-
-  const [openRoleModal,setOpenRoleModal]=useState(false);
-  const [type,setType]=useState("create")
-  const [data,setData]=useState("")
-
-  const handleModalClose=()=>{
-    setOpenRoleModal(false);
-  }
-
+const RolePage = ({open,handleModalClose,type,data}) => {
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
   const [userdropDownvalue, setUserDropDownValue] = useState('');
   const [groupname, setGroupname] = useState('');
@@ -43,7 +38,7 @@ const RoleAndResponsibility = () => {
 const [TABLE_HEAD,setTableHead] =useState( [
   {
     id: 'mainHeading',
-    label: 'Group Name',
+    label: 'Main Heading',
     type: 'text',
     containesAvatar: true,
     minWidth:'180px',
@@ -64,12 +59,7 @@ const [TABLE_HEAD,setTableHead] =useState( [
   
 ]);
 
-const handleEditRowParent = (data)=>{
-  console.log(data,'pdata')
-  setData(data)
-
-  setType("edit");setOpenRoleModal(true)
-}
+const handleEditRowParent = ()=>{}
   // (id) => {
   //   console.log('called',paths.dashboard.employee.userview(id))
   //   router.push(paths.dashboard.employee.userview(id));
@@ -116,21 +106,43 @@ dropdowns:[
 
 
   useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const department = await ApiHitDepartmentWithoutLocation();
+    if(open ){
+        if(type==="create"){
+            APiHitGetList()
+        }else {
+            setGroupname(data?.mainHeading)
+            const obj={
+                "companyId": "COMP1",
+                "groupName":data?.mainHeading,
+              
+            }
+            console.log(data?.mainHeading,'objobjobj')
+            ApiHitGetSub(obj)
+        }
+    }
+  }, [open]);
 
-        const arr = {
-          departmentOptions: department,
-        };
-        setUserDropDownOptions(arr);
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
-
-    fetchLocations();
-  }, []);
+  const ApiHitGetSub=(obj)=>{
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${baseUrl}/getGroupSubs`,
+        headers: { 
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+          'Content-Type': 'application/json', 
+        },
+        data : obj
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setCheckedState(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   const formatLabel = (label) => {
     // Convert camel case to space-separated with capitalization
     return label.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (str) => str.toUpperCase());
@@ -182,6 +194,7 @@ dropdowns:[
         setGroupname('');
         setCheckedState("")
         handleCallSnackbar(response.data.message,"success")
+        handleModalClose()
       })
       .catch((error) => {
         console.log(error);
@@ -194,8 +207,8 @@ dropdowns:[
       companyId: 'COMP1',
       pages: checkedState,
     };
-    ApiHitSavePages(obj);
-    console.log(checkedState);
+     ApiHitSavePages(obj);
+    console.log(checkedState,'checkedstate');
     // You can perform other actions here based on the state
   };
 
@@ -223,9 +236,7 @@ dropdowns:[
         console.log(error);
       });
   };
-  useEffect(() => {
-    APiHitGetList();
-  }, []);
+ 
 
   const handleCallSnackbar = (message, severity) => {
     console.log('handleCallSnackbar');
@@ -245,31 +256,90 @@ dropdowns:[
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
       />
-      
-      <Grid sx={{
-        display:'flex',
-        flexDirection:'column',
-        alignItems:'flex-end',
-        justifyContent:'flex-end'
-      }}>
-      <Button 
-      onClick={()=>{setType("create");setOpenRoleModal(true)}}
-      
+    <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
       >
-        Create View
-      </Button>
-
+     <DialogContent>
+      <Grid container marginTop="10px" spacing={2}>
+        <Grid item xs={12} md={3} lg={4}>
+          {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
+          <TextField
+            label="Group Name"
+            id="groupname"
+            value={groupname}
+            onChange={(e) => {
+              setGroupname(e?.target?.value);
+            }}
+          ></TextField>
+        </Grid>
       </Grid>
-      <RolePage data={data} open={openRoleModal}  handleModalClose={handleModalClose} type={type} />
-
-      <h2>Role and Responsibility- under constrution...</h2>
+      <FormGroup>
+        {checkedState &&
+          Object.entries(checkedState).map(([group, values], index) => (
+            <Box key={index}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    id={`main-heading-${group}`}
+                    checked={values.mainHeading}
+                    onChange={() => handleMainHeadingChange(group)}
+                    style={{ color: '#3B82F6' }}
+                  />
+                }
+                label={`${formatLabel(group)}`}
+              />
+              {values.mainHeading &&
+                Object.keys(values).map((key) =>
+                  key !== 'mainHeading' ? (
+                    <FormControlLabel
+                      key={key}
+                      control={
+                        <Checkbox
+                          id={`checkbox-${group}-${key}`}
+                          checked={values[key]}
+                          onChange={() => handleCheckboxChange(group, key)}
+                        />
+                      }
+                      label={`${formatLabel(key)}`}
+                    />
+                  ) : null
+                )}
+            </Box>
+          ))}
+      </FormGroup>
+      <Grid 
+      margin='10px'
+      spacing={2}
+      display='flex'
+      flexDirection='row'
       
+      alignItems='flex-end'
+      justifyContent='space-between'
+      
+      sx={{
+       
+      }}
+      >
+      <Grid item>
+      <Button variant="contained" color="primary" onClick={handleModalClose} marginRight="5px">
+        Cancel
+      </Button></Grid>
+      <Grid item>
+      <Button variant="contained" color="primary" onClick={handleSave}>
+        Save
+      </Button></Grid>
+      </Grid>
+      </DialogContent>
 
-      <BasicTable headerData={TABLE_HEAD} endpoint="/getGroupMains"  defaultPayload={defaultPayload} filterOptions={filterOptions}
-
-      rowActions={actions} filterName="a"  handleEditRowParent={handleEditRowParent}/>
+      </Dialog>
     </div>
   );
 };
 
-export default RoleAndResponsibility;
+export default RolePage;

@@ -38,7 +38,7 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 import { doc } from 'firebase/firestore';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
+const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCallSnackbar}) => {
 
   const [defaultValues, setDefaultValues] = useState([]);
   
@@ -64,13 +64,15 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response?.data));
         setDefaultValues([])
         callApi()
+        handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
       })
       .catch((error) => {
         console.log(error);
+        handleCallSnackbar(error?.response?.data?.message,"error")
       });
     }
 

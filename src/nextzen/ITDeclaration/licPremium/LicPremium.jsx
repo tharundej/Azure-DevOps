@@ -33,6 +33,7 @@ import './LicPReimum.css';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -112,10 +113,25 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   var [fileContent, setFileContent] = useState([])
  
   const methods = useForm();
-
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+   const financialYears = [];
+   for (let year = startYear; year <= endYear; year++) {
+     financialYears.push(`${year}-${year + 1}`);
+   }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+ 
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+  };
 
   // handling the file uploader compoent
   const handleLandLordattchment = (fileData) => {
+    console.log(fileData ,"fileData")
     console.log(fileData, 'getting from uploader ');
     fileName = fileData?.map((doc) => doc.fileName);
     setFileName(fileName);
@@ -533,15 +549,23 @@ const handleRentDeletedID = ( data)=>{
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
   
-       
+      
           {/* Row 1 */}
           {/* {policyData.length > 0 &&
           policyData?.map((row, rowIndex) => (
             <div key={rowIndex} style={{ marginTop: '2rem' }}> */}
 
           <Grid item container xs={12} spacing={2}>
+            <Grid  item xs={4}>
+            <Autocomplete
+        id="financialYear"
+        options={financialYears}
+        value={selectedYear}
+        onChange={handleYearChange}
+        renderInput={(params) => <TextField {...params} label="Financial Year" />}
+      />
+            </Grid>
             <Grid item xs={4}>
-              {/* <Typography >Policy Number </Typography> */}
               <TextField
                 label="Policy Number "
                 variant="outlined"
@@ -571,7 +595,13 @@ const handleRentDeletedID = ( data)=>{
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          {/* Row 2 */}
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <TextField
                 label="Insured Person Name"
                 variant="outlined"
@@ -582,11 +612,6 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <TextField
                 label="Sum Of Assured"
@@ -611,7 +636,11 @@ const handleRentDeletedID = ( data)=>{
                 renderInput={(params) => <TextField {...params} label="Relationship" />}
               />
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <TextField
                 label="Premium Amount For Which Proof Attched Now "
                 variant="outlined"
@@ -622,9 +651,6 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <TextField
                 label="Premium Amount Fall In Due"
@@ -647,7 +673,11 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={4}>
+            
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <Autocomplete
                 disablePortal
                 name="treatmentForSpecifiedDiseases"
@@ -668,9 +698,6 @@ const handleRentDeletedID = ( data)=>{
                 )}
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <Autocomplete
                 disablePortal
@@ -712,7 +739,12 @@ const handleRentDeletedID = ( data)=>{
             >
               <Grid item>
                 {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                <Button className="button" onClick={attchementHandler}>Attachment</Button>
+                {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+                <Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+      Upload file
+      {/* <VisuallyHiddenInput type="file" /> */}
+    </Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleSubmit}>

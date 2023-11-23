@@ -10,8 +10,9 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Button,
+  Button,Autocomplete
 } from '@mui/material';
+Autocomplete
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
@@ -41,6 +42,22 @@ const DeclarationDetails = () => {
    const [snackbarOpen, setSnackbarOpen] = useState(false);
    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+   const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+   const financialYears = [];
+   for (let year = startYear; year <= endYear; year++) {
+     financialYears.push(`${year}-${year + 1}`);
+   }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+ 
+   const handleYearChange = (_, value) => {
+     setSelectedYear(value);
+   };
    const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -66,9 +83,19 @@ const DeclarationDetails = () => {
 
   const handleAgeChange = (configId) => (event) => {
     console.log('i am called ');
+    const inputValue = parseFloat(event.target.value);
+    const sanitizedValue = isNaN(inputValue) ? 0 : inputValue;
+
+    console.log(inputValue ,"inoutvalue" ,sanitizedValue ,"sanitizedValue")
     const newData = data?.map((item) =>
-      item.configId === configId ? { ...item, declared: event.target.value } : item
+      item.configId === configId ? {
+        ...item,
+        declared:isNaN(inputValue) ?  null : sanitizedValue <= item.taxLimit ? sanitizedValue : item.taxLimit,
+      }
+    : item
     );
+
+    console.log(newData  ,"newData")
     setData(newData);
     console.log(data, ' datadataaaaaaa');
   };
@@ -187,6 +214,14 @@ const DeclarationDetails = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <Autocomplete
+        id="financialYear"
+        options={financialYears}
+        value={selectedYear}
+        onChange={handleYearChange}
+        renderInput={(params) => <TextField {...params} label="Financial Year" />}
+      />
+      <p>Selected Financial Year: {selectedYear}</p>
       <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
@@ -220,6 +255,9 @@ const DeclarationDetails = () => {
                         type="number"
                         value={row.declared}
                         onChange={handleAgeChange(row.configId)}
+                        // inputProps={{
+                        //   max: row.taxLimit,
+                        // }}
                       />
                     </TableCell>
                   </TableRow>

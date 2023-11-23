@@ -28,7 +28,7 @@ const employeeData=[ {
 
 ]
 
-const EmployeeEducation = ({employeeIDForApis}) => {
+const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
   const docType=["Marks Memo","Ssc Cards",'Provisional']
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
@@ -109,12 +109,14 @@ const EmployeeEducation = ({employeeIDForApis}) => {
     ApiHit();
      
    },[])
-
+   const handleCallSnackbarP=(msg,sev)=>{
+    handleCallSnackbar(msg,sev)
+   }
    
   return (
     <>
     
-      <CreateEducation callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
+      <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
@@ -179,7 +181,8 @@ const EmployeeEducation = ({employeeIDForApis}) => {
 }
 
 EmployeeEducation.propTypes = {
-  employeeIDForApis:PropTypes.string
+  employeeIDForApis:PropTypes.string,
+  handleCallSnackbar:PropTypes.func
 };
 
 export default EmployeeEducation

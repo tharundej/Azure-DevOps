@@ -151,14 +151,14 @@ export const paths = {
     },
 
     itdeclaration: {
-      root: `${ROOTS.DASHBOARD}/itdeclaration`,
+      root: `/itdeclaration`,
     },
     leave: {
       root: `/leave`,
     },
 
     timesheet: {
-      root: `/TimeSheetManagement`,
+      root: `/timesheetmanagement`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
@@ -171,11 +171,7 @@ export const paths = {
     },
 
     payroll: {
-      root: `${ROOTS.DASHBOARD}/payroll`,
-      // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
-      // demo: {
-      //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
-      // },
+      root: `/payroll`,
     },
     monthlydeductions: {
       root: `/monthlydeductions`,
@@ -186,13 +182,13 @@ export const paths = {
     },
     
       configurations:{
-        root:`${ROOTS.DASHBOARD}/configurations`,
-        leaveconfiguration: `${ROOTS.DASHBOARD}/configurations/leaveconfiguration`,
-        compoffconfiguration: `${ROOTS.DASHBOARD}/configurations/compoffconfiguration`,
-        appraisalconfiguration: `${ROOTS.DASHBOARD}/configurations/appraisalconfiguration`,
-      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configurations/expenseclaimconfiguration`,
-      shiftconfiguration: `${ROOTS.DASHBOARD}/configurations/shiftconfiguration`,
-      roleconfiguration: `${ROOTS.DASHBOARD}/configurations/roleconfiguration`,
+        root:`/configurations`,
+        leaveconfiguration: `/configurations/leaveconfiguration`,
+        compoffconfiguration: `/configurations/compoffconfiguration`,
+        appraisalconfiguration: `/configurations/appraisalconfiguration`,
+      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      shiftconfiguration: `/configurations/shiftconfiguration`,
+      roleconfiguration: `/configurations/roleconfiguration`,
       },
     
 

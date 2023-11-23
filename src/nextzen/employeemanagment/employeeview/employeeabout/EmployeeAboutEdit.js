@@ -220,7 +220,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           .then((response) => {
             console.log(JSON.stringify(response.data));
             handleCallSnackbar(response.data.message,'success');
-            ApiHit()
+            ApiHit();
+            handleEditClose();
           })
           .catch((error) => {
             console.log(error);
