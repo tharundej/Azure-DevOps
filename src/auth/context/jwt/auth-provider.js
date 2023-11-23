@@ -153,8 +153,8 @@ export function AuthProvider({ children }) {
       const { accessToken, user } = response.data;
       console.log(response?.data.statusCode, 'response');
       if (response?.data?.statusCode === 200) {
-       // setSession(accessToken);
-       setSession("1")
+        setSession(accessToken);
+      //  setSession("1")
         dispatch({
           type: 'LOGIN',
           payload: {
