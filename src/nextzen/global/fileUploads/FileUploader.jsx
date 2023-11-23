@@ -339,6 +339,9 @@ export default function FileUploader({
   const [trainingData, setTrainingData] = React.useState('');
   const [fileNames, setFileNames] = React.useState([]);
   console.log('photoss');
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [selectedFileURL, setSelectedFileURL] = React.useState(null);
+
 
   const [fileData , setFileData] = useState([])
 //   React.useEffect(() => {
@@ -498,6 +501,22 @@ handleDeletedID(newFileData[index].id)
     console.log(images.length ,images)
   };
 console.log(fileData ,"deleted file")
+
+const handleFileNameClick = async (index) => {
+  const fileContent = fileData[index].fileContent;
+  const blob = new Blob([fileContent], { type: 'application/pdf' }); // Adjust the MIME type accordingly
+
+  // Create a Blob URL for the file
+  const url = URL.createObjectURL(blob);
+
+  // Open the URL in a new tab
+  window.open(url, '_blank');
+
+  // Optionally, store the URL in the state for reference
+  setSelectedFileURL(url);
+};
+
+
   return (
     <div>
       <Dialog
@@ -545,6 +564,7 @@ console.log(fileData ,"deleted file")
                             <div
                               key={index}
                               style={{ marginLeft: '5px', color: '#000', marginBottom: '10px' }}
+                              onClick={() => handleFileNameClick(index)}
                             >
                               {file.fileName}
                               <Iconify

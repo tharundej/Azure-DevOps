@@ -1,12 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
+import TAxSectionConfig from './TAxSectionConfig';
 
-import ReusableTabs from '../../tabs/ReusableTabs';
 
-import RoleConfiguration from './RoleConfiguration';
-import DesignationConfig from './DesignationConfig';
-import DepartmentConfig from './DepartmentConfig';
-import DesignationGradeConfig from './DesignationGradeConfig';
+
 
 
 const bull = (
@@ -20,21 +18,13 @@ const bull = (
 // 'Department', 'Designation ',
 const tabLabels = [ 'Designation Grade' ];
   const tabContents = [
-    // <div>
-    //    <DepartmentConfig/> 
-    // </div>,
-    // <div>
-    // <DesignationConfig/>
-    // </div>,
+
     <div>
-      <DesignationGradeConfig/>
-    </div>,
-    <div>
-     <RoleConfiguration/>
+     <TAxSectionConfig />
     </div>
   ];
 
-export default function RoleConfigTab() {
+export default function TaxSEctionTab() {
   return (
     <ReusableTabs
         tabLabels={tabLabels}

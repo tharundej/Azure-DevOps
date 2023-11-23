@@ -117,11 +117,11 @@ export default function MedicalPremium() {
    const startYear = 2022;
    const endYear = 2030;
  
-   const financialYears = [];
-   for (let year = startYear; year <= endYear; year++) {
-     financialYears.push(`${year}-${year + 1}`);
-   }
- 
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+   const [financialYears, setFinancialYears] = useState([]);
    const [selectedYear, setSelectedYear] = useState(null);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
@@ -544,6 +544,45 @@ export default function MedicalPremium() {
     });
 
   }
+
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
+
   return (
     <div>
       <Snackbar
@@ -568,19 +607,19 @@ export default function MedicalPremium() {
           {/* grid 1 */}
         
           <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
-      
+          <Grid item xs={12}>
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+      </Grid>
             {/* Row 1 */}
             <Grid item container xs={12} spacing={2}>
-              <Grid item xs={4}>
-              <Autocomplete
-        id="financialYear"
-        options={financialYears}
-        value={selectedYear}
-        onChange={handleYearChange}
-        renderInput={(params) => <TextField {...params} label="Financial Year" />}
-      />
-    
-              </Grid>
+      
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -603,13 +642,7 @@ export default function MedicalPremium() {
                   fullWidth
                 />
               </Grid>
-              
-            </Grid>
-
-            {/* Row 2 */}
-
-            <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4} style={{ paddingTop: '9px' }}>
+              <Grid item xs={4} style={{ paddingTop: '9px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -630,6 +663,12 @@ export default function MedicalPremium() {
                 </LocalizationProvider>
                 
               </Grid>
+            </Grid>
+
+            {/* Row 2 */}
+
+            <Grid item container xs={12} spacing={2}>
+           
               <Grid item xs={4}>
                 <TextField
                   label="Insured Persion Name(S)"
@@ -654,11 +693,7 @@ export default function MedicalPremium() {
                   renderInput={(params) => <TextField {...params} label="Relationship Type" />}
                 />
               </Grid>
-             
-            </Grid>
-
-            <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4}>
+              <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
                   name="policyCitizenshipType"
@@ -674,6 +709,10 @@ export default function MedicalPremium() {
                   )}
                 />
               </Grid>
+            </Grid>
+
+            <Grid item container xs={12} spacing={2}>
+           
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -696,10 +735,7 @@ export default function MedicalPremium() {
                   onChange={handleChangeForAmoutDeduction}
                 />
               </Grid>
-            
-            </Grid>
-            <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4}>
+              <Grid item xs={4}>
                 <TextField
                   label="Eligible Deduction"
                   variant="outlined"
@@ -712,6 +748,9 @@ export default function MedicalPremium() {
                 />
               </Grid>
             </Grid>
+            {/* <Grid item container xs={12} spacing={2}>
+          
+            </Grid> */}
             {/* My buttons  */}
             <Grid item container xs={12} spacing={2}>
               <Grid
