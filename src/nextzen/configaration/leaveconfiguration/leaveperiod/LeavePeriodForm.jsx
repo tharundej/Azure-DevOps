@@ -27,6 +27,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeavePeriodForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -42,7 +43,16 @@ export default function LeavePeriodForm({ currentUser }) {
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [selectedDates2, setSelectedDates2] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
 
+  const handleStartDateChange = (date) => {
+    setSelectedStartDate(date);
+  };
+
+  const handleEndDateChange = (date) => {
+    setSelectedEndDate(date);
+  };
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string().required('Leave Period Type is Required'),
   });
@@ -120,10 +130,11 @@ export default function LeavePeriodForm({ currentUser }) {
         data
       );
       if(response?.data?.code===200  ){
+        handleClose()
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-         handleClose()
+        
       
       console.log('sucess', response);
 
@@ -191,7 +202,7 @@ const leavePeriodNames=[
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
         Add Leave Period
       </Button>
@@ -205,13 +216,13 @@ const leavePeriodNames=[
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Leave Period</DialogTitle>
+        <ModalHeader heading="Add Leave Period" />
           <DialogContent>
             <Box
               rowGap={3}
               columnGap={2}
               display="grid"
-              marginTop={2}
+              marginTop={3}
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
@@ -223,8 +234,11 @@ const leavePeriodNames=[
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
-                    value={selectedDates2}
-                    onChange={handleDateChanges2}
+                    value={selectedStartDate}
+                    onChange={handleStartDateChange}
+                    // value={null}
+                    maxDate={new dayjs}
+                    // onChange={handleDateChanges2}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -233,8 +247,9 @@ const leavePeriodNames=[
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    value={selectedDates}
-                    onChange={handleDateChanges}
+                    value={selectedEndDate}
+            minDate={selectedStartDate} // Ensure end date cannot be before the selected start date
+            onChange={handleEndDateChange}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -245,14 +260,22 @@ const leavePeriodNames=[
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+            <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

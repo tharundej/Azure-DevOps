@@ -9,7 +9,7 @@ import SalaryAdvace from './SalaryAdvace';
 
 
 export default function Month() {
-      const tabLabels = ["Salary Advance" , "Loans " , "My Deductions"]
+      const tabLabels = ["Salary Advance" , "Loans " , "Deductions"]
       const tabContents = [
         <div><SalaryAdvace/> </div>,
         <div> <Loans/> </div>,

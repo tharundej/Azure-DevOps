@@ -21,6 +21,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { width } from '@mui/system';
 
 export default function ComoffConfigurationForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -151,7 +152,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
         open={open}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 720 },
+          sx: { maxWidth: 420 },
         }}
       >
         {isTextFieldVisible ? (
@@ -183,6 +184,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
                 <RHFTextField
                   name="expiryDays"
                   label="Expiry Days"
+                  sx={{width:280,marginLeft:1.5}}
                 />
               </Box>
             </DialogContent>
@@ -231,6 +233,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
                   <RHFTextField
                     name="amount"
                     label="amount"
+                    sx={{width:280,marginLeft:1.5}}
                   />
                 
               </Box>

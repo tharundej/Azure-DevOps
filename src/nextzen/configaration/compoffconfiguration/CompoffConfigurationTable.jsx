@@ -20,6 +20,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function CompoffConfigurationTable({currentUser}) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -272,7 +273,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       >
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Edit Comoff Config</DialogTitle>
+            <ModalHeader heading="Edit Comoff Config" />
             
             <DialogContent>
             <Autocomplete
