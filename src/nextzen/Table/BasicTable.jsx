@@ -111,6 +111,7 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 
 const defaultFilters = {
   name: '',
@@ -619,6 +620,9 @@ const BasicTable = ({
           )}
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+            {filterName === 'HrTabFilter' && (
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>

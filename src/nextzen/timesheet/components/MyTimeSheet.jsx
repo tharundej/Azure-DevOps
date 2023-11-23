@@ -21,14 +21,14 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 import LoadingButton from '@mui/lab/LoadingButton';
-
-
+import axios from 'axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import Stack from '@mui/material/Stack';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
 
-const MyTimeSheet = ({currentUser}) => {
+const MyTimeSheet = ({currentUser,filterSearch}) => {
     const TABLE_HEAD = [
 
         // {
@@ -63,11 +63,13 @@ const MyTimeSheet = ({currentUser}) => {
     
       ];
  
-    
+      const managerID =localStorage.getItem('reportingManagerID');
+      const employeeID =localStorage.getItem('employeeID');
+      const companyID =localStorage.getItem('companyID');
      
     const defaultPayload={
-        "companyId":"comp1",
-        "employeeId":"info2",
+        "companyId":companyID,
+        "employeeId":employeeID,
         "page":0,
         "count":5,
         "search":"",
@@ -154,6 +156,8 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+ 
+  
 
   const onSubmit = handleSubmit(async (data) => {
     console.log("🚀 ~ file: SalaryAdvanceForm.jsx:93 ~ onSubmit ~ data:", data)
@@ -177,7 +181,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       console.log(data, 'data111ugsghghh');
 
       const response = await instance.post('addmytimesheet', data).then(
-        (successData) => {
+        (response) => {
           console.log('sucess', successData);
           handleClose()
         },
@@ -191,11 +195,423 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     }
   });
 
+   // edit dialog form data
+   const [timesheetData, setTimesheetData] = useState({
+    timesheetId: '',
+    flag :3,
+    companyId: companyID,
+    employeeId: employeeID,
+    employeeName: '',
+    projectId: '1',
+    activityId: '2',
+    startTime: '',
+    endTime: '',
+    monday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    tuesday: {
+      hours: '',
+      task: '',
+      comments: "",
+    },
+    wednesday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    thursday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    friday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    saturday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+  });
+console.log(timesheetData,"timesheetData1222")
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setTimesheetData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleDayInputChange = (day, field) => (event) => {
+    const { value } = event.target;
+    setTimesheetData((prevData) => ({
+      ...prevData,
+      [day]: {
+        ...prevData[day],
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    // Do something with the form data, such as sending it to a server
+    console.log('Form submitted:', timesheetData);
+  };
+
+  const onSubmitEdit2 = async(timesheetData, event) => {
+    const newId = timesheetData?.timeSheetId ;
+    console.log(newId,"newId")
+
+    const updateTimesheetId = (newId) => {
+      // Convert newId to a string before updating the state
+      setTimesheetData((prevData) => ({
+        ...prevData,
+        timesheetId: String(newId),
+      }));
+    };
+
+   
+    
+    console.log(timesheetData,"editDataeditData222")
+    try {
+      event.preventDefault();
+
+      //  timesheetData?.timesheetData="28"
+
+     console.log(timesheetData,"editDataeditData")
+      
+      const response = await axios.post(baseUrl+"/addmytimesheet", timesheetData).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+
+      
+    } catch (error) {
+
+      alert("api hit not done")
+      console.error(error);
+    }
+  }
+console.log(timesheetData,"vvvvvvvvvvv")
+  // mui modal related
+  const [open, setOpenEdit] = useState(false);
+  const handleOpen = () => {
+    setOpenEdit(true);
+  }
+  const handleCloseEdit = () => setOpenEdit(false);
+  const onclickActions = async(rowData,eventData) => {
+    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+    if (rowData && eventData) {
+     
+      console.log(rowData,'rowDatarowData')
+      // hit api for options return the resposnse.data.data
+      // const arr= await ApiHitClaimTypeOptions()
+      
+      const updatedRowData = {
+        ...rowData,
+        flag:3,
+        // company_id: 'COMP2',
+       
+      };
+    
+     
+      setTimesheetData(updatedRowData);
+
+      if (eventData?.type === 'edit') {
+        handleOpen()
+        
+        console.log("kl")
+      
+      }
+      
+        
+       else{
+     
+
+    }
+    }
+ 
+    
+    else {
+          // navigate[event.eventData.route]
+
+      }
+    }
+// edit
+
+
+     
   return (
     <>
    {/* <h1>hello</h1> */}
   
-   
+   <Dialog
+fullWidth
+maxWidth={false}
+open={open}
+onClose={handleClose}
+PaperProps={{
+  sx: { maxWidth: 720 },
+}}
+
+         >
+      <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
+      <DialogContent>
+      <Box
+                rowGap={1}
+                columnGap={1}
+                display="grid"
+                gridTemplateColumns={{
+                  // xs: 'repeat(1, 1fr)',
+                  // sm: 'repeat(7, 1fr)',
+                }}
+              >
+
+<Grid sx={{padding:'8px'}}>
+              <Typography sx={{marginLeft:'8px'}}>
+                ADD YOUR TIMELINE TO PROJECT IS HERE .....
+              </Typography>
+              <Typography sx={{marginLeft:'8px'}}>
+                Time Sheet
+              </Typography>
+            </Grid>
+            
+               <Grid container spacing={1} >
+                <Grid item xs={12} sm={6} fullWidth>
+                < Autocomplete
+                
+            // disablePortal
+            id="cobo-box-demo"
+            options={projectDetails || []}
+            value={currentProjectData.projectId}
+            getOptionLabel={(option) => option.projectcdName}
+            onChange={(e,newvalue)=>{
+             
+             
+              setCurrentProjectData(newvalue
+              )
+              
+           
+            }}
+          
+            renderInput={(params) => <TextField {...params} label="Project Name" />}
+          /></Grid>
+          <Grid item  xs={12} sm={6} fullWidth>
+                <Autocomplete
+            disablePortal
+            id="combo-box-dmo"
+            options={activityData || []}
+            value={currentActivitytData.activityId}
+            getOptionLabel={(option) => option.activityName}
+            onChange={(e,newvalue)=>{
+             
+             
+              setCurrentActivitytData(newvalue
+              )
+             
+           
+           
+            }}
+         
+            renderInput={(params) => <TextField {...params} label="Activity Name" />}
+          />
+          </Grid>
+          </Grid>
+          <Typography>Monday</Typography>
+          <Grid container spacing={1}>
+            
+               <Grid item sm={4}>
+                <TextField 
+              
+                label="Monday Hours" 
+                fullWidth
+                inputProps={{
+                  pattern: '[0-9]', 
+                  maxLength: 2, 
+                }}
+                value={timesheetData?.monday?.hours}
+                onChange={handleDayInputChange('monday', 'hours')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField 
+                 label="Monday Task" 
+                 fullWidth
+                value={timesheetData?.monday?.task}
+                onChange={handleDayInputChange('monday', 'task')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField 
+                 label="Monday Comments"
+                 fullWidth
+                value={timesheetData?.monday?.comments}
+                onChange={handleDayInputChange('monday', 'comments')}
+                 />
+                </Grid>
+               
+                
+
+                </Grid>
+                <Typography>Tuesday</Typography>
+          <Grid container spacing={1}>
+            
+               <Grid item sm={4}>
+                <TextField 
+                 label="Tuesday Hours"
+                 fullWidth
+                 
+                 inputProps={{
+                  pattern: '[0-9]', 
+                  maxLength: 2, 
+                }}
+                value={timesheetData?.tuesday?.hours}
+                onChange={handleDayInputChange('tuesday', 'hours')}
+                 />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField  label="Tuesday Task" 
+                fullWidth
+                value={timesheetData?.tuesday?.task}
+                onChange={handleDayInputChange('tuesday', 'task')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField  label="Tuesday Comments" 
+                fullWidth
+                value={timesheetData?.tuesday?.comments}
+                onChange={handleDayInputChange('tuesday', 'comments')}
+                />
+                </Grid>
+               
+                
+
+                </Grid>
+                <Typography>Wednesday</Typography>
+          <Grid container spacing={1}>
+            
+               <Grid item sm={4}>
+                <TextField  label="Wednesday Hours" 
+                fullWidth
+                inputProps={{
+                  pattern: '[0-9]', 
+                  maxLength: 2, 
+                }}
+                value={timesheetData?.wednesday?.hours}
+                onChange={handleDayInputChange('wednesday', 'hours')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField name="wednesdayTask" label="Wednesday Task" 
+                fullWidth
+                value={timesheetData?.wednesday?.task}
+                onChange={handleDayInputChange('wednesday', 'task')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField label="Wednesday Comments"
+                 fullWidth
+                 value={timesheetData?.wednesday?.comments}
+                 onChange={handleDayInputChange('wednesday', 'comments')}
+                />
+                </Grid>
+               
+                
+
+                </Grid>
+                <Typography>Thursday</Typography>
+          <Grid container spacing={1}>
+            
+               <Grid item sm={4}>
+                <TextField name="thursdayHours" label="Thursday Hours" 
+                 fullWidth
+                 inputProps={{
+                  pattern: '[0-9]', 
+                  maxLength: 2, 
+                }}
+                 value={timesheetData?.thursday?.hours}
+                 onChange={handleDayInputChange('thursday', 'hours')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField  label="Thursday Task" 
+                  fullWidth
+                  value={timesheetData?.thursday?.task}
+                  onChange={handleDayInputChange('thursday', 'task')}
+                
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField label="Thursday Comments" 
+                fullWidth
+                value={timesheetData?.thursday?.comments}
+                onChange={handleDayInputChange('thursday', 'comments')}
+                />
+                </Grid>
+               
+                
+
+                </Grid>
+                <Typography>Friday</Typography>
+          <Grid container spacing={1}>
+            
+               <Grid item sm={4}>
+                <TextField name="Friday" label="Friday" 
+                fullWidth
+                inputProps={{
+                  pattern: '[0-9]', 
+                  maxLength: 2, 
+                }}
+                value={timesheetData?.friday?.hours}
+                onChange={handleDayInputChange('friday', 'hours')}
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField name="fridayTask" label="Friday Task" 
+                fullWidth
+                value={timesheetData?.friday?.task}
+                onChange={handleDayInputChange('friday', 'task')}
+                
+                />
+                </Grid>
+                <Grid item sm={4}>
+                <TextField  label="Friday Comments"
+                fullWidth
+                value={timesheetData?.friday?.comments}
+                onChange={handleDayInputChange('friday', 'comments')}
+                />
+                </Grid>
+               
+                
+
+                </Grid>
+                
+             
+              </Box>
+    
+            
+             <DialogActions>
+              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Add  Timeline'}
+                </LoadingButton>
+                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}  onClick={handleCloseEdit}>Cancel</Button>
+              </Stack>
+             </DialogActions>
+           
+      
+        </DialogContent>
+      </FormProvider>
+      </Dialog>
    
  <BasicTable
  defaultPayload={defaultPayload}
@@ -204,6 +620,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
  endpoint='/Mytimesheets'
  bodyData='data'
  filterName="TimeSearchFilter"
+ onClickActions={onclickActions}
  />
     </>
   );

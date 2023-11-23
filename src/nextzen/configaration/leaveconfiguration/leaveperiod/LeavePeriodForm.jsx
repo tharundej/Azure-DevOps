@@ -43,7 +43,16 @@ export default function LeavePeriodForm({ currentUser }) {
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [selectedDates2, setSelectedDates2] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
 
+  const handleStartDateChange = (date) => {
+    setSelectedStartDate(date);
+  };
+
+  const handleEndDateChange = (date) => {
+    setSelectedEndDate(date);
+  };
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string().required('Leave Period Type is Required'),
   });
@@ -213,7 +222,7 @@ const leavePeriodNames=[
               rowGap={3}
               columnGap={2}
               display="grid"
-              marginTop={2}
+              marginTop={3}
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
@@ -225,9 +234,11 @@ const leavePeriodNames=[
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
-                    value={selectedDates2}
+                    value={selectedStartDate}
+                    onChange={handleStartDateChange}
                     // value={null}
-                    onChange={handleDateChanges2}
+                    maxDate={new dayjs}
+                    // onChange={handleDateChanges2}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -236,8 +247,9 @@ const leavePeriodNames=[
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    value={selectedDates}
-                    onChange={handleDateChanges}
+                    value={selectedEndDate}
+            minDate={selectedStartDate} // Ensure end date cannot be before the selected start date
+            onChange={handleEndDateChange}
                   />
                 </DemoContainer>
               </LocalizationProvider>

@@ -10,7 +10,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,Autocomplete
+  Paper,
+  Autocomplete,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 // import { makeStyles } from '@mui/styles';
@@ -31,7 +32,6 @@ import Snackbar from '@mui/material/Snackbar';
 import AppTopAuthors from 'src/sections/overview/app/app-top-authors';
 import { _mock } from 'src/_mock';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -55,19 +55,18 @@ const headings = [
   'Interest Payable',
   'Property Occupied',
   'Share Of Interest',
-  "Gross Rental Income",
+  'Gross Rental Income',
   'Municipal Taxes Paid',
   'Action',
 ];
 
 export default function HouseProperty() {
-
   // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
-  const [reload ,setREload] = useState(false)
- 
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+  const [reload, setREload] = useState(false);
+
+  const empId = localStorage.getItem('employeeID');
+  const cmpId = localStorage.getItem('companyID');
+  const token = localStorage.getItem('accessToken');
 
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
@@ -79,29 +78,29 @@ export default function HouseProperty() {
   var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
   var [landLordDocs, setLandLordDocs] = useState([]);
   var [rentDocs, setRentDocs] = useState([]);
-  const [landLordDeletedId , setLandLordDeletedID] = useState([])
-  const [rentDeletedId , setRentDeletedID] = useState([])
+  const [landLordDeletedId, setLandLordDeletedID] = useState([]);
+  const [rentDeletedId, setRentDeletedID] = useState([]);
   const [housingData, sethousingData] = useState([]);
-   // State for Snackbar
-   const [snackbarOpen, setSnackbarOpen] = useState(false);
-   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-   const [snackbarMessage, setSnackbarMessage] = useState('');
+  // State for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-   const currentYear = new Date().getFullYear();
-   console.log(currentYear ,"current year")
-   const startYear = 2022;
-   const endYear = 2030;
- 
-   const financialYears = [];
-   for (let year = startYear; year <= endYear; year++) {
-     financialYears.push(`${year}-${year + 1}`);
-   }
- 
-   const [selectedYear, setSelectedYear] = useState(null);
-   const handleYearChange = (_, value) => {
+  const currentYear = new Date().getFullYear();
+  console.log(currentYear, 'current year');
+  const startYear = 2022;
+  const endYear = 2030;
+
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+  const [financialYears, setFinancialYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const handleYearChange = (_, value) => {
     setSelectedYear(value);
   };
-   const snackBarAlertHandleClose = (event, reason) => {
+  const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -143,7 +142,6 @@ export default function HouseProperty() {
     setFormData({ ...formData, [name]: value });
   };
 
-
   const [formData, setFormData] = useState({
     propertyReferenceSlNo: null,
     name_of_the_owners: '',
@@ -165,20 +163,20 @@ export default function HouseProperty() {
   // You can make an axios request here to send the data to your server.
   const getHousePRoterty = async () => {
     const payload = {
-      "companyId": cmpId,
-      "employeeId": empId,
-      "financialYear":2023
-  };
+      companyId: cmpId,
+      employeeId: empId,
+      financialYear: financialYears,
+    };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
-      url: baseUrl +'/getHousingProperty',
+      url: baseUrl + '/getHousingProperty',
 
       headers: {
-        Authorization:
-       token,  'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -199,37 +197,39 @@ export default function HouseProperty() {
     console.log(result, 'resultsreults');
   };
   const addHousingProperity = useCallback(async () => {
-
-    console.log(formData.dateOfSanction ,"date ")
+    console.log(formData.dateOfSanction, 'date ');
     const payload = {
       companyId: cmpId,
       employeeId: empId,
-      financialYear: 2023,
+      financialYear: financialYears,
       nameOfTheOwners: formData.name_of_the_owners,
       propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
       addressOfProperty: formData.addressOfProperty,
       panOfTheLanders: formData.panOfTheLanders,
-      amountOfHousingloanTakenFromTheProperty: parseFloat(formData.amountOfHousingloanTakenFromTheProperty),
+      amountOfHousingloanTakenFromTheProperty: parseFloat(
+        formData.amountOfHousingloanTakenFromTheProperty
+      ),
       purposeOfLoan: formData.purposeOfLoan,
       // dateOfSanctionOfLoan: formData.dateOfSanction,
       dateOfSanctionOfLoan: formData.dateOfSanction,
       interestPaybleOnYear: parseFloat(formData.interestPaybleOnYear),
       isPropertySelfOccupiedOrLetOut: formData.isPropertySelfOccupiedOrLetOu,
-      ifJointPropertyThenEnterInterestRate: parseFloat(formData.ifJointPropertyThenEnterInterestRate),
+      ifJointPropertyThenEnterInterestRate: parseFloat(
+        formData.ifJointPropertyThenEnterInterestRate
+      ),
       grossRentalAmount: parseFloat(formData.grossRentalAmount),
       muncipalTaxPaid: parseFloat(formData.municipalTaxesPaid),
-      documents:landLordDocs,
-      oldFields:landLordDeletedId
+      documents: landLordDocs,
+      oldFields: landLordDeletedId,
     };
-   
-console.log(payload ,"payload")
+
+    console.log(payload, 'payload');
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: baseUrl + '/housingProperty',
       headers: {
-        Authorization:
-         token,
+        Authorization: token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -237,54 +237,49 @@ console.log(payload ,"payload")
     axios
       .request(config)
       .then((response) => {
-    console.log("success" , response ,response.data.message)
-          if (response.data.code === 201 || 200) {
-            setSnackbarSeverity('success');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-            
-            setREload(!reload)
-            setFormData({
-              propertyReferenceSlNo: null,
-    name_of_the_owners: '',
-    addressOfProperty: '',
-    panOfTheLanders: '',
-    amountOfHousingloanTakenFromTheProperty: '',
-    purposeOfLoan: '',
-    dateOfSanction: dayjs().format('YYYY-MM-DD'),
-    interestPaybleOnYear: '',
-    isPropertySelfOccupiedOrLetOu: '',
-    ifJointPropertyThenEnterInterestRate: '',
-    grossRentalAmount: '',
-    municipalTaxesPaid: '',
-            })
-       
-          }else    if (response.data.code === 400) {
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-          
-      
-          }
+        console.log('success', response, response.data.message);
+        if (response.data.code === 201 || 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+
+          setREload(!reload);
+          setFormData({
+            propertyReferenceSlNo: null,
+            name_of_the_owners: '',
+            addressOfProperty: '',
+            panOfTheLanders: '',
+            amountOfHousingloanTakenFromTheProperty: '',
+            purposeOfLoan: '',
+            dateOfSanction: dayjs().format('YYYY-MM-DD'),
+            interestPaybleOnYear: '',
+            isPropertySelfOccupiedOrLetOu: '',
+            ifJointPropertyThenEnterInterestRate: '',
+            grossRentalAmount: '',
+            municipalTaxesPaid: '',
+          });
+        } else if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
         }
-      )
+      })
       .catch((error) => {
         console.log(error);
       });
-  }, [formData ,landLordDocs]);
+  }, [formData, landLordDocs]);
   // useEffect(() => {
   //   const fetchData = async () => {
   //     await addHousingProperity();
   //   };
   //   fetchData();
-    
+
   // }, []);
   useEffect(() => {
     const fetchData = async () => {
       await getHousePRoterty();
     };
     fetchData();
-    
   }, [reload]);
   const handleLandLordattchment = (fileData) => {
     console.log(fileData, 'getting from uploader ');
@@ -327,23 +322,23 @@ console.log(payload ,"payload")
     setOpenAttchementDilog(false);
   };
   console.log(rentDocs, 'landlordDocs');
-const handleLandLordDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(landLordDeletedId, "deletedelete")
-}
-const handleRentDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setRentDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(rentDeletedId, "deletedelete")
-}
-// handle edit
-const handleEdit = (rowData) => {
-  console.log(rowData ,"rowData1234");
-  setLandLordDocs(rowData.documents)
-  setFormData({
-     employeeId:rowData.employeeId,
-     companyId:rowData.companyId,
+  const handleLandLordDeletedID = (data) => {
+    console.log(data, 'delete');
+    setLandLordDeletedID((prevIDs) => [...prevIDs, data]);
+    console.log(landLordDeletedId, 'deletedelete');
+  };
+  const handleRentDeletedID = (data) => {
+    console.log(data, 'delete');
+    setRentDeletedID((prevIDs) => [...prevIDs, data]);
+    console.log(rentDeletedId, 'deletedelete');
+  };
+  // handle edit
+  const handleEdit = (rowData) => {
+    console.log(rowData, 'rowData1234');
+    setLandLordDocs(rowData.documents);
+    setFormData({
+      employeeId: rowData.employeeId,
+      companyId: rowData.companyId,
       propertyReferenceSlNo: rowData.propertyReferenceSlNo,
       name_of_the_owners: rowData.nameOfTheOwners,
       addressOfProperty: rowData.addressOfProperty,
@@ -356,19 +351,55 @@ const handleEdit = (rowData) => {
       ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
       grossRentalAmount: rowData.grossRentalAmount,
       municipalTaxesPaid: rowData.muncipalTaxPaid,
-    
-    // Add other fields as needed
-  });
 
-  // Set the attached documents if available
-  if (rowData.documents && rowData.documents.length > 0) {
-    setLandLordDocs([...rowData.documents]);
-  }
-};
+      // Add other fields as needed
+    });
+
+    // Set the attached documents if available
+    if (rowData.documents && rowData.documents.length > 0) {
+      setLandLordDocs([...rowData.documents]);
+    }
+  };
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
-       <Snackbar
+      <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={snackBarAlertHandleClose}
@@ -385,189 +416,193 @@ const handleEdit = (rowData) => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Grid container spacing={2} style={{ marginTop: '1rem' }} direction="row" xs={12} lg={12} md={12}>
-     
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: '1rem' }}
+        direction="row"
+        xs={12}
+        lg={12}
+        md={12}
+      >
         {/* Row 1 */}
         <Grid item container xs={12} lg={8} md={8} spacing={2}>
-        <Grid  item container xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4} >
+          <Grid item xs={12}>
+            <Autocomplete
+              id="financialYear"
+              options={financialYears}
+              getOptionLabel={(option) => option.financialYear}
+              value={selectedYear}
+              onChange={handleYearChange}
+              renderInput={(params) => <TextField {...params} label="Financial Year" />}
+            />
+          </Grid>
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+            <Grid item xs={4}>
+              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
+              <TextField
+                label="Property Reference Sl.No(Enter 1,2,3 Etc) "
+                name="propertyReferenceSlNo"
+                value={formData.propertyReferenceSlNo}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Name[S] Of The Owner[S] Of The Property</Typography> */}
+              <TextField
+                label="Name[S] Of The Owner[S] Of The Property"
+                name="name_of_the_owners"
+                value={formData.name_of_the_owners}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >addressOfProperty Of The Property </Typography> */}
+              <TextField
+                label="Address Of The Property "
+                name="addressOfProperty"
+                value={formData.addressOfProperty}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
 
-          <Autocomplete
-        id="financialYear"
-        options={financialYears}
-        value={selectedYear}
-        onChange={handleYearChange}
-        renderInput={(params) => <TextField {...params} label="Financial Year" />}
-      />
+          {/* Row 2 */}
 
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+            <Grid item xs={4}>
+              {/* <Typography >PAN Of The Lender(S)</Typography> */}
+              <TextField
+                label="PAN Of The Lender(S)"
+                name="panOfTheLanders"
+                value={formData.panOfTheLanders}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Amount Of Housing loan Taken For The Property</Typography> */}
+              <TextField
+                label="Amount Of Housing loan Taken For The Property"
+                name="amountOfHousingloanTakenFromTheProperty"
+                value={formData.amountOfHousingloanTakenFromTheProperty}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >PurPose Of Loan</Typography> */}
+              <TextField
+                label="Purpose Of Loan"
+                name="purposeOfLoan"
+                value={formData.purposeOfLoan}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
-            <TextField
-              label="Property Reference Sl.No(Enter 1,2,3 Etc) "
-              name="propertyReferenceSlNo"
-              value={formData.propertyReferenceSlNo}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >Name[S] Of The Owner[S] Of The Property</Typography> */}
-            <TextField
-              label="Name[S] Of The Owner[S] Of The Property"
-              name="name_of_the_owners"
-              value={formData.name_of_the_owners}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-         
-        </Grid>
 
-        {/* Row 2 */}
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+            <Grid item xs={4} style={{ paddingTop: '9px' }}>
+              {/* <Typography >Date Of Sanction Of Loan</Typography> */}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Date Of Sanction Of Loan"
+                    value={dayjs(formData.dateOfSanction, { format: 'YYYY-MM-DD' })} // Use the appropriate form data field
+                    // defaultValue={dayjs(new Date())}
 
-        <Grid item container xs={12} lg={12} md={12}spacing={2}>
+                    onChange={(newValue) => {
+                      console.log(newValue);
+                      const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        dateOfSanction: formattedDate,
+                      }));
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Intrest Payable On Housing Loan For The Year</Typography> */}
+              <TextField
+                label="Intrest Payable On Housing Loan For The Year"
+                name="interestPaybleOnYear"
+                value={formData.interestPaybleOnYear}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
+              <TextField
+                label="Is The Property Self Occupied Or Let out?[See Notebelow]"
+                name="isPropertySelfOccupiedOrLetOu"
+                value={formData.isPropertySelfOccupiedOrLetOu}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
 
-        <Grid item xs={4}>
-            {/* <Typography >addressOfProperty Of The Property </Typography> */}
-            <TextField
-              label="Address Of The Property "
-              name="addressOfProperty"
-              value={formData.addressOfProperty}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+            <Grid item xs={4}>
+              {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
+              <TextField
+                label="IF Joint Property, Then Enter The Share Of Intrest[%]"
+                name="ifJointPropertyThenEnterInterestRate"
+                value={formData.ifJointPropertyThenEnterInterestRate}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Gross Rental Income</Typography> */}
+              <TextField
+                label="Gross Rental Income"
+                name="grossRentalAmount"
+                value={formData.grossRentalAmount}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              {/* <Typography >Less : MUnicipal Taxes Paid :</Typography> */}
+              <TextField
+                label="Less : Municipal Taxes Paid"
+                name="municipalTaxesPaid"
+                value={formData.municipalTaxesPaid}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >PAN Of The Lender(S)</Typography> */}
-            <TextField
-              label="PAN Of The Lender(S)"
-              name="panOfTheLanders"
-              value={formData.panOfTheLanders}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >Amount Of Housing loan Taken For The Property</Typography> */}
-            <TextField
-              label="Amount Of Housing loan Taken For The Property"
-              name="amountOfHousingloanTakenFromTheProperty"
-              value={formData.amountOfHousingloanTakenFromTheProperty}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-        
-        </Grid>
-
-        <Grid item container xs={12} lg={12} md={12} spacing={2}>
-        <Grid item xs={4}>
-            {/* <Typography >PurPose Of Loan</Typography> */}
-            <TextField
-              label="Purpose Of Loan"
-              name="purposeOfLoan"
-              value={formData.purposeOfLoan}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4} style={{ paddingTop: '9px' }}>
-            {/* <Typography >Date Of Sanction Of Loan</Typography> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Date Of Sanction Of Loan"
-                  value={dayjs(formData.dateOfSanction, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
-                  // defaultValue={dayjs(new Date())}
-                  
-onChange={(newValue) => {
-  console.log(newValue)
-  const formattedDate = dayjs(newValue).format('YYYY-MM-DD')
-  setFormData((prevFormData) => ({
-    ...prevFormData,
-    dateOfSanction:formattedDate,
-  }));
-}}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >Intrest Payable On Housing Loan For The Year</Typography> */}
-            <TextField
-              label="Intrest Payable On Housing Loan For The Year"
-              name="interestPaybleOnYear"
-              value={formData.interestPaybleOnYear}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-         
-        </Grid>
-
-        <Grid item container xs={12} lg={12} md={12} spacing={2}>
-        <Grid item xs={4}>
-            {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
-            <TextField
-              label="Is The Property Self Occupied Or Let out?[See Notebelow]"
-              name="isPropertySelfOccupiedOrLetOu"
-              value={formData.isPropertySelfOccupiedOrLetOu}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
-            <TextField
-              label="IF Joint Property, Then Enter The Share Of Intrest[%]"
-              name="ifJointPropertyThenEnterInterestRate"
-              value={formData.ifJointPropertyThenEnterInterestRate}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4}>
-            {/* <Typography >Gross Rental Income</Typography> */}
-            <TextField
-              label="Gross Rental Income"
-              name="grossRentalAmount"
-              value={formData.grossRentalAmount}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          
-        </Grid>
-        <Grid item xs={12} lg={12} md={12} spacing={2}>
-        <Grid item xs={4}>
-            {/* <Typography >Less : MUnicipal Taxes Paid :</Typography> */}
-            <TextField
-              label="Less : Municipal Taxes Paid"
-              name="municipalTaxesPaid"
-              value={formData.municipalTaxesPaid}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-        </Grid>
+          {/* <Grid item xs={12} lg={12} md={12} spacing={2}>
+      
+        </Grid> */}
         </Grid>
         <Grid
           item
           container
-          xs={12} lg={4} md={4}
+          xs={12}
+          lg={4}
+          md={4}
           spacing={2}
           alignItems="center"
           justifyContent="center"
@@ -587,34 +622,36 @@ onChange={(newValue) => {
               <Typography>Housing Property Calculation</Typography>
             </Paper>
             <Paper elevation={0} style={{ border: 'none' }}>
-              <Typography style={{  padding: '10px' , fontSize :"0.9rem" }}>
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
                 Gross Rental Income
               </Typography>
               <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Municipal Taxes Paid</Typography>
-              <Divider style={{ backgroundColor: '#F4F6F8' }} />
-
-              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
-                Balance
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
+                Less : Municipal Taxes Paid
               </Typography>
               <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>Less : Standard Deduction 30%</Typography>
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>Balance</Typography>
               <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
+                Less : Standard Deduction 30%
+              </Typography>
+              <Divider style={{ backgroundColor: '#F4F6F8' }} />
+
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
                 Less : Intest On Housing Loan
               </Typography>
               <Divider style={{ backgroundColor: '#F4F6F8' }} />
 
-              <Typography style={{ padding: '10px', fontSize :"0.9rem" }}>
+              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
                 Net Income(loss) From House Property
               </Typography>
             </Paper>
           </Paper>
         </Grid>
-      
+
         <Grid item container xs={12} spacing={2}>
           <Grid
             item
@@ -631,10 +668,16 @@ onChange={(newValue) => {
                 Attachment 
               </Button> */}
 
-<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
-Upload file
-{/* <VisuallyHiddenInput type="file" /> */}
-</Button>
+              <Button
+                className="button"
+                component="label"
+                variant="contained"
+                onClick={attchementHandler}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                {/* <VisuallyHiddenInput type="file" /> */}
+              </Button>
             </Grid>
             <Grid item>
               <Button className="button" onClick={addHousingProperity}>
@@ -658,56 +701,87 @@ Upload file
             style={{ marginBottom: '1rem' }}
           >
             <Grid item>
-              <Typography> Total Premium :{housingData?.length} </Typography>
+              <Typography> Total Property :{housingData?.length} </Typography>
             </Grid>
           </Grid>
           {/* Add more rows as needed */}
         </Grid>
       </Grid>
-{housingData?.length > 0  ?
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {headings.map((heading, index) => (
-                <TableCell
-                  key={index}
-                  style={{
-                    backgroundColor: '#F4F6F8',
-                    color: '#637381',
-                    whiteSpace: 'nowrap', // Prevent text wrapping
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {heading}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {housingData?.length > 0 && housingData?.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                <TableCell style={{ textAlign: 'center'}}>{rowIndex + 1}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.propertyReferenceSlNo? row.propertyReferenceSlNo: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.nameOfTheOwners? row.nameOfTheOwners: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.addressOfProperty? row.addressOfProperty: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.panOfTheLanders? row.panOfTheLanders: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.amountOfHousingloanTakenFromTheProperty? row.amountOfHousingloanTakenFromTheProperty: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.purposeOfLoan? row.purposeOfLoan: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.dateOfSanctionOfLoan? row.dateOfSanctionOfLoan: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.interestPaybleOnYear? row.interestPaybleOnYear: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.isPropertySelfOccupiedOrLetOu? row.isPropertySelfOccupiedOrLetOu: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.ifJointPropertyThenEnterInterestRate? row.ifJointPropertyThenEnterInterestRate: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.grossRentalAmount? row.grossRentalAmount: "-"}</TableCell>
-                <TableCell style={{ textAlign: 'center'}}>{row.muncipalTaxPaid? row.muncipalTaxPaid: "-"}</TableCell>  <TableCell style={{ textAlign: 'center' }}>
+      {housingData?.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {headings.map((heading, index) => (
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
+                      whiteSpace: 'nowrap', // Prevent text wrapping
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {housingData?.length > 0 &&
+                housingData?.map((row, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    <TableCell style={{ textAlign: 'center' }}>{rowIndex + 1}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.propertyReferenceSlNo ? row.propertyReferenceSlNo : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.nameOfTheOwners ? row.nameOfTheOwners : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.addressOfProperty ? row.addressOfProperty : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.panOfTheLanders ? row.panOfTheLanders : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.amountOfHousingloanTakenFromTheProperty
+                        ? row.amountOfHousingloanTakenFromTheProperty
+                        : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.purposeOfLoan ? row.purposeOfLoan : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.dateOfSanctionOfLoan ? row.dateOfSanctionOfLoan : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.interestPaybleOnYear ? row.interestPaybleOnYear : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.isPropertySelfOccupiedOrLetOu ? row.isPropertySelfOccupiedOrLetOu : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.ifJointPropertyThenEnterInterestRate
+                        ? row.ifJointPropertyThenEnterInterestRate
+                        : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.grossRentalAmount ? row.grossRentalAmount : '-'}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.muncipalTaxPaid ? row.muncipalTaxPaid : '-'}
+                    </TableCell>{' '}
+                    <TableCell style={{ textAlign: 'center' }}>
                       <Button onClick={() => handleEdit(row)}>Edit</Button>
                     </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer> : null}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : null}
       {openAttachmentDilog ? (
         <FileUploader
           showAttachmentDilog={openAttachmentDilog}
@@ -715,7 +789,7 @@ Upload file
           handleUploadattchmentFileName={handleUploadattchmentFileName}
           handleUploadattchment={handleLandLordattchment}
           previousData={landLordDocs}
-          handleDeletedID = {handleLandLordDeletedID}
+          handleDeletedID={handleLandLordDeletedID}
         />
       ) : null}
     </div>
