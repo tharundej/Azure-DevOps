@@ -241,14 +241,7 @@ export const dashboardRoutes = [
         ],
       },
 
-      {
-        path: 'claims',
-        children: [
-          { element: <Claims />, index: true },
-          { path: 'compoffapprove', element: <CompoffApprove /> },
-          { path: 'mycompoff', element: <MyCompoff /> },
-        ],
-      },
+     
 
       {
         path: 'payroll',
@@ -510,6 +503,23 @@ export const dashboardRoutes = [
     children: [
       { element: <TimeSheetManagement />, index: true },
       // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path: 'claims',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Claims />, index: true },
+      { path: 'compoffapprove', element: <CompoffApprove /> },
+      { path: 'mycompoff', element: <MyCompoff /> },
     ],
   },
 ];

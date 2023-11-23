@@ -165,9 +165,9 @@ export const paths = {
     },
 
     claims: {
-      root: `${ROOTS.DASHBOARD}/claims`,
-      compoffapprove: `${ROOTS.DASHBOARD}/claims/compoffapprove`,
-      mycompoff: `${ROOTS.DASHBOARD}/claims/ mycompoff`,
+      root: `/claims`,
+      compoffapprove: `/claims/compoffapprove`,
+      mycompoff: `/claims/ mycompoff`,
     },
 
     payroll: {
