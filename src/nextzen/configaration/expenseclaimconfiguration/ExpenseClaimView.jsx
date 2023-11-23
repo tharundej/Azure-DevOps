@@ -18,6 +18,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 export default function ExpenseClaimView({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -290,10 +291,10 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       const payload = {
         expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
         expense_name: editData?.expense_name?.type,
-        company_id: 'COMP2',
-        department_name: editData?.department_name?.type,
-        designation_name: editData?.designation_name?.type,
-        designation_grade_name: editData?.designation_grade_name?.type,
+        company_id: 'COMP1',
+        department_id: JSON.parse(editData?.department_id,10),
+        designation_id: JSON.parse(editData?.designation_id,10),
+        designation_grade_id: JSON.parse(editData?.designation_grade_id,10),
       };
       console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
@@ -404,7 +405,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
         }}
       >
         <FormProvider methods={methods1} onSubmit={(event) => onSubmitEdit2(editData, event)}>
-          <DialogTitle>Edit Expensive Config</DialogTitle>
+        <ModalHeader heading="Edit Expense Config" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -465,14 +466,22 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={(event) => onSubmitEdit2(editData, event)}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={(event) => onSubmitEdit2(editData, event)}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>
