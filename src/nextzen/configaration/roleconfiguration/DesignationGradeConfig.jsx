@@ -33,6 +33,7 @@ import AddDesignationGradeConfig from './AddDesignationGradeConfig';
 import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -220,7 +221,8 @@ export default function DesignationGradeConfig() {
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Edit Designation Grade Config</DialogTitle>
+          
+          <ModalHeader  heading="Edit Designation Grade Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -233,10 +235,7 @@ export default function DesignationGradeConfig() {
                 md: 'repeat(3, 1fr)', // Add this line for three items in a row
               }}
             >
-        
-        
-           
-              <TextField
+     <TextField
                 label="Department "
                 name="department"
                 value={valueSelected?.departmentName ||  null}
@@ -246,13 +245,6 @@ export default function DesignationGradeConfig() {
                 variant="outlined"
                 fullWidth
               />
-         
-           
-       
-
-         
-      
-          
 
               <TextField
                 label="Designation"
@@ -323,7 +315,7 @@ export default function DesignationGradeConfig() {
           Add Designation Grade
         </Button> */}
       </Container>
-      
+    
       <BasicTable
         headerData={TABLE_HEAD}
         defaultPayload={defaultPayload}

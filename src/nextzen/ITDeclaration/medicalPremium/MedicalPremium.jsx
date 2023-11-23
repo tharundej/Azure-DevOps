@@ -30,6 +30,7 @@ import MuiAlert from '@mui/material/Alert';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -111,6 +112,20 @@ export default function MedicalPremium() {
   const [rentDeletedId, setRentDeletedID] = useState([]);
   const [isEdit , setIsEdit] =useState(false)
   const methods = useForm();
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+   const financialYears = [];
+   for (let year = startYear; year <= endYear; year++) {
+     financialYears.push(`${year}-${year + 1}`);
+   }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+  };
 
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
@@ -551,41 +566,21 @@ export default function MedicalPremium() {
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
+        
           <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
-            {/* search and filter  */}
-            {/* <Grid
-            container
-            spacing={2}
-            alignItems="center"
-            justifyContent="flex-end"
-            direction="row"
-            style={{ marginBottom: '1rem' }}
-          >
-            <Grid item>
-              <TextField
-                sx={{ width: '20vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button className="button">Filter</Button>
-            </Grid>
-            <Grid item>
-              <Button className="button">Report</Button>
-            </Grid>
-          </Grid> */}
+      
             {/* Row 1 */}
             <Grid item container xs={12} spacing={2}>
+              <Grid item xs={4}>
+              <Autocomplete
+        id="financialYear"
+        options={financialYears}
+        value={selectedYear}
+        onChange={handleYearChange}
+        renderInput={(params) => <TextField {...params} label="Financial Year" />}
+      />
+    
+              </Grid>
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -608,7 +603,13 @@ export default function MedicalPremium() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4} style={{ paddingTop: '9px' }}>
+              
+            </Grid>
+
+            {/* Row 2 */}
+
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4} style={{ paddingTop: '9px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -629,11 +630,6 @@ export default function MedicalPremium() {
                 </LocalizationProvider>
                 
               </Grid>
-            </Grid>
-
-            {/* Row 2 */}
-
-            <Grid item container xs={12} spacing={2}>
               <Grid item xs={4}>
                 <TextField
                   label="Insured Persion Name(S)"
@@ -658,7 +654,11 @@ export default function MedicalPremium() {
                   renderInput={(params) => <TextField {...params} label="Relationship Type" />}
                 />
               </Grid>
-              <Grid item xs={4}>
+             
+            </Grid>
+
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
                   name="policyCitizenshipType"
@@ -674,9 +674,6 @@ export default function MedicalPremium() {
                   )}
                 />
               </Grid>
-            </Grid>
-
-            <Grid item container xs={12} spacing={2}>
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -699,7 +696,10 @@ export default function MedicalPremium() {
                   onChange={handleChangeForAmoutDeduction}
                 />
               </Grid>
-              <Grid item xs={4}>
+            
+            </Grid>
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4}>
                 <TextField
                   label="Eligible Deduction"
                   variant="outlined"
@@ -725,9 +725,16 @@ export default function MedicalPremium() {
                 style={{ marginBottom: '1rem' }}
               >
                 <Grid item>
-                  <Button className="button" onClick={attchementHandler}>
+                  {/* <Button className="button" onClick={attchementHandler}>
                     Attachment
-                  </Button>
+                  </Button> */}
+
+                  {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
                 </Grid>
                 <Grid item>
                   <Button className="button" onClick={handleSubmit}>
