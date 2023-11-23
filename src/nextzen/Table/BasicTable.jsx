@@ -192,10 +192,10 @@ const BasicTable = ({
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
-      // url: baseUrl + `${endpoint}`,
+      url: baseUrl + `${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
