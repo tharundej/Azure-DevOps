@@ -28,6 +28,7 @@ import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -65,7 +66,7 @@ export default function RentDetails() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedValue, setSelectedValue] = useState('');
-  var [isShowPannumber, setIsShowPanNumber] = useState(false);
+  var [isShowPannumber, setIsShowPanNumber] = useState();
   const [isPanValueThere, setIsPanValueThere] = useState(false);
   const [isPanValueNumber, setIsPanValueNumber] = useState('');
   const [declarationSelectedValue, setSeclarationSelectedValue] = useState('');
@@ -97,6 +98,20 @@ export default function RentDetails() {
   var [rentDocs, setRentDocs] = useState([]);
   const [landLordDeletedId , setLandLordDeletedID] = useState([])
   const [rentDeletedId , setRentDeletedID] = useState([])
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+   const financialYears = [];
+   for (let year = startYear; year <= endYear; year++) {
+     financialYears.push(`${year}-${year + 1}`);
+   }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+  };
   const handleUploadattchment = (data) => {
     attachedDocumment = data;
     setAttachedDocument(attachedDocumment);
@@ -110,12 +125,19 @@ export default function RentDetails() {
   };
 
   const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-    if (event.target.value === 'Yes') {
+    const selectedStringValue = event.target.value; // "Yes" or "No"
+    // setSelectedValue(selectedStringValue);
+  
+    // Convert back to boolean
+    const selectedBooleanValue = selectedStringValue === 'Yes' 
+    setSelectedValue(selectedBooleanValue);
+    console.log(selectedBooleanValue, isShowPannumber, '_>>>>>>>isshowPan1');
+  
+    if (selectedBooleanValue) {
       setIsShowPanNumber(true);
       setIsPanValueThere(true);
       setIsShowDeclaration(false);
-    } else if (event.target.value === 'No') {
+    } else {
       setIsPanValueThere(false);
       setIsShowPanNumber(false);
       setIsShowDeclaration(true);
@@ -124,6 +146,8 @@ export default function RentDetails() {
 
     console.log(event.target.value);
   };
+
+  console.log(" selected" , selectedValue ,isPanValueNumber,"isPanvlueNUmber")
 
   const handleChangeDeclaration = (event) => {
     setSeclarationSelectedValue(event.target.value);
@@ -247,7 +271,7 @@ const handleRentDeletedID = ( data)=>{
       nameOfLandlord: landLardName,
       addressOfLandlord: landLardAddress,
       data: updatedData,
-      panOfTheLandlord: isPanValueThere,
+      panOfTheLandlord: isShowPannumber,
       panNumber: panNumbers,
       declarationReceivedFFromLandlord: declarationSelectedValue == "Yes" ? true : false,
       fileName: attachedDocummentFileName,
@@ -269,13 +293,13 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.data.status === 200) {
+        if (response.data.code === 200) {
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
      
-        }else    if (response.data.status === 400) {
+        }else    if (response.data.code === 400) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
@@ -303,7 +327,7 @@ const handleRentDeletedID = ( data)=>{
       nameOfLandlord: rentDetailsData?.nameOfLandlord,
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
-      panOfTheLandlord: rentDetailsData?.panOfTheLandlord,
+      panOfTheLandlord: isShowPannumber,
        declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
       // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
@@ -330,13 +354,13 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
         console.log("success" ,response)
-        if (response.data.status === 200) {
+        if (response.data.code === 200) {
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
      
-        }else    if (response.data.status === 400) {
+        }else    if (response.data.code === 400) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
@@ -358,6 +382,7 @@ const handleRentDeletedID = ( data)=>{
   const getRentDetails = async () => {
     const payload = {
       employeeId: empId,
+      financialYear: "2023-2024",
     };
 
     const config = {
@@ -385,34 +410,26 @@ const handleRentDeletedID = ( data)=>{
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
           setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
           setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
-          setSelectedValue(response?.data?.data?.panOfTheLandlord ? 'Yes' : 'No');
+          setSelectedValue(response?.data?.data?.panOfTheLandlord );
           response?.data?.data?.panOfTheLandlord
             ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
             : '';
           setPanNumbers(
-            response?.data?.data?.pan_number == undefined || null
+            response?.data?.data?.panNumber == undefined || null
               ? ['', '', '']
-              : response?.data?.data?.pan_number
+              : response?.data?.data?.panNumber
           );
-          rentFiledsIndex = setRentFieldsIndex(rowsData.landLordDocs.map((doc) => doc.ID));
-          landlordFiledsIndex = rowsData.landLordDocs.map((doc) => doc.landlordID);
+          rentFiledsIndex = setRentFieldsIndex(rowsData?.rentDocs?.map((doc) => doc.ID));
+          landlordFiledsIndex = rowsData?.landLordDocs?.map((doc) => doc.landlordID);
           console.log(response?.data?.data?.landLordDocs ? rowsData?.landLordDocs : [] ,"response?.data?.data?.landLordDocs ? landLordDocsresponse?.data?.data?.landLordDocs : []")
 setLandLordDocs(rowsData?.landLordDocs ? rowsData?.landLordDocs : [] )
 setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
           console.log(rowsData?.landLordDocs);
           setLandlordFieldsIndex(landlordFiledsIndex);
-          console.log(
-            landLardName,
-            landLardAddress,
-            isShowDeclaration,
-            isShowPannumber,
-            panNumbers,
-            response?.data?.data?.pan_number,
-            landlordFiledsIndex,
-            rentFiledsIndex,
-            rentDocs ,
-            landLordDocs
-          );
+         
+
+          console.log(response ,"rentDocs in response")
+          console.log(rowsData ,"in rowData rentDocs ")
 
           setData((prevData) => {
             return prevData.map((existingMonth) => {
@@ -436,7 +453,7 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
           });
           console.log(JSON.stringify(response?.data?.data), 'result');
 
-          console.log(response);
+  
         }
       })
       .catch((error) => {
@@ -449,7 +466,8 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
     'rentDetailsDatarentDetailsData',
     isPreviousData,
     'previousData',
-    panNumbers
+    panNumbers,
+    rentDocs ,"rentDocs"
   );
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
@@ -480,8 +498,8 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
       // You can perform additional actions here when landLordDocs changes
     }, [landLordDocs]);
 
-  console.log(landLordDocs , rentDocs ,"dcuments")
-
+  console.log(selectedValue ,isShowPannumber , panNumbers , "_>>>>>>>isshowPan")
+  console.log(isShowDeclaration ,"_>>>>>>>isshowdec")
   return (
     <div>
       {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
@@ -508,6 +526,13 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
             <Button className="button">Report</Button>
           </Grid>
         </Grid> */}
+        <Autocomplete
+        id="financialYear"
+        options={financialYears}
+        value={selectedYear}
+        onChange={handleYearChange}
+        renderInput={(params) => <TextField {...params} label="Financial Year" />}
+      />
       <Grid
         item
         container
@@ -610,9 +635,15 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
           style={{ marginBottom: '1rem', height: '60px' }}
         >
           <Grid item>
-            <Button className="button" onClick={attchementHandler}>
+            {/* <Button className="button" onClick={attchementHandler}>
               Attachment
             </Button>
+            <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
           </Grid>
           <Grid item alignItems="center">
             <Button className="button" onClick={handleEditOrsave}>
@@ -642,7 +673,7 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
             <RadioGroup
               aria-label="options"
               name="options"
-              value={selectedValue}
+              value={selectedValue ? 'Yes' : 'No'}
               onChange={handleChange}
               row // align radio buttons horizontally
             >
@@ -690,9 +721,15 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
               </Grid>
               {isShowUpload ? (
                 <Grid item>
-                  <Button className="button" onClick={landloardDeclarationAttachment}>
+                  {/* <Button className="button" onClick={landloardDeclarationAttachment}>
                     Declaration Attachment
                   </Button>
+                  <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={landloardDeclarationAttachment} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
                 </Grid>
               ) : null}
             </>

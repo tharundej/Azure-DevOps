@@ -333,7 +333,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+        <DialogTitle sx={{ textAlign: 'start', paddingBottom: 0, paddingTop: 2 }}>
           Filters
           <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
             <Iconify icon="iconamoon:close-thin" />
@@ -488,17 +488,22 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
+          <Button
+          onClick={()=>{
+            setOptionsValue({})
+          }}
+          >Reset</Button>
         <Button
           onClick={() => {
             handleApply();
           }}
           // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
+          style={{ width: '80px', backgroundColor:'#3B82F6',color:'white'}}
         >
           Apply
         </Button>
-        </div>
+        </Grid>
       </Dialog>
     </>
   );
