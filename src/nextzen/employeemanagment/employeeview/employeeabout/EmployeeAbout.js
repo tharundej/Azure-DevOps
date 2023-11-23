@@ -31,7 +31,9 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+export default function 
+
+EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
   const userlocation={
     "locationID": 30,
     "locationName": "location1"

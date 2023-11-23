@@ -62,6 +62,70 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
+
+  const permission= {
+    "claims": {
+        "claimApprove": true,
+        "compoffApprove": true,
+        "mainHeading": true,
+        "myClaims": true,
+        "myCompoff": true
+    },
+    "configurations": {
+        "appraisalConfigurations": true,
+        "compoffConfigurations": true,
+        "expenseClaimConfigurations": true,
+        "leaveConfigurations": true,
+        "mainHeading": true,
+        "roleConfigurations": true,
+        "shiftConfigurations": true
+    },
+    "employeeManagement": {
+        "employeeTable": true,
+        "mainHeading": true,
+        "salaryStructure": true,
+        "statutory": true
+    },
+    "itDeclaration": {
+        "declarationDetails": true,
+        "houseProperty": true,
+        "licPremium": true,
+        "mainHeading": false,
+        "materDetails": true,
+        "medicalInsurancePremium": true,
+        "rentDetails": true
+    },
+    "leaveManagement": {
+        "approveLeave": true,
+        "leaveCalendar": true,
+        "mainHeading": false
+    },
+    "monthlyAdditionalDeductions": {
+        "loans": true,
+        "mainHeading": false,
+        "myDeductions": true,
+        "salaryAdvance": true
+    },
+    "payroll": {
+        "mainHeading": false,
+        "payRun": true,
+        "paySchedule": true,
+        "payScheduleHistory": true
+    },
+    "shiftManagement": {
+        "assignShift": true,
+        "mainHeading": false,
+        "myShiftDetails": true,
+        "shiftRoaster": true,
+        "shiftSwap": true
+    },
+    "timeSheetManagement": {
+        "approvals": true,
+        "mainHeading": false,
+        "myTimesheet": true,
+        "projects": true
+    }
+}
   const { setUser } = useContext(UserContext);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [OptVerify, setOptVerify] = useState(false);
@@ -130,6 +194,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await axios.post(baseUrl + '/loginUser', data);
       const obj = response?.data;
+      obj.permission=permission
       localStorage.setItem('userDetails', JSON.stringify(obj));
       setUser(obj);
 
