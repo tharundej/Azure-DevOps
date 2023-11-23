@@ -58,7 +58,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
       address2: currentData?.address2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
-      stateCode: currentData?.stateCode || null,
+      stateCode: null,
       country: currentData?.country || '',
       pincode: currentData?.pincode || '',
       vendorPANNo: currentData?.vendorPANNo || '',
@@ -191,12 +191,12 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
             }}
           >
             <RHFTextField name="vendorCompanyName" label="Vendor Company Names" />
-            <RHFTextField name="vendorName" label="vendor Name" />
+            <RHFTextField name="vendorName" label="Cendor Name" />
             <RHFTextField name="vendorPhoneNo" label="Vendor Phone No" />
             <RHFTextField name="vendorEmailID" label="Vendor Email Id" />
             <RHFTextField name="address1" label="Address 1" />
             <RHFTextField name="address2" label="Address 2" />
-            <RHFTextField name="city" label="city" />
+            <RHFTextField name="city" label="City" />
             <RHFAutocomplete
               name="state"
               id="location-autocomplete"
@@ -208,21 +208,21 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
                 <TextField {...params} label="Select Location State" variant="outlined" />
               )}
             />
-            <RHFTextField name="country" label="country" />
-            <RHFTextField name="pincode" label="pincode" />
-            <RHFTextField name="vendorPANNo" label="vendorPANNo" />
-            <RHFTextField name="vendorGSTNo" label="vendorGSTNo" />
-            <RHFTextField name="vendorTANNo" label="vendorTANNo" />
-            <RHFTextField name="vendorBankName" label="vendorBankName" />
-            <RHFTextField name="vendorAccountHolderName" label="vendorAccountHolderName" />
-            <RHFTextField name="vendorBankAccountNo" label="vendorBankAccountNo" />
-            <RHFTextField name="vendorBankIFSCCode" label="vendorBankIFSCCode" />
-            <RHFTextField name="bankBranchName" label="bankBranchName" />
+            <RHFTextField name="country" label="Country" />
+            <RHFTextField name="pincode" label="Pincode" />
+            <RHFTextField name="vendorPANNo" label="Vendor PAN No" />
+            <RHFTextField name="vendorGSTNo" label="Vendor GST No" />
+            <RHFTextField name="vendorTANNo" label="Vendor TAN No" />
+            <RHFTextField name="vendorBankName" label="Vendor Bank Name" />
+            <RHFTextField name="vendorAccountHolderName" label="Vendor Account Holder Name" />
+            <RHFTextField name="vendorBankAccountNo" label="Vendor Bank Account No" />
+            <RHFTextField name="vendorBankIFSCCode" label="Vendor Bank IFSC Code" />
+            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="on boarding Date"
+                  label="On Boarding Date"
                   value={datesUsed?.onboardingDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -238,7 +238,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="off boarding Date"
+                  label="Off Boarding Date"
                   value={datesUsed?.offboardingDate}
                   defaultValue={dayjs(new Date())}
                   onChange={(newValue) => {
@@ -257,7 +257,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
               value={selectedStatus}
               onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Select status Type" variant="outlined" />
+                <TextField {...params} label="Select Status Type" variant="outlined" />
               )}
             />
           </Box>

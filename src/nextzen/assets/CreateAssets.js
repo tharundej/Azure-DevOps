@@ -22,7 +22,7 @@ import { createAssetsAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
 import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
-import { getLocationAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
 
 export default function CreateAssets({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
@@ -74,6 +74,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       operationalDays: currentData?.operationalDays || '',
       quantity: currentData?.quantity || 1,
       model: currentData?.model || '',
+      gstRate: currentData?.gstRate || 0,
     }),
     [currentData]
   );
@@ -124,6 +125,9 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       : dayjs(new Date()),
     updatedDate: defaultValues?.updatedDate ? dayjs(defaultValues?.updatedDate) : dayjs(new Date()),
   });
+  const [taxsOptions, setTaxsOptions] = useState([]);
+  const [selectedTaxs, setSelectedTaxs] = useState();
+  const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       const data = { companyID: 'COMP1' };
@@ -140,7 +144,17 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
         console.log('API request failed:', error.message);
       }
     };
-
+    const fetchTaxs = async () => {
+      try {
+        const response = await getTaxs();
+        console.log('Tax responce:', response);
+        setTaxsOptions(response);
+        setSelectedTaxs(defaultValues.gstRate || (response.length > 0 ? response[0].value : null));
+      } catch (error) {
+        console.log('Tax API Error', error);
+      }
+    };
+    fetchTaxs();
     fetchData();
   }, [defaultValues.locationId]);
 
@@ -192,6 +206,9 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   const HandleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+  const handlePriceChange = () => {
+    console.log(defaultValues.quantity);
+  };
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -235,9 +252,9 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 <TextField {...params} label="Assets type *" variant="outlined" />
               )}
             />
-            <RHFTextField name="quantity" label="Quantity *" />
             <RHFTextField name="model" label="Model *" />
             <RHFTextField name="poNumber" label="PO Number *" />
+            <RHFTextField type="number" name="poValue" label="PO Value *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -254,7 +271,6 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField type="number" name="poValue" label="PO Value *" />
             <RHFTextField name="invoiceNumber" label="Invoice No *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
@@ -304,13 +320,6 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="supplierName" label="Supplier Name *" />
-            <RHFTextField name="supplierEmailId" label="Supplier Email Id *" />
-            <RHFTextField
-              type="number"
-              name="supplierContactNumber"
-              label="Supplier Contact Number *"
-            />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -327,6 +336,13 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <RHFTextField name="supplierName" label="Supplier Name *" />
+            <RHFTextField name="supplierEmailId" label="Supplier Email Id *" />
+            <RHFTextField
+              type="number"
+              name="supplierContactNumber"
+              label="Supplier Contact Number *"
+            />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -343,9 +359,21 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField type="number" name="amount" label="Amount" />
-            <RHFTextField type="number" name="gstAmount" label="GST Amount" />
-            <RHFTextField type="number" name="totalAmount" label="Total Amount *" />
+            <RHFTextField name="quantity" label="Quantity *" />
+            <RHFTextField name="price" label="Price *" />
+            <RHFAutocomplete
+              name="gstRate"
+              id="gstRate"
+              options={taxsOptions || []}
+              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              onChange={(event, newValue) => setSelectedTaxs(newValue ? newValue.value : null)}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Tax" variant="outlined" />
+              )}
+            />
+            <RHFTextField type="readonly" name="amount" label="Amount" />
+            <RHFTextField type="readonly" name="gstAmount" label="GST Amount" />
+            <RHFTextField type="readonly" name="totalAmount" label="Total Amount *" />
 
             <RHFAutocomplete
               name="assetsCondition"

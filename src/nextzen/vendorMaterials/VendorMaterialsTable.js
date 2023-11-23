@@ -37,7 +37,7 @@ const VendorMaterialsTable = () => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
-      console.log(rowdata,'rorrrrrr')
+      console.log(rowdata, 'rorrrrrr');
     } else if (event?.name === 'Delete') {
       const deleteData = { id: rowdata.id || 0, title: rowdata.materialName || '' };
       setDeleteData(deleteData);
@@ -96,17 +96,9 @@ const VendorMaterialsTable = () => {
       materialName: '',
       hsnId: '',
       gstRate: 0,
-      operationalDate: {
-        from: '',
-        to: '',
-      },
-      closeDate: {
-        from: '',
-        to: '',
-      },
-      status: '',
       vendorId: 0,
       vendorName: '',
+      materialPrice: 0,
     },
     sort: {
       key: 1,
@@ -121,9 +113,7 @@ const VendorMaterialsTable = () => {
     { id: 'hsnId', label: 'HSN ID', type: 'text', minWidth: '180px' },
     { id: 'materialType', label: 'Material Type', type: 'text', minWidth: '180px' },
     { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
-    { id: 'operationalDate', label: 'Operational Date', type: 'text', minWidth: '180px' },
-    { id: 'closeDate', label: 'Close Date', type: 'text', minWidth: '180px' },
-    { id: 'status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'materialPrice', label: 'Material Price', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
