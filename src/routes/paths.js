@@ -189,6 +189,7 @@ export const paths = {
       expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
       shiftconfiguration: `/configurations/shiftconfiguration`,
       roleconfiguration: `/configurations/roleconfiguration`,
+      taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
       },
     
 

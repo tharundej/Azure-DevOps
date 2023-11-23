@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Table,
   TableBody,
@@ -29,13 +29,14 @@ import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
 export default function RentDetails() {
-  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
@@ -55,10 +56,11 @@ export default function RentDetails() {
     // Add more months as needed
   ]);
 
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-
+  const empId = localStorage.getItem('employeeID');
+  const cmpId = localStorage.getItem('companyID');
+  const token = localStorage.getItem('accessToken');
+  const { user } = useContext(UserContext);
+  console.log(user, 'userDateails');
   const [isPreviousData, setIsPreviousData] = useState(false);
   const [reload, setReload] = useState(false);
   var [landLardName, setLandLardName] = useState('');
@@ -96,22 +98,26 @@ export default function RentDetails() {
   var [rentFiledsIndex, setRentFieldsIndex] = useState([]);
   var [landLordDocs, setLandLordDocs] = useState([]);
   var [rentDocs, setRentDocs] = useState([]);
-  const [landLordDeletedId , setLandLordDeletedID] = useState([])
-  const [rentDeletedId , setRentDeletedID] = useState([])
+  const [landLordDeletedId, setLandLordDeletedID] = useState([]);
+  const [rentDeletedId, setRentDeletedID] = useState([]);
   const currentYear = new Date().getFullYear();
-   console.log(currentYear ,"current year")
-   const startYear = 2022;
-   const endYear = 2030;
- 
-   const financialYears = [];
-   for (let year = startYear; year <= endYear; year++) {
-     financialYears.push(`${year}-${year + 1}`);
-   }
- 
-   const [selectedYear, setSelectedYear] = useState(null);
-   const handleYearChange = (_, value) => {
+  console.log(currentYear, 'current year');
+  const startYear = 2022;
+  const endYear = 2030;
+
+  //    const financialYears = [];
+  //    for (let year = startYear; year <= endYear; year++) {
+  //      financialYears.push(`${year}-${year + 1}`);
+  //    }
+  //  console.log(financialYears ,
+  //   "financialYears")
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [financialYears, setFinancialYears] = useState([]);
+  const handleYearChange = (_, value) => {
     setSelectedYear(value);
   };
+
+  console.log(selectedYear, 'selectedYear');
   const handleUploadattchment = (data) => {
     attachedDocumment = data;
     setAttachedDocument(attachedDocumment);
@@ -127,12 +133,12 @@ export default function RentDetails() {
   const handleChange = (event) => {
     const selectedStringValue = event.target.value; // "Yes" or "No"
     // setSelectedValue(selectedStringValue);
-  
+
     // Convert back to boolean
-    const selectedBooleanValue = selectedStringValue === 'Yes' 
+    const selectedBooleanValue = selectedStringValue === 'Yes';
     setSelectedValue(selectedBooleanValue);
     console.log(selectedBooleanValue, isShowPannumber, '_>>>>>>>isshowPan1');
-  
+
     if (selectedBooleanValue) {
       setIsShowPanNumber(true);
       setIsPanValueThere(true);
@@ -147,7 +153,7 @@ export default function RentDetails() {
     console.log(event.target.value);
   };
 
-  console.log(" selected" , selectedValue ,isPanValueNumber,"isPanvlueNUmber")
+  console.log(' selected', selectedValue, isPanValueNumber, 'isPanvlueNUmber');
 
   const handleChangeDeclaration = (event) => {
     setSeclarationSelectedValue(event.target.value);
@@ -244,16 +250,16 @@ export default function RentDetails() {
     setOpenAttchementDilog(false);
   };
   console.log(rentDocs, 'landlordDocs');
-const handleLandLordDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setLandLordDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(landLordDeletedId, "deletedelete")
-}
-const handleRentDeletedID = ( data)=>{
-  console.log(data , "delete")
-  setRentDeletedID( (prevIDs) => [...prevIDs, data])
-  console.log(rentDeletedId, "deletedelete")
-}
+  const handleLandLordDeletedID = (data) => {
+    console.log(data, 'delete');
+    setLandLordDeletedID((prevIDs) => [...prevIDs, data]);
+    console.log(landLordDeletedId, 'deletedelete');
+  };
+  const handleRentDeletedID = (data) => {
+    console.log(data, 'delete');
+    setRentDeletedID((prevIDs) => [...prevIDs, data]);
+    console.log(rentDeletedId, 'deletedelete');
+  };
   const updatedData = data?.map((entry) => ({
     month: entry.month,
     city_type: entry.city_type,
@@ -267,13 +273,13 @@ const handleRentDeletedID = ( data)=>{
     const payload = {
       companyId: cmpId,
       employeeId: empId,
-      financialYear: '2023-2024',
+      financialYear: selectedYear?.financialYear,
       nameOfLandlord: landLardName,
       addressOfLandlord: landLardAddress,
       data: updatedData,
       panOfTheLandlord: isShowPannumber,
       panNumber: panNumbers,
-      declarationReceivedFFromLandlord: declarationSelectedValue == "Yes" ? true : false,
+      declarationReceivedFFromLandlord: declarationSelectedValue == 'Yes' ? true : false,
       fileName: attachedDocummentFileName,
       fileContent: attachedDocumment,
       landlordFileName: landlord_file_name,
@@ -286,7 +292,7 @@ const handleRentDeletedID = ( data)=>{
       url: baseUrl + '/addRentDeclarationDetails ',
       headers: {
         Authorization: token,
-          'Content-Type': 'text/plain',
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -298,13 +304,10 @@ const handleRentDeletedID = ( data)=>{
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
-     
-        }else    if (response.data.code === 400) {
+        } else if (response.data.code === 400) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-        
-    
         }
       })
       .catch((error) => {
@@ -323,12 +326,12 @@ const handleRentDeletedID = ( data)=>{
       //  "employee_id": rentDetailsData?.employeeId,
       companyId: cmpId,
       employeeId: empId,
-      financialYear: rentDetailsData?.financialYear,
+      financialYear: selectedYear.financialYear,
       nameOfLandlord: rentDetailsData?.nameOfLandlord,
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
       panOfTheLandlord: isShowPannumber,
-       declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
       // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
@@ -336,8 +339,8 @@ const handleRentDeletedID = ( data)=>{
       rentDocs: rentDocs,
       // rentFilelds: rentFiledsIndex,
       // landlordFilelds: landlordFiledsIndex,
-      landLordIds:landLordDeletedId,
-      rentIds: rentDeletedId
+      landLordIds: landLordDeletedId,
+      rentIds: rentDeletedId,
     };
 
     const config = {
@@ -345,7 +348,7 @@ const handleRentDeletedID = ( data)=>{
       maxBodyLength: Infinity,
       url: baseUrl + '/updateRentDeclarationDetails ',
       headers: {
-        Authorization:token ,
+        Authorization: token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -353,19 +356,16 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        console.log("success" ,response)
+        console.log('success', response);
         if (response.data.code === 200) {
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
-     
-        }else    if (response.data.code === 400) {
+        } else if (response.data.code === 400) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-        
-    
         }
       })
       .catch((error) => {
@@ -382,7 +382,7 @@ const handleRentDeletedID = ( data)=>{
   const getRentDetails = async () => {
     const payload = {
       employeeId: empId,
-      financialYear: "2023-2024",
+      financialYear: selectedYear?.financialYear,
     };
 
     const config = {
@@ -391,7 +391,7 @@ const handleRentDeletedID = ( data)=>{
       // url: baseUrl +'getSingleLicPremium',
       url: baseUrl + '/getRentDeclarationDetails',
       headers: {
-        Authorization:token ,  
+        Authorization: token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -410,7 +410,7 @@ const handleRentDeletedID = ( data)=>{
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
           setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
           setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
-          setSelectedValue(response?.data?.data?.panOfTheLandlord );
+          setSelectedValue(response?.data?.data?.panOfTheLandlord);
           response?.data?.data?.panOfTheLandlord
             ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
             : '';
@@ -419,17 +419,20 @@ const handleRentDeletedID = ( data)=>{
               ? ['', '', '']
               : response?.data?.data?.panNumber
           );
+          // setSelectedYear(rowsData?.financialYear ?rowsData?.financialYear : null)
           rentFiledsIndex = setRentFieldsIndex(rowsData?.rentDocs?.map((doc) => doc.ID));
           landlordFiledsIndex = rowsData?.landLordDocs?.map((doc) => doc.landlordID);
-          console.log(response?.data?.data?.landLordDocs ? rowsData?.landLordDocs : [] ,"response?.data?.data?.landLordDocs ? landLordDocsresponse?.data?.data?.landLordDocs : []")
-setLandLordDocs(rowsData?.landLordDocs ? rowsData?.landLordDocs : [] )
-setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
-          console.log(rowsData?.landLordDocs);
+          console.log(
+            response?.data?.data?.landLordDocs ? rowsData?.landLordDocs : [],
+            'response?.data?.data?.landLordDocs ? landLordDocsresponse?.data?.data?.landLordDocs : []'
+          );
+          setLandLordDocs(rowsData?.landLordDocs ? rowsData?.landLordDocs : []);
+          setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []);
+          console.log(rowsData?.financialYear, 'rowsData?.financialYear');
           setLandlordFieldsIndex(landlordFiledsIndex);
-         
 
-          console.log(response ,"rentDocs in response")
-          console.log(rowsData ,"in rowData rentDocs ")
+          console.log(response, 'rentDocs in response');
+          console.log(rowsData, 'in rowData rentDocs ');
 
           setData((prevData) => {
             return prevData.map((existingMonth) => {
@@ -452,8 +455,37 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
             });
           });
           console.log(JSON.stringify(response?.data?.data), 'result');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
 
-  
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
         }
       })
       .catch((error) => {
@@ -467,7 +499,8 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
     isPreviousData,
     'previousData',
     panNumbers,
-    rentDocs ,"rentDocs"
+    rentDocs,
+    'rentDocs'
   );
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
@@ -487,19 +520,27 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
       getRentDetails();
     };
     fetchData();
-  }, [reload]);
+  }, [reload, selectedYear?.financialYear]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      getFinancialYear();
+    };
+    fetchData();
+  }, []);
   const handleEditOrsave = () => {
     rentDetailsData?.addressOfLandlord !== undefined ? editRentDetails() : saveRentDetails();
   };
-    // useEffect to handle changes in landLordDocs
-    useEffect(() => {
-      console.log('Updated landLordDocs:', landLordDocs);
-      // You can perform additional actions here when landLordDocs changes
-    }, [landLordDocs]);
+  // useEffect to handle changes in landLordDocs
+  useEffect(() => {
+    console.log('Updated landLordDocs:', landLordDocs);
+    // You can perform additional actions here when landLordDocs changes
+  }, [landLordDocs]);
 
-  console.log(selectedValue ,isShowPannumber , panNumbers , "_>>>>>>>isshowPan")
-  console.log(isShowDeclaration ,"_>>>>>>>isshowdec")
+  console.log(selectedValue, isShowPannumber, panNumbers, '_>>>>>>>isshowPan');
+  console.log(isShowDeclaration, '_>>>>>>>isshowdec');
+  console.log(selectedYear, 'selectedYear');
+
   return (
     <div>
       {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
@@ -526,13 +567,16 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
             <Button className="button">Report</Button>
           </Grid>
         </Grid> */}
+      <Grid item xs={12}>
         <Autocomplete
-        id="financialYear"
-        options={financialYears}
-        value={selectedYear}
-        onChange={handleYearChange}
-        renderInput={(params) => <TextField {...params} label="Financial Year" />}
-      />
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+      </Grid>
       <Grid
         item
         container
@@ -640,10 +684,16 @@ setRentDocs(response?.data?.data?.rentDocs ? rowsData?.rentDocs : []  )
             </Button>
             <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
 
-<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
-Upload file
-{/* <VisuallyHiddenInput type="file" /> */}
-</Button>
+            <Button
+              className="button"
+              component="label"
+              variant="contained"
+              onClick={attchementHandler}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload file
+              {/* <VisuallyHiddenInput type="file" /> */}
+            </Button>
           </Grid>
           <Grid item alignItems="center">
             <Button className="button" onClick={handleEditOrsave}>
@@ -726,10 +776,16 @@ Upload file
                   </Button>
                   <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
 
-<Button className="button" component="label" variant="contained" onClick={landloardDeclarationAttachment} startIcon={<CloudUploadIcon />}>
-Upload file
-{/* <VisuallyHiddenInput type="file" /> */}
-</Button>
+                  <Button
+                    className="button"
+                    component="label"
+                    variant="contained"
+                    onClick={landloardDeclarationAttachment}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload file
+                    {/* <VisuallyHiddenInput type="file" /> */}
+                  </Button>
                 </Grid>
               ) : null}
             </>
@@ -760,7 +816,7 @@ Upload file
           closeAttchementDilod={closeAttchementDilod}
           handleUploadattchmentFileName={handleUploadattchmentFileName}
           handleUploadattchment={handleRentattchment}
-          handleDeletedID = {handleRentDeletedID}
+          handleDeletedID={handleRentDeletedID}
           previousData={rentDocs}
         />
       ) : null}
@@ -771,7 +827,7 @@ Upload file
           handleUploadattchmentFileName={handleUploadattchment}
           handleUploadattchment={handleLandLordattchment}
           previousData={landLordDocs}
-          handleDeletedID = {handleLandLordDeletedID}
+          handleDeletedID={handleLandLordDeletedID}
         />
       ) : null}
     </div>

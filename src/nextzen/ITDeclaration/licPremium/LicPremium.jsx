@@ -58,6 +58,7 @@ const headings = [
 
 
 export default function LicPremium() {
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
  
   const empId = localStorage.getItem('employeeID')
@@ -82,12 +83,13 @@ export default function LicPremium() {
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
+  const [selectedYear, setSelectedYear] = useState(null);
   const [formData, setFormData] = useState({
     companyId: cmpId,
     companyName: '',
     employeeId: empId,
     employeeName: '',
-    financialYear: '2022-11-11',
+    financialYear:  selectedYear?.financialYear,
     policyNumber: '',
     dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
     insuredPersonName: '',
@@ -118,15 +120,20 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
    const startYear = 2022;
    const endYear = 2030;
  
-   const financialYears = [];
-   for (let year = startYear; year <= endYear; year++) {
-     financialYears.push(`${year}-${year + 1}`);
-   }
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
  
-   const [selectedYear, setSelectedYear] = useState(null);
- 
+  
+   const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      financialYear: value?.financialYear,
+    }));
+   
   };
 
   // handling the file uploader compoent
@@ -267,7 +274,8 @@ const handleRentDeletedID = ( data)=>{
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
-    const payload = { "employeeID":empId };
+    const payload = { "employeeID":empId,
+    financialYear: selectedYear?.financialYear, };
 
     const config = {
       method: 'post',
@@ -330,7 +338,7 @@ const handleRentDeletedID = ( data)=>{
               companyName: '',
               employeeId: empId,
               employeeName: '',
-              financialYear: '2022-11-11',
+              financialYear:  selectedYear?.financialYear,
               policyNumber: '',
               dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
               insuredPersonName: '',
@@ -416,7 +424,7 @@ const handleRentDeletedID = ( data)=>{
               companyName: '',
               employeeId: empId,
               employeeName: '',
-              financialYear: '2022-11-11',
+              financialYear:   selectedYear?.financialYear,
               policyNumber: '',
               dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
               insuredPersonName: '',
@@ -473,7 +481,7 @@ const handleRentDeletedID = ( data)=>{
     fetchData();
     setIsEdit(false)
     
-  }, [isreloading]);
+  }, []);
 
   const handleFormChange = (event, rowIndex) => {
     const { name, value } = event.target;
@@ -544,6 +552,54 @@ const handleRentDeletedID = ( data)=>{
 
   }
   const userId  =  5
+
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      await getLicPremium();
+    };
+    fetchData();
+    setIsEdit(false)
+    
+  }, [selectedYear?.financialYear]);
+
+  console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
       <FormProvider {...methods}>
@@ -557,13 +613,16 @@ const handleRentDeletedID = ( data)=>{
 
           <Grid item container xs={12} spacing={2}>
             <Grid  item xs={4}>
-            <Autocomplete
-        id="financialYear"
-        options={financialYears}
-        value={selectedYear}
-        onChange={handleYearChange}
-        renderInput={(params) => <TextField {...params} label="Financial Year" />}
-      />
+            
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+   
             </Grid>
             <Grid item xs={4}>
               <TextField
