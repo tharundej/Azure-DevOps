@@ -110,7 +110,7 @@ export default function Header({ onOpenNav }) {
       justifyContent="flex-end"
       spacing={{ xs: 0.5, sm: 1 }}
     >
-      <Typography style={{ color: '#3B82F6' }}>{headerMap.get(splicedPath)
+      <Typography style={{ color: 'black' }} component='span' variant='h5'>{headerMap.get(splicedPath)
       }</Typography>
     </Stack>
 

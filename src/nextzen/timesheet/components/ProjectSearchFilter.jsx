@@ -17,6 +17,8 @@ import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../s
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from 'src/api/BaseURL';
 import { LoadingButton } from '@mui/lab';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -174,14 +176,11 @@ const [reportingManager,setReportingManagerData]= useState([])
 const [projectManager,setProjectManagers] = useState([])
 const [selectedLocationID, setSelectedLocationID] = useState(null); 
 const [employesListData,setEmployesListData]= useState([])
+const [projectsList,setProjectsList] = useState([])
 const [locationList,setLocationList] = useState([])
 const [hasFetchedData, setHasFetchedData] = useState(false);
 const [projectId,setProjectID]= useState()
-useEffect(() => {
-  if(showProject){
-    getLocation()
-  }
-}, [])
+
 
 const [datesUsed, setDatesUsed] = useState({
     startDate: '',
@@ -280,6 +279,46 @@ const getLocation=()=>{
       console.log(error)
      })
 }
+
+const getEmployeesList =()=>{
+  const data ={
+    "projectManager":"INFO22"
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    console.log(response,"responseee")
+    setEmployesListData(response?.data?.data)
+   })
+   .catch((error)=>{
+    console.log(error)
+   })
+}
+
+const getProjectsList =()=>{
+  const data ={
+    "projectManager":"INFO22",
+    "companyID":"COMP1",
+    "locationID":30
+}
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForProjectManager',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    console.log(response,"responseee")
+    setProjectsList(response?.data?.data)
+   })
+   .catch((error)=>{
+    console.log(error)
+   })
+}
 const onSubmit = handleSubmit(async (data) => {
     try {
    
@@ -321,6 +360,7 @@ if (selectedLocationID !== null && !hasFetchedData) {
 }
 
 // const roleID = localStorage?.getItem('roleID')
+const roleID = 5;
 const [selectedIds, setSelectedIds] = useState([]);
 const employeesList =[
   {id:'30',firstName:'Harsha Priya'},
@@ -339,9 +379,33 @@ const handleProject=(event)=>{
     setProjectID(event.target.value)
 }
 
-
+const handleCancel = async()=>{
+  setDropdownProjectManager([])
+  setDropdownStatus([])
+  setDropdownReportingManager([])
+  setDates({
+    startDatefrom:"",
+    startDateto:"",
+    endDatefrom:"",
+    endDateto:"",
+    actualStartfrom:"",
+    actualStartto:"",
+    actualEndfrom:"",
+    actualEndto:""  
+  })
+}
 
 console.log(selectedIds,"selectedIDSSS")
+useEffect(() => {
+  if(showProject){
+    getLocation()
+  }
+  if(showAssignEmployee){
+    getProjectsList()
+    getEmployeesList()
+  }
+}, [showProject, showAssignEmployee])
+
   return (
         <> 
 {
@@ -350,18 +414,22 @@ console.log(selectedIds,"selectedIDSSS")
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={showFilter}
+        PaperProps={{
+          sx:{maxWidth:500,overflow:'auto'}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setShowFilter(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        {/* <Button onClick={()=>setShowFilter(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setShowFilter(false)} />
         </DialogTitle>
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
           
-          <Grid>
-      <Grid>
+          <Grid container>
+      <Grid container flexDirection="row">
             <Typography>Project Start Date</Typography>
             <Grid container flexDirection="row">
-              <Grid item>
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -379,8 +447,8 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Grid item md={6} xs={12}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
@@ -401,7 +469,8 @@ console.log(selectedIds,"selectedIDSSS")
        </Grid>
        <Grid container flexDirection="row" sx={{marginTop:2}}>
        <Typography>Project End Date</Typography>
-              <Grid item>
+       <Grid container flexDirection="row">
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -419,7 +488,7 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid  md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -437,10 +506,12 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
+        </Grid>
        </Grid>
        <Grid container flexDirection="row" sx={{marginTop:2}}>
        <Typography>Actual Start Date</Typography>
-              <Grid item>
+             <Grid container flexDirection="row">
+             <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -458,7 +529,7 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -476,10 +547,12 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
+             </Grid>
        </Grid>
        <Grid container flexDirection="row" sx={{marginTop:2}}>
        <Typography>Actual End Date</Typography>
-              <Grid item>
+       <Grid container flexDirection="row">
+              <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -497,7 +570,7 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item md={6} xs={12}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -515,9 +588,10 @@ console.log(selectedIds,"selectedIDSSS")
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
+          </Grid>
        </Grid>
-       <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+       <Grid container flexDirection="row" spacing={1}>
+                  <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Reporting Manager</InputLabel>
                 <Select
@@ -536,9 +610,8 @@ console.log(selectedIds,"selectedIDSSS")
                 </Select>
               </FormControl>
                    </Grid>
-      </Grid>
-      <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+     
+                  <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Project Manager</InputLabel>
                 <Select
@@ -557,9 +630,9 @@ console.log(selectedIds,"selectedIDSSS")
                 </Select>
               </FormControl>
                    </Grid>
-                </Grid>
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+      </Grid>
+                <Grid container>
+                  <Grid marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">status</InputLabel>
                 <Select
@@ -572,7 +645,7 @@ console.log(selectedIds,"selectedIDSSS")
                   input={<OutlinedInput label="status" />}
                   MenuProps={MenuProps}
                 >
-                 <MenuItem value="notStarted">Not Started</MenuItem>
+                 <MenuItem value="notStarted">Status Started</MenuItem>
                  <MenuItem value="inProgress">InProgress</MenuItem>
                  <MenuItem value="completed">Completed</MenuItem>
                 </Select>
@@ -582,8 +655,8 @@ console.log(selectedIds,"selectedIDSSS")
                </Grid>
            
          </DialogContent>
-         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Reset</Button></div>
+         <div style={{marginBottom:16,marginTop:5}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}} variant="outlined">Reset</Button></div>
     </Dialog>
     )
 }
@@ -598,7 +671,7 @@ console.log(selectedIds,"selectedIDSSS")
     />
   </Grid>
   <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
-    {/* {(roleID==2)?<Button
+    {(roleID==2)?<Button
       variant="contained"
       color="primary"
       className="button"
@@ -606,7 +679,7 @@ console.log(selectedIds,"selectedIDSSS")
       sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
     >
       Add project
-    </Button>: */}
+    </Button>:(roleID==5)?
     <Button   
     variant="contained"
     color="primary"
@@ -614,10 +687,9 @@ console.log(selectedIds,"selectedIDSSS")
     onClick={()=>setShowAssignEmployee(true)}
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>
     Assign Employees
-    </Button>
-    {/* } */}
+    </Button>:null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
-      <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
+      <Iconify icon="mi:filter" /> Filters
     </Button>
   </Grid>
 </Grid>
@@ -629,20 +701,15 @@ console.log(selectedIds,"selectedIDSSS")
      aria-labelledby="customized-dialog-title"
      open={showProject}
      PaperProps={{
-        sx: { maxWidth: 770 , overflow:'hidden'},
+        sx: { maxWidth: 770 , overflow:'auto'},
       }}
       >
-          <Grid sx={{margin:3}}>
-  
+      
           <FormProvider methods={methods} onSubmit={onSubmit}>
-          <Grid container spacing={3}>
+          <ModalHeader heading="Add Project"/>
+          <Grid container spacing={2} sx={{marginTop:1}}>
             <Grid xs={12} md={12}>
-              <Grid sx={{padding:'8px'}}>
-                <Typography variant="subtitle2" sx={{textAlign:'center'}}>
-                  ADD PROJECT
-                </Typography>
-              </Grid>
-              <Card sx={{ p: 1 }}>
+            <Card sx={{ p: 3 }}>
               <Grid container spacing={2}>
                <Grid item md={6} xs={12}>
                   <RHFTextField name="projectName" label="Project Name" fullWidth/>
@@ -765,19 +832,16 @@ console.log(selectedIds,"selectedIDSSS")
   </Grid>
   
                 <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                
+                  <Button variant="outlined" onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>
                   <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
                   save Project
                   </LoadingButton>
-                  <Button sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
                 </Stack>
-               
-              </Card>
+               </Card>
             </Grid>
           </Grid>
         </FormProvider>
-          </Grid>
-        {/* </DialogContent> */}
-      {/* </Grid> */}
      </Dialog>
     )
 }
@@ -790,10 +854,10 @@ console.log(selectedIds,"selectedIDSSS")
     aria-labelledby="customized-dialog-title"
      open={showAssignEmployee}
      PaperProps={{
-        sx: { width: 770, overflow:'hidden'},
+        sx: { width: 770, overflow:'auto'},
       }}
       >
-            <DialogTitle sx={{paddingBottom:0}}>Assign Employees to Project</DialogTitle>
+          <ModalHeader heading="Assign Employees"/>
         <Grid sx={{p:2,overflow: 'hidden'}}>
           {/* <Typography variant='subtitle2'>{projectId?'Project':'Select Project'}</Typography> */}
           <FormControl fullWidth sx={{marginBottom:2}}>
@@ -805,46 +869,45 @@ console.log(selectedIds,"selectedIDSSS")
     label='Project'
     onChange={handleProject}
   >
-      <MenuItem value="1"> Project1</MenuItem>
-              <MenuItem value="2">Project2</MenuItem>
-              <MenuItem value="3">Project3</MenuItem>
-              <MenuItem value="4">Project4</MenuItem>
-              <MenuItem value="5">Project5</MenuItem>
-              <MenuItem value="6">Project6</MenuItem>
+     {projectsList.map((option) => (
+            <MenuItem value={option.projectID}>
+              {option.projectName}
+            </MenuItem>
+          ))}
   </Select>
  
-<Autocomplete
- sx={{ marginTop:2 }}
-fullWidth
-      multiple
-      limitTags={2}
-      id="multiple-limit-tags"
-      options={employeesList} 
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-        <Chip
-          label={option.firstName}
-          {...getTagProps({ index })}
-          style={{ backgroundColor: 'white', color:'black' }}
-        />
-        ))
-            }
-      getOptionLabel={(option) => option.firstName}
-      getOptionSelected={(option, value) => option.id === value.id}
-      onChange={(event, newValue) => {
-        setSelectedIds(newValue.map((option) => option.id));
-      }}
-      value={employeesList.filter((option) => selectedIds.includes(option.id))}
-      renderInput={(params) => (
-<TextField {...params} label="Employees" placeholder="Employees" sx={{maxHeight:500}}/>
-      )}
-     
-    />
+  <Autocomplete
+  sx={{ marginTop: 2 }}
+  fullWidth
+  multiple
+  limitTags={2}
+  id="multiple-limit-tags"
+  options={employesListData}
+  renderTags={(value, getTagProps) =>
+    value.map((option, index) => (
+      <Chip
+        label={option.employeeName}
+        {...getTagProps({ index })}
+        style={{ backgroundColor: 'white', color: 'black' }}
+      />
+    ))
+  }
+  getOptionLabel={(option) => option.employeeName}
+  getOptionSelected={(option, value) => option.employeeID === value.employeeID}
+  onChange={(event, newValue) => {
+    setSelectedIds(newValue.map((option) => option.employeeID));
+  }}
+  value={employesListData?.filter((option) => selectedIds?.includes(option.employeeID))}
+  renderInput={(params) => (
+    <TextField {...params} label="Employees" placeholder="Employees" sx={{ maxHeight: 500 }} />
+  )}
+/>
+
 
 </FormControl>
 
-<Button sx={{float:'right'}}>Assign</Button>
-<Button sx={{float:'right',right:10}}>Cancel</Button>
+<Button sx={{float:'right'}} variant="contained" color="primary">Assign</Button>
+<Button sx={{float:'right',right:10}} variant="outlined" onClick={handleClose}>Cancel</Button>
       
         </Grid>
     </Dialog>

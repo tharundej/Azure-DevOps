@@ -25,8 +25,9 @@ import { LoadingButton } from '@mui/lab';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from 'rsuite';
+import Button from '@mui/material/Button';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function Holidays({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -297,7 +298,7 @@ export default function Holidays({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Holidays</DialogTitle>
+        <ModalHeader heading="Edit Holiday" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -320,6 +321,7 @@ export default function Holidays({ currentUser }) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Holiday Date"
+                    minDate={dayjs()}
                     // value={editData?.holidayDate}
                     onChange={handleDateChanges}
                   />
@@ -367,17 +369,26 @@ export default function Holidays({ currentUser }) {
           </DialogContent>
 
           <DialogActions>
+           
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>
