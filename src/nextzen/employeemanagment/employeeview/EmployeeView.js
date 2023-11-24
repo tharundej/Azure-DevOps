@@ -14,6 +14,7 @@ import Statoury from './statoury/Statoury';
 import PreviousWork from './previouswork/PreviousWork';
 
 import Documents from "../../employeemanagment/employeeview/documents/Document"
+import EmployeePermissions from './employeepermissions/EmployeePermissions';
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
@@ -42,6 +43,11 @@ const TABS = [
       value: 'Documents',
       label: 'Documents',
       icon: <Iconify icon="et:documents" width={24} />,
+    },
+    {
+      value: 'EmployeePermission',
+      label: 'Employee Permission',
+      icon: <Iconify icon="fluent-mdl2:permissions-solid" width={24} />,
     },
   ];
  
@@ -146,6 +152,8 @@ const EmployeeView = () => {
       {currentTab === 'Education' && <EmployeeEducation handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Documents' && <Documents handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
+      {currentTab==='EmployeePermission' && <EmployeePermissions open={id}  employeeId={id}  />}
+
     
       {/* // {currentTab === 'friends' && (
       //   <ProfileFriends
