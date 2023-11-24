@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
 import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
@@ -63,7 +64,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
         const response = await getVendorAPI(data);
         setVendorOptions(response);
         console.log('currentData.vendorID', currentData.vendorId);
-        console.log('currentData.vend', defaultValues.vendorID );
+        console.log('currentData.vend', defaultValues.vendorID);
         setSelectedVendor(
           defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
         );
@@ -130,9 +131,11 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     setOpenSnackbar(false);
   };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.id ? 'Edit' : 'Add New'} Vendor Material</DialogTitle>
+        <ModalHeader
+          heading={currentData?.id ? 'Edit Vendor Material' : 'Add New Vendor Material'}
+        />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}

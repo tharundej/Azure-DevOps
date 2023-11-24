@@ -14,6 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createCustomerAPI, updateCustomerAPI } from 'src/api/Accounts/Customers';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateCustomers({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
@@ -117,7 +118,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
   return (
     <div className="modal-container">
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.customerName ? 'Edit' : 'Add New'} Customers</DialogTitle>
+        <ModalHeader heading={currentData?.customerName ? 'Edit Customers' : 'Add New Customers'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
