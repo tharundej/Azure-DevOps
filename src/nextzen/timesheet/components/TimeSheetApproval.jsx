@@ -285,8 +285,43 @@ console.log(timesheetData,"timesheetData1222")
         timesheetId: String(newId),
       }));
     };
+    const payload ={
+      "project_id":4
+    }
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.123:3001/erp/listactivityname`,
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+      },
+      data: payload,
+    };
+    try {
+      axios.request(config).then((response) => {
+        if (response?.data?.code === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          setCurrentActivitytData(response?.data?.data)
+          console.log('curr', currentActivitytData);
+        }
+        if (response?.data?.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
 
-   
+          console.log('sucess', response);
+        }
+        console.log(response?.data);
+      });
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Editing. Please try again.');
+      setSnackbarOpen(true);
+      console.log(' ', error);
+    }
     
     console.log(timesheetData,"editDataeditData222")
     try {

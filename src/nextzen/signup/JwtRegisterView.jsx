@@ -336,6 +336,7 @@ export default function JwtRegisterView() {
                       // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                       value={null}
                       //  defaultValue={dayjs(new Date())}
+                      minDate={dayjs().subtract(300, 'year')}
                       maxDate={dayjs()}
                       onChange={(newValue) => {
                         console.log(newValue);
