@@ -279,7 +279,9 @@ const handleClick=()=>{
     company_id: Yup.string(),
     employee_id: Yup.string(),
     currency: Yup.string(),
-    expense_date:Yup.string(),
+   
+    expense_start_date:Yup.string(),
+    expense_end_date:Yup.string(),
     file_format: Yup.string(),
     file: Yup.mixed(),
     expense_config_id:Yup.number(),
@@ -309,7 +311,7 @@ const handleDateChange = (newValue) => {
       company_id:currentUser?.company_id || companyID,
       employee_id:currentUser?.employee_id || employeeID,
       expense_config_id:currentUser?.expense_config_id || 1,
-      expense_date: currentUser?.expense_date || "",
+      expense_start_date: currentUser?.expense_start_date || "",
 
       file_format:currentUser?.file_format|| "pdf",
       file:currentUser?.file,
@@ -343,7 +345,7 @@ const values = watch();
   const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
 //  data?.expense_date= selectedDate;
-data.expense_date = selectedDate;
+data.expense_start_date = selectedDate;
 
   console.log(data,"defaultValues111")
   // formData.append("file", null );
@@ -589,11 +591,25 @@ console.log(editData,"editData")
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Expense Date"
+                    label="Expense Start Date"
                     
-                    name="expense_date"
+                    name="expense_start_date"
                     value={selectedDate}
                     onChange={handleDateChange}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expense End Date"
+                    
+                    name="expense_end_date"
+                    // value={selectedDate}
+                    // onChange={handleDateChange}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
