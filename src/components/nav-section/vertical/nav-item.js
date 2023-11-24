@@ -31,7 +31,9 @@ export default function NavItem({ item, open, depth, active, config, externalLin
         {icon && <StyledIcon size={config.iconSize}>{icon}</StyledIcon>}
 
         {subItem && (
+
           <StyledIcon size={config.iconSize}>
+            
             <StyledDotIcon active={active} />
           </StyledIcon>
         )}
