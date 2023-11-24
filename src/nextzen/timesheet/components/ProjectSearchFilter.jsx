@@ -244,7 +244,7 @@ const reportingManagersData={
 }
 const getReportingManagers = async (requestData) => {
   try {
-    const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/reportingManagers', requestData);
+    const response = await axios.post(baseUrl + '/reportingManagers', requestData);
     return response.data.list;
   } catch (error) {
     throw error;
@@ -289,7 +289,6 @@ const getEmployeesList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager',
     url:baseUrl + '/getEmployeesForProjectManager',
     data:data
    }
@@ -311,7 +310,6 @@ const getProjectsList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForProjectManager',
   url:baseUrl + '/getProjectsForProjectManager',
     data:data
    }
@@ -334,7 +332,7 @@ const onSubmit = handleSubmit(async (data) => {
       data.reportingManager= data?.reportingManager?.employeeId;
       data.locationId = selectedLocationID,
       data.companyId = "COMP1";
-      const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/addProject', data).then(
+      const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
           handleClose()
@@ -414,11 +412,12 @@ const AssignEmployees =()=>{
    }
    axios.request(config).then((response)=>{
     enqueueSnackbar(response?.data?.message,{variant:'success'})
+    handleClose()
    })
    .catch((error)=>{
     console.log(error)
     enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
-  
+    handleClose()
    })
 }
 
@@ -679,7 +678,7 @@ const AssignEmployees =()=>{
     )
 }
 <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
-  <Grid item xs={12} md={8}>
+  <Grid item xs={12} md={6}>
     <TextField
       placeholder="Search...."
       fullWidth
@@ -688,16 +687,18 @@ const AssignEmployees =()=>{
       }}
     />
   </Grid>
-  <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
-    {(roleID==2)?<Button
+  <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+   
+    <Button
       variant="contained"
       color="primary"
       className="button"
       onClick={()=>setShowProject(true)}
-      sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
+      sx={{ marginRight:2,marginTop:1 }}
     >
       Add project
-    </Button>:(roleID==5)?
+    </Button>
+ 
     <Button   
     variant="contained"
     color="primary"
@@ -705,7 +706,7 @@ const AssignEmployees =()=>{
     onClick={()=>setShowAssignEmployee(true)}
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
-    </Button>:null}
+    </Button>
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>

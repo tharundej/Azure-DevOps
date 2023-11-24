@@ -3,8 +3,11 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { useState } from 'react';
 import { Card,Grid,Typography ,CardHeader,Box,Avatar,Stack,Button,IconButton} from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 const Project = () => {
 
+  const {user} = useContext(UserContext)
   const TABLE_HEAD = [
 
     { id: "projectID", label: "Project Id", minWidth: '5pc', type: "text" },
@@ -24,9 +27,9 @@ const Project = () => {
       "page": 0,
       "count": 5,
       "search": "",
-      "companyId":"COMP1",
-      "roleId": 1,
-      "employeeId": "",
+      "companyId":(user?.companyID)?user?.companyID:'',
+      "roleId": (user?.roleID)?user?.roleID:'',
+      "employeeId": (user?.roleID==1)?'':user?.employeeID,
       "externalFilters": {
           "startDate": {
               "fromDate": "",
@@ -98,10 +101,13 @@ const visibleEmployees = showAll ? rowData?.employee : rowData?.employee.slice(0
         </Card>
       </Grid> */}
         <Grid>
-          {/* <Iconify icon="solar:pen-bold"/> */}
-         <CardHeader title="Assigned Employees" />
+         <div style={{ display: 'flex' }}>
+  <Iconify icon="ic:baseline-arrow-back"  onClick={()=>setViewProject(false)} style={{ marginRight: '8px' ,marginTop:27,cursor:'pointer'}} />
+  <CardHeader title="Assigned Employees" />
+</div>
       <Grid container spacing={3} sx={{ p: 3 }}>
-        {visibleEmployees.map((employee, index) => (
+      {visibleEmployees && visibleEmployees.length > 0 ? (
+    visibleEmployees.map((employee, index) => (
           <Grid item xs={6} key={employee.employeeId}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar alt={employee.employeeName}>{employee.employeeName.charAt(0)}</Avatar>
@@ -123,7 +129,13 @@ const visibleEmployees = showAll ? rowData?.employee : rowData?.employee.slice(0
               </Box>
             </Stack>
           </Grid>
-        ))}
+    ))):
+      <Grid item xs={12}>
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          No employees are assigned.
+        </Typography>
+      </Grid>
+    }
 
         {!showAll && rowData?.employee.length > visibleItemsCount && (
           <Grid item xs={12} sx={{ textAlign: 'right' }}>
