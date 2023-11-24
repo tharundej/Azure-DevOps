@@ -193,10 +193,10 @@ export function AuthProvider({ children }) {
     // console.log(data, 'data ......');
     try {
       const response = await axios.post(baseUrl + '/loginUser', data);
-      const obj = response?.data;
-      obj.permission=permission
-      localStorage.setItem('userDetails', JSON.stringify(obj));
-      setUser(obj);
+      // const obj = response?.data;
+      // obj.permission=permission
+      localStorage.setItem('userDetails', JSON.stringify(response?.data));
+      setUser(response?.data);
 
       //  const response = await axios.post(endpoints.auth.login, data);
       // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)

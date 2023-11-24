@@ -156,6 +156,7 @@ export function useNavData() {
       title:t('configurations'),
       path:paths.dashboard.configurations.root,
       icon:ICONS.g_configurations,
+      key:'configurations',
       children: [
         { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
         { title: t('Compoff Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
@@ -212,7 +213,7 @@ export function useNavData() {
         var arr = [];
 
         items.forEach((item) => {
-          const permission = user.permission[item?.key];
+          const permission = user?.rolePermissions[item?.key];
           console.log( typeof permission?.mainHeading,  permission?.mainHeading)
         if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
           console.log(`User Permission for ${item?.key}:`, permission);
