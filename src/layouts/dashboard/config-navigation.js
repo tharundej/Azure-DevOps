@@ -139,7 +139,8 @@ export function useNavData() {
       title: t('IT Declaration'),
       path: paths.dashboard.itdeclaration.root,
       icon: ICONS.g_itDeclarations,
-      key:'itDeclaration'
+      key:'itDeclaration',
+      name:'IT Declaration'
     },
     {
       title: t('Monthly Additional Deductions'),

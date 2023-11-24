@@ -4,6 +4,7 @@ import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+import Tooltip from '@mui/material/Tooltip';
 // components
 import Label from 'src/components/label';
 
@@ -11,6 +12,8 @@ import Label from 'src/components/label';
 
 export default function ResultItem({ title, path, groupLabel, onClickItem }) {
   return (
+    <Tooltip key={title} title={title} arrow>
+    
     <ListItemButton
       onClick={onClickItem}
       sx={{
@@ -58,6 +61,7 @@ export default function ResultItem({ title, path, groupLabel, onClickItem }) {
 
       {groupLabel && <Label color="info">{groupLabel}</Label>}
     </ListItemButton>
+    </Tooltip>
   );
 }
 

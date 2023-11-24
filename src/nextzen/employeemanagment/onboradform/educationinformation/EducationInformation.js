@@ -3,6 +3,7 @@ import React ,{useEffect, useState,useImperativeHandle,forwardRef} from 'react'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+import dayjs, { Dayjs } from 'dayjs';
 import {
     TextField,
     Button,
@@ -410,21 +411,76 @@ const   EducationInformation=forwardRef((props,ref)=> {
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+               
               </Grid>
+
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+            <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                className='MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root'
+                md={12} xs={12} lg={6}
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
+
+              <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                fullWidth
+                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="End Date"
+                />
+                
+              </Grid>
+              
+              
+            </Grid>
                   
               {item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
