@@ -22,6 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { getStateAPI } from 'src/api/Accounts/Common';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateVendor({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
@@ -170,9 +171,9 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
     setOpenSnackbar(false);
   };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.vendorID ? 'Edit' : 'Add New'} Vendor</DialogTitle>
+        <ModalHeader heading={currentData?.vendorID ? 'Edit Vendor' : 'Add New Vendor'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}

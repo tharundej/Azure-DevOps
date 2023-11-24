@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -23,26 +22,20 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateAssets({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
-    // locationId: Yup.string().required('location is Required'),
     assetsName: Yup.string().required('Asset Name is Required'),
-    // assetsType: Yup.string().required('Asset Type is Required'),
     poNumber: Yup.string().required('PO Number is Required'),
-    // poDate: Yup.date().required('PO Date is Required'),
     poValue: Yup.number().positive().required('PO Value is Required'),
     invoiceNumber: Yup.string().required('Invoice Number is Required'),
-    // invoiceDate: Yup.date().required('Invoice Date is Required'),
-    // assetsStartDate: Yup.date().required('Assets Date is Required'),
-    // warrantyDate: Yup.date().required('Warranty Date is Required'),
     supplierName: Yup.string().required('Supplier Name is Required'),
     supplierEmailId: Yup.string().required('Supplier Email Id is Required'),
     supplierContactNumber: Yup.number().required('Supplier Contact Number is Required'),
-    // expiryDate: Yup.date().required('Expiry Date is Required'),
-    // lapseOfWarrantyDate: Yup.date().required('Lapse Of Warranty Date is Required'),
     totalAmount: Yup.number().positive().required('Total Amount is Required'),
     quantity: Yup.number().positive(),
+    price: Yup.number().positive(),
     model: Yup.string(),
   });
 
@@ -75,6 +68,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       quantity: currentData?.quantity || 1,
       model: currentData?.model || '',
       gstRate: currentData?.gstRate || 0,
+      price: currentData?.price || 1,
     }),
     [currentData]
   );
@@ -85,6 +79,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   });
 
   const {
+    register,
     reset,
     watch,
     control,
@@ -93,7 +88,35 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
     formState: { isSubmitting },
     errors,
   } = methods;
-  const values = watch();
+
+  const HandleChangeTax = (value) => {
+    console.log('parsed', value);
+    setSelectedTaxs(value);
+    setValue('gstRate', value);
+    updateCalculatedValues();
+  };
+  const HandleInputChnage = (e) => {
+    setValue(e?.target?.name, e?.target?.value);
+    updateCalculatedValues();
+  };
+  const updateCalculatedValues = () => {
+    const parsedQuantity = parseFloat(watch('quantity'));
+    const parsedPrice = parseFloat(watch('price'));
+    const parsedGstRate = parseFloat(watch('gstRate'));
+    const calculatedAmount =
+      isNaN(parsedQuantity) || isNaN(parsedPrice) ? 0 : parsedQuantity * parsedPrice;
+    const calculatedGstAmount =
+      isNaN(calculatedAmount) || isNaN(parsedGstRate)
+        ? 0
+        : (calculatedAmount * parsedGstRate) / 100;
+    const calculatedTotalAmount =
+      isNaN(calculatedAmount) || isNaN(calculatedGstAmount)
+        ? 0
+        : calculatedAmount + calculatedGstAmount;
+    setValue('amount', calculatedAmount);
+    setValue('gstAmount', calculatedGstAmount);
+    setValue('totalAmount', calculatedTotalAmount);
+  };
 
   const assetsConditionOptions = ['In Use', 'Scrap & Sold', 'Spare', 'Scrap', 'Under Maintenance'];
   const asstesTypeOptions = ['Electronic1', 'Electronic2'];
@@ -150,6 +173,8 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
         console.log('Tax responce:', response);
         setTaxsOptions(response);
         setSelectedTaxs(defaultValues.gstRate || (response.length > 0 ? response[0].value : null));
+        setValue('gstRate', defaultValues.gstRate || (response.length > 0 ? response[0].value : 0));
+        updateCalculatedValues();
       } catch (error) {
         console.log('Tax API Error', error);
       }
@@ -206,13 +231,12 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   const HandleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-  const handlePriceChange = () => {
-    console.log(defaultValues.quantity);
-  };
+
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.assetId ? 'Edit' : 'Add New'} Assets</DialogTitle>
+        {/* <DialogTitle>{currentData?.assetId ? 'Edit' : 'Add New'} Assets</DialogTitle> */}
+        <ModalHeader heading={currentData?.assetId ? 'Edit Assets' : 'Add New Assets'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -252,7 +276,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 <TextField {...params} label="Assets type *" variant="outlined" />
               )}
             />
-            <RHFTextField name="model" label="Model *" />
+            <RHFTextField name="model" label="Model Name *" />
             <RHFTextField name="poNumber" label="PO Number *" />
             <RHFTextField type="number" name="poValue" label="PO Value *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -359,22 +383,6 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="quantity" label="Quantity *" />
-            <RHFTextField name="price" label="Price *" />
-            <RHFAutocomplete
-              name="gstRate"
-              id="gstRate"
-              options={taxsOptions || []}
-              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
-              onChange={(event, newValue) => setSelectedTaxs(newValue ? newValue.value : null)}
-              renderInput={(params) => (
-                <TextField {...params} label="Select Tax" variant="outlined" />
-              )}
-            />
-            <RHFTextField type="readonly" name="amount" label="Amount" />
-            <RHFTextField type="readonly" name="gstAmount" label="GST Amount" />
-            <RHFTextField type="readonly" name="totalAmount" label="Total Amount *" />
-
             <RHFAutocomplete
               name="assetsCondition"
               id="assetsCondition-autocomplete"
@@ -384,6 +392,44 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
               renderInput={(params) => (
                 <TextField {...params} label="Select Assets Condition" variant="outlined" />
               )}
+            />
+            <RHFTextField
+              name="quantity"
+              type="number"
+              onChange={HandleInputChnage}
+              label="Quantity *"
+            />
+            <RHFTextField name="price" type="number" onChange={HandleInputChnage} label="Price *" />
+            <RHFAutocomplete
+              name="gstRate"
+              id="gstRate"
+              options={taxsOptions || []}
+              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              onChange={(event, newValue) => HandleChangeTax(newValue ? newValue.value : 0)}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Tax" variant="outlined" />
+              )}
+            />
+            <RHFTextField
+              name="amount"
+              label="Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="gstAmount"
+              label="GST Amount"
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="totalAmount"
+              label="Total Amount *"
             />
           </Box>
         </DialogContent>

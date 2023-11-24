@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createFactoryAPI, updateFactoryAPI } from 'src/api/Accounts/Factory';
 import { getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
@@ -125,9 +126,9 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
     setOpenSnackbar(false);
   };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.locationName ? 'Edit' : 'Add New'} Factory</DialogTitle>
+        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
