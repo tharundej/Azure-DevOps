@@ -325,15 +325,34 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="emailID"
-                    label="Email ID"
+                    label="Personal Email ID"
                     variant="outlined"
-                    id="middleName"
-                    value={currentUser?.emailID}
+                    id="personalEmail"
+                    value={currentUser?.personalEmail}
                     onChange={(e) => {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        emailID:e?.target.value
+                        personalEmail:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="emailID"
+                    label="Company Email ID"
+                    variant="outlined"
+                    id="comapnyEmail"
+                    value={currentUser?.companyEmail}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        companyEmail:e?.target.value
                       }))
                     }}
                   />

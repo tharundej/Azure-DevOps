@@ -258,7 +258,15 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
           Personal emailID
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.emailID}
+          {currentEmployee?.personalEmail}
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+          Comapany emailID
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {currentEmployee?.companyEmail}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">

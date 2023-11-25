@@ -2,6 +2,8 @@ import React ,{useEffect, useState,useImperativeHandle,forwardRef} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import dayjs, { Dayjs } from 'dayjs';
 import {
@@ -35,6 +37,18 @@ import * as Yup from 'yup';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const   EducationInformation=forwardRef((props,ref)=> {
   const [employeeData,setEmployeeData]=useState([ {
@@ -418,8 +432,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
             <Grid md={6} xs={12} lg={6} item>
                 <DatePicker
                 sx={{width:'100%'}}
-                className='MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root'
-                md={12} xs={12} lg={6}
+                
+               
                 fullWidth
                   value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
                   onChange={(date) => {
@@ -513,14 +527,17 @@ const   EducationInformation=forwardRef((props,ref)=> {
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                  
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
