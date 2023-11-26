@@ -316,6 +316,19 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
             <DialogContent>
 
+            {defaultValues[0]?.documents?.length && 
+          <Grid container alignItems="center" justifyContent="end" marginTop="5px">
+        <Button
+          variant="contained"
+          sx={{backgroundColor:"#3B82F6"}}
+          onClick={() => {
+            handleAdd();
+          }}
+        >
+          Add Education
+        </Button>
+        </Grid>}
+
             <Stack sx={{paddingTop:'20px'}}>
             
       <form style={{ padding: '4px' }}>
@@ -585,18 +598,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
             </Grid>
           ))}
         </>
-            {defaultValues[0]?.documents?.length && 
-          <Grid container alignItems="center" justifyContent="end">
-        <Button
-          variant="contained"
-          sx={{backgroundColor:"#3B82F6"}}
-          onClick={() => {
-            handleAdd();
-          }}
-        >
-          Add Education
-        </Button>
-        </Grid>}
+          
         {/* <Button
           variant="contained"
           color="primary"

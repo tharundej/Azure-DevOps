@@ -33,6 +33,7 @@ const employmentTypeOptions=[
 
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
@@ -246,6 +247,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           sx: { maxWidth: 720 },
         }}
       >
+        <ModalHeader heading="Edit General Information" />
             <FormProvider methods={methods} onSubmit={onSubmit}>
             <DialogContent>
 
