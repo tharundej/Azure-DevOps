@@ -50,31 +50,20 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
-const TimeSheetSearchFilter = ({currentUser}) => {
+const TimeSheetSearchFilter = ({currentUser,filterSearch}) => {
 
 
    // dialog
     // const values = watch();
     const [projectDetails ,setProjectDetails] = useState([])
     const [activityData ,SetActivityData] = useState([])
+    const [timeSheetWeek , setTimeSheetWeek]=useState()
     const [currentProjectData ,setCurrentProjectData] = useState({})
 const [currentActivitytData ,setCurrentActivitytData] = useState({})
     const NewUserSchema = Yup.object().shape({
       employee_id: Yup.string(),
       monday: Yup.string(),
-      tuesday: Yup.string(),
-      wednseday: Yup.string(),
-      thursday: Yup.string(),
-      friday: Yup.string(),
-      saturday: Yup.string(),
-      sunday: Yup.string(),
-      comments: Yup.string(),
-      // start_date: Yup.string(),
-      // end_date: Yup.string(),
-      // due_date: Yup.string().required('First Name is Required'),
-      // commentStatus: Yup.string(),
-     
-     
+  
     });
   
     
@@ -83,15 +72,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
    
         employee_id: currentUser?.employee_id || '',
         monday: currentUser?.monday || '',
-        tuesday: currentUser?.tuesday || '',
-        wednseday: currentUser?.wednseday || '',
-        thursday: currentUser?.thursday || '',
-        friday: currentUser?.friday || '',
-        saturday: currentUser?.saturday || '',
-        sunday: currentUser?.sunday || '',
-        comments: currentUser?.comments || '',
-  
-   
+
     }),
     [currentUser]
   );
@@ -117,6 +98,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     console.log("useeffectttttt");
      getProjectName();
      getActivityName();
+     getTimeSheetWeek();
   //   const fetchData = async () => {
   //     try {
   //        await getProjectName();
@@ -188,6 +170,34 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       throw error; 
     }
   }
+  const getTimeSheetWeek = async()=>{
+    try {
+    
+      // const data = {
+      //   manager_id: 'info7',
+      //   // Other data properties as needed
+      // };
+      const response = await axios.post(baseUrl+"/workweeklist").then(
+        (response) => {
+          // console.log('sucesswwwwoo', response);
+          setTimeSheetWeek(response?.data)
+
+        
+        },
+        (error) => {
+          console.log('lllll', error);
+       
+        }
+      );
+
+ 
+      
+    } catch (error) {
+      // Handle any errors (e.g., network error, request failure, etc.)
+      console.error('Error:', error);
+      throw error; // Re-throw the error or handle it according to your needs
+    }
+  }
   console.log(projectDetails,activityData,"currentActivitytDatacurrentActivitytData")
 
   const onSubmit = handleSubmit(async (data) => {
@@ -238,8 +248,8 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
 
   // add dialog form data
   const [timesheetData, setTimesheetData] = useState({
-    timesheetId: '',
-    flag: null,
+    timesheetId: null,
+    
     companyId: companyID,
     employeeId: employeeID,
     employeeName: '',
@@ -331,6 +341,15 @@ console.log(timesheetData,"timesheetData")
       console.error(error);
     }
   }
+
+  const handleSearch = (searchTerm) => {
+ 
+    filterSearch(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
+
+    // filters
+
   return (
     <>
           <Grid container alignItems="center" paddingBottom="10px">
@@ -339,7 +358,7 @@ console.log(timesheetData,"timesheetData")
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
-            // onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
 
             />
             </Grid>
@@ -438,6 +457,43 @@ PaperProps={{
             renderInput={(params) => <TextField {...params} label="Activity Name" />}
           />
           </Grid>
+
+          <Grid item xs={12} sm={6} fullWidth>
+                < Autocomplete
+                
+            // disablePortal
+            id="cobo-box-demo"
+            options={timeSheetWeek|| []}
+            value={timeSheetWeek?.days?.workWeekNo}
+            getOptionLabel={(option) => option.days?.workWeekNo}
+            // onChange={(e,newvalue)=>{
+             
+             
+            //   setCurrentProjectData(newvalue
+            //   )
+              
+           
+            // }}
+          
+            renderInput={(params) => <TextField {...params} label="Select TimeSheet Week" />}
+          /></Grid>
+         <Grid item xs={12} sm={6} fullWidth>
+  <Autocomplete
+    id="cobo-box-demo"
+    options={timeSheetWeek || []}
+    getOptionLabel={(option) => option?.workWeekNo}
+    value={timeSheetWeek?.[0]?.workWeekNo} // Set the default selected value as per your requirement
+    onChange={(e, newValue) => {
+      if (newValue) {
+        console.log(newValue.workWeekNo);
+        // Handle the selected value
+      }
+    }}
+    renderInput={(params) => <TextField {...params} label="Select TimeSheet Week" />}
+  />
+</Grid>
+
+
           </Grid>
           <Typography>Monday</Typography>
           <Grid container spacing={1}>
