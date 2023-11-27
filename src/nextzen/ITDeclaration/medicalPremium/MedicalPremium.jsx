@@ -62,7 +62,7 @@ const cardData = [
 ];
 
 export default function MedicalPremium() {
-  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
+  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
    
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
@@ -227,6 +227,7 @@ export default function MedicalPremium() {
 
   const saveMedicalDetails = async () => {
     const payload = {
+      financialYear: selectedYear?.financialYear,
       companyID: cmpId,
       employeeID: empId,
       type: formData?.type,
@@ -245,10 +246,12 @@ export default function MedicalPremium() {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + '/addMedicalInsuranceDetails',
+      // url: baseUrl + '/addMedicalInsuranceDetails',
+      url : 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addMedicalInsuranceDetails',
       headers: {
         Authorization:
-        token,
+        // token,
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -303,7 +306,7 @@ export default function MedicalPremium() {
     
           companyID: formData.companyID,
           employeeID:formData.employeeID,
-         
+          financialYear: selectedYear?.financialYear,
           employeeName: formData.employeeName,
           premiumID: formData?.premiumID,
           type: formData?.type,
@@ -324,10 +327,12 @@ export default function MedicalPremium() {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl +'updateMedicalInsuranceDetails',
-      url: baseUrl+'/updateMedicalInsuranceDetails',
+      // url: baseUrl+'/updateMedicalInsuranceDetails',
+      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
       headers: {
         Authorization:
-       token,
+      //  token,
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -385,17 +390,18 @@ export default function MedicalPremium() {
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: empId };
+    const payload = { employeeId: empId ,financialYear: selectedYear?.financialYear,};
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
-      url:baseUrl +'/getMedicalInsuranceDetails',
-
+      // url:baseUrl +'/getMedicalInsuranceDetails',
+url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
       headers: {
         Authorization:
-       token,
+      //  token,
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -492,7 +498,7 @@ export default function MedicalPremium() {
     };
     fetchData();
     setIsEdit(false)
-  }, [isreloading]);
+  }, [isreloading , selectedYear?.financialYear,]);
 
   // handling documents
  
@@ -530,6 +536,7 @@ export default function MedicalPremium() {
     setIsEdit(false)
      setFormData({
       companyID: cmpId,
+      financialYear: selectedYear?.financialYear,
       employeeID: empId,
       type: '',
       policyNumber: '',
@@ -548,6 +555,7 @@ export default function MedicalPremium() {
   const getFinancialYear = async () => {
     const payload = {
       companyID: cmpId,
+     
     };
 
     const config = {

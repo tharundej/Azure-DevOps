@@ -61,6 +61,9 @@ const headings = [
 ];
 
 export default function HouseProperty() {
+
+  
+const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
   const [reload, setREload] = useState(false);
 
@@ -165,7 +168,7 @@ export default function HouseProperty() {
     const payload = {
       companyId: cmpId,
       employeeId: empId,
-      financialYear: financialYears,
+      financialYear: selectedYear?.financialYear,
     };
 
     const config = {
@@ -201,7 +204,7 @@ export default function HouseProperty() {
     const payload = {
       companyId: cmpId,
       employeeId: empId,
-      financialYear: financialYears,
+      financialYear: selectedYear?.financialYear,
       nameOfTheOwners: formData.name_of_the_owners,
       propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
       addressOfProperty: formData.addressOfProperty,
@@ -280,7 +283,7 @@ export default function HouseProperty() {
       await getHousePRoterty();
     };
     fetchData();
-  }, [reload]);
+  }, [reload ,selectedYear?.financialYear]);
   const handleLandLordattchment = (fileData) => {
     console.log(fileData, 'getting from uploader ');
     attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
