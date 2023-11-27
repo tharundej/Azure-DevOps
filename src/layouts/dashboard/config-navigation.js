@@ -222,6 +222,13 @@ export function useNavData() {
 
           arr.push(item);
         }
+
+        arr.push( {
+          title: t('Dashboard'),
+          path: paths.dashboard.root,
+          icon: ICONS.g_dashboard,
+          key:'Dashboard'
+        })
         });
 
         setSidebarList(arr);
