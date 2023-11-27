@@ -54,7 +54,7 @@ export default function AmplifyForgotPasswordView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const payload = {
-        companyEmail: data.companyEmail,
+        email: data.email,
       };
       const config = {
         method: 'post',
