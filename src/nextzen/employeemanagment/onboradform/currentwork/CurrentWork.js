@@ -739,10 +739,10 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
           />
 
 
-<Autocomplete
+          <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={groupOptions}
+            options={groupOptions || []}
             value={groupValue}
             getOptionLabel={(option) => option}
             onChange={(e,newvalue)=>{

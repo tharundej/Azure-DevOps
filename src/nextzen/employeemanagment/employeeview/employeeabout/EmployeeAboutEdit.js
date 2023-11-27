@@ -33,6 +33,7 @@ const employmentTypeOptions=[
 
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
@@ -246,6 +247,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           sx: { maxWidth: 720 },
         }}
       >
+        <ModalHeader heading="Edit General Information" />
             <FormProvider methods={methods} onSubmit={onSubmit}>
             <DialogContent>
 
@@ -325,15 +327,34 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="emailID"
-                    label="Email ID"
+                    label="Personal Email ID"
                     variant="outlined"
-                    id="middleName"
-                    value={currentUser?.emailID}
+                    id="personalEmail"
+                    value={currentUser?.personalEmail}
                     onChange={(e) => {
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        emailID:e?.target.value
+                        personalEmail:e?.target.value
+                      }))
+                    }}
+                  />
+                  </Grid>
+
+                  <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="emailID"
+                    label="Company Email ID"
+                    variant="outlined"
+                    id="comapnyEmail"
+                    value={currentUser?.companyEmail}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        companyEmail:e?.target.value
                       }))
                     }}
                   />

@@ -140,7 +140,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
              
               </Typography>
                 <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing}
+                <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate}
                 
                 </Typography>
                   </>
@@ -160,7 +160,8 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                             <Typography><span style={{fontWeight:600}}>Stream :  </span>  {itm?.stream}</Typography>
 
                             <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                            <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing} </Typography>
+                            <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate} </Typography>
+                            <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate} </Typography>
                           <Typography><span style={{fontWeight:600}}>Grade Type : </span> {itm?.gradeType}</Typography>
                           <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
 
