@@ -73,8 +73,8 @@ import EmployeeFilterSearch from '../employeemanagment/employeestable/EmployeeFi
 // import EmployeeTableFilter from '../employeemanagment/employeefilter/EmployeeTableFilter';
 
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
-import ProjectSearchFilter from '../TimeSheetManagement/ProjectSearchFilter';
 import ApprovalSearchFilter from '../TimeSheetManagement/ApprovalSearchFilter';
+import ProjectSearchFilter from '../timesheet/components/ProjectSearchFilter';
 import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
@@ -102,15 +102,17 @@ import AssetsHead from '../assets/AssetsHeader';
 import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
-import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
-import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
-import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
-import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
-import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
-import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
-import PurchasePaymentHead from '../Purchase/PurchasePayment/PurchasePaymentHeader';
+import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
+import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
+// import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+// import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
+// import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
+// import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 
 const defaultFilters = {
   name: '',
@@ -183,6 +185,7 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
+    // const baseUrl = " https://vshhg43l-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -195,7 +198,7 @@ const BasicTable = ({
       url: baseUrl + `${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`https://3p1h3gwl-3001.inc1.devtunnels.ms/erp${endpoint}`,
+     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
@@ -251,13 +254,13 @@ const BasicTable = ({
   const [filters, setFilters] = useState(defaultFilters);
   // const dataFiltered = tableData.slice(startIndex, endIndex);
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: tableData || [],
     // console.log(inputData,"inputData checkingggggggggggg"),
     comparator: getComparator(table?.order, table?.orderBy),
     filters,
   });
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 50;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -462,14 +465,15 @@ const BasicTable = ({
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
-            <TimeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-          {filterName === 'TimeProjectFilter' && (
+           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
+        
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -660,12 +664,14 @@ const BasicTable = ({
               searchData={handleFilterSearch}
             />
           )}
-          {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter
-              filterSearch={handleFilterSearch}
-              filterData={handleFIlterOptions}
-              searchData={handleFilterSearch}
-            />
+            {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+            {filterName === 'HrTabFilter' && (
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+           {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>
@@ -692,7 +698,7 @@ const BasicTable = ({
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }}>
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
@@ -778,8 +784,10 @@ const BasicTable = ({
 function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
-
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  var stabilizedThis;
+  
+  if(inputData)
+  stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -843,3 +851,6 @@ BasicTable.propTypes = {
 };
 
 export { BasicTable };
+
+
+

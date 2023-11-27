@@ -49,12 +49,12 @@ export default function JwtLoginView() {
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    companyEmail: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: '',
+    companyEmail: '',
     password: '',
   };
 
@@ -77,7 +77,7 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login?.(data.email, data.password);
+      await login?.(data.companyEmail, data.password);
       // router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
@@ -103,9 +103,9 @@ export default function JwtLoginView() {
       </Stack>
       <Card sx={{ backgroundColor: '#cce9f0' }}>
         <CardContent>
-        <Typography variant="body2">Manager Login Use Below Credentials</Typography>
-          <Typography variant="body2">Email: potter@howgarts.com</Typography>
-          <Typography variant="body2">Password: Potter@123</Typography>
+        <Typography variant="body2">Admin Login Use Below Credentials</Typography>
+          <Typography variant="body2">Email: anilg@infobellit.com</Typography>
+          <Typography variant="body2">Password: Anil@123</Typography>
         </CardContent>
       </Card>
     </Stack>
@@ -115,7 +115,7 @@ export default function JwtLoginView() {
     <Stack spacing={2.5}>
       {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-      <RHFTextField name="email" label="Email address" />
+      <RHFTextField name="companyEmail" label="Email address" />
 
       <RHFTextField
         name="password"
@@ -149,13 +149,14 @@ export default function JwtLoginView() {
         size="large"
         type="submit"
         variant="contained"
+        
         loading={isSubmitting}
       >
         Login
       </LoadingButton>
     </Stack>
   );
-
+  
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}

@@ -116,6 +116,7 @@ export default function OnBoardForm() {
  
  
 const handleCallSnackbar=(message,severity)=>{
+  console.log("handleCallSnackbar")
   setOpenSnackbar(true);
   setSnacbarMessage(message);
   setSeverity(severity);
@@ -126,12 +127,15 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%' }} >
-        
+        <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
+            <StepButton color="inherit"
+            // onClick={handleStep(index)}
+            
+            >
+            {label}
             </StepButton>
           </Step>
         ))}

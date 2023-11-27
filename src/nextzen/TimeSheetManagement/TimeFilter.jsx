@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function TimeSearchFilter({filterData,filterSearch}){
+export default function TimeSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -112,11 +112,25 @@ export default function TimeSearchFilter({filterData,filterSearch}){
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'date_activity',
-        from:'from_date',
-        to:'to_date'
+        field:'ProjectStartDate',
+        from:'startDatefrom',
+        to:'startDateto'
       },
-    
+      {
+        field:'ProjectEndDate',
+        from:'endDatefrom',
+        to:'endDateto'
+      },
+      {
+        field:'actualStartDate',
+        from:'actualStartfrom',
+        to:'actualStartto'
+      },
+      {
+        field:'actualEndDate',
+        from:'actualEndfrom',
+        to:'actualEndto'
+      },
     ]
   )
 
@@ -127,11 +141,11 @@ export default function TimeSearchFilter({filterData,filterSearch}){
         options:[]
       },
       {
-        field:'activity_name',
+        field:'reportingManager',
         options:[]
       },
       {
-        field:'project_name',
+        field:'projectManager',
         options:[]
       }
     ]
@@ -144,12 +158,13 @@ export default function TimeSearchFilter({filterData,filterSearch}){
     console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
   }
 
-  const [datesSavedArray,setDatesSavedArray]=useState(["from_date","to_date","offer_date_from","offer_date_to"])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    from_date:null,
-    to_date:null,
+    ProjectStartDate:null,
+    ProjectEndDate:null,
+    actualStartDate:null,
+    actualEndDate:null
  
   })
 
@@ -165,12 +180,6 @@ export default function TimeSearchFilter({filterData,filterSearch}){
           from:formatDateToYYYYMMDD(dates[item?.from]),
           to:formatDateToYYYYMMDD(dates[item?.to])
         }
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }  
-        //  arr1.push(obj);
         })
         setDatesData(arr1);
         resolve(arr1)   
@@ -192,20 +201,8 @@ export default function TimeSearchFilter({filterData,filterSearch}){
           const commaSeparatedString = arrayOfStrings.join(', ');
           data[item.field]=commaSeparatedString;
         }
-        
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        
-         
-        //  arr1.push(obj);
-       
          
         })
-        // setDatesData(arr1);
         resolve(arr1)
         
     })
@@ -229,19 +226,20 @@ export default function TimeSearchFilter({filterData,filterSearch}){
         target: { value },
       } = event;
       
-      if(field==="project_name"){
-        setDropdownProjectName(value)
-        const obj=dropdown;
-        obj[field]=value;
-        setDropdown(obj);
-      }
-      else if(field==="status"){
+      
+      if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="activity_name"){
+      else if(field==="projectManager"){
+        setdropdownActivity(value)
+        const obj=dropdown;
+        obj[field]=value;
+        setDropdown(obj);
+      }
+      else if(field==="reportingManager"){
         setdropdownActivity(value)
         const obj=dropdown;
         obj[field]=value;
@@ -270,11 +268,20 @@ export default function TimeSearchFilter({filterData,filterSearch}){
     }
     const [search, setSearch]=useState("");
     const handleClose = () => setShowForm(false);
-    const handleSearch = (searchTerm) => {
-              filterSearch(searchTerm.target.value);
-        };
-    
 
+    
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
+        filterSearch(e?.target?.value)
+      },1000)
   
     return (
         <>
@@ -297,12 +304,12 @@ export default function TimeSearchFilter({filterData,filterSearch}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
  
             />
             </Grid>
  
-            <Grid md={4} xs={4} item>
+      <Grid md={4} xs={4} item>
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
@@ -320,7 +327,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
       </Grid>
          </Grid>
      
-      <Dialog
+      <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -338,7 +345,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
           <Grid>
 
                 <Grid>
-            <Typography> Date Activity</Typography>
+            <Typography>Project Start Date</Typography>
      
 
             <Grid container flexDirection="row">
@@ -348,12 +355,12 @@ export default function TimeSearchFilter({filterData,filterSearch}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="From Date"
-                      value={dates?.from_date}
+                      value={dates?.fromDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          from_date: newValue,
+                          fromDate: newValue,
                         }));
                       }}
                     />
@@ -366,24 +373,24 @@ export default function TimeSearchFilter({filterData,filterSearch}){
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="To Date"
-                      value={dates?.to_date}
+                      value={dates?.toDate}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDates((prev) => ({
                           ...prev,
-                          to_date: newValue,
+                          toDate: newValue,
                         }));
                       }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
+            </Grid>
                 </Grid>
                 <Grid container marginTop={2}>
   {/* <Typography>Offer Date</Typography> */}
   <Grid container spacing={2}>
-    <Grid item xs={12}>
+    {/* <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Project Name</InputLabel>
         <Select
@@ -406,7 +413,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
           ))}
         </Select>
       </FormControl>
-    </Grid>
+    </Grid> */}
     <Grid item xs={12}>
       <FormControl fullWidth>
         <InputLabel id="status">Activity Name</InputLabel>
@@ -469,7 +476,7 @@ export default function TimeSearchFilter({filterData,filterSearch}){
          </DialogContent>
          <Button onClick={()=>{handleApply()}}>Apply</Button>
    
-    </Dialog>
+    </BootstrapDialog>
     </>
     )
     
@@ -482,14 +489,14 @@ TimeSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
 TimeSearchFilter.propTypes={
-  filterSearch: PropTypes.any,
+  searchData: PropTypes.any,
 }
 
-// TimeSearchFilter.propTypes={
-//     filterOptions: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           fieldName: PropTypes.string,
-//           options: PropTypes.arrayOf(PropTypes.string)
-//         })
-//       ),
-// }
+TimeSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
+}

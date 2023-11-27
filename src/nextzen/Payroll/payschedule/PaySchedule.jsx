@@ -31,7 +31,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import GeneralForminfo from './GeneralForminfo';
 import PayScheduleform from './PayScheduleform';
-import { useState ,useMemo,useEffect,useCallback} from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EditPaySchedule from './EditPaySchedule';
@@ -40,6 +40,8 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { useForm } from 'react-hook-form';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
+import { parse } from 'date-fns';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -48,7 +50,7 @@ const bull = (
   </Box>
 );
 
-export default function PaySchedule({currentUser}) {
+export default function PaySchedule({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -61,7 +63,7 @@ export default function PaySchedule({currentUser}) {
     setOpen(false);
     reset1();
   };
-  
+
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -81,10 +83,10 @@ export default function PaySchedule({currentUser}) {
   ];
 
   const actions = [
-    { name: 'Edit', icon: 'hh', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
+    { name: 'Edit', icon: 'solar:pen-bold', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
     {
       name: 'Delete',
-      icon: 'hh',
+      icon: 'solar:trash-bin-trash-bold',
       path: 'jjj',
       type: 'serviceCall',
       endpoint: '/updateTimesheetStatus',
@@ -264,14 +266,27 @@ export default function PaySchedule({currentUser}) {
     setOpen(true);
   };
   const getOptionLabel = (employeepayType) => employeepayType.type;
-
+  // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employementType=valueSelected.employementType
+    data.companyID = 'COMP1';
+    // (data.employementType = valueSelected?.employementType?.type),
+   
+    (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
+      (data.employementType = valueSelected?.employementType),
+      (data.basicPayPercentage = JSON.parse(valueSelected?.basicPayPercentage, 10)),
+      (data.daPercentage = JSON.parse(valueSelected?.daPercentage, 10)),
+      (data.employeePfPercentage = JSON.parse(valueSelected?.employeePfPercentage, 10)),
+      (data.employerPfPercentage = JSON.parse(valueSelected?.employerPfPercentage, 10)),
+      (data.esicPercentage = JSON.parse(valueSelected?.esicPercentage, 10)),
+      (data.hraPercentage = JSON.parse(valueSelected?.hraPercentage, 10)),
+      (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
+      (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
+      (data.payScheduleId = valueSelected?.payScheduleId);
+      (data.employementType = valueSelected?.employementType?.type),
+      (data.payPcheduleType=valueSelected?.payPcheduleType?.type)
     console.log('valueSelectedaaaaaaaaaa', data);
 
-    data.company_id = 'COMP1';
-
-    console.log(data, 'valueSelected111ugsghghh');
+    console.log(valueSelected?.employementType?.type, 'abc');
 
     try {
       const response = await axios.post(baseUrl + '/editPaySchedule', data);
@@ -282,19 +297,97 @@ export default function PaySchedule({currentUser}) {
         setSnackbarOpen(true);
 
         console.log('sucess', response);
-      
       }
     } catch (error) {
       console.error(error);
     }
   });
+  // const onSubmitEdit1 = async (valueSelected, event) => {
+  //   console.log(valueSelected,'editData')
+  //   try {
+  //     event.preventDefault();
+  //     const payload={
+  //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
+  //       "companyId":'COMP1',
+  //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
+  //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
+  //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
+  //       'employementType':JSON.parse(valueSelected?.employementType?.type,10),
+  //       'employerPfPercentage':JSON.parse(valueSelected?.employerPfPercentage,10),
+  //       'esicPercentage':JSON.parse(valueSelected?.esicPercentage,10),
+  //       'hraPercentage':JSON.parse(valueSelected?.hraPercentage,10),
+  //       'ltaPercentage':JSON.parse(valueSelected?.ltaPercentage,10),
+  //       'payPcheduleType':JSON.parse(valueSelected?.payPcheduleType?.type,10),
+  //       'payScheduleId':JSON.parse(valueSelected?.payScheduleId,10),
+  //     }
+  //     console.log(payload,'payloada')
+  //     const response = await axios.post(baseUrl + '/editPaySchedule',payload);
+  //     console.log(response,'response')
+  //     if (response?.data?.code === 200 || 201) {
+  //       handleClose();
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+
+  //       console.log('sucess', response);
+  //     }
+  //     else if(response?.data?.code ===400 || 401) {
+  //       handleClose();
+  //       setSnackbarSeverity('error');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setOpen(true);
+  //     setSnackbarSeverity('error');
+  //     // setSnackbarMessage(response?.data?.message);
+  //     setSnackbarOpen(true);
+  //     console.log('error', error);
+  //   }
+  // };
+  const onSubmitEdit2 = async (valueSelected, event) => {
+    console.log(valueSelected,'editData')
+    try {
+      event.preventDefault();
+      const payload={
+        "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
+        "companyId":'COMP1',
+      }
+      console.log(payload,'payload')
+      const response = await axios.post(baseUrl + '/editPaySchedule', payload);
+      if (response?.data?.code === 200 || 201) {
+        handleClose();
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+      else if(response?.data?.code ===400 || 401) {
+        handleClose();
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setOpen(true);
+      setSnackbarSeverity('error');
+      // setSnackbarMessage(response?.data?.message);
+      setSnackbarOpen(true);
+      console.log('error', error);
+    }
+  };
+
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
-    data.company_id = 'COMP1';
-    // data.employee_type = valueSelected?.employementType;
-    data.employementType=valueSelected.employementType
+    data.companyID = 'COMP1';
+    data.employementType = valueSelected?.employementType?.type;
+    // (data.employementType = valueSelected?.employementType?.type),
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
-
+    data.payPcheduleType = valueSelected?.payPcheduleType?.type;
+    data.payScheduleId = valueSelected?.payScheduleId;
     console.log(data, 'data111ugsghghh');
 
     try {
@@ -318,21 +411,38 @@ export default function PaySchedule({currentUser}) {
   const handleSelectChange = (field, value) => {
     // console.log('values:', value);
     // console.log('event', event.target.value);
-   
+
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
-  const handleAutocompleteChange =(event,value)=>{
-    console.log(value, 'valllllllllll');
+  console.log(valueSelected, 'valllllllllll');
+  const handleAutocompleteChange = (field, value) => {
+    console.log(field, 'field');
     setSelectedOption(value);
-    if (value && value.type === 'Permanent') {
-      setTextFieldVisible(true);
-    } else {
-      setTextFieldVisible(false);
+    if (value) {
+      if (value.type === 'Permanent' ) {
+        setTextFieldVisible(true);
+        const updatedValueSelected = { ...valueSelected };
+
+        // Update the employementType property with the new value
+        updatedValueSelected.employementType = value;
+
+        // Set the updated object as the new state
+        setValueSelected(updatedValueSelected);
+      } else if (value.type === 'Contract') {
+        setTextFieldVisible(false);
+        const updatedValueSelected = { ...valueSelected };
+
+        // Update the employementType property with the new value
+        updatedValueSelected.employementType = value;
+
+        // Set the updated object as the new state
+        setValueSelected(updatedValueSelected);
+      }
     }
-  }
+  };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   return (
     <>
@@ -366,8 +476,7 @@ export default function PaySchedule({currentUser}) {
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-            
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -380,67 +489,76 @@ export default function PaySchedule({currentUser}) {
                 }}
               >
                 <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption.employementType} // Use tableEDitData or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
-                <RHFAutocomplete
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                  onChange={handleAutocompleteChange}
+                  sx={{ width: 300, padding: '8px' }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
+                <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  value={valueSelected.payScheduleType}
-                  options={payPcheduleTypes.map((payscheduleType) => payscheduleType.type)}
-                  onChange={(e) => handleSelectChange('payPcheduleType', e.target.value)}
+                  value={valueSelected?.payPcheduleType || null}
+                  options={payPcheduleTypes}
+                  getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('payPcheduleType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Pay Pchedule Type" variant="outlined" />
+                  )}
                 />
                 <RHFTextField
                   name="basicPayPercentage"
                   label="Basic Pay %"
-                  value={valueSelected.basicPayPercentage}
+                  value={valueSelected?.basicPayPercentage}
                   onChange={(e) => handleSelectChange('basicPayPercentage', e.target.value)}
                 />
 
                 <RHFTextField
                   name="hraPercentage"
                   label="HRA %"
-                  value={valueSelected.hraPercentage}
+                  value={valueSelected?.hraPercentage}
                   onChange={(e) => handleSelectChange('hraPercentage', e.target.value)}
                 />
-                <RHFTextField name="daPercentage" label="DA %" value={valueSelected.daPercentage} 
-                onChange={(e) => handleSelectChange('daPercentage', e.target.value)}
+                <RHFTextField
+                  name="daPercentage"
+                  label="DA %"
+                  value={valueSelected.daPercentage}
+                  onChange={(e) => handleSelectChange('daPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="employeePfPercentage"
                   label="Employee PF %"
-                  value={valueSelected.employeePfPercentage}
+                  value={valueSelected?.employeePfPercentage}
                   onChange={(e) => handleSelectChange('employeePfPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="employerPfPercentage"
                   label="Employer PF %"
-                  value={valueSelected.employerPfPercentage}
+                  value={valueSelected?.employerPfPercentage}
                   onChange={(e) => handleSelectChange('employerPfPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="ltaPercentage"
                   label="LTA %"
-                  value={valueSelected.ltaPercentage}
+                  value={valueSelected?.ltaPercentage}
                   onChange={(e) => handleSelectChange('ltaPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="esicPercentage"
                   label="ESIC %"
-                  value={valueSelected.esicPercentage}
+                  value={valueSelected?.esicPercentage}
                   onChange={(e) => handleSelectChange('esicPercentage', e.target.value)}
                 />
                 <RHFTextField
                   name="tdsPercentage"
                   label="TDS %"
-                  value={valueSelected.tdsPercentage}
+                  value={valueSelected?.tdsPercentage}
                   onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
                 />
               </Box>
@@ -450,20 +568,27 @@ export default function PaySchedule({currentUser}) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit1}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         ) : (
-          <FormProvider methods={methods2} onSubmit={onSubmit2}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-            
+          <FormProvider methods={methods2} onSubmit={(event) => onSubmitEdit2(valueSelected, event)}>
+           
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -476,30 +601,36 @@ export default function PaySchedule({currentUser}) {
                 }}
               >
                 <Autocomplete
-              disablePortal
-              name="employee_type"
-              id="combo-box-demo"
-              options={employeepayTypes}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption?.employementType} // Use tableEDitData or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
-              renderInput={(params) => <TextField {...params} label="Employee Type" />}
-            />
-              <RHFAutocomplete
-                name="payPcheduleType"
-                label="Pay Schedule Type"
-                options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
-                sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
-              />
-                  <RHFTextField
-                    name="tdsPercentage"
-                    label="TDS %"
-                    value={valueSelected?.tdsPercentage}
-                    onChange={(e) => handleSelectChange("tdsPercentage", e.target.value)}
-                    sx={{ width: '100%' }} 
-                  />
-                
+                  disablePortal
+                  name="employee_type"
+                  id="combo-box-demo"
+                  options={employeepayTypes}
+                  getOptionLabel={getOptionLabel}
+                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                  onChange={handleAutocompleteChange}
+                  sx={{ width: 300, padding: '8px' }}
+                  renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                />
+                <Autocomplete
+                  name="payScheduleType"
+                  label="Pay Schedule Type"
+                  value={valueSelected?.payPcheduleType || null}
+                  options={payPcheduleTypes}
+                  getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('payPcheduleType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Pay Pchedule Type" variant="outlined" />
+                  )}
+                />
+                <RHFTextField
+                  name="tdsPercentage"
+                  label="TDS %"
+                  value={valueSelected?.tdsPercentage}
+                  onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
+                  sx={{ width: '100%' }}
+                />
               </Box>
             </DialogContent>
 
@@ -507,14 +638,21 @@ export default function PaySchedule({currentUser}) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
-                onClick={onSubmit2}
-                loading={isSubmitting2}
+                onClick={(event) => onSubmitEdit2(valueSelected, event)}
+                 loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={(event) => onSubmitEdit2(valueSelected, event)}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         )}

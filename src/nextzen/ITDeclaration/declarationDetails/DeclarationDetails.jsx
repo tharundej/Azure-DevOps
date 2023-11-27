@@ -10,17 +10,25 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Button,
+  Button,Autocomplete
 } from '@mui/material';
+Autocomplete
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import './DeclarationDetails.css';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
 
-const DeclarationDetails = () => {
 
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
+
+const DeclarationDetails = () => {
+const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
   const token = localStorage.getItem('accessToken')
@@ -30,7 +38,33 @@ const DeclarationDetails = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+   // State for Snackbar
+   const [snackbarOpen, setSnackbarOpen] = useState(false);
+   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+   const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+ 
+   const [selectedYear, setSelectedYear] = useState(null);
+   const [financialYears, setFinancialYears] = useState([]);
+   const handleYearChange = (_, value) => {
+     setSelectedYear(value);
+   };
+   const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    // setOpen(false);
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -49,9 +83,19 @@ const DeclarationDetails = () => {
 
   const handleAgeChange = (configId) => (event) => {
     console.log('i am called ');
+    const inputValue = parseFloat(event.target.value);
+    const sanitizedValue = isNaN(inputValue) ? 0 : inputValue;
+
+    console.log(inputValue ,"inoutvalue" ,sanitizedValue ,"sanitizedValue")
     const newData = data?.map((item) =>
-      item.configId === configId ? { ...item, declared: event.target.value } : item
+      item.configId === configId ? {
+        ...item,
+        declared:isNaN(inputValue) ?  null : sanitizedValue <= item.taxLimit ? sanitizedValue : item.taxLimit,
+      }
+    : item
     );
+
+    console.log(newData  ,"newData")
     setData(newData);
     console.log(data, ' datadataaaaaaa');
   };
@@ -62,9 +106,9 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: 2023,
+      financialYear: selectedYear?.financialYear,
 
-      rowsPerPage: 10,
+      rowsPerPage: rowsPerPage,
 
       PageNum: 0,
 
@@ -101,6 +145,8 @@ const DeclarationDetails = () => {
     fetchData();
     
   }, [reloading]);
+
+
   const updateDeclarationsList = async () => {
     const newArray = data?.map((item) => ({
       configId: item.configId,
@@ -112,7 +158,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: 2023,
+      financialYear: selectedYear?.financialYear,
 
       records: newArray,
     };
@@ -130,19 +176,92 @@ const DeclarationDetails = () => {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.data.code === 200) {
           setReloading(!reloading);
           console.log(JSON.stringify(response.data));
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          console.log("response", response)
+        }
+        else if(response.data.code === 400){
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
         }
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
 
   return (
     <div>
-     
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Grid item xs={12}>
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option?.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+      </Grid>
       <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
@@ -176,6 +295,9 @@ const DeclarationDetails = () => {
                         type="number"
                         value={row.declared}
                         onChange={handleAgeChange(row.configId)}
+                        // inputProps={{
+                        //   max: row.taxLimit,
+                        // }}
                       />
                     </TableCell>
                   </TableRow>

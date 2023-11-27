@@ -42,6 +42,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
@@ -53,6 +54,10 @@ export default function AddDesignationGradeConfig({ currentUser ,handleCloseAddR
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -160,7 +165,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":"COMP1"
+        "companyID":cmpId
     }
   
     const config = {
@@ -171,8 +176,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     url : baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token, 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -192,55 +196,12 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       });
     //  console.log(result, 'resultsreults');
   };
-  const AddDepartment = async () => {
-    const payload = 
-   
-    {
-        "companyID":"COMP1",
-        "departmentName": formData?.department,
-        "locationID": formData?.Location?.locationID
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDepartment',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Department Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Department Adding. Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+  
 
    const getDepartment = async () => {
     const payload =
     {
-        "companyID": "COMP1",
+        "companyID": cmpId,
         //  "locationID": 30
     }
   
@@ -252,8 +213,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+      token, 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -274,57 +234,13 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignation = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": "COMP1",
-        "departmentID" : formData?.Department?.departmentID,
-        "designationName": formData?.designation,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignation',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+ 
 
    const getDesignation = async (id) => {
     console.log(id , "id id id ")
     const payload =
     {
-        "companyID":"COMP1",
+        "companyID":cmpId,
         "departmentID":id? id: formData?.Department?.departmentID,
     }
   
@@ -336,8 +252,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token , 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -363,7 +278,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
    
     
     {
-        "companyID": "COMP1",
+        "companyID": cmpId,
         "designationID" : formData?.Designation?.designationID,
         "designationGradeName": formData?.designationGrade,
     }
@@ -375,21 +290,26 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+        token ,'Content-Type': 'text/plain',
        },
        data: payload,
      };
      const result = await axios
        .request(config)
        .then((response) => {
-         if (response.status === 200) {
+         if (response.data.code === 200) {
            setSnackbarSeverity('success');
            setSnackbarMessage('Designation Added successfully!');
            setSnackbarOpen(true);
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
-         }
+         }else  if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setHitGetDepartment(!hitGetDepartment)
+          console.log("success")
+        }
    
        })
        .catch((error) => {
@@ -404,24 +324,37 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
    
    };
   useEffect(() => {
+    console.log('Calling getLocation');
     const fetchData = async () => {
-  
-      getDesignation()
+      console.log('Calling getLocation234');
+    // getDesignation()
       getDepartment()
     };
     fetchData();
     
-  }, []);
+  },[open]);
 
   useEffect(() => {
+    console.log('Calling getLocation');
     const fetchData = async () => {
+      console.log('Calling getLocation234');
       getDepartment();
       getDesignation()
     };
     fetchData();
     
-  }, [hitGetDepartment]);
-
+  },[hitGetDepartment]);
+  useEffect(() => {
+    console.log("i m calling in useEffect ")
+    const fetchData = async () => {
+      console.log('Calling getLocation');
+      getLocation();
+      getDepartment()
+      getDesignation()
+    };
+    fetchData();
+    
+  },[]);
 
 console.log(departmentType ,"DEPARTMENT TYPE    ")
   console.log(formData ,"formdata ")
@@ -455,9 +388,9 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{ margin: '20px',color:'white',backgroundColor:'#3B82F6' }}
       >
-        Add Designation Grade
+        Designation Grade
       </Button>
       <Dialog
         fullWidth
@@ -470,7 +403,8 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Designation Grade Config</DialogTitle>
+         
+          <ModalHeader  heading="Designation Grade Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -557,7 +491,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
             <Autocomplete
               disablePortal
               name="Designation"
-              id="combo-box-demo"
+              id="Designation"
               options={designationType?.map((employeepayType) => ({
                 label: employeepayType.designationName,
                 value: employeepayType.designationName,

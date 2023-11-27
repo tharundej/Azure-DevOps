@@ -123,7 +123,7 @@ export default function ShiftRoast() {
       }
   return (
     <>
-      {/* {showEdit && (
+      {showEdit && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -136,7 +136,7 @@ export default function ShiftRoast() {
 >
  <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
       </Dialog>
-    )} */}
+    )}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}

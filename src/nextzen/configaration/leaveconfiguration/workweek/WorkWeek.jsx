@@ -19,6 +19,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 export default function WorkWeek({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
@@ -28,6 +29,7 @@ export default function WorkWeek({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [valueSelected, setValueSelected] = useState();
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -63,8 +65,8 @@ export default function WorkWeek({ currentUser }) {
     { id: 'locationName', label: 'Location', type: 'text', minWidth: 280 },
   ];
   const actions = [
-    { name: 'View', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'View', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = {
     count: 5,
@@ -123,8 +125,10 @@ export default function WorkWeek({ currentUser }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
     data.locationID = formData?.Location?.locationID;
+    data.day=valueSelected?.day?.type
+    data.action=valueSelected?.action?.type
     console.log('submitted data111', data);
-    handleClose();
+    handleCloseEdit()
     try {
       const response = await axios.post(baseUrl + '/editWorkWeek', data);
       console.log('sucess', response);
@@ -172,6 +176,7 @@ export default function WorkWeek({ currentUser }) {
     console.log(rowdata, event, 'CompoffAprrove from to basic table');
     if (event?.name === 'Edit') {
       setEditData(rowdata);
+      setValueSelected(rowdata);
       handleOpenEdit();
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
@@ -224,7 +229,17 @@ export default function WorkWeek({ currentUser }) {
     setOpen(false);
     reset1();
   };
-
+  const handleSelectChange = (field, value) => {
+    // console.log('values:', value);
+    // console.log('event', event.target.value);
+    // setSelectedOption(value);
+    console.log(field, value, 'valllllllllll');
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   return (
     <>
       <Snackbar
@@ -255,7 +270,7 @@ export default function WorkWeek({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Work Week</DialogTitle>
+        <ModalHeader heading="Edit Work Week" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -267,17 +282,27 @@ export default function WorkWeek({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFAutocomplete
-                options={DayTypes.map((DayType) => DayType.type)}
+              <Autocomplete
+                options={DayTypes}
                 name="day"
                 label="Day"
-                value={editData?.day}
+                value={valueSelected?.day||null}
+                getOptionLabel={(option) => option.type }
+                onChange={(e, newValue) => handleSelectChange('day', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Day" variant="outlined" />
+                )}
               />
-              <RHFAutocomplete
-                options={actionTypes.map((actionType) => actionType.type)}
+              <Autocomplete
+                options={actionTypes}
                 name="action"
                 label="Action"
-                value={editData?.action}
+                getOptionLabel={(option) => option.type }
+                onChange={(e, newValue) => handleSelectChange('action', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Action" variant="outlined" />
+                )}
+                value={valueSelected?.action||null}
               />
               <Autocomplete
                 disablePortal
@@ -288,7 +313,7 @@ export default function WorkWeek({ currentUser }) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
-                value={editData?.locationName}
+                value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
                   handleAutocompleteChange('Location', newValue, selectedOption)
                 }
@@ -301,14 +326,22 @@ export default function WorkWeek({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

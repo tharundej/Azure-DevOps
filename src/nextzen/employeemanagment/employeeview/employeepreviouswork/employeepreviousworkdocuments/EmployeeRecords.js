@@ -5,6 +5,7 @@ import { Card, Typography } from '@mui/material';
 import axios from 'axios';
 import FilesGrid from '../../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
+import Iconify from 'src/components/iconify';
 
 const styles = {
   container: {
@@ -157,10 +158,14 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
 
 <div style={styles.container}>
       <Typography variant="body1">Documents</Typography>
-      <div style={styles.tooltip} onClick={()=>{
+      <Iconify icon="lets-icons:add-duotone"
+      sx={{cursor:'pointer'}}
+      width={24} onClick={()=>{
         setType('addDocs')
         setOpen(true)
-      }}>+</div>
+      }} />
+
+     
     </div>
 
 

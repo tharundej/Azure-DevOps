@@ -3,9 +3,10 @@ import React,{ useEffect, useState,useCallback } from 'react';
 import { styled } from '@mui/system';
 import { format } from 'date-fns';
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
-
+import Badge from '@mui/material/Badge';
 import {Card,TextField,CardContent,  InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
+import { keyframes } from '@emotion/react';
 
 import Iconify from 'src/components/iconify/iconify';
 
@@ -91,7 +92,13 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
  
  
   
-
+  const CustomBadge = styled(Badge)({
+    '.MuiBadge-dot': {
+      width: '20px', // Adjust the width as needed
+      height: '20px', // Adjust the height as needed
+    },
+  });
+  
   
   
 
@@ -116,7 +123,7 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
    
 
     
-;
+;  const [badgeContent, setBadgeContent] = useState(false);
 
     const handleSearch = (searchTerm) => {
  
@@ -249,10 +256,34 @@ const handleFieldChange = (fieldtype,field, value) => {
 
 };
 
+// reset 
+const handleReset = () => {
+  // Handle reset logic here
+  setSelectedFields({});
+  // setIsBlinking(false)
+  setBadgeContent(false)
+  onClose();
+};
+const blinkAnimation = keyframes`
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+`;
+
+// animation after filter selected
+const [isBlinking, setIsBlinking] = useState(false);
+
+
+
 const handleApply=()=>{
  
     filterData(selectedFields)
-
+    setBadgeContent(true)
+    // setBadgeContent((prevContent) => prevContent + 1);
+    // setIsBlinking(true);
     onClose();
     // setSelectedFields(dialogPayload);
     
@@ -289,10 +320,29 @@ console.log(selectedFields,"selectedFields 2nd method")
             <Grid md={2} xs={2} item>
 
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="error" variant="dot" anchorOrigin={{
+                vertical: 'up',
+                horizontal: 'left',
+              }} >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+        {/* <Badge badgeContent={""} color="error"  anchorOrigin={{
+    vertical: 'up',
+    horizontal: 'left',
+  }} >
+            <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
            <Iconify icon="mi:filter"/>
            Filters
       </Button>
+      </Badge > */}
 
       </Stack>
       </Grid>
@@ -355,8 +405,14 @@ console.log(selectedFields,"selectedFields 2nd method")
       ))}
      {/* </Grid> */}
      
-      <Grid container justifyContent="flex-end"  marginBottom={3} >
-      <Button variant='outlined' sx={{backgroundColor:"grey"}} onClick={handleApply}>apply</Button>
+      <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
+      {/* <Badge badgeContent={badgeContent} color="error"> */}
+      <Button sx={{margin:"2px"}} variant="outlined" onClick={handleReset}>
+            Reset
+          </Button>
+      <Button variant='outlined' sx={{margin:"2px"}} onClick={handleApply}>apply</Button>
+      {/* </Badge> */}
+
       </Grid >
       </DialogContent>
       

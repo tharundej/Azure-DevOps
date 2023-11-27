@@ -33,6 +33,7 @@ import './LicPReimum.css';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -57,6 +58,7 @@ const headings = [
 
 
 export default function LicPremium() {
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
  
   const empId = localStorage.getItem('employeeID')
@@ -81,12 +83,13 @@ export default function LicPremium() {
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
   });
+  const [selectedYear, setSelectedYear] = useState(null);
   const [formData, setFormData] = useState({
     companyId: cmpId,
     companyName: '',
     employeeId: empId,
     employeeName: '',
-    financialYear: '2022-11-11',
+    financialYear:  selectedYear?.financialYear,
     policyNumber: '',
     dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
     insuredPersonName: '',
@@ -112,10 +115,30 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   var [fileContent, setFileContent] = useState([])
  
   const methods = useForm();
-
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+ 
+  
+   const [financialYears, setFinancialYears] = useState([]);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      financialYear: value?.financialYear,
+    }));
+   
+  };
 
   // handling the file uploader compoent
   const handleLandLordattchment = (fileData) => {
+    console.log(fileData ,"fileData")
     console.log(fileData, 'getting from uploader ');
     fileName = fileData?.map((doc) => doc.fileName);
     setFileName(fileName);
@@ -251,7 +274,8 @@ const handleRentDeletedID = ( data)=>{
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
-    const payload = { "employeeID":empId };
+    const payload = { "employeeID":empId,
+    financialYear: selectedYear?.financialYear, };
 
     const config = {
       method: 'post',
@@ -302,14 +326,42 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic details saved successfully!');
-          setSnackbarOpen(true);
-          console.log('success');
+       
+          if (response.data.code === 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setISReloading(!isreloading);
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear:  selectedYear?.financialYear,
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Lic details. Please try again.');
@@ -360,19 +412,53 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic  Updated successfully!');
-          setSnackbarOpen(true);
-          setIsEdit(false)
-          console.log('success');
+     
+        console.log(response , "success")
+          if(response.data.status === 200){
+          
+            console.log('success',response);
+            setISReloading(!isreloading);
+            setSnackbarSeverity('success');
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear:   selectedYear?.financialYear,
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            setIsEdit(false)
+          }
+          else if(response.data.status === 400){
+            console.log('success',response);
+            // setISReloading(!isreloading);
+            setSnackbarSeverity('error');
+           
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            // setIsEdit(false)
+          }
+         
+          
         }
-      })
+      )
       .catch((error) => {
         setOpen(true);
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error Lic Updating. Please try again.');
+        setSnackbarMessage(response.message   );
         setSnackbarOpen(true);
         console.log(error);
       });
@@ -395,7 +481,7 @@ const handleRentDeletedID = ( data)=>{
     fetchData();
     setIsEdit(false)
     
-  }, [isreloading]);
+  }, []);
 
   const handleFormChange = (event, rowIndex) => {
     const { name, value } = event.target;
@@ -439,46 +525,6 @@ const handleRentDeletedID = ( data)=>{
     // }
   };
 
-  //basic table 
-  const [TABLE_HEAD,setTableHead] =useState( [
-    {
-      id: 'employeeId',
-      label: 'Employee ID',
-      type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
-      secondaryText: 'name',
-    },
-    { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
-    { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
-    { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'emailID', label: 'Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
-    { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
-    { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
-    { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
-    { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
-    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
-    { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
-    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
-
-
-    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
-    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
-    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
-    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
-    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
-
-    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
-   
-    
-  ]);
   const handleSubmit = ()=>{
     isEdit ? editcDetails() :saveLicDetals()
   }
@@ -506,20 +552,79 @@ const handleRentDeletedID = ( data)=>{
 
   }
   const userId  =  5
+
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      await getLicPremium();
+    };
+    fetchData();
+    setIsEdit(false)
+    
+  }, [selectedYear?.financialYear]);
+
+  console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
       <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
   
-       
+      
           {/* Row 1 */}
           {/* {policyData.length > 0 &&
           policyData?.map((row, rowIndex) => (
             <div key={rowIndex} style={{ marginTop: '2rem' }}> */}
 
           <Grid item container xs={12} spacing={2}>
+            <Grid  item xs={4}>
+            
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+   
+            </Grid>
             <Grid item xs={4}>
-              {/* <Typography >Policy Number </Typography> */}
               <TextField
                 label="Policy Number "
                 variant="outlined"
@@ -549,7 +654,13 @@ const handleRentDeletedID = ( data)=>{
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          {/* Row 2 */}
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <TextField
                 label="Insured Person Name"
                 variant="outlined"
@@ -560,11 +671,6 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <TextField
                 label="Sum Of Assured"
@@ -589,7 +695,11 @@ const handleRentDeletedID = ( data)=>{
                 renderInput={(params) => <TextField {...params} label="Relationship" />}
               />
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <TextField
                 label="Premium Amount For Which Proof Attched Now "
                 variant="outlined"
@@ -600,9 +710,6 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <TextField
                 label="Premium Amount Fall In Due"
@@ -625,15 +732,19 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={4}>
+            
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+          <Grid item xs={4}>
               <Autocomplete
                 disablePortal
                 name="treatmentForSpecifiedDiseases"
                 id="combo-box-demo"
                 options={treatmentTypes.map((employeepayType) => employeepayType.type)}
-                value={formData?.treatmentForSpecifiedDiseaseses === "1"
+                value={formData?.treatmentForSpecifiedDiseaseses === 1
                   ? 'Yes'
-                  : formData.treatmentForSpecifiedDiseases === "0"
+                  : formData.treatmentForSpecifiedDiseases === 0
                   ? 'No'
                   : formData.treatmentForSpecifiedDiseases
             }
@@ -646,18 +757,15 @@ const handleRentDeletedID = ( data)=>{
                 )}
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
             <Grid item xs={4}>
               <Autocomplete
                 disablePortal
                 name="doesTheInjuredPersonHaveDisability"
                 id="combo-box-demo"
                 options={pinjuredPersonDisability.map((employeepayType) => employeepayType.type)}
-                value={formData?.doesTheInjuredPersonHaveDisability === "1"
+                value={formData?.doesTheInjuredPersonHaveDisability === 1
                   ? 'Yes'
-                  : formData.doesTheInjuredPersonHaveDisability === "0"
+                  : formData.doesTheInjuredPersonHaveDisability === 0
                   ? 'No'
                   : formData.doesTheInjuredPersonHaveDisability
             }
@@ -690,7 +798,12 @@ const handleRentDeletedID = ( data)=>{
             >
               <Grid item>
                 {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                <Button className="button" onClick={attchementHandler}>Attchement</Button>
+                {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+                <Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+      Upload file
+      {/* <VisuallyHiddenInput type="file" /> */}
+    </Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleSubmit}>
@@ -714,7 +827,7 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                <Typography> Total Premium :{policyData?.length}</Typography>
+                <Typography style={{fontSize:"0.9rem"}}> Total Premium :{policyData?.length}</Typography>
               </Grid>
             </Grid>
             {/* Add more rows as needed */}
@@ -730,7 +843,7 @@ const handleRentDeletedID = ( data)=>{
             {/* </div>
           ))} */}
         </Grid>
-
+{policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -776,7 +889,7 @@ const handleRentDeletedID = ( data)=>{
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> :null}
       </FormProvider>
       <Snackbar
         open={snackbarOpen}

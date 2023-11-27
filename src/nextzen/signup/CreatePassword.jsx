@@ -120,6 +120,7 @@ export default function AmplifyNewPasswordView({emailId}) {
       setSnackbarSeverity('error');
       setSnackbarMessage(response?.data?.message);
       setSnackbarOpen(true);
+      
      console.log('error', error);
     }
   });

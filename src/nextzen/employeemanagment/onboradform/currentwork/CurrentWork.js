@@ -40,6 +40,8 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
+import AssignPages from '../../employeeview/pagepermission/assignpage/AssignPages';
+
 import {
     _roles,
     JOB_SKILL_OPTIONS,
@@ -54,6 +56,38 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
   const router = useRouter();
+  const [groupValue,setGroupValue]=useState("");
+  const [groupOptions,setGroupOptions]=useState([]);
+   
+  const ApiHitOptions=(obj)=>{
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl+'/getGroups',
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setGroupOptions(response.data.data||[])
+    })
+    .catch((error) => {
+      console.log(error);
+      setGroupOptions([])
+    });
+  }
+  useEffect(()=>{
+    const obj={
+      "companyId": "COMP1",
+    
+    }
+    ApiHitOptions(obj)
+  },[])
 
   const currentUser=props.currentUser;
 
@@ -136,7 +170,13 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     .then((response) => {
     
       console.log(JSON.stringify(response.data));
-      router.push(paths.dashboard.employee.root);
+      if(response.data.code===400){
+        props.handleCallSnackbar(response.data.message,'warning')
+      }
+      else{
+        router.push(paths.dashboard.employee.root);
+      }
+      
     
     })
     
@@ -391,6 +431,12 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
+       const obj={
+        companyID:'COMP1',
+       
+      }
+
+      ApiHitDepartment(obj)
        
     },[])
   const NewUserSchema = Yup.object().shape({
@@ -517,12 +563,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 ...prev,
                 locationID:newvalue
               }))
-              const obj={
-                companyID:'COMP1',
-               
-              }
-
-              ApiHitDepartment(obj)
+             
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
               // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
@@ -696,6 +737,29 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             }))
           }}
           />
+
+
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={groupOptions || []}
+            value={groupValue}
+            getOptionLabel={(option) => option}
+            onChange={(e,newvalue)=>{
+              
+             
+             setGroupValue(newvalue)
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Group Name" />}
+          />
                
                
               </Box>
@@ -731,6 +795,8 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
           </Grid>
         </Grid>
       </FormProvider>
+
+      {groupValue && <AssignPages open={groupValue} employeeId={localStorage.getItem('employeeIdCreated')}/>}
     </div>
   );
 })

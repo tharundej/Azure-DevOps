@@ -59,6 +59,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function ApproveClaim({ currentUser }) {
+  
 
   // const defaultPayload = {
   //   "count":5,
@@ -99,11 +100,16 @@ export default function ApproveClaim({ currentUser }) {
     { id: "claimType", label: "Claim Type", width: 180, type: "text" },
     { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
     { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "approveAmount", label: "Max Approve Amount", width: 200, type: "text" },
-    { id: "expenseDate", label: "Expense Date", width: 100, type: "text" },
+   
+  
+    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
+    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
     { id: "approverName", label: "Approver Name", width: 100, type: "text" },
+    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
+    { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
-
 
     // { id: '', width: 88 },
   ]
@@ -116,6 +122,8 @@ export default function ApproveClaim({ currentUser }) {
   const defaultPayload={
 
     "companyId":companyID,
+    "approverManagerId":managerID,
+    
     "count":5,
     "page":0,
     "search":"",
@@ -159,8 +167,8 @@ const dialogConfig={
   ],
 } 
 const actions = [
-  { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-  { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+  { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+  { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
   // { name: "eerr", icon: "hh", path: "jjj" },
 ];
   const searchFilterheader = [
@@ -371,9 +379,11 @@ const actions = [
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
           (successData) => {
             console.log('sucess', successData);
+            // enqueueSnackbar(response?.data?.message,{variant:'success'})
           },
           (error) => {
             console.log('lllll', error);
+            // enqueueSnackbar(response?.data?.message,{variant:'error'})
           }
         );
   
@@ -383,8 +393,8 @@ const actions = [
         // router.push(paths.dashboard.user.list);
         // console.info('DATA', data);
       } catch (error) {
-  
-        alert("api hit not done")
+        // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        // alert("api hit not done")
         console.error(error);
       }
     });

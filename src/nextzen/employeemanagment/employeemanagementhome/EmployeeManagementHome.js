@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 
@@ -6,10 +6,51 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
+import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
+
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { forEach } from 'lodash';
 
 
 function EmployeeManagementHome  () {
-    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure'];
+  const {user}=useContext(UserContext)
+  console.log(user,'from contest')
+  const [tabLabels,setTabLabels]=useState([])
+   // const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
+    const dataObj=[
+      {
+        id:'employeeTable',
+        label:'EmployeeTable'
+      },
+      {
+        id:'statutory',
+        label:'Statutory'
+      },
+      {
+        id:'salaryStructure',
+        label:'Salary Structure'
+      },
+
+    ]
+
+    useEffect(()=>{
+      var arr = [];
+
+      dataObj?.forEach((item) => {
+        const permission = user?.rolePermissions.employeeManagement;
+        //console.log( typeof permission?.mainHeading,  permission?.mainHeading)
+      if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading && permission[item.id]) {
+        console.log(`User Permission for ${item?.key}:`, permission);
+        console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+
+        arr.push(item.label);
+      }
+      });
+      arr.push("Roles")
+      setTabLabels(arr);
+    },[user])
+
+    
   const tabContents = [
     <div>
 
@@ -20,6 +61,9 @@ function EmployeeManagementHome  () {
     </div>,
     <div>
       <SalaryStructure/>
+    </div>,
+    <div>
+      <RoleAndResponsiblity/>
     </div>
   ];
   const [TABLE_HEAD,setTableHead] =React.useState( [
