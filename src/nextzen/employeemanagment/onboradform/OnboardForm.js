@@ -131,7 +131,10 @@ const handleCallSnackbar=(message,severity)=>{
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
+            <StepButton color="inherit"
+            // onClick={handleStep(index)}
+            
+            >
               {label}
             </StepButton>
           </Step>
