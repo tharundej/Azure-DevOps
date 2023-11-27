@@ -185,7 +185,7 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
-    // const baseUrl = " https://vshhg43l-3001.inc1.devtunnels.ms/erp"
+    const baseUrl = " https://vshhg43l-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,

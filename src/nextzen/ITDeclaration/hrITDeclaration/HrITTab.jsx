@@ -266,6 +266,11 @@ companyID: "COMP1",
 //   if (!itDetails) {
 //     return <div>Loading...</div>; 
 //   }
+
+function camelCaseToSentence(camelCase) {
+    // Add a space before all capital letters, then convert to lowercase
+    return camelCase.replace(/([A-Z])/g, ' $1').toLowerCase();
+  }
  
   return (
     <>
@@ -354,34 +359,7 @@ companyID: "COMP1",
           <Typography>Declaration</Typography>
         </AccordionSummary>
         <AccordionDetails>
-         <div>
-         {itDetails ? (
-  Object.entries(itDetails).map(([section, details], index) => (
-    <div key={index}>
-      <Typography variant="h4">{section}</Typography>
-      {Array.isArray(details) ? (
-        details.map((item, itemIndex) => (
-          <div key={itemIndex}>
-            {Object.entries(item).map(([key, value], keyIndex) => (
-              <div key={keyIndex}>
-                <Typography variant="subtitle1">{key}</Typography>
-                <Typography>{value}</Typography>
-              </div>
-            ))}
-          </div>
-        ))
-      ) : (
-        <div>Details is not an array</div>
-      )}
-    </div>
-  ))
-) : (
-  <div>Loading...</div>
-)}
-
-
-
-    </div>
+       
         </AccordionDetails>
       </Accordion>
       <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
@@ -421,14 +399,30 @@ companyID: "COMP1",
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography>Housing Property Details</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
+           <Typography>Housing Property Details</Typography>
+  </AccordionSummary>
+  <AccordionDetails>
+    {/* {itDetails.housingPropertyDetails.map((property, index) => (
+      <div key={index}>
+        <Typography>{`Address: ${property.addressOfProperty}`}</Typography>
+        <Typography>{`Loan Amount: ${property.amountOfHousingloanTakenFromTheProperty}`}</Typography>
+       
+      </div>
+    ))} */}
+
+{itDetails?.housingPropertyDetails[0] &&
+  Object.entries(itDetails.housingPropertyDetails[0]).map(([key, value]) => (
+    // Exclude 'documents' key
+    key !== 'documents' && (
+      <div key={key}>
+        <Typography>{`${camelCaseToSentence(key)}: ${value}`}</Typography>
+      </div>
+    )
+  ))
+}
+
+  </AccordionDetails>
+
       </Accordion>
 
       <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
