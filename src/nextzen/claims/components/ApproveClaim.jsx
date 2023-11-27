@@ -100,9 +100,15 @@ export default function ApproveClaim({ currentUser }) {
     { id: "claimType", label: "Claim Type", width: 180, type: "text" },
     { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
     { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "approveAmount", label: "Max Approve Amount", width: 200, type: "text" },
-    { id: "expenseDate", label: "Expense Date", width: 100, type: "text" },
+   
+  
+    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
+    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
     { id: "approverName", label: "Approver Name", width: 100, type: "text" },
+    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
+    { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -117,6 +123,8 @@ export default function ApproveClaim({ currentUser }) {
   const defaultPayload={
 
     "companyId":companyID,
+    "approverManagerId":managerID,
+    
     "count":5,
     "page":0,
     "search":"",

@@ -113,8 +113,14 @@ export default function MyClaims({ currentUser ,}) {
     { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
     { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
     { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
+    { id: "expense_start_date", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
+    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
+    { id: "total_days", label: "Total Days", width: 100, type: "text" },
+    { id: "approve_amount", label: "Approved Amount", width: 100, type: "text" },
     { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "approved_date", label: "Approved Date", width: 100, type: "text" },
+    { id: "Payment_status", label: "Payment Status", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -125,7 +131,7 @@ export default function MyClaims({ currentUser ,}) {
   const employeeID =localStorage.getItem('employeeID');
   const companyID =localStorage.getItem('companyID');
   const defaultPayload={
-
+    "companyId":companyID,
     "employee_id":employeeID,
     "page":0,
     "count":5,

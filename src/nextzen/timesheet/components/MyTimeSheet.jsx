@@ -92,7 +92,9 @@ const MyTimeSheet = ({currentUser,filterSearch}) => {
     
       ];
     
-   
+      const [currentDate, setCurrentDate] = useState(new Date());
+     
+      console.log(currentDate,"currentDate")
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -346,7 +348,49 @@ console.log(timesheetData,"vvvvvvvvvvv")
 
       }
     }
-// edit
+    useEffect(()=>{
+      calculateDays()
+      generateDaysArray(numberOfDays);
+     
+    },[])
+// day wise rendering the textfields
+const [days, setDays] = useState([]);
+function calculateDays(startDate, endDate) {
+  // Convert the input strings to Date objects
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Calculate the difference in milliseconds
+  const timeDifference = end - start;
+
+  // Calculate the number of days
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  return daysDifference;
+}
+
+// Example usage:
+const startDate = '2023-11-20';
+const endDate = '2023-11-25';
+
+const numberOfDays = calculateDays(startDate, endDate);
+console.log(numberOfDays,"numberOfDays");
+
+function generateDaysArray(value) {
+  const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  if (value >= 1 && value <= 7) {
+    setDays(allDays.slice(0, value));
+    return allDays.slice(0, value);
+  } else {
+    // Handle invalid values if needed
+    console.error('Invalid value. Please provide a value between 1 and 7.');
+    return [];
+  }
+}
+console.log(days,"allDays")
+// generateDaysArray(numberOfDays)
+
 
 
      
