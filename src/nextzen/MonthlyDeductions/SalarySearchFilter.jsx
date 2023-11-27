@@ -302,7 +302,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
       color="primary"
       className="button"
       onClick={handleTimeForm}
-      sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
+      sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
     >
       Apply Salary Advance
     </Button>

@@ -297,7 +297,7 @@ export default function GeneralForminfo({ currentUser }) {
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
             <ModalHeader heading="Add PayRoll" />
             {/* methods1={methods1} onSubmit={onSubmit} */}
-            <DialogTitle>Add PayRoll</DialogTitle>
+            {/* <DialogTitle>Add PayRoll</DialogTitle> */}
 
             <DialogContent>
               <Box
@@ -355,11 +355,12 @@ export default function GeneralForminfo({ currentUser }) {
                 Save
               </LoadingButton> */}
               <Button
-               sx={{backgroundColor:'#3B82F6'}}
-               variant="contained"
-               onClick={onSubmit2}>
-                Save
-                </Button>
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit2}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         )}

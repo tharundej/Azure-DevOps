@@ -41,6 +41,7 @@ import { useForm } from 'react-hook-form';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
 import { parse } from 'date-fns';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -475,8 +476,7 @@ export default function PaySchedule({ currentUser }) {
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -568,20 +568,27 @@ export default function PaySchedule({ currentUser }) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit1}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={(event) => onSubmitEdit2(valueSelected, event)}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-
+           
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -631,14 +638,21 @@ export default function PaySchedule({ currentUser }) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={(event) => onSubmitEdit2(valueSelected, event)}
                  loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={(event) => onSubmitEdit2(valueSelected, event)}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         )}

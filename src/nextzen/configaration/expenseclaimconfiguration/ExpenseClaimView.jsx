@@ -39,6 +39,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
+  const [designation,setDesignation] = useState(editData?.department_name);
   const TABLE_HEAD = [
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth: 180 },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth: 180 },
@@ -66,34 +67,9 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       key: 0,
     },
   };
-  const ApiHitDepartment = (obj) => {
-    const config = {
-      method: 'post',
-
-      maxBodyLength: Infinity,
-
-      url: `${baseUrl}/onboardingDepartment`,
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      data: obj,
-    };
-
-    axios
-      .request(config)
-
-      .then((response) => {
-        // console.log(JSON.stringify(response?.data));
-        setDepartmentOptions(response?.data?.data || []);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  const dep={
+    companyID:'COMPQ'
+  }
   const ApiHitDesgniation = (obj) => {
     const config = {
       method: 'post',
@@ -115,13 +91,14 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDesginationptions(response?.data?.data || []);
+        setDesignation(response?.data?.data || [])
       })
 
       .catch((error) => {
         console.log(error);
       });
   };
-
+console.log(designation,' ')
   const ApiHitDesgniationGrade = (obj) => {
     const config = {
       method: 'post',
@@ -151,9 +128,9 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   };
   useEffect(()=>{
     const obj={
-     companyID:'COMP1',
+     companyID:'COMP2',
    }
-   ApiHitDepartment(obj)
+  //  ApiHitDepartment(obj)
    ApiHitDesgniation(obj)
    ApiHitDesgniationGrade()
  },[])
@@ -322,27 +299,6 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
     }
   };
 
-  // const onSubmit1 = handleSubmit1(async (data) => {
-  //   data.companyId = 'COMP2';
-  //   console.log('submitted data111', data);
-
-  //   try {
-  //     const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
-  //     if (response?.data?.code === 200) {
-  //       handleCloseEdit();
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage('Shift Configuration Added Succuessfully!');
-  //       setSnackbarOpen(true);
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setOpen(false);
-  //     setSnackbarSeverity('error');
-  //     setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-  //     setSnackbarOpen(true);
-  //     console.log('error', error);
-  //   }
-  // });
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
 
   useEffect(() => {
@@ -432,7 +388,8 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
                 label="Department Name"
                 options={departmentName}
                 getOptionLabel={(option) => option.type}
-                value={editData?.department_name}
+                 value={editData?.department_name}
+                // defaultValue={editData?.department_name}
                 onChange={(e, newValue) => handleSelectChange('department_name', newValue || null)}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Department Name" />}
