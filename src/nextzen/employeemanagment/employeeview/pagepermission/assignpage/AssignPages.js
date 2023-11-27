@@ -3,7 +3,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import Dialog from '@mui/material/Dialog';
@@ -24,7 +24,9 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
-const RolePage = ({open,handleModalClose,type,data}) => {
+import {Box} from '@mui/material'
+
+const AssignPages = ({open,type,data,employeeId}) => {
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
   const [userdropDownvalue, setUserDropDownValue] = useState('');
   const [groupname, setGroupname] = useState('');
@@ -107,18 +109,16 @@ dropdowns:[
 
   useEffect(() => {
     if(open ){
-        if(type==="create"){
-            APiHitGetList()
-        }else {
-            setGroupname(data?.mainHeading)
+       
+            setGroupname(open)
             const obj={
                 "companyId": "COMP1",
-                "groupName":data?.mainHeading,
+                "groupName":open,
               
             }
-            console.log(data?.mainHeading,'objobjobj')
+            //console.log(data?.mainHeading,'objobjobj')
             ApiHitGetSub(obj)
-        }
+       
     }
   }, [open]);
 
@@ -178,7 +178,7 @@ dropdowns:[
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${baseUrl}/setGroups`,
+      url: `${baseUrl}/setPermissions`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
@@ -191,8 +191,8 @@ dropdowns:[
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        setGroupname('');
-        setCheckedState("")
+        // setGroupname('');
+        //setCheckedState("")
         handleCallSnackbar(response.data.message,"success")
         handleModalClose()
       })
@@ -206,6 +206,7 @@ dropdowns:[
       groupName: groupname,
       companyId: 'COMP1',
       pages: checkedState,
+      employeeId:employeeId
     };
      ApiHitSavePages(obj);
     console.log(checkedState,'checkedstate');
@@ -256,19 +257,19 @@ dropdowns:[
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
       />
-    <Dialog
+    <Box
         fullWidth
-        maxWidth={false}
-        open={open}
+        
+        
         // onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 720 },
+          sx: { maxWidth: 1020 },
         }}
       >
      <DialogContent>
-      <Grid container marginTop="10px" spacing={2}>
+      {/* <Grid container marginTop="10px" spacing={2}>
         <Grid item xs={12} md={3} lg={4}>
-         
+          
           <TextField
             label="Group Name"
             id="groupname"
@@ -278,7 +279,7 @@ dropdowns:[
             }}
           ></TextField>
         </Grid>
-      </Grid>
+      </Grid> */}
       <FormGroup>
         {checkedState &&
           Object.entries(checkedState).map(([group, values], index) => (
@@ -327,9 +328,11 @@ dropdowns:[
       }}
       >
       <Grid item>
-      <Button variant="contained" color="primary" onClick={handleModalClose} marginRight="5px">
+      {/* <Button variant="contained" color="primary" onClick={handleModalClose} marginRight="5px">
         Cancel
-      </Button></Grid>
+      </Button> */}
+      
+      </Grid>
       <Grid item>
       <Button variant="contained" color="primary" onClick={handleSave}>
         Save
@@ -337,9 +340,9 @@ dropdowns:[
       </Grid>
       </DialogContent>
 
-      </Dialog>
+      </Box>
     </div>
   );
 };
 
-export default RolePage;
+export default AssignPages;

@@ -79,7 +79,7 @@ function Searchbar() {
 
   const renderItems = () => {
     const data = groupedData(dataFiltered);
-
+   
     return Object.keys(data)
       .sort((a, b) => -b.localeCompare(a))
       .map((group, index) => (

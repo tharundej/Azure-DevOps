@@ -16,12 +16,17 @@ const FileBox = ({file,onDelete,onEdit,sx,index}) => {
                  <FileThumbnail file={file?.type || " "} sx={{ width: 36, height: 36 }} />
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary" onClick={()=>{onEdit(index)}} >
-                    Edit
-                  </Button>
-                  <Button variant="outlined" color="secondary" onClick={()=>{onDelete(index)}} >
-                    Delete
-                  </Button>
+
+                    <Iconify 
+                  sx={{cursor: "pointer",color:'black',width:'30px',height:"20px"}}
+                  onClick={()=>{onEdit(index)}}
+                  icon="mdi:edit-outline" />
+
+                    <Iconify 
+                  sx={{cursor: "pointer",color:'black',width:'30px',height:"20px"}}
+                  onClick={()=>{onDelete(index)}}
+                  icon="material-symbols:delete-outline" />
+                 
                 </Grid>
       </Grid>
     );
