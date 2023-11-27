@@ -184,20 +184,21 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
+  
   const login = useCallback(async (companyEmail, password) => {
     const data = {
       companyEmail,
       password,
     };
-
+    
     // console.log(data, 'data ......');
     try {
-      const response = await axios.post(baseUrl + '/loginUser', data);
+      const response = await axios.post(baseUrl+'/loginUser', data);
       // const obj = response?.data;
       // obj.permission=permission
       localStorage.setItem('userDetails', JSON.stringify(response?.data));
       setUser(response?.data);
-
+      const companyEmail = localStorage.setItem('companyEmail',data?.companyEmail);
       //  const response = await axios.post(endpoints.auth.login, data);
       // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
       const companyID = localStorage.setItem('companyID', response?.data?.companyID);
@@ -215,6 +216,7 @@ export function AuthProvider({ children }) {
       );
       const roleID = localStorage.setItem('roleID', response?.data?.roleID);
       const userName = localStorage.setItem('userName', response?.data?.userName);
+
       const { accessToken, user } = response.data;
       console.log(response?.data.statusCode, 'response');
       if (response?.data?.statusCode === 200) {
@@ -289,7 +291,7 @@ export function AuthProvider({ children }) {
         data.middleName = middleName;
       }
       console.log(data, 'data ......');
-      const response = await axios.post(baseUrl + '/signup', data);
+      const response = await axios.post(baseUrl+'/signup', data);
       // const response = await axios.post(endpoints.auth.register, data);
 
       console.log(response);
@@ -319,6 +321,7 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
+    localStorage.removeItem('accessToken');
     localStorage.clear();
     dispatch({
       type: 'LOGOUT',
@@ -375,6 +378,8 @@ export function AuthProvider({ children }) {
     </>
   );
 }
+export { reducer }; // Exporting only the reducer function
+export default logout;
 
 AuthProvider.propTypes = {
   children: PropTypes.node,
