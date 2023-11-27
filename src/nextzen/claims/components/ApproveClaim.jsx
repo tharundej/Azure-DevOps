@@ -111,7 +111,6 @@ export default function ApproveClaim({ currentUser }) {
     { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
-
     // { id: '', width: 88 },
   ]
 
