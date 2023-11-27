@@ -212,6 +212,12 @@ export function useNavData() {
     const updateSidebarList = () => {
       if (user) {
         var arr = [];
+        arr.push( {
+          title: t('Dashboard'),
+          path: paths.dashboard.root,
+          icon: ICONS.g_dashboard,
+          key:'Dashboard'
+        })
 
         items.forEach((item) => {
           const permission = user?.rolePermissions[item?.key];
@@ -223,13 +229,10 @@ export function useNavData() {
           arr.push(item);
         }
 
-        arr.push( {
-          title: t('Dashboard'),
-          path: paths.dashboard.root,
-          icon: ICONS.g_dashboard,
-          key:'Dashboard'
-        })
+      
         });
+
+        
 
         setSidebarList(arr);
       }
