@@ -25,6 +25,7 @@ import axios from 'axios';
 import { MobileTimePicker } from '@mui/x-date-pickers';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ShiftConfigurationForm({ currentUser }) {
   // const [open, setOpen] = useState(false);
@@ -173,7 +174,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
         Add Shift Config
       </Button>
@@ -187,7 +188,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Shift Config</DialogTitle>
+        <ModalHeader heading="Add Shift Config" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -249,14 +250,22 @@ export default function ShiftConfigurationForm({ currentUser }) {
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

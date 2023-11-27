@@ -28,7 +28,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
-
+const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
   const token = localStorage.getItem('accessToken')
@@ -48,13 +48,13 @@ const DeclarationDetails = () => {
    const startYear = 2022;
    const endYear = 2030;
  
-   const financialYears = [];
-   for (let year = startYear; year <= endYear; year++) {
-     financialYears.push(`${year}-${year + 1}`);
-   }
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
  
    const [selectedYear, setSelectedYear] = useState(null);
- 
+   const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
      setSelectedYear(value);
    };
@@ -106,7 +106,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: 2023,
+      financialYear: selectedYear?.financialYear,
 
       rowsPerPage: rowsPerPage,
 
@@ -158,7 +158,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: 2023,
+      financialYear: selectedYear?.financialYear,
 
       records: newArray,
     };
@@ -194,6 +194,44 @@ const DeclarationDetails = () => {
         console.log(error);
       });
   };
+  const getFinancialYear = async () => {
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
 
   return (
     <div>
@@ -214,14 +252,16 @@ const DeclarationDetails = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Autocomplete
-        id="financialYear"
-        options={financialYears}
-        value={selectedYear}
-        onChange={handleYearChange}
-        renderInput={(params) => <TextField {...params} label="Financial Year" />}
-      />
-      <p>Selected Financial Year: {selectedYear}</p>
+      <Grid item xs={12}>
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option?.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+        />
+      </Grid>
       <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
