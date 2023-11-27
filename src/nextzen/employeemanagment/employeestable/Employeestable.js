@@ -136,12 +136,9 @@ export default function EmployeeTable() {
     },
      
     "sort": {
-     
-    "key": 1,
-     
-    "orderBy": "employee_id"
-     
-    }
+      "key": 0,
+      "orderBy": "last_updated_by"
+  }
     }
 
 
