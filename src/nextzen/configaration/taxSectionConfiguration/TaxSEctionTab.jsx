@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
-import TAxSectionConfig from './TaxSectionConfig';
+import TAxSectionConfig from './TAxSectionConfig';
 
 
 
