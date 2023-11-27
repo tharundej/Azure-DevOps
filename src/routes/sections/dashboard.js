@@ -143,7 +143,7 @@ const RoleConfiguration = lazy(() =>
 const TaxSectionConfiguration = lazy(() =>
   import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
 );
-
+const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
@@ -465,7 +465,7 @@ export const dashboardRoutes = [
       { path: ':id/edit', element: <Edits /> },
       { path: 'userneweditform', element: <UserNewEditForm1 /> },
       { path: 'onboardform', element: <OnBoardForm /> },
-
+      {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
       //  { path: ':id/edit', element: <Edits /> },
       // { path: 'reusetable', element: <ReuseTable /> },
@@ -570,7 +570,21 @@ export const dashboardRoutes = [
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },
-
+  {
+    path:'changepassword',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children:[
+      {element: <ChangePassword/>, index: true},
+    ],
+  },
   {
     path: 'configurations',
     element: (

@@ -115,7 +115,7 @@ export default function JwtRegisterView() {
     companyName: Yup.string()
       .required('Company Name Required')
       .matches(
-        /^[A-Za-z0-9\s@\-_.*#!^<>%+]+$/,
+        /^[A-Za-z0-9\s@\-_.*#!^<>%+$^(){}|]+$/,
         'Company Name must contain only alphanumeric characters and Spichal Charters'
       ),
     companyRegistrationNo: Yup.string()
@@ -192,7 +192,7 @@ export default function JwtRegisterView() {
       await register?.(
         data.cin,
         data.companyName,
-        data.companyRegistrationNo,
+        parseInt(data.companyRegistrationNo,10),
 
         formatDateToYYYYMMDD(datesUsed.companyDateOfIncorporation),
         data.companyCeoName,
@@ -336,6 +336,7 @@ export default function JwtRegisterView() {
                       // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                       value={null}
                       //  defaultValue={dayjs(new Date())}
+                      minDate={dayjs().subtract(300, 'year')}
                       maxDate={dayjs()}
                       onChange={(newValue) => {
                         console.log(newValue);

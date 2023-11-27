@@ -268,7 +268,7 @@ dropdowns:[
      <DialogContent>
       <Grid container marginTop="10px" spacing={2}>
         <Grid item xs={12} md={3} lg={4}>
-          {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
+         
           <TextField
             label="Group Name"
             id="groupname"
@@ -289,7 +289,7 @@ dropdowns:[
                     id={`main-heading-${group}`}
                     checked={values.mainHeading}
                     onChange={() => handleMainHeadingChange(group)}
-                    style={{ color: '#3B82F6' }}
+                    style={{ color: '#00FF00', transform: 'scale(1.2)' }}
                   />
                 }
                 label={`${formatLabel(group)}`}

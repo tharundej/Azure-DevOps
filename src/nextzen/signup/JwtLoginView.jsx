@@ -103,9 +103,9 @@ export default function JwtLoginView() {
       </Stack>
       <Card sx={{ backgroundColor: '#cce9f0' }}>
         <CardContent>
-        <Typography variant="body2">Manager Login Use Below Credentials</Typography>
-          <Typography variant="body2">Email: potter@howgarts.com</Typography>
-          <Typography variant="body2">Password: Potter@123</Typography>
+        <Typography variant="body2">Admin Login Use Below Credentials</Typography>
+          <Typography variant="body2">Email: anilg@infobellit.com</Typography>
+          <Typography variant="body2">Password: Anil@123</Typography>
         </CardContent>
       </Card>
     </Stack>
@@ -156,7 +156,7 @@ export default function JwtLoginView() {
       </LoadingButton>
     </Stack>
   );
-
+  
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}

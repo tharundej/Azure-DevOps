@@ -26,7 +26,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 import {Box} from '@mui/material'
 
-const AssignPages = ({open,type,data,employeeId}) => {
+const EmployeePermissions = ({open,type,data,employeeId}) => {
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
   const [userdropDownvalue, setUserDropDownValue] = useState('');
   const [groupname, setGroupname] = useState('');
@@ -113,7 +113,7 @@ dropdowns:[
             setGroupname(open)
             const obj={
                 "companyId": "COMP1",
-                "groupName":open,
+                "employeeId":open,
               
             }
             //console.log(data?.mainHeading,'objobjobj')
@@ -126,7 +126,9 @@ dropdowns:[
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${baseUrl}/getGroupSubs`,
+        url: `${baseUrl}/getEmpAllPerms
+        
+        `,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json', 
@@ -136,8 +138,12 @@ dropdowns:[
       
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setCheckedState(response.data.data);
+        const obj={}
+      if(Object.keys(response.data.data)?.length>0){
+        setCheckedState(response?.data?.data);
+      }else{
+        APiHitGetList()
+      }
       })
       .catch((error) => {
         console.log(error);
@@ -203,7 +209,7 @@ dropdowns:[
 
   const handleSave = () => {
     const obj = {
-      groupName: groupname,
+     
       companyId: 'COMP1',
       pages: checkedState,
       employeeId:employeeId
@@ -267,9 +273,8 @@ dropdowns:[
         }}
       >
      <DialogContent>
-      {/* <Grid container marginTop="10px" spacing={2}>
-        <Grid item xs={12} md={3} lg={4}>
-          
+      <Grid container marginTop="10px" spacing={2}>
+        {/* <Grid item xs={12} md={3} lg={4}> 
           <TextField
             label="Group Name"
             id="groupname"
@@ -278,15 +283,15 @@ dropdowns:[
               setGroupname(e?.target?.value);
             }}
           ></TextField>
-        </Grid>
-      </Grid> */}
+        </Grid> */}
+      </Grid>
       <FormGroup>
         {checkedState &&
           Object.entries(checkedState).map(([group, values], index) => (
             <Box key={index}>
               <FormControlLabel
                 control={
-                  <Checkbox
+                    <Checkbox
                     id={`main-heading-${group}`}
                     checked={values.mainHeading}
                     onChange={() => handleMainHeadingChange(group)}
@@ -345,4 +350,4 @@ dropdowns:[
   );
 };
 
-export default AssignPages;
+export default EmployeePermissions;

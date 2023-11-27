@@ -1,5 +1,6 @@
 import React,{forwardRef,useEffect,useImperativeHandle,useState} from 'react'
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
@@ -17,6 +18,19 @@ import Iconify from 'src/components/iconify';
 import { baseUrl } from '../BaseUrl';
 import ModalHeader from '../../global/modalheader/ModalHeader'
 import axios from 'axios';
+
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,type,employeeIDForApis})=> {
   
@@ -335,14 +349,17 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                    id={`file-upload-input-${index}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                    
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}

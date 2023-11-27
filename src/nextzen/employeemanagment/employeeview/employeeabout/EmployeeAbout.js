@@ -31,7 +31,9 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+export default function 
+
+EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -256,7 +258,15 @@ export default function EmployeeAbout({ handleCallSnackbar, delivery, shippingAd
           Personal emailID
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.emailID}
+          {currentEmployee?.personalEmail}
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+          Comapany emailID
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {currentEmployee?.companyEmail}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
