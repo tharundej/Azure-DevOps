@@ -99,7 +99,7 @@ export default function ChangePassword() {
         setSnackbarOpen(true);
         handleClose();
         // router.push(paths.auth.jwt.login);
-        logout();
+        
       } else if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);

@@ -379,7 +379,7 @@ export function AuthProvider({ children }) {
   );
 }
 export { reducer }; // Exporting only the reducer function
-export default logout;
+
 
 AuthProvider.propTypes = {
   children: PropTypes.node,
