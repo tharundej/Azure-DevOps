@@ -372,7 +372,7 @@ export default function LeavePeriodFilters({
                   >
                     {leavePeriodTypes?.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
+                        {name?.leavePeriodType}
                       </MenuItem>
                     ))}
                   </Select>
