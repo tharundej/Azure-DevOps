@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function Loans() {
+export default function Loans({defaultPayload}) {
   const {user} = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -76,7 +76,7 @@ export default function Loans() {
        
       } 
     
-  const defaultPayload={
+  const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "count": 5,
     "page": 0,
     "search": "",
@@ -380,7 +380,7 @@ sx={{margin:2}}
     }
     <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"

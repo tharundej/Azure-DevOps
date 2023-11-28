@@ -2,16 +2,6 @@ import * as React from 'react';
 
 import Box from '@mui/material/Box';
 
-import Card from '@mui/material/Card';
-
-import CardActions from '@mui/material/CardActions';
-
-import CardContent from '@mui/material/CardContent';
-
-import Button from '@mui/material/Button';
-
-import Typography from '@mui/material/Typography';
-
 import { _userList } from 'src/_mock';
 
 import ReusableTabs from '../tabs/ReusableTabs';
@@ -19,6 +9,8 @@ import ReusableTabs from '../tabs/ReusableTabs';
 import Approveleave from './approveleave/ApproveLeave';
 
 import LeaveRequest from './leavecalendar/Calendar/LeaveRequest';
+import { useContext , useEffect,useState} from 'react';
+import UserContext from '../context/user/UserConext';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -27,17 +19,51 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Approve Leave','Leave Calendar'];
-  const tabContents = [
-    <div>
-      <Approveleave />
-    </div>,
-    <div><LeaveRequest/></div>,
+  const { user } = useContext(UserContext);
+  const [tabLabels, setTabLabels] = useState([]);
+  const [tabContents, setTabContents] = useState([]);
+
+  const dataObj = [
+    {
+      id: 'approveLeave',
+      label: 'Leave Approval',
+      content: <Approveleave key="approveLeave" />,
+    },
+    {
+      id: 'leaveCalendar',
+      label: 'Leave Overview',
+      content: <LeaveRequest key="leaveCalendar" />,
+    },
+    // Add other data as needed
   ];
 
-  return (
-    
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
+  useEffect(() => {
+    const arrLabels = [];
+    const arrContents = [];
 
+    dataObj?.forEach((item) => {
+      const permission = user?.rolePermissions.leaveManagement;
+
+      if (
+        permission &&
+        permission.hasOwnProperty('mainHeading') &&
+        permission.mainHeading &&
+        permission[item.id]
+      ) {
+        arrLabels.push(item.label);
+        arrContents.push(item.content);
+      }
+    });
+
+    setTabLabels(arrLabels);
+    setTabContents(arrContents);
+  }, [user]);
+
+  return (
+    <ReusableTabs
+      tabLabels={tabLabels}
+      tabContents={tabContents}
+      tabsSx={{ borderBottom: "3px solid #3b82f6 !important" }}
+    />
   );
 }

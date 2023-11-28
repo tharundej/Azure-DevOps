@@ -15,7 +15,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function SalaryAdvace() {
+export default function SalaryAdvace({defaultPayload}) {
   const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -50,15 +50,32 @@ export default function SalaryAdvace() {
     
      
     
-      const actions = [
+      const actualActions = [
     
         { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
         { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
     
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
-    
-    
       ];
+
+      const defaultActions=[
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
+      ]
+     
+      // Function to get row actions based on user role
+      const generateRowActions = () => {
+        const userRoleID = user?.roleID; // Assuming roleID is available in user object
+    
+        // Define actions based on the condition (roleID <= 3)
+        // const actions = userRoleID && userRoleID <= 3?actualActions:defaultActions;
+    console.log(userRoleID,"roleiddd")
+        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        console.log(actions,"actionsss")
+        return actions;
+      };
+    
+      const actionsBasedOnRoles = generateRowActions();
+      
+
       const [showForm, setShowForm] = useState  (false);
       const [showApproveForm,setApproveForm]= useState(false);
       const [showRejectForm,setRejectForm]= useState(false);
@@ -75,7 +92,8 @@ export default function SalaryAdvace() {
       const handleTimeForm =()=>{
         setShowForm(true)
       } 
-  const defaultPayload={
+  const defaultPayloadValue=(defaultPayload)?defaultPayload:
+  {
     "count": 5,
     "page": 0,
     "search": "",
@@ -366,10 +384,10 @@ sx={{margin:2}}
     }
     <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
-rowActions={actions}
+rowActions={actionsBasedOnRoles}
 bodyData="data"
 onClickActions={onClickActions}
 />  
