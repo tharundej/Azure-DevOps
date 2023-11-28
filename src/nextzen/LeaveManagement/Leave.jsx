@@ -19,45 +19,53 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const {user} = useContext(UserContext)
-  const [tabLabels,setTabLabels]=useState([])
-  const dataObj =[
+  const { user } = useContext(UserContext);
+  const [tabLabels, setTabLabels] = useState([]);
+  const [tabContents, setTabContents] = useState([]);
+
+  const dataObj = [
     {
-      id:'approveLeave',
-      label:'Leave Approval'
+      id: 'approveLeave',
+      label: 'Leave Approval',
+      content: <Approveleave key="approveLeave" />,
     },
     {
-      id:'leaveCalendar',
-      label:'Leave Overview'
-    }
-  ]
+      id: 'leaveCalendar',
+      label: 'Leave Overview',
+      content: <LeaveRequest key="leaveCalendar" />,
+    },
+    // Add other data as needed
+  ];
 
-  useEffect(()=>{
-    var arr = [];
+  useEffect(() => {
+    const arrLabels = [];
+    const arrContents = [];
 
     dataObj?.forEach((item) => {
-      const permission = user?.rolePermissions.leaveManagement
-      //console.log( typeof permission?.mainHeading,  permission?.mainHeading)
-    if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading && permission[item.id]) {
-      console.log(`User Permission for ${item?.key}:`, permission);
-      console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
-      arr.push(item.label);
-    }
-    });
-    setTabLabels(arr);
-  },[user])
+      const permission = user?.rolePermissions.leaveManagement;
 
-   const tabContents = [
-      <div>
-        <Approveleave />
-      </div>,
-      <div><LeaveRequest /></div>,
-    ];
- 
+      if (
+        permission &&
+        permission.hasOwnProperty('mainHeading') &&
+        permission.mainHeading &&
+        permission[item.id]
+      ) {
+        console.log(`User Permission for ${item?.key}:`, permission);
+        console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+        arrLabels.push(item.label);
+        arrContents.push(item.content);
+      }
+    });
+
+    setTabLabels(arrLabels);
+    setTabContents(arrContents);
+  }, [user]);
 
   return (
-    
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
-
+    <ReusableTabs
+      tabLabels={tabLabels}
+      tabContents={tabContents}
+      tabsSx={{ borderBottom: "3px solid #3b82f6 !important" }}
+    />
   );
 }
