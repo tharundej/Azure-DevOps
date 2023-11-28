@@ -58,13 +58,14 @@ const [sendData, setSendData] = useState({
           handleClose()
         },
         (error) => {
-          enqueueSnackbar("Previous Claim is Pending",{variant:'Error'})
+          enqueueSnackbar(error.response.data.Message,{variant:'error'})
+          console.log(error)
           handleClose()
         }
       );
     } 
     catch (error) {
-      enqueueSnackbar(error?.Message,{variant:'Error'})
+      enqueueSnackbar(error?.Message,{variant:'error'})
       console.error(error);
     }
   });

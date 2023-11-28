@@ -68,7 +68,7 @@ export const paths = {
       forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
-      changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
+      // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -130,7 +130,7 @@ export const paths = {
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
        onboardform: `/employeemanagementhome/onboardform`,
        userview: (id) => `/employeemanagementhome/${id}/employeeview`,
-      
+       changepassword:`/changepassword`,
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,

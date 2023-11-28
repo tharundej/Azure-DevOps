@@ -19,6 +19,8 @@ import instance from 'src/api/BaseURL';
 import { LoadingButton } from '@mui/lab';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import {useSnackbar} from '../../../components/snackbar';
+import AddProject from './AddProject';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -31,6 +33,7 @@ const MenuProps = {
 };
 const ProjectSearchFilter = ({filterSearch,filterData}) =>{
     const theme = useTheme();
+    const {enqueueSnackbar} = useSnackbar();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [showProject,setShowProject]=useState(false);
     const [showAssignEmployee,setShowAssignEmployee]=useState(false);
@@ -172,113 +175,10 @@ const ProjectSearchFilter = ({filterSearch,filterData}) =>{
           filterSearch(e?.target?.value)
         },1000)
 
-const [reportingManager,setReportingManagerData]= useState([])
-const [projectManager,setProjectManagers] = useState([])
-const [selectedLocationID, setSelectedLocationID] = useState(null); 
 const [employesListData,setEmployesListData]= useState([])
 const [projectsList,setProjectsList] = useState([])
-const [locationList,setLocationList] = useState([])
-const [hasFetchedData, setHasFetchedData] = useState(false);
 const [projectId,setProjectID]= useState()
 
-
-const [datesUsed, setDatesUsed] = useState({
-    startDate: '',
-    endDate: '',
-    actualStartDate:'',
-    actualEndDate:''
-  });
-  const NewUserSchema = Yup.object().shape({
-    projectName: Yup.string(),
-    startDate: Yup.string(),
-    endDate: Yup.string(),
-    actualStartDate:Yup.string(),
-    actualEndDate:Yup.string(),
-    projectDescription:Yup.string(),
-    status: Yup.string(),
-   
-   
-  });
-  const defaultValues = useMemo(
-    () => ({
-        projectName:'',
-        startDate:'',
-        endDate: '',
-        status:'',
-        actualStartDate:'',
-        actualEndDate:'',
-        projectDescription:''
-    }),
-    []
-  );
-  const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
-    defaultValues,
-  });
-  const {
-    reset, 
-    watch,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-const handleLocationSelection = (selectedOption) => {
-  if (selectedOption) {
-    setSelectedLocationID(selectedOption.locationID); 
-  }
-};
-const projectManagersData= {
-  companyId:'COMP1',
-  locationId:'',
-  roleId:6
-};
-
-const reportingManagersData={
-  companyId:'COMP1',
-  locationId:'',
-  roleId:7
-}
-const getReportingManagers = async (requestData) => {
-  try {
-    const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/reportingManagers', requestData);
-    return response.data.list;
-  } catch (error) {
-    throw error;
-  }
-}
-const fetchReportingManagers = async () => {
-  try {
-    reportingManagersData.locationId = parseInt(selectedLocationID) || null;
-    const reportingManagersData1 = await getReportingManagers(reportingManagersData);
-    setReportingManagerData(reportingManagersData1)
-    projectManagersData.locationId = parseInt(selectedLocationID) || null;
-    const reportingManagersData2 = await getReportingManagers(projectManagersData);
-    setProjectManagers(reportingManagersData2)
-  } 
-  catch (error) {
-    console.error(error);
-  }
-};
-
-const getLocation=()=>{
-    const data={
-      "companyID":"COMP1"
-    }
-     const config={
-      method:'POST',
-      maxBodyLength:Infinity,
-      url:baseUrl + '/locationOnboardingDepartment',
-      data:data
-     }
-     axios.request(config).then((response)=>{
-      setLocationList(response?.data?.data)
-     })
-     .catch((error)=>{
-      console.log(error)
-     })
-}
 
 const getEmployeesList =()=>{
   const data ={
@@ -287,7 +187,7 @@ const getEmployeesList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager',
+    url:baseUrl + '/getEmployeesForProjectManager',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -308,7 +208,7 @@ const getProjectsList =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:'https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForProjectManager',
+  url:baseUrl + '/getProjectsForProjectManager',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -319,63 +219,15 @@ const getProjectsList =()=>{
     console.log(error)
    })
 }
-const onSubmit = handleSubmit(async (data) => {
-    try {
-   
-      data.endDate = datesUsed?.endDate;
-      data.startDate = datesUsed?.startDate;
-      data.actualStartDate=datesUsed?.actualStartDate;
-      data.actualEndDate=datesUsed?.actualEndDate;
-      data.projectManager=data?.projectManager?.employeeId;
-      data.reportingManager= data?.reportingManager?.employeeId;
-      data.locationId = selectedLocationID,
-      data.companyId = "COMP1";
-      const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/addProject', data).then(
-        (successData) => {
-          handleClose()
-          reset()
-        },
-        (error) => {
-            reset()
-          console.log('lllll', error);
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
-});
 
 const handleClose=()=>{
     setShowProject(false);
     setShowFilter(false);
     setShowAssignEmployee(false);
-    setProjectID();
-    setSelectedIds();
-    setSelectedLocationID();
 }
-  
-if (selectedLocationID !== null && !hasFetchedData) {
-  fetchReportingManagers();
-  setHasFetchedData(true); // Update the state to mark that data has been fetched
-}
-
-// const roleID = localStorage?.getItem('roleID')
-const roleID = 5;
 const [selectedIds, setSelectedIds] = useState([]);
-const employeesList =[
-  {id:'30',firstName:'Harsha Priya'},
-  {id:'31',firstName:'Harsha'},
-  {id:'32',firstName:'Harsh'},
-  {id:'33',firstName:'Hars'},
-  {id:'34',firstName:'Har'},
-  {id:'35',firstName:'Ha'},
-  {id:'36',firstName:'H'},
-  {id:'37',firstName:'Priya'},
-  {id:'38',firstName:'Kondamuru'},
-  {id:'39',firstName:'Kondamuru Harsha Priya'},
-]
-
 const handleProject=(event)=>{
+  console.log(event,"event")
     setProjectID(event.target.value)
 }
 
@@ -394,17 +246,37 @@ const handleCancel = async()=>{
     actualEndto:""  
   })
 }
-
-console.log(selectedIds,"selectedIDSSS")
 useEffect(() => {
-  if(showProject){
-    getLocation()
-  }
+  
   if(showAssignEmployee){
     getProjectsList()
     getEmployeesList()
   }
 }, [showProject, showAssignEmployee])
+
+const AssignEmployees =()=>{   
+  const data ={
+    "projectID": projectId?.projectID,
+    "employeeIDs": selectedIds,
+    "projectName": projectId?.projectName
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:baseUrl+'/assignEmpsToProjects',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    enqueueSnackbar(response?.data?.message,{variant:'success'})
+    handleClose()
+   })
+   .catch((error)=>{
+    console.log(error)
+    enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+    handleClose()
+   })
+}
+
 
   return (
         <> 
@@ -661,7 +533,7 @@ useEffect(() => {
     )
 }
 <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
-  <Grid item xs={12} md={8}>
+  <Grid item xs={12} md={6}>
     <TextField
       placeholder="Search...."
       fullWidth
@@ -670,24 +542,26 @@ useEffect(() => {
       }}
     />
   </Grid>
-  <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
-    {(roleID==2)?<Button
+  <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+   
+    <Button
       variant="contained"
       color="primary"
       className="button"
       onClick={()=>setShowProject(true)}
-      sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}
+      sx={{ marginRight:2,marginTop:1 }}
     >
       Add project
-    </Button>:(roleID==5)?
+    </Button>
+ 
     <Button   
     variant="contained"
     color="primary"
     className="button"
     onClick={()=>setShowAssignEmployee(true)}
-    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>
+    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
-    </Button>:null}
+    </Button>
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>
@@ -704,144 +578,7 @@ useEffect(() => {
         sx: { maxWidth: 770 , overflow:'auto'},
       }}
       >
-      
-          <FormProvider methods={methods} onSubmit={onSubmit}>
-          <ModalHeader heading="Add Project"/>
-          <Grid container spacing={2} sx={{marginTop:1}}>
-            <Grid xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Grid container spacing={2}>
-               <Grid item md={6} xs={12}>
-                  <RHFTextField name="projectName" label="Project Name" fullWidth/>
-                </Grid>
-                 <Grid item md={6} xs={12}>
-                 <RHFAutocomplete
-            name="locationId"
-            label="Location"
-            options={locationList}
-            getOptionLabel={(option) => option.locationName}
-            isOptionEqualtoValue={(option) => option.locationId}
-            onChange={(event, selectedOption) => handleLocationSelection(selectedOption)}
-            />  
-                 </Grid>
-              </Grid>
-            
-  <Grid container spacing={2} sx={{marginTop:1}}>
-     <Grid item md={6} xs={12}>
-     <RHFAutocomplete
-            name="projectManager"
-            label="Project Manager"
-            options={projectManager}
-            getOptionLabel={(option) => option.firstName}
-            isOptionEqualtoValue={(option) => option.employeeId}
-            />    
-     </Grid>
-     <Grid item md={6} xs={12}>
-     <RHFAutocomplete
-            name="reportingManager"
-            label="Reporting Manager"
-            options={reportingManager}
-            getOptionLabel={(option) => option.firstName}
-            isOptionEqualtoValue={(option) => option.employeeId}
-            />
-     </Grid>
-  </Grid>
-  <Grid container sx={{mt:1}}>
-              <Grid md={12} xs={12} item>
-                      <RHFTextField name="projectDescription" label="Project Description"/>
-                  </Grid>
-              </Grid>
-  <Grid container spacing={2} >
-  <Grid item md={6} xs={12}>
-      
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="Start date"
-                        value={datesUsed?.startDate?dayjs(datesUsed?.startDate):null}
-                        defaultValue={dayjs(new Date())}
-                        onChange={(newValue) => {
-                          setDatesUsed((prev) => ({
-                            ...prev,
-                            startDate: newValue?formatDateToYYYYMMDD(newValue):"",
-                          }));
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-  </Grid>
-                             <Grid item md={6} xs={12}>
-                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="End date"
-                        value={datesUsed?.endDate?dayjs(datesUsed?.endDate):null}
-                        defaultValue={dayjs(new Date())}
-                        onChange={(newValue) => {
-                          setDatesUsed((prev) => ({
-                            ...prev,
-                            endDate: newValue?formatDateToYYYYMMDD(newValue):"",
-                          }));
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                             </Grid>
-  </Grid>
-  
-  <Grid container spacing={2}>
-  <Grid item md={6} xs={12}>
-      
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="Actual Start date"
-                        value={datesUsed?.actualStartDate?dayjs(datesUsed?.actualStartDate):null}
-                        defaultValue={dayjs(new Date())}
-                        onChange={(newValue) => {
-                          setDatesUsed((prev) => ({
-                            ...prev,
-                            actualStartDate: newValue?formatDateToYYYYMMDD(newValue):"",
-                          }));
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-  </Grid>
-                             <Grid item md={6} xs={12}>
-                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        sx={{ width: '100%', paddingLeft: '3px' }}
-                        label="Actual End date"
-                        value={datesUsed?.actualEndDate?dayjs(datesUsed?.actualEndDate):null}
-                        defaultValue={dayjs(new Date())}
-                        onChange={(newValue) => {
-                          setDatesUsed((prev) => ({
-                            ...prev,
-                            actualEndDate: newValue?formatDateToYYYYMMDD(newValue):"",
-                          }));
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                             </Grid>
-  </Grid>
-  
-                <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                
-                  <Button variant="outlined" onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>
-                  <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
-                  save Project
-                  </LoadingButton>
-                </Stack>
-               </Card>
-            </Grid>
-          </Grid>
-        </FormProvider>
+      <AddProject handleClose={handleClose} title="Add Project"/>
      </Dialog>
     )
 }
@@ -870,7 +607,7 @@ useEffect(() => {
     onChange={handleProject}
   >
      {projectsList.map((option) => (
-            <MenuItem value={option.projectID}>
+            <MenuItem value={option}>
               {option.projectName}
             </MenuItem>
           ))}
@@ -882,7 +619,7 @@ useEffect(() => {
   multiple
   limitTags={2}
   id="multiple-limit-tags"
-  options={employesListData}
+  options={employesListData && employesListData?.length ? employesListData : []}
   renderTags={(value, getTagProps) =>
     value.map((option, index) => (
       <Chip
@@ -892,7 +629,7 @@ useEffect(() => {
       />
     ))
   }
-  getOptionLabel={(option) => option.employeeName}
+  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
   getOptionSelected={(option, value) => option.employeeID === value.employeeID}
   onChange={(event, newValue) => {
     setSelectedIds(newValue.map((option) => option.employeeID));
@@ -906,7 +643,7 @@ useEffect(() => {
 
 </FormControl>
 
-<Button sx={{float:'right'}} variant="contained" color="primary">Assign</Button>
+<Button sx={{float:'right'}} variant="contained" color="primary" onClick={AssignEmployees}>Assign</Button>
 <Button sx={{float:'right',right:10}} variant="outlined" onClick={handleClose}>Cancel</Button>
       
         </Grid>

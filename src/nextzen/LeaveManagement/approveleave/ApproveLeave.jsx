@@ -94,7 +94,7 @@ const onClickActions=(rowdata,event)=>{
         enqueueSnackbar(response.data.message,{variant:'success'})
       })
         .catch((error) => {
-          enqueueSnackbar(error.message,{variant:'Error'})
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
           console.log(error);
         });
       

@@ -204,7 +204,7 @@ export default function Loans() {
      handleClose()
     })
       .catch((error) => {
-        enqueueSnackbar(error.message,{variant:'Error'})
+        enqueueSnackbar(error.message,{variant:'error'})
        handleClose()
       });
   }
