@@ -111,6 +111,8 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 
 const defaultFilters = {
   name: '',
@@ -183,6 +185,7 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
+    // const baseUrl = " https://vshhg43l-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -620,6 +623,12 @@ const BasicTable = ({
           )}
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+            {filterName === 'HrTabFilter' && (
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+           {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>
