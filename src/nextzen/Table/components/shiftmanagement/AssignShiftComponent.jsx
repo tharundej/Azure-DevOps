@@ -134,7 +134,7 @@ export default function AssignShiftComponent() {
  }}
  className="custom-dialog"  
 >
- <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
+ <EditShiftRoaster currentUser={{}} editData={editData}  onClose={handleClose} />
       </Dialog>
     )}
 

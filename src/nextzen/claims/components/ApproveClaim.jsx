@@ -59,6 +59,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function ApproveClaim({ currentUser }) {
+  
 
   // const defaultPayload = {
   //   "count":5,
@@ -159,8 +160,8 @@ const dialogConfig={
   ],
 } 
 const actions = [
-  { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-  { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+  { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+  { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
   // { name: "eerr", icon: "hh", path: "jjj" },
 ];
   const searchFilterheader = [
@@ -371,9 +372,11 @@ const actions = [
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
           (successData) => {
             console.log('sucess', successData);
+            // enqueueSnackbar(response?.data?.message,{variant:'success'})
           },
           (error) => {
             console.log('lllll', error);
+            // enqueueSnackbar(response?.data?.message,{variant:'error'})
           }
         );
   
@@ -383,8 +386,8 @@ const actions = [
         // router.push(paths.dashboard.user.list);
         // console.info('DATA', data);
       } catch (error) {
-  
-        alert("api hit not done")
+        // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        // alert("api hit not done")
         console.error(error);
       }
     });

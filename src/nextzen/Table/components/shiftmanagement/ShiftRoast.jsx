@@ -14,6 +14,7 @@ import AddEmployeShift from './AddeployeShift';
 import instance from 'src/api/BaseURL';
 import { enqueueSnackbar } from 'notistack';
 import EditShiftRoaster from './EditShiftRoaster';
+import ShiftRoasterEmployeList from './ShiftRoasterEmployeList';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -40,7 +41,7 @@ export default function ShiftRoast() {
         { id: "shiftName", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "", label: "Employees", width: 180, type: "badge" },
+        { id: "", label: "Employees", width: 180,eyeIcon:true, type: "text" },
         
         { id: "departmentName", label: "Department", width: 100, type: "text" },
         { id: "designationName", label: "Designation", width: 100, type: "text" },
@@ -80,14 +81,16 @@ export default function ShiftRoast() {
     
       const actions = [
     
-        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-        { name: "Delete", icon: "hh", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
+        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
     
 
     
       ];
     
- 
+      const [employeListDialog,SetEmployeListDialog]=useState(false)
+      const [roasterRowData,setRoasterRowData]=useState([])
+      const closeEmployeList = ()=> SetEmployeListDialog(false)
       const [showEdit, setShowEdit] = useState  (false);
       const handleClose = () => setShowEdit(false);
       const [editData,setEditData]=useState({})
@@ -127,9 +130,22 @@ export default function ShiftRoast() {
         setShowEdit(true);
         setEditData(rowdata)
       }
+      const SecondoryTable = async (rowdata,event) => {
+        console.log("🚀 ~ file: ShiftRoast.jsx:131 ~ SecondoryTable ~ rowdata:",rowdata)
+       setRoasterRowData(rowdata.EmpList)
+        SetEmployeListDialog(true)
+
+      }
+      const handleEditRowParent = async (rowdata,event) => {
+
+   
+        // alert("yes yes yes")
+      }
+
+
   return (
     <>
-      {/* {showEdit && (
+      {showEdit && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -142,7 +158,23 @@ export default function ShiftRoast() {
 >
  <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
       </Dialog>
-    )} */}
+    )}
+ {employeListDialog && 
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={employeListDialog}
+ onClose={closeEmployeList}
+ PaperProps={{
+  sx:{maxWidth:770,overflow:"hidden"},
+ }}
+ className="custom-dialog"  
+ >
+<ShiftRoasterEmployeList onClose={closeEmployeList} roasterRowData={roasterRowData} />
+ </Dialog>
+
+ }
+
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
@@ -156,8 +188,10 @@ bodyData='data'
 endpoint='/getAssignshift'
 rowActions={actions}
 onClickActions={onClickActions}
-
+SecondoryTable={SecondoryTable}
+handleEditRowParent={handleEditRowParent}
 />  
     </>
   );
 }
+ 

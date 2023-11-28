@@ -54,18 +54,24 @@ export default function Swaprequest() {
      
     const defaultPayload ={
       "companyId":localStorage.getItem('companyID'),
-      "count":5,
+      "supervisorId":"ibm5",
+      "count":7,
       "page":0,
       "search":"",
-      "externalFilter":{
-      "requestDate":"",
-      "startDate":"",
-      "endDate":"",
+      "externalFilters":{
+      "requestDate":{
+      "fromRequestDate":"",
+      "toRequestDate":""
+      },
+      "startDate":{
+      "fromStartDate":"",
+      "toStartDate":""
+      },
       "status":""
   }, 
       "sort":{
       "key":0,
-      "order":""
+      "order":"employeeName"
   }
   }
 

@@ -283,7 +283,7 @@ export default function SwapSearchFilter({filterSearch,filterData}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            onChange={e=>{handleSearch(e.target.value)}}
 
             />
             </Grid>

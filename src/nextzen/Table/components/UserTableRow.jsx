@@ -35,7 +35,8 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
-  onHandleEditRow
+  onHandleEditRow,
+  SecondoryTable
 
 }) {
   const confirm = useBoolean();
@@ -78,6 +79,19 @@ console.log(row,'row data')
                         ? row.avatarURL
                         : `${ASSETS_API}/assets/images/avatar/avatar_0.jpg`
                     }
+                    sx={{ mr: 2 }}
+                  />
+                )}
+                {ele.eyeIcon && (
+                  <Avatar
+                    alt={row[ele.id]}
+                    src={
+                      row && row.avatarURL && row.avatarURL.length > 0
+                        ? row.avatarURL
+                        : `${ASSETS_API}/assets/images/avatar/avatar_0.jpg`
+                    }
+                    onClick={(row)=>{SecondoryTable(row)}}
+
                     sx={{ mr: 2 }}
                   />
                 )}
@@ -162,6 +176,7 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
+  SecondoryTable: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
   headerContent: PropTypes.any,

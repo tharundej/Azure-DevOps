@@ -267,9 +267,7 @@ return arr
     
       const data = {
         shiftConfigurationId: CurrentShiftNameData?.shiftConfigurationId !== undefined ? parseInt( CurrentShiftNameData?.shiftConfigurationId) : null,
-        // ShiftTerm:"weekly",
-        shiftGroupName: CurrentShiftGroupNameData?.ShiftGroupName !== undefined ? CurrentShiftGroupNameData?.ShiftGroupName : CurrentShiftGroupNameData,
-        shiftGroupNameId: CurrentShiftGroupNameData?.employeeShiftGroupId !== undefined ? parseInt(CurrentShiftGroupNameData?.employeeShiftGroupId) : 0 ,
+        // ShiftTerm:"weekly"
         supervisorId:'ibm4',
         toggle:SwitchValue !== '' ? parseInt(SwitchValue) : 0,
         departmentId:CurrentDepartmentData?.departmentID !== undefined ? JSON.stringify (CurrentDepartmentData?.departmentID) : '',
@@ -277,7 +275,7 @@ return arr
         DesignationGradeId: CurrentGradeData?.designationGradeID !== undefined ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
         companyId:localStorage.getItem('companyID'),
         employeeId:join(),
-        locationId:"30"
+        locationId:"43"
       }
           console.log(data, 'data111ugsghghh');
           if (CurrentShiftNameData?.shiftConfigurationId === undefined) {

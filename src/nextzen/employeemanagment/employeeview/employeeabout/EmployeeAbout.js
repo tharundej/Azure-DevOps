@@ -23,7 +23,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
@@ -31,7 +31,7 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({  delivery, shippingAddress, payment,employeeIDForApis }) {
+export default function EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -79,7 +79,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         }
         try {
           const locations = await ApiHitLocations();
-          const department=await ApiHitDepartment(deptObj);
+          const department=await ApiHitDepartmentWithoutLocation();
           const desgination=await ApiHitDesgniation(desgObj)
           const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj)
           const roles= await ApiHitRoles()
@@ -150,6 +150,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         console.log(JSON.stringify(response.data));
         setCurrentEmployee(response.data.data)
         currentEmployeeData=response.data.data
+        handleCallSnackbar(response.data.message,'success')
       })
       .catch((error) => {
         console.log(error);
@@ -195,12 +196,14 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
     
   
 }
- 
+ const handleCallSnackbarP=(msg,sev)=>{
+  handleCallSnackbar(msg,sev);
+ }
  
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
+    <EmployeeAboutEdit handleCallSnackbar={handleCallSnackbarP} ApiHit={ApiHit} dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>
@@ -608,5 +611,6 @@ EmployeeAbout.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
-  employeeIDForApis:PropTypes.string
+  employeeIDForApis:PropTypes.string,
+  handleCallSnackbar:PropTypes.func
 };

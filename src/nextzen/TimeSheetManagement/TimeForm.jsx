@@ -30,6 +30,11 @@ import { countries } from 'src/assets/data';
 // components
 import { Autocomplete, TextField } from '@mui/material';
 import Label from 'src/components/label';
+import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -216,6 +221,7 @@ const getActivityName = async ()=>{
 
   return (
     <div style={{ paddingTop: '20px' }}>
+      <Dialog>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
  <Grid xs={12} md={12}>
@@ -233,16 +239,16 @@ const getActivityName = async ()=>{
                 columnGap={1}
                 display="grid"
                 gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(7, 1fr)',
+                  // xs: 'repeat(1, 1fr)',
+                  // sm: 'repeat(7, 1fr)',
                 }}
               >
                 <RHFTextField name="employee_id" label="Employe id  " />
                 <Autocomplete
             disablePortal
-            id="cobo-box-demo"
-            options={projectDetails || []}
-            value={currentProjectData.projectId}
+            id="combo-box-demo"
+            options={projectDetails}
+            value={currentProjectData}
             getOptionLabel={(option) => option.projectcdName}
             onChange={(e,newvalue)=>{
              
@@ -267,9 +273,9 @@ const getActivityName = async ()=>{
           />
                 <Autocomplete
             disablePortal
-            id="combo-box-dmo"
-            options={activityData || []}
-            value={currentActivitytData.activityId}
+            id="combo-box-demo"
+            options={activityData}
+            value={currentActivitytData}
             getOptionLabel={(option) => option.activityName}
             onChange={(e,newvalue)=>{
              
@@ -317,6 +323,7 @@ const getActivityName = async ()=>{
           </Grid>
         </Grid>
       </FormProvider>
+      </Dialog>
     </div>
   );
 }

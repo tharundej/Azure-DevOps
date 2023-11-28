@@ -43,8 +43,9 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
-export default function EditShiftRoaster({  currentUser , setShowEdit ,handleClose, editData}) {
-  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData )
+export default function EditShiftRoaster({  currentUser   , editData ,handleEditClose}) {
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ handleEditClose:", handleEditClose)
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:", editData?.toggle )
   const [datesUsed, setDatesUsed] = useState({
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
@@ -264,7 +265,7 @@ return arr
       const data = {
         shiftConfigurationId:parseInt( CurrentShiftNameData?.shiftConfigurationId),
         ShiftTerm:"weekly",
-        shiftGroupName:CurrentShiftGroupNameData?.ShiftGroupName,
+
         supervisorId:'ibm4',
         departmentId: JSON.stringify (CurrentDepartmentData?.departmentID),
         designationId:JSON.stringify( CurrentDesignationData?.designationID),
@@ -276,7 +277,7 @@ return arr
     
           const response = await instance.post('/addShiftDetails', data).then(
             (successData) => {
-              handleClose()
+              handleEditClose()
               enqueueSnackbar(response.data.message,{variant:'success'})
     
               console.log('sucess', successData);
@@ -311,7 +312,7 @@ return arr
 <Grid xs={12} md={12}>
   <Grid sx={{padding:'8px'}}>
     <Typography sx={{marginLeft:'5px'}}>
-  Edit Employee Shift Here ...
+  Edit Employee Shift Here 
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -336,7 +337,7 @@ return arr
 
 </RHFSelect> */}
 
-<Autocomplete
+{/* <Autocomplete
 disablePortal
 id="combo-box-dem"
 options={ShiftGroupName || []}
@@ -355,7 +356,9 @@ sx={{
 width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 }}
 renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
-/>
+/> */}
+<RHFTextField  value={editData?.shiftGroupName}  name="shiftGroupName" label="Shift Group Name " readonly/>   
+
 {/* <RHFSelect name="Select_Shift" label="Select Shift">
 
 <option value="full_day" >Full Day</option>
@@ -399,7 +402,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
 <option value="second_half" >Second Half</option>
 
 </RHFSelect> */}
-{!isemployeLevel && <Autocomplete
+{editData?.toggle == "0" && <Autocomplete
 disablePortal
 id="combo-box-demo"
 options={departmentData || []}
@@ -428,7 +431,7 @@ renderInput={(params) => <TextField {...params} label="Select Department" />}
 <option value="second_half" >Developer</option>
 
 </RHFSelect> */}
-{!isemployeLevel && 
+{editData?.toggle == "0" && 
 <Autocomplete
 disablePortal
 id="combo-box-demo3"
@@ -450,7 +453,7 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 renderInput={(params) => <TextField {...params} label="Select Designation" />}
 />
 }
-{!isemployeLevel && 
+{editData?.toggle == "0" && 
 <Autocomplete
 disablePortal
 id="combo-box-demo"
@@ -472,7 +475,7 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 renderInput={(params) => <TextField {...params} label="Select Grade" />}
 />
 }
-{isemployeLevel && 
+{editData?.toggle == "1" && 
 <Autocomplete
             multiple
             disablePortal
@@ -495,7 +498,11 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
                 <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Save Employe To Shift'}
                 </LoadingButton>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+
+                <Button  sx={{ml:"5px"}} 
+                onClick={
+                  handleEditClose
+                  }>Cancel</Button>
               </Stack>
    
   </Card>
@@ -506,7 +513,8 @@ renderInput={(params) => <TextField {...params} label="Select Grade" />}
   );
 }
 
+
 EditShiftRoaster.propTypes = {
   currentUser: PropTypes.object,
-  handleClose: PropTypes.func,
+  handleEditClose: PropTypes.func,
 };

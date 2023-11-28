@@ -34,19 +34,26 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
   // const handleClose=()=>setOpen(false)
 
   console.log(optionsEdit,optionsValueEdit,'optionsValueEdit')
-  const [dropdownOptions,setDropDownOptions]=useState();
-  const [dropdownValues,setDropDownValue]=useState()
-  const [currentUser,setcurrentUser]=useState()
+  const [dropdownOptions,setDropDownOptions]=useState("");
+  const [dropdownValues,setDropDownValue]=useState("")
+  const [currentUser,setcurrentUser]=useState("")
   useEffect(()=>{
-    if(optionsValueEdit && optionsValueEdit && editRowIds){
+    if( openModalEdit){
+      setDropDownValue((prevValue) => ({
+        ...prevValue,
+        departmentValue: optionsValueEdit?.departmentValue,
+        desginationValue: optionsValueEdit?.desginationValue,
+        desginationGradeValue: optionsValueEdit?.desginationGradeValue,
+      }));
+  
         setDropDownOptions(optionsEdit);
-        setDropDownValue(optionsValueEdit);
+        
         setcurrentUser(editRowIds)
         console.log(optionsValueEdit,'optionsValueEditoptionsValueEdit')
 
     }
 
-  },[optionsEdit,optionsValueEdit,editRowIds])
+  },[openModalEdit])
 
   const [options,setOptions]=useState({})
   const [optionsValue,setOptionsValue]=useState({})

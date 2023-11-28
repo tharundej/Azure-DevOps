@@ -302,14 +302,42 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic details saved successfully!');
-          setSnackbarOpen(true);
-          console.log('success');
+       
+          if (response.data.code === 200) {
+            setSnackbarSeverity('success');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            
+            setISReloading(!isreloading);
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+       
+          }else    if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+          
+      
+          }
         }
-      })
+      )
       .catch((error) => {
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Lic details. Please try again.');
@@ -360,19 +388,53 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Lic  Updated successfully!');
-          setSnackbarOpen(true);
-          setIsEdit(false)
-          console.log('success');
+     
+        console.log(response , "success")
+          if(response.data.status === 200){
+          
+            console.log('success',response);
+            setISReloading(!isreloading);
+            setSnackbarSeverity('success');
+            setFormData({
+              companyId: cmpId,
+              companyName: '',
+              employeeId: empId,
+              employeeName: '',
+              financialYear: '2022-11-11',
+              policyNumber: '',
+              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+              insuredPersonName: '',
+              sumOfAssured: '',
+              relationship: '',
+              premiumAmountForwhichProofAssured: '',
+              premiumAmountFallInDue: '',
+              premiumConsiderForDeduction: '',
+              treatmentForSpecifiedDiseases: '',
+              doesTheInjuredPersonHaveDisability: '',
+              fileName: [],
+              fileContent: [],
+            })
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            setIsEdit(false)
+          }
+          else if(response.data.status === 400){
+            console.log('success',response);
+            // setISReloading(!isreloading);
+            setSnackbarSeverity('error');
+           
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+            // setIsEdit(false)
+          }
+         
+          
         }
-      })
+      )
       .catch((error) => {
         setOpen(true);
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error Lic Updating. Please try again.');
+        setSnackbarMessage(response.message   );
         setSnackbarOpen(true);
         console.log(error);
       });
@@ -439,46 +501,6 @@ const handleRentDeletedID = ( data)=>{
     // }
   };
 
-  //basic table 
-  const [TABLE_HEAD,setTableHead] =useState( [
-    {
-      id: 'employeeId',
-      label: 'Employee ID',
-      type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
-      secondaryText: 'name',
-    },
-    { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
-    { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
-    { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'emailID', label: 'Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
-    { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
-    { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
-    { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
-    { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
-    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
-    { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
-    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
-
-
-    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
-    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
-    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
-    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
-    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
-
-    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
-   
-    
-  ]);
   const handleSubmit = ()=>{
     isEdit ? editcDetails() :saveLicDetals()
   }
@@ -631,9 +653,9 @@ const handleRentDeletedID = ( data)=>{
                 name="treatmentForSpecifiedDiseases"
                 id="combo-box-demo"
                 options={treatmentTypes.map((employeepayType) => employeepayType.type)}
-                value={formData?.treatmentForSpecifiedDiseaseses === "1"
+                value={formData?.treatmentForSpecifiedDiseaseses === 1
                   ? 'Yes'
-                  : formData.treatmentForSpecifiedDiseases === "0"
+                  : formData.treatmentForSpecifiedDiseases === 0
                   ? 'No'
                   : formData.treatmentForSpecifiedDiseases
             }
@@ -655,9 +677,9 @@ const handleRentDeletedID = ( data)=>{
                 name="doesTheInjuredPersonHaveDisability"
                 id="combo-box-demo"
                 options={pinjuredPersonDisability.map((employeepayType) => employeepayType.type)}
-                value={formData?.doesTheInjuredPersonHaveDisability === "1"
+                value={formData?.doesTheInjuredPersonHaveDisability === 1
                   ? 'Yes'
-                  : formData.doesTheInjuredPersonHaveDisability === "0"
+                  : formData.doesTheInjuredPersonHaveDisability === 0
                   ? 'No'
                   : formData.doesTheInjuredPersonHaveDisability
             }
@@ -690,7 +712,7 @@ const handleRentDeletedID = ( data)=>{
             >
               <Grid item>
                 {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                <Button className="button" onClick={attchementHandler}>Attchement</Button>
+                <Button className="button" onClick={attchementHandler}>Attachment</Button>
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleSubmit}>
@@ -714,7 +736,7 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                <Typography> Total Premium :{policyData?.length}</Typography>
+                <Typography style={{fontSize:"0.9rem"}}> Total Premium :{policyData?.length}</Typography>
               </Grid>
             </Grid>
             {/* Add more rows as needed */}
@@ -730,7 +752,7 @@ const handleRentDeletedID = ( data)=>{
             {/* </div>
           ))} */}
         </Grid>
-
+{policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -776,7 +798,7 @@ const handleRentDeletedID = ( data)=>{
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> :null}
       </FormProvider>
       <Snackbar
         open={snackbarOpen}

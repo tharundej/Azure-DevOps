@@ -109,7 +109,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const values = watch();
   useEffect(() => {
     getEmployeSwap()
-   getShiftName()
+  
 
   }, [])
    const [newShift,setnewShift]= useState(false)
@@ -126,7 +126,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
-    getShiftgroupName()
+    getShiftGroupName()
     // getShiftName()
   }, [])
   const getEmployeSwap = async ( toGroup,fromGroup) => {
@@ -171,12 +171,27 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       }
     }
   }
-  const getShiftgroupName= async (newvalue)=>{
+  // const getShiftgroupName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:localStorage.getItem('companyID'),
+       
+  //     };
+  //     const response = await instance.post('/getShiftGroupName',data);
+  //     setShiftGroupName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+  const getShiftGroupName= async ()=>{
     try{
     const  data= {
-      
-      companyId:localStorage.getItem('companyID'),
-       
+      companyId:"CDAC1",
+      locationId:43,
+      supervisorId:"CDAC_01",
       };
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
@@ -187,21 +202,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     }
   }
 
-  const getShiftName = async (newvalue)=>{
-    try{
-      const data={
-        companyId:localStorage.getItem('companyID'),
-        locationId:30
-      };
-      const response = await instance.post("/getShiftConfig",data);
-      setShiftNames(response.data.data)
 
-    }
-    catch(error){
-      console.error("Error",error)
-      throw error
-    }
-  }
 
   // const getShiftName= async (newvalue)=>{
   //   try{
@@ -318,9 +319,9 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       <Autocomplete
   disablePortal
   id="combo-boxSelectshift"
-  options={shiftName || []}
-  // value={currentEmployeSwapData?.employee_shift_swap_id}
-  getOptionLabel={(option) => option.shiftName}
+  options={ShiftGroupName || []}
+  value={currentEmployeSwapData?.employeeShiftGroupId}
+  getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
   onChange={(e,newvalue)=>{
    
    

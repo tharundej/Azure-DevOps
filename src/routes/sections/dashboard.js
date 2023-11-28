@@ -101,6 +101,7 @@ const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
+const TimeSheetManagement = lazy(() => import('src/nextzen/timesheet/TimeSheet'));
 
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
@@ -225,9 +226,9 @@ export const dashboardRoutes = [
       //   ],
       // },
       {
-        path: 'timesheet',
+        path: 'TimeSheetManagement',
         children: [
-          { element: <TimeSheet />, index: true },
+          { element: <TimeSheetManagement />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
@@ -509,7 +510,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path: 'timesheet',
+    path: 'TimeSheetManagement',
     element: (
       <AuthGuard>
         <DashboardLayout>
@@ -520,7 +521,7 @@ export const dashboardRoutes = [
       </AuthGuard>
     ),
     children: [
-      { element: <TimeSheet />, index: true },
+      { element: <TimeSheetManagement />, index: true },
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },

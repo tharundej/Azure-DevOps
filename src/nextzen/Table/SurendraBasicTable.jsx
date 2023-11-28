@@ -365,7 +365,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 72;
 
  
 
@@ -752,7 +752,7 @@ const [sortColumn, setSortColumn]=useState("")
 
             <Scrollbar>
 
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
+              <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom

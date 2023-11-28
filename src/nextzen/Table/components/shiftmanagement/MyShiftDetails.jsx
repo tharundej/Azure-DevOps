@@ -50,22 +50,13 @@ export default function MyShiftDetails() {
     
      
     const defaultPayload ={
-      "company_id":localStorage.getItem('companyID'),
-      "employee_id":localStorage.getItem('employeeID'),
+      "company_id":"COMP2",
+      "employee_id":"ibm2",
       "page":0,
-      "count":10,
-      "Search":"r",
+      "count":50,
+      "Search":"",
       "externalFilters":{
-      "shift_name": "",
-      "shift_term": "",
-        "startDate": {
-              "from": "",
-              "to": ""
-          },
-          "endDate": {
-              "from": "",
-              "to": ""
-          }
+      "shift_name": ""
    
   },
       "sort": {

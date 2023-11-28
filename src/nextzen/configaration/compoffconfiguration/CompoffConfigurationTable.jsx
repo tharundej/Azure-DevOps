@@ -43,13 +43,13 @@ export default function CompoffConfigurationTable({currentUser}) {
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
     const TABLE_HEAD = [
-      { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth:180 },
-      { id: 'expiryDays', label: 'Expiry Days', type: 'text' , minWidth:180},
-      { id: 'amount', label: 'Amount', type: 'text' , minWidth:180},
+      { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth:280 },
+      { id: 'expiryDays', label: 'Expiry Days', type: 'text' , minWidth:280},
+      { id: 'amount', label: 'Amount', type: 'text' , minWidth:280},
     ];
     const actions = [
       { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' ,endpoint:'/'},
-      { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj' },
+      // { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj' },
     ];
     // const bodyContent = [
     //   {
