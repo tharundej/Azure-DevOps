@@ -45,3 +45,11 @@ export const getTaxs = async (requestBody) => {
     throw error;
   }
 };
+export const getUnitOfMeasure = async (requestBody) => {
+  try {
+    const response = ['Ton', 'Gram', 'KG'];
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
