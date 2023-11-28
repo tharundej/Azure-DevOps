@@ -247,7 +247,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          last Name
+          Last Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.lastName}
@@ -255,7 +255,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Personal emailID
+          Personal Email
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.personalEmail}
@@ -263,7 +263,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Comapany emailID
+          Company Email
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.companyEmail}
@@ -327,7 +327,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          religion
+          Religion
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.religion}
@@ -461,7 +461,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line1
+                    Permanent Address line1
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
                     {currentEmployee?.pAddressLine1}
@@ -471,7 +471,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     </Stack>
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line2
+                    Permanent Address line2
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
                     {currentEmployee?.pAddressLine2}

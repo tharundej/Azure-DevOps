@@ -188,7 +188,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     toggle: currentUser?.toggle || true,
 
    
-     gender:currentUser?.gender||  {label:'Male'},
+     gender:currentUser?.gender||  undefined,
     companyEmail: currentUser?.companyEmail ||'',
     personalEmail: currentUser?.personalEmail ||'',
     }),
@@ -408,7 +408,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="personalEmail" label="Personal Email" />
                 <RHFAutocomplete
                 name="gender"
-                label="gender"
+                label="Gender"
                 options={genderOptions}
                 getOptionLabel={(option) => option.label}
                 
@@ -436,7 +436,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                          
 
                         }));
-                        setIsDateOfBirthFilled(!newValue);
+                        setIsDateOfBirthFilled(!isDateOfBirthFilled);
                       }}
                       
                     />
