@@ -425,7 +425,7 @@ export default function HrFilter({
 
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item md={6} xs={6}>
+        <Grid item md={10} xs={10}>
           <TextField
             placeholder="Search...."
             fullWidth
@@ -433,9 +433,9 @@ export default function HrFilter({
           />
         </Grid>
      
-        <Grid item xs={4} msd={4}>
+        {/* <Grid item xs={4} msd={4}>
          <AddTaxSectionConfig />
-        </Grid>
+        </Grid> */}
         <Grid item md={2} xs={2}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>

@@ -260,11 +260,16 @@ export function AuthProvider({ children }) {
       firstName,
       middleName,
       lastName,
-      pAddressLine1,
-      pAddressLine2,
-      pCity,
-      pState,
-      pPincode
+      companyAddressLine1,
+      companyAddressLine2,
+      companyCountry,
+      companyCity,
+      companyState,
+      companyPincode,
+      empIdPrefix,
+      logoName,
+      companyLogo,
+      
     ) => {
       console.log('hiiii');
       const data = {
@@ -279,11 +284,15 @@ export function AuthProvider({ children }) {
         firstName,
         // middleName,
         lastName,
-        pAddressLine1,
-        pAddressLine2,
-        pCity,
-        pState,
-        pPincode,
+        companyAddressLine1,
+        companyAddressLine2,
+        companyCountry,
+        companyCity,
+        companyState,
+        companyPincode,
+        empIdPrefix,
+        logoName,
+        companyLogo,
       };
       if (companyDateOfIncorporation != 'NaN-NaN-NaN') {
         data.companyDateOfIncorporation = companyDateOfIncorporation;

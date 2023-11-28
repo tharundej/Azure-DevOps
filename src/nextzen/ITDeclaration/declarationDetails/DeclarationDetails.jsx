@@ -28,7 +28,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
-
+const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
   const token = localStorage.getItem('accessToken')
@@ -106,7 +106,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: selectedYear,
+      financialYear: selectedYear?.financialYear,
 
       rowsPerPage: rowsPerPage,
 
@@ -158,7 +158,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: selectedYear,
+      financialYear: selectedYear?.financialYear,
 
       records: newArray,
     };
@@ -256,7 +256,7 @@ const DeclarationDetails = () => {
         <Autocomplete
           id="financialYear"
           options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          getOptionLabel={(option) => option?.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
           renderInput={(params) => <TextField {...params} label="Financial Year" />}

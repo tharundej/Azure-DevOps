@@ -81,8 +81,11 @@ export default function JwtRegisterView() {
   //uploader handler
   const [imageData, setImageData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [countryNames, setCountryNames] = useState([]);
   const [stateNames, setStateNames] = useState([]);
   const [citiesNames, setCitiesNames] = useState([]);
+  const [citySelected, setCitySelected] = useState(null);
+  const [countrySelected, setCountrySelected] = useState(null);
   const [valueSelected, setValueSelected] = useState(null);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -97,6 +100,7 @@ export default function JwtRegisterView() {
       reader.readAsDataURL(file);
     }
   };
+ 
   const RegisterSchema = Yup.object().shape({
     cin: Yup.string()
       .required('CIN is Required')
@@ -150,8 +154,6 @@ export default function JwtRegisterView() {
     emailId: Yup.string()
       .required('Email is Required')
       .email('Email must be a valid email address'),
-    // companyDateOfIncorporation: Yup.date().required('Date of corporation is required') .nullable(),
-    //  .max(new Date(), 'Date of Incorporation cannot be in the future'),
     phoneNo: Yup.string()
       .required('Phone No is Required')
       .matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
@@ -165,13 +167,15 @@ export default function JwtRegisterView() {
     lastName: Yup.string()
       .required('Last Name is Required')
       .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
-    pAddressLine1: Yup.string().required('Address Line 1 is Required'),
-    pAddressLine2: Yup.string(),
-    pCity: Yup.string().required('City is Required'),
-    pState: Yup.string().required('State is Required'),
-    pPincode: Yup.string()
+     companyAddressLine1: Yup.string().required('Address Line 1 is Required'),
+     companyAddressLine2: Yup.string(),
+    // companyCity: Yup.string().required('City is Required'),
+    // companyState: Yup.string().required('State is Required'),
+    companyPincode: Yup.string()
       .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
       .required('Pin code is Required'),
+    empIdPrefix: Yup.string().required('Employee ID type Required'),
+    //  companyCountry: Yup.string().required('Country is Required'),
   });
 
   const defaultValues = {
@@ -186,11 +190,13 @@ export default function JwtRegisterView() {
     firstName: '',
     middleName: '',
     lastName: '',
-    pAddressLine1: '',
-    pAddressLine2: '',
-    pCity: '',
-    pState: '',
-    pPincode: '',
+     companyAddressLine1: '',
+     companyAddressLine2: '',
+    // companyCity: '',
+    // companyState: '',
+    // companyPincode: '',
+    empIdPrefix: '',
+    companyCountry:'',
   };
 
   const methods = useForm({
@@ -291,49 +297,84 @@ export default function JwtRegisterView() {
   //   handleState()
   // },[])
   useEffect(() => {
-    fetchStates();
+    fetchCountry();
+    handleCountry();
+    handleStateChange();
   }, []);
 
-  const fetchStates = () => {
-    let data = JSON.stringify({
-      country: 'India',
-    });
+  const handleCountry = (value) => {
+    setCountrySelected(value);
+    if (value) {
+      let data = {
+        country: value,
+      };
 
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://countriesnow.space/api/v0.1/countries/states',
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        data: data,
+      };
+
+      axiosInstance
+        .request(config)
+        .then((response) => {
+          setStateNames(response?.data?.data?.states || []);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setStateNames([]);
+    }
+  };
+  const fetchCountry = () => {
     let config = {
-      method: 'post',
+      method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://countriesnow.space/api/v0.1/countries/states',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: data,
+      url: 'https://countriesnow.space/api/v0.1/countries/states/',
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
     };
 
     axiosInstance
       .request(config)
       .then((response) => {
-        setStateNames(response?.data?.data?.states || []);
+        setCountryNames(response?.data?.data || []);
+        console.log(response?.data?.data, 'country');
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-  const handleStateChange = (e, value) => {
+  console.log(countrySelected, 'kkk');
+  const handleCity =(value)=>{
+    setCitySelected(value)
+  }
+  const handleStateChange = (value) => {
     setValueSelected(value);
+
+    // if (!valueSelected) {
+    //   setError('Please select a state.'); // Set error if no value is selected
+    //   return; // Prevent form submission
+    // }
     if (value) {
-      let data = JSON.stringify({
-        country: 'India',
+      let data = {
+        country: countrySelected,
         state: value,
-      });
+      };
 
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://countriesnow.space/api/v0.1/countries/state/cities',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
         data: data,
       };
 
@@ -367,11 +408,15 @@ export default function JwtRegisterView() {
         data.firstName,
         data.middleName,
         data.lastName,
-        data.pAddressLine1,
-        data.pAddressLine2,
-        data.pCity,
-        data.pState,
-        data.pPincode
+        data.companyAddressLine1,
+         data.companyAddressLine2,
+         data.companyCountry=countrySelected,
+         data.companyCity=citySelected,
+        data.companyState=valueSelected,
+        parseInt(data.companyPincode,10),
+        data.empIdPrefix,
+        data.logoName=imageData[0]?.name,
+        data.companyLogo=imageData[0]?.data,
       );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
@@ -569,7 +614,7 @@ export default function JwtRegisterView() {
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
-                  name="pAddressLine1"
+                  name="companyAddressLine1"
                   label={
                     <span>
                       Permanent Address Line 1 <span style={{ color: 'red' }}>*</span>
@@ -581,7 +626,7 @@ export default function JwtRegisterView() {
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
-                  name="pAddressLine2"
+                  name="companyAddressLine2"
                   label={<span>Permanent Address Line 2</span>}
                   maxLength={40}
                   type="text"
@@ -589,32 +634,84 @@ export default function JwtRegisterView() {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Autocomplete
-                  value={valueSelected}
-                  onChange={(event, value) => handleStateChange(event, value)}
-                  options={stateNames.map((state) => state.name)}
+                  name="companyCountry"
+                  value={countrySelected || null}
+                  onChange={(event, value) => handleCountry(value)}
+                  options={countryNames.map((countries) => countries.name)}
                   renderInput={(params) => (
-                    <TextField {...params} label="State" variant="outlined" />
+                    <TextField
+                      {...params}
+                      label={
+                        <span>
+                          Country <span style={{ color: 'red' }}>*</span>
+                        </span>
+                      }
+                      variant="outlined"
+                    />
                   )}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
                 <Autocomplete
-                  options={citiesNames}
-                  getOptionLabel={(option) => option}
+                  name="companyState"
+                  id="companyState"
+                  value={valueSelected || null}
+                  onChange={(event, value) => handleStateChange(value)}
+                  options={stateNames.map((state) => state.name)}
                   renderInput={(params) => (
-                    <TextField {...params} label="City" variant="outlined" />
+                    <TextField
+                      {...params}
+                      label={
+                        <span>
+                          State <span style={{ color: 'red' }}>*</span>
+                        </span>
+                      }
+                      variant="outlined"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Autocomplete
+                  id="companyCity"
+                  options={citiesNames}
+                  value={citySelected || null}
+                  getOptionLabel={(option) => option}
+                  onChange={(e,value)=>handleCity(value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={
+                        <span>
+                          City <span style={{ color: 'red' }}>*</span>
+                        </span>
+                      }
+                      variant="outlined"
+                    />
                   )}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
-                  name="pPincode"
+                  name="companyPincode"
                   label={
                     <span>
                       Pin Code<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={6}
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <RHFTextField
+                  name="empIdPrefix"
+                  label={
+                    <span>
+                      Employee ID Prefix<span style={{ color: 'red' }}>*</span>
+                    </span>
+                  }
+                  maxLength={4}
                   type="text"
                 />
               </Grid>
@@ -679,6 +776,8 @@ export default function JwtRegisterView() {
               size="large"
               type="submit"
               variant="contained"
+               onClick={onSubmit}
+              
               //  loading={isSubmitting}
               style={{ display: 'block', margin: '0 auto', backgroundColor: '#3B82F6' }}
             >
@@ -691,7 +790,7 @@ export default function JwtRegisterView() {
     </FormProvider>
   );
 
-  console.log(imageData);
+  console.log(imageData[0]?.data);
   return (
     <StyledContainer>
       <div style={{ backgroundColor: '', height: '100%' }}>

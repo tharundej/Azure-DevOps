@@ -37,21 +37,26 @@ const bull = (
 );
 
 export default function TAxSectionConfig() {
-
+const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
   const {user}=useContext(UserContext)
   console.log(user ,"userDetails ")
   const empId = localStorage.getItem('employeeID')
   const cmpId= localStorage.getItem('companyID')
   const token = localStorage.getItem('accessToken')
+    // State for Snackbar
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+  
   const TABLE_HEAD = [
   
  
-    { id: 'taxsection', label: 'Tax Section', width: 180, type: 'text' },
+    { id: 'taxSection', label: 'Tax Section', width: 180, type: 'text' },
 
 
-    { id: 'taxscheme', label: 'Tax Scheme', width: 180, type: 'text' },
+    { id: 'taxScheme', label: 'Tax Scheme', width: 180, type: 'text' },
     
-    { id: 'limit', label: 'Limit', width: 220, type: 'text' },
+    { id: 'taxLimit', label: 'Limit', width: 220, type: 'text' },
 
    
     // { id: '', width: 88 },
@@ -59,6 +64,7 @@ export default function TAxSectionConfig() {
 
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj' },
 
     // { name: 'Delete', icon: 'hh', path: 'jjj' },
 
@@ -107,20 +113,8 @@ export default function TAxSectionConfig() {
 
   const defaultPayload = 
   {
-    count:5,
-    page: 0,
-    search: "",
-    companyId: cmpId,
-    externalFilters: {
-      departmentName: "",
-      designationName: "",
-      designationGradeName: ""
-    },
-    sort: {
-      key: 1,
-      orderBy: ""
+    companyId:cmpId
     }
-  };
   const handleSelectChange = (field, value ,e) => {
     // console.log('values:', value);
     // console.log('event', event.target.value);
@@ -141,23 +135,18 @@ export default function TAxSectionConfig() {
 
   const updateDepartment = async (data) => {
     const payload = {
-      departmentID: valueSelected?.departmentID,
-      departmentName: valueSelected?.departmentName,
-      designationName: valueSelected?.designationName,
-      designationGradeName: valueSelected?.designationGradeName,
-    
- 
-      designation_id:valueSelected?.designationID,
-    
-      designation_grade_id:valueSelected?.designationGradeID,
-     
-    };
+        companyId:cmpId,
+       configId:valueSelected?.configId,
+       taxSection:valueSelected?.taxSection,
+       taxScheme:valueSelected?.taxScheme,
+       taxLimit:valueSelected?.taxLimit
+       }
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       //    url: baseUrl + '/updateSingleDepartmentInfo ',
-      url: baseUrl +'/updateSingleDepartmentInfo',
+      url: baseUrl +'/updateDeclarationsConfig',
       headers: {
         Authorization:
       token ,  'Content-Type': 'text/plain',
@@ -167,13 +156,19 @@ export default function TAxSectionConfig() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.data.code === 200) {
              setSnackbarSeverity('success');
-             setSnackbarMessage('Designation Added successfully!');
+             setSnackbarMessage(response.data.message);
              setSnackbarOpen(true);
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
-        }
+        }else   if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+           //  setHitGetDepartment(!hitGetDepartment)
+         console.log('success',response);
+       }
       })
       .catch((error) => {
          setOpen(true);
@@ -185,6 +180,8 @@ export default function TAxSectionConfig() {
   
   };
 
+
+ 
   const handleOpen = () => setOpen(true);
  
   const handleCloseEdit = () => setOpenEdit(false);
@@ -233,10 +230,10 @@ export default function TAxSectionConfig() {
             >
      <TextField
                 label="Tax Section "
-                name="taxsection"
-                value={valueSelected?.departmentName ||  null}
+                name="taxSection"
+                value={valueSelected?.taxSection ||  null}
                 onChange={(e, newValue) =>
-                  handleSelectChange('taxsection', newValue ,e || null)
+                  handleSelectChange('taxSection', newValue ,e || null)
                 }
                 variant="outlined"
                 fullWidth
@@ -244,10 +241,10 @@ export default function TAxSectionConfig() {
 
               <TextField
                 label="Tax Scheme "
-                name="taxscheme"
-                value={valueSelected?.designationName || null}
+                name="taxScheme"
+                value={valueSelected?.taxScheme || null}
                 onChange={(e, newValue) =>
-                  handleSelectChange('tacscheme', newValue  ,e|| null)
+                  handleSelectChange('taxScheme', newValue  ,e|| null)
                 }
                 variant="outlined"
                 fullWidth
@@ -256,10 +253,10 @@ export default function TAxSectionConfig() {
 
               <TextField
                 label="Limit "
-                name="limit"
-                value={valueSelected?.designationGradeName || null}
+                name="taxLimit"
+                value={valueSelected?.taxLimit || null}
                  onChange={(e, newValue) =>
-                  handleSelectChange('limit', newValue , e|| null)
+                  handleSelectChange('taxLimit', newValue , e|| null)
                 }
                 variant="outlined"
                 fullWidth
@@ -307,11 +304,11 @@ export default function TAxSectionConfig() {
       <BasicTable
         headerData={TABLE_HEAD}
         defaultPayload={defaultPayload}
-        endpoint="/getallDepartmentInfo"
+        endpoint="/getDeclarationsConfig"
         bodyData="data"
         rowActions={actions}
         onClickActions={onClickActions}
-        filterName="HrTabFilter"
+        filterName="TaxSectionFilter"
       />
     </>
   );

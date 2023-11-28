@@ -115,6 +115,10 @@ export default function TaxSectionFilter({
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownDesignation, setdropdownDesignation] = useState([]);
   const [dropdownleavePeriodType, setdropdownleavePeriodType] = useState([]);
+  // State for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -433,7 +437,7 @@ export default function TaxSectionFilter({
           />
         </Grid>
         <Grid item  md={3} xs={3} direction="row" >
-     <AddTaxSectionConfig /> working
+     <AddTaxSectionConfig /> 
        </Grid>
     
         <Grid item md={1} xs={1}>
@@ -442,7 +446,7 @@ export default function TaxSectionFilter({
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-              
+
             </Stack>
           </Grid>
         </Grid>

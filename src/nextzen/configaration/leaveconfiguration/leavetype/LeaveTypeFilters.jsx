@@ -52,7 +52,8 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 import LeaveTypeForm from './LeaveTypeForm';
-import { ApiHitleaveNameType, ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import { leaveTypeName } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+import {leavePeriodType} from '../../../global/configurationdropdowns/ConfigurationDropdown'
 
 const defaultFilters = {
   name: '',
@@ -90,63 +91,31 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function LeaveTypeFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function LeaveTypeFilters({ filterData, filterOptions, filterSearch, searchData }) {
   const theme = useTheme();
-   const [open, setOpen] = useState(false);
-  const termTypes = [
-    'Custom Period',
-    'Fiscal Year'
-  ];
-  const leaveTypeNames = [
-    'Sick Leave',
-    'CL',
-    'CL1'
-  ]
-  const [options, setOptions] = useState({});
-  const [optionLeaveType,setOptionLeaveType] = useState({});
+  const [leaveTypes, setLeaveTypes] = useState([]);
+  const [leavePeriodTypes,setLeavePeriodTypes]=useState([])
   useEffect(() => {
-    if (open) {
-      async function call() {
-        try {
-          const Obj = {
-            companyID: 'COMP1',
-          };
-          const leaveperiod = await ApiHitleavePeriodType(Obj);
-          var optionsArr = { ...optionLeaveType };
-
-          optionsArr.leavePeriodType = leaveperiod;
-
-          console.log(optionsArr, 'optionsArr');
-
-          setOptionLeaveType(optionsArr);
-        } catch (error) {}
-      }
-      async function call2(){
-        try {
-          const Obj = {
-            companyID: 'COMP1',
-          };
-          const leaveTypeName = await ApiHitleaveNameType(Obj);
-          var optionsArr = { ...options };
-
-          optionsArr.leaveTypeName = leaveTypeName;
-
-          console.log(optionsArr, 'optionsArr');
-
-          setOptions(optionsArr);
-        } catch (error) {}
-      }
-      call();
-      call2()
+    async function call() {
+      const arr = await leaveTypeName();
+      console.log(arr, 'sairam');
+      setLeaveTypes(arr);
     }
-  }, [open]);
-  const designationGradeName = [
-    'senior',
-    'junior'
-  ]
+    async function call2(){
+      const arr=await leavePeriodType();
+      console.log(arr,'sairam')
+      setLeavePeriodTypes(arr);
+    }
+    call();
+    call2();
+  }, []);
+  const termTypes = ['Annual', 'Month'];
+  const leaveNames = ['Diwali'];
+
+  const designationGradeName = ['senior', 'junior'];
 
   const [dropdown, setDropdown] = useState({});
-
+  const [dropdown1,setDropdown1] = useState({});
   const [dateError, setDataError] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
   const [personName, setPersonName] = React.useState([]);
@@ -155,8 +124,8 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownleaveName, setdropdownleaveName] = useState([]);
-  const [dropdownTermtype, setdropdownTermtype] = useState([]);
-  const [optionsValue, setOptionsValue] = useState({});
+  const [dropdownleavePeriodType, setDropdownleavePeriodType] = useState([]);
+
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'date_activity',
@@ -165,75 +134,67 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
     },
   ]);
 
-  const [dropdownFiledArray, setDropdownFiledArray] = useState([
-    
-    {
-      field: 'leaveTypeName',
-      options: [],
-    },
-    {
-      field: 'leavePeriodType',
-      options: [],
-    },
-  ]);
+  // const [dropdownFiledArray, setDropdownFiledArray] = useState([
+  //   {
+  //     field: 'leaveTypeName',
+  //     options: [],
+  //   },
+  //   {
+  //     field: 'leavePeriodType',
+  //     options1: [],
+  //   },
+  // ]);
 
-  const [datesSavedArray, setDatesSavedArray] = useState([
-    'from_date',
-    'to_date',
-    'offer_date_from',
-    'offer_date_to',
-  ]);
-  const [datesData, setDatesData] = useState([]);
+  // const [datesSavedArray, setDatesSavedArray] = useState([
+  //   'from_date',
+  //   'to_date',
+  //   'offer_date_from',
+  //   'offer_date_to',
+  // ]);
+  // const [datesData, setDatesData] = useState([]);
 
   const [dates, setDates] = useState({
     from_date: null,
     to_date: null,
   });
 
-  function formDateDataStructure() {
-    return new Promise((resolve) => {
-      const arr1 = {};
-      datesFiledArray.forEach((item, index) => {
-        arr1[item.field] = {
-          from: formatDateToYYYYMMDD(dates[item?.from]),
-          to: formatDateToYYYYMMDD(dates[item?.to]),
-        };
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-        //  arr1.push(obj);
-      });
-      setDatesData(arr1);
-      resolve(arr1);
-    });
-  }
+  // function formDateDataStructure() {
+  //   return new Promise((resolve) => {
+  //     const arr1 = {};
+  //     datesFiledArray.forEach((item, index) => {
+  //       arr1[item.field] = {
+  //         from: formatDateToYYYYMMDD(dates[item?.from]),
+  //         to: formatDateToYYYYMMDD(dates[item?.to]),
+  //       };
+  //       //  const obj={
+  //       //    filed_name:item?.field,
+  //       //    from:dates[item?.from],
+  //       //    to:dates[item?.to]
+  //       //  }
+  //       //  arr1.push(obj);
+  //     });
+  //     setDatesData(arr1);
+  //     resolve(arr1);
+  //   });
+  // }
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(',');
-          arr1[item.field] = commaSeparatedString;
-        }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+      const arr1 = [];
+      dropdown?.leaveTypeName?.forEach((item, index) => {
+        arr1.push(item?.leaveTypeName);
+      });
+      const arr2 = [];
+      dropdown1?.leavePeriodType?.forEach((item, index) => {
+        arr2.push(item?.leavePeriodType);
       });
       // setDatesData(arr1);
       resolve(arr1);
+      resolve(arr2);
     });
   }
 
-  // const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [openDateRange, setOpendateRange] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -263,10 +224,10 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
       obj[field] = value;
       setDropdown(obj);
     } else if (field === 'leavePeriodType') {
-      setdropdownTermtype(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
+      setDropdownleavePeriodType(value);
+      const obj1 = dropdown1;
+      obj1[field] = value;
+      setDropdown1(obj1);
     }
 
     // On autofill we get a stringified value.
@@ -276,26 +237,69 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
   };
 
   const handleApply = async () => {
-    setDatesData([]);
+    // setDatesData([]);
 
-    // const obj={
-    //   leaveTypeName:dropdown
-    // }
     const data = await formWithDropdown();
-    filterData(data);
-    console.log(optionsValue, ';;;');
 
+    const comma = data.join(',');
+    const obj = {
+      leaveTypeName: comma,
+    };
+    const obj1={
+      leavePeriodType: comma,
+    };
+    filterData(obj);
+    filterData(obj1);
+    console.log(obj, 'ram');
+    console.log(obj1,'obj2');
     //   filterData(data);
     handleClickClose();
   };
+  const [options, setOptions] = useState({});
+  const [options1, setOptions1] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const leaveperiod = await leaveTypeName(Obj);
+          var optionsArr = { ...options };
+
+          optionsArr.leaveTypeName = leaveperiod;
+          // optionsArr.leavePeriodType=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+      async function call2() {
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const leaveperiod = await leavePeriodType(Obj);
+          var optionsArr = { ...options1 };
+
+          optionsArr.leavePeriodType = leaveperiod;
+          // optionsArr.leavePeriodType=desgination;
+          console.log(optionsArr, 'optionsArr2');
+
+          setOptions1(optionsArr);
+        } catch (error) {}
+      }
+      call2();
+      call();
+    }
+  }, [open]);
   const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+    searchData(searchTerm);
+    console.log(searchTerm, 'search ........');
+  };
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
@@ -303,21 +307,19 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
-        <TextField
+        <Grid item md={8} xs={8}>
+          <TextField
             placeholder="Search...."
-             fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          
         </Grid>
-        <Grid item  md={2} xs={2}>
-       <LeaveTypeForm/>
-       </Grid>
-        <Grid item  md={2} xs={2}>
-        <Grid>
+        <Grid item md={2} xs={2}>
+          <LeaveTypeForm />
+        </Grid>
+        <Grid item md={2} xs={2}>
+          <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
@@ -339,111 +341,93 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"300px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
+        <DialogContent
+          sx={{ minWidth: '300px' }}
+          //   style={{
+          //     paddingTop: '20px',
+          //     paddingRight: '17px',
+          //     paddingBottom: '44px',
+          //     paddingLeft: '44px',
+          //   }}
         >
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                <Autocomplete
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    options={optionLeaveType?.leavePeriodType || []}
-                  value={optionsValue?.leavePeriodType}
-                  getOptionLabel={(option) => option?.leavePeriodType}
-                  onChange={async (e, newvalue) => {
-                    var newArr = { ...optionsValue };
-                    newArr.leavePeriodType = newvalue;
-                    console.log(newArr, 'newArr');
-                    setOptionsValue(newArr)
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Leave Period Type" style={{ width: '100%' }} />
-                  )}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                  <FormControl fullWidth>
-                  <Autocomplete
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    options={options?.leaveTypeName || []}
-                  value={optionsValue?.leaveTypeName}
-                  getOptionLabel={(option) => option?.leaveTypeName}
-                  onChange={async (e, newvalue) => {
-                    var newArr = { ...optionsValue };
-                    newArr.leaveTypeName = newvalue;
-                    console.log(newArr, 'newArr');-
-                    setOptionsValue(newArr)
+          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
 
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Leave Name" style={{ width: '100%' }} />
-                  )}
-                  />
-                  </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
-                {/* <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
-                  <Select
+          <Grid
+            container
+            spacing={1}
+            sx={{ flexDirection: 'row', display: 'flex', marginTop: '1rem' }}
+            item
+          >
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
+                <Select
                   fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {designationGradeName.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl> */}
-                   </Grid>
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownleavePeriodType}
+                  onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                  input={<OutlinedInput label="Leave Period Type" />}
+                  MenuProps={MenuProps}
+                  // sx={{minWidth:'300px'}}
+                >
+                  {leavePeriodTypes.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.leavePeriodType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-
-           
-            
-             
-          
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="leaveTypeName">Leave Name</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownleaveName}
+                  onChange={(e) => handleChangeDropDown(e, 'leaveTypeName')}
+                  input={<OutlinedInput label="Leave Name" />}
+                  MenuProps={MenuProps}
+                  //   sx={{minWidth:'300px'}}
+                >
+                  {leaveTypes.map((name,index) => (
+                    <MenuItem key={index} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.leaveTypeName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+            </Grid>
+          </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+          <Button
+            onClick={() => {
+              handleApply();
+            }}
+            // variant="outlined"
+            style={{
+              width: '80px',
+              marginBottom: '1rem',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            Apply
+          </Button>
         </div>
       </BootstrapDialog>
     </>
   );
 }
 
-// LeaveTypeFilters.propTypes={
-//     handleFilters: PropTypes.any,
-// }
 LeaveTypeFilters.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,

@@ -52,7 +52,8 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 import LeavePeriodForm from './LeavePeriodForm';
-import { ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
+
+import {leavePeriodType} from '../../../global/configurationdropdowns/ConfigurationDropdown'
 
 const defaultFilters = {
   name: '',
@@ -97,13 +98,26 @@ export default function LeavePeriodFilters({
   searchData,
 }) {
   const theme = useTheme();
-  const [optionsValue, setOptionsValue] = useState({});
   // const leavePeriodTypes = [
   //   'Financial Year',
   //   'Year'
   // ];
 
-  const designationName = ['executive'];
+  const [leavePeriodTypes,setLeavePeriodTypes]=useState([])
+
+  useEffect(()=>{
+
+    async function call(){
+      const arr=await leavePeriodType();
+      console.log(arr,'sairam')
+      setLeavePeriodTypes(arr);
+    }
+    call()
+    
+  },[])
+  const designationName = [
+    'executive'
+  ]
 
   const designationGradeName = ['senior', 'junior'];
 
@@ -177,13 +191,14 @@ export default function LeavePeriodFilters({
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(',');
-          arr1[item.field] = commaSeparatedString;
-        }
+      const arr1 = [];
+      dropdown?.leavePeriodType?.forEach((item, index) => {
+        // if (dropdown[item.field]?.length > 0) {
+        //   const arrayOfStrings = dropdown[item.field];
+        //   const commaSeparatedString = arrayOfStrings.join(',');
+        //   arr1[item.field] = commaSeparatedString;
+        // }
+        arr1.push(item?.leavePeriodType)
 
         //  const obj={
         //    filed_name:item?.field,
@@ -263,9 +278,17 @@ export default function LeavePeriodFilters({
 
   const handleApply = async () => {
     setDatesData([]);
+    
     const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
+   
+    const comma=data.join(',')
+    const obj={
+      leavePeriodType:comma
+    }
+    filterData(obj);
+    console.log(obj, "sairam")
+    
+   
 
     //   filterData(data);
     handleClickClose();
@@ -321,37 +344,40 @@ export default function LeavePeriodFilters({
           </Button>
         </DialogTitle>
 
-        <DialogContent sx={{ minWidth: '300px'}}>
-          <Grid
-            container
-            spacing={1}
-            sx={{
-              flexDirection: 'row',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '1rem',
-              
-            }}
-          >
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <Autocomplete
-                  disablePortal
-                  options={options?.leavePeriodType || []}
-                  value={optionsValue?.leavePeriodType}
-                  getOptionLabel={(option) => option?.leavePeriodType}
-                  onChange={async (e, newvalue) => {
-                    var newArr = { ...optionsValue };
-                    newArr.leavePeriodType = newvalue;
-                    console.log(newArr, 'newArr');
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Leave Period Type" style={{ width: '100%' }} />
-                  )}
-                />
-              </FormControl>
-            </Grid>
+        <DialogContent  sx={{minWidth:"300px"}}
+        //   style={{
+        //     paddingTop: '20px',
+        //     paddingRight: '17px',
+        //     paddingBottom: '44px',
+        //     paddingLeft: '44px',
+        //   }}
+        >
+          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
+            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
+           
+            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
+              <Grid item xs={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
+                  <Select
+                  fullWidth
+                    labelId="demo-multiple-name-shift_name_1"
+                    id="demo-multiple-shift_name_1"
+                    multiple
+                    value={dropdownleavePeriodType}
+                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
+                    input={<OutlinedInput label="Leave Period Type" />}
+                    MenuProps={MenuProps}
+                    // sx={{minWidth:'300px'}}
+                  >
+                    {leavePeriodTypes?.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
           </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
