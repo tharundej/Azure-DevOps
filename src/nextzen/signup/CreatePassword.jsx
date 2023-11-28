@@ -179,14 +179,21 @@ export default function AmplifyNewPasswordView({emailId}) {
         }}
       />
 
-      <LoadingButton
+      {/* <LoadingButton
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
       >
         Create Password
-      </LoadingButton>
+      </LoadingButton> */}
+      <Button
+       size="large"
+       type="submit"
+       variant="contained"
+       loading={isSubmitting}>
+        Create Password
+      </Button>
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}

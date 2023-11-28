@@ -52,6 +52,7 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 import LeaveTypeForm from './LeaveTypeForm';
+import { ApiHitleaveNameType, ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 const defaultFilters = {
   name: '',
@@ -91,6 +92,7 @@ function getStyles(name, personName, theme) {
 
 export default function LeaveTypeFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
+   const [open, setOpen] = useState(false);
   const termTypes = [
     'Custom Period',
     'Fiscal Year'
@@ -100,7 +102,44 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
     'CL',
     'CL1'
   ]
+  const [options, setOptions] = useState({});
+  const [optionLeaveType,setOptionLeaveType] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const leaveperiod = await ApiHitleavePeriodType(Obj);
+          var optionsArr = { ...optionLeaveType };
 
+          optionsArr.leavePeriodType = leaveperiod;
+
+          console.log(optionsArr, 'optionsArr');
+
+          setOptionLeaveType(optionsArr);
+        } catch (error) {}
+      }
+      async function call2(){
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const leaveTypeName = await ApiHitleaveNameType(Obj);
+          var optionsArr = { ...options };
+
+          optionsArr.leaveTypeName = leaveTypeName;
+
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+      call();
+      call2()
+    }
+  }, [open]);
   const designationGradeName = [
     'senior',
     'junior'
@@ -117,7 +156,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownleaveName, setdropdownleaveName] = useState([]);
   const [dropdownTermtype, setdropdownTermtype] = useState([]);
-
+  const [optionsValue, setOptionsValue] = useState({});
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'date_activity',
@@ -127,10 +166,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
   ]);
 
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
-    {
-      field: 'designation_grade_name',
-      options: [],
-    },
+    
     {
       field: 'leaveTypeName',
       options: [],
@@ -197,7 +233,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
     });
   }
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [openDateRange, setOpendateRange] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -241,9 +277,13 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
 
   const handleApply = async () => {
     setDatesData([]);
+
+    // const obj={
+    //   leaveTypeName:dropdown
+    // }
     const data = await formWithDropdown();
     filterData(data);
-    console.log(data, ';;;');
+    console.log(optionsValue, ';;;');
 
     //   filterData(data);
     handleClickClose();
@@ -313,50 +353,47 @@ export default function LeaveTypeFilters({ filterData, filterOptions ,filterSear
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="leavePeriodType">Term Type</InputLabel>
-                  <Select
+                <Autocomplete
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownTermtype}
-                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
-                    input={<OutlinedInput label="Term Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {termTypes.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    options={optionLeaveType?.leavePeriodType || []}
+                  value={optionsValue?.leavePeriodType}
+                  getOptionLabel={(option) => option?.leavePeriodType}
+                  onChange={async (e, newvalue) => {
+                    var newArr = { ...optionsValue };
+                    newArr.leavePeriodType = newvalue;
+                    console.log(newArr, 'newArr');
+                    setOptionsValue(newArr)
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Leave Period Type" style={{ width: '100%' }} />
+                  )}
+                  />
                 </FormControl>
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="leaveTypeName">Leave Name</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownleaveName}
-                      onChange={(e) => handleChangeDropDown(e, 'leaveTypeName')}
-                      input={<OutlinedInput label="leave Type Name" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {leaveTypeNames.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                  <Autocomplete
+                  fullWidth
+                    labelId="demo-multiple-name-shift_name_1"
+                    id="demo-multiple-shift_name_1"
+                    multiple
+                    options={options?.leaveTypeName || []}
+                  value={optionsValue?.leaveTypeName}
+                  getOptionLabel={(option) => option?.leaveTypeName}
+                  onChange={async (e, newvalue) => {
+                    var newArr = { ...optionsValue };
+                    newArr.leaveTypeName = newvalue;
+                    console.log(newArr, 'newArr');-
+                    setOptionsValue(newArr)
+
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Leave Name" style={{ width: '100%' }} />
+                  )}
+                  />
                   </FormControl>
                 </Grid>
                 <Grid  item xs={12} md={6}>
