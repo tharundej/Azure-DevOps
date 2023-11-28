@@ -192,6 +192,7 @@ const BasicTable = ({
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
       url: baseUrl + `${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -213,7 +214,7 @@ const BasicTable = ({
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data?.data, 'total no of records-->');
+        console.log(response?.data, 'total no of records-->',response?.count,"responsss",response);
 
         // leave list api
         console.log('leave list api integration');

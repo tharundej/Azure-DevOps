@@ -1,4 +1,4 @@
-import react from 'react';
+import react, { useContext } from 'react';
 import * as Yup from 'yup';
 import { useState,useEffect,useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,6 +21,7 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import {useSnackbar} from '../../../components/snackbar';
 import AddProject from './AddProject';
+import UserContext from 'src/nextzen/context/user/UserConext';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -33,6 +34,7 @@ const MenuProps = {
 };
 const ProjectSearchFilter = ({filterSearch,filterData}) =>{
     const theme = useTheme();
+    const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [showProject,setShowProject]=useState(false);
@@ -46,12 +48,12 @@ const ProjectSearchFilter = ({filterSearch,filterData}) =>{
   const [datesFiledArray,setDatesFiledArray]=useState(
     [
       {
-        field:'ProjectStartDate',
+        field:'startDate',
         from:'startDatefrom',
         to:'startDateto'
       },
       {
-        field:'ProjectEndDate',
+        field:'endDate',
         from:'endDatefrom',
         to:'endDateto'
       },
@@ -182,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":"INFO22"
+    "projectManager":user?.employeeID
   }
   const config={
     method:'POST',
@@ -201,9 +203,9 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":"INFO22",
-    "companyID":"COMP1",
-    "locationID":30
+    "projectManager":user?.employeeID,
+    "companyID":user?.companyID,
+    "locationID":user?.locationID
 }
   const config={
     method:'POST',
@@ -462,7 +464,7 @@ const AssignEmployees =()=>{
                 </Grid>
           </Grid>
        </Grid>
-       <Grid container flexDirection="row" spacing={1}>
+       {/* <Grid container flexDirection="row" spacing={1}>
                   <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Reporting Manager</InputLabel>
@@ -502,7 +504,7 @@ const AssignEmployees =()=>{
                 </Select>
               </FormControl>
                    </Grid>
-      </Grid>
+      </Grid> */}
                 <Grid container>
                   <Grid marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
@@ -517,9 +519,10 @@ const AssignEmployees =()=>{
                   input={<OutlinedInput label="status" />}
                   MenuProps={MenuProps}
                 >
-                 <MenuItem value="notStarted">Status Started</MenuItem>
-                 <MenuItem value="inProgress">InProgress</MenuItem>
-                 <MenuItem value="completed">Completed</MenuItem>
+                 <MenuItem value="active" key="active">Active</MenuItem>
+                 <MenuItem value="pending" key="pending">Pending</MenuItem>
+                 <MenuItem value="inProgress" key="inProgress">InProgress</MenuItem>
+                 <MenuItem value="completed" key="completed">Completed</MenuItem>
                 </Select>
               </FormControl>
                    </Grid>
@@ -606,7 +609,7 @@ const AssignEmployees =()=>{
     label='Project'
     onChange={handleProject}
   >
-     {projectsList.map((option) => (
+     {projectsList?.map((option) => (
             <MenuItem value={option}>
               {option.projectName}
             </MenuItem>
