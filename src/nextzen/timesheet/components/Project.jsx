@@ -203,8 +203,8 @@ const UpdateEmployees=()=>{
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>
-      {visibleEmployees && visibleEmployees.length > 0 ? (
-    visibleEmployees.map((employee, index) => (
+      {visibleEmployees && visibleEmployees?.length > 0 ? (
+    visibleEmployees?.map((employee, index) => (
           <Grid item xs={6} key={employee.employeeId}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar alt={employee.employeeName}>{employee.employeeName.charAt(0)}</Avatar>

@@ -50,8 +50,6 @@ export default function BasicCard() {
         permission.mainHeading &&
         permission[item.id]
       ) {
-        console.log(`User Permission for ${item?.key}:`, permission);
-        console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
         arrLabels.push(item.label);
         arrContents.push(item.content);
       }

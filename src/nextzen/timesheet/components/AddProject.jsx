@@ -190,14 +190,14 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
       setSelectedLocation(existingLocation || null);
     }
     if(rowData && rowData?.reportingManagerName && reportingManager){
-        const existingReportingmanager = reportingManager.find(manager => manager.firstName == rowData?.reportingManagerName);
+        const existingReportingmanager = reportingManager.find(manager => manager.employeeId == rowData?.reportingManager);
         setSelectedReportingManager(existingReportingmanager || null);
     }
     if(rowData && rowData?.projectManagerName && projectManager){
-        const existingprojectManager = projectManager.find(manager => manager.firstName == rowData?.projectManagerName);
+        const existingprojectManager = projectManager.find(manager => manager.employeeId == rowData?.projectManager);
         setSelectedProjectManager(existingprojectManager || null);
     }
-    console.log(selectedProjectManager,"projectmanagerr")
+    console.log(selectedProjectManager,"projectmanagerr",selectedReportingManager)
   }, [locationList,rowData,reportingManager,projectManager]);
   
  
@@ -211,10 +211,10 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
       data.actualEndDate=(datesUsed?.actualEndDate)?datesUsed?.actualEndDate:rowData?.actualEndDate
       data.startDate =(datesUsed?.startDate)?datesUsed?.startDate:rowData?.startDate
       data.endDate =(datesUsed?.endDate)?datesUsed?.endDate:rowData?.endDate
-      data.status = rowData?.status,
+      // data.status = rowData?.status,
       data.roleId=user?.roleID,
-      data.reportingManager = selectedReportingManagerID?selectedReportingManagerID:rowData?.reportingManager,
-      data.projectManager = selectedProjectManagerID?selectedProjectManagerID:rowData?.projectManager
+      data.reportingManager = selectedReportingManager?.employeeId,
+      data.projectManager = selectedProjectManager?.employeeId
 
       const response = await axios.post(baseUrl+'/updateproject', data).then(
         (successData) => {
@@ -269,26 +269,31 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
   name="projectManager"
   label="Project Manager"
   options={projectManager}
-  // value={selectedProjectManager ? selectedProjectManager : null}
+  value={selectedProjectManager}
   getOptionLabel={(option) => option.firstName}
   isOptionEqualToValue={(option) => option.employeeId}
-  onChange={(event, selectedOption) => handleSelectedProjectManager(selectedOption)}
+  onChange={(event, selectedOption) => 
+    setSelectedProjectManager(selectedOption)}
   renderInput={(params) => (
     <TextField {...params} label="Project Manager" variant="outlined" />
   )}
   />
+
      </Grid>
      {console.log(selectedProjectManager,"project",selectedReportingManager)}
      <Grid item md={6} xs={12}>
      <Autocomplete
-     value={(selectedReportingManager) ? selectedReportingManager: selectedReportingManagerID}
+    //  value={(selectedReportingManager) ? selectedReportingManager: selectedReportingManagerID}
             name="reportingManager"
             label="Reporting Manager"
+            value={selectedReportingManager}
             options={reportingManager}
             getOptionLabel={(option) => option.firstName}
             getOptionSelected={(option) => option.firstName == rowData?.reportingManagerName}
             isOptionEqualtoValue={(option) => option.employeeId}
-            onChange={(event, selectedOption) => handleSelectedReportingManager(selectedOption)}
+            onChange={(event, selectedOption) =>
+               setSelectedReportingManager(selectedOption)
+              }
             renderInput={(params) => (
                 <TextField {...params} label="Reporting Manager" variant="outlined" />
                 )}

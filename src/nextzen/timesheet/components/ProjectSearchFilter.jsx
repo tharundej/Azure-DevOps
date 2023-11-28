@@ -184,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":user?.employeeID
+    "projectManager":"Info7"
   }
   const config={
     method:'POST',
@@ -203,7 +203,7 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":user?.employeeID,
+    "projectManager":"info7",
     "companyID":user?.companyID,
     "locationID":user?.locationID
 }

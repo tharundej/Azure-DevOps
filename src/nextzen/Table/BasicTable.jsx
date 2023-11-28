@@ -194,12 +194,13 @@ const BasicTable = ({
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
       url: baseUrl + `${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
       },
       data: initialDefaultPayload,
     };
@@ -435,7 +436,8 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
-      row?.status === 'InActive'
+      row?.status === 'InActive' || 
+      row?.status === "Upcoming" || row?.status==="Ongoing"
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -686,7 +688,7 @@ const BasicTable = ({
                           />
                         </>
                       ))}
-
+{console.log(rowActions,"rowActionss")}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
