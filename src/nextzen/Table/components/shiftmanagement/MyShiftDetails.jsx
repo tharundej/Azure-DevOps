@@ -11,6 +11,7 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
+import ViewTeamMates from './ViewTeamMates';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -42,7 +43,7 @@ export default function MyShiftDetails() {
         { id: "end_time", label: "End Time", width: 100, type: "text" },
         // { id: "start_date", label: "Start Date", width: 100, type: "text" },
         // { id: "end_date ", label: "End Date", width: 100, type: "text" },
-        { id: "shift_term", label: "View Team Mates", width: 100, type: "text" },
+        { id: "", label: "View Team Mates", width: 100,eyeIcon:true, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -50,8 +51,8 @@ export default function MyShiftDetails() {
     
      
     const defaultPayload ={
-      "company_id":"COMP2",
-      "employee_id":"ibm2",
+      "company_id":localStorage.getItem("companyID"),
+      "employee_id":localStorage.getItem("employeeID"),
       "page":0,
       "count":50,
       "Search":"",
@@ -82,9 +83,37 @@ export default function MyShiftDetails() {
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       }
-    
+      const [employeListDialog,SetEmployeListDialog]=useState(false)
+
+      const closeEmployeList = ()=> SetEmployeListDialog(false)
+      const SecondoryTable = async (rowdata,event) => {
+        console.log("🚀 ~ file: ShiftRoast.jsx:131 ~ SecondoryTable ~ rowdata:",rowdata)
+      //  setRoasterRowData(rowdata.EmpList)
+        SetEmployeListDialog(true)
+
+      }
+      const handleEditRowParent = async (rowdata,event) => {
+
+   
+        // alert("yes yes yes")
+      }
   return (
     <>
+     {employeListDialog && 
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={employeListDialog}
+ onClose={closeEmployeList}
+ PaperProps={{
+  sx:{maxWidth:770,overflow:"hidden"},
+ }}
+ className="custom-dialog"  
+ >
+<ViewTeamMates onClose={closeEmployeList} />
+ </Dialog>
+
+ }
       {showForm && (
  <Dialog
  fullWidth
@@ -113,6 +142,8 @@ endpoint='/Myshiftdetails'
 bodyData='data'
 // rowActions={actions}
 filterName='MyShiftFilter'
+SecondoryTable={SecondoryTable}
+handleEditRowParent={handleEditRowParent}
 />  
     </>
   );
