@@ -720,7 +720,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             sx={{
               width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
-            renderInput={(params) => <TextField {...params} label="Assign Manager" />}
+            renderInput={(params) => <TextField {...params} label="Reporting Manager" />}
           />
 
 
