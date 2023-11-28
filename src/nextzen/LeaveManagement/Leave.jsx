@@ -9,7 +9,7 @@ import ReusableTabs from '../tabs/ReusableTabs';
 import Approveleave from './approveleave/ApproveLeave';
 
 import LeaveRequest from './leavecalendar/Calendar/LeaveRequest';
-import { useContext } from 'react';
+import { useContext , useEffect,useState} from 'react';
 import UserContext from '../context/user/UserConext';
 
 const bull = (
@@ -20,7 +20,33 @@ const bull = (
 
 export default function BasicCard() {
   const {user} = useContext(UserContext)
- const tabLables = ['Leave Approval', 'Leave Overview'];
+  const [tabLabels,setTabLabels]=useState([])
+  const dataObj =[
+    {
+      id:'approveLeave',
+      label:'Leave Approval'
+    },
+    {
+      id:'leaveCalendar',
+      label:'Leave Overview'
+    }
+  ]
+
+  useEffect(()=>{
+    var arr = [];
+
+    dataObj?.forEach((item) => {
+      const permission = user?.rolePermissions.leaveManagement
+      //console.log( typeof permission?.mainHeading,  permission?.mainHeading)
+    if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading && permission[item.id]) {
+      console.log(`User Permission for ${item?.key}:`, permission);
+      console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+      arr.push(item.label);
+    }
+    });
+    setTabLabels(arr);
+  },[user])
+
    const tabContents = [
       <div>
         <Approveleave />
@@ -31,7 +57,7 @@ export default function BasicCard() {
 
   return (
     
-      <ReusableTabs tabLabels={tabLables} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
 
   );
 }
