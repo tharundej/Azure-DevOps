@@ -615,7 +615,10 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
           {/* grid 1 */}
         
           <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
-          <Grid item xs={12}>
+      
+            {/* Row 1 */}
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
           options={financialYears}
@@ -625,9 +628,6 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
           renderInput={(params) => <TextField {...params} label="Financial Year" />}
         />
       </Grid>
-            {/* Row 1 */}
-            <Grid item container xs={12} spacing={2}>
-      
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -650,7 +650,13 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4} style={{ paddingTop: '9px' }}>
+             
+            </Grid>
+
+            {/* Row 2 */}
+
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4} style={{ paddingTop: '9px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -671,12 +677,6 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                 </LocalizationProvider>
                 
               </Grid>
-            </Grid>
-
-            {/* Row 2 */}
-
-            <Grid item container xs={12} spacing={2}>
-           
               <Grid item xs={4}>
                 <TextField
                   label="Insured Persion Name(S)"
@@ -701,7 +701,11 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                   renderInput={(params) => <TextField {...params} label="Relationship Type" />}
                 />
               </Grid>
-              <Grid item xs={4}>
+            
+            </Grid>
+
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
                   name="policyCitizenshipType"
@@ -717,10 +721,6 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                   )}
                 />
               </Grid>
-            </Grid>
-
-            <Grid item container xs={12} spacing={2}>
-           
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -743,7 +743,10 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                   onChange={handleChangeForAmoutDeduction}
                 />
               </Grid>
-              <Grid item xs={4}>
+             
+            </Grid>
+            <Grid item container xs={12} spacing={2}>
+            <Grid item xs={4}>
                 <TextField
                   label="Eligible Deduction"
                   variant="outlined"
@@ -756,9 +759,6 @@ url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
                 />
               </Grid>
             </Grid>
-            {/* <Grid item container xs={12} spacing={2}>
-          
-            </Grid> */}
             {/* My buttons  */}
             <Grid item container xs={12} spacing={2}>
               <Grid

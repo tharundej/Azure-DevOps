@@ -112,7 +112,8 @@ export default function RentDetails() {
   //  console.log(financialYears ,
   //   "financialYears")
   const [selectedYear, setSelectedYear] = useState(null);
-  const [financialYears, setFinancialYears] = useState([]);
+  const [
+    financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
   };
@@ -567,7 +568,15 @@ export default function RentDetails() {
             <Button className="button">Report</Button>
           </Grid>
         </Grid> */}
-      <Grid item xs={12}>
+     
+      <Grid
+        item
+        container
+        xs={12}
+        spacing={2}
+        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
+      >
+         <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
           options={financialYears}
@@ -577,14 +586,7 @@ export default function RentDetails() {
           renderInput={(params) => <TextField {...params} label="Financial Year" />}
         />
       </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        spacing={2}
-        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
-      >
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <TextField
             label="Name Of The Landloard "
             value={landLardName}
@@ -594,7 +596,7 @@ export default function RentDetails() {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <TextField
             label="Address Of The Landloard"
             value={landLardAddress}

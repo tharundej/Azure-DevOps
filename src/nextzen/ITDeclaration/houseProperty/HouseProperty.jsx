@@ -430,7 +430,9 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       >
         {/* Row 1 */}
         <Grid item container xs={12} lg={8} md={8} spacing={2}>
-          <Grid item xs={12}>
+         
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4}>
             <Autocomplete
               id="financialYear"
               options={financialYears}
@@ -440,7 +442,6 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
               renderInput={(params) => <TextField {...params} label="Financial Year" />}
             />
           </Grid>
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
             <Grid item xs={4}>
               {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
               <TextField
@@ -463,7 +464,13 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          {/* Row 2 */}
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4}>
               {/* <Typography >addressOfProperty Of The Property </Typography> */}
               <TextField
                 label="Address Of The Property "
@@ -474,11 +481,6 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
             <Grid item xs={4}>
               {/* <Typography >PAN Of The Lender(S)</Typography> */}
               <TextField
@@ -501,7 +503,11 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4}>
               {/* <Typography >PurPose Of Loan</Typography> */}
               <TextField
                 label="Purpose Of Loan"
@@ -512,9 +518,6 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
               {/* <Typography >Date Of Sanction Of Loan</Typography> */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -548,7 +551,11 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+           
+          </Grid>
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4}>
               {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
               <TextField
                 label="Is The Property Self Occupied Or Let out?[See Notebelow]"
@@ -559,9 +566,6 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-          </Grid>
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
@@ -584,7 +588,10 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+            
+          </Grid>
+          <Grid item xs={12} lg={12} md={12} spacing={2}>
+          <Grid item xs={4}>
               {/* <Typography >Less : MUnicipal Taxes Paid :</Typography> */}
               <TextField
                 label="Less : Municipal Taxes Paid"
@@ -595,10 +602,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-          </Grid>
-          {/* <Grid item xs={12} lg={12} md={12} spacing={2}>
-      
-        </Grid> */}
+        </Grid>
         </Grid>
         <Grid
           item
