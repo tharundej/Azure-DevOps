@@ -117,6 +117,8 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
+import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 
 const defaultFilters = {
   name: '',
@@ -203,7 +205,7 @@ const BasicTable = ({
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
@@ -221,7 +223,13 @@ const BasicTable = ({
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data, 'total no of records-->',response?.count,"responsss",response);
+        console.log(
+          response?.data,
+          'total no of records-->',
+          response?.count,
+          'responsss',
+          response
+        );
 
         // leave list api
         console.log('leave list api integration');
@@ -442,9 +450,10 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
-      row?.status === 'InActive' || 
+      row?.status === 'InActive' ||
       row?.status === 'active' ||
-      row?.status === "Upcoming" || row?.status==="Ongoing"
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -471,15 +480,18 @@ const BasicTable = ({
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
-            <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <TimeSheetSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
           )}
-           {filterName === 'ProjectSearchFilter' && (
+          {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
-        
+
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -654,7 +666,11 @@ const BasicTable = ({
             />
           )}
           {filterName === 'BalanceSheetHead' && (
-            <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <BalanceSheetHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'SaleInvoiceHead' && (
             <SaleInvoiceHead
@@ -663,14 +679,14 @@ const BasicTable = ({
               getTableData={getTableData}
             />
           )}
-           {filterName === 'SaleOrderHead' && (
+          {filterName === 'SaleOrderHead' && (
             <SaleOrderHead
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               getTableData={getTableData}
             />
           )}
-           {filterName === 'SalePaymentHead' && (
+          {filterName === 'SalePaymentHead' && (
             <SalePaymentHead
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
@@ -691,8 +707,12 @@ const BasicTable = ({
               searchData={handleFilterSearch}
             />
           )}
-            {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {/* accounts  */}
           <Card>
@@ -759,7 +779,7 @@ const BasicTable = ({
                           />
                         </>
                       ))}
-{console.log(rowActions,"rowActionss")}
+                    {console.log(rowActions, 'rowActionss')}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
@@ -806,9 +826,8 @@ function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
   var stabilizedThis;
-  
-  if(inputData)
-  stabilizedThis = inputData?.map((el, index) => [el, index]);
+
+  if (inputData) stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -872,6 +891,3 @@ BasicTable.propTypes = {
 };
 
 export { BasicTable };
-
-
-
