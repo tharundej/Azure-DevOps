@@ -111,6 +111,8 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import UserContext from '../context/user/UserConext';
+import { useContext } from 'react';
 
 const defaultFilters = {
   name: '',
@@ -152,7 +154,11 @@ const BasicTable = ({
   // const defaultPayloaddata =defaultPayload;
   //   const endpointdata =endpoint;
   // const [TABLE_HEAD, setTABLE_HEAD] = useState();
-
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const TABLE_HEAD = headerData;
   // const[_userList, set_userList] = useState(bodydata);
   const [tableData, setTableData] = useState([]);
@@ -200,8 +206,7 @@ const BasicTable = ({
      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
-      },
+        token  },
       data: initialDefaultPayload,
     };
 

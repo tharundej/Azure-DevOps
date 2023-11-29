@@ -624,7 +624,7 @@ const handleRentDeletedID = ( data)=>{
      {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <> <FormProvider {...methods}>
-        <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+        <Grid container spacing={2} >
   
         <Grid  item xs={12}>
             

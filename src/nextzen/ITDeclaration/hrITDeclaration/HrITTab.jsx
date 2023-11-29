@@ -275,15 +275,16 @@ export default function HrITTab() {
     <>
       {showForm && (
         <Dialog
-          fullWidth
+          // fullWidth
           maxWidth={false}
           open={showForm}
           onClose={handleClose}
+        
           PaperProps={{
-            sx: { maxWidth: 770, overflow: 'hidden' },
+            sx: {  overflow: 'hidden' },
           }}
-          style={{ overflow: 'hidden' }}
-          className="custom-dialog"
+          // style={{ overflow: 'hidden',maxWidth: "770px", }}
+          // className="custom-dialog"
         >
           <AddDesignationGradeConfig
             currentUser={{}}
@@ -293,14 +294,14 @@ export default function HrITTab() {
         </Dialog>
       )}
       <Dialog
-        fullWidth
+        // fullWidth
         maxWidth={false}
         open={openEdit}
         onClick={handleOpen}
         onClose={handleClose}
-        // PaperProps={{
-        //   sx: { maxWidth: 720 },
-        // }}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider>
