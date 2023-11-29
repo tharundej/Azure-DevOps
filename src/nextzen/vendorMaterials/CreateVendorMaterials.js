@@ -26,7 +26,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
-      id: currentData?.id || 0,
+      materialID: currentData?.id || 0,
       vendorID: currentData?.vendorId || 0,
       companyID: currentData?.companyID || 'COMP1',
       materialName: currentData?.materialName || '',
