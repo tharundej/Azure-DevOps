@@ -103,6 +103,12 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
+import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
+import PurchasePaymentHead from '../Purchase/PurchasePayment/PurchasePaymentHeader';
+import SaleInvoiceHead from '../sales/SaleInvoice/SaleInvoiceHeader';
+import SalePaymentHead from '../sales/SalePayment/SalePaymentHeader';
+import SaleOrderHead from '../sales/SalesOrder/SaleOrderHeader';
 import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 // import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
@@ -650,6 +656,27 @@ const BasicTable = ({
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
+          {filterName === 'SaleInvoiceHead' && (
+            <SaleInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'SaleOrderHead' && (
+            <SaleOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'SalePaymentHead' && (
+            <SalePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
           {filterName === 'DepartmentFilterSearch' && (
             <DeparrtmentSearchFilter
               filterSearch={handleFilterSearch}
@@ -754,7 +781,7 @@ const BasicTable = ({
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
               <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
-                   
+
             </Grid >
             <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
             <Pagination
@@ -764,9 +791,9 @@ const BasicTable = ({
             onChange={handleChange}
             shape="rounded"
             />
- 
+
             </Grid>
-           
+
             </Grid> */}
           </Card>
         </Container>
