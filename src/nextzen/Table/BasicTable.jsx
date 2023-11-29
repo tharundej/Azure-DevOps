@@ -132,6 +132,7 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  componentPage
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -499,10 +500,11 @@ const BasicTable = ({
             <SalarySearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              componentPage = {componentPage}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -582,7 +584,7 @@ const BasicTable = ({
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
