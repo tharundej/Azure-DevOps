@@ -701,7 +701,7 @@ const BasicTable = ({
               // rowsPerPage={25}
               onPageChange={onPageChangeHandeler}
               onRowsPerPageChange={onChangeRowsPerPageHandeler}
-              dense={table.dense}
+              // dense={table.dense}
               onChangeDense={table.onChangeDense}
             />
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>

@@ -141,25 +141,22 @@ const externalFilter = {
   ];
   
 
-  // useEffect=(()=>{
-  //   onclickActions()
-  // },[approve])
+ 
 
   const [approve, setApprove]= React.useState({
 
-    compensatoryRequestId:"",
+    compensatoryRequestId:null,
         status: "",
-        utilisation: "",
+        utilisation: null,
         companyId:companyID,
         employeeId:employeeID,
         managerId:managerID,
+        comment:""
 
   })
 
 
-  // useEffect(()=>{
-  //   handle(approve);
-  // },[approve])
+  
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
@@ -168,19 +165,20 @@ const externalFilter = {
       if (eventData?.type === 'status') {
         // handle(approve);
            if (eventData?.name === 'Approve'){
-          //   setApprove(prevState => ({
-          //     ...prevState,
-          //     status: "Approve",
-          //     utilisation:`${rowData?.utilisation}`,
-          //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+            setApprove(prevState => ({
+              ...prevState,
+              status: "Approve",
+              utilisation:rowData?.utilisation,
+              compensatoryRequestId: rowData?.compensantory_request_id,
 
-          // }));
+          }));
           // handle(approve);
+          handleOpen()
 
-          handle({...approve, ...{status: "Approve",
-               utilisation:`${rowData?.utilisation}`,
-              compensatoryRequestId: `${rowData?.compensantory_request_id}`,
-        }});
+        //   handle({...approve, ...{status: "Approved",
+        //        utilisation:rowData?.utilisation,
+        //       compensatoryRequestId: rowData?.compensantory_request_id,
+        // }});
          
 
            }
@@ -195,8 +193,8 @@ const externalFilter = {
       // }));
       
       handle({...approve, ...{status: "Reject",
-      utilisation:`${rowData?.utilisation}`,
-     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
+      utilisation:rowData?.utilisation,
+     compensatoryRequestId: rowData?.compensantory_request_id,
 }});
       
       // handle(approve);
@@ -300,14 +298,14 @@ console.log(defaultValues,"defaultValues")
     }
   });
 
-
-  const  handle =(async (approve) => {
+  console.log(approve,"approve defaultValues111")
+  const  handle =(async (approve,event) => {
     
-    console.log(approve,"approve defaultValues111")
+   
    
 
     try {
-     
+      event.preventDefault();
       // console.log(data, 'formdata api in check');
 
       const response = await axios.post(baseUrl+'/UpdateMycompoffdetails', approve).then(
@@ -348,16 +346,12 @@ console.log(defaultValues,"defaultValues")
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods} onSubmit={onSubmit}>
+        <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Apply All Claims</DialogTitle>
+          <DialogTitle>Update Compoff</DialogTitle>
 
           <DialogContent>
-            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            Account is waiting for confirmation
-          </Alert> */}
-
-
+    
             <Box
               rowGap={3}
               columnGap={2}
@@ -368,128 +362,14 @@ console.log(defaultValues,"defaultValues")
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {/* <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect> */}
+             
+             
+             
 
-              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              <RHFAutocomplete
-                name="type_oc_claim"
-                label="Type Of Claim"
-                options={claim_type.map((claimtype) => claimtype.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                // renderOption={(props, option) => {
-                //   const { code, label, phone } = countries.filter(
-                //     (country) => country.label === option
-                //   )[0];
-
-                //   if (!label) {
-                //     return null;
-                //   }
-
-                //   return (
-                //     <li {...props} key={label}>
-                //       <Iconify
-                //         key={label}
-                //         icon={`circle-flags:${code.toLowerCase()}`}
-                //         width={28}
-                //         sx={{ mr: 1 }}
-                //       />
-                //       {label} ({code}) +{phone}
-                //     </li>
-                //   );
-                // }}
-              />
-              {/* <RHFAutocomplete
-                name="country"
-                label=" Currency for Reimbursement"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
-
-                  if (!label) {
-                    return null;
-                  }
-
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              /> */}
-
-
-              <RHFTextField name="amount" label="Claim Amount" />
-              <Grid sx={{ alignSelf: "flex-start" }}  >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="To"
-                    // value={item?.to}
-                    onChange={(newValue) => {
-                     // handleChangeDate(newValue, 'to');
-                    }}
-                  />
-                  {/* </DemoContainer> */}
-                </LocalizationProvider>
-              </Grid>
-              <RHFTextField name="comment" label="comments" />
-              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
-              <Grid sx={{ alignSelf: "flex-end" }}>
-
-                <Controller
-                  name="file"
-                  control={control}
-                  defaultValue={null}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type="file"
-                      accept=".doc, .pdf"
-                    />
-                  )}
-                />
-              </Grid>
-              <TextField
-                fullWidth
-                variant="outlined"
-                InputLabelProps={{ htmlFor: 'contained-button-file' }}
-                label="Upload Document"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <input
-                        accept=".doc,.pdf"
-                        style={{ display: 'none' }}
-                        id="contained-button-file"
-                        multiple
-                        type="file"
-                      />
-                      <label htmlFor="contained-button-file">
-                        {/* <CloudUploadIcon /> */}
-                        <CloudUploadIcon />
-                      </label>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <TextField name="comment" label="Comment" 
+               value={approve.comment}
+               onChange={(e) => setApprove((prevState) => ({ ...prevState, comment: e.target.value }))}/>
+             
 
 
 

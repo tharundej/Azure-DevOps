@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState,useEffect, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,6 +11,7 @@ import CompoffApprove from './components/CompoffApprove';
 import MyCompoff from './components/MyCompoff';
 import MyClaims from "./components/MyClaims";
 import ApproveClaim from './components/ApproveClaim';
+import UserContext from '../context/user/UserConext';
 
 const bull = (
   <Box
@@ -55,18 +57,88 @@ export default function BasicCard() {
       status: "active",
     },
   ];
-  const tabLabels = ['My Claims', 'Claim Approve', 'My Compoff', 'Compoff Approve'];
-  const tabContents = [
-    <div>
 
-      <MyClaims currentUser={{}}/>
-    </div>,
-    <div><ApproveClaim  /></div>,
-    <div>
-      <MyCompoff />
-    </div>,
-    <div><CompoffApprove /></div>,
+  const userDetailsString = localStorage.getItem('userDetails');
+const userDetails = JSON.parse(userDetailsString);
+  // console.log(userDetails?.rolePermissions,"claimsPermissions")
+  const [permissions, setPermissions]=useState({})
+
+
+const permissionsData=()=>{
+   if (userDetails && userDetails.rolePermissions && userDetails.rolePermissions.claims) {
+    const claimsPermissions = userDetails.rolePermissions.claims;
+    console.log(claimsPermissions,"claimsPermissions11");
+    setPermissions(claimsPermissions);
+  } else {
+    console.error('Unable to retrieve claims permissions from localStorage.');
+  }
+
+}
+// useState(()=>{
+//   permissionsData()
+// },[])
+const {user}=useContext(UserContext)
+const [tabLabels, setTabLabels] = useState([]);
+  const [tabContents, setTabContents] = useState([]);
+ 
+  const dataObj = [
+    {
+      id: 'myClaims',
+      label: 'My Claims',
+      content: <MyClaims currentUser={{}}/>
+    },
+    {
+      id: 'claimApprove',
+      label: 'Claim Approve',
+      content: <ApproveClaim  />,
+    },
+    {
+      id: 'myCompoff',
+      label: 'My Compoff',
+      content: <MyCompoff />,
+    },
+    {
+      id: 'compoffApprove',
+      label: 'Compoff Approve',
+      content: <CompoffApprove />,
+    },
+    // Add other data as needed
   ];
+useEffect(() => {
+  const arrLabels = [];
+  const arrContents = [];
+
+  dataObj?.forEach((item) => {
+    const permission = user?.rolePermissions.claims;
+
+    if (
+      permission &&
+      permission.hasOwnProperty('mainHeading') &&
+      permission.mainHeading &&
+      permission[item.id]
+    ) {
+      arrLabels.push(item.label);
+      arrContents.push(item.content);
+    }
+  });
+
+  setTabLabels(arrLabels);
+  setTabContents(arrContents);
+}, [user]);
+  
+console.log(permissions,permissions?.myClaims,"permissions")
+  // const tabLabels = ['My Claims', 'Claim Approve', 'My Compoff', 'Compoff Approve'];
+  // const tabContents = [
+  //   <div>
+
+  //   <MyClaims currentUser={{}}/>
+  //   </div>,
+  //   <div><ApproveClaim  /></div>,
+  //   <div>
+  //     <MyCompoff />
+  //   </div>,
+  //   <div><CompoffApprove /></div>,
+  // ];
 
   return (
    
