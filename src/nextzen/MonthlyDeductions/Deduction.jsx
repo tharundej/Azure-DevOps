@@ -7,7 +7,7 @@ import {useSnackbar} from '../../components/snackbar';
 import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
-export default function Deduction() {
+export default function Deduction({defaultPayload}) {
    const {enqueueSnackbar} = useSnackbar()
    const {user} = useContext(UserContext)
   const TABLE_HEAD = [
@@ -35,7 +35,7 @@ export default function Deduction() {
 
   ];
 const roleID = localStorage?.getItem('roleID')
-const defaultPayload={
+const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "count":5,
     "page":0,
     "search":"",
@@ -60,7 +60,7 @@ return (
 
 <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDeductionDetailsHR'
 bodyData='data'
 filterName="DeductionFilter"

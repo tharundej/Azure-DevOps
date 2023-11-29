@@ -111,8 +111,6 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
-import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
-import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 
 const defaultFilters = {
   name: '',
@@ -185,7 +183,6 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
-    // const baseUrl = " https://vshhg43l-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -195,13 +192,15 @@ const BasicTable = ({
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
       url: baseUrl + `${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
       },
       data: initialDefaultPayload,
     };
@@ -216,7 +215,7 @@ const BasicTable = ({
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data?.data, 'total no of records-->');
+        console.log(response?.data, 'total no of records-->',response?.count,"responsss",response);
 
         // leave list api
         console.log('leave list api integration');
@@ -437,8 +436,9 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
+      row?.status === 'InActive' || 
       row?.status === 'active' ||
-      row?.status === 'InActive'
+      row?.status === "Upcoming" || row?.status==="Ongoing"
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -667,12 +667,6 @@ const BasicTable = ({
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
-            {filterName === 'HrTabFilter' && (
-            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )}
-           {filterName === 'TaxSectionFilter' && (
-            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
-          )}
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -738,7 +732,7 @@ const BasicTable = ({
                           />
                         </>
                       ))}
-
+{console.log(rowActions,"rowActionss")}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
