@@ -95,7 +95,7 @@ export default function CompoffApprove({ currentUser ,}) {
   
     "employee_id":"",
     "company_id":companyID,
-    "Approval_manager_id":managerID,
+    "Approval_manager_id":employeeID,
     "page":0,
     "search":"",
     "count":5,
