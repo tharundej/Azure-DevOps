@@ -20,6 +20,7 @@ import {
   Typography,
   FormControlLabel,
   Autocomplete,
+  Card
 } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import '../declarationDetails/DeclarationDetails.css';
@@ -30,13 +31,14 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
 export default function RentDetails() {
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
@@ -55,12 +57,15 @@ export default function RentDetails() {
 
     // Add more months as needed
   ]);
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
 
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
-  const { user } = useContext(UserContext);
-  console.log(user, 'userDateails');
+const [loading,setLoading] = useState(false);
+ 
+ 
   const [isPreviousData, setIsPreviousData] = useState(false);
   const [reload, setReload] = useState(false);
   var [landLardName, setLandLardName] = useState('');
@@ -112,7 +117,8 @@ export default function RentDetails() {
   //  console.log(financialYears ,
   //   "financialYears")
   const [selectedYear, setSelectedYear] = useState(null);
-  const [financialYears, setFinancialYears] = useState([]);
+  const [
+    financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
   };
@@ -270,6 +276,7 @@ export default function RentDetails() {
   console.log(name, 'name ');
   var testing = name;
   const saveRentDetails = async () => {
+    setLoading(true)
     const payload = {
       companyId: cmpId,
       employeeId: empId,
@@ -300,11 +307,13 @@ export default function RentDetails() {
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
+          setLoading(false)
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
@@ -312,6 +321,7 @@ export default function RentDetails() {
       })
       .catch((error) => {
         setOpen(true);
+        setLoading(false)
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving rent details. Please try again.');
         setSnackbarOpen(true);
@@ -321,6 +331,7 @@ export default function RentDetails() {
   };
 
   const editRentDetails = async () => {
+    setLoading(true)
     const payload = {
       //  "company_id": rentDetailsData?.companyId,
       //  "employee_id": rentDetailsData?.employeeId,
@@ -358,18 +369,22 @@ export default function RentDetails() {
       .then((response) => {
         console.log('success', response);
         if (response.data.code === 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
+          setLoading(false)
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        setLoading(false)
         setOpen(true);
+        
         <Snackbar open={open} autoHideDuration={6000} onClose={snackBarAlertHandleClose}>
           <Alert onClose={snackBarAlertHandleClose} severity="success" sx={{ width: '100%' }}>
             This is a success message!
@@ -380,6 +395,7 @@ export default function RentDetails() {
   };
 
   const getRentDetails = async () => {
+    setLoading(true)
     const payload = {
       employeeId: empId,
       financialYear: selectedYear?.financialYear,
@@ -400,6 +416,7 @@ export default function RentDetails() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           if (rowsData !== null || undefined) {
             setIsPreviousData(true);
@@ -458,12 +475,14 @@ export default function RentDetails() {
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
   };
 
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
     };
@@ -483,25 +502,19 @@ export default function RentDetails() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
   };
-  console.log(
-    rentDetailsData,
-    'rentDetailsDatarentDetailsData',
-    isPreviousData,
-    'previousData',
-    panNumbers,
-    rentDocs,
-    'rentDocs'
-  );
+  
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
   };
@@ -537,37 +550,21 @@ export default function RentDetails() {
     // You can perform additional actions here when landLordDocs changes
   }, [landLordDocs]);
 
-  console.log(selectedValue, isShowPannumber, panNumbers, '_>>>>>>>isshowPan');
-  console.log(isShowDeclaration, '_>>>>>>>isshowdec');
-  console.log(selectedYear, 'selectedYear');
+
 
   return (
     <div>
-      {/* <Grid container spacing={2} alignItems="center"  justifyContent="flex-end" direction="row"style={{marginBottom:"1rem"}}>
-           <Grid item>
-             <TextField
-              sx={{ width: '20vw' }}
-              // value={filters.name}
-              // onChange={handleFilterName}
-              placeholder="Search..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-                border: 'none',
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <Button className="button">Filter</Button>
-          </Grid>
-          <Grid item>
-            <Button className="button">Report</Button>
-          </Grid>
-        </Grid> */}
-      <Grid item xs={12}>
+    
+      {loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :<>
+      <Grid
+        item
+        container
+        xs={12}
+        spacing={2}
+        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
+      >
+         <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
           options={financialYears}
@@ -577,14 +574,8 @@ export default function RentDetails() {
           renderInput={(params) => <TextField {...params} label="Financial Year" />}
         />
       </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        spacing={2}
-        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
-      >
-        <Grid item xs={6}>
+      
+        <Grid item xs={4}>
           <TextField
             label="Name Of The Landloard "
             value={landLardName}
@@ -594,7 +585,7 @@ export default function RentDetails() {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <TextField
             label="Address Of The Landloard"
             value={landLardAddress}
@@ -830,6 +821,8 @@ export default function RentDetails() {
           handleDeletedID={handleLandLordDeletedID}
         />
       ) : null}
+     
+      </>}
     </div>
   );
 }

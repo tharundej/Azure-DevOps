@@ -43,9 +43,9 @@ const OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const router = useRouter();
 
-  const { user } =useContext(UserContext);
+  const {user}=useContext(UserContext)
+  const router = useRouter();
 
   const { logout } = useAuthContext();
 
