@@ -1,8 +1,8 @@
 import instance from '../BaseURL';
 import { apiHeaders } from '../Token';
-export const createAssetsAPI = async (requestBody) => {
+export const createFactoryAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`addAssets`, requestBody, apiHeaders);
+    const response = await instance.post(`addLocation`, requestBody, apiHeaders);
     console.log('API response:', response); // Log the response data
     return response.data;
   } catch (error) {
@@ -10,9 +10,9 @@ export const createAssetsAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
-export const getAssetsListAPI = async (requestBody) => {
+export const getFactoryListAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`listassets`, requestBody, apiHeaders);
+    const response = await instance.post(`getallLocation`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data.data;
   } catch (error) {
@@ -20,9 +20,9 @@ export const getAssetsListAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
-export const updateAssetsAPI = async (requestBody) => {
+export const updateFactoryAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`editAssets`, requestBody, apiHeaders);
+    const response = await instance.post(`editLocation`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {
@@ -30,9 +30,9 @@ export const updateAssetsAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
-export const DeleteAssetsAPI = async (requestBody) => {
+export const DeleteFactoryAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`deleteasset`, requestBody, apiHeaders);
+    const response = await instance.post(`deleteLocation`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {

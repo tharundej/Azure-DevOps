@@ -29,23 +29,9 @@ export default function ShiftSwap() {
    
       const TABLE_HEAD = [
 
-        {
     
-          id: "",
     
-          label: " SL NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
-    
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
         { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
     
@@ -56,7 +42,7 @@ export default function ShiftSwap() {
         // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     
         // { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
-        { id: "status", label: "Status ", width: 100, type: "text" },
+        { id: "status", label: "Status ", width: 100, type: "badge" },
         // { id: "End_Date", label: "End Date", width: 100, type: "text" },
         // { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
     
@@ -65,16 +51,20 @@ export default function ShiftSwap() {
       ];
     
      const defaultPayload = {
-      "company_id":"COMP2",
+      "company_id":localStorage.getItem('companyID'),
+      "location_id":32,
       "page":0,
-      "search":"",
-      "count": 5,
+      "Search":"",
+      "count": 10,
       "externalFilters":{
       "status": "",
-      "swap_date": ""
-  } , 
+      "swap_date": {
+           "from": "",
+          "to": ""
+      }
+  } ,
       "sort": {
-      "orderby": "employee_name",
+      "orderby": "",
       "key": 0
   } 
    
@@ -128,7 +118,7 @@ endpoint="/MyShiftSwap"
 bodyData='data'
 defaultPayload={defaultPayload}
 filterName="SwapSearchFilter"
-rowActions={actions}
+// rowActions={actions}
 
 />  
     </>

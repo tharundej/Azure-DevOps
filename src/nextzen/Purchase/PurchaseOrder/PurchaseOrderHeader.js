@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreatePurchaseOrder from './CreatePurchaseOrder';
 
-const PurchaseOrderHead = ({ filterSearch, filterData }) => {
+const PurchaseOrderHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -34,11 +34,15 @@ const PurchaseOrderHead = ({ filterSearch, filterData }) => {
           open={showForm}
           onClose={handleClose}
           PaperProps={{
-            sx: { maxWidth: 1300,},
+            sx: { maxWidth: 1300 },
           }}
           className="custom-dialog"
         >
-          <CreatePurchaseOrder currentData={{}} handleClose={handleClose} />
+          <CreatePurchaseOrder
+            currentData={{}}
+            handleClose={handleClose}
+            getTableData={getTableData}
+          />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
@@ -91,7 +95,8 @@ const PurchaseOrderHead = ({ filterSearch, filterData }) => {
 
 PurchaseOrderHead.propTypes = {
   filterSearch: PropTypes.func, // A function to handle search filtering.
-  filterData: PropTypes.any, // The data to be filtered (modify 'any' with the actual data type if known).
+  filterData: PropTypes.any,
+  getTableData: PropTypes.any,
 };
 
 export default PurchaseOrderHead;

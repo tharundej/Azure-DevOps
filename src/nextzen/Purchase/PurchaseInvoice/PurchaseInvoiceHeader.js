@@ -6,9 +6,9 @@ import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import CreateProducts from './CreateProducts';
+import CreatePurchaseInvoice from './CreatePurchaseInvoice';
 
-const ProductsHead = ({ filterSearch, filterData, getTableData }) => {
+const PurchaseInvoiceHead = ({ filterSearch, filterData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -34,20 +34,16 @@ const ProductsHead = ({ filterSearch, filterData, getTableData }) => {
           open={showForm}
           onClose={handleClose}
           PaperProps={{
-            sx: { maxWidth: 770, overflow: 'hidden' },
+            sx: { maxWidth: 1300,},
           }}
           className="custom-dialog"
         >
-          <CreateProducts
-            currentData={{}}
-            handleClose={handleClose}
-            getTableData={getTableData}
-          />
+          <CreatePurchaseInvoice currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          {/* <Typography variant="h4">Products Details</Typography> */}
+          <Typography variant="h4">Purchase Invoice Details</Typography>
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
@@ -93,9 +89,9 @@ const ProductsHead = ({ filterSearch, filterData, getTableData }) => {
   );
 };
 
-ProductsHead.propTypes = {
+PurchaseInvoiceHead.propTypes = {
   filterSearch: PropTypes.func, // A function to handle search filtering.
   filterData: PropTypes.any, // The data to be filtered (modify 'any' with the actual data type if known).
 };
 
-export default ProductsHead;
+export default PurchaseInvoiceHead;

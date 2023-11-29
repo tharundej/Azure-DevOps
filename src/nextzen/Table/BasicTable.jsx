@@ -437,6 +437,7 @@ const BasicTable = ({
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
       row?.status === 'InActive' || 
+      row?.status === 'active' ||
       row?.status === "Upcoming" || row?.status==="Ongoing"
     ) {
       return rowActions;
@@ -456,6 +457,12 @@ const BasicTable = ({
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
+          {filterName === 'SwapRequestSearchFilter' && (
+            <SwapRequestSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
+          )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -582,7 +589,18 @@ const BasicTable = ({
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'VendorHead' && (
-            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <VendorHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'VendorMaterialsHead' && (
+            <VendorMaterialsHeader
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'MaterialsHead' && (
             <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -609,16 +627,42 @@ const BasicTable = ({
             />
           )}
           {filterName === 'PurchaseOrderHead' && (
-            <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <PurchaseOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchaseInvoiceHead' && (
+            <PurchaseInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchasePaymentHead' && (
+            <PurchasePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-           {filterName === 'DepartmentFilterSearch' && (
-            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DepartmentFilterSearch' && (
+            <DeparrtmentSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {filterName === 'DesignationFilterSearch' && (
-            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <DesignationSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
@@ -799,8 +843,6 @@ BasicTable.propTypes = {
   deleteFunction: PropTypes.any,
   handleEditRowParent: PropTypes.any,
 };
-
-
 
 export { BasicTable };
 

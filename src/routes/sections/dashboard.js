@@ -10,6 +10,9 @@ import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 import Expenses from 'src/nextzen/expenses/Expenses';
+import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
+import PurchaseInvoice from 'src/nextzen/Purchase/PurchaseInvoice/PurchaseInvoice';
+import PurchasePayment from 'src/nextzen/Purchase/PurchasePayment/PurchasePayment';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -148,7 +151,6 @@ const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
 const VendorIndex = lazy(() => import('src/nextzen/vendor/Vendor'));
-const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
 const Assets = lazy(() => import('src/nextzen/assets/Assets'));
 const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
@@ -387,19 +389,9 @@ export const dashboardRoutes = [
       {
         path: 'vendor',
         children: [
-          {
-            element: <VendorIndex />,
-            index: true,
-          },
-        ],
-      },
-      {
-        path: 'materials',
-        children: [
-          {
-            element: <Materials />,
-            index: true,
-          },
+          { element: <VendorIndex />, index: true },
+          { path: 'vendor', element: <VendorIndex /> },
+          { path: 'vendormaterials', element: <VendorMaterials /> },
         ],
       },
       {
@@ -414,19 +406,9 @@ export const dashboardRoutes = [
       {
         path: 'products',
         children: [
-          {
-            element: <Products />,
-            index: true,
-          },
-        ],
-      },
-      {
-        path: 'customers',
-        children: [
-          {
-            element: <Customers />,
-            index: true,
-          },
+          { element: <Products />, index: true, },
+          { path: 'products', element: <Products /> },
+          { path: 'customers', element: <Customers /> },
         ],
       },
       {
@@ -434,8 +416,8 @@ export const dashboardRoutes = [
         children: [
           { element: <PurchaseOrder />, index: true },
           { path: 'order', element: <PurchaseOrder /> },
-          { path: 'invoice', element: <PurchaseOrder /> },
-          { path: 'payment', element: <PurchaseOrder /> },
+          { path: 'invoice', element: <PurchaseInvoice /> },
+          { path: 'payment', element: <PurchasePayment /> },
         ],
       },
       {

@@ -14,6 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createCustomerAPI, updateCustomerAPI } from 'src/api/Accounts/Customers';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateCustomers({ currentData, handleClose, getTableData }) {
   const newUserSchema = Yup.object().shape({
@@ -36,18 +37,18 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
 
   const defaultValues = useMemo(
     () => ({
-      customer_id: currentData?.customer_id || '',
+      customer_id: currentData?.customerId || '',
       customer_name: currentData?.customerName || '',
       customer_company_name: currentData?.customerCompanyName || '',
       customer_email_id: currentData?.customerEmailId || '',
       customer_phone_no: currentData?.customerPhoneNo || '',
-      customer_address_line1: currentData?.customerAddress || '',
-      customer_address_line2: currentData?.customer_address_line2 || '',
+      customer_address_line1: currentData?.customerAddressesLine1 || '',
+      customer_address_line2: currentData?.customerAddressesLine2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
-      state_code: currentData?.state_code || '',
+      state_code: currentData?.stateCode || '',
       country: currentData?.country || '',
-      pincode: currentData?.pincode || '',
+      pincode: currentData?.pinCode || '',
       customer_gst_no: currentData?.customerGstNo || '',
       customer_pan_no: currentData?.customerPanNo || '',
       customer_tan_no: currentData?.customerTanNo || '',
@@ -117,7 +118,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
   return (
     <div className="modal-container">
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.customerName ? 'Edit' : 'Add New'} Customers</DialogTitle>
+        <ModalHeader heading={currentData?.customerName ? 'Edit Customers' : 'Add New Customers'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -12,8 +12,9 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Iconify from 'src/components/iconify/iconify';
 
-export default function CreateBalanceSheet({ currentUser, handleClose }) {
+export default function CreatePurchasePayment({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -21,18 +22,12 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      emailID: currentUser?.emailID || '',
-      phoneNo: currentUser?.phoneNo || '',
-      address: currentUser?.address || '',
-      bankName: currentUser?.bankName || '',
-      nameAsPerBank: currentUser?.nameAsPerBank || '',
-      accountNo: currentUser?.accountNo || '',
-      ifscCode: currentUser?.ifscCode || '',
-      bankBranchName: currentUser?.bankBranchName || '',
-      status: currentUser?.status || '',
+      ProductName: currentData?.ProductName || '',
+      ProductCategory: currentData?.ProductCategory || '',
+      hsnID: currentData?.hsnID || '',
+      status: currentData?.status || '',
     }),
-    [currentUser]
+    [currentData]
   );
 
   const methods = useForm({
@@ -50,20 +45,13 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
   } = methods;
   const values = watch();
 
-  const statusOptions = ['Active', 'Inactive'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
-
-  const asstesTypeOptions = ['Type1', 'Type2'];
-  const [selectedAssetsType, setSelectedAssetsType] = useState(defaultValues.status || '');
-
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
-    data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addbalsheet', data).then(
+      const response = await instance.post('addPurchasePayment', data).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -75,10 +63,11 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
       console.error(error);
     }
   });
+
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add Sheets</DialogTitle>
+        <DialogTitle>Add New Purchase Payment</DialogTitle>
 
         <DialogContent>
           <Box
@@ -88,17 +77,20 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
             marginTop={2}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFTextField name="invoiceno" label="Invoice No" />
-            <RHFTextField name="invoicedate" label="Invoice Date" />
-            <RHFTextField name="particulars" label="particulars" />
-            <RHFTextField name="transactionno" label="Transaction No" />
-            <RHFTextField name="credit" label="Credit" />
-            <RHFTextField name="debit" label="Debit" />
-            <RHFTextField name="balanceamount" label="Balance Amount" />
+            <RHFTextField name="PO Number" label="PO Number" />
+            <RHFTextField name="Amount" label="Amount" />
+            <RHFTextField name="Paid Date" label="Paid Date" />
+            <RHFTextField name="No of Instalments" label="No of Instalments" />
+            <RHFTextField name="Balance Amount" label="Balance Amount" />
+            <RHFTextField name="Due Date" label="Due Date" />
+            <RHFTextField name="Payment Method" label="Payment Method" />
+            <RHFTextField name="Payment Status" label="Payment Status" />
+            
           </Box>
+          
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>
@@ -114,7 +106,7 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
   );
 }
 
-CreateBalanceSheet.propTypes = {
-  currentUser: PropTypes.object,
+CreatePurchasePayment.propTypes = {
+  currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

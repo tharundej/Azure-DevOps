@@ -14,6 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
 export default function CreateProducts({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
@@ -56,7 +57,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const statusOptions = ['Active', 'In Active'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
 
   const onSubmit = handleSubmit(async (data) => {
     data.status = selectedStatus;
@@ -97,9 +98,9 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
     setOpenSnackbar(false);
   };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.productID ? 'Edit' : 'Add New'} Products</DialogTitle>
+        <ModalHeader heading={currentData?.productID ? 'Edit Products' : 'Add New Products'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}

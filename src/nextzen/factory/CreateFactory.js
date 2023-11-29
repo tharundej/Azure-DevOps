@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -8,31 +8,41 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import instance from 'src/api/BaseURL';
-
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createFactoryAPI, updateFactoryAPI } from 'src/api/Accounts/Factory';
+import { getStateAPI } from 'src/api/Accounts/Common';
+import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
 
-export default function CreateFactory({ currentUser, handleClose }) {
+export default function CreateFactory({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string(),
+    locationName: Yup.string(),
+    locationPhone: Yup.number(),
+    locationEmailID: Yup.string(),
+    locationAddressLine1: Yup.string(),
+    locationAddressLine2: Yup.string(),
+    locationCity: Yup.string(),
+    locationPincode: Yup.number(),
+    locationState: Yup.string(),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      emailID: currentUser?.emailID || '',
-      phoneNo: currentUser?.phoneNo || '',
-      address: currentUser?.address || '',
-      bankName: currentUser?.bankName || '',
-      nameAsPerBank: currentUser?.nameAsPerBank || '',
-      accountNo: currentUser?.accountNo || '',
-      ifscCode: currentUser?.ifscCode || '',
-      bankBranchName: currentUser?.bankBranchName || '',
-      status: currentUser?.status || '',
+      locationID: currentData?.locationID || 0,
+      companyID: currentData?.companyID || 'COMP1',
+      locationName: currentData?.locationName || '',
+      locationPhone: currentData?.locationPhone || '',
+      locationEmailID: currentData?.locationEmailid || '',
+      locationAddressLine1: currentData?.addressLine1 || '',
+      locationAddressLine2: currentData?.addressLine2 || '',
+      locationCity: currentData?.locationCity || '',
+      locationPincode: currentData?.locationPincode || '',
+      locationState: currentData?.locationState || '',
+      status: currentData?.status || '',
     }),
-    [currentUser]
+    [currentData]
   );
 
   const methods = useForm({
@@ -50,33 +60,81 @@ export default function CreateFactory({ currentUser, handleClose }) {
   } = methods;
   const values = watch();
 
-  const statusOptions = ['Active', 'Inactive'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const [locationsOptions, setLocationsOptions] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = { companyID: 'COMP1' };
+      try {
+        const response = await getStateAPI(data);
+        console.log('location success', response);
+        const stateNames = response.map((stateObj) => stateObj.state);
+        setLocationsOptions(stateNames);
+        console.log('defaultValues.locationState', defaultValues.locationState);
+        const defaultLocation = defaultValues.locationState;
+        setSelectedLocation(defaultLocation || stateNames[0]);
+      } catch (error) {
+        setErrorMessage(error.message);
+        console.log('API request failed:', error.message);
+      }
+    };
+
+    fetchData();
+  }, [defaultValues.locationState]);
+
+  const statusOptions = ['Active', 'In Active'];
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
-    data.status = selectedStatus;
+    data.locationState = selectedLocation;
     try {
-      console.log(data, 'data111ugsghghh');
-
-      const response = await instance.post('addFactory', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      console.log('Create Factory Data', data);
+      let response = '';
+      if (currentData?.locationName) {
+        response = await updateFactoryAPI(data);
+      } else {
+        response = await createFactoryAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      currentData?.locationName ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        handleCallSnackbar(error.response.data.Message, 'warning');
+        console.log('request failed:', error.response.data.Message);
+      } else {
+        handleCallSnackbar(error.Message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Factory</DialogTitle>
-
+        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}
@@ -88,23 +146,32 @@ export default function CreateFactory({ currentUser, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="name" label="Name" />
-            <RHFTextField name="emailID" label="Email ID" />
-            <RHFTextField name="phoneNo" label="Phone No" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="bankName" label=" Bank Name" />
-            <RHFTextField name="nameAsPerBank" label="Name As Per Bank" />
-            <RHFTextField name="accountNo" label="Account No" />
-            <RHFTextField name="ifscCode" label="IFSC Code" />
-            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFTextField name="locationName" label="Name" />
+            <RHFTextField name="locationPhone" label="Phone" />
+            <RHFTextField name="locationEmailID" label="EmailID" />
+            <RHFTextField name="locationAddressLine1" label="AddressLine1" />
+            <RHFTextField name="locationAddressLine2" label="AddressLine2" />
+            <RHFTextField name="locationCity" label="City" />
+            <RHFTextField name="locationPincode" label="Pincode" />
+            <RHFAutocomplete
+              name="locationId"
+              id="location-autocomplete"
+              options={locationsOptions || []}
+              value={selectedLocation}
+              onChange={(event, newValue) => setSelectedLocation(newValue)}
+              getOptionLabel={(option) => option} // Adjust property based on your API response
+              renderInput={(params) => (
+                <TextField {...params} label="Select Location State" variant="outlined" />
+              )}
+            />
             <RHFAutocomplete
               name="status"
-              id="status-autocomplete"
+              id="status"
               options={statusOptions || []}
               value={selectedStatus}
               onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Select Status" variant="outlined" />
+                <TextField {...params} label="Select status Type" variant="outlined" />
               )}
             />
           </Box>
@@ -114,8 +181,8 @@ export default function CreateFactory({ currentUser, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+            {currentData?.locationName ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -124,6 +191,6 @@ export default function CreateFactory({ currentUser, handleClose }) {
 }
 
 CreateFactory.propTypes = {
-  currentUser: PropTypes.object,
+  currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

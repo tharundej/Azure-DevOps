@@ -47,18 +47,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-
-  
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
-export default function MyShiftSearchFilter({filterData,filterOptions,searchData}){
+export default function SwapRequestSearchFilter({filterSearch,filterData}){
   const theme = useTheme();
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
@@ -87,15 +76,6 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
   const [dropdown,setDropdown]=useState({
 // 
   })
-
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
-
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
@@ -103,11 +83,11 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
   const [dropdownstatus,setDropdownStatus]=useState([])
   const [datesFiledArray,setDatesFiledArray]=useState(
       [
-        // {
-        //   field:'requestDate',
-        //   from:'applyDatefrom',
-        //   to:'applyDateto'
-        // },
+        {
+          field:'requestDate',
+          from:'applyDatefrom',
+          to:'applyDateto'
+        },
         {
           field:'startDate',
           from:'fromDatefrom',
@@ -123,11 +103,11 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'shift_name',
+        field:'status',
         options:[]
       },
       {
-        field:'shift_term',
+        field:'leave_type_name',
         options:[]
       }
     ]
@@ -140,8 +120,8 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    shift_name: "",         // Add default value for "shift_name"
-    shift_term: "",  // Add default value for "shift_term"
+    status: "",         // Add default value for "status"
+    leave_type_name: "",  // Add default value for "leave_type_name"
   })
   function formDateDataStructure(){
     return new Promise((resolve) => {
@@ -166,8 +146,8 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     return new Promise((resolve) => {
      
       const arr1 = {
-        shift_name: "",
-        shift_term: "",
+        status: "",
+        leave_type_name: "",
       };
   
        dropdownFiledArray.forEach((item,index)=>{  
@@ -179,8 +159,8 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
         }
          
         })
-        arr1.shift_name = data.shift_name;
-        arr1.shift_term = data.shift_term;
+        arr1.status = data.status;
+        arr1.leave_type_name = data.leave_type_name;
         resolve(arr1)
         
     })
@@ -191,7 +171,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
-      getLeaveType();
+      // getLeaveType();
     }
     const handleClickClose=()=>{
       setOpen(false)
@@ -201,13 +181,13 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
         target: { value },
       } = event;
       
-      if(field==="shift_term"){
+      if(field==="leave_type_name"){
         setDropdownLeaveType(value)
         const obj=dropdown;
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="shift_name"){
+      else if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
@@ -233,8 +213,8 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    shift_name: "",        
-    shift_term: "",  
+    status: "",        
+    leave_type_name: "",  
       })
       setOpen(false);
     }
@@ -248,9 +228,9 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      // const handleSearch=debounce((e)=>{
-      //   filterSearch(e?.target?.value)
-      // },1000)
+      const handleSearch=debounce((e)=>{
+        filterSearch(e?.target?.value)
+      },1000)
     
   
     return (
@@ -259,9 +239,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
             <Grid md={8} xs={8} item>
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch}
-            onChange={(e) => handleSearch(e.target.value)}
-
+            onChange={e=>{handleSearch(e)}}
             />
             </Grid>
             <Grid md={4} xs={4} item>
@@ -285,7 +263,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
         <DialogContent sx={{mt:0,paddingBottom:0}}>
           
           <Grid>
-                {/* <Grid>
+                <Grid>
             <Typography>Request Date</Typography>
      
             <Grid container flexDirection="row">
@@ -326,7 +304,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
                 </LocalizationProvider>
                 </Grid>
                 </Grid>
-                </Grid> */}
+                </Grid>
              <Grid sx={{marginTop:2}}>
 
              <Typography>Start Date</Typography>
@@ -416,49 +394,50 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
       <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="shift_name">Shift Name</InputLabel>
+                <InputLabel fullWidth id="status">Status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'shift_name')}
-                  input={<OutlinedInput label="Shift Name" />}
+                  onChange={(e)=>handleChangeDropDown(e,'status')}
+                  input={<OutlinedInput label="Status" />}
                   MenuProps={MenuProps}
                 >
                  
-                 <MenuItem value="morning">Morning</MenuItem>
-                    <MenuItem value="evening">Evening</MenuItem>
-                    <MenuItem value="night">Night</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="approved">Approved</MenuItem>
+                    <MenuItem value="rejected">Rejected</MenuItem>
+                  
                 </Select>
               </FormControl>
                    </Grid>
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   {/* <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="shift_term">Shift Term</InputLabel>
+                <InputLabel fullWidth id="leave_type_name">Leave Type</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_2"
                   id="demo-multiple-status_2"
                   multiple
                   value={dropdownLeaveType}
-                  onChange={(e)=>handleChangeDropDown(e,'shift_term')}
-                  input={<OutlinedInput label="Shift Term" />}
+                  onChange={(e)=>handleChangeDropDown(e,'leave_type_name')}
+                  input={<OutlinedInput label="Leave Type" />}
                   MenuProps={MenuProps}
                 >
                  
- {leaveType?.map((shift_name) => {
+ {leaveType?.map((status) => {
   return (
-                <MenuItem value={shift_name.leaveTypeName} key={shift_name.leaveTypeID}>
-                  {shift_name.leaveTypeName}
+                <MenuItem value={status.leaveTypeName} key={status.leaveTypeID}>
+                  {status.leaveTypeName}
                 </MenuItem>
   )
   })}
 
                 </Select>
               </FormControl>
-                   </Grid>
+                   </Grid> */}
                 </Grid>
                </Grid>
            
@@ -470,15 +449,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     )
     
 }
-MyShiftSearchFilter.propTypes={
-    filterData: PropTypes.func,
-}
-
-MyShiftSearchFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
+SwapRequestSearchFilter.propTypes={
+    filterSearch:PropTypes.any,
+    filterData: PropTypes.any,
 }
