@@ -92,7 +92,7 @@ const ProductsTable = () => {
     companyID: 'COMP1',
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'productCategory', label: 'Product Category', type: 'text', minWidth: '180px' },
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
