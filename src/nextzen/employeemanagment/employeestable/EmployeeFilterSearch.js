@@ -250,12 +250,12 @@ const [stateOptions,setOptions]=useState([])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joiningDateFrom:undefined,
-    joiningDateTo:undefined,
-    offerDateFrom:undefined,
-    offerDateTo:undefined,
-    fofferDateFrom:undefined,
-    fofferDateTo:undefined
+    joiningDateFrom:"",
+    joiningDateTo:"",
+    offerDateFrom:"",
+    offerDateTo:"",
+    fofferDateFrom:"",
+    fofferDateTo:""
   })
 
   function formDateDataStructure(){
@@ -267,8 +267,8 @@ const [stateOptions,setOptions]=useState([])
        datesFiledArray.forEach((item,index)=>{  
          if(dates[item?.from]!==undefined){
                 arr1[item.field]={
-                from:formatDateToYYYYMMDD(dates[item?.from]),
-              to:formatDateToYYYYMMDD(dates[item?.to])
+                from:(dates[item?.from]),
+                  to:(dates[item?.to] || "")
               }
        
            }
@@ -278,7 +278,7 @@ const [stateOptions,setOptions]=useState([])
 
             arr1[item.field]={
               from:"",
-            to:""
+                to:""
             }
            }
          
@@ -436,6 +436,7 @@ const [stateOptions,setOptions]=useState([])
       
       filterData(data);
       // call parent function and pass it
+      handleClickClose()
       
       
     }
@@ -453,7 +454,7 @@ const [stateOptions,setOptions]=useState([])
     return (
         <>
           <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+            <Grid md={8} xs={12} item>
 
             <TextField placeholder='Search....' 
             fullWidth
@@ -462,7 +463,7 @@ const [stateOptions,setOptions]=useState([])
             />
             </Grid>
 
-            <Grid md={4} xs={4} item>
+            <Grid md={4} xs={12} item>
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            
       <Grid item>
@@ -490,13 +491,17 @@ const [stateOptions,setOptions]=useState([])
          </Grid>
      
       <Dialog
+      fullWidth
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
 
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        <DialogTitle sx={{textAlign:"start",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -516,43 +521,43 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
-      <Grid item xs={12} md={12} lg={12}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+      <Grid item xs={12} md={12} lg={6}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="From Date"
-              value={dates?.fjoiningDateFrom}
-              defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              
+              value={dates?.fjoiningDateFrom ? dayjs(dates?.fjoiningDateFrom).toDate() : null}
+              
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fjoiningDateFrom: newValue,
+                 
+                  fjoiningDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+         
       </Grid>
 
       {/* To Date */}
-      <Grid item xs={12} md={12} lg={12}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+      <Grid item xs={12} md={12} lg={6}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="To Date"
-              value={dates?.fjoiningDateTo}
+             
+              value={dates?.fjoiningDateTo ? dayjs(dates?.fjoiningDateTo).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fjoiningDateTo: newValue,
+                 
+                  fjoiningDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+          
       </Grid>
           </Grid>
             </Grid>
@@ -565,43 +570,43 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid container direction="row" spacing={2}>
       {/* From Date */}
-      <Grid item xs={12} md={12} lg={12}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+      <Grid item xs={12} md={12} lg={6}>
+        
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="From Date"
-              value={dates?.fDOBDateFrom}
+              
+              value={dates?.fDOBDateFrom ? dayjs(dates?.fDOBDateFrom).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fDOBDateFrom: newValue,
+                
+                  fDOBDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+         
       </Grid>
 
       {/* To Date */}
-      <Grid item xs={12} md={12} lg={12}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
+      <Grid item xs={12} md={12} lg={6}>
+       
             <DatePicker
               sx={{ width: '100%', paddingLeft: '3px' }}
               label="To Date"
-              value={dates?.fDOBDateTo}
+            
+              value={dates?.fDOBDateTo ? dayjs(dates?.fDOBDateTo).toDate() : null}
               defaultValue={dayjs(new Date())}
-              onChange={(newValue) => {
+              onChange={(date) => {
                 setDates((prev) => ({
                   ...prev,
-                  fDOBDateTo: newValue,
+                 
+                  fDOBDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
                 }));
               }}
             />
-          </DemoContainer>
-        </LocalizationProvider>
+        
       </Grid>
     </Grid>
 
@@ -612,44 +617,47 @@ const [stateOptions,setOptions]=useState([])
             <Typography>Offer Date</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fofferDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fofferDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fofferDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fofferDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
+            <Grid container direction="row">
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={6}>
+       
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+             
+              value={dates?.fofferDateFrom ? dayjs(dates?.fofferDateFrom).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                  
+                  fofferDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+        
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={6}>
+        
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+            
+              value={dates?.fofferDateTo ? dayjs(dates?.fofferDateTo).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                 
+                  fofferDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+         
+      </Grid>
+    </Grid>
 
              
              </Grid>
@@ -664,7 +672,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={6}>
+                  <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -689,8 +697,8 @@ const [stateOptions,setOptions]=useState([])
                 </Select>
               </FormControl>
                    </Grid>
-
-                   <Grid marginTop="10px" xs={12} md={6}>
+                    
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
@@ -716,7 +724,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Marital Status</InputLabel>
                 <Select
@@ -743,7 +751,7 @@ const [stateOptions,setOptions]=useState([])
                    </Grid>
 
                    {/* Blood Group */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Blood Group</InputLabel>
                 <Select
@@ -769,7 +777,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
                    {/* State */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -796,120 +804,11 @@ const [stateOptions,setOptions]=useState([])
                    </Grid>
 
 
-                   {/* departmentName */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Department Name</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-departmentName"
-                  id="demo-multiple-departmentName"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPdepartmentName')}
-                  input={<OutlinedInput label="Department Name" />}
-                  MenuProps={MenuProps}
-                >
-                  {departmentNameOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-
-                   {/* fPDesignation */}
-
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Designation</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPDesignation"
-                  id="demo-multiple-fPDesignation"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPDesignation')}
-                  input={<OutlinedInput label="Designation" />}
-                  MenuProps={MenuProps}
-                >
-                  {designationOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-                   {/* fPDesignationGrade */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Designation Grade</InputLabel>
-                <Select
                   
-                  fullWidth
-                  labelId="demo-multiple-name-fPDesignationGrade"
-                  id="demo-multiple-fPDesignationGrade"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPDesignationGrade')}
-                  input={<OutlinedInput label="Designation Grade" />}
-                  MenuProps={MenuProps}
-                >
-                  {designationGradeOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-                   {/* fWorkingLocation */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Working Location</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fWorkingLocation"
-                  id="demo-multiple-fWorkingLocation"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fWorkingLocation')}
-                  input={<OutlinedInput label="Working Location" />}
-                  MenuProps={MenuProps}
-                >
-                  {WorkingLocationOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
 
                      <Grid  >
               
-                  <Grid item xs={12} md={6} lg={12}>
+                  <Grid item xs={12} md={12} lg={6} marginTop="10px">
               
                 <Autocomplete
                   disablePortal
@@ -957,10 +856,10 @@ const [stateOptions,setOptions]=useState([])
                   renderInput={(params) => <TextField {...params} label="Location"
                   style={{  width: '100%' }} />}
                 />
-              </Grid>
+                      </Grid>
                      </Grid>
-                     <Grid container >
-                <Grid item xs={12} md={6} lg={12}>
+                    
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                 {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                   <Autocomplete
                     disablePortal
@@ -1005,10 +904,10 @@ const [stateOptions,setOptions]=useState([])
                     style={{  width: '100%' }} />}
                   />
                 </Grid>
-                     </Grid>
+                     
 
                      <Grid container >
-                <Grid item xs={12} md={6} lg={12}>
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                  
                   <Autocomplete
                     disablePortal
@@ -1054,7 +953,7 @@ const [stateOptions,setOptions]=useState([])
                       </Grid>
 
                       <Grid container >
-                <Grid item xs={12} md={6} lg={12}>
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
                 
                   <Autocomplete
                     disablePortal
@@ -1083,7 +982,7 @@ const [stateOptions,setOptions]=useState([])
               </Grid>
 
               <Grid container >
-                <Grid item xs={12} md={6} lg={12}>
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
                 
                   <Autocomplete
                     disablePortal
@@ -1113,7 +1012,7 @@ const [stateOptions,setOptions]=useState([])
 
 
               <Grid container >
-                <Grid item xs={12} md={6} lg={12}>
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
                 
                   <Autocomplete
                     disablePortal
@@ -1148,7 +1047,25 @@ const [stateOptions,setOptions]=useState([])
 
            </Grid>
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
+         <Button onClick={()=>{
+          setDates({
+            joiningDateFrom:"",
+            joiningDateTo:"",
+            offerDateFrom:"",
+            offerDateTo:"",
+            fofferDateFrom:"",
+            fofferDateTo:""
+          });
+
+
+          
+         }}>Reset</Button>
+         <Button 
+         sx={{backgroundColor:'#3B82F6',marginLeft:'5px'}}
+         onClick={()=>{handleApply()}}>Apply</Button>
+         
+         </Grid>
    
     </Dialog>
     </>

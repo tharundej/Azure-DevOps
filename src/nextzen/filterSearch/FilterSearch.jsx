@@ -286,7 +286,7 @@ export default function SearchFilter({filterSearch,filterData}){
 
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        <DialogTitle sx={{textAlign:"start",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -386,11 +386,11 @@ export default function SearchFilter({filterSearch,filterData}){
                 <Grid>
                   <Grid marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="status">status</InputLabel>
+                <InputLabel fullWidth id="status">Status</InputLabel>
                 <Select
                 fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
+                  
+                  id="Status"
                   multiple
                   value={dropdownstatus}
                   onChange={(e)=>handleChangeDropDown(e,'pfType')}
@@ -441,7 +441,22 @@ export default function SearchFilter({filterSearch,filterData}){
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
+          <Button
+          onClick={()=>{
+            setDropdownStatus([])
+          }}
+          >Reset</Button>
+        <Button
+          onClick={() => {
+            handleApply();
+          }}
+          // variant="outlined"
+          style={{ width: '80px', backgroundColor:'#3B82F6',color:'white'}}
+        >
+          Apply
+        </Button>
+        </Grid>
    
     </BootstrapDialog>
     </>

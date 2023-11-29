@@ -27,6 +27,7 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeaveType({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -56,8 +57,8 @@ export default function LeaveType({ currentUser }) {
     { id: 'upperCapLimit', label: 'EL Upper Cap Limit', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
-    { name: 'Delete', icon: 'hh', path: 'jjj' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'Delete', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = {
     count: 5,
@@ -111,16 +112,21 @@ export default function LeaveType({ currentUser }) {
     // console.log('values:', value);
     // console.log('event', event.target.value);
     // setSelectedOption(value);
-    console.log(field, value, 'valllllllllll');
+    
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-  
+    console.log(field, value, 'valllllllllll');
   };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
+    data.leavePeriodType=valueSelected.leavePeriodTypem
+    data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
+    data.leaveTypeName=valueSelected.leaveTypeName
+    data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
+    data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
@@ -247,7 +253,7 @@ export default function LeaveType({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Leave Type</DialogTitle>
+        <ModalHeader heading="Edit Leave Type" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -259,20 +265,7 @@ export default function LeaveType({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {/* <Autocomplete
-                disablePortal
-                name="Location"
-                id="combo-box-demo"
-                options={locationType?.map((employeepayType) => ({
-                  label: employeepayType.locationName,
-                  value: employeepayType.locationName,
-                  ...employeepayType,
-                }))}
-                onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
-                }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              /> */}
+              
               <RHFTextField
                 name="LeaveName"
                 label="Leave Name"
@@ -285,20 +278,10 @@ export default function LeaveType({ currentUser }) {
                 value={valueSelected?.totalNumberLeave}
                 onChange={(e) => handleSelectChange('totalNumberLeave', e.target.value)}
               />
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Start Date"
-                    value={selectedDates}
-                    onChange={handleDateChanges}
-                  />
-                </DemoContainer>
-              </LocalizationProvider> */}
               <RHFTextField
                 name="upperCapLimit"
                 label="EL Upper Cap Limit"
-                value={editData?.upperCapLimit}
+                value={valueSelected?.upperCapLimit}
                 onChange={(e) => handleSelectChange('upperCapLimit', e.target.value)}
               />
               <Autocomplete
@@ -318,7 +301,7 @@ export default function LeaveType({ currentUser }) {
               <RHFTextField
                 name="leaveTakeRange"
                 label="Leave Take Range"
-                value={editData?.leaveTakeRange}
+                value={valueSelected?.leaveTakeRange}
                 onChange={(e) => handleSelectChange('leaveTakeRange', e.target.value)}
               />
             </Box>
@@ -328,14 +311,21 @@ export default function LeaveType({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit1}
+             type="submit"
+             >Save
+             </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { _userList } from 'src/_mock';
-import { useState, useEffect } from 'react';
+import { useState, useEffect  ,useContext} from 'react';
 import { Container } from '@mui/system';
 import {  Alert,
   Autocomplete,
@@ -31,6 +31,9 @@ import AddRoleConfig from './AddRoleConfig';
 import FormProvider from 'src/components/hook-form/form-provider';
 import AddDesignationGradeConfig from './AddDesignationGradeConfig';
 import axios from 'axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -38,6 +41,12 @@ const bull = (
 );
 
 export default function DesignationGradeConfig() {
+
+  const {user}=useContext(UserContext)
+  console.log(user ,"userDetails ")
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
   const TABLE_HEAD = [
   
  
@@ -105,7 +114,7 @@ export default function DesignationGradeConfig() {
     count:5,
     page: 0,
     search: "",
-    companyId: "COMP1",
+    companyId: cmpId,
     externalFilters: {
       departmentName: "",
       designationName: "",
@@ -152,11 +161,10 @@ export default function DesignationGradeConfig() {
       method: 'post',
       maxBodyLength: Infinity,
       //    url: baseUrl + '/updateSingleDepartmentInfo ',
-      url: 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/updateSingleDepartmentInfo',
+      url: baseUrl +'/updateSingleDepartmentInfo',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-        'Content-Type': 'text/plain',
+      token ,  'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -168,7 +176,7 @@ export default function DesignationGradeConfig() {
              setSnackbarMessage('Designation Added successfully!');
              setSnackbarOpen(true);
             //  setHitGetDepartment(!hitGetDepartment)
-          console.log('success');
+          console.log('success',response);
         }
       })
       .catch((error) => {
@@ -213,7 +221,8 @@ export default function DesignationGradeConfig() {
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Edit Designation Grade Config</DialogTitle>
+          
+          <ModalHeader  heading="Edit Designation Grade Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -226,10 +235,7 @@ export default function DesignationGradeConfig() {
                 md: 'repeat(3, 1fr)', // Add this line for three items in a row
               }}
             >
-        
-        
-           
-              <TextField
+     <TextField
                 label="Department "
                 name="department"
                 value={valueSelected?.departmentName ||  null}
@@ -239,13 +245,6 @@ export default function DesignationGradeConfig() {
                 variant="outlined"
                 fullWidth
               />
-         
-           
-       
-
-         
-      
-          
 
               <TextField
                 label="Designation"
@@ -290,18 +289,17 @@ export default function DesignationGradeConfig() {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <Button
+            {/* <Button
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               // loading={isSubmitting1}
             >
               Save
-            </Button>
+            </Button> */}
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} />
       <Container
         sx={{
           display: 'flex',
@@ -316,6 +314,7 @@ export default function DesignationGradeConfig() {
           Add Designation Grade
         </Button> */}
       </Container>
+    
       <BasicTable
         headerData={TABLE_HEAD}
         defaultPayload={defaultPayload}

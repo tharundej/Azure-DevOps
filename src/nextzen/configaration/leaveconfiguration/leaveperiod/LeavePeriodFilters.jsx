@@ -53,6 +53,8 @@ import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 import LeavePeriodForm from './LeavePeriodForm';
 
+import {leavePeriodType} from '../../../global/configurationdropdowns/ConfigurationDropdown'
+
 const defaultFilters = {
   name: '',
   type: [],
@@ -91,10 +93,23 @@ function getStyles(name, personName, theme) {
 
 export default function LeavePeriodFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const leavePeriodTypes = [
-    'Financial Year',
-    'Year'
-  ];
+  // const leavePeriodTypes = [
+  //   'Financial Year',
+  //   'Year'
+  // ];
+
+  const [leavePeriodTypes,setLeavePeriodTypes]=useState([])
+
+  useEffect(()=>{
+
+    async function call(){
+      const arr=await leavePeriodType();
+      console.log(arr,'sairam')
+      setLeavePeriodTypes(arr);
+    }
+    call()
+    
+  },[])
   const designationName = [
     'executive'
   ]
@@ -174,13 +189,14 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(',');
-          arr1[item.field] = commaSeparatedString;
-        }
+      const arr1 = [];
+      dropdown?.leavePeriodType?.forEach((item, index) => {
+        // if (dropdown[item.field]?.length > 0) {
+        //   const arrayOfStrings = dropdown[item.field];
+        //   const commaSeparatedString = arrayOfStrings.join(',');
+        //   arr1[item.field] = commaSeparatedString;
+        // }
+        arr1.push(item?.leavePeriodType)
 
         //  const obj={
         //    filed_name:item?.field,
@@ -239,9 +255,17 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
 
   const handleApply = async () => {
     setDatesData([]);
+    
     const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
+   
+    const comma=data.join(',')
+    const obj={
+      leavePeriodType:comma
+    }
+    filterData(obj);
+    console.log(obj, "sairam")
+    
+   
 
     //   filterData(data);
     handleClickClose();
@@ -260,8 +284,9 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
         justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
+        lg={12} md={12} xs={12}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item lg={8} md={6} xs={4}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -269,10 +294,10 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={2}>
        <LeavePeriodForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={2}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -323,9 +348,9 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {leavePeriodTypes.map((name) => (
+                    {leavePeriodTypes?.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
+                        {name?.leavePeriodType}
                       </MenuItem>
                     ))}
                   </Select>

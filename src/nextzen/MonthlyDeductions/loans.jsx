@@ -11,7 +11,11 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import {useSnackbar} from '../../components/snackbar';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useForm, Controller } from 'react-hook-form';
-export default function Loans() {
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+import ModalHeader from '../global/modalheader/ModalHeader';
+export default function Loans({defaultPayload}) {
+  const {user} = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
         {
@@ -44,15 +48,26 @@ export default function Loans() {
     
      
     
-      const actions = [
+      const actualActions = [
     
-        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveLoanDetails",icon:"charm:circle-tick"},
-        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveLoanDetails",icon:"charm:circle-cross"},
-    
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateLoanDetails",icon:"solar:pen-bold" },
-    
+        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
+        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
     
       ];
+
+      const defaultActions=[
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
+      ]
+     
+      // Function to get row actions based on user role
+      const generateRowActions = () => {
+        const userRoleID = user?.roleID; // Assuming roleID is available in user object
+        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        console.log(actions,"actionsss")
+        return actions;
+      };
+    
+      const actionsBasedOnRoles = generateRowActions();
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -72,13 +87,13 @@ export default function Loans() {
        
       } 
     
-  const defaultPayload={
+  const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "count": 5,
     "page": 0,
     "search": "",
-    "companyID": localStorage?.getItem('companyID'),
-    "employeeID":localStorage?.getItem('employeeID'),
-    "roleID":parseInt(localStorage?.getItem('roleID')),
+    "companyID":(user?.companyID)?user?.companyID:'',
+    "employeeID":(user?.employeeID)?user?.employeeID:'',
+    "roleID":(user?.roleID)?user?.roleID:'',
     "externalFilters": {
   "requestDate": {
    
@@ -130,7 +145,7 @@ export default function Loans() {
   const handleLoanReject=()=>{
     var payload =
     {
-      "employeeID":localStorage?.getItem('employeeID'),
+      "employeeID":(user?.employeeID)?user?.employeeID:'',
       "loanID": rowData?.loanID,
       "paidAmount":rowData?.paidAmount,
       "noOfInstallments":rowData?.noOfInstallments,
@@ -160,7 +175,7 @@ export default function Loans() {
 
     () => ({ 
       
-      employeeID:localStorage?.getItem('employeeID'),
+      employeeID:(user?.employeeID)?user?.employeeID:'',
       loanID:0,
       paidAmount:"",
       noOfInstallments:"",
@@ -192,7 +207,6 @@ export default function Loans() {
       method: 'POST',
       maxBodyLength:Infinity,
       url: baseUrl + `/approveLoanDetails`,
-      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/approveLoanDetails`,
       data: obj
     
     }
@@ -201,7 +215,7 @@ export default function Loans() {
      handleClose()
     })
       .catch((error) => {
-        enqueueSnackbar(error.message,{variant:'Error'})
+        enqueueSnackbar(error.message,{variant:'error'})
        handleClose()
       });
   }
@@ -277,16 +291,10 @@ export default function Loans() {
  }}
  className="custom-dialog"  
 >
+<ModalHeader heading="Edit Loan Request"/>
   <DialogContent>
   <Grid container spacing={2}>
-     <Grid xs={12} md={12}>
-            <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'5px'}}>
-                Edit Your Loan Request 
-              </Typography>
-            </Grid>
-      </Grid>
-      <Grid  xs={12} md={12} sx={{marginLeft:5}}>
+      <Grid  xs={12} md={12} sx={{marginLeft:3,marginTop:2}}>
       <TextField
                 
                 fullWidth
@@ -299,8 +307,9 @@ export default function Loans() {
      </Grid>
   </DialogContent>
   <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-               <Button variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditLoan}>Apply</Button>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+             
+                <Button  sx={{marginRight:2}} onClick={handleClose} variant="outlined">Cancel</Button>
+                <Button sx={{right:5}} variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditLoan}>Apply</Button>
               </Stack>
       </Dialog>
     )}
@@ -317,33 +326,39 @@ export default function Loans() {
  className="custom-dialog"  
 >
 <FormProvider methods={methods} onSubmit={onSubmit}>
-    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Approve Loan Request
-    </Typography>
+   <ModalHeader heading="Approve Request"/>
 <DialogContent>
-<Grid>
+<Grid container>
+  <Grid container flexDirection="row" spacing={1}>
+  <Grid item xs={12} md={6}>
 <RHFTextField name="noOfInstallments" label="No of Installments"/>
 </Grid>
-<Grid sx={{marginTop:2}}>
+<Grid item xs={12} md={6}>
 <RHFTextField name="paidAmount" label="Paid Amount"/>
 </Grid>
+  </Grid>
 
-<Grid sx={{marginTop:2}}>
+<Grid container flexDirection="row" spacing={1}>
+<Grid item sx={{marginTop:2}} xs={12} md={6}>
 <RHFTextField name="interestRate" label="Interest Rate" />
 </Grid>
-<Grid sx={{marginTop:2}}>
+<Grid item sx={{marginTop:2}} xs={12} md={6}>
 <RHFSelect name="paymentStatus" label="Payment Status">
   <MenuItem value="credited">Credited</MenuItem>
   <MenuItem value="debited">Debited</MenuItem>
 </RHFSelect>
 
 </Grid>
-<Grid sx={{marginTop:2}}>
+</Grid>
+<Grid container flexDirection="row" sx={{marginTop:2}} xs={12} md={12}>
 <RHFTextField name="approverComments" label="Comments"/>
 
 </Grid>
-<Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Approve Loan</Button>
-<Button sx={{float:"right",right:10,marginTop:2}} onClick={()=>setApproveForm(false)}>Cancel</Button>
+</Grid>
+
+<Button variant="contained" color="primary" sx={{float:"right",marginTop:2,color:"white"}} type="submit">Approve Loan</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={()=>setApproveForm(false)}>Cancel</Button>
+
 </DialogContent>
 </FormProvider>
       </Dialog>
@@ -358,10 +373,8 @@ onClose={handleClose}
 PaperProps={{
   sx: { maxWidth: 500 , overflow:'hidden'},
 }}
-className="custom-dialog"  >
-<Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Reject Salary Request
-    </Typography>
+className="custom-dialog">
+    <ModalHeader heading="Reject Request"/>
 <TextField 
 label="comments"
 placeholder='comments'
@@ -369,19 +382,20 @@ onChange={(e)=>handleComments(e)}
 sx={{margin:2}}
 />
 <div style={{display:"flex",justifyContent:"right",marginBottom:2}}>
-<Button variant="contained" color="primary" sx={{width:150,float:'right'}}  onClick={handleLoanReject}>Reject Request</Button>
-<Button  onClick={()=>setRejectForm(false)}>Cancel</Button>
+<Button variant="outlined" onClick={()=>setRejectForm(false)} sx={{marginRight:2}}>Cancel</Button>
+<Button variant="contained" color="primary" sx={{float:'right',right:5}}  onClick={handleLoanReject}>Reject</Button>
+
 </div>
 </Dialog>
       )
     }
     <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"
-rowActions={actions}
+rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
 />  
     </>

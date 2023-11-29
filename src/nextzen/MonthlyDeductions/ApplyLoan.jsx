@@ -1,88 +1,40 @@
 import PropTypes, { number } from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import {  useMemo, useState,useContext } from 'react';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import TextField from '@mui/material/TextField';
-
-import Chip from '@mui/material/Chip';
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
+import {Box,Card,Stack} from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
-// utils
-// routes
 import { useRouter } from 'src/routes/hooks';
-// assets
-// components
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
-  RHFAutocomplete,
-} from 'src/components/hook-form';
-import axios from 'axios';
+import FormProvider, {RHFTextField} from 'src/components/hook-form';
 import instance  from 'src/api/BaseURL';
-import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
-export default function ApplyLoan({ currentUser,handleClose }) {
-  const [datesUsed, setDatesUsed] = useState({
-    No_instalment: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-    due_date: dayjs(new Date()),
-    // activity_name:[]
-  });
-  const [selectedActivity, setSelectedActivity] = useState([]);
-
-  const handleSelectChange = (event, values) => {
-    setSelectedActivity(values);
-  };
+import UserContext from '../context/user/UserConext';
+import ModalHeader from '../global/modalheader/ModalHeader';
+export default function ApplyLoan({ handleClose }) {
+  const {user} = useContext(UserContext)
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
   const NewUserSchema = Yup.object().shape({
     requestAmount: Yup.number(),
-    // No_instalment: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
     comment: Yup.string(),
-   
-   
   });
-
   const defaultValues = useMemo(
     () => ({
-   
-        requestAmount: currentUser?.requestAmount || '',
-        // No_instalment: currentUser?.No_instalment || '',
-        // end_date: currentUser?.end_date || '',
-        // due_date: currentUser?.due_date || '',
-        comment: currentUser?.comment || '',
-  
-   
+        requestAmount:'',
+        comment:'',
     }),
-    [currentUser]
+    []
   );
-
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-
   const m2 = useForm();
-
   const {
     reset, 
     watch,
@@ -91,53 +43,41 @@ export default function ApplyLoan({ currentUser,handleClose }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const values = watch();
 const [sendData, setSendData] = useState({
   projectId : '',  
 })
   const onSubmit = handleSubmit(async (data) => {
-
     try {
     
-      data.companyID = localStorage.getItem('companyID'),
-      data.employeeID = localStorage.getItem('employeeID')
-      
-      // data.companyID="comp1",
-      // data.employeeID="info1"
+      data.companyID = (user?.companyID)?user?.companyID:'',
+      data.employeeID = (user?.employeeID)?user?.employeeID:''
       const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
           handleClose()
         },
         (error) => {
-          enqueueSnackbar("Previous Claim is Pending",{variant:'Error'})
+          enqueueSnackbar(error.response.data.Message,{variant:'error'})
+          console.log(error)
           handleClose()
         }
       );
-
     } 
     catch (error) {
-      console.log(error,"applyloanerror")
-      enqueueSnackbar(error?.Message,{variant:'Error'})
+      enqueueSnackbar(error?.Message,{variant:'error'})
       console.error(error);
     }
   });
-
  
-
   return (
-    <div style={{ paddingTop: '20px' }}>
+  
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Loan Request"/>
         <Grid container spacing={3}>
-
           <Grid xs={12} md={12}>
-            <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'5px'}}>
-                Enter Your Amount to Request Loans
-              </Typography>
-            </Grid>
-            <Card sx={{ p: 3 }}>
+           
+            <Card sx={{ p: 2 }}>
               <Box
                 rowGap={1}
                 columnGap={1}
@@ -148,26 +88,20 @@ const [sendData, setSendData] = useState({
                 }}
               >
                 <RHFTextField name="requestAmount" type={number} label="Enter Amount" />
-                {/* <RHFTextField name="No_instalment" label=" No Of Instalment" /> */}
                 <RHFTextField name="comment" label="Comment" />
               </Box>
-
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Apply Loan'}
-                </LoadingButton>
-                <Button sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              <Button sx={{marginRight:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
+                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>Apply</LoadingButton>
+              
               </Stack>
            
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
-    </div>
   );
 }
-
 ApplyLoan.propTypes = {
-  currentUser: PropTypes.object,
   handleClose: PropTypes.func,
 };

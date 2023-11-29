@@ -59,6 +59,7 @@ import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 
 export default function ApproveClaim({ currentUser }) {
+  
 
   // const defaultPayload = {
   //   "count":5,
@@ -99,11 +100,16 @@ export default function ApproveClaim({ currentUser }) {
     { id: "claimType", label: "Claim Type", width: 180, type: "text" },
     { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
     { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "approveAmount", label: "Max Approve Amount", width: 200, type: "text" },
-    { id: "expenseDate", label: "Expense Date", width: 100, type: "text" },
+   
+  
+    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
+    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
     { id: "approverName", label: "Approver Name", width: 100, type: "text" },
+    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
+    { id: "paymentStatus", label: "Payment Status", width: 100, type: "badge" },
     { id: "status", label: "Status", width: 100, type: "badge" },
-
 
     // { id: '', width: 88 },
   ]
@@ -116,6 +122,8 @@ export default function ApproveClaim({ currentUser }) {
   const defaultPayload={
 
     "companyId":companyID,
+    "approverManagerId":employeeID,
+    
     "count":5,
     "page":0,
     "search":"",
@@ -159,8 +167,8 @@ const dialogConfig={
   ],
 } 
 const actions = [
-  { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-  { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+  { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+  { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
   // { name: "eerr", icon: "hh", path: "jjj" },
 ];
   const searchFilterheader = [
@@ -170,16 +178,7 @@ const actions = [
     { name: "Edit", icon: "hh", id: 'edit' },
     { name: "Delete", icon: "hh", id: 'delete' },
   ];
-  const bodyContent = [
-    {
-      name: "Surendra",
-      email: "suri@infobellIt.com",
-      phoneNumber: "9879876789",
-      company: "Infobell",
-      role: "UI Developer",
-      status: "active",
-    },
-  ];
+
   // mui modal related
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -281,35 +280,33 @@ const actions = [
       console.error(error);
     }
   });
-  // for upload docmunt
-
-  // const onclickActions = (event) => {
-  //   console.log( "my claims from to basic table")
-  //   console.log(event)
-  //   if (event && event?.eventData) {
-  //     if (event?.eventData?.type === 'serviceCall') {
-  //       // serviceCall(event.eventData.endpoint,event.rowData)
-        
-  //     } else {
-  //         // navigate[event.eventData.route]
-  //     }
-  //   }
-  // }
+  
 
 
-  const [approve, setApprove]= React.useState({
-
-    // compensatoryRequestId:"1",
-    //     status: "",
-    //     utilisation: "1"
+  const [approve, setApprove]= React.useState({ 
     companyId:companyID,
     employeeId:"",
     expenseClaimId :"" ,
     approverManagerId:employeeID,
-    status:""
+    approvedAmount:null,
+    status:"",
+    approverRemark:"",
+    claimAmount:"",
+    claimType:""
  
 
   })
+console.log(approve,"approve1233")
+const handleInputChange = (event) => {
+  const { name, value } = event.target;
+  const parsedValue = name === "approvedAmount" ? parseFloat(value) : value;
+
+  setApprove((prevApprove) => ({
+    ...prevApprove,
+    [name]: parsedValue,
+  }));
+  
+};
 
 
   // console.log(approve,"approve data11111111")
@@ -319,15 +316,18 @@ const actions = [
       if (eventData?.type === 'status') {
        
            if (eventData?.name === 'Approve'){
-          //   setApprove(prevState => ({
-          //     ...prevState,
-          //     status: "Approve",
-          //     expenseClaimId :rowData?.expenseClaimId,
-          //     employeeId:rowData?.EmployeeId,
-          // }));
-          handle({...approve, ...{status: "Approve",
-          expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,}});
+            setApprove(prevState => ({
+              ...prevState,
+              status: "Approved",
+              expenseClaimId :rowData?.expenseClaimId,
+              employeeId:rowData?.EmployeeId,
+              claimAmount:rowData?.claimAmount,
+              claimType:rowData?.claimType,
+          }));
+          handleOpen()
+          // handle({...approve, ...{status: "Approved",
+          // expenseClaimId :rowData?.expenseClaimId,
+          // employeeId:rowData?.EmployeeId,}});
        
 
            }
@@ -341,7 +341,7 @@ const actions = [
       //     employeeId:rowData?.EmployeeId,
       // }));
       // handle(approve);
-      handle({...approve, ...{status: "Reject",
+      handle({...approve, ...{status: "Rejected",
           expenseClaimId :rowData?.expenseClaimId,
           employeeId:rowData?.EmployeeId,}});
       
@@ -359,21 +359,23 @@ const actions = [
     }
    
 
-    const  handle =(async (approve) => {
+    const  handle =(async (approve,event) => {
     
       console.log(approve,"approve defaultValues111")
      
   
       try {
-       
+        event.preventDefault();
         // console.log(data, 'formdata api in check');
   
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
           (successData) => {
             console.log('sucess', successData);
+            // enqueueSnackbar(response?.data?.message,{variant:'success'})
           },
           (error) => {
             console.log('lllll', error);
+            // enqueueSnackbar(response?.data?.message,{variant:'error'})
           }
         );
   
@@ -383,8 +385,8 @@ const actions = [
         // router.push(paths.dashboard.user.list);
         // console.info('DATA', data);
       } catch (error) {
-  
-        alert("api hit not done")
+        // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        // alert("api hit not done")
         console.error(error);
       }
     });
@@ -392,24 +394,85 @@ const actions = [
   const serviceCall = (endpoint, payload) => {
 
   }
+  //  
+  
   return (
     <>
       <Helmet>
         <title> Dashboard: ApproveClaim</title>
       </Helmet>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
+ 
+          <DialogTitle>update claim</DialogTitle>
 
-      {/* <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button> */}
-      {/* <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField fullWidth label="Search">o</TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <Button sx={{ alignSelf: "center" }} variant="contained" onClick={handleOpen}>Open modal</Button>
-          <Button variant="contained" >Filter</Button>
-          <Button variant="contained" >exports</Button>
-        </Grid>
-       
-      </Grid> */}
+          <DialogContent>
+          
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              
+
+              <TextField name="reason" label="Claim Type" value={approve?.claimType || ''}  InputProps={{
+    readOnly: true,
+  }} />
+              <TextField name="reason" label="Claim Amount"  value={approve?.claimAmount || ''}  InputProps={{
+    readOnly: true,
+  }}/>
+              <TextField
+        name="approvedAmount"
+        label="Approval Amount"
+        value={approve.approvedAmount}
+        onChange={handleInputChange}
+      />
+      <TextField
+        name="approverRemark"
+        label="Comments"
+        value={approve.approverRemark}
+        onChange={handleInputChange}
+      />
+            
+             
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button >
+           
+
+            <LoadingButton type="submit" variant="contained"  loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
+      
 
       
       <SurendraBasicTable

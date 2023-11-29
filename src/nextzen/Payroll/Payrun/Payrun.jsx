@@ -13,8 +13,21 @@ import Paper from '@mui/material/Paper';
 import { Route } from 'react-router';
 
 import Brightness1Icon from '@mui/icons-material/Brightness1';
+import { useContext  ,useState} from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import axios from 'axios';
 
 function Payrun( {handleCreatePayrun} ) {
+  const {user} = useContext(UserContext)
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+  
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
+  
+  const [loading,setLoading] = useState(false);
+   
   const   shapeStyles = {
     bgcolor: 'primary.main',
     width: 80,
@@ -27,7 +40,46 @@ function Payrun( {handleCreatePayrun} ) {
     right: "1.5em",
     top: 0
 }
-  
+
+// https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails
+const getPayRunDetails = async () => {
+  // setLoading(true)
+  const payload = {
+   companyID : "COMP1"
+  };
+
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    // url: baseUrl +'getSingleLicPremium',
+    // url: baseUrl + '/getRentDeclarationDetails',
+    url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails",
+    headers: {
+      Authorization: token,
+      'Content-Type': 'text/plain',
+    },
+    data: payload,
+  };
+  const result = await axios
+    .request(config)
+    .then((response) => {
+      if (response.status === 200) {
+        // setLoading(false)
+        const rowsData = response?.data?.data;
+    
+        console.log(JSON.stringify(response?.data?.data), 'result');
+      }
+    })
+    .catch((error) => {
+      // setLoading(false)
+      console.log(error);
+    });
+  //  console.log(result, 'resultsreults');
+};
+
+React.useEffect(()=>{
+  getPayRunDetails()
+},[])
   const shapeCircleStyles = { borderRadius: '50%' };
   const rectangle = <Box component="span" sx={shapeStyles} />;
   return (

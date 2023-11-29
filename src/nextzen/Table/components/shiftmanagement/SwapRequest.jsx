@@ -28,9 +28,23 @@ export default function Swaprequest() {
    
       const TABLE_HEAD = [
 
-      
+        {
     
-        { id: "employeeShiftSwapId", label: "Employee Shift Swap ID", width: 180, type: "text" },
+          id: "",
+    
+          label: " SL_NO",
+    
+          type: "text",
+    
+          containesAvatar: false,
+    
+     
+    
+          secondaryText: "text",
+    
+        },
+    
+        { id: "employeeShiftSwapId", label: "Employe Shift Swap ID", width: 180, type: "text" },
 
         { id: "employeeName", label: "Employee Name", width: 180, type: "text" },
         { id: "fromShiftGroup", label: "From Shift Group", width: 180, type: "text" },
@@ -53,7 +67,7 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "companyId":localStorage.getItem('companyID'),
+      "companyId":"COMP2",
       "count":5,
       "page":0,
       "search":"",
@@ -68,40 +82,15 @@ export default function Swaprequest() {
       "order":""
   }
   }
-
-  const onClickActions=(rowdata,event) => {
-    console.log("🚀 ~ file: SwapRequest.jsx:73 ~ onClickActions ~ event:", event?.id)
+      const actions = [
     
-  //   var payload ={
-  //     "project_id": rowdata?.projectId,
-  //     "employee_id": rowdata?.employeeId,
-  //     "status": parseInt( event?.id),          
-  //  }
-  // console.log(payload,"requestedddbodyyy")
-  // const config = {
-  //   method: 'POST',
-  //   maxBodyLength:Infinity,
-  //   url: baseUrl + `/updateTimesheetStatus`,
-  //   // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
-  //   data: payload
- 
-  // }
-  // axios.request(config).then((response) => {
-  //   enqueueSnackbar(response.data.Message,{variant:'success'})
-  // })
-  //   .catch((error) => {
-  //     enqueueSnackbar(error.Message,{variant:'Error'})
-  //     console.log(error);
-  //   });
- 
-  }
-  const actions = [
+        { name: "approve", icon: "hh", path: "jjj" },
     
-    { name: "Approve",  icon: "charm:circle-tick", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-
-    { name: "Reject", icon: "charm:circle-cross", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
-
-  ];
+        { name: "view", icon: "hh", path: "jjj" },
+    
+        { name: "eerr", icon: "hh", path: "jjj" },
+    
+      ];
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -113,7 +102,7 @@ export default function Swaprequest() {
     
   return (
     <>
-      {/* {showForm && (
+      {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -126,7 +115,7 @@ export default function Swaprequest() {
 >
  <AssignShift currentUser={{}} />
       </Dialog>
-    )} */}
+    )}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
@@ -140,8 +129,7 @@ headerData={TABLE_HEAD}
 endpoint='/getallSwapDetails'
 bodyData='data'
 rowActions={actions}
-onClickActions={onClickActions}
-filterName='SwapRequestSearchFilter'
+filterName='RequestSwapSerachFilter'
 />  
     </>
   );

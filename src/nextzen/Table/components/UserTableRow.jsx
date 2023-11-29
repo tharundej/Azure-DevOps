@@ -21,7 +21,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { ASSETS_API } from 'src/config-global';
 // import UserQuickEditForm from './UserQuickEditForm';
 import { useRouter } from 'src/routes/hooks';
-
+import { styled } from '@mui/system'; 
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
 
@@ -49,8 +49,6 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
-console.log(row,'row data')
-  
   return (
     <>
      
@@ -62,11 +60,13 @@ console.log(row,'row data')
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row?.employeeId)}
+              onClick={()=>onHandleEditRow(row)}
+              
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
+                  height:1,
                   cursor:'pointer'
                 }}
               >
@@ -81,30 +81,56 @@ console.log(row,'row data')
                     sx={{ mr: 2 }}
                   />
                 )}
-
+ {console.log(row,"rowdataa")}
                 {ele.type === 'text' && (
+                 
                   <ListItemText
-                    primary={row[ele.id]}
+                    primary={row[ele.id] || <span   style={{
+                      // display: 'flex',
+                      // justifyContent: 'center',
+                      // alignItems: 'center',
+                      // height: '100%', // Adjust the height if needed
+                      fontSize: 30,
+                    }}>-</span>}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-                    primaryTypographyProps={{ typography: 'body2' }}
+                    primaryTypographyProps={{ typography: 'body2'}}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
                     }}
                   />
                 )}
+                 {ele.type === 'bool' && (
+                 
+                 <ListItemText
+
+                   primary={(row[ele.id] === "true")?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
 
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
+                      (row[ele.id] === ('approved' || 'Approved' ) && 'success') ||
                       (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
                       (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
+                      (row[ele.id] === ('true' || 'True' ) && 'success') ||
+                      (row[ele.id] === ('false' || 'False') && 'warning') ||
                       'default'
                     }
                   >
-                    {row[ele.id]}
+                    {row[ele.id] ? row[ele.id].toString():"False"}
+                   
                   </Label>
                 )}
               </TableCell>

@@ -41,6 +41,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
@@ -52,6 +53,9 @@ export default function AddDepartmentConfig({ currentUser ,handleCloseAddRoleDil
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+  const empId = localStorage.getItem('employeeID')
+  const cmpId= localStorage.getItem('companyID')
+  const token = localStorage.getItem('accessToken')
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -161,7 +165,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":"COMP1"
+        "companyID":cmpId
     }
   
     const config = {
@@ -172,8 +176,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     url : baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token , 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -197,7 +200,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     const payload = 
    
     {
-        "companyID":"COMP1",
+        "companyID":cmpId,
         "departmentName": formData?.department,
         "locationID": formData?.Location?.locationID
     }
@@ -209,21 +212,26 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDepartment',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+       token,  'Content-Type': 'text/plain',
        },
        data: payload,
      };
      const result = await axios
        .request(config)
        .then((response) => {
-         if (response.status === 200) {
+         if (response.data.code === 200) {
            setSnackbarSeverity('success');
-           setSnackbarMessage('Department Added successfully!');
+           setSnackbarMessage(response.data.message);
            setSnackbarOpen(true);
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
-         }
+         }else  if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+          setHitGetDepartment(!hitGetDepartment)
+          console.log("success")
+        }
    
        })
        .catch((error) => {
@@ -241,8 +249,8 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
    const getDepartment = async () => {
     const payload =
     {
-        "companyID": "COMP1",
-         "locationID": 30
+        "companyID": cmpId,
+        //  "locationID": 30
     }
   
     const config = {
@@ -250,11 +258,10 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
+    url : baseUrl + '/onboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token , 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -275,56 +282,12 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignation = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": "COMP1",
-        "departmentID" : formData?.Department?.departmentID,
-        "designationName": formData?.designation,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignation',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+  
 
    const getDesignation = async () => {
     const payload =
     {
-        "companyID":"COMP1",
+        "companyID":cmpId,
         "departmentID":formData?.Department?.departmentID,
     }
   
@@ -333,11 +296,10 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
+    url :  baseUrl +'/onboardingDesignation',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token ,  'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -358,51 +320,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignationGrade = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": "COMP1",
-        "designationID" : formData?.Designation?.designationID,
-        "designationGradeName": formData?.designationGrade,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+ 
   useEffect(() => {
     const fetchData = async () => {
       getLocation();
@@ -453,7 +371,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
 
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px' }}>Add Department </Button>
+        sx={{margin:'20px' ,color:'white',backgroundColor:'#3B82F6'}}>Department </Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -465,7 +383,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider methods={methods1} onSubmit={onSubmit1} >
-          <DialogTitle>Department Config</DialogTitle>
+          <ModalHeader  heading="Department Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -479,8 +397,6 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               }}
             >
         
-        
-           
               <TextField
                 label="Department "
                 name="department"
@@ -490,131 +406,39 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
                 fullWidth
               />
          
-           
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={locationType?.map((employeepayType) => ({
-                label: employeepayType.locationName,
-                value: employeepayType.locationName,
-                ...employeepayType,
-              }))}
-              value={formData.Location}
-              onChange={(event, newValue, selectedOption) =>
-                handleAutocompleteChange('Location', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              /> */}
          
-          
+{/*           
               <Button  onClick={onSubmit1}>Add</Button>
-        
-          {/* Row 2 */}
-
-         
-      
-          
-              {/* <Autocomplete
-                disablePortal
-                name="Department"
-                id="combo-box-demo"
-                options={departmentType?.map((department) => ({
-                    label: department.departmentName,
-                    value: department.departmentName,
-                    ...department,
-                  }))}
-                value={formData.Department}
-                onChange={(event, newValue ,selectedOption) => handleDesignationChange('Department', newValue ,selectedOption)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Department" />}
-              />
-            */}
-         
-              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
-
-              {/* <TextField
-                label="Designation"
-                name="designation"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              /> */}
-          
-
-{/*        
-              <Button onClick={AddDesignation}>Add</Button>
-              
-           */}
-
-         
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={designationType?.map((employeepayType) => ({
-                label: employeepayType.designationName,
-                value: employeepayType.designationName,
-                ...employeepayType,
-              }))}
-              value={formData.Designation}
-              onChange={(event, newValue, selectedOption) =>
-                handleDesignationGradeChange('Designation', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Designation " />}
-              />
-          
-              <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-          
-              <Button onClick={AddDesignationGrade}>Add</Button>
-          */}
-
-          {/*       
-        <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
-        <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
          */}
-          {/* <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-            style={{ marginBottom: '1rem', textAlign: 'center' }}
-          >
-            <Grid item xs={2}>
-              <Button className="button">Save</Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button className="button">Cancel</Button>
-            </Grid>
-          </Grid> */}
-      
+    
               
             </Box>
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Close
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              loading={isSubmitting1}
-            >
-              Save
-            </Button> */}
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        onSubmit1()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+           handleClose();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+          
           </DialogActions>
         </FormProvider>
       </Dialog>

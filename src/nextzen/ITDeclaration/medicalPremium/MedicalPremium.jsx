@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Autocomplete,
+  Card,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
@@ -30,6 +31,9 @@ import MuiAlert from '@mui/material/Alert';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -48,13 +52,31 @@ const headings = [
   'Action',
 ];
 
+const cardHeadings = [
+  'Total Decduction U/S 80D',
+  'Overal Deduction',
+
+];
+
+const cardData = [
+  { name: 'Self Spouse & Child', value: '1' },
+  { name: 'Parent(s)', value: '2' },
+  { name: 'Total Deduction', value: '3' },
+];
+
 export default function MedicalPremium() {
-  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
+  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+  const {user} = useContext(UserContext)
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+  
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
+  
+  const [loading,setLoading] = useState(false);
    
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-  // State for Snackbar
+ // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -99,6 +121,20 @@ export default function MedicalPremium() {
   const [rentDeletedId, setRentDeletedID] = useState([]);
   const [isEdit , setIsEdit] =useState(false)
   const methods = useForm();
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+   const [financialYears, setFinancialYears] = useState([]);
+   const [selectedYear, setSelectedYear] = useState(null);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+  };
 
   const attchementHandler = () => {
     setOpenAttchementDilog(true);
@@ -148,6 +184,28 @@ export default function MedicalPremium() {
     let calculatedEligibleDeduction = integerValue;
 
     // Check if amountOfPremium is greater than 2500
+    // if (name === 'amountOfPremium' && integerValue > 25000) {
+    //   calculatedEligibleDeduction = 25000;
+    // }
+
+    
+
+    setFormData({
+      ...formData,
+      [name]: integerValue,
+      // eligibleDeduction: calculatedEligibleDeduction,
+    });
+
+    // setFormData({ ...formData, [name]: integerValue });
+
+    console.log(formData);
+  };
+  const handleChangeForAmoutDeduction = (event) => {
+    const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
+    let calculatedEligibleDeduction = integerValue;
+
+    // Check if amountOfPremium is greater than 2500
     if (name === 'amountOfPremium' && integerValue > 25000) {
       calculatedEligibleDeduction = 25000;
     }
@@ -162,7 +220,6 @@ export default function MedicalPremium() {
 
     console.log(formData);
   };
-
   const handleAutocompleteChange = (name, selectedValue) => {
     let mappedValue;
 
@@ -178,7 +235,9 @@ export default function MedicalPremium() {
   };
 
   const saveMedicalDetails = async () => {
+    setLoading(true)
     const payload = {
+      financialYear: selectedYear?.financialYear,
       companyID: cmpId,
       employeeID: empId,
       type: formData?.type,
@@ -198,9 +257,11 @@ export default function MedicalPremium() {
       method: 'post',
       maxBodyLength: Infinity,
       url: baseUrl + '/addMedicalInsuranceDetails',
+      // url : 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addMedicalInsuranceDetails',
       headers: {
         Authorization:
         token,
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -208,15 +269,40 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
+       
+        if (response.data.code === 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance details saved successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-          console.log('success');
+          
+          setISReloading(!isreloading);
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: '',
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     
+        }else    if (response.data.code === 400) {
+          setLoading(false)
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
       })
       .catch((error) => {
+        setLoading(false)
         setOpen(true);
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
@@ -227,13 +313,14 @@ export default function MedicalPremium() {
   };
 
   const editMedicalDetails = async () => {
+    setLoading(true)
     console.log(" i am calling fine info042" , formData)
     const payload = {
      
     
           companyID: formData.companyID,
           employeeID:formData.employeeID,
-         
+          financialYear: selectedYear?.financialYear,
           employeeName: formData.employeeName,
           premiumID: formData?.premiumID,
           type: formData?.type,
@@ -255,9 +342,11 @@ export default function MedicalPremium() {
       maxBodyLength: Infinity,
       // url: baseUrl +'updateMedicalInsuranceDetails',
       url: baseUrl+'/updateMedicalInsuranceDetails',
+      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
       headers: {
         Authorization:
        token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -265,16 +354,48 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-          setISReloading(!isreloading);
+       
+
+        if (response.data.code === 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance  Updated successfully!');
+          setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
-          console.log('success');
           
+          setISReloading(!isreloading);
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: '',
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     
+        }else    if (response.data.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
+        
+    
         }
+        // if (response.data. === 200) {
+        //   setISReloading(!isreloading);
+        //   setSnackbarSeverity('success');
+        //   setSnackbarMessage('Medical Insurance  Updated successfully!');
+        //   setSnackbarOpen(true);
+        //   console.log('success');
+          
+        // }
       })
       .catch((error) => {
+        setLoading(false)
         setOpen(true);
         setSnackbarSeverity('error');
         setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
@@ -285,17 +406,19 @@ export default function MedicalPremium() {
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: empId };
+    setLoading(true)
+    const payload = { employeeId: empId ,financialYear: selectedYear?.financialYear,};
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
       url:baseUrl +'/getMedicalInsuranceDetails',
-
+// url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
       headers: {
         Authorization:
        token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -304,6 +427,7 @@ export default function MedicalPremium() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           setMedicalTableData(rowsData);
           console.log(JSON.stringify(response?.data), 'resultMedical');
@@ -312,6 +436,7 @@ export default function MedicalPremium() {
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     console.log(result, 'resultsreults');
@@ -392,7 +517,7 @@ export default function MedicalPremium() {
     };
     fetchData();
     setIsEdit(false)
-  }, [isreloading]);
+  }, [isreloading , selectedYear?.financialYear,]);
 
   // handling documents
  
@@ -430,6 +555,7 @@ export default function MedicalPremium() {
     setIsEdit(false)
      setFormData({
       companyID: cmpId,
+      financialYear: selectedYear?.financialYear,
       employeeID: empId,
       type: '',
       policyNumber: '',
@@ -444,8 +570,54 @@ export default function MedicalPremium() {
     });
 
   }
+
+  const getFinancialYear = async () => {
+    setLoading(true)
+    const payload = {
+      companyID: cmpId,
+     
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setLoading(false)
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
+
   return (
     <div>
+   {    loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -466,41 +638,22 @@ export default function MedicalPremium() {
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
-          <Grid item container spacing={2} xs={12} style={{ marginTop: '1rem' }}>
-            {/* search and filter  */}
-            {/* <Grid
-            container
-            spacing={2}
-            alignItems="center"
-            justifyContent="flex-end"
-            direction="row"
-            style={{ marginBottom: '1rem' }}
-          >
-            <Grid item>
-              <TextField
-                sx={{ width: '20vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button className="button">Filter</Button>
-            </Grid>
-            <Grid item>
-              <Button className="button">Report</Button>
-            </Grid>
-          </Grid> */}
+          <Grid item xs={12}>
+        <Autocomplete
+          id="financialYear"
+          options={financialYears}
+          getOptionLabel={(option) => option.financialYear}
+          value={selectedYear}
+          onChange={handleYearChange}
+          renderInput={(params) => <TextField {...params} label="PLease Select Financial Year" />}
+        />
+      </Grid>
+    { selectedYear?.financialYear && !loading? <>
+          <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
+      
             {/* Row 1 */}
             <Grid item container xs={12} spacing={2}>
+          
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -528,7 +681,7 @@ export default function MedicalPremium() {
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Date Of Commencement Of Policy Or Date Paid"
+                      label=" Commencement Of Policy/Paid Date"
                       value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
                       defaultValue={dayjs(new Date())}
     onChange={(newValue) => {
@@ -549,6 +702,7 @@ export default function MedicalPremium() {
             {/* Row 2 */}
 
             <Grid item container xs={12} spacing={2}>
+           
               <Grid item xs={4}>
                 <TextField
                   label="Insured Persion Name(S)"
@@ -592,6 +746,7 @@ export default function MedicalPremium() {
             </Grid>
 
             <Grid item container xs={12} spacing={2}>
+           
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -611,7 +766,7 @@ export default function MedicalPremium() {
                   fullWidth
                   name="amountOfPremium"
                   value={formData.amountOfPremium}
-                  onChange={handleChange}
+                  onChange={handleChangeForAmoutDeduction}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -619,12 +774,16 @@ export default function MedicalPremium() {
                   label="Eligible Deduction"
                   variant="outlined"
                   fullWidth
-                  // disabled
+                  disabled
                   name="eligibleDeduction"
                   value={formData.eligibleDeduction}
-                  onChange={handleChange}
+                  style={{ background: '#e9e6e'}}
+                  // onChange={handleChange}
                 />
               </Grid>
+            </Grid>
+            <Grid item container xs={12} spacing={2}>
+           
             </Grid>
             {/* My buttons  */}
             <Grid item container xs={12} spacing={2}>
@@ -639,9 +798,16 @@ export default function MedicalPremium() {
                 style={{ marginBottom: '1rem' }}
               >
                 <Grid item>
-                  <Button className="button" onClick={attchementHandler}>
-                    Attchement
-                  </Button>
+                  {/* <Button className="button" onClick={attchementHandler}>
+                    Attachment
+                  </Button> */}
+
+                  {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
                 </Grid>
                 <Grid item>
                   <Button className="button" onClick={handleSubmit}>
@@ -658,80 +824,52 @@ export default function MedicalPremium() {
           {/* grid 1 end  */}
 
           {/* grid 2 for the table to keep left side  */}
-          {/* <Grid item xs={4}>
-            <Grid
-              item
-              container
-              xs={12}
-              spacing={2}
-              alignItems="center"
-              justifyContent="center"
-              direction="column"
-              style={{ marginBottom: '1rem', marginTop: '1rem' }}
-            >
-              <Grid xs={6}>
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{
-                    padding: '10px',
-                    backgroundColor: '#2196f3',
-                    color: 'white',
-                    border: 'none',
-                  }}
-                >
-                  <Grid item xs={6}>
-                    Total Decduction U/S 80D
-                  </Grid>
-                  <Grid item xs={6}>
-                    Overal Deduction
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{ backgroundColor: '#f0eded', padding: '10px' }}
-                >
-                  <Grid item xs={6}>
-                    Self Spouse & Child
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid item container xs={12} style={{ padding: '10px' }}>
-                  <Grid item xs={6}>
-                    Parent(s)
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  style={{ backgroundColor: '#f0eded', padding: '10px' }}
-                >
-                  <Grid item xs={6}>
-                    Total Deduction
-                  </Grid>
-                  <Grid item xs={6}>
-                    0
-                  </Grid>
-                </Grid>
-                <Divider style={{ backgroundColor: 'black' }} />
-              </Grid>
-            </Grid>
-          </Grid> */}
+          <Grid item xs={12} lg={4} md={4} 
+          style={{ marginBottom: '1rem', marginTop: '1.5rem' }}>
+         
+        <TableContainer component={Paper} style={{ overflowX: 'hidden' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {cardHeadings.map((heading, index) => (
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
+                      whiteSpace: 'nowrap', // Prevent text wrapping
+                      // overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+             
+                 
+                  {cardData.map((row, index) => (
+                    <TableRow key={index}>
+                       <TableCell style={{ textAlign: 'center' }}>{row.name}</TableCell>
+                       <TableCell style={{ textAlign: 'center' }}>{row.value}</TableCell>
+                     
+                    </TableRow>
+                  ))}
+                </TableBody>
+                  
+             
+          
+          </Table>
+        </TableContainer> 
+            
+          </Grid>
+
+          </>: null}
           {/* grid 2 end  */}
         </Grid>
-
+{medicalTableData?.length > 0?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -778,8 +916,8 @@ export default function MedicalPremium() {
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
-        <Grid
+        </TableContainer> : null}
+        {/* <Grid
           item
           container
           xs={12}
@@ -837,7 +975,7 @@ export default function MedicalPremium() {
             </Grid>
             <Divider style={{ backgroundColor: 'black' }} />
           </Grid>
-        </Grid>
+        </Grid> */}
       </FormProvider>
       {openAttachmentDilog ? (
         <FileUploader
@@ -849,6 +987,7 @@ export default function MedicalPremium() {
           handleDeletedID={handleRentDeletedID}
         />
       ) : null}
+      </>}
     </div>
   );
 

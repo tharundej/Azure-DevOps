@@ -1,19 +1,19 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import merge from 'lodash/merge';
 // _mock
 import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // ----------------------------------------------------------------------
 
 export default function useEvent(events, selectEventId, selectedRange, openForm) {
-  console.log(events,"eventsss",selectEventId)
   const currentEvent = events.find((event) => event.leaveId === parseInt(selectEventId));
-  console.log(currentEvent,"currenteventt",selectEventId)
+  const {user} = useContext(UserContext)
   const defaultValues = useMemo(
     () => ({
       leaveTypeId:0,
-      companyId: localStorage.getItem('companyID'),
-      employeeId:localStorage.getItem('employeeID'),
+      companyId: (user?.companyID)?user?.companyID:'',
+      employeeId:(user?.employeeID)?user?.employeeID:'',
       applyDate:"",
       status:"pending",
       fullday:"0",

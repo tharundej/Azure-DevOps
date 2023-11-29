@@ -14,6 +14,7 @@ import Carousel, { CarouselDots, CarouselArrows, useCarousel } from 'src/compone
 // ----------------------------------------------------------------------
 
 export default function AppFeatured({ list, ...other }) {
+  console.log(other,'otherother')
   const carousel = useCarousel({
     speed: 800,
     autoplay: true,

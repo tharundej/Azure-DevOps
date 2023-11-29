@@ -41,7 +41,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
 
   const defaultValues = useMemo(
     () => ({
-      assetsId: currentData?.assetId || '',
+      assetsId: currentData?.assetId || 0,
       locationId: currentData?.locationId || '',
       assetsName: currentData?.assetsName || '',
       assetsType: currentData?.assetsType || '',
@@ -209,7 +209,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.assetId ? '' : getTableData();
+      currentData?.assetId > 0 ? '' : getTableData();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists
@@ -235,7 +235,6 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        {/* <DialogTitle>{currentData?.assetId ? 'Edit' : 'Add New'} Assets</DialogTitle> */}
         <ModalHeader heading={currentData?.assetId ? 'Edit Assets' : 'Add New Assets'} />
         <SnackBarComponent
           open={openSnackbar}

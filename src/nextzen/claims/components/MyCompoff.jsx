@@ -40,6 +40,7 @@ import { _userList } from "src/_mock";
 import { paths } from 'src/routes/paths';
 
 import { useRouter } from 'src/routes/hooks';
+import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
@@ -135,8 +136,8 @@ export default function MyCompoff({ currentUser ,}) {
 
   const actions = [
     // { name: "approve", icon: "hh", path: "jjj" },
-    { name: "Edit", icon: "hh", path: "jjj"  , type:"edit" },
-    { name: "Delete", icon: "hh", path: "jjj" , type:"delete"},
+    { name: "Edit", icon: "solar:pen-bold", path: "jjj"  , type:"edit" },
+    { name: "Delete", icon: "solar:trash-bin-trash-bold", path: "jjj" , type:"delete"},
   ];
   const bodyContent = [
     {
@@ -224,17 +225,25 @@ export default function MyCompoff({ currentUser ,}) {
       const response = await axios.post(baseUrl+"/EditMyCompoff", editData).then(
         (successData) => {
           console.log('sucess', successData);
+         
+          handleCloseEdit()
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
+          handleCloseEdit()
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
+
         }
       );
 
       
     } catch (error) {
 
-      alert("api hit not done")
+      // alert("api hit not done")
+      handleCloseEdit()
       console.error(error);
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
     }
   }
 
@@ -387,21 +396,23 @@ export default function MyCompoff({ currentUser ,}) {
       const response = await axios.post(baseUrl+'/AddMycompoffdetails', data).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
+          handleClose()
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
+     
     } catch (error) {
 
-      alert("api hit not done")
+      // alert("api hit not done")
       console.error(error);
+      handleClose()
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
     }
   });
 
@@ -491,6 +502,22 @@ export default function MyCompoff({ currentUser ,}) {
                 
                
               />
+              {/* <RHFAutocomplete
+                name="compensantory_policies"
+                label="Select Project"
+                options={compoff_type}
+                getOptionLabel={(option) => option.compensantory_policies} 
+                isOptionEqualToValue={(option, value) => option === value}
+    
+              />
+                <RHFAutocomplete
+                name="compensantory_policies"
+                label="Select Activity"
+                options={compoff_type}
+                getOptionLabel={(option) => option.compensantory_policies} 
+                isOptionEqualToValue={(option, value) => option === value}
+    
+              /> */}
 
 {/* 
          <Autocomplete

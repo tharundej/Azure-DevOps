@@ -21,7 +21,7 @@ import { EmailInboxIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
 import axios, { endpoints } from 'src/utils/axios';
-import { Grid, Snackbar } from '@mui/material';
+import { Alert, Grid, Snackbar } from '@mui/material';
 import { column } from 'stylis';
 import { baseUrl } from '../global/BaseUrl';
 import { useState } from 'react';
@@ -45,6 +45,7 @@ export default function VerifyOtp() {
   };
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false);
   const VerifySchemaSchema = Yup.object().shape({
     code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
   });
@@ -69,37 +70,35 @@ export default function VerifyOtp() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-        const apiUrl=baseUrl+'/verifyOtp';
-        const payload={
-          otp:parseInt(data.code, 10)
-        }
-        const response = await axios.post(apiUrl,payload);
-        console.log(response?.data?.data?.code)
-        if(response?.data?.data?.code===200 ){
-          setSnackbarSeverity('success');
-      setSnackbarMessage('Email Sent Succuessfully!');
-      setSnackbarOpen(true);
-   
-        
+      const apiUrl = baseUrl + '/verifyOtp';
+      const payload = {
+        otp: parseInt(data.code, 10),
+      };
+      const response = await axios.post(apiUrl, payload);
+      console.log(response?.data?.data?.code);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Email Sent Succuessfully!');
+        setSnackbarOpen(true);
+
         console.log('sucess', response);
-            router.push(paths.auth.jwt.setpassword);
-          }
-          if(response?.data?.code===400 ||202 ){
-            setSnackbarSeverity('error');
+        router.push(paths.auth.jwt.setpassword);
+      }
+      if (response?.data?.code === 400 || 202) {
+        setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
-          console.log('Error', response?.data?.message);
-    
-          }
-    //   await confirmRegister?.(data.email, data.code);
-    //   router.push(paths.auth.jwt.login);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+        console.log('Error', response?.data?.message);
+      }
+      //   await confirmRegister?.(data.email, data.code);
+      //   router.push(paths.auth.jwt.login);
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage(response?.data?.message);
       setSnackbarOpen(true);
-     console.log('error', error);
+      console.log('error', error);
     }
   });
 
@@ -107,27 +106,26 @@ export default function VerifyOtp() {
     try {
       startCountdown();
       await resendCodeRegister?.(values.email);
-       const response = await axios.post(baseUrl+'/resendOtpToUser');
-       if(response?.data?.code===200||201||202 ){
+      const response = await axios.post(baseUrl + '/resendOtpToUser');
+      if (response?.data?.code === 200 || 201 || 202) {
         setSnackbarSeverity('success');
-         setSnackbarMessage('OTP Sent Succuessfully!');
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
-        }
-        if(response?.data?.code===400  ){
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response?.data?.message);
-           setSnackbarOpen(true);
-        
+        setSnackbarMessage('OTP Sent Succuessfully!');
+        setSnackbarOpen(true);
+
         console.log('sucess', response);
-  
-        }
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage(response?.data?.message);
       setSnackbarOpen(true);
-     console.log('error', error);
+      console.log('error', error);
     }
   }, [resendCodeRegister, startCountdown, values.email]);
 
@@ -143,7 +141,7 @@ export default function VerifyOtp() {
       <RHFCode name="code" />
 
       <LoadingButton
-        sx={{width:'80px'}}
+        sx={{ width: '80px' }}
         size="large"
         type="submit"
         variant="contained"
@@ -171,7 +169,7 @@ export default function VerifyOtp() {
 
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.createpassword}
+        href={paths.auth.jwt.login}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -189,35 +187,45 @@ export default function VerifyOtp() {
     <>
       <EmailInboxIcon sx={{ height: 96 }} />
       <Stack spacing={1} sx={{ my: 5 }}>
-      <Grid container flexDirection="column" justifyContent="center" alignContent="center">
-        <Typography variant="h3">Please check your email!</Typography>
+        <Grid container flexDirection="column" justifyContent="center" alignContent="center">
+          <Typography variant="h3">Please check your email!</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Please enter the OTP to Verify and Reset your Password.
-        </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Please enter the OTP to Verify and Reset your Password.
+          </Typography>
         </Grid>
       </Stack>
     </>
   );
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
-
+     
       {renderForm}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000} // Adjust the duration as needed
-        onClose={handleSnackbarClose}
+        onClose={snackBarAlertHandleClose}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
         }}
       >
-        <MuiAlert onClose={handleSnackbarClose} severity="error">
-          {errorMsg}
-        </MuiAlert>
-        </Snackbar>
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </FormProvider>
   );
 }
