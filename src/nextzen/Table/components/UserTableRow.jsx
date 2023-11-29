@@ -100,6 +100,22 @@ export default function UserTableRow({
                     }}
                   />
                 )}
+                 {ele.type === 'bool' && (
+                 
+                 <ListItemText
+
+                   primary={(row[ele.id] === "true")?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
 
                 {ele.type === 'badge' && (
                   <Label

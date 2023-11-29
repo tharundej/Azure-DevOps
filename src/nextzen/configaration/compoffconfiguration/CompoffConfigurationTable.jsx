@@ -268,7 +268,7 @@ export default function CompoffConfigurationTable({currentUser}) {
         onClick={handleOpen}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 720 },
+          sx: { maxWidth: 420 },
         }}
       >
         {isTextFieldVisible ? (
@@ -300,6 +300,7 @@ export default function CompoffConfigurationTable({currentUser}) {
                 <RHFTextField
                   name="expiryDays"
                   label="Expiry Days"
+                  sx={{width:280,marginLeft:1.5}}
                   value={editData?.expiryDays}
                 />
               </Box>
@@ -309,19 +310,27 @@ export default function CompoffConfigurationTable({currentUser}) {
               <Button variant="outlined"onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+               <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
-            <DialogTitle>Edit Comoff Config</DialogTitle>
+           <ModalHeader heading="Edit Comoff Config" />
             
             <DialogContent>
             <Autocomplete
@@ -348,7 +357,8 @@ export default function CompoffConfigurationTable({currentUser}) {
 
                   <RHFTextField
                     name="amount"
-                    label="amount"
+                    label="Amount"
+                    sx={{width:280,marginLeft:1.5}}
                     value={editData?.amount}
                   />
                 
@@ -359,14 +369,22 @@ export default function CompoffConfigurationTable({currentUser}) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit2}
                 loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+               <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit2}
+              >
+            Save
+            </Button>
             </DialogActions>
           </FormProvider>
         )}

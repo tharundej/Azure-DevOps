@@ -42,8 +42,8 @@ export default function Approveleave(){
           }
       },
       "sort": {
-          "key": 1,
-          "orderby": ""
+          "key": 0,
+          "orderby": "al.apply_date"
       }
   }
     
@@ -54,15 +54,16 @@ export default function Approveleave(){
               minWidth:"8pc",
               type: "text"
             },
-            { id: "employeeName", label: "Employee Name",minWidth:"10pc",type: "text"},
-            { id: "applyDate", label: "Apply Date",minWidth:"8pc", type: "text" },
-            {id : "leaveBalance",label:"Leave Balance",minWidth:"7pc",type:"text"},
-            { id: "LeaveType", label: "Leave Type",minWidth:"8pc", type: "text" },
+            { id: "employeeName", label: "Employee Name",minWidth:"9pc",type: "text"},
+            { id: "managerName", label: "Reporting Manager",minWidth:"8pc",type: "text"},
+            { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
+            {id : "leaveBalance",label:"Leave Balance",minWidth:"6pc",type:"text"},
+            { id: "LeaveType", label: "Leave Type",minWidth:"7pc", type: "text" },
             { id: "startDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "endDate",label:"End Date",minWidth:"7pc",type:"text"},
-            {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
-            {id: "approvedBy",label:"Approver Name",minWidth:"8pc",type:"text"},
-            {id: 'status',label:'Status',minWidth:"8pc",type: "badge"}
+            {id: "requestedDuration",label:"Requested Duration",minWidth:"5pc",type:'text'},
+            {id: "approvedBy",label:"Approver Name",minWidth:"7pc",type:"text"},
+            {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
             // { id: '', width: 88 },
 
        ]);
@@ -94,7 +95,7 @@ const onClickActions=(rowdata,event)=>{
         enqueueSnackbar(response.data.message,{variant:'success'})
       })
         .catch((error) => {
-          enqueueSnackbar(error.message,{variant:'Error'})
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
           console.log(error);
         });
       

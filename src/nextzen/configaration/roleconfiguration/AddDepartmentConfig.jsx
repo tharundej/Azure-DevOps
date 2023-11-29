@@ -407,26 +407,38 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               />
          
          
-          
+{/*           
               <Button  onClick={onSubmit1}>Add</Button>
-        
+         */}
     
               
             </Box>
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Close
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              loading={isSubmitting1}
-            >
-              Save
-            </Button> */}
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        onSubmit1()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+           handleClose();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+          
           </DialogActions>
         </FormProvider>
       </Dialog>

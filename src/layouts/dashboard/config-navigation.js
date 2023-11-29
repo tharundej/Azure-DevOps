@@ -165,7 +165,7 @@ export function useNavData() {
          { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
          { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
          { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
-
+         { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
       ],
     },
     // {
@@ -262,29 +262,13 @@ export function useNavData() {
             icon: ICONS.g_factory,
           },
           {
-            title: t('assets'),
-            path: paths.dashboard.assets.assets,
-            icon: ICONS.g_assets,
-          },
-          {
             title: t('vendor'),
             path: paths.dashboard.vendor.vendor,
             icon: ICONS.g_vendor,
-          },
-          {
-            title: t('materials'),
-            path: paths.dashboard.materials.materials,
-            icon: ICONS.g_materials,
-          },
-          {
-            title: t('products'),
-            path: paths.dashboard.products.products,
-            icon: ICONS.g_products,
-          },
-          {
-            title: t('customers'),
-            path: paths.dashboard.customers.customers,
-            icon: ICONS.g_customers,
+            children: [
+              { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
+              { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
+            ],
           },
           {
             title: t('purchase'),
@@ -297,14 +281,38 @@ export function useNavData() {
             ],
           },
           {
-            title: t('balancesheet'),
-            path: paths.dashboard.balancesheet.balancesheet,
-            icon: ICONS.g_balanceSheet,
+            title: t('products'),
+            path: paths.dashboard.products.products,
+            icon: ICONS.g_products,
+            children: [
+              { title: t('Product Details'), path: paths.dashboard.products.products },
+              { title: t('Customer'), path: paths.dashboard.products.customers },
+            ],
+          },
+          {
+            title: t('sales'),
+            path: paths.dashboard.purchase.purchaseOrder,
+            icon: ICONS.g_purchases,
+            children: [
+              { title: t('Sales Order'), path: paths.dashboard.purchase.purchaseOrder },
+              { title: t('Sales Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
+              { title: t('Sales Payment'), path: paths.dashboard.purchase.purchasePayment },
+            ],
           },
           {
             title: t('Expenses'),
             path: paths.dashboard.expenses.expenses,
             icon: ICONS.g_expenses,
+          },
+          {
+            title: t('assets'),
+            path: paths.dashboard.assets.assets,
+            icon: ICONS.g_assets,
+          },
+          {
+            title: t('balancesheet'),
+            path: paths.dashboard.balancesheet.balancesheet,
+            icon: ICONS.g_balanceSheet,
           },
         ],
       },

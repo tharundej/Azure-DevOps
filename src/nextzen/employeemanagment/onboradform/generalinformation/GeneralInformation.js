@@ -55,6 +55,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
   const [messageSnackbar,setmessageSnackbar]=useState('');
+  const [isDateOfBirthFilled,setIsDateOfBirthFilled]=useState(false);
 
 
   const currentUser=props.currentUser;
@@ -103,15 +104,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         (val) => val && val.toString().length === 10
     ),
     emergencyContactNumber: Yup.number(),
-    dateOfBirth: Yup.string(),
+
     fatherName: Yup.string(),
     motherName: Yup.string(),
     maritalStatus: Yup.string(),
     nationality: Yup.string(),
     religion: Yup.string(),
     bloodGroup: Yup.string(),
-    offerDate: Yup.string(),
-    joiningDate: Yup.string(),
+   
+   
     pAddressLine1: Yup.string(),
     pAddressLine2: Yup.string(),
     pCity: Yup.string(),
@@ -125,9 +126,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
    
     toggle: Yup.bool(),
 
-    companyEmail: Yup.string(),
-    // gender: Yup.string(),
+  
+     gender: Yup.object(),
     personalEmail: Yup.string().required("Email is required"),
+    companyEmail: Yup.string(),
     
     // first_name: Yup.string().required('First Name is required'),
 
@@ -163,15 +165,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
    
     contactNumber: currentUser?.contactNumber ||undefined,
     emergencyContactNumber: currentUser?.emergencyContactNumber || undefined,
-    dateOfBirth: currentUser?.dateOfBirth ||'',
+    
     fatherName: currentUser?.fatherName ||'',
     motherName: currentUser?.motherName ||'',
     maritalStatus: currentUser?.maritalStatus ||'',
     nationality: currentUser?.nationality ||'',
     religion: currentUser?.religion ||'',
     bloodGroup: currentUser?.bloodGroup ||'',
-    offerDate: currentUser?.offerDate ||'',
-    joiningDate: currentUser?.joiningDate ||'',
+   
+   
     pAddressLine1: currentUser?.pAddressLine1 ||'',
     pAddressLine2: currentUser?.pAddressLine2 ||'',
     pCity: currentUser?.pCity ||'',
@@ -185,9 +187,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     
     toggle: currentUser?.toggle || true,
 
-    personalEmail: currentUser?.personalEmail ||'',
-   //  gender:currentUser?.gender|| "Male",
+   
+     gender:currentUser?.gender||  undefined,
     companyEmail: currentUser?.companyEmail ||'',
+    personalEmail: currentUser?.personalEmail ||'',
     }),
     [currentUser]
   );
@@ -239,9 +242,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         })
         .catch((error) => {
           console.log(error);
-          setopenSnackBar(true);
-          setseveritySnackbar("warning");
-          setmessageSnackbar("Something Wrong")
+          // setopenSnackBar(true);
+          // setseveritySnackbar("warning");
+          // setmessageSnackbar("Something Wrong")
+          props.handleCallSnackbar(error.response.data.message,"error")
         });
 
   }
@@ -404,7 +408,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="personalEmail" label="Personal Email" />
                 <RHFAutocomplete
                 name="gender"
-                label="gender"
+                label="Gender"
                 options={genderOptions}
                 getOptionLabel={(option) => option.label}
                 
@@ -413,7 +417,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.label}
                   </li>
                 )}
+
               />
+
                 <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
                
@@ -427,9 +433,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         setDatesUsed((prev) => ({
                           ...prev,
                           date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
+                         
+
                         }));
+                        setIsDateOfBirthFilled(!isDateOfBirthFilled);
                       }}
+                      
                     />
+                    {isDateOfBirthFilled && <p style={{ color: 'red' }}>Date Of Birth is required</p>}
                  
                 <RHFTextField name="fatherName" label="Father Name" />
                 <RHFTextField name="motherName" label="Mother Name" />
@@ -440,7 +451,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Offer Date"
+                      label="Offer Date*"
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
@@ -454,7 +465,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Joining Date"
+                      label="Joining Date*"
                       value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {

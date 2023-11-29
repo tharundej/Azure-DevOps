@@ -192,13 +192,15 @@ const BasicTable = ({
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
       url: baseUrl + `${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
       },
       data: initialDefaultPayload,
     };
@@ -213,7 +215,7 @@ const BasicTable = ({
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data?.data, 'total no of records-->');
+        console.log(response?.data, 'total no of records-->',response?.count,"responsss",response);
 
         // leave list api
         console.log('leave list api integration');
@@ -434,7 +436,9 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
-      row?.status === 'InActive'
+      row?.status === 'InActive' || 
+      row?.status === 'active' ||
+      row?.status === "Upcoming" || row?.status==="Ongoing"
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -453,6 +457,12 @@ const BasicTable = ({
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
+          {filterName === 'SwapRequestSearchFilter' && (
+            <SwapRequestSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
+          )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -579,7 +589,18 @@ const BasicTable = ({
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'VendorHead' && (
-            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <VendorHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'VendorMaterialsHead' && (
+            <VendorMaterialsHeader
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'MaterialsHead' && (
             <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -606,16 +627,42 @@ const BasicTable = ({
             />
           )}
           {filterName === 'PurchaseOrderHead' && (
-            <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <PurchaseOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchaseInvoiceHead' && (
+            <PurchaseInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchasePaymentHead' && (
+            <PurchasePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'BalanceSheetHead' && (
             <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
-           {filterName === 'DepartmentFilterSearch' && (
-            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DepartmentFilterSearch' && (
+            <DeparrtmentSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {filterName === 'DesignationFilterSearch' && (
-            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <DesignationSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
@@ -685,7 +732,7 @@ const BasicTable = ({
                           />
                         </>
                       ))}
-
+{console.log(rowActions,"rowActionss")}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
@@ -796,8 +843,6 @@ BasicTable.propTypes = {
   deleteFunction: PropTypes.any,
   handleEditRowParent: PropTypes.any,
 };
-
-
 
 export { BasicTable };
 

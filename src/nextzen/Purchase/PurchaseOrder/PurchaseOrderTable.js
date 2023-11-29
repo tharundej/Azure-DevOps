@@ -7,104 +7,146 @@ import axios from 'axios';
 import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
+import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 
 const PurchaseOrderTable = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
+    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
   ];
+  const [editShowForm, setEditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      setEditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = { asset_id: rowdata.assetId || 0, assetsName: rowdata.assetsName || '' };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    setEditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteAssetsAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({});
-  const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
-  const ApiHit = () => {
-    const data1 = body_for_employee;
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/PurchaseOrderDetails',
-      // headers: {
-      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      // },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setBodyContent(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const ApiHit = async () => {
+    try {
+      const response = await getPurchaseOrderAPI(defaultPayload);
+      console.log('success', response);
+      setBodyContent(response);
+    } catch (error) {
+      console.log('API request failed:', error.message);
+    }
   };
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    roleid: 1,
     externalFilters: {
-      fMaritalStatus: '',
-      fBloodGroup: '',
-      fPState: '',
-      fPEmployementType: '',
-      fPdepartmentName: '',
-      fPDesignation: '',
-      fPDesignationGrade: '',
-      fWorkingLocation: '',
-      fjoiningDate: {
+      poDate: {
         from: '',
         to: '',
       },
-      fDOB: {
+      fPODate: '',
+      fItemName: '',
+      fUnitOfMeasure: '',
+      expectedDeliveryDate: {
         from: '',
         to: '',
       },
-      fofferDate: {
-        from: '',
-        to: '',
-      },
+      fExpectedDeliveryDate: '',
+      fPaymentTerm: '',
+      fVendorName: '',
+      fCompanyName: '',
     },
     sort: {
       key: 1,
-      orderBy: 'PONumber',
+      orderBy: 'po.purchase_order_id',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: 'ItemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'Quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
-    { id: 'UnitOfMeasure', label: 'Unit  Of Measure', type: 'text', minWidth: '180px' },
-    { id: 'Rate', label: 'Rate', type: 'text', minWidth: '180px' },
-    { id: 'Discount', label: 'Discount', type: 'text', minWidth: '180px' },
-    { id: 'GSTAmount', label: 'GST Amount', type: 'text', minWidth: '180px' },
-    { id: 'TotalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
-    { id: 'AdvanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
-    { id: 'BalanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
-    { id: 'ExpectedDeliveryDate', label: 'Expected Delivery Date', type: 'text', minWidth: '180px' },
-    { id: 'PaymentTerm', label: 'Payment Term', type: 'text', minWidth: '180px' },
-    { id: 'VendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
-    { id: 'VendorAddress', label: 'Vendor Address', type: 'text', minWidth: '180px' },
-    { id: 'VendorPAN', label: 'Vendor PAN', type: 'text', minWidth: '180px' },
-    { id: 'EmailID', label: 'Email ID', type: 'text', minWidth: '180px' },
-    { id: 'ContactNo', label: 'Contact No', type: 'text', minWidth: '180px' },
-    { id: 'VendorLocation', label: 'Vendor Location', type: 'text', minWidth: '180px' },
-    { id: 'CompanyName', label: 'Company Name', type: 'text', minWidth: '180px' },
-    { id: 'CompanyBillingAddress', label: 'Company Billing Address', type: 'text', minWidth: '180px' },
-    { id: 'CompanyBillingGST', label: 'Company Billing GST', type: 'text', minWidth: '180px' },
-    { id: 'CompanyBillingPAN', label: 'Company Billing PAN', type: 'text', minWidth: '180px' },
-    { id: 'FactoryShippingAddress', label: 'Factory Shipping Address', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
+    { id: 'itemName', label: 'Item Name', type: 'text', minWidth: '180px' },
+    { id: 'quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
+    { id: 'unitOfMeasure', label: 'Unit  Of Measure', type: 'text', minWidth: '180px' },
+    { id: 'rate', label: 'Rate', type: 'text', minWidth: '180px' },
+    { id: 'discount', label: 'Discount', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'GST Amount', type: 'text', minWidth: '180px' },
+    { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
+    { id: 'advanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
+    {
+      id: 'expectedDeliveryDate',
+      label: 'Expected Delivery Date',
+      type: 'text',
+      minWidth: '180px',
+    },
+    { id: 'paymentTerm', label: 'Payment Term', type: 'text', minWidth: '180px' },
+    { id: 'vendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
+    { id: 'vendorAddress', label: 'Vendor Address', type: 'text', minWidth: '180px' },
+    { id: 'vendorPAN', label: 'Vendor PAN', type: 'text', minWidth: '180px' },
+    { id: 'emailID', label: 'Email ID', type: 'text', minWidth: '180px' },
+    { id: 'contactNo', label: 'Contact No', type: 'text', minWidth: '180px' },
+    { id: 'vendorLocation', label: 'Vendor Location', type: 'text', minWidth: '180px' },
+    { id: 'companyName', label: 'Company Name', type: 'text', minWidth: '180px' },
+    {
+      id: 'companyBillingAddress',
+      label: 'Company Billing Address',
+      type: 'text',
+      minWidth: '180px',
+    },
+    { id: 'companyBillingGST', label: 'Company Billing GST', type: 'text', minWidth: '180px' },
+    { id: 'companyBillingPAN', label: 'Company Billing PAN', type: 'text', minWidth: '180px' },
+    {
+      id: 'factoryShippingAddress',
+      label: 'Factory Shipping Address',
+      type: 'text',
+      minWidth: '180px',
+    },
+    { id: 'comments', label: 'Comments', type: 'text', minWidth: '180px' },
+    { id: 'grandTotal', label: 'Grand Total', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -113,7 +155,7 @@ const PurchaseOrderTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchaseOrderDetails"
+        endpoint="/listPurchaseOrder"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}

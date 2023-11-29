@@ -1,10 +1,10 @@
 import React,{useState,useCallback} from 'react'
 import { useParams } from 'src/routes/hooks';
-
-import { Container,Card,Tab } from '@mui/material';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import ProfileCover from 'src/sections/user/profile-cover';
-
 import Iconify from '../../../components/iconify/iconify';
 
 import EmployeeAbout from './employeeabout/EmployeeAbout';
@@ -17,6 +17,7 @@ import Documents from "../../employeemanagment/employeeview/documents/Document"
 import EmployeePermissions from './employeepermissions/EmployeePermissions';
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import ChangePassword from 'src/nextzen/signup/ChangePassword';
 
 const TABS = [
     {
@@ -146,7 +147,35 @@ const EmployeeView = () => {
           ))}
         </Tabs>
       </Card>
-
+      <Grid container justifyContent="flex-end">
+      <Button
+        component={RouterLink}
+        to={paths.dashboard.employee.changepassword}
+        color="primary"
+        variant="contained"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px', // Adjust spacing between icon and text
+        }}
+      >
+        {/* <Iconify icon="eva:arrow-ios-back-fill" width={16} /> */}
+        Change Password
+      </Button>
+        </Grid>
+         {/* <Link
+        component={RouterLink}
+        href={paths.auth.jwt.login}
+        color="inherit"
+        variant="subtitle2"
+        sx={{
+          alignItems: 'center',
+          display: 'inline-flex',
+        }}
+      >
+        <Iconify icon="eva:arrow-ios-back-fill" width={16} />
+        Return to sign in
+      </Link> */}
       {currentTab === 'About' && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
 
       {currentTab === 'Education' && <EmployeeEducation handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}

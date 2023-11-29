@@ -18,6 +18,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 export default function ExpenseClaimView({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -38,6 +39,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
+  const [designation,setDesignation] = useState(editData?.department_name);
   const TABLE_HEAD = [
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth: 180 },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth: 180 },
@@ -65,34 +67,9 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       key: 0,
     },
   };
-  const ApiHitDepartment = (obj) => {
-    const config = {
-      method: 'post',
-
-      maxBodyLength: Infinity,
-
-      url: `${baseUrl}/onboardingDepartment`,
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      data: obj,
-    };
-
-    axios
-      .request(config)
-
-      .then((response) => {
-        // console.log(JSON.stringify(response?.data));
-        setDepartmentOptions(response?.data?.data || []);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  const dep={
+    companyID:'COMPQ'
+  }
   const ApiHitDesgniation = (obj) => {
     const config = {
       method: 'post',
@@ -114,13 +91,14 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDesginationptions(response?.data?.data || []);
+        setDesignation(response?.data?.data || [])
       })
 
       .catch((error) => {
         console.log(error);
       });
   };
-
+console.log(designation,' ')
   const ApiHitDesgniationGrade = (obj) => {
     const config = {
       method: 'post',
@@ -150,9 +128,9 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   };
   useEffect(()=>{
     const obj={
-     companyID:'COMP1',
+     companyID:'COMP2',
    }
-   ApiHitDepartment(obj)
+  //  ApiHitDepartment(obj)
    ApiHitDesgniation(obj)
    ApiHitDesgniationGrade()
  },[])
@@ -290,10 +268,10 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       const payload = {
         expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
         expense_name: editData?.expense_name?.type,
-        company_id: 'COMP2',
-        department_name: editData?.department_name?.type,
-        designation_name: editData?.designation_name?.type,
-        designation_grade_name: editData?.designation_grade_name?.type,
+        company_id: 'COMP1',
+        department_id: JSON.parse(editData?.department_id,10),
+        designation_id: JSON.parse(editData?.designation_id,10),
+        designation_grade_id: JSON.parse(editData?.designation_grade_id,10),
       };
       console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
@@ -321,27 +299,6 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
     }
   };
 
-  // const onSubmit1 = handleSubmit1(async (data) => {
-  //   data.companyId = 'COMP2';
-  //   console.log('submitted data111', data);
-
-  //   try {
-  //     const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
-  //     if (response?.data?.code === 200) {
-  //       handleCloseEdit();
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage('Shift Configuration Added Succuessfully!');
-  //       setSnackbarOpen(true);
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setOpen(false);
-  //     setSnackbarSeverity('error');
-  //     setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-  //     setSnackbarOpen(true);
-  //     console.log('error', error);
-  //   }
-  // });
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
 
   useEffect(() => {
@@ -404,7 +361,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
         }}
       >
         <FormProvider methods={methods1} onSubmit={(event) => onSubmitEdit2(editData, event)}>
-          <DialogTitle>Edit Expensive Config</DialogTitle>
+        <ModalHeader heading="Edit Expense Config" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -431,7 +388,8 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
                 label="Department Name"
                 options={departmentName}
                 getOptionLabel={(option) => option.type}
-                value={editData?.department_name}
+                 value={editData?.department_name}
+                // defaultValue={editData?.department_name}
                 onChange={(e, newValue) => handleSelectChange('department_name', newValue || null)}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Department Name" />}
@@ -465,14 +423,22 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={(event) => onSubmitEdit2(editData, event)}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={(event) => onSubmitEdit2(editData, event)}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

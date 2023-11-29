@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateVendor from './CreateVendor';
 
-const VendorHead = ({ filterSearch, filterData }) => {
+const VendorHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -34,16 +34,16 @@ const VendorHead = ({ filterSearch, filterData }) => {
           open={showForm}
           onClose={handleClose}
           PaperProps={{
-            sx: { maxWidth: 770},
+            sx: { maxWidth: 1200 },
           }}
           className="custom-dialog"
         >
-          <CreateVendor currentUser={{}} handleClose={handleClose} />
+          <CreateVendor currentData={{}} handleClose={handleClose} getTableData={getTableData} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Vendor Details</Typography>
+          {/* <Typography variant="h4">Vendor Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField

@@ -38,12 +38,12 @@ const FactoryHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentUser={{}} handleClose={handleClose} />
+          <CreateFactory currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Factory Details</Typography>
+          {/* <Typography variant="h4">Factory Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
