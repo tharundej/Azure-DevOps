@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function Loans() {
+export default function Loans({defaultPayload}) {
   const {user} = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -48,15 +48,26 @@ export default function Loans() {
     
      
     
-      const actions = [
+      const actualActions = [
     
-        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveLoanDetails",icon:"charm:circle-tick"},
-        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveLoanDetails",icon:"charm:circle-cross"},
-    
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateLoanDetails",icon:"solar:pen-bold" },
-    
+        { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
+        { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
     
       ];
+
+      const defaultActions=[
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
+      ]
+     
+      // Function to get row actions based on user role
+      const generateRowActions = () => {
+        const userRoleID = user?.roleID; // Assuming roleID is available in user object
+        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        console.log(actions,"actionsss")
+        return actions;
+      };
+    
+      const actionsBasedOnRoles = generateRowActions();
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -76,7 +87,7 @@ export default function Loans() {
        
       } 
     
-  const defaultPayload={
+  const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "count": 5,
     "page": 0,
     "search": "",
@@ -380,11 +391,11 @@ sx={{margin:2}}
     }
     <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDetailsHr'
 bodyData='data'
 filterName="LoanSearchFilter"
-rowActions={actions}
+rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
 />  
     </>

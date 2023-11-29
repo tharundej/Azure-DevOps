@@ -13,12 +13,13 @@ import PendingLeaves from './PendingLeaves';
 import ApprovedLeaves from './ApprovedLeaves';
 
 export default function LeaveRequest() {
-  const tabLabels = ['Leave Request','History','Pending','Approved'];
+  const tabLabels = ['Leave Schedule','Pending Requests','Approved Leaves','Leave History'];
   const tabContents = [
     <div><CalendarView/></div>,
-    <div><History/></div>,
+   
     <div><PendingLeaves/></div>,
-    <div><ApprovedLeaves/></div>
+    <div><ApprovedLeaves/></div>,
+    <div><History/></div>,
   ];
 
   return (

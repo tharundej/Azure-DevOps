@@ -362,10 +362,10 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Accountholder Name
+          Account Holder Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {employeeStatouryData?.accountholderName}
+          {employeeStatouryData?.accountHolderName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -441,7 +441,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          lwf Number
+          LWF Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {employeeStatouryData?.lwfNumber}

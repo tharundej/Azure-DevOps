@@ -28,23 +28,9 @@ export default function MyShiftDetails() {
    
       const TABLE_HEAD = [
 
-        {
+        
     
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
-    
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
@@ -53,7 +39,7 @@ export default function MyShiftDetails() {
     
         { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "end_time", label: "End time", width: 100, type: "text" },
+        { id: "end_time", label: "End Time", width: 100, type: "text" },
         { id: "start_date", label: "Start Date", width: 100, type: "text" },
         { id: "end_date ", label: "End Date", width: 100, type: "text" },
         { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
@@ -64,33 +50,39 @@ export default function MyShiftDetails() {
     
      
     const defaultPayload ={
-      "company_id":"COMP2",
-      "employee_id":"ibm1",
+      "company_id":localStorage.getItem('companyID'),
+      "employee_id":localStorage.getItem('employeeID'),
       "page":0,
-      "count":3,
+      "count":10,
       "Search":"r",
       "externalFilters":{
       "shift_name": "",
       "shift_term": "",
-      "startdate":"",
-      "enddate":""
+        "startDate": {
+              "from": "",
+              "to": ""
+          },
+          "endDate": {
+              "from": "",
+              "to": ""
+          }
    
   },
       "sort": {
-      "orderby": "shift_name",
+      "orderby": "",
       "key": 0
   } 
    
   }
-      const actions = [
+      // const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+      //   { name: "approve", icon: "hh", path: "jjj" },
     
-        { name: "view", icon: "hh", path: "jjj" },
+      //   { name: "view", icon: "hh", path: "jjj" },
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+      //   { name: "eerr", icon: "hh", path: "jjj" },
     
-      ];
+      // ];
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -128,7 +120,7 @@ defaultPayload={defaultPayload}
 headerData={TABLE_HEAD}
 endpoint='/Myshiftdetails'
 bodyData='data'
-rowActions={actions}
+// rowActions={actions}
 filterName='MyShiftFilter'
 />  
     </>

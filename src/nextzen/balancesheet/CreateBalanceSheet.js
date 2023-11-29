@@ -90,14 +90,14 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(2, 1fr)',
             }}
-          >            
+          >
             <RHFTextField name="invoiceno" label="Invoice No" />
             <RHFTextField name="invoicedate" label="Invoice Date" />
             <RHFTextField name="particulars" label="particulars" />
             <RHFTextField name="transactionno" label="Transaction No" />
             <RHFTextField name="credit" label="Credit" />
             <RHFTextField name="debit" label="Debit" />
-            <RHFTextField name="balanceamount" label="Balance Amount" />            
+            <RHFTextField name="balanceamount" label="Balance Amount" />
           </Box>
         </DialogContent>
         <DialogActions>
@@ -105,7 +105,7 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             Save
           </LoadingButton>
         </DialogActions>

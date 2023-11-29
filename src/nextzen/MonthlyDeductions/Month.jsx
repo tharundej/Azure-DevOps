@@ -5,15 +5,17 @@ import ReusableTabs from '../tabs/ReusableTabs';
 import Deduction from './Deduction';
 import Loans from './loans';
 import SalaryAdvace from './SalaryAdvace';
+import Requests from './Requests';
 
 
 
 export default function Month() {
-      const tabLabels = ["Salary Advance" , "Loans " , "Deductions"]
+      const tabLabels = ["Salary Requests" , "Loan Requests" ,"Deductions","My Requests"]
       const tabContents = [
         <div><SalaryAdvace/> </div>,
-        <div> <Loans/> </div>,
-        <div><Deduction/>  </div>
+        <div><Loans/></div>,
+        <div><Deduction/></div>,
+        <div><Requests/></div>
       ]
   return (
     <>

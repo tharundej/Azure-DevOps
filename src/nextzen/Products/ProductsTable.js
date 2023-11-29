@@ -25,7 +25,7 @@ const ProductsTable = () => {
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
       const deleteData = {
-        product_id: rowdata?.productID || 0,
+        productID: rowdata?.productID || 0,
         productName: rowdata.productName,
       };
       setDeleteData(deleteData);
