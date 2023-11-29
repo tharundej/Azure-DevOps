@@ -540,9 +540,30 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Close
-            </Button>
+
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        AddDesignation()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+           handleClose();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+           
             {/* <LoadingButton
               type="submit"
               variant="contained"

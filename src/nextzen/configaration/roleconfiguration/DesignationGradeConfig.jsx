@@ -300,7 +300,6 @@ export default function DesignationGradeConfig() {
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} />
       <Container
         sx={{
           display: 'flex',

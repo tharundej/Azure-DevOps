@@ -69,7 +69,7 @@ export default function HrITTab() {
     { id: 'employeeID', label: 'Employee Id ', width: 180, type: 'text' },
 
     { id: 'employeeName', label: 'Employee Name', width: 180, type: 'text' },
-
+    { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
     { id: 'declaration', label: 'Declaration', width: 220, type: 'bool' },
     { id: 'rentDetails', label: 'Rent Details', width: 220, type: 'bool' },
     { id: 'licPremium', label: 'Lic Details', width: 220, type: 'bool' },
@@ -108,7 +108,7 @@ export default function HrITTab() {
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
   const onClickActions = (rowdata, event) => {
-    if (event?.name === 'View') {
+    if (event?.name === 'View' ) {
       setEditData(rowdata);
       setValueSelected(rowdata);
       handleOpenEdit();
@@ -317,39 +317,7 @@ export default function HrITTab() {
                 md: 'repeat(1, 1fr)', // Add this line for three items in a row
               }}
             >
-              {/* <TextField
-                label="Department "
-                name="department"
-                value={valueSelected?.departmentName ||  null}
-                onChange={(e, newValue) =>
-                  handleSelectChange('departmentName', newValue ,e || null)
-                }
-                variant="outlined"
-                fullWidth
-              />
-
-              <TextField
-                label="Designation"
-                name="designation"
-                value={valueSelected?.designationName || null}
-                onChange={(e, newValue) =>
-                  handleSelectChange('designationName', newValue  ,e|| null)
-                }
-                variant="outlined"
-                fullWidth
-              />
           
-          <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={valueSelected?.designationGradeName || null}
-                 onChange={(e, newValue) =>
-                  handleSelectChange('designationGradeName', newValue , e|| null)
-                }
-                variant="outlined"
-                fullWidth
-              />
-           */}
 
               <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                 <AccordionSummary

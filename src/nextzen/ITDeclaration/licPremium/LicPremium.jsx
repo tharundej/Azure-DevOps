@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Autocomplete,
+  Card,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 // import { makeStyles } from '@mui/styles';
@@ -34,6 +35,8 @@ import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -58,12 +61,16 @@ const headings = [
 
 
 export default function LicPremium() {
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+ // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
 
+const [loading,setLoading] = useState(false);
  
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+
   // const cmpName =localStorage.getItem('accessToken')
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
@@ -274,6 +281,7 @@ const handleRentDeletedID = ( data)=>{
   console.log(formData, 'formdata');
 
   const getLicPremium = async () => {
+    setLoading(true)
     const payload = { "employeeID":empId,
     financialYear: selectedYear?.financialYear, };
 
@@ -285,6 +293,7 @@ const handleRentDeletedID = ( data)=>{
       headers: {
         Authorization:
           token,
+       
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -293,6 +302,7 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           setPolicyData(rowsData);
           console.log(JSON.stringify(response?.data?.data), 'result');
@@ -301,6 +311,7 @@ const handleRentDeletedID = ( data)=>{
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -309,7 +320,7 @@ const handleRentDeletedID = ( data)=>{
   const saveLicDetals = async () => {
     console.log(attachedDocumment ,attachedDocummentFileName, "saceasveasave")
    
-
+    setLoading(true)
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -328,6 +339,7 @@ const handleRentDeletedID = ( data)=>{
       .then((response) => {
        
           if (response.data.code === 200) {
+            setLoading(false)
             setSnackbarSeverity('success');
             setSnackbarMessage(response.data.message);
             setSnackbarOpen(true);
@@ -354,6 +366,7 @@ const handleRentDeletedID = ( data)=>{
             })
        
           }else    if (response.data.code === 400) {
+            setLoading(false)
             setSnackbarSeverity('error');
             setSnackbarMessage(response.data.message);
             setSnackbarOpen(true);
@@ -363,6 +376,7 @@ const handleRentDeletedID = ( data)=>{
         }
       )
       .catch((error) => {
+        setLoading(false)
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving Lic details. Please try again.');
         setSnackbarOpen(true);
@@ -371,6 +385,7 @@ const handleRentDeletedID = ( data)=>{
     //  console.log(result, 'resultsreults');
   };
   const editcDetails = async () => {
+    setLoading(true)
     console.log(" i am calling fine info042" , formData)
     const payload = {
       
@@ -415,7 +430,7 @@ const handleRentDeletedID = ( data)=>{
      
         console.log(response , "success")
           if(response.data.status === 200){
-          
+            setLoading(false)
             console.log('success',response);
             setISReloading(!isreloading);
             setSnackbarSeverity('success');
@@ -456,6 +471,7 @@ const handleRentDeletedID = ( data)=>{
         }
       )
       .catch((error) => {
+        setLoading(false)
         setOpen(true);
         setSnackbarSeverity('error');
         setSnackbarMessage(response.message   );
@@ -554,6 +570,7 @@ const handleRentDeletedID = ( data)=>{
   const userId  =  5
 
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
     };
@@ -573,12 +590,14 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -602,28 +621,28 @@ const handleRentDeletedID = ( data)=>{
   console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
-      <FormProvider {...methods}>
+     {loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <> <FormProvider {...methods}>
         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
   
-      
-          {/* Row 1 */}
-          {/* {policyData.length > 0 &&
-          policyData?.map((row, rowIndex) => (
-            <div key={rowIndex} style={{ marginTop: '2rem' }}> */}
-
-          <Grid item container xs={12} spacing={2}>
-            <Grid  item xs={4}>
+        <Grid  item xs={12}>
             
-        <Autocomplete
-          id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
-          value={selectedYear}
-          onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
-        />
-   
-            </Grid>
+            <Autocomplete
+              id="financialYear"
+              options={financialYears}
+              getOptionLabel={(option) => option.financialYear}
+              value={selectedYear}
+              onChange={handleYearChange}
+              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+            />
+       
+                </Grid>
+
+
+ {  selectedYear?.financialYear ? <>
+          <Grid item container xs={12} spacing={2}>
+           
             <Grid item xs={4}>
               <TextField
                 label="Policy Number "
@@ -642,25 +661,20 @@ const handleRentDeletedID = ( data)=>{
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Date Of Commencement Of Policy"
                     value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
-                    defaultValue={dayjs(new Date())}
+                    // defaultValue={dayjs(new Date())}
   onChange={(newValue) => {
     console.log(newValue)
+    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
     setFormData((prevFormData) => ({
       ...prevFormData,
-      dateOfCommencementOfPolicy: newValue,
+      dateOfCommencementOfPolicy: formattedDate,
     }));
   }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-           
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               <TextField
                 label="Insured Person Name"
                 variant="outlined"
@@ -671,6 +685,12 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
+          </Grid>
+
+          {/* Row 2 */}
+
+          <Grid item container xs={12} spacing={2}>
+          
             <Grid item xs={4}>
               <TextField
                 label="Sum Of Assured"
@@ -695,11 +715,7 @@ const handleRentDeletedID = ( data)=>{
                 renderInput={(params) => <TextField {...params} label="Relationship" />}
               />
             </Grid>
-           
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               <TextField
                 label="Premium Amount For Which Proof Attched Now "
                 variant="outlined"
@@ -710,6 +726,10 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+         
             <Grid item xs={4}>
               <TextField
                 label="Premium Amount Fall In Due"
@@ -732,11 +752,7 @@ const handleRentDeletedID = ( data)=>{
                 onChange={handleChange}
               />
             </Grid>
-            
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               <Autocomplete
                 disablePortal
                 name="treatmentForSpecifiedDiseases"
@@ -757,6 +773,10 @@ const handleRentDeletedID = ( data)=>{
                 )}
               />
             </Grid>
+          </Grid>
+
+          <Grid item container xs={12} spacing={2}>
+          
             <Grid item xs={4}>
               <Autocomplete
                 disablePortal
@@ -832,16 +852,7 @@ const handleRentDeletedID = ( data)=>{
             </Grid>
             {/* Add more rows as needed */}
           </Grid>
-          {/* <Button onClick={() => saveLicDetails(row)} style={{ marginTop: '1rem' }}>
-                Save
-              </Button> */}
-              {/* {   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={selectedRowDocuments}
-          handleDeletedID = {handleLandLordDeletedID}/> : null}
- */}
-
- 
-            {/* </div>
-          ))} */}
+          </> : null}
         </Grid>
 {policyData?.length > 0 ?
         <TableContainer component={Paper}>
@@ -908,15 +919,12 @@ const handleRentDeletedID = ( data)=>{
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      
+      </>  }
 {   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleLandLordattchment}   previousData={landLordDocs}
           handleDeletedID = {handleLandLordDeletedID}/> : null}
 
 
-{/* <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions} filterName="EmployeeFilterSearch"  handleEditRowParent={handleEditRowParent}
- /> */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Autocomplete,
+  Card,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 // import { makeStyles } from '@mui/styles';
@@ -32,6 +33,8 @@ import Snackbar from '@mui/material/Snackbar';
 import AppTopAuthors from 'src/sections/overview/app/app-top-authors';
 import { _mock } from 'src/_mock';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { LoadingScreen } from 'src/components/loading-screen';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -63,14 +66,20 @@ const headings = [
 export default function HouseProperty() {
 
   
-const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+// const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
+const [loading,setLoading] = useState(false);
+ 
+
   const [reload, setREload] = useState(false);
 
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
-
+ 
   const [dates, setDates] = useState({
     start_date: dayjs(new Date()),
     end_date: dayjs(new Date()),
@@ -165,6 +174,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
   // You can make an axios request here to send the data to your server.
   const getHousePRoterty = async () => {
+    setLoading(true)
     const payload = {
       companyId: cmpId,
       employeeId: empId,
@@ -187,6 +197,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           sethousingData(rowsData);
           console.log(JSON.stringify(response?.data), 'resultMedical');
@@ -195,11 +206,13 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     console.log(result, 'resultsreults');
   };
   const addHousingProperity = useCallback(async () => {
+    setLoading(true)
     console.log(formData.dateOfSanction, 'date ');
     const payload = {
       companyId: cmpId,
@@ -242,6 +255,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       .then((response) => {
         console.log('success', response, response.data.message);
         if (response.data.code === 201 || 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
@@ -268,16 +282,11 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
   }, [formData, landLordDocs]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await addHousingProperity();
-  //   };
-  //   fetchData();
 
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       await getHousePRoterty();
@@ -364,6 +373,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     }
   };
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
     };
@@ -383,12 +393,14 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -402,6 +414,9 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
   return (
     <div>
+  {    loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+   <>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -428,20 +443,22 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
         lg={12}
         md={12}
       >
-        {/* Row 1 */}
-        <Grid item container xs={12} lg={8} md={8} spacing={2}>
-         
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4}>
+        <Grid item xs={12}>
             <Autocomplete
               id="financialYear"
               options={financialYears}
               getOptionLabel={(option) => option.financialYear}
               value={selectedYear}
               onChange={handleYearChange}
-              renderInput={(params) => <TextField {...params} label="Financial Year" />}
+              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
             />
           </Grid>
+  {selectedYear?.financialYear?
+   <>
+        <Grid item container xs={12} lg={8} md={8} spacing={2}>
+        
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          
             <Grid item xs={4}>
               {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
               <TextField
@@ -464,13 +481,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-           
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               {/* <Typography >addressOfProperty Of The Property </Typography> */}
               <TextField
                 label="Address Of The Property "
@@ -481,6 +492,12 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
+          </Grid>
+
+          {/* Row 2 */}
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+         
             <Grid item xs={4}>
               {/* <Typography >PAN Of The Lender(S)</Typography> */}
               <TextField
@@ -503,11 +520,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-           
-          </Grid>
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               {/* <Typography >PurPose Of Loan</Typography> */}
               <TextField
                 label="Purpose Of Loan"
@@ -518,6 +531,10 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
+          </Grid>
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+         
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
               {/* <Typography >Date Of Sanction Of Loan</Typography> */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -551,11 +568,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-           
-          </Grid>
-
-          <Grid item container xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
               <TextField
                 label="Is The Property Self Occupied Or Let out?[See Notebelow]"
@@ -566,6 +579,10 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
+          </Grid>
+
+          <Grid item container xs={12} lg={12} md={12} spacing={2}>
+          
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
@@ -588,10 +605,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-            
-          </Grid>
-          <Grid item xs={12} lg={12} md={12} spacing={2}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               {/* <Typography >Less : MUnicipal Taxes Paid :</Typography> */}
               <TextField
                 label="Less : Municipal Taxes Paid"
@@ -602,7 +616,10 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
                 fullWidth
               />
             </Grid>
-        </Grid>
+          </Grid>
+          {/* <Grid item xs={12} lg={12} md={12} spacing={2}>
+         
+        </Grid> */}
         </Grid>
         <Grid
           item
@@ -713,6 +730,8 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           </Grid>
           {/* Add more rows as needed */}
         </Grid>
+        </> 
+        : null}
       </Grid>
       {housingData?.length > 0 ? (
         <TableContainer component={Paper}>
@@ -799,6 +818,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           handleDeletedID={handleLandLordDeletedID}
         />
       ) : null}
+      </>}
     </div>
   );
 }
