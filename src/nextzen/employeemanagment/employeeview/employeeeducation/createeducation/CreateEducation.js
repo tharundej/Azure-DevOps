@@ -2,6 +2,7 @@ import React ,{useEffect, useState} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -33,12 +34,26 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCallSnackbar}) => {
 
   const [defaultValues, setDefaultValues] = useState([]);
   
@@ -64,13 +79,15 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response?.data));
         setDefaultValues([])
         callApi()
+        handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
       })
       .catch((error) => {
         console.log(error);
+        handleCallSnackbar(error?.response?.data?.message,"error")
       });
     }
 
@@ -88,7 +105,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
         nameOfTheDegree:  '',
         stream:  '',
         university:  '',
-        yearOfPassing: undefined,
+       
        
         gradeType:'',
         grade:undefined,
@@ -284,7 +301,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   return (
     <>
     <Helmet>
-    <title> Dashboard: Add Education</title>
+    <title> Dashboard: Education</title>
   </Helmet>
 
   <Dialog
@@ -295,9 +312,22 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     PaperProps={{
       sx: { maxWidth: 720 },
     }}
-  >  <ModalHeader heading="Add Education"/>
+  >  <ModalHeader heading={(endpoint==='addEducation'?"Add ":"Edit ")+"Education"}/>
 
             <DialogContent>
+
+            {defaultValues[0]?.documents?.length && 
+          <Grid container alignItems="center" justifyContent="end" marginTop="5px">
+        <Button
+          variant="contained"
+          sx={{backgroundColor:"#3B82F6"}}
+          onClick={() => {
+            handleAdd();
+          }}
+        >
+          Add Education
+        </Button>
+        </Grid>}
 
             <Stack sx={{paddingTop:'20px'}}>
             
@@ -401,21 +431,76 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+              
               </Grid>
+
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+            <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                
+               
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
+
+              <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                fullWidth
+                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="End Date"
+                />
+                
+              </Grid>
+              
+              
+            </Grid>
                   
               {item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -448,14 +533,17 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                   
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
@@ -510,18 +598,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
             </Grid>
           ))}
         </>
-            {defaultValues[0]?.documents?.length && 
-          <Grid container alignItems="center" justifyContent="end">
-        <Button
-          variant="contained"
-          sx={{backgroundColor:"#3B82F6"}}
-          onClick={() => {
-            handleAdd();
-          }}
-        >
-          Add Education
-        </Button>
-        </Grid>}
+          
         {/* <Button
           variant="contained"
           color="primary"

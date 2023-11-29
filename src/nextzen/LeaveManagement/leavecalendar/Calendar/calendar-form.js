@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState,useEffect } from 'react';
+import { useCallback, useState,useEffect, useContext } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
@@ -28,9 +28,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
+import UserContext from 'src/nextzen/context/user/UserConext';
 // ----------------------------------------------------------------------
 
 export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose }) {
+  const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
   const [listLeave,setListLeave] = useState();
@@ -73,7 +75,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     
   });
 
-  console.log(datesUsed,"datesss")
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
     const selectedValue = data?.day_span;
@@ -84,8 +85,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
 
     const eventData = {
       leaveTypeId:data?.leaveTypeId,
-      companyId: localStorage.getItem('companyID'),
-      employeeId:localStorage.getItem('employeeID'),
+      companyId: (user?.companyID)?user?.companyID:'',
+      employeeId:(user?.employeeID)?user?.employeeID:'',
       comments: data?.comments,
       applyDate: "",
       fromDate:(datesUsed?.fromDate)?formatDateToYYYYMMDD(datesUsed?.fromDate):selectedRange?.start,
@@ -99,39 +100,29 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       color:(data?.leaveTypeId===1)?"#0c1f31":(data?.leaveTypeId===2)?"#d4a085":(data?.leaveTypeId===3)?"#c9de8c":"#ffbed1"
     };
     try {
-      const result = await createEvent(eventData);
-      
+      const result = await createEvent(eventData,user);
       onClose();
-      enqueueSnackbar("Leave applied", { variant: 'success' });
+      enqueueSnackbar(result.message, { variant: 'success' });
       reset();
     } 
     catch (error) {
+      enqueueSnackbar(error.message,{variant:'error'})
+      onClose();
       // Handle the error, e.g., show a snackbar.
-      if (error.response && error.response.data && error.response.data.message) {
-        if (error.response.data["show message"] === "user") {
-          // Display the error message from the response
-          enqueueSnackbar(error.response.data.message, { variant: 'error' });
-       }
-       else{
-        enqueueSnackbar('An error occurred while applying the leave.', { variant: 'error' });
-       }
-      } else {
-        // Display a generic error message
-        enqueueSnackbar('An error occurred while creating the event.', { variant: 'error' });
-      }
     }
   });
 
   const onDelete = useCallback(async () => {
     try {
       const {leaveId,employeeId}= currentEvent
-      await deleteEvent(leaveId,employeeId);
+      await deleteEvent(leaveId,employeeId,user);
       enqueueSnackbar('Delete success!');
       onClose();
-    } catch (error) {
-      console.error(error);
+    } 
+    catch (error) {
+      enqueueSnackbar(error.message,{variant:'error'})
     }
-  }, [currentEvent?.leaveId, enqueueSnackbar, onClose]);
+  }, [currentEvent?.leaveId, onClose]);
 
   
   function getBase64(file) {
@@ -173,16 +164,13 @@ useEffect(()=>{
 const getLeaveList = () => {
   setLoader(true);
   const payload = {
-    // companyId: "C1",
-    // employeeId:"E1"
-    companyId: localStorage.getItem('companyID'),
-    employeeId: localStorage.getItem('employeeID')
+    companyId: (user?.companyID)?user?.companyID:'',
+    employeeId: (user?.employeeID)?user?.employeeID:''
   }
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
     url: baseUrl + `/getLeaveType`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
@@ -192,24 +180,23 @@ const getLeaveList = () => {
   })
 
     .catch((error) => {
+      enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
       console.log(error);
+      setLoader(false);
     });
 }
 
 const AvailableLeaves = () => {
   setLoader(true);
   const payload = {
-    companyId: localStorage.getItem('companyID'),
-     employeeId:localStorage.getItem('employeeID')
-    // companyId:"C1",
-    // employeeId:"E1"
+    companyId: (user?.companyID)?user?.companyID:'',
+     employeeId:(user?.employeeID)?user?.employeeID:''
   }
  
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
     url: baseUrl + `/availableLeave`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 
@@ -219,7 +206,9 @@ const AvailableLeaves = () => {
   })
 
     .catch((error) => {
+         enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
       console.log(error);
+      setLoader(false);
     });
 }
 
@@ -230,13 +219,14 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
   <>
   {currentEvent?.leaveStatus==="pending" ? 
   <>
-   <Tooltip title="Delete Event" sx={{float:"right",right:5}}>
+  
+  <Grid sx={{margin:1}}>
+      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}
+      <Tooltip title="Delete Event" sx={{float:"right",right:5}}>
     <IconButton onClick={onDelete}>
       <Iconify icon="solar:trash-bin-trash-bold" />
     </IconButton>
-  </Tooltip>
-  <Grid sx={{marginLeft:1}}>
-      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
+  </Tooltip></Typography>
       <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
       <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
      <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>

@@ -68,7 +68,7 @@ export const paths = {
       forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
-      changepassword: `${ROOTS.AUTH}/jwt/changepassword`,
+      // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -128,9 +128,9 @@ export const paths = {
     employee: {
       root: `/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
-      onboardform: `/employeemanagementhome/onboardform`,
-      userview: (id) => `/employeemanagementhome/${id}/employeeview`,
-
+       onboardform: `/employeemanagementhome/onboardform`,
+       userview: (id) => `/employeemanagementhome/${id}/employeeview`,
+       changepassword:`/changepassword`,
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
@@ -151,31 +151,27 @@ export const paths = {
     },
 
     itdeclaration: {
-      root: `${ROOTS.DASHBOARD}/itdeclaration`,
+      root: `/itdeclaration`,
     },
     leave: {
       root: `/leave`,
     },
 
     timesheet: {
-      root: `/timesheet`,
+      root: `/timesheetmanagement`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
     },
 
     claims: {
-      root: `${ROOTS.DASHBOARD}/claims`,
-      compoffapprove: `${ROOTS.DASHBOARD}/claims/compoffapprove`,
-      mycompoff: `${ROOTS.DASHBOARD}/claims/ mycompoff`,
+      root: `/claims`,
+      compoffapprove: `/claims/compoffapprove`,
+      mycompoff: `/claims/ mycompoff`,
     },
 
     payroll: {
-      root: `${ROOTS.DASHBOARD}/payroll`,
-      // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
-      // demo: {
-      //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
-      // },
+      root: `/payroll`,
     },
     monthlydeductions: {
       root: `/monthlydeductions`,
@@ -184,16 +180,19 @@ export const paths = {
     appraisal: {
       root: `${ROOTS.DASHBOARD}/appraisal`,
     },
+    
+      configurations:{
+        root:`/configurations`,
+        leaveconfiguration: `/configurations/leaveconfiguration`,
+        compoffconfiguration: `/configurations/compoffconfiguration`,
+        appraisalconfiguration: `/configurations/appraisalconfiguration`,
+      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      shiftconfiguration: `/configurations/shiftconfiguration`,
+      roleconfiguration: `/configurations/roleconfiguration`,
+      taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
+      },
+    
 
-    configurations: {
-      root: `${ROOTS.DASHBOARD}/configurations`,
-      leaveconfiguration: `${ROOTS.DASHBOARD}/configurations/leaveconfiguration`,
-      compoffconfiguration: `${ROOTS.DASHBOARD}/configurations/compoffconfiguration`,
-      appraisalconfiguration: `${ROOTS.DASHBOARD}/configurations/appraisalconfiguration`,
-      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configurations/expenseclaimconfiguration`,
-      shiftconfiguration: `${ROOTS.DASHBOARD}/configurations/shiftconfiguration`,
-      roleconfiguration: `${ROOTS.DASHBOARD}/configurations/roleconfiguration`,
-    },
 
     // configaration:{
     //   root:`${ROOTS.DASHBOARD}/configaration`,
@@ -284,6 +283,11 @@ export const paths = {
       purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,
       purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/invoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
+    },
+    sale: {
+      saleOrder: `${ROOTS.DASHBOARD}/sale/order`,
+      saleInvoice: `${ROOTS.DASHBOARD}/sale/invoice`,
+      salePayment: `${ROOTS.DASHBOARD}/sale/payment`,
     },
     balancesheet: {
       balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,

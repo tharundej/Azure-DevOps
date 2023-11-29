@@ -28,7 +28,7 @@ const employeeData=[ {
 
 ]
 
-const EmployeeEducation = ({employeeIDForApis}) => {
+const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
   const docType=["Marks Memo","Ssc Cards",'Provisional']
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
@@ -109,12 +109,14 @@ const EmployeeEducation = ({employeeIDForApis}) => {
     ApiHit();
      
    },[])
-
+   const handleCallSnackbarP=(msg,sev)=>{
+    handleCallSnackbar(msg,sev)
+   }
    
   return (
     <>
     
-      <CreateEducation callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
+      <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
@@ -138,7 +140,7 @@ const EmployeeEducation = ({employeeIDForApis}) => {
              
               </Typography>
                 <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing}
+                <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate}
                 
                 </Typography>
                   </>
@@ -158,7 +160,8 @@ const EmployeeEducation = ({employeeIDForApis}) => {
                             <Typography><span style={{fontWeight:600}}>Stream :  </span>  {itm?.stream}</Typography>
 
                             <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                            <Typography><span style={{fontWeight:600}}>Year Of Passing :  </span>  {itm?.yearOfPassing} </Typography>
+                            <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate} </Typography>
+                            <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate} </Typography>
                           <Typography><span style={{fontWeight:600}}>Grade Type : </span> {itm?.gradeType}</Typography>
                           <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
 
@@ -179,7 +182,8 @@ const EmployeeEducation = ({employeeIDForApis}) => {
 }
 
 EmployeeEducation.propTypes = {
-  employeeIDForApis:PropTypes.string
+  employeeIDForApis:PropTypes.string,
+  handleCallSnackbar:PropTypes.func
 };
 
 export default EmployeeEducation

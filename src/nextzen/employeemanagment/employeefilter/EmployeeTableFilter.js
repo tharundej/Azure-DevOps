@@ -263,16 +263,16 @@ export default function EmployeeTableFilter({filterSearch,filterData}){
     return (
         <>
           <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
-            <Grid md={6} xs={6} item>
+            <Grid md={6} xs={12} lg={6} item>
 
-            <TextField placeholder='Search....' 
+            <TextField placeholder='Search..' 
             fullWidth
              onChange={e=>{handleSearch(e)}}
 
             />
             </Grid>
 
-            <Grid  md={6} xs={6} item>
+            <Grid  md={6} xs={12} lg={6} item>
 
                     <Grid sx={{display:'flex',alignItems:'flex-end',justifyContent:'flex-end'}} spacing={2}>
                     <Grid md={2} xs={2} item>

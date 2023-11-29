@@ -25,8 +25,9 @@ import { LoadingButton } from '@mui/lab';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from 'rsuite';
+import Button from '@mui/material/Button';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function Holidays({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -43,8 +44,8 @@ export default function Holidays({ currentUser }) {
     { id: 'locationName', label: 'Locations', type: 'text', minWidth: 180 },
   ];
   const actions = [
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
-    { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
+    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+    // { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
   ];
   // const bodyContent = [
   //   {
@@ -79,13 +80,13 @@ export default function Holidays({ currentUser }) {
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditData(rowdata);
+      setValueSelected(rowdata);
       handleOpenEdit();
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
   };
-  const [valueSelected, setValueSelected] = useState('');
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
     setEditData(rowdata);
@@ -155,6 +156,7 @@ export default function Holidays({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
+  const [valueSelected, setValueSelected] = useState();
   const NewUserSchema1 = Yup.object().shape({
     holidayName: Yup.string(),
     fulldayHalfday: Yup.string(),
@@ -193,8 +195,8 @@ export default function Holidays({ currentUser }) {
       ...prevData,
       [field]: value,
     }));
-    console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   };
+  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
@@ -237,9 +239,12 @@ export default function Holidays({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP7';
+    data.companyId = 'COMP1';
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
     data.locationID = formData?.Location?.locationID;
+    data.holidayName=valueSelected?.holidayName
+    data.repeatAnnualy=valueSelected?.repeatAnnualy?.type
+
     console.log('submitted data111', data);
 
     try {
@@ -293,7 +298,7 @@ export default function Holidays({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Holidays</DialogTitle>
+        <ModalHeader heading="Edit Holiday" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -308,32 +313,42 @@ export default function Holidays({ currentUser }) {
               <RHFTextField
                 name="holidayName"
                 label="Holiday Name"
-                value={editData?.holidayName}
-                // onChange={(e) => handleSelectChange('holidayName', e.target.value)}
+                value={valueSelected?.holidayName}
+                  onChange={(e) => handleSelectChange('holidayName', e.target.value)}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Holiday Date"
+                    minDate={dayjs()}
                     // value={editData?.holidayDate}
                     onChange={handleDateChanges}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <RHFAutocomplete
+              <Autocomplete
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
-                value={editData?.fulldayHalfday}
-                //  onChange = {(e) => handleSelectChange('fulldayHalfday', e.target.value)}
-                options={Fullday_halfdays.map((Fullday_halfday) => Fullday_halfday.type)}
+                value={valueSelected?.fulldayHalfday || null}
+                options={Fullday_halfdays}
+                getOptionLabel={(option) => option.type }
+                onChange={(e, newValue) => handleSelectChange('fulldayHalfday', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Fullday/Halfday" variant="outlined" />
+                )}
               />
-              <RHFAutocomplete
+              <Autocomplete
                 name="repeatAnnualy"
                 label="Repeats Anually"
-                value={editData?.repeatAnnualy}
+                value={valueSelected?.repeatAnnualy}
                 // onChange = {(e) => handleSelectChange('repeatAnnualy', e.target.value)}
-                options={RepeatsAnuallys.map((RepeatsAnually) => RepeatsAnually.type)}
+                options={RepeatsAnuallys}
+                getOptionLabel={(option) => option.type}
+                onChange={(e, newValue) => handleSelectChange('repeatAnnualy', newValue || null)}
+                renderInput={(params) => (
+                  <TextField {...params} label="Repeat Annualy" variant="outlined" />
+                )}
               />
               <Autocomplete
                 disablePortal
@@ -344,7 +359,7 @@ export default function Holidays({ currentUser }) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
-                value={editData?.locationName}
+                value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
                   handleAutocompleteChange('Location', newValue, selectedOption)
                 }
@@ -354,17 +369,26 @@ export default function Holidays({ currentUser }) {
           </DialogContent>
 
           <DialogActions>
+           
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

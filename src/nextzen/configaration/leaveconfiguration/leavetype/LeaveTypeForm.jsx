@@ -30,6 +30,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeaveTypeForm({ currentUser}) {
   const [open, setOpen] = useState(false);
@@ -198,7 +199,7 @@ setSnackbarOpen(false)
   </Snackbar>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add Leave Type</Button>
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Leave Type</Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -210,7 +211,7 @@ setSnackbarOpen(false)
 
       >  
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Leave Type</DialogTitle>
+          <ModalHeader heading="Add Leave Type" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -258,14 +259,22 @@ setSnackbarOpen(false)
               <Button variant="outlined" onClick={handleClose}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+               <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
             </DialogActions>
           </FormProvider>
       </Dialog>

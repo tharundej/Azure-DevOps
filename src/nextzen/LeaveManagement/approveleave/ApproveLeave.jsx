@@ -4,7 +4,7 @@ import { _userList } from 'src/_mock';
 
 import { useTheme } from '@mui/material/styles';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import {useSnackbar} from '../../../components/snackbar'
 
@@ -13,45 +13,17 @@ import {Typography,CardContent,Grid,Card,TextField,InputAdornment} from '@mui/ma
 import Iconify from 'src/components/iconify/iconify';
 import LeaveFilter from '../LeaveFilter';
  import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import UserContext from 'src/nextzen/context/user/UserConext';
 export default function Approveleave(){
   const {enqueueSnackbar} = useSnackbar()
+  const {user} = useContext(UserContext)
    const theme = useTheme();
-    // const defaultPayload={
-    //     "count": 5,
-    //     "page": 0,
-    //     "search": "",
-    //     "eid": localStorage.getItem('employeeID'),
-    //     "externalFilters": {
-    //       "fApplyDate": "",
-    //       "fFromDate": "",
-    //       "fToDate": "",
-    //       "applyDate": {
-    //           "from": "",
-    //           "to": ""
-    //       },
-    //       "fromDate": {
-    //           "from": "",
-    //           "to": ""
-    //       },
-    //       "toDate": {
-    //           "from": "",
-    //           "to": ""
-    //       },
-    //       "fLeaveTypeName": "",
-    //       "fStatus": ""
-    //   },
-    // "sort": {
-    //     "key":1,
-    //     "orderBy":"al.apply_date"
-    // }
-    // }
-const roleID = localStorage?.getItem('roleID')
     const defaultPayload={
-      "manager_id":localStorage?.getItem('employeeID'),
-      "role_id": parseInt(localStorage?.getItem('roleID')),
-      "company_id": localStorage?.getItem('companyID'),
+      "manager_id":(user?.employeeID)?user?.employeeID:'',
+      "role_id": (user?.roleID)?user?.roleID:'',
+      "company_id": (user?.companyID)?user?.companyID:'',
       "page": 0,
-      "count": 10,
+      "count": 5,
       "search": "",
       "externalFilters": {
           "leaveTypeName": "",
@@ -70,29 +42,10 @@ const roleID = localStorage?.getItem('roleID')
           }
       },
       "sort": {
-          "key": 1,
-          "orderby": ""
+          "key": 0,
+          "orderby": "al.apply_date"
       }
   }
-
-      // const [TABLE_HEAD,setTableHead] =useState( [
-      //   {
-      //         id: "employeeId",
-      //         label: "Employee Id",
-      //         minWidth:"8pc",
-      //         type: "text"
-      //       },
-      //       { id: "employee", label: "Employee Name",minWidth:"10pc",type: "text"},
-      //       { id: "applyDate", label: "Apply Date",minWidth:"8pc", type: "text" },
-      //       {id : "netLeaveBalance",label:"Leave Balance",minWidth:"7pc",type:"text"},
-      //       { id: "leaveType", label: "Leave Type",minWidth:"8pc", type: "text" },
-      //       { id: "fromDate", label: "Start Date",minWidth:"7pc", type: "text" },
-      //       {id: "toDate",label:"End Date",minWidth:"7pc",type:"text"},
-      //       {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
-      //       {id: 'status',label:'Status',minWidth:"8pc",type: "badge"}
-      //       // { id: '', width: 88 },
-
-      //  ]);
     
       const [TABLE_HEAD,setTableHead] =useState( [
         {
@@ -101,15 +54,16 @@ const roleID = localStorage?.getItem('roleID')
               minWidth:"8pc",
               type: "text"
             },
-            { id: "employeeName", label: "Employee Name",minWidth:"10pc",type: "text"},
-            { id: "applyDate", label: "Apply Date",minWidth:"8pc", type: "text" },
-            {id : "leaveBalance",label:"Leave Balance",minWidth:"7pc",type:"text"},
-            { id: "LeaveType", label: "Leave Type",minWidth:"8pc", type: "text" },
+            { id: "employeeName", label: "Employee Name",minWidth:"9pc",type: "text"},
+            { id: "managerName", label: "Reporting Manager",minWidth:"8pc",type: "text"},
+            { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
+            {id : "leaveBalance",label:"Leave Balance",minWidth:"6pc",type:"text"},
+            { id: "LeaveType", label: "Leave Type",minWidth:"7pc", type: "text" },
             { id: "startDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "endDate",label:"End Date",minWidth:"7pc",type:"text"},
-            {id: "requestedDuration",label:"Requested Duration",minWidth:"7pc",type:'text'},
-            {id: "approvedBy",label:"Approver Name",minWidth:"8pc",type:"text"},
-            {id: 'status',label:'Status',minWidth:"8pc",type: "badge"}
+            {id: "requestedDuration",label:"Requested Duration",minWidth:"5pc",type:'text'},
+            {id: "approvedBy",label:"Approver Name",minWidth:"7pc",type:"text"},
+            {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
             // { id: '', width: 88 },
 
        ]);
@@ -128,13 +82,12 @@ const onClickActions=(rowdata,event)=>{
           "status": event?.id,           
           "leave_type_id":parseInt(rowdata?.leaveTypeId),
           "duration": parseInt(rowdata?.requestedDuration),
-          "approvedBy":localStorage?.getItem('employeeID'),
+          "approvedBy":(user?.employeeID)?user?.employeeID:''
        }
       const config = {
         method: 'POST',
         maxBodyLength:Infinity,
         url: baseUrl + `/approveLeave`,
-        // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
         data: payload
       
       }
@@ -142,7 +95,7 @@ const onClickActions=(rowdata,event)=>{
         enqueueSnackbar(response.data.message,{variant:'success'})
       })
         .catch((error) => {
-          enqueueSnackbar(error.message,{variant:'Error'})
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
           console.log(error);
         });
       

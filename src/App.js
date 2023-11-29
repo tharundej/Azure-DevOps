@@ -41,6 +41,8 @@ import { SettingsProvider, SettingsDrawer } from 'src/components/settings';
 import { CheckoutProvider } from 'src/sections/checkout/context';
 // auth
 import { AuthProvider, AuthConsumer } from 'src/auth/context/jwt';
+
+import UserContextProvider from './nextzen/context/user/UserContextProvider';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/auth0';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/amplify';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/firebase';
@@ -63,6 +65,7 @@ export default function App() {
   useScrollToTop();
   
   return (
+    <UserContextProvider>
     <AuthProvider>
       <LocalizationProvider>
         <SettingsProvider
@@ -91,5 +94,6 @@ export default function App() {
         </SettingsProvider>
       </LocalizationProvider>
     </AuthProvider>
+    </UserContextProvider>
   );
 }

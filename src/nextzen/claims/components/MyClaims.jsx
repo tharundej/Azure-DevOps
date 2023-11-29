@@ -113,8 +113,14 @@ export default function MyClaims({ currentUser ,}) {
     { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
     { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
     { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_date", label: "Expense Date", width: 100, type: "text" },
+    { id: "expense_start_date", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
+    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
+    { id: "total_days", label: "Total Days", width: 100, type: "text" },
+    { id: "approve_amount", label: "Approved Amount", width: 100, type: "text" },
     { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
+    { id: "approved_date", label: "Approved Date", width: 100, type: "text" },
+    { id: "Payment_status", label: "Payment Status", width: 100, type: "badge" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -125,7 +131,7 @@ export default function MyClaims({ currentUser ,}) {
   const employeeID =localStorage.getItem('employeeID');
   const companyID =localStorage.getItem('companyID');
   const defaultPayload={
-
+    "companyId":companyID,
     "employee_id":employeeID,
     "page":0,
     "count":5,
@@ -279,7 +285,9 @@ const handleClick=()=>{
     company_id: Yup.string(),
     employee_id: Yup.string(),
     currency: Yup.string(),
-    expense_date:Yup.string(),
+   
+    expense_start_date:Yup.string(),
+    expense_end_date:Yup.string(),
     file_format: Yup.string(),
     file: Yup.mixed(),
     expense_config_id:Yup.number(),
@@ -291,13 +299,20 @@ const handleClick=()=>{
 
   });
 
-const [selectedDate, setSelectedDate] = useState( );
-console.log(selectedDate,"selectedDate")
-const handleDateChange = (newValue) => {
+const [selectedDate, setSelectedDate] = useState({
+  expenseStartDate:"",
+  expenseEndDate:"",
 
-  const parsedDate = dayjs(newValue).format('YYYY-MM-DD');
-  console.log(parsedDate,"pppppppppp");
-  setSelectedDate(parsedDate);
+ } );
+
+ 
+console.log(selectedDate,"selectedDate")
+const handleDateChange = (date, dateType) => {
+  const parsedDate = dayjs(date).format('YYYY-MM-DD');
+  setSelectedDate((prevDates) => ({
+    ...prevDates,
+    [dateType]: parsedDate,
+  }));
 };
   const defaultValues = useMemo(
     () => ({
@@ -309,7 +324,7 @@ const handleDateChange = (newValue) => {
       company_id:currentUser?.company_id || companyID,
       employee_id:currentUser?.employee_id || employeeID,
       expense_config_id:currentUser?.expense_config_id || 1,
-      expense_date: currentUser?.expense_date || "",
+      expense_start_date: currentUser?.expense_start_date || "",
 
       file_format:currentUser?.file_format|| "pdf",
       file:currentUser?.file,
@@ -343,8 +358,10 @@ const values = watch();
   const onSubmit = handleSubmit(async (data) => {
   console.log('uyfgv');
 //  data?.expense_date= selectedDate;
-data.expense_date = selectedDate;
-
+data.expense_start_date = selectedDate?.expenseStartDate;
+data.expense_end_date = selectedDate?.expenseEndDate;
+data.file = file;
+// data.expense_start_date = selectedDate;
   console.log(data,"defaultValues111")
   // formData.append("file", null );
   // formData.append("claim_amount", 1234 );
@@ -361,14 +378,7 @@ data.expense_date = selectedDate;
 
 
   try {
-    // data.company_id = '0001';
-    // data.company_name = 'infbell';
-    // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-    // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-    // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-    // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
-
-
+    
 
     console.log(formData, 'formdata api in check');
     // baseUrl+`${endpoint}`
@@ -518,6 +528,15 @@ console.log(editData,"editData")
     }
   });
 
+  // file upload using formaadata
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+  console.log(file,"file")
+  console.log(defaultValues,"ppp")
+
   return (
     <>
       <Helmet>
@@ -589,11 +608,27 @@ console.log(editData,"editData")
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Expense Date"
+                    label="Expense Start Date"
                     
-                    name="expense_date"
-                    value={selectedDate}
-                    onChange={handleDateChange}
+                    name="expense_start_date"
+                    // value={selectedDate}
+                    // onChange={handleDateChange}
+                    value={selectedDate?.expenseStartDate}
+                   onChange={(date) => handleDateChange(date, 'expenseStartDate')}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expense End Date"
+                    
+                    name="expense_end_date"
+                    value={selectedDate?.expenseEndDate}
+                    onChange={(date) => handleDateChange(date, 'expenseEndDate')}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
@@ -601,8 +636,14 @@ console.log(editData,"editData")
               <RHFTextField name="comment" label="comments" />
              
               <Grid sx={{ alignSelf: "flex-end" }}>
+              <input
+                      // {...field}
+                      type="file"
+                      accept=".doc, .pdf"
+                      onChange={handleFileChange}
+                    />
 
-                <Controller
+                {/* <Controller
                   name="file"
                   control={control}
                   defaultValue={null}
@@ -611,9 +652,10 @@ console.log(editData,"editData")
                       {...field}
                       type="file"
                       accept=".doc, .pdf"
+                      onChange={handleFileChange}
                     />
                   )}
-                />
+                /> */}
               </Grid>
              
 
@@ -715,12 +757,28 @@ console.log(editData,"editData")
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Expense Date"
+                    label="Expense Start Date"
                     
                     // value={editData?.expense_date || ""}
-                    value={ dayjs( editData['expense_date'] || null)}
+                    value={ dayjs( editData['expense_start_date'] || null)}
                     onChange={(newValue) => {  
-                      handleEditChange('expense_date', formatDateToYYYYMMDD(newValue));
+                      handleEditChange('expense_start_date', formatDateToYYYYMMDD(newValue));
+                    }}
+                  />
+                  {/* </DemoContainer> */}
+                </LocalizationProvider>
+              </Grid>
+              <Grid sx={{ alignSelf: "flex-start" }}  >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
+                  <DatePicker
+                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    label="Expense End Date"
+                    
+                    // value={editData?.expense_date || ""}
+                    value={ dayjs( editData['expense_end_date'] || null)}
+                    onChange={(newValue) => {  
+                      handleEditChange('expense_end_date', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}

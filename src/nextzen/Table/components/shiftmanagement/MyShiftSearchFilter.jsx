@@ -47,7 +47,18 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-export default function MyShiftSearchFilter({filterSearch,filterData}){
+
+  
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+export default function MyShiftSearchFilter({filterData,filterOptions,searchData}){
   const theme = useTheme();
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
@@ -76,6 +87,15 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
   const [dropdown,setDropdown]=useState({
 // 
   })
+
+  const [search, setSearch]=useState("");
+
+    const handleSearch = (searchTerm) => {
+      setSearch(searchTerm)
+        searchData(search)
+        console.log(searchTerm,"search ........")
+        };
+
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
@@ -228,9 +248,9 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      const handleSearch=debounce((e)=>{
-        filterSearch(e?.target?.value)
-      },1000)
+      // const handleSearch=debounce((e)=>{
+      //   filterSearch(e?.target?.value)
+      // },1000)
     
   
     return (
@@ -239,7 +259,9 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
             <Grid md={8} xs={8} item>
             <TextField placeholder='Search....' 
             fullWidth
-            onChange={e=>{handleSearch(e)}}
+            // onChange={handleSeacrch}
+            onChange={(e) => handleSearch(e.target.value)}
+
             />
             </Grid>
             <Grid md={4} xs={4} item>
@@ -449,6 +471,14 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
     
 }
 MyShiftSearchFilter.propTypes={
-    filterSearch:PropTypes.any,
-    filterData: PropTypes.any,
+    filterData: PropTypes.func,
+}
+
+MyShiftSearchFilter.propTypes={
+    filterOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+          fieldName: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
 }

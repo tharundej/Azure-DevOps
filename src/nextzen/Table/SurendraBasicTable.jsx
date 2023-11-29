@@ -1,4 +1,4 @@
-
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import isEqual from 'lodash/isEqual';
@@ -126,6 +126,7 @@ import UserTableRow from './components/UserTableRow';
 import Style from "../styles/Style.module.css";
 import { baseUrl } from '../global/BaseUrl';
 
+import Box from '@mui/material/Box';
  
 
  
@@ -133,6 +134,7 @@ import { baseUrl } from '../global/BaseUrl';
 import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
 
 const defaultFilters = {
 
@@ -365,7 +367,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 72;
 
  
 
@@ -686,6 +688,16 @@ const [sortColumn, setSortColumn]=useState("")
   getTableData(payload)
 };
 
+// table expanded
+const [expandedRowId, setExpandedRowId] = useState(null);
+
+const handleExpandClick = (rowId) => {
+  setExpandedRowId(expandedRowId === rowId ? null :rowId );
+};
+
+
+
+
   
   return (
 
@@ -752,7 +764,7 @@ const [sortColumn, setSortColumn]=useState("")
 
             <Scrollbar>
 
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
+              <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
@@ -814,6 +826,7 @@ const [sortColumn, setSortColumn]=useState("")
                       .map((row) => (
 
                         <>
+                          <React.Fragment key={row.id}>
 
                         <UserTableRow
 
@@ -830,11 +843,39 @@ const [sortColumn, setSortColumn]=useState("")
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
+                          onHandleEditRow={(id) =>{ handleExpandClick(id),setExpandedRowId === row.id,console.log(id,"iddd")}}
 
                           rowActions={getRowActionsBasedOnStatus(row.status)|| []}
 
-                        />
+                          expandable
+          onExpandClick={() => handleExpandClick(row.id)}
+          isExpanded={expandedRowId === row.id}
 
+                        />
+{console.log(expandedRowId,row.id,row,"table expanded")}
+                        
+         {/* Expanded Row */}
+         {expandedRowId === row.employeename && (
+                    <TableRow>
+                      
+                      <TableCell colSpan={TABLE_HEAD.length + 1}>
+                        <Box margin={1}>
+                          <Typography variant="h6" gutterBottom component="div">
+                            Expanded Content for :
+                          </Typography>
+                          {/* Add your expanded row content here */}
+                          {/* For example, display additional information about the user */}
+                          <Typography>
+                            Employee ID: 
+                          </Typography>
+                          <Typography>
+                            Department:
+                          </Typography>
+                          {/* Add more fields as needed */}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )}
 {/* {tableData.map((headCell) => (
       <TableCell key={headCell.id}>
         {row[headCell.id] || '-'}
@@ -846,7 +887,7 @@ const [sortColumn, setSortColumn]=useState("")
                        
 
  
-
+</React.Fragment>
  
 
                         </>

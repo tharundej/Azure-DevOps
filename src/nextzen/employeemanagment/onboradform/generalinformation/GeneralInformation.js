@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 import { fData } from 'src/utils/format-number';
@@ -54,6 +55,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
   const [messageSnackbar,setmessageSnackbar]=useState('');
+  const [isDateOfBirthFilled,setIsDateOfBirthFilled]=useState(false);
 
 
   const currentUser=props.currentUser;
@@ -76,9 +78,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
  
 
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    date_of_birth: '',
+    joining_date: "",
+    offer_date: "",
   });
   const router = useRouter();
 
@@ -92,7 +94,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     firstName: Yup.string().required("First name is required"),
     middleName: Yup.string(),
     lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().required("Email is required"),
+   
     contactNumber: Yup.number()
     .required("Contact Number is required")
     .integer("Contact Number must be an integer")
@@ -102,15 +104,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         (val) => val && val.toString().length === 10
     ),
     emergencyContactNumber: Yup.number(),
-    dateOfBirth: Yup.string(),
+
     fatherName: Yup.string(),
     motherName: Yup.string(),
     maritalStatus: Yup.string(),
     nationality: Yup.string(),
     religion: Yup.string(),
     bloodGroup: Yup.string(),
-    offerDate: Yup.string(),
-    joiningDate: Yup.string(),
+   
+   
     pAddressLine1: Yup.string(),
     pAddressLine2: Yup.string(),
     pCity: Yup.string(),
@@ -122,7 +124,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rState: Yup.string(),
     rPincode: Yup.number(),
    
-    toggle: Yup.bool()
+    toggle: Yup.bool(),
+
+  
+     gender: Yup.object(),
+    personalEmail: Yup.string().required("Email is required"),
+    companyEmail: Yup.string(),
+    
     // first_name: Yup.string().required('First Name is required'),
 
     // middle_name: Yup.string().required('Middle Name is required'),
@@ -149,22 +157,23 @@ const   GeneralInformation=forwardRef((props,ref)=> {
    
     companyID: currentUser?.companyID ||'',
     companyName: currentUser?.companyName ||'',
-    
+     
     firstName: currentUser?.firstName ||'',
+   
     middleName: currentUser?.middleName ||'',
     lastName: currentUser?.lastName ||'',
-    email: currentUser?.email ||'',
+   
     contactNumber: currentUser?.contactNumber ||undefined,
     emergencyContactNumber: currentUser?.emergencyContactNumber || undefined,
-    dateOfBirth: currentUser?.dateOfBirth ||'',
+    
     fatherName: currentUser?.fatherName ||'',
     motherName: currentUser?.motherName ||'',
     maritalStatus: currentUser?.maritalStatus ||'',
     nationality: currentUser?.nationality ||'',
     religion: currentUser?.religion ||'',
     bloodGroup: currentUser?.bloodGroup ||'',
-    offerDate: currentUser?.offerDate ||'',
-    joiningDate: currentUser?.joiningDate ||'',
+   
+   
     pAddressLine1: currentUser?.pAddressLine1 ||'',
     pAddressLine2: currentUser?.pAddressLine2 ||'',
     pCity: currentUser?.pCity ||'',
@@ -177,6 +186,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     rPincode: currentUser?.rPincode || undefined,
     
     toggle: currentUser?.toggle || true,
+
+   
+     gender:currentUser?.gender||  undefined,
+    companyEmail: currentUser?.companyEmail ||'',
+    personalEmail: currentUser?.personalEmail ||'',
     }),
     [currentUser]
   );
@@ -221,15 +235,17 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           console.log(response.data.empID,'nithinnn')
           localStorage.setItem("employeeIdCreated",response.data?.empID)
           
-          props.nextStep();
+          
           props.handleCallSnackbar(response.data.message,"success")
-          console.log(response.data.message,'response.data.message')
+         
+          props.nextStep();
         })
         .catch((error) => {
           console.log(error);
-          setopenSnackBar(true);
-          setseveritySnackbar("warning");
-          setmessageSnackbar("User Alredy Present")
+          // setopenSnackBar(true);
+          // setseveritySnackbar("warning");
+          // setmessageSnackbar("Something Wrong")
+          props.handleCallSnackbar(error.response.data.message,"error")
         });
 
   }
@@ -242,9 +258,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.companyName = 'infobell';
 
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offerDate = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joiningDate = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.dateOfBirth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      data.offerDate = (datesUsed?.offer_date);
+      data.joiningDate = (datesUsed?.joining_date);
+      data.dateOfBirth = (datesUsed?.date_of_birth);
+       data.gender=data?.gender?.label|| ""
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
@@ -298,6 +315,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     },
     [setValue]
   );
+
+  const genderOptions=[
+    {label:'Male'},
+    {label:'Female'}
+  ]
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -382,64 +404,79 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="firstName" label="First Name* " />
                 <RHFTextField name="middleName" label="Middle Name " />
                 <RHFTextField name="lastName" label="Last Name* " />
-                <RHFTextField name="email" label="Email Id* " />
+                <RHFTextField name="companyEmail" label="Company Email" />
+                <RHFTextField name="personalEmail" label="Personal Email" />
+                <RHFAutocomplete
+                name="gender"
+                label="Gender"
+                options={genderOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+
+              />
+
                 <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+               
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
+                    
+                      value={datesUsed?.date_of_birth ? dayjs(datesUsed?.date_of_birth).toDate() : null}
+                      
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          date_of_birth: newValue,
+                          date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
+                         
+
                         }));
+                        setIsDateOfBirthFilled(!isDateOfBirthFilled);
                       }}
+                      
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
+                    {isDateOfBirthFilled && <p style={{ color: 'red' }}>Date Of Birth is required</p>}
+                 
                 <RHFTextField name="fatherName" label="Father Name" />
                 <RHFTextField name="motherName" label="Mother Name" />
                 <RHFTextField name="maritalStatus" label="Martial Status" />
                 <RHFTextField name="nationality" label="Nationality" />
                 <RHFTextField name="religion" label="Religion " />
                 <RHFTextField name="bloodGroup" label="Blood Group " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Offer Date"
-                      value={datesUsed?.date_of_birth}
+                      label="Offer Date*"
+                      value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         setDatesUsed((prev) => ({
                           ...prev,
-                          offer_date: newValue,
+                          offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                 
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Joining Date"
-                      value={datesUsed?.date_of_birth}
+                      label="Joining Date*"
+                      value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
                         console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,
-                          joining_date: newValue,
+                          joining_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
+                
                 
                 <RHFTextField name="pAddressLine1" label="Permanent Address Line1 " />
                 <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />

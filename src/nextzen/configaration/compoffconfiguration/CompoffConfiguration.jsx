@@ -21,6 +21,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { width } from '@mui/system';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ComoffConfigurationForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -151,12 +153,12 @@ export default function ComoffConfigurationForm({ currentUser }) {
         open={open}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 720 },
+          sx: { maxWidth: 420 },
         }}
       >
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add Comoff Config</DialogTitle>
+            <ModalHeader heading="Add Compoff Config" />
             
             <DialogContent>
             <Autocomplete
@@ -183,6 +185,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
                 <RHFTextField
                   name="expiryDays"
                   label="Expiry Days"
+                  sx={{width:280,marginLeft:1.5}}
                 />
               </Box>
             </DialogContent>
@@ -191,19 +194,27 @@ export default function ComoffConfigurationForm({ currentUser }) {
               <Button variant="outlined" onClick={handleClose}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+               <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
-            <DialogTitle>Add Comoff Config</DialogTitle>
+            <ModalHeader heading="Add Compoff Config" />
             
             <DialogContent>
             <Autocomplete
@@ -230,7 +241,8 @@ export default function ComoffConfigurationForm({ currentUser }) {
 
                   <RHFTextField
                     name="amount"
-                    label="amount"
+                    label="Amount"
+                    sx={{width:280,marginLeft:1.5}}
                   />
                 
               </Box>
@@ -240,14 +252,22 @@ export default function ComoffConfigurationForm({ currentUser }) {
               <Button variant="outlined" onClick={handleClose2}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit2}
                 loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+               <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit2}
+              >
+            Save
+            </Button>
             </DialogActions>
           </FormProvider>
         )}
