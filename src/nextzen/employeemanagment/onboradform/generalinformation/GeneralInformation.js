@@ -107,9 +107,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
     fatherName: Yup.string(),
     motherName: Yup.string(),
-    maritalStatus: Yup.string(),
+    maritalStatus: Yup.object(),
     nationality: Yup.string(),
-    religion: Yup.string(),
+    religion: Yup.object(),
     bloodGroup: Yup.string(),
    
    
@@ -168,9 +168,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     
     fatherName: currentUser?.fatherName ||'',
     motherName: currentUser?.motherName ||'',
-    maritalStatus: currentUser?.maritalStatus ||'',
+    maritalStatus: currentUser?.maritalStatus ||undefined,
     nationality: currentUser?.nationality ||'',
-    religion: currentUser?.religion ||'',
+    religion: currentUser?.religion ||undefined,
     bloodGroup: currentUser?.bloodGroup ||'',
    
    
@@ -188,7 +188,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     toggle: currentUser?.toggle || true,
 
    
-     gender:currentUser?.gender||  {label:'Male'},
+     gender:currentUser?.gender||  undefined,
     companyEmail: currentUser?.companyEmail ||'',
     personalEmail: currentUser?.personalEmail ||'',
     }),
@@ -261,7 +261,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.offerDate = (datesUsed?.offer_date);
       data.joiningDate = (datesUsed?.joining_date);
       data.dateOfBirth = (datesUsed?.date_of_birth);
-       data.gender=data?.gender?.label|| ""
+       data.gender=data?.gender?.label|| "",
+       data.maritalStatus=data?.maritalStatus?.label || ""
+       data.religion=data?.religion?.label || ""
+       
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
@@ -320,6 +323,36 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     {label:'Male'},
     {label:'Female'}
   ]
+
+  const maritalStatusOptions = [
+    { value: 'single', label: 'Single' },
+    { value: 'married', label: 'Married' },
+    { value: 'divorced', label: 'Divorced' },
+    { value: 'widowed', label: 'Widowed' },
+    { value: 'separated', label: 'Separated' }
+  ];
+
+  const religionOptions = [
+    { value: 'christianity', label: 'Christianity' },
+    { value: 'islam', label: 'Islam' },
+    { value: 'hinduism', label: 'Hinduism' },
+    { value: 'buddhism', label: 'Buddhism' },
+    { value: 'sikhism', label: 'Sikhism' },
+    { value: 'judaism', label: 'Judaism' },
+    { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+    { value: 'jainism', label: 'Jainism' },
+    { value: 'shinto', label: 'Shinto' },
+    { value: 'taoism', label: 'Taoism' },
+    { value: 'zoroastrianism', label: 'Zoroastrianism' },
+    { value: 'confucianism', label: 'Confucianism' },
+    { value: 'atheist', label: 'Atheist' },
+    { value: 'agnostic', label: 'Agnostic' },
+    {value:'other',labal:"Other"}
+  ];
+  
+  // Example usage:
+
+  
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -408,7 +441,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="personalEmail" label="Personal Email" />
                 <RHFAutocomplete
                 name="gender"
-                label="gender"
+                label="Gender"
                 options={genderOptions}
                 getOptionLabel={(option) => option.label}
                 
@@ -444,9 +477,33 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                  
                 <RHFTextField name="fatherName" label="Father Name" />
                 <RHFTextField name="motherName" label="Mother Name" />
-                <RHFTextField name="maritalStatus" label="Martial Status" />
+                <RHFAutocomplete
+                name="maritalStatus"
+                label="Marital Status"
+                options={maritalStatusOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+
+              />
                 <RHFTextField name="nationality" label="Nationality" />
-                <RHFTextField name="religion" label="Religion " />
+                <RHFAutocomplete
+                name="religion"
+                label="Religion"
+                options={religionOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+
+              />
                 <RHFTextField name="bloodGroup" label="Blood Group " />
                 
                     <DatePicker

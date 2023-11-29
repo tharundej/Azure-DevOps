@@ -262,7 +262,7 @@ dropdowns:[
       </Grid>
       <RolePage data={data} open={openRoleModal}  handleModalClose={handleModalClose} type={type} />
 
-      <h2>Role and Responsibility- under constrution...</h2>
+     
       
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/getGroupMains"  defaultPayload={defaultPayload} filterOptions={filterOptions}
