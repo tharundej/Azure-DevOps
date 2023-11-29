@@ -200,27 +200,34 @@ export default function ShiftConfigView({currentUser}) {
     data.companyId = 'COMP2';
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID = formData?.Location?.locationID;
-    data.shiftName=valueSelected?.shiftName?.type
+    data.locationID =( formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationId
+    data.shiftName=valueSelected?.shiftName
     data.shiftConfigId=valueSelected?.shiftConfigId
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl+'/editShitConfig', data);
-      if(response?.status===200){
-        handleClose();
+      if (response?.data?.status === '200') {
+        handleCloseEdit();
         setSnackbarSeverity('success');
-         setSnackbarMessage('Shift Configuration Added Succuessfully!');
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+        handleCloseEdit();
+      }
+      if (response?.data?.status === '400') {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
       }
     } catch (error) {
-      setOpen(true);
-       setSnackbarSeverity('error');
-       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-       setSnackbarOpen(true);
-      console.log('error', error);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Editing. Please try again.');
+      setSnackbarOpen(true);
+      handleCloseEdit();
+      console.log(' ', error);
     }
   });
   const [locationType, setLocationType] = useState([]);
@@ -300,8 +307,8 @@ export default function ShiftConfigView({currentUser}) {
                 label="Shift Name"
                 name="ShiftName"
                 value={valueSelected?.shiftName}
-                options={ShiftNames}
-                getOptionLabel={(option) => option.type }
+                options={ShiftNames.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('shiftName', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Shift Name" variant="outlined" />

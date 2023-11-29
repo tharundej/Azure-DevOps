@@ -60,7 +60,7 @@ export default function BasicCard() {
           <Tab label="Leave Period" value="1" sx={{ color: '#3B82F6' }} />
           <Tab label="Leave Type" value="2" sx={{ color: '#3B82F6' }}  />
           <Tab label="Holidays" value="3" sx={{ color: '#3B82F6' }} />
-          <Tab label="WorkWeek" value="4" sx={{ color: '#3B82F6' }} />
+          <Tab label="Work Week" value="4" sx={{ color: '#3B82F6' }} />
         </TabList>
       </Box>
       <TabPanel value="1" ><LeavePeriod/></TabPanel>

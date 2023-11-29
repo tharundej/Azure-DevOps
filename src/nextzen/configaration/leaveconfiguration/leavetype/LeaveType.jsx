@@ -28,6 +28,7 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { da } from 'date-fns/locale';
 
 export default function LeaveType({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -122,11 +123,13 @@ export default function LeaveType({ currentUser }) {
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
-    data.leavePeriodType=valueSelected.leavePeriodTypem
     data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
     data.leaveTypeName=valueSelected.leaveTypeName
     data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
     data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
+    data.leaveTypeID=JSON.parse(valueSelected.leaveTypeID,10)
+    data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
+    data.leavePeriodType=valueSelected.leavePeriodType
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
@@ -137,20 +140,21 @@ export default function LeaveType({ currentUser }) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleClose();
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('success');
+        setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       setSnackbarOpen(true);
+      handleCloseEdit();
       console.log('error', error);
     }
   });
@@ -287,9 +291,9 @@ export default function LeaveType({ currentUser }) {
               <Autocomplete
                 name="leaveTypeName"
                 label="Term Type"
-                options={leaveTypeNames}
+                options={leaveTypeNames.map((name)=>name.type)}
                 value={valueSelected?.leavePeriodType || null}
-                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
+                //  getOptionLabel={(option) => option.type} // Use 'label' as the display label
                 // isOptionEqualToValue={(option, value) => option.value === value}
                 onChange={(e, newValue) =>
                   handleSelectChange('leavePeriodType', newValue || null)
