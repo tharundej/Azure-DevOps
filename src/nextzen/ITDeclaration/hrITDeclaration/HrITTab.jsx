@@ -634,22 +634,35 @@ export default function HrITTab() {
                 </AccordionDetails>
               </Accordion>
 
-              <Button onClick={updateDepartment}>Approve</Button>
+              {/* <Button onClick={updateDepartment}>Approve</Button> */}
             </Box>
           </DialogContent>
 
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEdit}>
-              Cancel
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              // loading={isSubmitting1}
-            >
-              Save
-            </Button> */}
+
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+                AddTaxConfiguration()
+            }}
+          >
+            Approve
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => {
+              handleCloseEdit();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+           
           </DialogActions>
         </FormProvider>
       </Dialog>
