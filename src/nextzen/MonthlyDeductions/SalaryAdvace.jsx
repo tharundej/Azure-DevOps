@@ -64,10 +64,6 @@ export default function SalaryAdvace({defaultPayload}) {
       // Function to get row actions based on user role
       const generateRowActions = () => {
         const userRoleID = user?.roleID; // Assuming roleID is available in user object
-    
-        // Define actions based on the condition (roleID <= 3)
-        // const actions = userRoleID && userRoleID <= 3?actualActions:defaultActions;
-    console.log(userRoleID,"roleiddd")
         const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
         console.log(actions,"actionsss")
         return actions;
