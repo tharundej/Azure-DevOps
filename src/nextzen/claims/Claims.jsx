@@ -70,7 +70,7 @@ const permissionsData=()=>{
     console.log(claimsPermissions,"claimsPermissions11");
     setPermissions(claimsPermissions);
   } else {
-    console.error('Unable to retrieve claims permissions from localStorage.');
+    console.error('Unable to retrieve claims permissions from localStorages.');
   }
 
 }
