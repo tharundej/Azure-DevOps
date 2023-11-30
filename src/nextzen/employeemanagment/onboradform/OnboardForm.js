@@ -132,7 +132,7 @@ const handleCallSnackbar=(message,severity)=>{
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
             <StepButton color="inherit"
-            // onClick={handleStep(index)}
+             onClick={handleStep(index)}
             
             >
             {label}

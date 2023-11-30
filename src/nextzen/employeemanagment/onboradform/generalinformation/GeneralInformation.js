@@ -108,9 +108,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     fatherName: Yup.string(),
     motherName: Yup.string(),
     maritalStatus: Yup.object(),
-    nationality: Yup.string(),
+    nationality: Yup.object(),
     religion: Yup.object(),
-    bloodGroup: Yup.string(),
+    bloodGroup: Yup.object(),
    
    
     pAddressLine1: Yup.string(),
@@ -169,9 +169,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     fatherName: currentUser?.fatherName ||'',
     motherName: currentUser?.motherName ||'',
     maritalStatus: currentUser?.maritalStatus ||undefined,
-    nationality: currentUser?.nationality ||'',
+    nationality: currentUser?.nationality ||undefined,
     religion: currentUser?.religion ||undefined,
-    bloodGroup: currentUser?.bloodGroup ||'',
+    bloodGroup: currentUser?.bloodGroup || undefined,
    
    
     pAddressLine1: currentUser?.pAddressLine1 ||'',
@@ -263,7 +263,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.dateOfBirth = (datesUsed?.date_of_birth);
        data.gender=data?.gender?.label|| "",
        data.maritalStatus=data?.maritalStatus?.label || ""
-       data.religion=data?.religion?.label || ""
+       data.religion=data?.religion?.label || "",
+       data.nationality=data?.nationality?.nationality || "",
+       data.bloodGroup=data?.bloodGroup?.label || ""
        
 
       if(isSameAsPermanent){
@@ -350,7 +352,36 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     {value:'other',labal:"Other"}
   ];
   
-  // Example usage:
+
+  const nationalitiesOptions = [
+    { country: "United States", nationality: "American" },
+    { country: "United Kingdom", nationality: "British" },
+    { country: "Canada", nationality: "Canadian" },
+    { country: "Australia", nationality: "Australian" },
+    { country: "Germany", nationality: "German" },
+    { country: "France", nationality: "French" },
+    { country: "China", nationality: "Chinese" },
+    { country: "India", nationality: "Indian" },
+    { country: "Brazil", nationality: "Brazilian" },
+    { country: "Russia", nationality: "Russian" },
+    { country: "South Africa", nationality: "South African" },
+    { country: "Japan", nationality: "Japanese" },
+    { country: "Mexico", nationality: "Mexican" },
+    { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+    { country: "South Korea", nationality: "South Korean" },
+    { country: "Other", nationality: "other" }
+  ];
+  
+  const bloodGroupsOptions = [
+    { label: "A+", value: "A positive" },
+    { label: "A-", value: "A negative" },
+    { label: "B+", value: "B positive" },
+    { label: "B-", value: "B negative" },
+    { label: "AB+", value: "AB positive" },
+    { label: "AB-", value: "AB negative" },
+    { label: "O+", value: "O positive" },
+    { label: "O-", value: "O negative" }
+  ];
 
   
   return (
@@ -490,7 +521,19 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 )}
 
               />
-                <RHFTextField name="nationality" label="Nationality" />
+                <RHFAutocomplete
+                name="nationality"
+                label="Nationality"
+                options={nationalitiesOptions}
+                getOptionLabel={(option) => option.nationality}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.nationality}>
+                    {option.nationality}
+                  </li>
+                )}
+
+              />
                 <RHFAutocomplete
                 name="religion"
                 label="Religion"
@@ -504,7 +547,19 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 )}
 
               />
-                <RHFTextField name="bloodGroup" label="Blood Group " />
+          <RHFAutocomplete
+                name="bloodGroup"
+                label="Blood Group"
+                options={bloodGroupsOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+
+              />
                 
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
