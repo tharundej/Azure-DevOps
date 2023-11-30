@@ -74,30 +74,6 @@ const actions = [
    
     
 ];
-const [filterOptions,setFilterOptions]=useState({
-  dates:[
-    {
-    display:'Joining Date',
-    field_name:'joining_date'
-  },
-  {
-    display:'Offer Date',
-    field_name:'offer_date'
-  }
-],
-dropdowns:[
-  {
-    display:'Status',
-    options:["active","inactive"],
-    field_name:'status'
-  },
-  {
-    display:'Employement Type',
-    options:["Permanent","Contract"],
-    field_name:'employement_type'
-  }
-]
-})
 
 
 
