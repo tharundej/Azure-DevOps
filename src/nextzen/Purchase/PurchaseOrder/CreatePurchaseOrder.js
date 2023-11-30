@@ -27,7 +27,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 export default function CreatePurchaseOrder({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
-    paymentTerm: Yup.string(),
+    paymentTerm: Yup.string().required(),
   });
 
   const defaultValues = useMemo(
@@ -155,10 +155,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     if (gstRate) {
       setValue(`addPurchaseMaterial[${index}].rate`, price ? price : 0);
       setValue(`addPurchaseMaterial[${index}].gstRate`, gstRate ? gstRate : 0);
+      setValue(`addPurchaseMaterial[${index}].quantity`, 1);
     }
+    updateCalculatedValues(index);
   };
   const updateCalculatedValues = (index) => {
     const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
+    console.log({ parsedQuantity });
     const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
     const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
@@ -168,8 +171,14 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
   };
   const onSubmit = handleSubmit(async (data) => {
-    data.addPurchaseMaterial = data.addPurchaseMaterial.filter((material) => material !== null);
-    data.addPurchaseMaterial.forEach((material, index) => {
+    data.addPurchaseMaterial = data?.addPurchaseMaterial?.filter(
+      (material) => material?.materialId !== undefined && material?.materialId !== 0
+    );
+    if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
+      handleCallSnackbar('Please Add at least one Material', 'warning');
+      return;
+    }
+    data?.addPurchaseMaterial?.forEach((material, index) => {
       data.addPurchaseMaterial[index].quantity = parseInt(material.quantity, 10) || 0;
       data.addPurchaseMaterial[index].rate = parseInt(material.rate, 10) || 0;
       data.addPurchaseMaterial[index].amount = parseInt(material.amount, 10) || 0;
@@ -233,11 +242,11 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         options={vendorMaterials || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
-            newValue.id,
+            newValue?.id,
             `addPurchaseMaterial[${index}].materialId`,
             index,
-            newValue.gstRate,
-            newValue.materialPrice
+            newValue?.gstRate,
+            newValue?.materialPrice
           )
         }
         getOptionLabel={(option) => option.materialName}
