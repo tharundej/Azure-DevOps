@@ -105,6 +105,7 @@ const PurchaseInvoiceTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseInvoiceHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

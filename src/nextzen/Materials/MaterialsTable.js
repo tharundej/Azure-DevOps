@@ -100,6 +100,7 @@ const MaterialsTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="MaterialsHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

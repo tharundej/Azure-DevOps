@@ -190,6 +190,7 @@ const AssetsTable = () => {
         rowActions={actions}
         filterName="AssetsHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

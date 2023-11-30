@@ -139,6 +139,7 @@ const ProductsTable = () => {
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="ProductsHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

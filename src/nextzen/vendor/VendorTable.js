@@ -156,6 +156,7 @@ const VendorTable = () => {
         rowActions={actions}
         filterName="VendorHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

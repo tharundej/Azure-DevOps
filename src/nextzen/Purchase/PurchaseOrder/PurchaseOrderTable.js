@@ -160,7 +160,7 @@ const PurchaseOrderTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseOrderHead"
-        handleEditRowParent=""
+        handleEditRowParent={() => {}}
       />
     </>
   );

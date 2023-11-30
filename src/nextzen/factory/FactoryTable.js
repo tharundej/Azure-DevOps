@@ -70,7 +70,6 @@ const FactoryTable = () => {
       console.log('API request failed:', error.message);
     }
   };
-
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
@@ -150,6 +149,7 @@ const FactoryTable = () => {
         rowActions={actions}
         filterName="FactoryHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );
