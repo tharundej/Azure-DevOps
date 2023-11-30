@@ -562,7 +562,7 @@ const [loading,setLoading] = useState(false);
         container
         xs={12}
         spacing={2}
-        style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
+        style={{ marginBottom: '0.9rem'}}
       >
          <Grid item xs={4}>
         <Autocomplete

@@ -55,25 +55,31 @@ export default function Approveleave(){
               type: "text"
             },
             { id: "employeeName", label: "Employee Name",minWidth:"9pc",type: "text"},
-            { id: "manager_name", label: "Reporting Manager",minWidth:"8pc",type: "text"},
+            { id: "managerName", label: "Reporting Manager",minWidth:"10pc",type: "text"},
             { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
-            {id : "leaveBalance",label:"Leave Balance",minWidth:"6pc",type:"text"},
+            {id : "leaveBalance",label:"Leave Balance",minWidth:"8pc",type:"text"},
             { id: "LeaveType", label: "Leave Type",minWidth:"7pc", type: "text" },
             { id: "startDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "endDate",label:"End Date",minWidth:"7pc",type:"text"},
-            {id: "requestedDuration",label:"Requested Duration",minWidth:"5pc",type:'text'},
-            {id: "approvedBy",label:"Approver Name",minWidth:"7pc",type:"text"},
+            {id: "requestedDuration",label:"Requested Duration",minWidth:"11pc",type:'text'},
+            {id: "approvedBy",label:"Approver",minWidth:"7pc",type:"text"},
             {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
             // { id: '', width: 88 },
 
        ]);
     
-      const actions = [
+      const actualActions = [
         { name: "Approve", id: "1", type: "serviceCall", endpoint: '/approveLeave' ,icon:"charm:circle-tick"},
 
         { name: "Reject", id:"2", type: "serviceCall", endpoint: '/approveLeave',icon:"charm:circle-cross" },
     
       ];
+      const generateRowActions = () => {
+        const userRoleID = user?.roleID;
+        const actions = (userRoleID==1)?null:actualActions
+        return actions;
+      };
+      const actionsBasedOnRoles = generateRowActions();
 
 const onClickActions=(rowdata,event)=>{
         var payload ={
@@ -100,17 +106,21 @@ const onClickActions=(rowdata,event)=>{
         });
       
       }
-   
+      const handleEditRowParent =()=>{
+        return null
+      };
+
  return (
   <>
   <BasicTable 
   headerData={TABLE_HEAD} 
   endpoint="/hrapprovals"  
   defaultPayload={defaultPayload} 
-  rowActions={actions} 
+  rowActions={actionsBasedOnRoles} 
   bodyData = 'appliedLeave'
   filterName="LeavelistFilter"
-  onClickActions={onClickActions}/>
+  onClickActions={onClickActions}
+  handleEditRowParent={handleEditRowParent}/>
   
   </>
  )
