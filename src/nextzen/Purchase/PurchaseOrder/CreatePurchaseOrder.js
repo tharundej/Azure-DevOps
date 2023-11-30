@@ -326,23 +326,22 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       </Button>
     </Box>
   );
-  // const handleDeleteClick = (contentToDelete) => {
-  //   const updatedList = contentList.filter((content) => content !== contentToDelete);
-  //   console.log({updatedList});
-  //   setContentList(updatedList);
-  // };
-  const handleDeleteClick = (indexToDelete) => {
-    if (indexToDelete === 1) {
-      // Delete all elements above index 1
-      const updatedList = contentList.slice(0, indexToDelete);
-      console.log({ updatedList });
-      setContentList(updatedList);
-    } else {
-      // Delete only one element
-      const updatedList = contentList.filter((_, index) => index !== indexToDelete);
-      console.log({ updatedList });
-      setContentList(updatedList);
-    }
+  const handleAddContent = () => {
+    const newIndex = contentList.length;
+    const newContent = initialContent(newIndex);
+    setContentList((prevList) => [...prevList, newContent]);
+    console.log(vendorMaterials, 'vendorMaterials');
+  };
+  const handleDeleteClick = (index) => {
+    // setContentList((prevList) => prevList.filter((_, i) => i !== index));
+    // const updatedList = contentList.filter((content) => content !== index);
+    // console.log({ updatedList });
+    // setContentList(updatedList);
+    setContentList((prevList) => {
+      const updatedList = [...prevList];
+      updatedList[index] = '';
+      return updatedList;
+    });
   };
 
   const [contentList, setContentList] = useState([initialContent]);
@@ -441,10 +440,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {
-                const newContent = initialContent(contentList.length);
-                setContentList([...contentList, newContent]);
-              }}
+              onClick={handleAddContent}
               startIcon={<Iconify icon="mingcute:add-line" />}
               sx={{ margin: '20px' }}
               disabled={!selectedVendor}
@@ -455,7 +451,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
           {contentList.map((content, index) => (
             <div key={index}>
               {content}
-              {index > 0 && (
+              {index > 0 && content && (
                 <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
               )}
             </div>

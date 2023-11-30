@@ -93,7 +93,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const [severity, setSeverity] = useState('');
   console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
-    data.vendorID = `${selectedVendor}`;
+    data.vendorID = selectedVendor;
     data.gstRate = selectedTaxs;
     try {
       console.log(data, 'data111ugsghghh');
