@@ -27,7 +27,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 export default function CreatePurchaseOrder({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
-    paymentTerm: Yup.string(),
+    paymentTerm: Yup.string().required(),
   });
 
   const defaultValues = useMemo(
@@ -155,10 +155,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     if (gstRate) {
       setValue(`addPurchaseMaterial[${index}].rate`, price ? price : 0);
       setValue(`addPurchaseMaterial[${index}].gstRate`, gstRate ? gstRate : 0);
+      setValue(`addPurchaseMaterial[${index}].quantity`, 1);
     }
+    updateCalculatedValues(index);
   };
   const updateCalculatedValues = (index) => {
     const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
+    console.log({ parsedQuantity });
     const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
     const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
@@ -239,11 +242,11 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         options={vendorMaterials || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
-            newValue.id,
+            newValue?.id,
             `addPurchaseMaterial[${index}].materialId`,
             index,
-            newValue.gstRate,
-            newValue.materialPrice
+            newValue?.gstRate,
+            newValue?.materialPrice
           )
         }
         getOptionLabel={(option) => option.materialName}
