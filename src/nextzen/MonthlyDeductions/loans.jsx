@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function Loans({defaultPayload}) {
+export default function Loans({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -397,6 +397,7 @@ bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
+componentPage={componentPage}
 />  
     </>
   );

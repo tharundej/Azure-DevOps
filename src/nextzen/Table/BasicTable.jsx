@@ -103,6 +103,12 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
+import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
+import PurchasePaymentHead from '../Purchase/PurchasePayment/PurchasePaymentHeader';
+import SaleInvoiceHead from '../sales/SaleInvoice/SaleInvoiceHeader';
+import SalePaymentHead from '../sales/SalePayment/SalePaymentHeader';
+import SaleOrderHead from '../sales/SalesOrder/SaleOrderHeader';
 import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 // import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
@@ -111,9 +117,14 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+<<<<<<< HEAD
 import UserContext from '../context/user/UserConext';
 import { useContext } from 'react';
 import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
+=======
+import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
+import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+>>>>>>> ec4d5f28c909862bd6d11ac8ec651d60b8f548b8
 
 const defaultFilters = {
   name: '',
@@ -135,6 +146,7 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  componentPage
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -207,10 +219,15 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
+<<<<<<< HEAD
         token  },
+=======
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+      },
+>>>>>>> ec4d5f28c909862bd6d11ac8ec651d60b8f548b8
       data: initialDefaultPayload,
     };
 
@@ -224,7 +241,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data, 'total no of records-->',response?.count,"responsss",response);
+        console.log(
+          response?.data,
+          'total no of records-->',
+          response?.count,
+          'responsss',
+          response
+        );
 
         // leave list api
         console.log('leave list api integration');
@@ -445,9 +468,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
-      row?.status === 'InActive' || 
+      row?.status === 'InActive' ||
       row?.status === 'active' ||
-      row?.status === "Upcoming" || row?.status==="Ongoing"
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -474,15 +498,18 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
-            <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <TimeSheetSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
           )}
-           {filterName === 'ProjectSearchFilter' && (
+          {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
-        
+
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -508,10 +535,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <SalarySearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              componentPage = {componentPage}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -591,7 +619,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
@@ -657,7 +685,32 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             />
           )}
           {filterName === 'BalanceSheetHead' && (
-            <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <BalanceSheetHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'SaleInvoiceHead' && (
+            <SaleInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'SaleOrderHead' && (
+            <SaleOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'SalePaymentHead' && (
+            <SalePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'DepartmentFilterSearch' && (
             <DeparrtmentSearchFilter
@@ -673,8 +726,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               searchData={handleFilterSearch}
             />
           )}
-            {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
              {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
@@ -745,7 +802,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           />
                         </>
                       ))}
-{console.log(rowActions,"rowActionss")}
+                    {console.log(rowActions, 'rowActionss')}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
@@ -761,13 +818,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               // rowsPerPage={25}
               onPageChange={onPageChangeHandeler}
               onRowsPerPageChange={onChangeRowsPerPageHandeler}
-              dense={table.dense}
+              // dense={table.dense}
               onChangeDense={table.onChangeDense}
             />
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
               <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
-                   
+
             </Grid >
             <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
             <Pagination
@@ -777,9 +834,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             onChange={handleChange}
             shape="rounded"
             />
- 
+
             </Grid>
-           
+
             </Grid> */}
           </Card>
         </Container>
@@ -792,9 +849,8 @@ function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
   var stabilizedThis;
-  
-  if(inputData)
-  stabilizedThis = inputData?.map((el, index) => [el, index]);
+
+  if (inputData) stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -858,6 +914,3 @@ BasicTable.propTypes = {
 };
 
 export { BasicTable };
-
-
-

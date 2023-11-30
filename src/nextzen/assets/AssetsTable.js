@@ -128,12 +128,12 @@ const AssetsTable = () => {
   }, []);
 
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'assetsName', label: 'Assets Name', type: 'text', minWidth: '180px' },
     { id: 'assetsType', label: 'Assets Type', type: 'text', minWidth: '180px' },
-    { id: 'poNumber', label: 'Po Number', type: 'text', minWidth: '180px' },
-    { id: 'poDate', label: 'Po Date', type: 'text', minWidth: '180px' },
-    { id: 'poValue', label: 'Po Value', type: 'text', minWidth: '180px' },
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
+    { id: 'poValue', label: 'PO Value', type: 'text', minWidth: '180px' },
     { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
     { id: 'Invoice_date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'startDate', label: 'Start Date', type: 'text', minWidth: '180px' },
@@ -145,7 +145,7 @@ const AssetsTable = () => {
     { id: 'lapseOfWarrantyDate', label: 'Lapse Of Warranty Date', type: 'text', minWidth: '180px' },
     { id: 'operationalDays', label: 'Operational Days', type: 'text', minWidth: '180px' },
     { id: 'amount', label: 'Amount', type: 'text', minWidth: '180px' },
-    { id: 'gstAmount', label: 'Gst Amount', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'GST Amount', type: 'text', minWidth: '180px' },
     { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
     { id: 'assetCondition', label: 'Assets Condition', type: 'text', minWidth: '180px' },
     { id: 'updatedDate', label: 'Updated Date', type: 'text', minWidth: '180px' },
@@ -190,6 +190,7 @@ const AssetsTable = () => {
         rowActions={actions}
         filterName="AssetsHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

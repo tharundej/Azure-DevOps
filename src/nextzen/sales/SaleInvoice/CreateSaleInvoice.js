@@ -13,8 +13,9 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
+export default function CreateSaleInvoice({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -22,15 +23,10 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
-      paymentMode: currentData?.paymentMode || '',
-      netTotalAmount: currentData?.netTotalAmount || '',
-      gstAmount: currentData?.gstAmount || '',
-      totalAmount: currentData?.totalAmount || '',
+      ProductName: currentData?.ProductName || '',
+      ProductCategory: currentData?.ProductCategory || '',
+      hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
     }),
     [currentData]
   );
@@ -79,11 +75,11 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
         sm: 'repeat(5, 1fr)',
       }}
     >
-      <RHFTextField name="Material Name" label="Material Name" />
+      {/* <RHFTextField name="Material Name" label="Material Name" />
       <RHFTextField name="HSN Code" label="HSN Code" />
       <RHFTextField name="Unit Of Measure" label="Unit Of Measure" />
       <RHFTextField name="Quantity" label="Quantity" />
-      <RHFTextField name="Rate" label="Rate" />
+      <RHFTextField name="Rate" label="Rate" /> */}
     </Box>
   );
   const [contentList, setContentList] = useState([initialContent]);
@@ -93,9 +89,10 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   };
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
+      <ModalHeader heading={"Add New Sales Invoice"} />
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Purchase Invoice</DialogTitle>
+        <DialogTitle>Add New Sales Invoice</DialogTitle>
 
         <DialogContent>
           <Box
@@ -108,24 +105,21 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFTextField name="PO Number" label="PO Number" />
-            <RHFTextField name="PO Date" label="PO Date" />
-            <RHFTextField name="Expected Delivery Date" label="Expected Delivery Date" />
-            <RHFTextField name="Payment Term" label="Payment Term" />
-            <RHFTextField name="Vendor Name" label="Vendor Name" />
-            <RHFTextField name="Vendor Address" label="Vendor Address" />
-            <RHFTextField name=" Vendor PAN" label=" Vendor PAN" />
-            <RHFTextField name=" Vendor GST No" label=" Vendor GST No" />
-            <RHFTextField name="Email ID" label="Email ID" />
-            <RHFTextField name="Contact No" label="Contact No" />
-            <RHFTextField name="Vendor Location" label="Vendor Location" />
-            <RHFTextField name="Company Name" label="Company Name" />
-            <RHFTextField name="Company  Address" label="Company  Address" />
-            <RHFTextField name="Company  GST" label="Company  GST" />
-            <RHFTextField name="Company  PAN" label="Company  PAN" />
-            <RHFTextField name="Factory Shipping Address" label="Factory Shipping Address" />
+            <RHFTextField name="SO Number" label="SO Number" />
+            <RHFTextField name="Invoice Number" label="Invoice Number" />
+            <RHFTextField name="Invoice Date" label="Invoice Date" />
+            <RHFTextField name="Material Name" label="Material Name" />
+            <RHFTextField name="HSN Code" label="HSN Code" />
+            <RHFTextField name="Unit Of Measure" label="Unit Of Measure" />
+      <RHFTextField name="Quantity" label="Quantity" />
+      <RHFTextField name="Rate" label="Rate" />
+            <RHFTextField name="SGST" label="SGST" />
+            <RHFTextField name="CGST" label="CGST" />
+            <RHFTextField name="IGST" label="IGST" />
+            <RHFTextField name="Discount" label="Discount" />
+
           </Box>
-          <Box
+          {/* <Box
             marginTop={2}
             display="flex"
             justifyContent="space-between" // Align items to the right
@@ -141,7 +135,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
             >
               Add
             </Button>
-          </Box>
+          </Box> */}
           {contentList.map((content, index) => (
             <div key={index}>{content}</div>
           ))}
@@ -160,7 +154,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   );
 }
 
-CreatePurchaseInvoice.propTypes = {
+CreateSaleInvoice.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

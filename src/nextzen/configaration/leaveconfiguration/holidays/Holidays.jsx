@@ -243,7 +243,7 @@ export default function Holidays({ currentUser }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    data.locationID =(formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected.locationID
+    data.locationID =(formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
     data.holidayName=valueSelected?.holidayName
     // data.repeatAnnualy=valueSelected?.repeatAnnualy
     data.holidayID=valueSelected?.holidayID
@@ -342,6 +342,7 @@ export default function Holidays({ currentUser }) {
                     label="Holiday Date"
                     minDate={dayjs()}
                     // value={editData?.holidayDate}
+                    value={selectedDates}
                     onChange={handleDateChanges}
                   />
                 </DemoContainer>

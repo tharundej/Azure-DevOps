@@ -8,7 +8,7 @@ import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
 
-const PurchasePaymentTable = () => {
+const SaleInvoiceTable = () => {
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -32,31 +32,33 @@ const PurchasePaymentTable = () => {
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: ' Amount', label: ' Amount', type: 'text', minWidth: '180px' },
-    { id: 'Paid Date', label: 'Paid Date', type: 'text', minWidth: '180px' },
-    { id: 'No of Installments', label: 'No of Installments', type: 'text', minWidth: '180px' },
-    { id: 'Balance Amount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
-    { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
-    { id: 'Payment Method', label: 'Payment Method', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
+    { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'Quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
+    { id: 'Unit of measure', label: 'Unit of Measure', type: 'text', minWidth: '180px' },
+    { id: 'Rate', label: 'Rate', type: 'text', minWidth: '180px' },
+    { id: ' SGST', label: 'SGST', type: 'text', minWidth: '180px' },
+    { id: 'CGST', label: 'CGST', type: 'text', minWidth: '180px' },
+    { id: 'IGST', label: 'IGST', type: 'text', minWidth: '180px' },
+    { id: 'Discount', label: 'Discount', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
       <Helmet>
-        <title> Dashboard: Purchase Payment</title>
+        <title> Dashboard: Purchase Invoice</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchasePaymentDetails"
+        endpoint="/PurchaseOrderDetails"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="PurchasePaymentHead"
+        filterName="SaleInvoiceHead"
         handleEditRowParent={() => {}}
       />
     </>
   );
 };
-export default PurchasePaymentTable;
+export default SaleInvoiceTable;

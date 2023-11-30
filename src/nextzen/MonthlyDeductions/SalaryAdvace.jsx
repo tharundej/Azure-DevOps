@@ -15,7 +15,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function SalaryAdvace({defaultPayload}) {
+export default function SalaryAdvace({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -266,20 +266,7 @@ const [amountValue,setAmountValue] = useState();
       
   return (
     <>
-      {(showForm) && (
- <Dialog
- fullWidth
- maxWidth={false}
- open={showForm}
- onClose={handleClose}
- PaperProps={{
-   sx: { maxWidth: 770 , overflow:'hidden'},
- }}
- className="custom-dialog"  
->
- <SalaryAdvanceForm handleClose={handleClose} />
-      </Dialog>
-    )}
+   
       {(showEditForm) && (
  <Dialog
  fullWidth
@@ -385,6 +372,7 @@ endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
 rowActions={actionsBasedOnRoles}
 bodyData="data"
+componentPage={componentPage}
 onClickActions={onClickActions}
 />  
     </>
