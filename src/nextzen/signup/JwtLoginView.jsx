@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Snackbar, Alert as MuiAlert, Card, CardContent } from '@mui/material';
+import { Snackbar, Alert as MuiAlert, Card, CardContent ,Button} from '@mui/material';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -25,7 +25,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { createTheme } from '@mui/system';
+import { color, createTheme } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import { useNavData } from 'src/layouts/dashboard/config-navigation';
 
@@ -143,17 +143,27 @@ export default function JwtLoginView() {
         Forgot password?
       </Link>
 
-      <LoadingButton
-        // fullWidth
-        color="inherit"
+      {/* <LoadingButton
+         fullWidth
+        // color="inherit"
         size="large"
         type="submit"
         variant="contained"
-        
+        // sx={{color:'#3B82F6'}}
         loading={isSubmitting}
       >
-        Login
-      </LoadingButton>
+        LOGIN
+      </LoadingButton> */}
+      <Button
+       fullWidth
+       // color="inherit"
+       size="large"
+       type="submit"
+       variant="contained"
+       // sx={{color:'#3B82F6'}}
+       loading={isSubmitting}>
+         LOGIN
+      </Button>
     </Stack>
   );
   
