@@ -440,7 +440,7 @@ export default function TaxSectionFilter({
      <AddTaxSectionConfig /> 
        </Grid>
     
-        <Grid item md={1} xs={1}>
+        {/* <Grid item md={1} xs={1}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
@@ -449,7 +449,7 @@ export default function TaxSectionFilter({
 
             </Stack>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
 
 {/*       

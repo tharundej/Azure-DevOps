@@ -40,6 +40,7 @@ import { _userList } from "src/_mock";
 import { paths } from 'src/routes/paths';
 
 import { useRouter } from 'src/routes/hooks';
+import formatDateToYYYYMMDD from '../../global/GetDateFormat';
 
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
@@ -501,6 +502,22 @@ export default function MyCompoff({ currentUser ,}) {
                 
                
               />
+              {/* <RHFAutocomplete
+                name="compensantory_policies"
+                label="Select Project"
+                options={compoff_type}
+                getOptionLabel={(option) => option.compensantory_policies} 
+                isOptionEqualToValue={(option, value) => option === value}
+    
+              />
+                <RHFAutocomplete
+                name="compensantory_policies"
+                label="Select Activity"
+                options={compoff_type}
+                getOptionLabel={(option) => option.compensantory_policies} 
+                isOptionEqualToValue={(option, value) => option === value}
+    
+              /> */}
 
 {/* 
          <Autocomplete

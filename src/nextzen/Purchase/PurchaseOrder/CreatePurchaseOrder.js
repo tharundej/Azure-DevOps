@@ -326,9 +326,23 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       </Button>
     </Box>
   );
-  const handleDeleteClick = (contentToDelete) => {
-    const updatedList = contentList.filter((content) => content !== contentToDelete);
-    setContentList(updatedList);
+  // const handleDeleteClick = (contentToDelete) => {
+  //   const updatedList = contentList.filter((content) => content !== contentToDelete);
+  //   console.log({updatedList});
+  //   setContentList(updatedList);
+  // };
+  const handleDeleteClick = (indexToDelete) => {
+    if (indexToDelete === 1) {
+      // Delete all elements above index 1
+      const updatedList = contentList.slice(0, indexToDelete);
+      console.log({ updatedList });
+      setContentList(updatedList);
+    } else {
+      // Delete only one element
+      const updatedList = contentList.filter((_, index) => index !== indexToDelete);
+      console.log({ updatedList });
+      setContentList(updatedList);
+    }
   };
 
   const [contentList, setContentList] = useState([initialContent]);
