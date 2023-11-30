@@ -708,6 +708,7 @@ const handleExpandClick = (rowId) => {
      
 
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+         
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFilterOptions} searchData={handleFilterSearch}  
      addButton={button}  buttonFunction={buttonFunction} 
      dialogConfig={filterContent} dialogPayload={dialogPayload}
@@ -843,7 +844,7 @@ const handleExpandClick = (rowId) => {
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
-                          onHandleEditRow={(id) =>{ handleExpandClick(id),setExpandedRowId === row.id,console.log(id,"iddd")}}
+                          onHandleEditRow={(row) =>{ handleExpandClick(row.employeename),setExpandedRowId === row.employeename ,console.log(row,"iddd")}}
 
                           rowActions={getRowActionsBasedOnStatus(row.status)|| []}
 

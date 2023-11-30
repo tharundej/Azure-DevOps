@@ -56,6 +56,7 @@ const SaleInvoiceTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="SaleInvoiceHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );
