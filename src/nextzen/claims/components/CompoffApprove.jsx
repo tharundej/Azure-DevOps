@@ -59,10 +59,10 @@ export default function CompoffApprove({ currentUser ,}) {
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
       // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: ' Start Date', name: 'start_date',category:"claim",  },
-      { type: 'datePicker', label: ' End Date', name: 'end_date',category:"claim",  },
+      { type: 'datePicker', label: ' Start Date', name: 'startDate',category:"claim",  },
+      { type: 'datePicker', label: ' End Date', name: 'endDate',category:"claim",  },
       // { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
-      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
+      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approved', 'Rejected', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   }
@@ -70,7 +70,7 @@ export default function CompoffApprove({ currentUser ,}) {
 
   const TABLE_HEAD = [
     {
-      id: "employeename",
+      id: "employeeName",
       label: " Employee Name",
       width: 180,
       type: "text",
@@ -78,12 +78,12 @@ export default function CompoffApprove({ currentUser ,}) {
 
       secondaryText: "email",
     },
-    { id: "compensantory_policies", label: "Compensantory Policies", width: 180, type: "text" },
-    { id: "start_date", label: "Start Date", width: 220, type: "text" },
-    { id: "end_date", label: "End Date", width: 180, type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 180, type: "text" },
+    { id: "startDate", label: "Start Date", width: 220, type: "text" },
+    { id: "endDate", label: "End Date", width: 180, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
-    { id: "expire_date", label: "Expire Date", width: 180, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 180, type: "text" },
+    { id: "expireDate", label: "Expire Date", width: 180, type: "text" },
+    { id: "approverName", label: "Approver Name", width: 180, type: "text" },
     // { id: '', width: 88 },
   ]
   const managerID =localStorage.getItem('reportingManagerID');
@@ -93,17 +93,17 @@ export default function CompoffApprove({ currentUser ,}) {
   const defaultPayload={
 
   
-    "employee_id":"",
-    "company_id":companyID,
-    "Approval_manager_id":employeeID,
+    "employeeid":"",
+    "companyId":companyID,
+    "ApprovalManagerId":employeeID,
     "page":0,
     "search":"",
     "count":5,
     "externalFilters":{
-      "start_date":"",
-      "end_date":"",
+      "startDate":"",
+      "enddate":"",
       "status":"",
-      "compensantory_policies":"",
+      "compensantoryPolicies":"",
       "utilisation":""
     },
     "sort":{
@@ -117,10 +117,10 @@ export default function CompoffApprove({ currentUser ,}) {
 
 const externalFilter = {
     
-  "start_date":"",
-  "end_date":"",
+  "startDate":"",
+  "endDate":"",
   "status":"",
-  "compensantory_policies":"",
+  "compensantoryPolicies":"",
   "utilisation":""
 }
 
@@ -149,8 +149,8 @@ const externalFilter = {
         status: "",
         utilisation: null,
         companyId:companyID,
-        employeeId:employeeID,
-        managerId:managerID,
+        employeeId:"",
+        managerId:employeeID,
         comment:""
 
   })
@@ -167,9 +167,10 @@ const externalFilter = {
            if (eventData?.name === 'Approve'){
             setApprove(prevState => ({
               ...prevState,
-              status: "Approve",
+              status: "Approved",
+              employeeId:rowData?.employeeId,
               utilisation:rowData?.utilisation,
-              compensatoryRequestId: rowData?.compensantory_request_id,
+              compensatoryRequestId: rowData?.compensantoryRequestId,
 
           }));
           // handle(approve);
@@ -185,19 +186,21 @@ const externalFilter = {
           
         
        else{
-      //   setApprove(prevState => ({
-      //     ...prevState,
-      //     status: "Reject",
-      //     utilisation:`${rowData?.utilisation}`,
-      //     compensatoryRequestId: `${rowData?.compensantory_request_id}`,
-      // }));
+        setApprove(prevState => ({
+          ...prevState,
+          status: "Rejected",
+          employeeId:rowData?.employeeId,
+          utilisation:rowData?.utilisation,
+          compensatoryRequestId: rowData?.compensantory_request_id,
+      }));
       
-      handle({...approve, ...{status: "Reject",
-      utilisation:rowData?.utilisation,
-     compensatoryRequestId: rowData?.compensantory_request_id,
-}});
+//       handle({...approve, ...{status: "Rejected",
+//       utilisation:rowData?.utilisation,
+//      compensatoryRequestId: rowData?.compensantoryRequestId,
+// }});
       
       // handle(approve);
+      handleOpen()
     }
     }
     
@@ -211,7 +214,7 @@ const externalFilter = {
    
    
   
-console.log(approve,"outside approve")
+// console.log(approve,"outside approve")
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
