@@ -168,8 +168,14 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
   };
   const onSubmit = handleSubmit(async (data) => {
-    data.addPurchaseMaterial = data.addPurchaseMaterial.filter((material) => material !== null);
-    data.addPurchaseMaterial.forEach((material, index) => {
+    data.addPurchaseMaterial = data?.addPurchaseMaterial?.filter(
+      (material) => material?.materialId !== undefined && material?.materialId !== 0
+    );
+    if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
+      handleCallSnackbar('Please Add at least one Material', 'warning');
+      return;
+    }
+    data?.addPurchaseMaterial?.forEach((material, index) => {
       data.addPurchaseMaterial[index].quantity = parseInt(material.quantity, 10) || 0;
       data.addPurchaseMaterial[index].rate = parseInt(material.rate, 10) || 0;
       data.addPurchaseMaterial[index].amount = parseInt(material.amount, 10) || 0;
