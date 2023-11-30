@@ -14,7 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 
-export default function CreatePurchaseInvoice({ currentData, handleClose }) {
+export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -22,10 +22,15 @@ export default function CreatePurchaseInvoice({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      ProductName: currentData?.ProductName || '',
-      ProductCategory: currentData?.ProductCategory || '',
-      hsnID: currentData?.hsnID || '',
+      paymentMode: currentData?.paymentMode || '',
+      netTotalAmount: currentData?.netTotalAmount || '',
+      gstAmount: currentData?.gstAmount || '',
+      totalAmount: currentData?.totalAmount || '',
       status: currentData?.status || '',
+      totalAmount: currentData?.totalAmount || '',
+      totalAmount: currentData?.totalAmount || '',
+      totalAmount: currentData?.totalAmount || '',
+      totalAmount: currentData?.totalAmount || '',
     }),
     [currentData]
   );
