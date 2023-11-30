@@ -54,6 +54,7 @@ const SalePaymentTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="SalePaymentHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

@@ -156,6 +156,7 @@ const VendorMaterialsTable = () => {
         rowActions={actions}
         filterName="VendorMaterialsHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

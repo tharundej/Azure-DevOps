@@ -145,6 +145,7 @@ const CustomersTable = () => {
         rowActions={actions}
         filterName="CustomersHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );
