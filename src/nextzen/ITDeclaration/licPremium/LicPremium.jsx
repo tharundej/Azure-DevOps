@@ -338,7 +338,7 @@ const handleRentDeletedID = ( data)=>{
       .request(config)
       .then((response) => {
        
-          if (response.data.code === 200) {
+          if (response.data.status === 200) {
             setLoading(false)
             setSnackbarSeverity('success');
             setSnackbarMessage(response.data.message);
@@ -364,8 +364,8 @@ const handleRentDeletedID = ( data)=>{
               fileName: [],
               fileContent: [],
             })
-       
-          }else    if (response.data.code === 400) {
+            getLicPremium()
+          }else    if (response.data.status === 400) {
             setLoading(false)
             setSnackbarSeverity('error');
             setSnackbarMessage(response.data.message);
@@ -456,6 +456,7 @@ const handleRentDeletedID = ( data)=>{
             setSnackbarMessage(response.data.message);
             setSnackbarOpen(true);
             setIsEdit(false)
+            getLicPremium()
           }
           else if(response.data.status === 400){
             console.log('success',response);
@@ -616,7 +617,7 @@ const handleRentDeletedID = ( data)=>{
     fetchData();
     setIsEdit(false)
     
-  }, [selectedYear?.financialYear]);
+  }, [selectedYear?.financialYear ,isreloading]);
 
   console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (

@@ -140,7 +140,7 @@ export default function HrITTab() {
   const defaultPayload = {
     count: 5,
     page: 0,
-    search: '',
+    search: 'INFO57',
     companyID: 'COMP1',
     financialYear: '2023-2024',
     externalFilters: {

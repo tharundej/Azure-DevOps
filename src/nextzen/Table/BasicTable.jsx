@@ -113,6 +113,7 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
 import UserContext from '../context/user/UserConext';
 import { useContext } from 'react';
+import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 
 const defaultFilters = {
   name: '',
@@ -189,6 +190,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
+    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
+    // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -199,6 +202,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
+   
       url: baseUrl + `${endpoint}`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -672,6 +676,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
+             {filterName === 'HrTabFilter' && (
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+
           {/* accounts  */}
           <Card>
             <TableContainer
