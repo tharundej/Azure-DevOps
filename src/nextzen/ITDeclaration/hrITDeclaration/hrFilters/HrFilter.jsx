@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import {
   Card,
   TextField,
@@ -92,12 +92,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function HrFilter({
-  filterData,
-  filterOptions,
-  filterSearch,
-  searchData,
-}) {
+export default function HrFilter({ filterData, filterOptions, filterSearch, searchData }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
   const designationName = ['executive'];
@@ -194,9 +189,10 @@ export default function HrFilter({
       resolve(arr1);
     });
   }
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+  const empId = localStorage.getItem('employeeID');
+  //   const cmpId= localStorage.getItem('companyID')
+  const cmpId = 'COMP1';
+  const token = localStorage.getItem('accessToken');
   const [formData, setFormData] = useState({});
   const [designationGradeType, setDesignationGradeType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -212,47 +208,19 @@ export default function HrFilter({
     setOpen(false);
   };
 
-  const handleChangeDropDown = (event, field) => {
-    const {
-      target: { value },
-    } = event;
-
-    if (field === 'designation_grade_name') {
-      setDropdownDesignationGradeName(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'shift_name') {
-      setDropdownStatus(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'leavePeriodType') {
-      setdropdownleavePeriodType(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    }
-
-    // On autofill we get a stringified value.
-
-    console.log(value);
-    // console.log( typeof value === 'string' ? value.split(',') : value,)
-  };
-
   const handleApply = async () => {
     console.log(formData, 'form dat  in apply');
     setDatesData([]);
-    const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
+    // const data = await formWithDropdown();
+    const obj = {
+      departmentID: JSON.stringify(formData?.Department?.departmentID) || '',
+      designationID: JSON.stringify(formData?.Designation?.designationID) || '',
+      designationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
+    };
+    filterData(obj);
+    console.log(obj, 'FilterData');
 
-    //   filterData(data);
+    // filterData(data);
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
@@ -273,8 +241,8 @@ export default function HrFilter({
       url: baseUrl + '/onboardingDepartment',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
       headers: {
-        Authorization:
-       token , 'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -312,8 +280,8 @@ export default function HrFilter({
       url: baseUrl + '/onboardingDesignation',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
       headers: {
-        Authorization:
-       token, 'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -350,8 +318,8 @@ export default function HrFilter({
       url: baseUrl + '/onboardingDesignationGrade',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
       headers: {
-        Authorization:
-       token,  'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -406,13 +374,18 @@ export default function HrFilter({
 
   console.log(formData, 'data in the form ');
   useEffect(() => {
-    console.log("calling in filter folder")
+    console.log('calling in filter folder');
     const fetchData = async () => {
       getDesignationGrade();
       getDepartment();
     };
     fetchData();
   }, []);
+  const handleCancel = () => {
+    setFormData({});
+  };
+
+  console.log(formData, 'inreset');
   return (
     <>
       <Grid
@@ -421,9 +394,10 @@ export default function HrFilter({
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        xs={12} md={12} lg={12}
-
-        style={{ marginBottom: '0.1rem' }}
+        xs={12}
+        md={12}
+        lg={12}
+        style={{ marginBottom: '0.5rem' }}
       >
         <Grid item md={10} xs={10}>
           <TextField
@@ -432,7 +406,7 @@ export default function HrFilter({
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-     
+
         {/* <Grid item xs={4} msd={4}>
          <AddTaxSectionConfig />
         </Grid> */}
@@ -446,51 +420,23 @@ export default function HrFilter({
           </Grid>
         </Grid>
       </Grid>
-      
 
-{/*       
-      <Grid item  container spacing={0} alignItems="flex-end" 
-      // justifyContent="space-around"
-      >
-   
-        <Grid item xs={3}>
-          <AddDepartmentConfig />
-        </Grid>
-    
-        <Grid item xs={4}>
-          <AddDesignationConfig />
-        </Grid>
-
-        <Grid item xs={3}>
-          <AddDesignationGradeConfig />
-
-        </Grid>
-      </Grid> */}
       <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+        <DialogTitle sx={{ paddingBottom: 0, paddingTop: 2 }}>
           Filters
-          <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
-            <Iconify icon="iconamoon:close-thin" />
-          </Button>
+          {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+          <CancelOutlinedIcon
+            sx={{ cursor: 'pointer', float: 'right' }}
+            onClick={() => setOpen(false)}
+          />
         </DialogTitle>
 
-        <DialogContent
-          sx={{ minWidth: '300px' }}
-          //   style={{
-          //     paddingTop: '20px',
-          //     paddingRight: '17px',
-          //     paddingBottom: '44px',
-          //     paddingLeft: '44px',
-          //   }}
-        >
-          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-
+        <DialogContent sx={{ minWidth: '300px' }}>
           <Grid
             container
             spacing={1}
@@ -504,27 +450,6 @@ export default function HrFilter({
             item
           >
             <Grid item xs={6}>
-              {/* <FormControl fullWidth>
-                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownleavePeriodType}
-                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
-                    input={<OutlinedInput label="Leave Period Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {leavePeriodTypes.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
-
               <Autocomplete
                 disablePortal
                 name="Department"
@@ -534,20 +459,16 @@ export default function HrFilter({
                   value: department.departmentName,
                   ...department,
                 }))}
-                value={formData.Department}
+                value={formData?.Department || null}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationChange('Department', newValue, selectedOption)
                 }
                 // sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="Department" />}
               />
-
-            
-
-            
             </Grid>
-            <Grid item xs={6} >
-            <Autocomplete
+            <Grid item xs={6}>
+              <Autocomplete
                 disablePortal
                 name="Designation"
                 id="combo-box-demo"
@@ -556,15 +477,15 @@ export default function HrFilter({
                   value: employeepayType.designationName,
                   ...employeepayType,
                 }))}
-                value={formData.Designation}
+                value={formData?.Designation || null}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationGradeChange('Designation', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Designation " />}
               />
-                </Grid>
-            <Grid  item xs={12} md={6}>
-            <Autocomplete
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Autocomplete
                 disablePortal
                 name="DesignationGrade"
                 id="combo-box-demo"
@@ -573,29 +494,36 @@ export default function HrFilter({
                   value: employeepayType.designationGradeID,
                   ...employeepayType,
                 }))}
-                value={formData.DesignationGrade}
+                value={formData?.DesignationGrade || null}
                 getOptionLabel={(option) => option.label}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationGrade('DesignationGrade', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Designation Grade " />}
               />
-                   </Grid>
+            </Grid>
           </Grid>
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
           <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
               handleApply();
             }}
-            // variant="outlined"
-            style={{
-              width: '80px',
-              marginBottom: '1rem',
-              color:'white',backgroundColor:'#3B82F6'
-            }}
           >
             Apply
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => {
+              handleCancel();
+            }}
+          >
+            Reset
           </Button>
         </div>
       </BootstrapDialog>
@@ -603,9 +531,6 @@ export default function HrFilter({
   );
 }
 
-// HrFilter.propTypes={
-//     handleFilters: PropTypes.any,
-// }
 HrFilter.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,

@@ -36,6 +36,7 @@ import dayjs from 'dayjs';
 import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 import { Today } from '@mui/icons-material';
 
@@ -196,9 +197,9 @@ export default function DesignationGradeSearchFilter({
       resolve(arr1);
     });
   }
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+  const empId = localStorage.getItem('employeeID');
+  const cmpId = localStorage.getItem('companyID');
+  const token = localStorage.getItem('accessToken');
   const [formData, setFormData] = useState({});
   const [designationGradeType, setDesignationGradeType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -250,11 +251,14 @@ export default function DesignationGradeSearchFilter({
   const handleApply = async () => {
     console.log(formData, 'form dat  in apply');
     setDatesData([]);
-    const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
-
-    //   filterData(data);
+    // const data = await formWithDropdown();
+    const obj = {
+      departmentName: JSON.stringify(formData?.Department?.departmentName) || '',
+      designationName: JSON.stringify(formData?.Designation?.designationName) || '',
+      designationGradeName: JSON.stringify(formData?.DesignationGrade?.designationGradeName) || '',
+    };
+    filterData(obj);
+    console.log(obj, 'FilterData');
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
@@ -275,8 +279,8 @@ export default function DesignationGradeSearchFilter({
       url: baseUrl + '/onboardingDepartment',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
       headers: {
-        Authorization:
-       token , 'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -314,8 +318,8 @@ export default function DesignationGradeSearchFilter({
       url: baseUrl + '/onboardingDesignation',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
       headers: {
-        Authorization:
-       token, 'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -352,8 +356,8 @@ export default function DesignationGradeSearchFilter({
       url: baseUrl + '/onboardingDesignationGrade',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
       headers: {
-        Authorization:
-       token,  'Content-Type': 'text/plain',
+        Authorization: token,
+        'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -375,6 +379,8 @@ export default function DesignationGradeSearchFilter({
   };
   const handleDesignationChange = (name, selectedValue, selectedOption) => {
     const id = selectedValue?.departmentID;
+
+    console.log('data in handle change ', name, selectedValue, selectedOption);
     if (name === 'Department') {
       console.log('calling me ', selectedValue?.departmentID);
       getDesignation(id);
@@ -383,8 +389,8 @@ export default function DesignationGradeSearchFilter({
     setFormData({
       ...formData,
       [name]: selectedValue,
-      departmentID: selectedOption?.departmentID,
-      departmentName: selectedOption?.departmentName,
+      departmentID: selectedValue?.departmentID,
+      departmentName: selectedValue?.departmentName,
     });
   };
   const handleDesignationGradeChange = (name, selectedValue, selectedOption) => {
@@ -392,8 +398,8 @@ export default function DesignationGradeSearchFilter({
     setFormData({
       ...formData,
       [name]: selectedValue,
-      designationID: selectedOption?.designationID,
-      designationName: selectedOption?.designationName,
+      designationID: selectedValue?.designationID,
+      designationName: selectedValue?.designationName,
     });
     getDesignationGrade(id);
   };
@@ -401,30 +407,35 @@ export default function DesignationGradeSearchFilter({
     setFormData({
       ...formData,
       [name]: selectedValue,
-      designationGradeID: selectedOption?.designationGradeID,
-      departmentName: selectedOption?.designationGradeName,
+      designationGradeID: selectedValue?.designationGradeID,
+      departmentName: selectedValue?.designationGradeName,
     });
   };
 
-  console.log(formData, 'data in the form ');
+  console.log(formData, 'FormData UPDATED');
   useEffect(() => {
-    console.log("calling in filter folder")
+    console.log('calling in filter folder');
     const fetchData = async () => {
       getDesignationGrade();
       getDepartment();
     };
     fetchData();
   }, []);
+
+  const handleCancel = () => {
+    setFormData({});
+  };
   return (
     <>
       <Grid
         container
-        spacing={2}
+        spacing={0}
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
-        xs={12} md={12} lg={12}
-
+        xs={12}
+        md={12}
+        lg={12}
         style={{ marginBottom: '0.1rem' }}
       >
         <Grid item md={3} xs={3}>
@@ -439,23 +450,28 @@ export default function DesignationGradeSearchFilter({
        <AddDesignationConfig/>
        <AddDesignationConfig />
        </Grid> */}
-        <Grid item  container spacing={0} alignItems="flex-end"    xs={8} md={8} lg={8}
-      // justifyContent="space-around"
-      >
-   
-        <Grid item xs={4}>
-          <AddDepartmentConfig />
-        </Grid>
-    
-        <Grid item xs={4}>
-          <AddDesignationConfig />
-        </Grid>
+        <Grid
+          item
+          container
 
-        <Grid item xs={4}>
-          <AddDesignationGradeConfig />
+          alignItems="flex-end"
+          xs={8}
+          md={8}
+          lg={8}
+          // justifyContent="space-around"
+        >
+          <Grid item xs={4}>
+            <AddDepartmentConfig />
+          </Grid>
 
+          <Grid item xs={4}>
+            <AddDesignationConfig />
+          </Grid>
+
+          <Grid item xs={4}>
+            <AddDesignationGradeConfig />
+          </Grid>
         </Grid>
-      </Grid>
         <Grid item md={1} xs={1}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -467,7 +483,7 @@ export default function DesignationGradeSearchFilter({
         </Grid>
       </Grid>
 
-{/*       
+      {/*       
       <Grid item  container spacing={0} alignItems="flex-end" 
       // justifyContent="space-around"
       >
@@ -491,25 +507,16 @@ export default function DesignationGradeSearchFilter({
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+        <DialogTitle sx={{ paddingBottom: 0, paddingTop: 2 }}>
           Filters
-          <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
-            <Iconify icon="iconamoon:close-thin" />
-          </Button>
+          {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+          <CancelOutlinedIcon
+            sx={{ cursor: 'pointer', float: 'right' }}
+            onClick={() => setOpen(false)}
+          />
         </DialogTitle>
 
-        <DialogContent
-          sx={{ minWidth: '300px' }}
-          //   style={{
-          //     paddingTop: '20px',
-          //     paddingRight: '17px',
-          //     paddingBottom: '44px',
-          //     paddingLeft: '44px',
-          //   }}
-        >
-          {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-
+        <DialogContent sx={{ minWidth: '300px' }}>
           <Grid
             container
             spacing={1}
@@ -523,27 +530,6 @@ export default function DesignationGradeSearchFilter({
             item
           >
             <Grid item xs={6}>
-              {/* <FormControl fullWidth>
-                  <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownleavePeriodType}
-                    onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
-                    input={<OutlinedInput label="Leave Period Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {leavePeriodTypes.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
-
               <Autocomplete
                 disablePortal
                 name="Department"
@@ -553,20 +539,16 @@ export default function DesignationGradeSearchFilter({
                   value: department.departmentName,
                   ...department,
                 }))}
-                value={formData.Department}
+                value={formData?.Department || null}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationChange('Department', newValue, selectedOption)
                 }
                 // sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="Department" />}
               />
-
-            
-
-            
             </Grid>
-            <Grid item xs={6} >
-            <Autocomplete
+            <Grid item xs={6}>
+              <Autocomplete
                 disablePortal
                 name="Designation"
                 id="combo-box-demo"
@@ -575,15 +557,15 @@ export default function DesignationGradeSearchFilter({
                   value: employeepayType.designationName,
                   ...employeepayType,
                 }))}
-                value={formData.Designation}
+                value={formData?.Designation || null}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationGradeChange('Designation', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Designation " />}
               />
-                </Grid>
-            <Grid  item xs={12} md={6}>
-            <Autocomplete
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Autocomplete
                 disablePortal
                 name="DesignationGrade"
                 id="combo-box-demo"
@@ -592,29 +574,36 @@ export default function DesignationGradeSearchFilter({
                   value: employeepayType.designationGradeID,
                   ...employeepayType,
                 }))}
-                value={formData.DesignationGrade}
+                value={formData?.DesignationGrade || null}
                 getOptionLabel={(option) => option.label}
                 onChange={(event, newValue, selectedOption) =>
                   handleDesignationGrade('DesignationGrade', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Designation Grade " />}
               />
-                   </Grid>
+            </Grid>
           </Grid>
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
           <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
               handleApply();
             }}
-            // variant="outlined"
-            style={{
-              width: '80px',
-              marginBottom: '1rem',
-              color:'white',backgroundColor:'#3B82F6'
-            }}
           >
             Apply
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => {
+              handleCancel();
+            }}
+          >
+            Reset
           </Button>
         </div>
       </BootstrapDialog>

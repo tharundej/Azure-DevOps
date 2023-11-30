@@ -184,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":"Info7"
+    "projectManager":user?.employeeID
   }
   const config={
     method:'POST',
@@ -203,7 +203,7 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":"info7",
+    "projectManager":user?.employeeID,
     "companyID":user?.companyID,
     "locationID":user?.locationID
 }
@@ -279,6 +279,7 @@ const AssignEmployees =()=>{
    })
 }
 
+const roleid  = user?.roleID
 
   return (
         <> 
@@ -547,6 +548,7 @@ const AssignEmployees =()=>{
   </Grid>
   <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
    
+   {roleid==1?
     <Button
       variant="contained"
       color="primary"
@@ -556,7 +558,7 @@ const AssignEmployees =()=>{
     >
       Add project
     </Button>
- 
+    :(roleid==6)?
     <Button   
     variant="contained"
     color="primary"
@@ -564,7 +566,7 @@ const AssignEmployees =()=>{
     onClick={()=>setShowAssignEmployee(true)}
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
-    </Button>
+    </Button>:null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>

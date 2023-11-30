@@ -3,8 +3,9 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+
 import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import { _userList } from 'src/_mock';
 import { useState, useEffect  ,useContext} from 'react';
 import { Container } from '@mui/system';
@@ -179,8 +180,52 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
       });
   
   };
+  const DeleteTaxSection = async (data) => {
+    const payload = {
+      configId:data.configId
+     }
 
-
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      //    url: baseUrl + '/updateSingleDepartmentInfo ',
+      url: baseUrl +'/deleteDeclarationsConfig',
+      headers: {
+        Authorization:
+      token ,  'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.data.code === 200) {
+             setSnackbarSeverity('success');
+             setSnackbarMessage(response.data.message);
+             setSnackbarOpen(true);
+            //  setHitGetDepartment(!hitGetDepartment)
+          console.log('success',response);
+        }else   if (response.data.code === 400) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage(response.data.message);
+            setSnackbarOpen(true);
+           //  setHitGetDepartment(!hitGetDepartment)
+         console.log('success',response);
+       }
+      })
+      .catch((error) => {
+         setOpen(true);
+         setSnackbarSeverity('error');
+         setSnackbarMessage('Error Designation Adding . Please try again.');
+         setSnackbarOpen(true);
+        console.log(error);
+      });
+  
+  };
+const  deleteFunction =(rowdata, event)=>{
+  console.log(rowdata, event ,"rowdata, event")
+  DeleteTaxSection(rowdata)
+}
  
   const handleOpen = () => setOpen(true);
  

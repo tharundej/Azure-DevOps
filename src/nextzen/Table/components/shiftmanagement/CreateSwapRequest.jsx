@@ -145,7 +145,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     try {
     
   const data = {
-    companyId:"COMP2",
+    companyId:localStorage.getItem("companyID"),
     employeeId:"ibm4",
     fromShiftGroup:parseInt( FromShiftGroup_Name1),
     toShiftGroup:parseInt (ToShiftGroup_Name),
@@ -186,7 +186,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
 <Grid xs={12} md={12}>
   <Grid sx={{ padding: '8px' }}>
     <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here ...
+      Employee Shift Swap Here 
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -256,7 +256,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
+  renderInput={(params) => <TextField {...params} label="To Shift Group Name" />}
 />
 
       {/* <Autocomplete
@@ -391,13 +391,13 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
 /> */}
     </Box>
 
-    <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : ' Request Shift Swap'}
-      </LoadingButton>
-      {/* <Button type='submit'></Button> */}
-      <Button onClick={handleClose} sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
-    </Stack>
+
+        <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Request Shift Swap'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
   </Card>
 </Grid>
 </Grid>

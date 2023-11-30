@@ -125,7 +125,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       },
     },
-    employee:{
+    employee: {
       root: `/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
        onboardform: `/employeemanagementhome/onboardform`,
@@ -270,26 +270,27 @@ export const paths = {
     },
     vendor: {
       vendor: `${ROOTS.DASHBOARD}/vendor`,
-    },
-    materials: {
-      materials: `${ROOTS.DASHBOARD}/materials`,
+      vendormaterials: `${ROOTS.DASHBOARD}/vendor/vendormaterials`,
     },
     assets: {
       assets: `${ROOTS.DASHBOARD}/assets`,
     },
     products: {
       products: `${ROOTS.DASHBOARD}/products`,
-    },
-    customers: {
-      customers: `${ROOTS.DASHBOARD}/customers`,
+      customers: `${ROOTS.DASHBOARD}/products/customers`,
     },
     purchase: {
       purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,
-      purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/nvoice`,
+      purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/invoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
     },
-    balancesheet:{
-      balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,
+    sale: {
+      saleOrder: `${ROOTS.DASHBOARD}/sale/order`,
+      saleInvoice: `${ROOTS.DASHBOARD}/sale/invoice`,
+      salePayment: `${ROOTS.DASHBOARD}/sale/payment`,
+    },
+    balancesheet: {
+      balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
   },
 };

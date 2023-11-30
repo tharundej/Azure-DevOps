@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Button,Autocomplete
+  Button,Autocomplete, Card
 } from '@mui/material';
 Autocomplete
 import InputAdornment from '@mui/material/InputAdornment';
@@ -21,6 +21,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -28,11 +30,17 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
-const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-  console.log(empId ,"emp")
+  const {user} = useContext(UserContext)
+// const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
+const [loading,setLoading] = useState(false);
+ 
+
   const [data, setData] = useState();
   const [reloading, setReloading] = useState(false);
 
@@ -144,10 +152,11 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     };
     fetchData();
     
-  }, [reloading]);
+  }, [reloading ,selectedYear?.financialYear]);
 
 
   const updateDeclarationsList = async () => {
+    setLoading(true)
     const newArray = data?.map((item) => ({
       configId: item.configId,
       declared: parseInt(item.declared, 10),
@@ -177,6 +186,7 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
+          setLoading(false)
           setReloading(!reloading);
           console.log(JSON.stringify(response.data));
           setSnackbarSeverity('success');
@@ -185,16 +195,19 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           console.log("response", response)
         }
         else if(response.data.code === 400){
+          setLoading(false)
           setSnackbarSeverity('error');
           setSnackbarMessage(response.data.message);
           setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
   };
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
     };
@@ -217,9 +230,11 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
+          setLoading(false)
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -235,7 +250,10 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
   return (
     <div>
-      <Snackbar
+   {loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <>
+  <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={snackBarAlertHandleClose}
@@ -259,10 +277,12 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           getOptionLabel={(option) => option?.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          renderInput={(params) => <TextField {...params} label=" Please Select Financial Year" />}
         />
       </Grid>
-      <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
+  { selectedYear?.financialYear?  
+  <>
+  <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -342,6 +362,8 @@ const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
           </Grid>
         </Grid>
       </Grid>
+      </> : null}
+      </>}
     </div>
   );
 };

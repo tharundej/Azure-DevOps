@@ -25,7 +25,7 @@ const ProductsTable = () => {
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
       const deleteData = {
-        product_id: rowdata?.productID || 0,
+        productID: rowdata?.productID || 0,
         productName: rowdata.productName,
       };
       setDeleteData(deleteData);
@@ -92,7 +92,7 @@ const ProductsTable = () => {
     companyID: 'COMP1',
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'productCategory', label: 'Product Category', type: 'text', minWidth: '180px' },
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
@@ -139,6 +139,7 @@ const ProductsTable = () => {
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="ProductsHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );
