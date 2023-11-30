@@ -41,6 +41,9 @@ export default function LeaveTypeForm({ currentUser }) {
   };
   const [openEdit, setOpenEdit] = useState(false);
   const handleCloseEdit = () => setOpenEdit(false);
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  }
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -99,7 +102,7 @@ export default function LeaveTypeForm({ currentUser }) {
           setSnackbarSeverity('success');
           setSnackbarMessage(response?.data?.message);
           setSnackbarOpen(true);
-          handleCloseEdit();
+           handleClose();
           console.log('success', response);
         }
 
@@ -107,14 +110,14 @@ export default function LeaveTypeForm({ currentUser }) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response?.data?.message);
           setSnackbarOpen(true);
-          handleCloseEdit();
+           handleClose();
           console.log('error', response);
         }
       } catch (error) {
         setSnackbarSeverity('error');
         setSnackbarMessage('Error While Adding Leave Type. Please try again.');
         setSnackbarOpen(true);
-        handleCloseEdit();
+         handleClose();
         console.log('error', error);
       }
     };
@@ -136,7 +139,7 @@ export default function LeaveTypeForm({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+         handleClose();
 
         console.log('sucess', response);
       }
@@ -144,14 +147,14 @@ export default function LeaveTypeForm({ currentUser }) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+         handleClose();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       setSnackbarOpen(true);
-      handleCloseEdit();
+       handleClose();
       console.log('error', error);
     }
   });
@@ -250,6 +253,7 @@ export default function LeaveTypeForm({ currentUser }) {
               type="submit"
               variant="contained"
               onClick={onSubmit1}
+             
             >
               Save
             </Button>
