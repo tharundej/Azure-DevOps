@@ -94,7 +94,7 @@ const CustomersTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
     { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
     { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
