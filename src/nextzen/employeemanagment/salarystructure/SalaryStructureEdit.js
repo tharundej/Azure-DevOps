@@ -188,7 +188,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
                     fullWidth
                     type="number"
                     name="marketRate"
-                    label="market Rate"
+                    label="Market Rate"
                     variant="outlined"
                     id="motherName"
                     value={currentUser?.marketRate}

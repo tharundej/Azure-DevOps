@@ -20,7 +20,7 @@ function EmployeeManagementHome  () {
     const dataObj=[
       {
         id:'employeeTable',
-        label:'EmployeeTable'
+        label:'Employees'
       },
       {
         id:'statutory',

@@ -341,7 +341,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
      };
      
   
-  
  
   return (
 

@@ -6,7 +6,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 // ----------------------------------------------------------------------
 
-export default function RHFAutocomplete({ name, label, placeholder, helperText, ...other }) {
+export default function RHFAutocomplete({ name, label, placeholder, helperText,onChnageAutoComplete,onChnageAutoCompleteState,onChnageAutoCompletercountry,onChnageAutoCompleterState ,...other }) {
   const { control, setValue } = useFormContext();
 
   return (
@@ -17,7 +17,22 @@ export default function RHFAutocomplete({ name, label, placeholder, helperText, 
         <Autocomplete
           {...field}
           
-          onChange={(event, newValue) => {setValue(name, newValue, { shouldValidate: true })}}
+          onChange={(event, newValue) => {
+            if(onChnageAutoComplete){
+              onChnageAutoComplete(newValue);
+            }
+            if(onChnageAutoCompleteState){
+              onChnageAutoCompleteState(newValue)
+            }
+
+            if(onChnageAutoCompleterState){
+              onChnageAutoCompleterState(newValue)
+            }
+            if(onChnageAutoCompletercountry){
+              onChnageAutoCompletercountry(newValue)
+            }
+           
+            setValue(name, newValue, { shouldValidate: true })}}
           renderInput={(params) => (
             // console.log(params),
             <TextField
