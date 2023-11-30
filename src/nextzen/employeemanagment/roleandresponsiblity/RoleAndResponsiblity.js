@@ -250,19 +250,27 @@ dropdowns:[
         display:'flex',
         flexDirection:'column',
         alignItems:'flex-end',
-        justifyContent:'flex-end'
+        justifyContent:'flex-end',
+        margin:'10px'
       }}>
-      <Button 
-      onClick={()=>{setType("create");setOpenRoleModal(true)}}
-      
-      >
-        Create View
-      </Button>
+      <Button
+          onClick={() => { setType("create"); setOpenRoleModal(true) }}
+          sx={{
+            backgroundColor: "#3B82F6",
+            color: 'white',
+            '&:hover': {
+              backgroundColor: "#3B82F6", // Set it to the same color as the default background color
+              color: 'white', // You can adjust the hover color if needed
+            },
+          }}
+        >
+          Create View
+        </Button>
 
       </Grid>
       <RolePage data={data} open={openRoleModal}  handleModalClose={handleModalClose} type={type} />
 
-    
+     
       
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/getGroupMains"  defaultPayload={defaultPayload} filterOptions={filterOptions}

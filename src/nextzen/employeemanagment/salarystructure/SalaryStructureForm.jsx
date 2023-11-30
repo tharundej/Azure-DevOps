@@ -168,7 +168,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                     fullWidth
                     type="number"
                     name="marketRate"
-                    label="market Rate"
+                    label="Market Rate"
                     variant="outlined"
                     id="motherName"
                     value={currentUser?.marketRate}
