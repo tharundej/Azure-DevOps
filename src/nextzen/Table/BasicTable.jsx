@@ -119,7 +119,7 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
 import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
-
+import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
 const defaultFilters = {
   name: '',
   role: [],
@@ -459,7 +459,11 @@ const BasicTable = ({
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
       return rowActions;
-    } else {
+    } 
+    else if (row?.status === 'Completed') {
+      return [rowActions.find(action => action.name === 'View')];
+    }
+    else {
       return null;
     }
   };
@@ -527,6 +531,10 @@ const BasicTable = ({
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
+          {filterName === 'LeaveHistoryFilter' && (
+            <LeaveHistoryFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+
           {filterName === 'EmployeeListFilter' && (
             <EmployeeTableFilter filterData={handleFIlterOptions} />
           )}
