@@ -301,6 +301,7 @@ export function AuthProvider({ children }) {
         data.middleName = middleName;
       }
       console.log(data, 'data ......');
+     
       const response = await axios.post(baseUrl + '/signup', data);
       // const response = await axios.post(endpoints.auth.register, data);
 

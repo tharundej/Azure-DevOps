@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {baseUrl} from '../../../global/BaseUrl';
 import {
   Alert,
   Autocomplete,
