@@ -53,7 +53,7 @@ import UserContext from '../context/user/UserConext';
     },
   };
 
-export default function SalarySearchFilter({filterSearch,filterData}){
+export default function SalarySearchFilter({filterSearch,filterData,componentPage}){
   const {user} = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -297,6 +297,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
   </Grid>
 
   <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+    {componentPage=="MyRequests"?
     <Button
       variant="contained"
       color="primary"
@@ -305,11 +306,11 @@ export default function SalarySearchFilter({filterSearch,filterData}){
       sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
     >
       Apply Salary Advance
-    </Button>
+    </Button>:null}
 
-    <Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+    {componentPage!="MyRequests"?<Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
-    </Button>
+    </Button>:null}
   </Grid>
 </Grid>
 

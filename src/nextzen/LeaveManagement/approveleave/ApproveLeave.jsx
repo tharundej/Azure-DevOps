@@ -55,7 +55,7 @@ export default function Approveleave(){
               type: "text"
             },
             { id: "employeeName", label: "Employee Name",minWidth:"9pc",type: "text"},
-            { id: "managerName", label: "Reporting Manager",minWidth:"8pc",type: "text"},
+            { id: "manager_name", label: "Reporting Manager",minWidth:"8pc",type: "text"},
             { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
             {id : "leaveBalance",label:"Leave Balance",minWidth:"6pc",type:"text"},
             { id: "LeaveType", label: "Leave Type",minWidth:"7pc", type: "text" },

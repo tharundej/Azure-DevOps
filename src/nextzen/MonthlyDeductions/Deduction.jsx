@@ -7,7 +7,7 @@ import {useSnackbar} from '../../components/snackbar';
 import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
-export default function Deduction({defaultPayload}) {
+export default function Deduction({defaultPayload,componentPage}) {
    const {enqueueSnackbar} = useSnackbar()
    const {user} = useContext(UserContext)
   const TABLE_HEAD = [
@@ -64,6 +64,7 @@ defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDeductionDetailsHR'
 bodyData='data'
 filterName="DeductionFilter"
+componentPage={componentPage}
 />  
 </>
 );
