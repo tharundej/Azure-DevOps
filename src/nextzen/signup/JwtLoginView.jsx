@@ -115,7 +115,7 @@ export default function JwtLoginView() {
     <Stack spacing={2.5}>
       {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-      <RHFTextField name="companyEmail" label="Email address" />
+      <RHFTextField name="companyEmail" label="Email ID" />
 
       <RHFTextField
         name="password"

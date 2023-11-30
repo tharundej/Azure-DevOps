@@ -509,6 +509,7 @@ export default function JwtRegisterView() {
                       CIN<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
+                  placeholder=" Ex: L67190MH2020PLC123456"
                   maxLength={21}
                 />
               </Grid>
@@ -731,47 +732,52 @@ export default function JwtRegisterView() {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <div>
-                  <label htmlFor="file-input">
-                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                      Upload Logo<span style={{ color: 'red' }}> *</span>
-                      <input
-                        id="file-input"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: 'none' }}
-                      />
-                    </Button>
-                  </label>
-                  {selectedFile && (
-                    <div>
-                      {/* <p>File Name: {selectedFile.name}</p> */}
-                      <div
-                        style={{
-                          width: '100px',
-                          height: '100px',
-                          borderRadius: '50%',
-                          overflow: 'hidden',
-                          display: 'inline-block',
-                          marginRight: '10px',
-                        }}
-                      >
-                        <img
-                          src={imageData[0].data}
-                          alt={selectedFile.name}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
-                      </div>
-                      {/* <button onClick={handleDelete}>Delete</button> */}
-                    </div>
-                  )}
-                </div>
-              </Grid>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <label htmlFor="file-input">
+
+        <span style={{display:'flex', flexDirection:'row'}}>
+        <Button style={{height:'fit-content'}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+          Upload Logo<span style={{ color: 'red' }}> *</span>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+        </Button>
+        {selectedFile && (
+      <div>
+        <div
+          style={{
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            display: 'inline-block',
+          }}
+        >
+          <img
+            src={imageData[0]?.data}
+            alt={selectedFile.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        {/* <button onClick={handleDelete}>Delete</button> */}
+      </div>
+    )}</span>
+      </label>
+      {/* Empty space for alignment */}
+      <div style={{ width: '10px' }}></div>
+    </div>
+  </Grid>
+  <Grid item xs={12} md={8}>
+    
+  </Grid>
             </Grid>
           </Stack>
           <CardActions style={{ marginTop: '30px' }}>
