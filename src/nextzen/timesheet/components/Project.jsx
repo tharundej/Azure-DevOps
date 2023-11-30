@@ -58,15 +58,29 @@ const Project = () => {
       }
 }
 
-const actions = [
+const actualActions = [
     
-  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
 
-  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall", endpoint: '/approveLeave'},
-
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall"},
   { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "3", type: "serviceCall", endpoint: '/deleteproject'},
 
 ];
+const defaultActions=[
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+]
+const editActions=[
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall"},
+]
+
+const generateRowActions = () => {
+  const userRoleID = user?.roleID; // Assuming roleID is available in user object
+  const actions = (userRoleID==1)?actualActions:(userRoleID==6)?editActions:defaultActions
+  return actions;
+};
+
+const actionsBasedOnRoles = generateRowActions();
 const [viewProject,setViewProject]=useState(false)
 const [editProject,setEditProject] = useState(false)
 const [deleteData, setDeleteData] = useState(null);
@@ -159,7 +173,7 @@ const getEmployeesList =()=>{
 const selectedEmployees = employesListData?.filter(option => selectedIds.includes(option.employeeID));
 useEffect(()=>{
    getEmployeesList()
-},[])
+},[rowData])
 
 const UpdateEmployees=()=>{
   const data ={
@@ -174,11 +188,13 @@ const UpdateEmployees=()=>{
     data:data
    }
    axios.request(config).then((response)=>{
+    console.log(response,"Responsee")
     enqueueSnackbar(response?.data?.message,{variant:'success'})
     handleCloseEmployee()
    })
    .catch((error)=>{
-    enqueueSnackbar(error?.data?.message,{variant:'error'})
+    console.log(error,"error")
+    enqueueSnackbar(error?.response?.data,{variant:'error'})
     handleCloseEmployee()
    })
 }
@@ -199,7 +215,8 @@ const UpdateEmployees=()=>{
     </Button>    
         <CardHeader title="Assigned Employees" />
           
-        <Grid item sx={{ flexGrow: 1 }} /> <Button variant="contained" color="primary" onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
+        <Grid item sx={{ flexGrow: 1 }} /> 
+        <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>
@@ -250,7 +267,7 @@ filterName="ProjectSearchFilter"
 endpoint='/listProject'
 bodyData='data'
 onClickActions={onClickActions}
-rowActions={actions}
+rowActions={actionsBasedOnRoles}
 
 
 /> }

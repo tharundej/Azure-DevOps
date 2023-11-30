@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 
 import axios from 'axios';
 
-import { _userList } from '../../_mock';
+import { _userList } from '../../../_mock';
 
-import { BasicTable } from '../Table/BasicTable';
+import { BasicTable } from '../../Table/BasicTable';
 
-const MaterialsTable = () => {
+const SalesOrderTable = () => {
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -24,7 +24,7 @@ const MaterialsTable = () => {
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/MaterialsDetails',
+      url: 'http://192.168.0.222:3001/erp/PurchaseOrderDetails',
       // headers: {
       //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
       // },
@@ -44,7 +44,7 @@ const MaterialsTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
+
   }, []);
   const defaultPayload = {
     count: 5,
@@ -75,34 +75,47 @@ const MaterialsTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: 'MaterialsName',
+      orderBy: 'PONumber',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'Vendor Name', label: 'Vendor Name', type: 'text', minWidth: '180px' },
-    { id: 'HSN ID', label: 'HSN ID', type: 'text', minWidth: '180px' },
-    { id: 'Material Name', label: 'Material Name', type: 'text', minWidth: '180px' },
-    { id: 'Material Category', label: 'Material Category', type: 'text', minWidth: '180px' },
-    { id: 'OperationalDate ', label: 'Operational Date', type: 'text', minWidth: '180px' },
-    { id: 'CloseDate', label: 'Close Date', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
+    { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'MSME/UAMNo.', label: 'MSME/UAM No.', type: 'text', minWidth: '180px' },
+    { id: 'FactoryName', label: 'Factory Name', type: 'text', minWidth: '180px' },
+    { id: 'ProductName', label: 'Product Name', type: 'text', minWidth: '180px' },
+    { id: 'ProductQuantity', label: 'Product Quantity', type: 'text', minWidth: '180px' },
+    { id: 'DeliveredQuantity', label: 'Delivered Quantity', type: 'text', minWidth: '180px' },
+    { id: 'PendingQuantity', label: 'Pending Quantity', type: 'text', minWidth: '180px' },
+    { id: 'UnitOfMeasure', label: 'Unit  Of Measure', type: 'text', minWidth: '180px' },
+    { id: 'SOAmount', label: 'SO Amount', type: 'text', minWidth: '180px' },
+    { id: 'DeliveryDate', label: 'Delivery Date', type: 'text', minWidth: '180px' },
+    { id: 'CustomerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
+    { id: 'CustomerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
+    { id: 'DeliveryAddress', label: 'Delivery Address', type: 'text', minWidth: '180px' },
+    { id: 'CustomerContactNo', label: 'Customer Contact No', type: 'text', minWidth: '180px' },
+    { id: 'CustomerPAN', label: 'Customer PAN', type: 'text', minWidth: '180px' },
+    { id: 'CustomerGSTNo', label: 'Customer GST No', type: 'text', minWidth: '180px' },
+
   ]);
   return (
     <>
       <Helmet>
-        <title> Dashboard: Materials</title>
+        <title> Dashboard: PurchaseOrder</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/MaterialsDetails"
+        endpoint="/PurchaseOrderDetails"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="MaterialsHead"
+        filterName="SaleOrderHead"
         handleEditRowParent={() => {}}
       />
     </>
   );
 };
-export default MaterialsTable;
+export default SalesOrderTable;

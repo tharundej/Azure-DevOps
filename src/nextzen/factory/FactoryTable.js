@@ -70,7 +70,6 @@ const FactoryTable = () => {
       console.log('API request failed:', error.message);
     }
   };
-
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
@@ -98,6 +97,7 @@ const FactoryTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Factory Name', type: 'text', minWidth: '180px' },
     { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
     { id: 'locationPhone', label: 'Phone No', type: 'text', minWidth: '180px' },
@@ -149,6 +149,7 @@ const FactoryTable = () => {
         rowActions={actions}
         filterName="FactoryHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

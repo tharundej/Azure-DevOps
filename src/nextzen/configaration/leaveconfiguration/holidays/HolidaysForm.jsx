@@ -118,7 +118,7 @@ export default function HolidaysForm({ currentUser }) {
 
     try {
       const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addHoliday',
+        baseUrl+'/addHoliday',
         data
       );
       console.log('sucess', response);

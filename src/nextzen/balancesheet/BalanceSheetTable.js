@@ -119,6 +119,7 @@ const BalanceSheetTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="BalanceSheetHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

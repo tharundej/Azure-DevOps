@@ -98,6 +98,7 @@ const VendorTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'vendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
     { id: 'vendorEmailID', label: 'Vendor  Email ID', type: 'text', minWidth: '180px' },
     { id: 'vendorPhoneNo', label: 'Vendor Phone No', type: 'text', minWidth: '180px' },
@@ -107,7 +108,7 @@ const VendorTable = () => {
     { id: 'vendorGSTNo', label: 'GST No', type: 'text', minWidth: '180px' },
     { id: 'vendorTANNo', label: 'TAN No', type: 'text', minWidth: '180px' },
     { id: 'vendorBankName', label: 'Bank Name', type: 'text', minWidth: '180px' },
-    { id: 'vendorAccountHolderName', label: 'Acc Holder name', type: 'text', minWidth: '180px' },
+    { id: 'vendorAccountHolderName', label: 'Account Holder name', type: 'text', minWidth: '180px' },
     { id: 'vendorBankAccountNo', label: 'Account No', type: 'text', minWidth: '180px' },
     { id: 'vendorBankIFSCCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
     { id: 'bankBranchName', label: 'Bank Branch', type: 'text', minWidth: '180px' },
@@ -155,6 +156,7 @@ const VendorTable = () => {
         rowActions={actions}
         filterName="VendorHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

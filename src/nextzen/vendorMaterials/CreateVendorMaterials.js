@@ -26,7 +26,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
-      id: currentData?.id || 0,
+      materialID: currentData?.id || 0,
       vendorID: currentData?.vendorId || 0,
       companyID: currentData?.companyID || 'COMP1',
       materialName: currentData?.materialName || '',
@@ -93,7 +93,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const [severity, setSeverity] = useState('');
   console.log('defaultValues', defaultValues);
   const onSubmit = handleSubmit(async (data) => {
-    data.vendorID = `${selectedVendor}`;
+    data.vendorID = selectedVendor;
     data.gstRate = selectedTaxs;
     try {
       console.log(data, 'data111ugsghghh');

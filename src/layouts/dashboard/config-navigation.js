@@ -291,12 +291,12 @@ export function useNavData() {
           },
           {
             title: t('sales'),
-            path: paths.dashboard.purchase.purchaseOrder,
+            path: paths.dashboard.sale.salePayment,
             icon: ICONS.g_purchases,
             children: [
-              { title: t('Sales Order'), path: paths.dashboard.purchase.purchaseOrder },
-              { title: t('Sales Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
-              { title: t('Sales Payment'), path: paths.dashboard.purchase.purchasePayment },
+              { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
+              { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
+              { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
             ],
           },
           {
