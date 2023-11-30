@@ -18,7 +18,7 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Expensive Claim Config'];
+const tabLabels = ['Expense Claim Configuration'];
   const tabContents = [
     <div>
       <ExpenseClaimConfiguration/>

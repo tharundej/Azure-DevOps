@@ -29,14 +29,18 @@ import FormProvider, {
   RHFTextField,
   RHFUploadAvatar,
   RHFAutocomplete,
+  RHFSelect,
 } from 'src/components/hook-form';
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import Stack from '@mui/material/Stack';
-import { Autocomplete, TextField, DialogContent, DialogActions } from '@mui/material';
+import { Autocomplete, TextField, DialogContent, DialogActions ,MenuItem} from '@mui/material';
 import Grid from '@mui/material/Grid';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const TABLE_HEAD = [
@@ -68,7 +72,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
 
     // { id: '', width: 88 },
   ];
-
+  const {user} = useContext(UserContext)
   const managerID = localStorage.getItem('reportingManagerID');
   const employeeID = localStorage.getItem('employeeID');
   const companyID = localStorage.getItem('companyID');
@@ -90,10 +94,21 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
       orderBy: 'p.project_name',
     },
   };
-  const actions = [{ name: 'Edit', icon: 'solar:pen-bold', id: 'edit', type: 'edit' }];
+  const actions =   [ { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
+  { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},];
 
   const [showForm, setShowForm] = useState(false);
-  const handleClose = () => setShowForm(false);
+      const [showApproveForm,setApproveForm]= useState(false);
+      const [showRejectForm,setRejectForm]= useState(false);
+      const [showEditForm,setShowEditForm]= useState(false);
+      const [commentsValue,setCommentsValue]=useState("");
+  const handleClose = () => {
+    setShowForm(false);
+    setShowEditForm(false);
+    setApproveForm(false);
+    setRejectForm(false);
+  }
+  const [rowData,setRowData] = useState();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -109,32 +124,16 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const [currentActivitytData, setCurrentActivitytData] = useState([]);
   const [selectedActivitytData, setSelectedActivitytData] = useState();
   const NewUserSchema = Yup.object().shape({
-    employee_id: Yup.string(),
-    monday: Yup.string(),
-    tuesday: Yup.string(),
-    wednseday: Yup.string(),
-    thursday: Yup.string(),
-    friday: Yup.string(),
-    saturday: Yup.string(),
-    sunday: Yup.string(),
-    comments: Yup.string(),
-    // start_date: Yup.string(),
-    // end_date: Yup.string(),
-    // due_date: Yup.string().required('First Name is Required'),
-    // commentStatus: Yup.string(),
+    hrComments:Yup.string(),
+    status:Yup.string(),
+    employeeID:Yup.string()
   });
 
   const defaultValues = useMemo(
     () => ({
-      employee_id: currentUser?.employee_id || '',
-      monday: currentUser?.monday || '',
-      tuesday: currentUser?.tuesday || '',
-      wednseday: currentUser?.wednseday || '',
-      thursday: currentUser?.thursday || '',
-      friday: currentUser?.friday || '',
-      saturday: currentUser?.saturday || '',
-      sunday: currentUser?.sunday || '',
-      comments: currentUser?.comments || '',
+      hrComments:"",
+    status:"approved",
+    employeeID:(user?.employeeID)?user?.employeeID:'',
     }),
     [currentUser]
   );
@@ -153,40 +152,40 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: SalaryAdvanceForm.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
+  // const onSubmit = handleSubmit(async (data) => {
+  //   console.log('🚀 ~ file: SalaryAdvanceForm.jsx:93 ~ onSubmit ~ data:', data);
+  //   console.log('uyfgv');
 
-    try {
-      data.company_id = 'COMP2';
-      data.activity_id = String(currentActivitytData.activityId);
-      data.project_id = String(currentProjectData.projectId);
-      data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
-      data.start_time = '2023-10-17 11:50:02.023';
-      data.end_time = '2023-10-17 11:50:02.023';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
-      // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
-      // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
-      // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
-      // data.employeeID = "info4";
+  //   try {
+  //     data.company_id = 'COMP2';
+  //     data.activity_id = String(currentActivitytData.activityId);
+  //     data.project_id = String(currentProjectData.projectId);
+  //     data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
+  //     data.start_time = '2023-10-17 11:50:02.023';
+  //     data.end_time = '2023-10-17 11:50:02.023';
+  //     // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+  //     // data.due_date = formatDateToYYYYMMDD(datesUsed?.due_date);
+  //     // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
+  //     // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
+  //     // data.selectedActivity = selectedActivity;
+  //     // data.companyID = "COMP1";
+  //     // data.employeeID = "info4";
 
-      console.log(data, 'data111ugsghghh');
+  //     console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addmytimesheet', data).then(
-        (response) => {
-          console.log('sucess', successData);
-          handleClose();
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  //     const response = await instance.post('addmytimesheet', data).then(
+  //       (response) => {
+  //         console.log('sucess', successData);
+  //         handleClose();
+  //       },
+  //       (error) => {
+  //         console.log('lllll', error);
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
 
   // edit dialog form data
   const [timesheetData, setTimesheetData] = useState({
@@ -357,20 +356,72 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
         handleOpen();
 
         console.log('kl');
-      } else {
+      } 
+      else if(eventData?.name==="Approve")
+      {
+        setRowData(rowData)
+        setApproveForm(true)
+      }
+      else if(eventData?.name==="Reject"){
+        setRowData(rowData)
+        setRejectForm(true)
       }
     } else {
       // navigate[event.eventData.route]
     }
   };
-  // edit
-  const handleActivity = (name, value) => {
-    setSelectedActivity(value?.activityName);
-    setTimesheetData((prevdata) => ({
-      ...prevdata,
-      [name]: value?.activityName,
-    }));
-  };
+  //Approve
+  const handleApprove=(obj)=>{
+    const config = {
+      method: 'POST',
+      maxBodyLength:Infinity,
+      url: baseUrl + `/approveSalaryAdvance`,
+      data: obj
+    
+    }
+
+    axios.request(config).then((response) => {
+      enqueueSnackbar(response.data.message,{variant:'success'})
+      handleClose();
+    })
+      .catch((error) => {
+        enqueueSnackbar(error.message,{variant:'Error'})
+        handleClose();
+      });
+  }
+  const onSubmit = handleSubmit(async (data)=>{
+    data.salaryAdvanceID=rowData?.SalaryAdvanceID
+
+    try{
+      apihit(data)
+    }
+    catch (error){
+      console.error(error)
+    }
+  });
+  // Reject
+  const handleReject=()=>{
+    var payload =
+    {
+      "employeeID":(user?.employeeID)?user?.employeeID:'',
+      "hrComments":commentsValue,
+      "status":"rejected",
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength:Infinity,
+    url: baseUrl + `/approveSalaryAdvance`,
+    data: payload
+  
+  }
+  axios.request(config).then((response) => {
+    enqueueSnackbar(response.data.message,{variant:'success'})
+  })
+    .catch((error) => {
+      enqueueSnackbar(error.message,{variant:'Error'})
+    });
+  
+  }
   useEffect(() => {
     getActivityList();
   }, []);
@@ -380,256 +431,99 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
     <>
       {/* <h1>hello</h1> */}
 
-      <Dialog
-        fullWidth
-        maxWidth={false}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { maxWidth: 720 },
-        }}
-      >
-        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
-          <DialogContent>
-            <Box
-              rowGap={1}
-              columnGap={1}
-              display="grid"
-              gridTemplateColumns={
-                {
-                  // xs: 'repeat(1, 1fr)',
-                  // sm: 'repeat(7, 1fr)',
-                }
-              }
-            >
-              <Grid sx={{ padding: '8px' }}>
-                <Typography sx={{ marginLeft: '8px' }}>
-                  ADD YOUR TIMELINE TO PROJECT IS HERE .....
-                </Typography>
-                <Typography sx={{ marginLeft: '8px' }}>Time Sheet</Typography>
-              </Grid>
-
-              <Grid container spacing={1}>
-                <Grid item xs={12} sm={6} fullWidth>
-                  <Autocomplete
-                    // disablePortal
-                    id="cobo-box-demo"
-                    options={projectDetails || []}
-                    value={currentProjectData.projectId}
-                    getOptionLabel={(option) => option.projectcdName}
-                    onChange={(e, newvalue) => {
-                      setCurrentProjectData(newvalue);
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Project Name" />}
-                  />
-
-                  <Grid item  fullWidth>
-                     <TextField
-                    label="Status"
-                    fullWidth
-                     value={null}
-                    // onChange={handleDayInputChange('status', 'task')}
-                  />
-                  </Grid>
-                  <Grid item xs={12} sm={6} fullWidth>
-                  <TextareaAutosize
-                    aria-label="empty textarea"
-                    placeholder="Commemt..."
-                    style={{ width: '100%' }} // Adjust width as needed
-                  />
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sm={6} fullWidth>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-dmo"
-                    options={currentActivitytData} // Pass the activities array directly
-                    value={selectedActivity?.activityName} // Display the selected activity's name
-                    getOptionLabel={(option) => option.activityName} // Render the activity name
-                    onChange={(e, newValue) => {
-                      handleActivity('activityName', newValue); // Store the selected activity object
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Activity Name" />}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>Monday</Typography>
-              <Grid container spacing={1}>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Monday Hours"
-                    fullWidth
-                    inputProps={{
-                      pattern: '[0-9]',
-                      maxLength: 2,
-                    }}
-                    value={timesheetData?.monday?.hours}
-                    onChange={handleDayInputChange('monday', 'hours')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Monday Task"
-                    fullWidth
-                    value={timesheetData?.monday?.task}
-                    onChange={handleDayInputChange('monday', 'task')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Monday Comments"
-                    fullWidth
-                    value={timesheetData?.monday?.comments}
-                    onChange={handleDayInputChange('monday', 'comments')}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>Tuesday</Typography>
-              <Grid container spacing={1}>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Tuesday Hours"
-                    fullWidth
-                    inputProps={{
-                      pattern: '[0-9]',
-                      maxLength: 2,
-                    }}
-                    value={timesheetData?.tuesday?.hours}
-                    onChange={handleDayInputChange('tuesday', 'hours')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Tuesday Task"
-                    fullWidth
-                    value={timesheetData?.tuesday?.task}
-                    onChange={handleDayInputChange('tuesday', 'task')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Tuesday Comments"
-                    fullWidth
-                    value={timesheetData?.tuesday?.comments}
-                    onChange={handleDayInputChange('tuesday', 'comments')}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>Wednesday</Typography>
-              <Grid container spacing={1}>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Wednesday Hours"
-                    fullWidth
-                    inputProps={{
-                      pattern: '[0-9]',
-                      maxLength: 2,
-                    }}
-                    value={timesheetData?.wednesday?.hours}
-                    onChange={handleDayInputChange('wednesday', 'hours')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    name="wednesdayTask"
-                    label="Wednesday Task"
-                    fullWidth
-                    value={timesheetData?.wednesday?.task}
-                    onChange={handleDayInputChange('wednesday', 'task')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Wednesday Comments"
-                    fullWidth
-                    value={timesheetData?.wednesday?.comments}
-                    onChange={handleDayInputChange('wednesday', 'comments')}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>Thursday</Typography>
-              <Grid container spacing={1}>
-                <Grid item sm={4}>
-                  <TextField
-                    name="thursdayHours"
-                    label="Thursday Hours"
-                    fullWidth
-                    inputProps={{
-                      pattern: '[0-9]',
-                      maxLength: 2,
-                    }}
-                    value={timesheetData?.thursday?.hours}
-                    onChange={handleDayInputChange('thursday', 'hours')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Thursday Task"
-                    fullWidth
-                    value={timesheetData?.thursday?.task}
-                    onChange={handleDayInputChange('thursday', 'task')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Thursday Comments"
-                    fullWidth
-                    value={timesheetData?.thursday?.comments}
-                    onChange={handleDayInputChange('thursday', 'comments')}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>Friday</Typography>
-              <Grid container spacing={1}>
-                <Grid item sm={4}>
-                  <TextField
-                    name="Friday"
-                    label="Friday"
-                    fullWidth
-                    inputProps={{
-                      pattern: '[0-9]',
-                      maxLength: 2,
-                    }}
-                    value={timesheetData?.friday?.hours}
-                    onChange={handleDayInputChange('friday', 'hours')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    name="fridayTask"
-                    label="Friday Task"
-                    fullWidth
-                    value={timesheetData?.friday?.task}
-                    onChange={handleDayInputChange('friday', 'task')}
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Friday Comments"
-                    fullWidth
-                    value={timesheetData?.friday?.comments}
-                    onChange={handleDayInputChange('friday', 'comments')}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-
-            <DialogActions>
-              <Stack
-                alignItems="flex-end"
-                sx={{ mt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
-              >
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Add  Timeline'}
-                </LoadingButton>
-                <Button sx={{ backgroundColor: '#d12317', ml: '5px' }} onClick={handleCloseEdit}>
-                  Cancel
-                </Button>
+      {(showEditForm) && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showEditForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 500 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+    <ModalHeader heading="Edit Request"/>
+  <DialogContent>
+  <Grid container spacing={2}>
+    
+      <Grid  xs={12} md={12} sx={{marginLeft:5,marginTop:2}}>
+      <TextField
+                
+                fullWidth
+                defaultValue={rowData?.requestAmount}
+                value={amountValue}
+                onChange={handleChange}
+                label="Amount"
+              />
+      </Grid>
+     </Grid>
+  </DialogContent>
+  <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+  <Button  sx={{mr:"4px"}} onClick={handleClose} variant="outlined">Cancel</Button>
+               <Button variant="contained" sx={{marginRight:2}} color="primary" disabled={amountValue===undefined || 0} onClick={handleEditSalary}>Apply</Button>
               </Stack>
-            </DialogActions>
-          </DialogContent>
-        </FormProvider>
       </Dialog>
+    )}
+
+{(showApproveForm) && (
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={showApproveForm}
+ onClose={handleClose}
+ PaperProps={{
+   sx: { maxWidth: 500 , overflow:'hidden'},
+ }}
+ className="custom-dialog"  
+>
+<FormProvider methods={methods} onSubmit={onSubmit}>
+    <ModalHeader heading="Approve Request"/>
+<DialogContent>
+<Grid container flexDirection="row" spacing={2}>
+
+<Grid item xs={12} md={12}>
+<RHFSelect name="status" label="Status">
+  <MenuItem value="approve">Approve</MenuItem>
+</RHFSelect>
+
+</Grid>
+</Grid>
+<Grid item xs={12} md={6} sx={{marginTop:2}}>
+  <RHFTextField name="hrComments" label="Comments"/>
+</Grid>
+<Grid>
+
+  </Grid>
+<Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Approve Request</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={()=>setApproveForm(false)}>Cancel</Button>
+</DialogContent>
+</FormProvider>
+      </Dialog>
+    )}
+    {(showRejectForm) && (
+<Dialog
+fullWidth
+maxWidth={false}
+open={showRejectForm}
+onClose={handleClose}
+PaperProps={{
+  sx: { maxWidth: 500 , overflow:'hidden'},
+}}
+className="custom-dialog">
+     <ModalHeader heading="Reject Request"/>
+<TextField 
+label="Comments"
+placeholder='comments'
+onChange={(e)=>handleComments(e)}
+sx={{margin:2}}
+/>
+<div style={{display:"flex",justifyContent:"right",marginBottom:4}}>
+<Button  onClick={()=>setRejectForm(false)} sx={{marginRight:2}} variant="outlined">Cancel</Button>
+<Button variant="contained" color="primary" sx={{float:'right',right:5}}  onClick={handleReject}>Reject</Button>
+</div>
+</Dialog>
+      )
+    }
 
       <BasicTable
         defaultPayload={defaultPayload}

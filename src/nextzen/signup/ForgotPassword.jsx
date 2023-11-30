@@ -34,11 +34,11 @@ export default function AmplifyForgotPasswordView() {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
   const ForgotPasswordSchema = Yup.object().shape({
-    companyEmail: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
-    companyEmail: '',
+    email: '',
   };
 
   const methods = useForm({
@@ -101,7 +101,7 @@ export default function AmplifyForgotPasswordView() {
     <Stack spacing={3} alignItems="center" sx={{maxWidth: '400px',
     mx: 'auto', // Center horizontally
     my: 'auto',}} >
-      <RHFTextField name="companyEmail" label="Email address"  />
+      <RHFTextField name="email" label="Email address"  />
 
       <LoadingButton
         // fullWidth

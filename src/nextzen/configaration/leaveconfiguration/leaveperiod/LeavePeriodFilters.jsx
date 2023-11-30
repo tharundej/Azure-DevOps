@@ -91,7 +91,12 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function LeavePeriodFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function LeavePeriodFilters({
+  filterData,
+  filterOptions,
+  filterSearch,
+  searchData,
+}) {
   const theme = useTheme();
   // const leavePeriodTypes = [
   //   'Financial Year',
@@ -114,10 +119,7 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
     'executive'
   ]
 
-  const designationGradeName = [
-    'senior',
-    'junior'
-  ]
+  const designationGradeName = ['senior', 'junior'];
 
   const [dropdown, setDropdown] = useState({});
 
@@ -219,7 +221,28 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
   const handleClickClose = () => {
     setOpen(false);
   };
+  const [options, setOptions] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const leaveperiod = await ApiHitleavePeriodType(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.leavePeriodType = leaveperiod;
+          // optionsArr.leavePeriodType=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+
+      call();
+    }
+  }, [open]);
   const handleChangeDropDown = (event, field) => {
     const {
       target: { value },
@@ -271,36 +294,35 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+    searchData(searchTerm);
+    console.log(searchTerm, 'search ........');
+  };
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
-        lg={12} md={12} xs={12}
+        lg={12}
+        md={12}
+        xs={12}
       >
         <Grid item lg={8} md={6} xs={4}>
-        <TextField
+          <TextField
             placeholder="Search...."
-             fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          
         </Grid>
         <Grid item lg={2} md={2} xs={2}>
-       <LeavePeriodForm/>
-       </Grid>
+          <LeavePeriodForm />
+        </Grid>
         <Grid item lg={2} md={2} xs={2}>
-        <Grid>
+          <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
@@ -309,11 +331,11 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
         </Grid>
       </Grid>
 
-      <BootstrapDialog
+      <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        // className="custom-dialog-width"
+        //  className="custom-dialog-width"
       >
         <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
           Filters
@@ -356,73 +378,25 @@ export default function LeavePeriodFilters({ filterData, filterOptions ,filterSe
                   </Select>
                 </FormControl>
               </Grid>
-              {/* <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="designation_name">Designation Name</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownDesignation}
-                      onChange={(e) => handleChangeDropDown(e, 'designation_name')}
-                      input={<OutlinedInput label="Designation Name" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {designationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid> */}
-                {/* <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Designation Grade Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {designationGradeName.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl>
-                   </Grid> */}
-            </Grid>
-
-           
-            
-             
-          
+          </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+          <Button
+            onClick={() => {
+              handleApply();
+            }}
+            // variant="outlined"
+            style={{
+              width: '80px',
+              marginBottom: '1rem',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            Apply
+          </Button>
         </div>
-      </BootstrapDialog>
+      </Dialog>
     </>
   );
 }
