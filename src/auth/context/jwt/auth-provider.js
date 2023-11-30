@@ -241,6 +241,7 @@ export function AuthProvider({ children }) {
       setSnackbarSeverity('error');
       setSnackbarMessage('An unexpected error occurred');
       setSnackbarOpen(true);
+      
     }
   }, []);
   const [datesUsed, setDatesUsed] = useState({

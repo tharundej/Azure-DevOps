@@ -49,25 +49,25 @@ import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 
 export default function MyCompoff({ currentUser ,}) {
   const compoff_type = [
-    { compensantory_configuration_id: null, compensantory_policies:""  },
-    {   compensantory_configuration_id: 11, compensantory_policies: "enchachment", id:0 },
-    {   compensantory_configuration_id: 12, compensantory_policies: "leave",  id:1},
+    { compensantoryConfigurationId: null, compensantoryPolicies:""  },
+    {   compensantoryConfigurationId: 11, compensantoryPolicies: "enchachment", id:0 },
+    {   compensantoryConfigurationId: 12, compensantoryPolicies: "leave",  id:1},
    
 
   ]
   const compoff_type_edit = [
-    { compensantory_configuration_id: null, compensantory_policies:""  },
-    {   compensantory_configuration_id: 11, compensantory_policies: "enchachment", id:0 },
-    {   compensantory_configuration_id: 12, compensantory_policies: "leave",  id:1},
+    { compensantoryConfigurationId: null, compensantoryPolicies:""  },
+    {   compensantoryConfigurationId: 11, compensantoryPolicies: "enchachment", id:0 },
+    {   compensantoryConfigurationId: 12, compensantoryPolicies: "leave",  id:1},
    
 
   ]
   const externalFilter = {
     
-    "start_date":"",
-    "end_date":"",
+    "startDate":"",
+    "endDate":"",
     "status":"",
-    "compensantory_policies":"",
+    "compensantoryPolicies":"",
     "utilisation":""
   }
 
@@ -77,30 +77,30 @@ export default function MyCompoff({ currentUser ,}) {
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
       // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: ' Start Date', name: 'start_date',category:"claim",  },
-      { type: 'datePicker', label: ' End Date', name: 'end_date',category:"claim",  },
+      { type: 'datePicker', label: ' Start Date', name: 'startDate',category:"claim",  },
+      { type: 'datePicker', label: ' End Date', name: 'endDate',category:"claim",  },
       // { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
-      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
+      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approved', 'Rejected', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   }
 
   const TABLE_HEAD = [
-    {
-      id: "employeename",
-      label: " Employee Name",
-      width: 180,
-      type: "text",
-      containesAvatar: false,
+    // {
+    //   id: "employeeName",
+    //   label: " Employee Name",
+    //   width: 180,
+    //   type: "text",
+    //   containesAvatar: false,
 
-      secondaryText: "email",
-    },
-    { id: "compensantory_policies", label: "Compensantory Policies", width: 180, type: "text" },
-    { id: "start_date", label: "Start Date", width: 220, type: "text" },
-    { id: "end_date", label: "End Date", width: 180, type: "text" },
+    //   secondaryText: "email",
+    // },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 180, type: "text" },
+    { id: "startDate", label: "Start Date", width: 220, type: "text" },
+    { id: "endDate", label: "End Date", width: 180, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
-    { id: "expire_date", label: "Expire Date", width: 180, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 180, type: "text" },
+    { id: "expireDate", label: "Expire Date", width: 180, type: "text" },
+    { id: "approverName", label: "Approver Name", width: 180, type: "text" },
     // { id: '', width: 88 },
   ]
 
@@ -111,16 +111,16 @@ export default function MyCompoff({ currentUser ,}) {
   const defaultPayload={
 
   
-    "employee_id":employeeID,
-    "company_id":companyID,
+    "employeeId":employeeID,
+    "companyId":companyID,
     "page":0,
     "search":"",
     "count":5,
     "externalFilters":{
-      "start_date":"",
-      "end_date":"",
+      "startDate":"",
+      "endDate":"",
       "status":"",
-      "compensantory_policies":"",
+      "compensantoryPolicies":"",
       "utilisation":""
     },
     "sort":{
@@ -150,8 +150,8 @@ export default function MyCompoff({ currentUser ,}) {
     },
   ];
   const [selectedDates, setSelectedDates] = useState({
-    start_date: "",
-    end_date:"",
+    startDate: "",
+    endDate:"",
   });
 
   const handleDateChange = (date, dateType) => {
@@ -254,8 +254,8 @@ export default function MyCompoff({ currentUser ,}) {
 
       const updatedRowData = {
         ...rowData,
-  
-        company_id: companyID,
+  employeeId:employeeID,
+        companyId: companyID,
       };
     
       console.log("updatedRowData",updatedRowData)
@@ -273,7 +273,7 @@ export default function MyCompoff({ currentUser ,}) {
         console.log("delete")
         setDel(prevState => ({
               ...prevState,
-              compensantoryRequestId:rowData?.compensantory_request_id
+              compensantoryRequestId:rowData?.compensantoryRequestId
               ,
           }));
 
@@ -298,7 +298,7 @@ export default function MyCompoff({ currentUser ,}) {
 
       }
     }
-
+console.log(editData,"ppppppppppppppppppppp")
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -321,14 +321,14 @@ export default function MyCompoff({ currentUser ,}) {
   const NewUserSchema = Yup.object().shape({
     
    
-    company_id: Yup.string(),
-    employee_id: Yup.string(),
-    compensantory_policies: Yup.object(),
+    companyId: Yup.string(),
+    employeeId: Yup.string(),
+    compensantoryPolicies: Yup.object(),
     // file_format: Yup.string(),
    
-    start_date: Yup.string(),
-    end_date: Yup.string(),
-    approver_id: Yup.string(),
+    startDate: Yup.string(),
+    endDate: Yup.string(),
+    approverId: Yup.string(),
     reason: Yup.string(),
 
     
@@ -345,13 +345,13 @@ export default function MyCompoff({ currentUser ,}) {
       // type_oc_claim: currentUser?.type_oc_claim|| '',
       // currency:currentUser?.currency|| '',
 
-      company_id:currentUser?.company_id|| companyID,
-      employee_id:currentUser?.employee_id|| employeeID,
+      companyId:currentUser?.companyId|| companyID,
+      employeeId:currentUser?.employeeId|| employeeID,
       // compensantory_configuration_id:currentUser?.compoffId|| 11,
-      compensantory_policies:compoffId || currentUser?.compensantory_policies || 9,
-      start_date:currentUser?.start_date|| '',
-      end_date:currentUser?.end_date|| '',
-      approver_id: currentUser?.approver_id || managerID,
+      compensantoryPolicies:compoffId || currentUser?.compensantoryPolicies || 9,
+      startDate:currentUser?.startDate|| '',
+      endDate:currentUser?.endDate|| '',
+      approverId: currentUser?.approverId || managerID,
       reason: currentUser?.reason || '',
 
 
@@ -387,8 +387,8 @@ export default function MyCompoff({ currentUser ,}) {
     
     console.log(data,"defaultValues111")
    
-    data.start_date= selectedDates?.start_date;
-    data.end_date= selectedDates?.end_date;
+    data.startDate= selectedDates?.startDate;
+    data.endDate= selectedDates?.endDate;
     try {
      
       console.log(data, 'formdata api in check');
@@ -489,11 +489,11 @@ export default function MyCompoff({ currentUser ,}) {
 
            
               <RHFAutocomplete
-                name="compensantory_policies"
+                name="compensantoryPolicies"
                 label="Select Compoff Type"
                 options={compoff_type}
                 
-                getOptionLabel={(option) => option.compensantory_policies} 
+                getOptionLabel={(option) => option.compensantoryPolicies} 
                 isOptionEqualToValue={(option, value) => option === value}
                
 
@@ -548,7 +548,7 @@ export default function MyCompoff({ currentUser ,}) {
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
                     value={selectedDates?.startDate}
-                      onChange={(newValue) => handleDateChange(newValue, 'start_date')}
+                      onChange={(newValue) => handleDateChange(newValue, 'startDate')}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
@@ -560,7 +560,7 @@ export default function MyCompoff({ currentUser ,}) {
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
                     value={selectedDates.endDate}
-                     onChange={(newValue) => handleDateChange(newValue, 'end_date')}
+                     onChange={(newValue) => handleDateChange(newValue, 'endDate')}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
@@ -626,11 +626,11 @@ export default function MyCompoff({ currentUser ,}) {
                 label="Select Compoff Type"
                 options={compoff_type_edit}
                 bindLabel="label"
-                getOptionLabel={(option) => option.compensantory_policies} // Use 'label' as the display label
+                getOptionLabel={(option) => option.compensantoryPolicies} // Use 'label' as the display label
                 isOptionEqualToValue={(option, value) => option === value}
-                value={editData?.compensantory_policies|| null}  
-                {...console.log(editData?.compensantory_policies,"editData?.compensantory_policies")}
-                 onChange={(event, newValue) => {console.log("newValue", newValue);handleEditChange('compensantory_policies', newValue)}}
+                value={editData?.compensantoryPolicies|| null}  
+                {...console.log(editData?.compensantoryPolicies,"editData?.compensantoryPolicies")}
+                 onChange={(event, newValue) => {console.log("newValue", newValue);handleEditChange('compensantoryPolicies', newValue)}}
                 renderInput={(params) => (
                 <TextField {...params} label="Select Compoff Type" variant="outlined" />
   )}
@@ -648,10 +648,10 @@ export default function MyCompoff({ currentUser ,}) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
-                    value={ dayjs( editData['start_date'] || null)}
+                    value={ dayjs( editData['startDate'] || null)}
                     onChange={(newValue) => {
                       
-                      handleEditChange('start_date', formatDateToYYYYMMDD(newValue));
+                      handleEditChange('startDate', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}
@@ -663,10 +663,10 @@ export default function MyCompoff({ currentUser ,}) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    value={ dayjs( editData['end_date'] || null)}
+                    value={ dayjs( editData['endDate'] || null)}
                     onChange={(newValue) => {
                       
-                      handleEditChange('end_date', formatDateToYYYYMMDD(newValue));
+                      handleEditChange('endDate', formatDateToYYYYMMDD(newValue));
                     }}
                     
                   />

@@ -81,7 +81,7 @@ export default function UserTableRow({
                     sx={{ mr: 2 }}
                   />
                 )}
- {console.log(row,"rowdataa")}
+ {/* {console.log(row,"rowdataa")} */}
                 {ele.type === 'text' && (
                  
                   <ListItemText

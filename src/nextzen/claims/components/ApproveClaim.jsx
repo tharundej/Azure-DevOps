@@ -334,18 +334,20 @@ const handleInputChange = (event) => {
           
         
        else{
-      //   setApprove(prevState => ({
-      //     ...prevState,
-      //     status: "Reject",
-      //     expenseClaimId :rowData?.expenseClaimId,
-      //     employeeId:rowData?.EmployeeId,
-      // }));
-      // handle(approve);
-      handle({...approve, ...{status: "Rejected",
+        setApprove(prevState => ({
+          ...prevState,
+          status: "Rejected",
           expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,}});
+          employeeId:rowData?.EmployeeId,
+          claimAmount:rowData?.claimAmount,
+              claimType:rowData?.claimType,
+      }));
+      // handle(approve);
+      // handle({...approve, ...{status: "Rejected",
+      //     expenseClaimId :rowData?.expenseClaimId,
+      //     employeeId:rowData?.EmployeeId,}});
       
-     
+      handleOpen()
 
     }
     
