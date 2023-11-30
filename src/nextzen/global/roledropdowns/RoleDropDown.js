@@ -202,6 +202,71 @@ const ApiHitRoles = async () => {
       return [];
     }
   }
+
+  const ApiHitCountries=async ()=>{
+    try {
+      const config = {
+        method: 'GET',
+        maxBodyLength: Infinity,
+        url: `https://countriesnow.space/api/v0.1/countries/states/`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+       
+      };
+  
+      const response = await axios.request(config);
+      console.log(response.data.data,'response.data.data' )
+      return response.data.data || [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  const ApiHitStates=async (obj)=>{
+    try {
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://countriesnow.space/api/v0.1/countries/states`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: obj
+      };
+  
+      const response = await axios.request(config);
+      console.log(response.data?.data?.states,'response.data.data' )
+      return response.data.data?.states || [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  const ApiHitCities=async()=>{
+    
+      try {
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `https://countriesnow.space/api/v0.1/countries/state/cities`,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: obj
+        };
+    
+        const response = await axios.request(config);
+        console.log(response.data.data,'response.data.data' )
+        return response.data.data || [];
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+   
+  }
   
 
-  export {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation,ApiHitleavePeriodType,ApiHitleaveNameType}
+  export {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation,ApiHitleavePeriodType,ApiHitleaveNameType}
