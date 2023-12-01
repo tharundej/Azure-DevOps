@@ -77,7 +77,7 @@ export default function HolidaysForm({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {

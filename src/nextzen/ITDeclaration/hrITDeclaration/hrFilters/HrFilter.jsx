@@ -191,7 +191,7 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
   }
   const empId = localStorage.getItem('employeeID');
   //   const cmpId= localStorage.getItem('companyID')
-  const cmpId = 'COMP1';
+  const cmpId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
   const token = localStorage.getItem('accessToken');
   const [formData, setFormData] = useState({});
   const [designationGradeType, setDesignationGradeType] = useState([]);

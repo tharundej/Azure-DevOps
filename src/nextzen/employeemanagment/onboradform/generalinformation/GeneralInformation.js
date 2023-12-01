@@ -80,22 +80,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     }
   }))
   useEffect(()=>{
-    async function fetchLocations (){
-      try{
-        
-        const obj=Country.getAllCountries();
-        const newArray={...options};
-        newArray.countryOptions=obj;
-        newArray.rcountryOptions=obj;
-        console.log(obj,'ooooooo')
-        setOptions(newArray)
-
-      }
-      catch (e){
-
-      }
-    }
-    fetchLocations()
+    console.log("HIII")
+    const obj=Country.getAllCountries();
+    const newArray={...options};
+    newArray.countryOptions=obj;
+    newArray.rcountryOptions=obj;
+    console.log(obj,'ooooooo')
+    setOptions(newArray)
   },[])
 
   const handleCloseSnackBar=()=>{
@@ -287,7 +278,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     console.log(data,'general information');
 
     try {
-      data.companyID = 'COMP1';
+      data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
 
       if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){

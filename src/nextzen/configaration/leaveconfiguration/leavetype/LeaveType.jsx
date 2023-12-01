@@ -65,7 +65,7 @@ export default function LeaveType({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       leaveTypeName: '',
       leavePeriodType: '',
@@ -122,7 +122,7 @@ export default function LeaveType({ currentUser }) {
   };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
     data.leaveTypeName=valueSelected.leaveTypeName
     data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
@@ -181,7 +181,7 @@ export default function LeaveType({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         leaveTypeID: rowdata.leaveTypeID,
       };
       const response = await axios.post(baseUrl + '/deleteLeaveType', data);

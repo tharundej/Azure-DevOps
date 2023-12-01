@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -23,8 +23,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { getStateAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateVendor({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
     vendorName: Yup.string().required('vendor Name is Required'),
@@ -50,7 +52,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const defaultValues = useMemo(
     () => ({
       vendorID: currentData?.vendorID || 0,
-      companyID: currentData?.companyID || 'COMP1',
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
       vendorCompanyName: currentData?.vendorCompanyName || '',
       vendorName: currentData?.vendorName || '',
       vendorPhoneNo: currentData?.vendorPhoneNo || '',
@@ -97,7 +99,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);
@@ -192,7 +194,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
             }}
           >
             <RHFTextField name="vendorCompanyName" label="Vendor Company Names" />
-            <RHFTextField name="vendorName" label="Cendor Name" />
+            <RHFTextField name="vendorName" label="Vendor Name" />
             <RHFTextField name="vendorPhoneNo" label="Vendor Phone No" />
             <RHFTextField name="vendorEmailID" label="Vendor Email Id" />
             <RHFTextField name="address1" label="Address 1" />

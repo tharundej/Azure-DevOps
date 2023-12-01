@@ -87,7 +87,7 @@ export default function LeaveTypeForm({ currentUser }) {
           count: 5,
           page: 0,
           search: '',
-          companyId: 'COMP1',
+          companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           externalFilters: {
             leavePeriodType: '',
           },

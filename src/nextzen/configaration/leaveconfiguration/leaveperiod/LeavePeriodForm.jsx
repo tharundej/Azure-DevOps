@@ -87,7 +87,7 @@ export default function LeavePeriodForm({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -129,7 +129,7 @@ export default function LeavePeriodForm({ currentUser }) {
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await ApiHitleavePeriodType(Obj);
           var optionsArr = { ...options };
@@ -146,7 +146,7 @@ export default function LeavePeriodForm({ currentUser }) {
     }
   }, [open]);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1'
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
     // data.locationID = formData?.Location?.locationID;

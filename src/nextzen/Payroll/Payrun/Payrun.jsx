@@ -46,7 +46,7 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
   const getPayRunDetails = async () => {
     // setLoading(true)
     const payload = {
-     companyID : "COMP1"
+     companyID : "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
     };
   
     const config = {
@@ -85,7 +85,7 @@ const handleCreate = async (data) => {
   handleCreatePayrun()
   // setLoading(true)
   const payload = {
-   companyID : "COMP1"
+   companyID : "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
   };
 
   const config = {
