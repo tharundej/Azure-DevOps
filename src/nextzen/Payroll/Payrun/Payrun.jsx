@@ -17,6 +17,7 @@ import { useContext  ,useState} from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import axios from 'axios';
 import "./payrun.css"
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 function Payrun( {handleCreatePayrun ,handleEmpType} ) {
   const {user} = useContext(UserContext)
   // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
@@ -53,8 +54,8 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
-      // url: baseUrl + '/getRentDeclarationDetails',
-      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunCount",
+      url: baseUrl + '/getPayRunCount',
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunCount",
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',

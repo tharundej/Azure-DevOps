@@ -114,6 +114,7 @@ import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter
 import UserContext from '../context/user/UserConext';
 import { useContext } from 'react';
 import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 
 const defaultFilters = {
   name: '',
@@ -679,7 +680,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
              {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
-
+ {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer

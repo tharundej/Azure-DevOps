@@ -23,6 +23,7 @@ import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -30,6 +31,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
+  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
 // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
@@ -186,22 +188,25 @@ const [loading,setLoading] = useState(false);
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
           setLoading(false)
           setReloading(!reloading);
-          console.log(JSON.stringify(response.data));
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
-          console.log("response", response)
+          // console.log(JSON.stringify(response.data));
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
+          // console.log("response", response)
         }
         else if(response.data.code === 400){
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
         console.log(error);
       });

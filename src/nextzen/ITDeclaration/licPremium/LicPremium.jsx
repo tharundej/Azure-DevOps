@@ -37,6 +37,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -62,6 +63,7 @@ const headings = [
 
 export default function LicPremium() {
  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+ const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
@@ -70,7 +72,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
 const [loading,setLoading] = useState(false);
  
-
   // const cmpName =localStorage.getItem('accessToken')
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
@@ -305,9 +306,7 @@ const handleRentDeletedID = ( data)=>{
           setLoading(false)
           const rowsData = response?.data?.data;
           setPolicyData(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
+        
         }
       })
       .catch((error) => {
@@ -339,10 +338,11 @@ const handleRentDeletedID = ( data)=>{
       .then((response) => {
        
           if (response.data.status === 200) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            setSnackbarSeverity('success');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarSeverity('success');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             
             setISReloading(!isreloading);
             setFormData({
@@ -366,20 +366,22 @@ const handleRentDeletedID = ( data)=>{
             })
             getLicPremium()
           }else    if (response.data.status === 400) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarSeverity('error');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
           
       
           }
         }
       )
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Lic details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving Lic details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -388,9 +390,7 @@ const handleRentDeletedID = ( data)=>{
     setLoading(true)
     console.log(" i am calling fine info042" , formData)
     const payload = {
-      
-      
-                  licPremiumID: formData.licPremiumID,
+        licPremiumID: formData.licPremiumID,
                   companyID: formData.companyId,
                   employeeID: formData.employeeId,
                   employeeName: formData.employeeName,
@@ -430,10 +430,11 @@ const handleRentDeletedID = ( data)=>{
      
         console.log(response , "success")
           if(response.data.status === 200){
+            enqueueSnackbar(response.data.message,{variant:'success'})
             setLoading(false)
             console.log('success',response);
             setISReloading(!isreloading);
-            setSnackbarSeverity('success');
+            // setSnackbarSeverity('success');
             setFormData({
               companyId: cmpId,
               companyName: '',
@@ -453,18 +454,19 @@ const handleRentDeletedID = ( data)=>{
               fileName: [],
               fileContent: [],
             })
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             setIsEdit(false)
             getLicPremium()
           }
           else if(response.data.status === 400){
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             console.log('success',response);
             // setISReloading(!isreloading);
-            setSnackbarSeverity('error');
+            // setSnackbarSeverity('error');
            
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             // setIsEdit(false)
           }
          
@@ -472,11 +474,12 @@ const handleRentDeletedID = ( data)=>{
         }
       )
       .catch((error) => {
+        enqueueSnackbar(response.data.message,{variant:'success'})
         setLoading(false)
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response.message   );
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response.message   );
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
