@@ -519,14 +519,15 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
       // status: 'rejected',
       employee_id:rowData?.employeeId,
       project_id:JSON.parse (rowData?.projectId ,10),
-      status:1,
+      timesheetID:rowData?.timeSheetId,
+      status:'rejected',
       managerComments: comment
     };
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-       url: baseUrl + `/updateTimesheetStatus`,
-      // url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+        url: baseUrl + `/updateTimesheetStatus`,
+      //  url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
       data: payload,
     };
     axios
@@ -546,14 +547,15 @@ console.log(rowData ,"rowDataIN ")
       // status: 'rejected',
       employee_id:rowData?.employeeId,
     project_id: JSON.parse (rowData?.projectId ,10),
-    status:1,
+    status:'approved',
+    timesheetID:rowData?.timeSheetId,
     managerComments : comment
     };
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      url: baseUrl + `/updateTimesheetStatus`,
-      // url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+       url: baseUrl + `/updateTimesheetStatus`,
+      //  url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
       data: payload,
     };
     axios
