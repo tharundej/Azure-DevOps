@@ -47,7 +47,11 @@ const FactoryTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
+<<<<<<< HEAD
+        companyID: rowdata?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
         title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
@@ -89,7 +93,11 @@ const FactoryTable = () => {
     count: 5,
     page: 0,
     search: '',
+<<<<<<< HEAD
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
     companyId: user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
     externalFilters: {
       locationName: '',
       locationPhone: '',

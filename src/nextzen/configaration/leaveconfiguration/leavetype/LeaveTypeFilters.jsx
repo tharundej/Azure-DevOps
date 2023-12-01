@@ -263,7 +263,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await leaveTypeName(Obj);
           var optionsArr = { ...options };
@@ -275,6 +275,15 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           setOptions(optionsArr);
         } catch (error) {}
       }
+<<<<<<< HEAD
+      async function call2() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const leaveperiod = await leavePeriodType(Obj);
+          var optionsArr = { ...options1 };
+=======
       // async function call2() {
       //   try {
       //     const Obj = {
@@ -282,6 +291,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       //     };
       //     const leaveperiod = await leavePeriodType(Obj);
       //     var optionsArr = { ...options1 };
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
 
       //     optionsArr.leavePeriodType = leaveperiod;
       //     // optionsArr.leavePeriodType=desgination;

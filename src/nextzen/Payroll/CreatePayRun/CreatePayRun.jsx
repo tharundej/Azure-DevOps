@@ -61,7 +61,7 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
   {
       page:0,
       count:5,
-      companyID:"COMP1",
+      companyID:"JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
       employementType:employmentType,
       sort:{
           key:1,

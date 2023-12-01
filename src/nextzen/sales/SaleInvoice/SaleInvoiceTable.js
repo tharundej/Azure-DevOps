@@ -28,7 +28,7 @@ const SaleInvoiceTable = () => {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },

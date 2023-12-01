@@ -98,7 +98,7 @@ export default function EmployeeTable() {
     "page": 0,
      
     "search": "",
-    "companyID": "COMP1",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      
     "externalFilters": {
     "fMaritalStatus":"",

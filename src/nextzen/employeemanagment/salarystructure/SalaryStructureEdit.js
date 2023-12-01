@@ -146,7 +146,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
     obj.departmentID=optionsValue?.departmentValue?.departmentID || "";
     obj.designationID=optionsValue?.desginationValue?.designationID || "";
     obj.designationGradeID=optionsValue?.desginationGradeValue?.designationGradeID || "";
-    obj.companyID= "COMP1";
+    obj.companyID= "JSON.parse(localStorage.getItem('userDetails'))?.companyID,";
     ApiHit(obj)
 
   };
@@ -279,7 +279,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(deptObj);
@@ -330,7 +330,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
                         
                           try{
                             const desgGradeObj={
-                              companyID:'COMP1',
+                              companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                               designationID:newvalue?.designationID
                             }
                             const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);

@@ -68,15 +68,15 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
       if(currentEmployee){
       const fetchLocations = async () => {
         const deptObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           locationID:currentEmployee?.locationID
         }
         const desgObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           departmentID:currentEmployee?.departmentID
         }
         const desgGradeObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           designationID:currentEmployee?.designationID
         }
         try {

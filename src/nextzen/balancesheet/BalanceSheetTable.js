@@ -69,7 +69,11 @@ const BalanceSheetTable = () => {
     count: 5,
     page: 0,
     search: '',
+<<<<<<< HEAD
+    fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
     fcompanyID: user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
     externalFilters: {
       fMaritalStatus: '',
       fBloodGroup: '',

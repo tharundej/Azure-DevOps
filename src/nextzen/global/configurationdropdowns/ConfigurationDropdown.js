@@ -4,7 +4,7 @@ import { baseUrl } from "../BaseUrl";
 const leavePeriodType = async () => {
   try {
     const data1 = JSON.stringify({
-      "companyID": "COMP1"
+      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
     });
 
     const config = {
@@ -28,7 +28,7 @@ const leavePeriodType = async () => {
 const leaveTypeName = async () => {
   try {
     const data1 = JSON.stringify({
-      "companyID": "COMP1"
+      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
     });
 
     const config = {

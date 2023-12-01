@@ -223,7 +223,7 @@ export default function LeavePeriodFilters({
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await ApiHitleavePeriodType(Obj);
           var optionsArr = { ...options };
