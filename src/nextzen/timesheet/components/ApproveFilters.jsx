@@ -78,6 +78,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
   const [dropdown, setDropdown] = useState({});
 
   const [dropdownStatustype, setdropdownStatustype] = useState([]);
+  const [dropdownProjectName, setdropdownProjectName] = useState([]);
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'dateofactivity',
@@ -87,7 +88,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
   ]);
   const [dropdownFiledArray, setDropdownFiledArray] = useState([
     {
-      field: 'statustype',
+      field: 'Status',
       options: [],
     },
   ]);
@@ -144,6 +145,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
     statusType: Yup.string(),
     employeeID: Yup.string(),
     companyID: Yup.string(),
+    projectName: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -152,6 +154,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
       statusType: '',
       employeeID: '',
       companyID: '',
+      projectName:'',
     }),
     []
   );
@@ -199,11 +202,17 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
       target: { value },
     } = event;
 
-    if (field === 'statustype') {
+    if (field === 'Status') {
       setdropdownStatustype(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
+    }
+    else if(field === 'Project'){
+      setdropdownProjectName(value);
+      const obj = dropdown;
+      obj[field]  = value;
+      setDropdown(obj)
     }
   };
   const handleApply = async () => {
@@ -233,6 +242,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
       statusStart: '',
       statusEnd: '',
     });
+    setdropdownProjectName([]);
     setOpen(false);
   };
 
@@ -413,7 +423,7 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownStatustype}
-                  onChange={(e) => handleChangeDropDown(e, 'statustype')}
+                  onChange={(e) => handleChangeDropDown(e, 'Status')}
                   input={<OutlinedInput label="Status Type" />}
                   MenuProps={MenuProps}
                 >
@@ -423,10 +433,27 @@ export default function ApproveFilter({ filterSearch, filterData, componentPage 
                 </Select>
               </FormControl>
             </Grid>
+            {/* <Grid container flexDirection="row" marginTop="10px" xs={12} md={12}>
+              <FormControl fullWidth>
+                <InputLabel fullWidth id="Status">
+                 Project Name
+                </InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-multiple-name-status_1"
+                  id="demo-multiple-status_1"
+                  multiple
+                  value={dropdownProjectName}
+                  onChange={(e) => handleChangeDropDown(e, 'Status')}
+                  input={<OutlinedInput label="Status Type" />}
+                  MenuProps={MenuProps}
+                >
+                </Select>
+              </FormControl>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <div style={{ marginBottom: 16, marginTop: 3 }}>
-          {' '}
           <Button
             variant="contained"
             color="primary"

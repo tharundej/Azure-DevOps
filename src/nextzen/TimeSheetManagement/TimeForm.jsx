@@ -200,7 +200,7 @@ const getActivityName = async ()=>{
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "JSON.parse(localStorage.getItem('userDetails'))?.companyID,";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');

@@ -80,7 +80,7 @@ const VisuallyHiddenInput = styled('input')({
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }

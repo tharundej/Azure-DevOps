@@ -128,7 +128,7 @@ export default function LeaveType({ currentUser }) {
     data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
     data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
     data.leaveTypeID=JSON.parse(valueSelected.leaveTypeID,10)
-    data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
+    // data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
     // data.leavePeriodType=valueSelected.leavePeriodType
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);

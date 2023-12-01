@@ -46,6 +46,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 // import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { enqueueSnackbar } from 'notistack';
 
 const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const TABLE_HEAD = [
@@ -84,22 +85,24 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const companyID = localStorage.getItem('companyID');
   const [selectedActivity, setSelectedActivity] = useState(null);
   const defaultPayload = {
-    companyId: companyID,
-    employeeId: employeeID,
-    page: 0,
-    count: 5,
-    search: '',
-    externalFilters: {
-      projectName: '',
-      Status: '',
-      from: '',
-      to: '',
+    "companyId":"comp1",
+    "employeeId":"info2",
+    "page":0,
+    "count":5,
+    "search":"",
+    "externalFilters":{
+             "projectName":"",
+             "Status":"",
+             "dateOfActivity":{
+             "from":"",
+             "to":""
+             }
     },
-    sort: {
-      key: 0,
-      orderBy: 'p.project_name',
-    },
-  };
+    "sort":{
+        "key":0,
+        "orderBy":"p.project_name"
+    }
+}
   const actions = [
     {
       name: 'Approve',
@@ -278,7 +281,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   //     // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
   //     // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
   //     // data.selectedActivity = selectedActivity;
-  //     // data.companyID = "JSON.parse(localStorage.getItem('userDetails'))?.companyID,";
+  //     // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
   //     // data.employeeID = "info4";
 
   //     console.log(data, 'data111ugsghghh');
@@ -522,8 +525,8 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      // url: baseUrl + `/approveSalaryAdvance`,
-      url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+       url: baseUrl + `/updateTimesheetStatus`,
+      // url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
       data: payload,
     };
     axios
@@ -549,8 +552,8 @@ console.log(rowData ,"rowDataIN ")
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
-      // url: baseUrl + `/approveSalaryAdvance`,
-      url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+      url: baseUrl + `/updateTimesheetStatus`,
+      // url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
       data: payload,
     };
     axios
