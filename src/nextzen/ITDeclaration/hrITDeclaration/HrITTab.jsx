@@ -72,7 +72,7 @@ export default function HrITTab() {
     { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
     { id: 'declaration', label: 'Declaration', width: 220, type: 'bool' },
     { id: 'rentDetails', label: 'Rent Details', width: 220, type: 'bool' },
-    { id: 'licPremium', label: 'Lic Details', width: 220, type: 'bool' },
+    { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
     { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
     { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
     { id: 'status', label: 'Status', width: 220, type: 'bool' },
