@@ -28,7 +28,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     () => ({
       materialID: currentData?.id || 0,
       vendorID: currentData?.vendorId || 0,
-      companyID: currentData?.companyID || 'COMP1',
+      companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       materialName: currentData?.materialName || '',
       hsnId: currentData?.hsnId || '',
       materialType: currentData?.materialType || '',
@@ -60,7 +60,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchVendor = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
       try {
         const response = await getVendorAPI(data);
         setVendorOptions(response);

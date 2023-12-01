@@ -105,7 +105,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
 
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = selectedOption?.type;
 
     console.log('submitted data111', data);
@@ -122,7 +122,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = selectedOption?.type;
     console.log('submitted data2222', data);
 

@@ -63,7 +63,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       assetsCondition: currentData?.assetCondition || '',
       updatedDate: currentData?.updatedDate || '',
       deleteBit: currentData?.deleteBit || 0,
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       operationalDays: currentData?.operationalDays || '',
       quantity: currentData?.quantity || 1,
       model: currentData?.model || '',
@@ -153,7 +153,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
       try {
         const response = await getLocationAPI(data);
         console.log('location success', response);

@@ -90,7 +90,7 @@ const AssetsTable = () => {
   });
   const [bodyContent, setBodyContent] = useState([]);
   const defaultPayload = {
-    company_id: 'COMP1',
+    company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     page: 0,
     count: 5,
     search: '',

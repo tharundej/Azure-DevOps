@@ -28,7 +28,7 @@ const PurchaseInvoiceTable = () => {
     search: '',
     page: 0,
     perPage: 10,
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       invoiceDate: {
         fromDate: '',

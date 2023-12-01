@@ -134,7 +134,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const getDepartment = async ()=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         locationID: 30,
        
       };
@@ -151,7 +151,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
   const getDesignation = async (newvalue)=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       departmentID: newvalue.departmentID,
        
       };
@@ -184,7 +184,7 @@ export default function AddEmployeShift({ currentUser , handleClose }) {
     try{
     const  data= {
       
-      companyiD:'COMP1',
+      companyiD:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
        
       };
       const response = await instance.post('/getEmployeeIDDetails',data);
@@ -442,7 +442,7 @@ placeholder="Favorites"
               
              
               // const obj={
-              //   companyId:'COMP1',
+              //   companyId:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   reporting_manager_id:newvalue?.employeeId
               // }
  

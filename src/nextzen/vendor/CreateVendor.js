@@ -50,7 +50,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const defaultValues = useMemo(
     () => ({
       vendorID: currentData?.vendorID || 0,
-      companyID: currentData?.companyID || 'COMP1',
+      companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       vendorCompanyName: currentData?.vendorCompanyName || '',
       vendorName: currentData?.vendorName || '',
       vendorPhoneNo: currentData?.vendorPhoneNo || '',
@@ -97,7 +97,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);

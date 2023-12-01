@@ -89,7 +89,7 @@ const ProductsTable = () => {
     count: 5,
     page: 0,
     search: '',
-    companyID: 'COMP1',
+    companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },

@@ -232,6 +232,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           console.error(error);
         }
       });
+
+      
   return (
     <>
 
@@ -793,7 +795,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     // try{
                     //   const deptObj={
-                    //     companyID:'COMP1',
+                    //     companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                     //     locationID:newvalue?.locationID
                     //   }
                     //   const department=await ApiHitDepartment(deptObj);
@@ -844,7 +846,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     try{
                       const desgObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(desgObj);
@@ -890,7 +892,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     try{
                       const desgGradeObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         designationID:newvalue?.designationID
                       }
                       const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
@@ -962,7 +964,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                  
                   // try{
                   //   const deptObj={
-                  //     companyID:'COMP1',
+                  //     companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                   //     locationID:newvalue?.locationID
                   //   }
                   //   const department=await ApiHitDepartment(deptObj);
@@ -987,7 +989,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                
                 
-                renderInput={(params) => <TextField {...params} label="Assign Manager"
+                renderInput={(params) => <TextField {...params} label="Reporting Manager"
                 style={{  width: '100%' }} />}
               />
               </Grid>
@@ -1007,27 +1009,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                  
                   
                   console.log(newArr)
-                 
-                  // try{
-                  //   const deptObj={
-                  //     companyID:'COMP1',
-                  //     locationID:newvalue?.locationID
-                  //   }
-                  //   const department=await ApiHitDepartment(deptObj);
-                  //   var optionsArr={...userdropDownOptions};
-                  //   optionsArr.departmentOptions=department;
-                  //   optionsArr.desginationGradeOptions=[];
-                  //   optionsArr.desginationOptions=[];
-                  //   console.log(optionsArr,'optionsArroptionsArr')
-                  //   setUserDropDownOptions(optionsArr)
-
-                  // }
-                  // catch(error){
-                    
-                  // }
-
-                 
-                  
+               
                   setUserDropDownValue(newArr)
                 }
                 
@@ -1039,6 +1021,14 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 style={{  width: '100%' }} />}
               />
               </Grid>
+
+
+
+              {/* checking  */}
+
+
+
+             
             
              </Grid>
 

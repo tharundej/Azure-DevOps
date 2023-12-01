@@ -53,7 +53,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
       customer_pan_no: currentData?.customerPanNo || '',
       customer_tan_no: currentData?.customerTanNo || '',
       status: currentData?.status || '',
-      company_id: currentData?.companyId || 'COMP1',
+      company_id: currentData?.companyId || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     }),
     [currentData]
   );

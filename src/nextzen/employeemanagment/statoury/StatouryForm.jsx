@@ -168,7 +168,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
         console.log(currentUser,'uyfgv');
    
         currentUser.employeeID=employeeIDForApis
-        currentUser.companyID='COMP1'
+        currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
      
          
          

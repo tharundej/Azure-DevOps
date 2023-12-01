@@ -262,7 +262,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await leaveTypeName(Obj);
           var optionsArr = { ...options };
@@ -277,7 +277,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       async function call2() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await leavePeriodType(Obj);
           var optionsArr = { ...options1 };

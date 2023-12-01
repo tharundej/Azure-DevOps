@@ -38,7 +38,7 @@ const FactoryTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
-        companyID: rowdata?.companyID || 'COMP1',
+        companyID: rowdata?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
@@ -80,7 +80,7 @@ const FactoryTable = () => {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       locationName: '',
       locationPhone: '',

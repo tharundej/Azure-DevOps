@@ -11,7 +11,7 @@ function SnackBarComponent  ({open,snacbarMessage,severity,onHandleCloseSnackbar
     open={open}
     autoHideDuration={4000}
     onClose={onHandleCloseSnackbar}
-    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    anchorOrigin={{ vertical: "top", horizontal: 'right' }}
   >
     <Alert onClose={onHandleCloseSnackbar} severity={severity} sx={{ width: '100%' }}>
       {snacbarMessage}

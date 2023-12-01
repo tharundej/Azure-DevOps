@@ -132,7 +132,7 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
   const getDepartment = async ()=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         locationID: 30,
        
       };
@@ -149,7 +149,7 @@ export default function EditShiftRoaster({ currentUser , handleClose ,editData }
   const getDesignation = async (newvalue)=>{
     try{
     const  data= {
-      companyID:'COMP1',
+      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       departmentID: newvalue.departmentID,
        
       };

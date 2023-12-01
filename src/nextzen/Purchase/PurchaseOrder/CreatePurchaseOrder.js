@@ -32,7 +32,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
 
   const defaultValues = useMemo(
     () => ({
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       expectedDeliveryDate: currentData?.expectedDeliveryDate || '',
       paymentTerm: currentData?.paymentTerm || '',
       vendorId: currentData?.vendorId || '',
@@ -70,7 +70,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const fetchVendor = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
     try {
       const response = await getVendorAPI(data);
       setVendorOptions(response);
@@ -83,7 +83,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     }
   };
   const fetchLocation = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
     try {
       const response = await getLocationAPI(data);
       console.log('location success', response);
@@ -117,7 +117,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     try {
       if (newValue) {
         const vendorMaterialPayload = {
-          companyId: 'COMP1',
+          companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           search: '',
           externalFilters: {
             materialName: '',

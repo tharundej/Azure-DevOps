@@ -84,7 +84,7 @@ const CustomersTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     page: 0,
     count: 10,
     search: '',

@@ -32,7 +32,7 @@ export default function SalaryStructure() {
       "count": 5,
       "page": 0,
       "search": "",
-      "companyId": "COMP1",
+      "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
       "externalFilters": {
           "departmentName": "",
           "designationName": "",
@@ -92,11 +92,11 @@ export default function SalaryStructure() {
 
       
       const desgObj={
-        companyID:'COMP1',
+        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         departmentID:editRowIds?.departmentID
       }
       const desgGradeObj={
-        companyID:'COMP1',
+        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         designationID:editRowIds?.designationID
       }
       try {

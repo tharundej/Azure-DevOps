@@ -31,7 +31,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const defaultValues = useMemo(
     () => ({
       locationID: currentData?.locationID || 0,
-      companyID: currentData?.companyID || 'COMP1',
+      companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       locationName: currentData?.locationName || '',
       locationPhone: currentData?.locationPhone || '',
       locationEmailID: currentData?.locationEmailid || '',
@@ -65,7 +65,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);

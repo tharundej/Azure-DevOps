@@ -90,7 +90,7 @@ const VendorMaterialsTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     search: '',
     externalFilters: {
       materialName: '',

@@ -88,7 +88,7 @@ const VendorTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     page: 0,
     search: '',
     count: 5,

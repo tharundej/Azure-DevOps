@@ -51,7 +51,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   ];
 
   const defaultPayload = {
-    company_id: 'COMP1',
+    company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     // employee_id: 'ibm1',
     page: 0,
     count: 5,
@@ -256,7 +256,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       const payload = {
         expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
         expense_name: editData?.expense_name?.type,
-        company_id: 'COMP1',
+        company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         department_id: JSON.parse(editData?.department_id,10),
         designation_id: JSON.parse(editData?.designation_id,10),
         designation_grade_id: JSON.parse(editData?.designation_grade_id,10),

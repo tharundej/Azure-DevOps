@@ -28,7 +28,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   const defaultValues = useMemo(
     () => ({
       productId: currentData?.productID || '',
-      companyId: currentData?.companyID || 'COMP1',
+      companyId: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       productName: currentData?.productName || '',
       productCategory: currentData?.productCategory || '',
       HsnId: currentData?.hsnID || '',

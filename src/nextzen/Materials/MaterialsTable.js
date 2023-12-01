@@ -50,7 +50,7 @@ const MaterialsTable = () => {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       fMaritalStatus: '',
       fBloodGroup: '',
