@@ -22,8 +22,9 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useContext } from 'react';
 import UserContextProvider from 'src/nextzen/context/user/UserContextProvider';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import Button from '@mui/material/Button';
 
-// ----------------------------------------------------------------------
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';// ----------------------------------------------------------------------
 
 const OPTIONS = [
   {
@@ -129,8 +130,9 @@ export default function AccountPopover() {
         <MenuItem
           onClick={handleLogout}
           sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
+          style={{padding: 0, margin: 0}}
         >
-          Logout
+          <Button  startIcon={<PowerSettingsNewIcon />} variant="contained" size="large" color='error' style={{width: '100%', borderRadius: 0}}>LOGOUT</Button>
         </MenuItem>
       </CustomPopover>
     </>
