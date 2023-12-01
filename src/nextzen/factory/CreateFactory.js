@@ -175,6 +175,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               )}
             />
           </Box>
+
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>
