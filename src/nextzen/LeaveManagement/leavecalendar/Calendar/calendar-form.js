@@ -121,7 +121,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       reset();
     } 
     catch (error) {
-      enqueueSnackbar(error.message, { variant: 'error' });
+      console.log(error,"calendarerror")
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       onClose();
       // Handle the error, e.g., show a snackbar.
     }

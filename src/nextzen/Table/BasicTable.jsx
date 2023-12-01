@@ -144,7 +144,7 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
-  componentPage
+  componentPage,count
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -183,7 +183,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   useEffect(() => {
     // onclickActions();
     getTableData();
-  }, []);
+  }, [count]);
 
   const getTableData = (payload) => {
     setLoading(false);
@@ -799,7 +799,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => handleEditRowParent(id)}
+                            onHandleEditRow={(id) => 
+                              {
+                                if(handleEditRowParent)
+                              
+                              handleEditRowParent(id)
+                              }
+                            }
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
                             onDeleteRow={() => handleDeleteRow(row.id)}
