@@ -123,6 +123,7 @@ import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
+import ApproveFilter from '../timesheet/components/ApproveFilters';
 const defaultFilters = {
   name: '',
   role: [],
@@ -498,6 +499,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <TimeSheetSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+            />
+          )}
+          {filterName === 'ApproveFilters' && (
+            <ApproveFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
             />
           )}
           {filterName === 'ProjectSearchFilter' && (

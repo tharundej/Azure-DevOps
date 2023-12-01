@@ -95,11 +95,9 @@ export default function ShiftConfigView({currentUser}) {
 
   const defaultPayload = {
     companyId: 'COMP2',
-    locationId: 32,
     count: 5,
     search: '',
     page: 0,
-    limit: 5,
     externalFilters: {
       shiftName: '',
       startTime: '',
