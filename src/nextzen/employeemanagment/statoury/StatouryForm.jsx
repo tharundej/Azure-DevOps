@@ -245,11 +245,11 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     label="Account Number"
                     variant="outlined"
                     id="accountNumber"
-                     value={currentUser?.bankAccountNumber}
+                     value={currentUser?.accountNumber}
                     onChange={(e) => {
                       setCurrentUser(prev=>({
                         ...prev,
-                        bankAccountNumber: parseInt(e.target.value, 10) || ''
+                        accountNumber: parseInt(e.target.value, 10) || ''
                       }
                       ))
                     }}
