@@ -85,16 +85,20 @@ export default function MyShiftDetails() {
       }
       const [employeListDialog,SetEmployeListDialog]=useState(false)
 
+      const [RowDate,setRowDate] = useState([])
       const closeEmployeList = ()=> SetEmployeListDialog(false)
       const SecondoryTable = async (rowdata,event) => {
         console.log("🚀 ~ file: ShiftRoast.jsx:131 ~ SecondoryTable ~ rowdata:",rowdata)
       //  setRoasterRowData(rowdata.EmpList)
         SetEmployeListDialog(true)
+        setRowDate(rowdata)
 
       }
+
+    
       const handleEditRowParent = async (rowdata,event) => {
 
-   
+
         // alert("yes yes yes")
       }
   return (
@@ -110,7 +114,7 @@ export default function MyShiftDetails() {
  }}
  className="custom-dialog"  
  >
-<ViewTeamMates onClose={closeEmployeList} />
+<ViewTeamMates onClose={closeEmployeList} RowDate={RowDate} />
  </Dialog>
 
  }
@@ -140,6 +144,7 @@ defaultPayload={defaultPayload}
 headerData={TABLE_HEAD}
 endpoint='/Myshiftdetails'
 bodyData='data'
+
 // rowActions={actions}
 filterName='MyShiftFilter'
 SecondoryTable={SecondoryTable}

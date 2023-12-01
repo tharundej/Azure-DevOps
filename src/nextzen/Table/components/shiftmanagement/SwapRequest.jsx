@@ -11,6 +11,7 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
+import ApproveSwap from './ApproveSwap';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -101,16 +102,24 @@ export default function Swaprequest() {
   // //   });
  
   // }
- const [approveShow,setApproveShow]= useState(false)
+ const [approveShow  , setApproveShow]= useState(false)
+//  const ApproveClose = ()=> setApproveShow(false)
+const ApproveClose =() =>{
+  setApproveShow(false)
+}
  const [rowData,setRowData]= useState([])
+ const [status,setStatus]= useState()
   const onClickActions=(rowdata,event)=>{
     if(event?.name==="Approve"){
       setApproveShow(true)
       setRowData(rowdata)
-      handleApproveAPICALL(rowdata,event)
+      setStatus(event.id)
+      
     }
     else if(event?.name==="Reject"){
-      handleDeleteAPICALL(rowdata,event)
+      setApproveShow(true)
+      setStatus(event.id)
+      
     }
   }
 
@@ -120,9 +129,9 @@ export default function Swaprequest() {
   } 
   const actions = [
     
-    { name: "Approve",  icon: "charm:circle-tick", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+    { name: "Approve",  icon: "charm:circle-tick", id: "Approve", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
 
-    { name: "Reject", icon: "charm:circle-cross", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
+    { name: "Reject", icon: "charm:circle-cross", id: "Reject", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
 
   ];
     
@@ -136,6 +145,21 @@ export default function Swaprequest() {
     
   return (
     <>
+    {
+      approveShow &&
+      <Dialog
+      fullWidth
+      maxWidth={false}
+      open={approveShow}
+      onClose={ApproveClose}
+      PaperProps={{
+        sx:{maxWidth:700, overflow:"hidden"}
+      }}
+      className="custom-dialog" 
+      >
+        <ApproveSwap currentUser={{}} ApproveClose={ApproveClose} status={status} rowData={rowData}   />
+         </Dialog>
+    }
       {/* {showForm && (
  <Dialog
  fullWidth
