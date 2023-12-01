@@ -105,7 +105,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
     const obj1=defaultValues;
     
     const obj={
-     companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      employeeId: localStorage.getItem('employeeIdCreated'),
      education:defaultValues
     }

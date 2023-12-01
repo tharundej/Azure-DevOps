@@ -83,7 +83,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   }
   useEffect(()=>{
     const obj={
-      "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     }
     ApiHitOptions(obj)
@@ -92,7 +92,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   const currentUser=props.currentUser;
 
   const [currentWorkData,setCurrentWorkData]=useState({
-    "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     reportingManagerID:currentUser?.reportingManagerID|| undefined,
 
   "employeeID":localStorage.getItem("employeeId"),
@@ -189,7 +189,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitLocations=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     
@@ -388,7 +388,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitManager=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     const config = {

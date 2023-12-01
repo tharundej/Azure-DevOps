@@ -60,7 +60,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   
     const onSave=()=>{
      const obj={
-      companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
       education:defaultValues
      }

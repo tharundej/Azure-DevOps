@@ -91,7 +91,7 @@ const PreviousWork = ({employeeIDForApis}) => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeID": employeeIDForApis
   });
      

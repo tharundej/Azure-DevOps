@@ -31,7 +31,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyID": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeID":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
@@ -62,7 +62,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         console.log(endPointTopass,'documentsonEdit')
 
         const obj={
-          "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
@@ -101,7 +101,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         
 
         let data = JSON.stringify({
-            "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -124,7 +124,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)
