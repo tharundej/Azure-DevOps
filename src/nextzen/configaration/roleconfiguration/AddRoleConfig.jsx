@@ -152,7 +152,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID
+        "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     }
   
     const config = {

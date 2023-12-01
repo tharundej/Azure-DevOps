@@ -34,6 +34,8 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 export default function 
 
 EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+
+ 
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -477,28 +479,40 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     {currentEmployee?.pAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent City
+                    Permanent Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pCity}
+                    {currentEmployee?.pCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pState}
+                    {currentEmployee?.pState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Permanent City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.pCity?.name}
+                    </Box>
+                    </Stack>
+                   
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent Pincode
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.Permanent}
+                    {currentEmployee?.pPincode}
                     </Box>
                     </Stack>
                    
@@ -526,22 +540,34 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     {currentEmployee?.rAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential City
+                    Residential Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rCity}
+                    {currentEmployee?.rCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rState}
+                    {currentEmployee?.rState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Residential City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.rCity?.name}
+                    </Box>
+                    </Stack>
+                    
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential Pincode

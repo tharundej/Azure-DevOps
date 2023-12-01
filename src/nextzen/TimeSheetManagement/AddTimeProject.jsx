@@ -159,7 +159,7 @@ let getEmployeList = async (props)=>{
   console.log(selectedLocationID,"selectedlocationID")
   const getLocation=()=>{
     const data={
-      "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID
+      "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     }
      const config={
       method:'POST',

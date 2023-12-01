@@ -33,7 +33,7 @@ const RolePage = ({open,handleModalClose,type,data}) => {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const defaultPayload={
-    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 }
 
 const [TABLE_HEAD,setTableHead] =useState( [

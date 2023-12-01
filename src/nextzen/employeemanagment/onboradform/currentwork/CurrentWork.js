@@ -189,7 +189,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitLocations=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     
@@ -388,7 +388,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitManager=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     const config = {
