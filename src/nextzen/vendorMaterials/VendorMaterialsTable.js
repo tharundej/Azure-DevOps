@@ -26,8 +26,14 @@ const VendorMaterialsTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});

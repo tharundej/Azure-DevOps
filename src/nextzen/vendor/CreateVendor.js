@@ -192,7 +192,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
             }}
           >
             <RHFTextField name="vendorCompanyName" label="Vendor Company Names" />
-            <RHFTextField name="vendorName" label="Cendor Name" />
+            <RHFTextField name="vendorName" label="Vendor Name" />
             <RHFTextField name="vendorPhoneNo" label="Vendor Phone No" />
             <RHFTextField name="vendorEmailID" label="Vendor Email Id" />
             <RHFTextField name="address1" label="Address 1" />
