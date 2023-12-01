@@ -26,7 +26,67 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
+const genderOptions=[
+  {label:'Male'},
+  {label:'Female'}
+]
 
+const maritalStatusOptions = [
+  { value: 'single', label: 'Single' },
+  { value: 'married', label: 'Married' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'separated', label: 'Separated' }
+];
+
+const religionOptions = [
+  { value: 'christianity', label: 'Christianity' },
+  { value: 'islam', label: 'Islam' },
+  { value: 'hinduism', label: 'Hinduism' },
+  { value: 'buddhism', label: 'Buddhism' },
+  { value: 'sikhism', label: 'Sikhism' },
+  { value: 'judaism', label: 'Judaism' },
+  { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+  { value: 'jainism', label: 'Jainism' },
+  { value: 'shinto', label: 'Shinto' },
+  { value: 'taoism', label: 'Taoism' },
+  { value: 'zoroastrianism', label: 'Zoroastrianism' },
+  { value: 'confucianism', label: 'Confucianism' },
+  { value: 'atheist', label: 'Atheist' },
+  { value: 'agnostic', label: 'Agnostic' },
+  {value:'other',labal:"Other"}
+];
+
+
+const nationalitiesOptions = [
+  { country: "United States", nationality: "American" },
+  { country: "United Kingdom", nationality: "British" },
+  { country: "Canada", nationality: "Canadian" },
+  { country: "Australia", nationality: "Australian" },
+  { country: "Germany", nationality: "German" },
+  { country: "France", nationality: "French" },
+  { country: "China", nationality: "Chinese" },
+  { country: "India", nationality: "Indian" },
+  { country: "Brazil", nationality: "Brazilian" },
+  { country: "Russia", nationality: "Russian" },
+  { country: "South Africa", nationality: "South African" },
+  { country: "Japan", nationality: "Japanese" },
+  { country: "Mexico", nationality: "Mexican" },
+  { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+  { country: "South Korea", nationality: "South Korean" },
+  { country: "Other", nationality: "other" }
+];
+
+const bloodGroupsOptions = [
+  { label: "A+", value: "A positive" },
+  { label: "A-", value: "A negative" },
+  { label: "B+", value: "B positive" },
+  { label: "B-", value: "B negative" },
+  { label: "AB+", value: "AB positive" },
+  { label: "AB-", value: "AB negative" },
+  { label: "O+", value: "O positive" },
+  { label: "O-", value: "O negative" }
+];
 
 
 // ----------------------------------------------------------------------
@@ -95,7 +155,13 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
             desginationOptions:desgination,
             desginationGradeOptions:desginationGrade,
             rolesOptions:roles,
-            managerOptions:manager
+            managerOptions:manager,
+            bloodGroupsOptions:bloodGroupsOptions,
+            religionOptions:religionOptions,
+            nationalitiesOptions:nationalitiesOptions,
+            genderOptions:genderOptions,
+            maritalStatusOptions:maritalStatusOptions,
+            
 
 
           }

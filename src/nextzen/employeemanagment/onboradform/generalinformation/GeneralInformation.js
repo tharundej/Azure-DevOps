@@ -442,7 +442,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       try {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
-        newArray.rstateOptions=State.getStatesOfCountry(obj?.isoCode);
+  
         setCoutryIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
