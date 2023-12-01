@@ -35,14 +35,14 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
     
-        { id: "requestAmount", label: "Request Amount", width: "7pc", type: "text" },
+        { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "6pc", type: "text" },
-        { id: "PaidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
+        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+        { id: "PaidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "approverName", label: "Approver", minWidth: "7pc", type: "text" },
-        { id: "commentStatus", label: "User Remarks", minWidth: "7pc", type: "text" },
-        { id: "hrComments", label: "HR Remarks", minWidth: "7pc", type: "text" },
-        { id: "paymentStatus", label: "Payment Status", minWidth: "7pc", type: "text" },
+        { id: "commentStatus", label: "User Remarks", minWidth: "8pc", type: "text" },
+        { id: "hrComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
+        { id: "paymentStatus", label: "Payment Status", minWidth: "9pc", type: "text" },
         { id: "status", label: "Status", minWidth: "7pc",type: "badge"},
         // { id: '', width: 88 },
     

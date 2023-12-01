@@ -39,24 +39,20 @@ export default function History(){
            }
           }
         }
-
-    
+        
       const [TABLE_HEAD,setTableHead] =useState( [
        
-            { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
+         
             {id : "leaveTypeName",label:"Leave Type",minWidth:"8pc",type:"text"},
+            { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "text" },
             { id: "fromDate", label: "Start Date",minWidth:"7pc", type: "text" },
             {id: "toDate",label:"End Date",minWidth:"7pc",type:"text"},
             {id: "leaveDays",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "comments",label:"Leave Reason",minWidth:"7pc",type:"text"},
+            {id:'approvedBy',label:"Approval Manager",minWidth:'9pc',type:'text'},
             {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
 
        ]);
-
-const handleEditRowParent=()=>{
-  return null
-}
-
 return (    
     <>
 <BasicTable
@@ -65,7 +61,6 @@ return (
  defaultPayload={defaultPayload} 
  rowActions={null}
  filterName="LeaveHistoryFilter"
- handleEditRowParent={handleEditRowParent}
  />
  
   
