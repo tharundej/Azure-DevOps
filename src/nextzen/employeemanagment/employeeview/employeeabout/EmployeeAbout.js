@@ -23,6 +23,8 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import { Country, State, City }  from 'country-state-city';
+
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
@@ -158,9 +160,18 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
             managerOptions:manager,
             bloodGroupsOptions:bloodGroupsOptions,
             religionOptions:religionOptions,
-            nationalitiesOptions:nationalitiesOptions,
-            genderOptions:genderOptions,
-            maritalStatusOptions:maritalStatusOptions,
+            nationalityOptions:nationalitiesOptions,
+            genderOptions:genderOptions || [],
+            maritalStatusOptions:maritalStatusOptions || [],
+            pCountryOptions:Country.getAllCountries() || [],
+            pStateOptions:State.getStatesOfCountry(currentEmployee?.pCountry?.isoCode)|| [],
+            pCityOptions:City.getCitiesOfState(currentEmployee?.pCountry?.isoCode, currentEmployee?.pState?.isoCode)|| [],
+
+            rCountryOptions:Country.getAllCountries() || [],
+            rStateOptions:State.getStatesOfCountry(currentEmployee?.rCountry?.isoCode)|| [],
+            rCityOptions:City.getCitiesOfState(currentEmployee?.rCountry?.isoCode, currentEmployee?.rState?.isoCode)|| [],
+           
+            
             
 
 
@@ -174,19 +185,32 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
           const rolesValue=funcDropDownValue(roles,'roleID',currentEmployee?.roleID)
           const managerValue=funcDropDownValue(manager,'managerID',currentEmployee?.reportingManagerID)
 
+
           const arrValue={
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,
             desginationGradeValue:desginationGradeValue,
             rolesValue:rolesValue,
-            managerValue:managerValue
+            managerValue:managerValue,
+            bloodGroupValue: { label: currentEmployee?.bloodGroup },
+            religionValue:{label:currentEmployee?.religion},
+            genderValue:{label:currentEmployee?.gender},
+            nationalityValue:{nationality:currentEmployee?.nationality},
+            maritalStatusValue:{label:currentEmployee?.maritalStatus},
+            pCountryValue:currentEmployee?.pCountry || undefined,
+            rCountryValue:currentEmployee?.rCountry || undefined,
+            pStateValue:currentEmployee?.pState || undefined,
+            rStateValue:currentEmployee?.rState || undefined,
+            pCityValue:currentEmployee?.pCity || undefined,
+            rCityValue:currentEmployee?.rCity || undefined,
+
 
           }
 
 
           setDropDownValue(arrValue);
-          console.log(arrValue, 'locationsdepartmentarr');
+          console.log(arr, 'locationsdepartmentarr');
          
           setLocations(locations);
           

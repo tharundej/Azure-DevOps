@@ -52,7 +52,8 @@ import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgni
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [countruIsoCode,setCoutryIsoCode]=useState("")
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
 
@@ -395,7 +396,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setCoutryIsoCode(obj?.isoCode)
+        setPCoutryIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -417,8 +418,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.cityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
-         console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
+        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
+         //console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
       }
       catch(e){
   
@@ -442,8 +443,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       try {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
-  
-        setCoutryIsoCode(obj?.isoCode)
+        newArray.rstateOptions=State.getStatesOfCountry(obj?.isoCode);
+        setCoutryRIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -465,7 +466,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.rcityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
+        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
         // console.log(cityOptions1,'stateOptionsSatet')
       }
       catch(e){
