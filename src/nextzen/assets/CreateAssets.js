@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm, reset } from 'react-hook-form';
@@ -23,8 +23,10 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/ho
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreateAssets({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     assetsName: Yup.string().required('Asset Name is Required'),
     poNumber: Yup.string().required('PO Number is Required'),
@@ -63,7 +65,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       assetsCondition: currentData?.assetCondition || '',
       updatedDate: currentData?.updatedDate || '',
       deleteBit: currentData?.deleteBit || 0,
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || user?.companyID ? user?.companyID : '',
       operationalDays: currentData?.operationalDays || '',
       quantity: currentData?.quantity || 1,
       modelName: currentData?.moduleName || '',
@@ -153,7 +155,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
         const response = await getLocationAPI(data);
         console.log('location success', response);

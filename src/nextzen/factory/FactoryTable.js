@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -10,8 +10,11 @@ import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
+import UserContext from '../context/user/UserConext';
 
 const FactoryTable = () => {
+  const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -44,7 +47,7 @@ const FactoryTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
-        companyID: rowdata?.companyID || 'COMP1',
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
@@ -86,7 +89,7 @@ const FactoryTable = () => {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       locationName: '',
       locationPhone: '',

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -11,8 +11,10 @@ import { DeleteVendorAPI, getVendorListAPI } from 'src/api/Accounts/Vendor';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import CreateVendor from './CreateVendor';
+import UserContext from '../context/user/UserConext';
 
 const VendorTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -94,7 +96,7 @@ const VendorTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     page: 0,
     search: '',
     count: 5,
@@ -114,7 +116,12 @@ const VendorTable = () => {
     { id: 'vendorGSTNo', label: 'GST No', type: 'text', minWidth: '180px' },
     { id: 'vendorTANNo', label: 'TAN No', type: 'text', minWidth: '180px' },
     { id: 'vendorBankName', label: 'Bank Name', type: 'text', minWidth: '180px' },
-    { id: 'vendorAccountHolderName', label: 'Account Holder name', type: 'text', minWidth: '180px' },
+    {
+      id: 'vendorAccountHolderName',
+      label: 'Account Holder name',
+      type: 'text',
+      minWidth: '180px',
+    },
     { id: 'vendorBankAccountNo', label: 'Account No', type: 'text', minWidth: '180px' },
     { id: 'vendorBankIFSCCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
     { id: 'bankBranchName', label: 'Bank Branch', type: 'text', minWidth: '180px' },

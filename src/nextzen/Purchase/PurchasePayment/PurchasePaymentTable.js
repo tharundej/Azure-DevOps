@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -7,8 +7,10 @@ import axios from 'axios';
 import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const PurchasePaymentTable = () => {
+  const { user } = useContext(UserContext);
   const actions = [
     { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
     {
@@ -34,7 +36,7 @@ const PurchasePaymentTable = () => {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    fcompanyID: user?.companyID ? user?.companyID : '',
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },

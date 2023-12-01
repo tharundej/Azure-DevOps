@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -12,8 +12,10 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import CreateAssets from './CreateAssets';
 import { DeleteAssetsAPI } from 'src/api/Accounts/Assets';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const AssetsTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -96,7 +98,7 @@ const AssetsTable = () => {
   });
   const [bodyContent, setBodyContent] = useState([]);
   const defaultPayload = {
-    company_id: 'COMP1',
+    company_id: user?.companyID ? user?.companyID : '',
     page: 0,
     count: 5,
     search: '',
