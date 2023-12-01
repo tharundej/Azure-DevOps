@@ -136,21 +136,21 @@ export default function WorkWeek({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+        handleClose();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+        handleClose();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('UnExpected Error. Please try again.');
       setSnackbarOpen(true);
-      handleCloseEdit();
+      handleClose();
       console.log('error', error);
     }
   });

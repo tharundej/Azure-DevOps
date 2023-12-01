@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -10,8 +10,11 @@ import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
+import UserContext from '../context/user/UserConext';
 
 const FactoryTable = () => {
+  const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -24,8 +27,14 @@ const FactoryTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -38,7 +47,11 @@ const FactoryTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
+<<<<<<< HEAD
         companyID: rowdata?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
         title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
@@ -80,7 +93,11 @@ const FactoryTable = () => {
     count: 5,
     page: 0,
     search: '',
+<<<<<<< HEAD
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
+    companyId: user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
     externalFilters: {
       locationName: '',
       locationPhone: '',

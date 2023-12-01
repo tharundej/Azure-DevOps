@@ -39,6 +39,8 @@ export default function LeavePeriodForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleCloseEdit = () => setOpenEdit(false);
   const user =useContext(UserContext)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -160,7 +162,7 @@ export default function LeavePeriodForm({ currentUser }) {
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-        
+         handleClose();
       
       console.log('sucess', response);
 
@@ -169,7 +171,7 @@ export default function LeavePeriodForm({ currentUser }) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-      
+         handleClose();
       console.log('sucess', response);
 
       }
@@ -178,6 +180,7 @@ export default function LeavePeriodForm({ currentUser }) {
     setSnackbarSeverity('error');
     setSnackbarMessage('Error While Adding Leave Period. Please try again.');
     setSnackbarOpen(true);
+    handleClose();
    console.log('error', error);
  }
   });

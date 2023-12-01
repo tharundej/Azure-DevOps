@@ -7,8 +7,10 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import UserContext from '../context/user/UserConext';
 
 const BalanceSheetTable = () => {
+  const { user } = UserContext(UserContext);
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -30,7 +32,6 @@ const BalanceSheetTable = () => {
         options: ['active', 'inactive'],
         field_name: 'status',
       },
-      
     ],
   });
   const [bodyContent, setBodyContent] = useState([]);
@@ -63,13 +64,16 @@ const BalanceSheetTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
     count: 5,
     page: 0,
     search: '',
+<<<<<<< HEAD
     fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
+    fcompanyID: user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
     externalFilters: {
       fMaritalStatus: '',
       fBloodGroup: '',

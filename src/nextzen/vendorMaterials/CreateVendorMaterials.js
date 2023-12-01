@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,8 +14,10 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
 import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
     hsnId: Yup.number().required('HSN ID is Required'),
@@ -28,7 +30,11 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     () => ({
       materialID: currentData?.id || 0,
       vendorID: currentData?.vendorId || 0,
+<<<<<<< HEAD
       companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       materialName: currentData?.materialName || '',
       hsnId: currentData?.hsnId || '',
       materialType: currentData?.materialType || '',
@@ -60,7 +66,11 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchVendor = async () => {
+<<<<<<< HEAD
       const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
+=======
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       try {
         const response = await getVendorAPI(data);
         setVendorOptions(response);

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,8 +14,10 @@ import { createFactoryAPI, updateFactoryAPI } from 'src/api/Accounts/Factory';
 import { getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
+  const {user} = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
     locationPhone: Yup.number(),
@@ -31,7 +33,11 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const defaultValues = useMemo(
     () => ({
       locationID: currentData?.locationID || 0,
+<<<<<<< HEAD
       companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+=======
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       locationName: currentData?.locationName || '',
       locationPhone: currentData?.locationPhone || '',
       locationEmailID: currentData?.locationEmailid || '',
@@ -65,7 +71,11 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
+<<<<<<< HEAD
       const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
+=======
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
+>>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);

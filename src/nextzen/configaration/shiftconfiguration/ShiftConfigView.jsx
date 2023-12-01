@@ -289,7 +289,7 @@ export default function ShiftConfigView({currentUser}) {
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           {/* <DialogTitle>Edit Shift Config</DialogTitle> */}
-          <ModalHeader heading="Edit Shift Config" />
+          <ModalHeader heading="Edit Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}

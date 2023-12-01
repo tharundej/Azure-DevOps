@@ -160,9 +160,9 @@ export function useNavData() {
       key:'configurations',
       children: [
         { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
-        { title: t('Compoff Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
+        { title: t('Compensantory Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
          { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-         { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
+        //  { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
          { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
          { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
          { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
