@@ -17,7 +17,7 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Shift Config'];
+const tabLabels = ['Shift Configuration'];
   const tabContents = [
     <div>
       <ShiftConfigView/>

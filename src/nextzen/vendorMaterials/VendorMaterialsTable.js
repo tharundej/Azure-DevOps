@@ -108,6 +108,7 @@ const VendorMaterialsTable = () => {
     count: 5,
   };
   const [TABLE_HEAD, setTableHead] = useState([
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'vendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
     { id: 'materialName', label: 'Material Name', type: 'text', minWidth: '180px' },
     { id: 'hsnId', label: 'HSN ID', type: 'text', minWidth: '180px' },
@@ -155,6 +156,7 @@ const VendorMaterialsTable = () => {
         rowActions={actions}
         filterName="VendorMaterialsHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

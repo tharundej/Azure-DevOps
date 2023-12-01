@@ -113,6 +113,7 @@ const SalesOrderTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="SaleOrderHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {baseUrl} from '../../../global/BaseUrl';
 import {
   Alert,
   Autocomplete,
@@ -124,20 +124,21 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
       setSnackbarOpen(true);
+      handleCloseEdit();
       console.log('error', error);
     }
   };
@@ -183,9 +184,10 @@ export default function LeavePeriod({ currentUser }) {
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = 'COMP1';
-    data.leavePeriodType=valueSelected?.leavePeriodType?.type
+    data.leavePeriodType = valueSelected?.leavePeriodType || null;
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
+    data.leavePeriodID = valueSelected?.leavePeriodID;
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
@@ -196,7 +198,7 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-      
+
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -204,7 +206,7 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        
+
         console.log('sucess', response);
       }
     } catch (error) {
@@ -252,7 +254,7 @@ export default function LeavePeriod({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(false);
   };
-  
+
   React.useEffect(() => {}, []);
   return (
     <>
@@ -284,8 +286,8 @@ export default function LeavePeriod({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-        <ModalHeader heading="Edit Leave Period" />
-         
+          <ModalHeader heading="Edit Leave Period" />
+
           <DialogContent>
             <Box
               rowGap={3}
@@ -300,13 +302,11 @@ export default function LeavePeriod({ currentUser }) {
               <Autocomplete
                 name="leavePeriodType"
                 label="Leave Period Type"
-                options={leavePeriodNames}
+                options={leavePeriodNames.map((name) => name.type)}
                 value={valueSelected?.leavePeriodType || null}
-                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
+                //  getOptionLabel={(option) => option.type} // Use 'label' as the display label
                 // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('leavePeriodType', newValue || null)
-                }
+                onChange={(e, newValue) => handleSelectChange('leavePeriodType', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Leave Period Type" variant="outlined" />
                 )}
@@ -317,7 +317,8 @@ export default function LeavePeriod({ currentUser }) {
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
                     value={selectedDates2}
-                    onChange={handleDateChanges2}
+                    // onChange={handleDateChanges2}
+                    onChange={(e, newValue) => handleSelectChange('startDate', newValue || null)}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -347,12 +348,13 @@ export default function LeavePeriod({ currentUser }) {
               Save
             </LoadingButton> */}
             <Button
-             sx={{backgroundColor:'#3B82F6'}}
-             variant="contained"
-             onClick={onSubmit1}
-             type="submit"
-             >Save
-             </Button>
+              sx={{ backgroundColor: '#3B82F6' }}
+              variant="contained"
+              onClick={onSubmit1}
+              type="submit"
+            >
+              Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

@@ -25,40 +25,73 @@ const PurchaseInvoiceTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 5,
-    page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    page: 0,
+    perPage: 10,
+    companyId: 'COMP1',
+    externalFilters: {
+      invoiceDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      dueDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      poDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      paymentMode: '',
+      status: '',
+    },
+    sort: {
+      orderBy: 'invoiceDate',
+      order: 1,
+    },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
-    { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'ItemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'Total Weight', label: 'Total Weight', type: 'text', minWidth: '180px' },
-    { id: 'Vehicle Weight', label: 'Vehicle Weight', type: 'text', minWidth: '180px' },
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'paymentMode', label: 'paymentMode', type: 'text', minWidth: '180px' },
+    { id: 'netTotalAmount', label: 'netTotalAmount', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'gstAmount', type: 'text', minWidth: '180px' },
     {
-      id: 'Recieved Material Weight',
-      label: 'Recieved Material Weight',
+      id: 'totalAmount',
+      label: 'totalAmount',
       type: 'text',
       minWidth: '180px',
     },
     {
-      id: 'Balance Material Weight',
-      label: 'Balance Material Weight',
+      id: 'status',
+      label: 'status',
       type: 'text',
       minWidth: '180px',
     },
-    { id: 'Rate', label: 'Rate', type: 'text', minWidth: '180px' },
-    { id: ' Unit of Measure', label: ' Unit of Measure', type: 'text', minWidth: '180px' },
-    { id: ' Amount', label: ' Amount', type: 'text', minWidth: '180px' },
-    { id: 'Paid Date', label: 'Paid Date', type: 'text', minWidth: '180px' },
-    { id: 'No of Installments', label: 'No of Installments', type: 'text', minWidth: '180px' },
-    { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
-    { id: 'Payment Method', label: 'Payment Method', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'totalWeight', label: 'totalWeight', type: 'text', minWidth: '180px' },
+    { id: 'vehicleWeight', label: 'vehicleWeight', type: 'text', minWidth: '180px' },
+    { id: 'comments', label: 'comments', type: 'text', minWidth: '180px' },
+    {
+      id: 'receivedMaterialWeight',
+      label: 'receivedMaterialWeight',
+      type: 'text',
+      minWidth: '180px',
+    },
+    {
+      id: 'balanceMaterialWeight',
+      label: 'balanceMaterialWeight',
+      type: 'text',
+      minWidth: '180px',
+    },
+    { id: 'quantity', label: 'quantity', type: 'text', minWidth: '180px' },
+    { id: 'rate', label: 'rate', type: 'text', minWidth: '180px' },
+    { id: 'unitOfMeasure', label: 'unitOfMeasure', type: 'text', minWidth: '180px' },
+    { id: 'amount', label: 'amount', type: 'text', minWidth: '180px' },
+    { id: 'dueDate', label: 'dueDate', type: 'text', minWidth: '180px' },
+    { id: 'PoDate', label: 'PoDate', type: 'text', minWidth: '180px' },
+    { id: 'materialName', label: 'materialName', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -67,11 +100,12 @@ const PurchaseInvoiceTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchaseOrderDetails"
+        endpoint="/listPurchaseInvoice"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseInvoiceHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

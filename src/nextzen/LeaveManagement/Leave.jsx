@@ -26,7 +26,7 @@ export default function BasicCard() {
   const dataObj = [
     {
       id: 'approveLeave',
-      label: 'Leave Approval',
+      label: user?.roleID === 1 ? 'Leave Applications' : 'Leave Approval',
       content: <Approveleave key="approveLeave" />,
     },
     {
@@ -34,7 +34,6 @@ export default function BasicCard() {
       label: 'Leave Overview',
       content: <LeaveRequest key="leaveCalendar" />,
     },
-    // Add other data as needed
   ];
 
   useEffect(() => {

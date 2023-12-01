@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import { Alert, Snackbar } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,10 +36,14 @@ export default function HolidaysForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleCloseEdit = () => setOpenEdit(false);
   const [formData, setFormData] = useState({});
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
     holidayName: Yup.string().required('holiday Name is Required'),
     fulldayHalfday: Yup.string().required('Fullday/Halfday is Required'),
@@ -118,13 +123,35 @@ export default function HolidaysForm({ currentUser }) {
 
     try {
       const response = await axios.post(
-        'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addHoliday',
+        baseUrl+'/addHoliday',
         data
       );
+      if(response?.data?.code===200  ){
+        handleClose()
+        setSnackbarSeverity('success');
+         setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+         handleClose();
+      
       console.log('sucess', response);
-    } catch (error) {
-      console.log('error', error);
-    }
+
+      }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+         handleClose();
+      console.log('sucess', response);
+
+      }
+    
+  } catch (error) {
+    setSnackbarSeverity('error');
+    setSnackbarMessage('Error While Adding Leave Period. Please try again.');
+    setSnackbarOpen(true);
+    handleClose();
+   console.log('error', error);
+ }
   });
   const handleDateChanges = (date) => {
     setSelectedDates(date);
@@ -138,10 +165,29 @@ export default function HolidaysForm({ currentUser }) {
       locationName: selectedOption?.locationName,
     });
   };
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setSnackbarOpen(false)
+    setOpen(false);
+  };
   console.log(formData, 'formdata for location');
   return (
     <>
+      <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={4000}
+    onClose={snackBarAlertHandleClose}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+  >
+    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"

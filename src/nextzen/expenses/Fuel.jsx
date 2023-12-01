@@ -26,7 +26,7 @@ export default function Fuel() {
 		  // },
 		  data: data1,
 		};
-	
+
 		axios
 		  .request(config)
 		  .then((response) => {
@@ -37,10 +37,10 @@ export default function Fuel() {
 			console.log(error);
 		  });
 	  };
-	
+
 	  useEffect(() => {
 		ApiHit();
-		
+
 	  }, []);
 	  const defaultPayload = {
 		count: 5,
@@ -78,7 +78,7 @@ export default function Fuel() {
 		{ id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
 		{ id: 'Date', label: 'Date', type: 'text', minWidth: '180px' },
 		{ id: 'Vehicle No.', label: 'Vehicle No.', type: 'text', minWidth: '180px' },
-		{ id: 'Invoice No.', label: 'Invoide No.', type: 'text', minWidth: '180px' },
+		{ id: 'Invoice No.', label: 'Invoice No.', type: 'text', minWidth: '180px' },
 		{ id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
 		{ id: 'Total Amount', label: 'Total Amount', type: 'text', minWidth: '180px' },
 		{ id: 'Advance Amount', label: 'Balance Amount', type: 'text', minWidth: '180px' },

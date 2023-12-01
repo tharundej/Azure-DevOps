@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -73,13 +73,7 @@ export default function MyClaims({ currentUser ,}) {
   //   "expense_configuration_id": 1,
   //    "expense_name": "hotel"
   // },
-  const compoff_type = [
-    { expense_configuration_id: 1, expense_name: "hotel" },
-    { expense_configuration_id: 2, expense_name: "medical" },
-    { expense_configuration_id: 3, expense_name: "travel" },
-   
-
-  ]
+  const[claimTypeOptions, setClaimTypeOptions]= useState([]);
   const currency = [
     {
       value: 'USD',
@@ -101,26 +95,26 @@ export default function MyClaims({ currentUser ,}) {
 
   
   const TABLE_HEAD = [
-    {
-      id: "employeename",
-      label: " Employee Name",
-      width: 180,
-      type: "text",
-      containesAvatar: false,
+    // {
+    //   id: "employeeName",
+    //   label: " Employee Name",
+    //   width: 180,
+    //   type: "text",
+    //   containesAvatar: false,
 
-      secondaryText: "email",
-    },
-    { id: "claim_type", label: "Claim Type", width: 180, type: "text" },
-    { id: "claim_date", label: "Claim Date", width: 220, type: "text" },
-    { id: "claim_amount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expense_start_date", label: "Expense Start Date", width: 100, type: "text" },
-    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
-    { id: "expense_end_date", label: "Expense End Date", width: 100, type: "text" },
-    { id: "total_days", label: "Total Days", width: 100, type: "text" },
-    { id: "approve_amount", label: "Approved Amount", width: 100, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 100, type: "text" },
-    { id: "approved_date", label: "Approved Date", width: 100, type: "text" },
-    { id: "Payment_status", label: "Payment Status", width: 100, type: "badge" },
+    //   secondaryText: "email",
+    // },
+    { id: "claimType", label: "Claim Type", width: 180, type: "text" },
+    { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
+    { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
+    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
+    
+    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "approveAmount", label: "Approved Amount", width: 100, type: "text" },
+    { id: "approverName", label: "Approver Name", width: 100, type: "text" },
+    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
+    { id: "PaymentStatus", label: "Payment Status", width: 100, type: "badge" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
 
@@ -132,15 +126,15 @@ export default function MyClaims({ currentUser ,}) {
   const companyID =localStorage.getItem('companyID');
   const defaultPayload={
     "companyId":companyID,
-    "employee_id":employeeID,
+    "employeeId":employeeID,
     "page":0,
     "count":5,
     "search":"",
     "externalFilters":{
-      "claim_start_date":"",
-      "claim_end_date":"",
+      "claimStartDate":"",
+      "claimEndDate":"",
       "status":"",
-      "claim_type":""
+      "claimType":""
     },
     "sort":{
        "key":1,
@@ -165,10 +159,10 @@ const handleClick=()=>{
 
   const externalFilter = {
     
-    claim_start_date: "",
-    claim_end_date: "",
+    claimStartDate: "",
+    claimEndDate: "",
     status: "",
-    claim_type: ""
+    claimType: ""
 
   }
    const dialogConfig={
@@ -177,9 +171,9 @@ const handleClick=()=>{
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
       // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: 'Claim Start Date', name: 'claim_start_date',category:"claim",  },
-      { type: 'datePicker', label: 'Claim End Date', name: 'claim_end_date',category:"claim",  },
-      { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
+      { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
+      { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
+      { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claimType", options: ['Hotel', 'Medical', 'Travel'] },
       { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
@@ -198,6 +192,7 @@ const handleClick=()=>{
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
+    getProjectName(claimTypePayLoad);
   }
   const handleClose = () => setOpen(false);
 
@@ -418,16 +413,20 @@ console.log(editData,"editData")
 
   
   const onclickActions = async(rowData,eventData) => {
+    
+    await getProjectName(claimTypePayLoad);
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
      
-      console.log(rowData,'rowDatarowData')
+      console.log(rowData,claimTypeOptions,'rowDatarowData')
       // hit api for options return the resposnse.data.data
       // const arr= await ApiHitClaimTypeOptions()
-      
+      // getProjectName(claimTypePayLoad);
       const updatedRowData = {
         ...rowData,
-        company_id: 'COMP2',
+        companyId: companyID,
+        employeeId:employeeID,
+        claimType: { expenseConfigurationId: 1, expenseName: "hotel" },
       };
     
       console.log("updatedRowData",updatedRowData)
@@ -534,8 +533,76 @@ console.log(editData,"editData")
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-  console.log(file,"file")
-  console.log(defaultValues,"ppp")
+// dropdown apis
+
+// useEffect(()=>{
+  
+  // getProjectName(claimTypePayLoad)
+// },[])
+
+
+// const claimTypeOptions = [
+//   { expenseConfigurationId: 1, expenseName: "hotel" },
+//   { expenseConfigurationId: 2, expenseName: "medical" },
+//   { expenseConfigurationId: 3, expenseName: "travel" },
+ 
+
+// ]
+
+
+const claimTypePayLoad = {
+  companyId:companyID,
+}
+console.log(claimTypePayLoad,"claimTypePayLoad")
+const getProjectName = async(claimTypePayLoad)=>{
+  console.log(claimTypePayLoad,"claimTypePayLoad")
+ 
+    const response = await axios.post(baseUrl+'/GetClaimType', claimTypePayLoad).then(
+      (response) => {
+        console.log('sucesswwwwee', response?.data?.data);
+        setClaimTypeOptions(response?.data?.data)
+        // setProjectDetails(response?.data?.data)
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+     
+      }
+    );
+
+
+    
+  } 
+
+const getClaimTypeData = (claimTypePayLoad) => {
+  console.log("response for claimtype");
+  const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+   
+    url: baseUrl + "/GetClaimType",
+    // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
+    
+    headers: {
+      Authorization:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
+    },
+    data: claimTypePayLoad,
+  };
+
+  axios.request(config).then((response) => {
+    
+      console.log(response,"response for claimtype");
+
+      
+    })
+
+    .catch((error) => {
+     
+      console.log(error);
+    });
+};
+  
 
   return (
     <>
@@ -581,7 +648,7 @@ console.log(editData,"editData")
               <RHFAutocomplete
                 name="type_oc_claim"
                 label="Type Of Claim"
-                options={claim_type.map((claimtype) =>claimtype.label)}
+                options={claimTypeOptions.map((claimtype) =>claimtype.expenseName)}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
              
@@ -716,15 +783,16 @@ console.log(editData,"editData")
               
 
 <Autocomplete
-  name="claim_type"
+  name="claimType"
   label="Claim Type"
-  options={compoff_type}
+  options={claimTypeOptions}
   
-  getOptionLabel={(option) => option.expense_name}
+  getOptionLabel={(option) => option.expenseName}
   // getOptionValue={(option) => option.value} 
   // isOptionEqualToValue={(option, value) => option.value === value} 
-  value={editData?.claim_type || null}  
-  onChange={(event, newValue) => {console.log("newValue", newValue);handleEditChange('claim_type', newValue)}}
+  value={editData?.claimType}  
+  onChange={(event, newValue) => {console.log("newValue", newValue);
+  handleEditChange('claimType', newValue)}}
   renderInput={(params) => (
     <TextField {...params} label="Claim Type" variant="outlined" />
   )}
@@ -737,7 +805,7 @@ console.log(editData,"editData")
                   readOnly
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Claim Date"
-                    value={ dayjs( editData['claim_date'] || null)}
+                    value={ dayjs( editData['claimDate'] || null)}
                     // onChange={(newValue) => {
                       
                     //   handleEditChange('claim_date', formatDateToYYYYMMDD(newValue));
@@ -747,9 +815,9 @@ console.log(editData,"editData")
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="claim_amount"  label="Claim Amount" 
-              value={editData?.claim_amount}
-              onChange={(event) => handleEditChange('claim_amount', parseInt(event.target.value, 10))}
+              <RHFTextField name="claimAmount"  label="Claim Amount" 
+              value={editData?.claimAmount}
+              onChange={(event) => handleEditChange('claimAmount', parseInt(event.target.value, 10))}
               />
              
               <Grid sx={{ alignSelf: "flex-start" }}  >
@@ -760,9 +828,9 @@ console.log(editData,"editData")
                     label="Expense Start Date"
                     
                     // value={editData?.expense_date || ""}
-                    value={ dayjs( editData['expense_start_date'] || null)}
+                    value={ dayjs( editData['expenseStartDate'] || null)}
                     onChange={(newValue) => {  
-                      handleEditChange('expense_start_date', formatDateToYYYYMMDD(newValue));
+                      handleEditChange('expenseStartDate', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}
@@ -776,9 +844,9 @@ console.log(editData,"editData")
                     label="Expense End Date"
                     
                     // value={editData?.expense_date || ""}
-                    value={ dayjs( editData['expense_end_date'] || null)}
+                    value={ dayjs( editData['expenseEndDate'] || null)}
                     onChange={(newValue) => {  
-                      handleEditChange('expense_end_date', formatDateToYYYYMMDD(newValue));
+                      handleEditChange('expenseEndDate', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                   {/* </DemoContainer> */}
