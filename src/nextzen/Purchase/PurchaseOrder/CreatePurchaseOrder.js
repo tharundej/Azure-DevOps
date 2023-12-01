@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -24,8 +24,10 @@ import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { createPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreatePurchaseOrder({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     paymentTerm: Yup.string().required(),
     grandTotalAmount: Yup.number().required(),
@@ -36,7 +38,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
 
   const defaultValues = useMemo(
     () => ({
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || user?.companyID ? user?.companyID : '',
       expectedDeliveryDate: currentData?.expectedDeliveryDate || '',
       paymentTerm: currentData?.paymentTerm || '',
       vendorId: currentData?.vendorId || '',
@@ -78,7 +80,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const fetchVendor = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getVendorAPI(data);
       setVendorOptions(response);
@@ -91,7 +93,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     }
   };
   const fetchLocation = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getLocationAPI(data);
       console.log('location success', response);
@@ -125,7 +127,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     try {
       if (newValue) {
         const vendorMaterialPayload = {
-          companyId: 'COMP1',
+          companyId: user?.companyID ? user?.companyID : '',
           search: '',
           externalFilters: {
             materialName: '',
@@ -155,7 +157,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
 
   const HandleInputChange = (e, index) => {
-    console.log({index});
+    console.log({ index });
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
   };

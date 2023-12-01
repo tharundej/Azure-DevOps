@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -13,8 +13,10 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
+  const {user} =useContext(UserContext)
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),

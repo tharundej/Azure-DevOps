@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -9,8 +9,10 @@ import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { deleteCutomerApi } from 'src/api/Accounts/Customers';
 import CreateCustomers from './CreateCustomers';
+import UserContext from '../context/user/UserConext';
 
 const CustomersTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -90,7 +92,7 @@ const CustomersTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     page: 0,
     count: 10,
     search: '',

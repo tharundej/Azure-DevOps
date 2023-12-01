@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -12,8 +12,10 @@ import {
 import SnackBarComponent from '../global/SnackBarComponent';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import CreateVendorMaterials from './CreateVendorMaterials';
+import UserContext from '../context/user/UserConext';
 
 const VendorMaterialsTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -96,7 +98,7 @@ const VendorMaterialsTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     search: '',
     externalFilters: {
       materialName: '',
