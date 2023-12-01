@@ -7,7 +7,7 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-
+//import { async } from '@firebase/util';
 import SnackBarComponent from '../global/SnackBarComponent';
 import CreateAssets from './CreateAssets';
 import { DeleteAssetsAPI } from 'src/api/Accounts/Assets';
