@@ -52,10 +52,10 @@ export default function LeaveType({ currentUser }) {
   const leaveTypeNames = [{ type: 'Annual' }, { type: 'Month' }];
   const TABLE_HEAD = [
     { id: 'leaveTypeName', label: 'Leave Name', type: 'text', minWidth: 180 },
-    { id: 'totalNumberLeave', label: 'Total Number Of Leaves', type: 'text', minWidth: 180 },
-    { id: 'leavePeriodType', label: 'Term Type', type: 'text', minWidth: 180 },
+    { id: 'totalNumberLeave', label: 'Total Number Of Leaves Per Year', type: 'text', minWidth: 280 },
+    // { id: 'leavePeriodType', label: 'Term Type', type: 'text', minWidth: 180 },
     { id: 'leaveTakeRange', label: 'Leave Take Range', type: 'text', minWidth: 180 },
-    { id: 'upperCapLimit', label: 'EL Upper Cap Limit', type: 'text', minWidth: 180 },
+    { id: 'upperCapLimit', label: 'Leave Upper Cap Limit', type: 'text', minWidth: 180 },
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
@@ -65,7 +65,7 @@ export default function LeaveType({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       leaveTypeName: '',
       leavePeriodType: '',
@@ -122,14 +122,14 @@ export default function LeaveType({ currentUser }) {
   };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
     data.leaveTypeName=valueSelected.leaveTypeName
     data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
     data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
     data.leaveTypeID=JSON.parse(valueSelected.leaveTypeID,10)
     data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
-    data.leavePeriodType=valueSelected.leavePeriodType
+    // data.leavePeriodType=valueSelected.leavePeriodType
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
@@ -139,7 +139,7 @@ export default function LeaveType({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleClose();
+        // handleClose();
         handleCloseEdit();
         console.log('sucess', response);
       }
@@ -181,7 +181,7 @@ export default function LeaveType({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         leaveTypeID: rowdata.leaveTypeID,
       };
       const response = await axios.post(baseUrl + '/deleteLeaveType', data);
@@ -284,11 +284,11 @@ export default function LeaveType({ currentUser }) {
               />
               <RHFTextField
                 name="upperCapLimit"
-                label="EL Upper Cap Limit"
+                label="Upper Cap Limit"
                 value={valueSelected?.upperCapLimit}
                 onChange={(e) => handleSelectChange('upperCapLimit', e.target.value)}
               />
-              <Autocomplete
+              {/* <Autocomplete
                 name="leaveTypeName"
                 label="Term Type"
                 options={leaveTypeNames.map((name)=>name.type)}
@@ -301,7 +301,7 @@ export default function LeaveType({ currentUser }) {
                 renderInput={(params) => (
                   <TextField {...params} label="leave Type Name" variant="outlined" />
                 )}
-              />
+              /> */}
               <RHFTextField
                 name="leaveTakeRange"
                 label="Leave Take Range"

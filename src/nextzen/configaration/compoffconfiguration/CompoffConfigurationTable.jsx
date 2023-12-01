@@ -46,7 +46,7 @@ export default function CompoffConfigurationTable({currentUser}) {
     const TABLE_HEAD = [
       { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth:280 },
       { id: 'expiryDays', label: 'Expiry Days', type: 'text' , minWidth:280},
-      { id: 'amount', label: 'Amount', type: 'text' , minWidth:280},
+      { id: 'amount', label: '% of Basic Pay', type: 'text' , minWidth:280},
     ];
     const actions = [
       { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' ,endpoint:'/'},
@@ -70,7 +70,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       "count": 5,
       "page": 0,
       "search": "",
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "externalFilters": {
         "compensantoryPolicies": ""
       },
@@ -98,7 +98,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       try {
         console.log(rowdata, 'rowData:::::');
         const data = {
-            companyID:"COMP1",
+            companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
              compensantoryConfigurationID: rowdata.compensantoryConfigurationID,
         };
         const response = await axios.post( baseUrl+'/deleteCompensantoryConfiguration', data);
@@ -201,7 +201,7 @@ export default function CompoffConfigurationTable({currentUser}) {
   
   
     const onSubmit1 = handleSubmit1(async (data) => {
-      data.companyId = 'COMP1';
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       data.compensantoryPolicies = editData?.compensantoryPolicies
       data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
       data.expiryDays=editData?.expiryDays
@@ -237,7 +237,7 @@ export default function CompoffConfigurationTable({currentUser}) {
     });
   
     const onSubmit2 = handleSubmit2(async (data) => {
-      data.companyId = 'COMP1';
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       data.compensantoryPolicies = editData?.compensantoryPolicies
       data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
       data.amount=editData?.amount
@@ -312,7 +312,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       >
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <ModalHeader heading="Edit Comoff Config" />
+            <ModalHeader heading="Edit Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete
@@ -370,7 +370,7 @@ export default function CompoffConfigurationTable({currentUser}) {
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
-           <ModalHeader heading="Edit Comoff Config" />
+           <ModalHeader heading="Edit Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete

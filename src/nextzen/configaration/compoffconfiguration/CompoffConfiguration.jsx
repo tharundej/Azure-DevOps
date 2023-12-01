@@ -105,7 +105,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
 
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = selectedOption?.type;
 
     console.log('submitted data111', data);
@@ -122,7 +122,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = selectedOption?.type;
     console.log('submitted data2222', data);
 
@@ -143,9 +143,9 @@ export default function ComoffConfigurationForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
-        Add Comoff Config
+        Add Compensantory Configuration
       </Button>
       <Dialog
         fullWidth
@@ -153,12 +153,12 @@ export default function ComoffConfigurationForm({ currentUser }) {
         open={open}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 420 },
+          sx: { maxWidth: 360 },
         }}
       >
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <ModalHeader heading="Add Compoff Config" />
+            <ModalHeader heading=" Add Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete
@@ -169,7 +169,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
               getOptionLabel={getOptionLabel}
               value={selectedOption} // Use selectedOption or an empty string
               onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
+              sx={{ width: 300, padding: '8px' ,marginTop:'15px'}}
               renderInput={(params) => <TextField {...params} label="Compensatory" />}
             />
               <Box
@@ -214,7 +214,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
-            <ModalHeader heading="Add Compoff Config" />
+            <ModalHeader heading=" Add Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete
@@ -225,7 +225,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
               getOptionLabel={getOptionLabel}
               value={selectedOption} // Use selectedOption or an empty string
               onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' }}
+              sx={{ width: 300, padding: '8px',marginTop:'15px' }}
               renderInput={(params) => <TextField {...params} label="Compensatory" />}
             />
               <Box
@@ -241,7 +241,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
 
                   <RHFTextField
                     name="amount"
-                    label="Amount"
+                    label="% of Basic Pay"
                     sx={{width:280,marginLeft:1.5}}
                   />
                 

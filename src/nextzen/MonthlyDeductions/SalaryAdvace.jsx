@@ -15,7 +15,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function SalaryAdvace({defaultPayload}) {
+export default function SalaryAdvace({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -31,19 +31,19 @@ export default function SalaryAdvace({defaultPayload}) {
          
         },
     
-        { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+        { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
     
         { id: "requestAmount", label: "Request Amount", width: "7pc", type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-        { id: "PaidAmount", label: "paid Amount", width: "7pc", type: "text" },
-        { id: "approverName", label: "Approver Name", width: 100, type: "text" },
-        { id: "commentStatus", label: "User Comments", width: 100, type: "text" },
-        { id: "hrComments", label: "Approver Comments", width: 100, type: "text" },
-        { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100,type: "badge"},
+        { id: "paidDate", label: "Paid Date", minWidth: "6pc", type: "text" },
+        { id: "PaidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
+        { id: "approverName", label: "Approver", minWidth: "7pc", type: "text" },
+        { id: "commentStatus", label: "User Remarks", minWidth: "7pc", type: "text" },
+        { id: "hrComments", label: "HR Remarks", minWidth: "7pc", type: "text" },
+        { id: "paymentStatus", label: "Payment Status", minWidth: "7pc", type: "text" },
+        { id: "status", label: "Status", minWidth: "7pc",type: "badge"},
         // { id: '', width: 88 },
     
       ];
@@ -266,20 +266,7 @@ const [amountValue,setAmountValue] = useState();
       
   return (
     <>
-      {(showForm) && (
- <Dialog
- fullWidth
- maxWidth={false}
- open={showForm}
- onClose={handleClose}
- PaperProps={{
-   sx: { maxWidth: 770 , overflow:'hidden'},
- }}
- className="custom-dialog"  
->
- <SalaryAdvanceForm handleClose={handleClose} />
-      </Dialog>
-    )}
+   
       {(showEditForm) && (
  <Dialog
  fullWidth
@@ -385,6 +372,7 @@ endpoint='/searchSalaryAdvance'
 filterName='SalaryFilter'
 rowActions={actionsBasedOnRoles}
 bodyData="data"
+componentPage={componentPage}
 onClickActions={onClickActions}
 />  
     </>

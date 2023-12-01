@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -9,8 +9,10 @@ import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { deleteCutomerApi } from 'src/api/Accounts/Customers';
 import CreateCustomers from './CreateCustomers';
+import UserContext from '../context/user/UserConext';
 
 const CustomersTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -23,8 +25,14 @@ const CustomersTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -84,7 +92,7 @@ const CustomersTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     page: 0,
     count: 10,
     search: '',
@@ -94,7 +102,7 @@ const CustomersTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
     { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
     { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
@@ -145,6 +153,7 @@ const CustomersTable = () => {
         rowActions={actions}
         filterName="CustomersHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

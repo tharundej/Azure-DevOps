@@ -66,6 +66,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
     overflow: 'hidden',
+    
   },
   '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
@@ -101,13 +102,13 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       console.log(arr, 'sairam');
       setLeaveTypes(arr);
     }
-    async function call2(){
-      const arr=await leavePeriodType();
-      console.log(arr,'sairam')
-      setLeavePeriodTypes(arr);
-    }
+    // async function call2(){
+    //   const arr=await leavePeriodType();
+    //   console.log(arr,'sairam')
+    //   setLeavePeriodTypes(arr);
+    // }
     call();
-    call2();
+    // call2();
   }, []);
   const termTypes = ['Annual', 'Month'];
   const leaveNames = ['Diwali'];
@@ -184,13 +185,13 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       dropdown?.leaveTypeName?.forEach((item, index) => {
         arr1.push(item?.leaveTypeName);
       });
-      const arr2 = [];
-      dropdown1?.leavePeriodType?.forEach((item, index) => {
-        arr2.push(item?.leavePeriodType);
-      });
+      // const arr2 = [];
+      // dropdown1?.leavePeriodType?.forEach((item, index) => {
+      //   arr2.push(item?.leavePeriodType);
+      // });
       // setDatesData(arr1);
       resolve(arr1);
-      resolve(arr2);
+      // resolve(arr2);
     });
   }
 
@@ -245,13 +246,13 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
     const obj = {
       leaveTypeName: comma,
     };
-    const obj1={
-      leavePeriodType: comma,
-    };
+    // const obj1={
+    //   leavePeriodType: comma,
+    // };
     filterData(obj);
-    filterData(obj1);
+    // filterData(obj1);
     console.log(obj, 'ram');
-    console.log(obj1,'obj2');
+    // console.log(obj1,'obj2');
     //   filterData(data);
     handleClickClose();
   };
@@ -262,7 +263,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const leaveperiod = await leaveTypeName(Obj);
           var optionsArr = { ...options };
@@ -274,22 +275,22 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           setOptions(optionsArr);
         } catch (error) {}
       }
-      async function call2() {
-        try {
-          const Obj = {
-            companyID: 'COMP1',
-          };
-          const leaveperiod = await leavePeriodType(Obj);
-          var optionsArr = { ...options1 };
+      // async function call2() {
+      //   try {
+      //     const Obj = {
+      //       companyID: 'COMP1',
+      //     };
+      //     const leaveperiod = await leavePeriodType(Obj);
+      //     var optionsArr = { ...options1 };
 
-          optionsArr.leavePeriodType = leaveperiod;
-          // optionsArr.leavePeriodType=desgination;
-          console.log(optionsArr, 'optionsArr2');
+      //     optionsArr.leavePeriodType = leaveperiod;
+      //     // optionsArr.leavePeriodType=desgination;
+      //     console.log(optionsArr, 'optionsArr2');
 
-          setOptions1(optionsArr);
-        } catch (error) {}
-      }
-      call2();
+      //     setOptions1(optionsArr);
+      //   } catch (error) {}
+      // }
+      // call2();
       call();
     }
   }, [open]);
@@ -331,7 +332,9 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
       <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
+        // maxWidth="sm"
         open={open}
+        
         // className="custom-dialog-width"
       >
         <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
@@ -342,7 +345,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
         </DialogTitle>
 
         <DialogContent
-          sx={{ minWidth: '300px' }}
+          sx={{ minWidth: '200px' }}
           //   style={{
           //     paddingTop: '20px',
           //     paddingRight: '17px',
@@ -356,31 +359,16 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           <Grid
             container
             spacing={1}
-            sx={{ flexDirection: 'row', display: 'flex', marginTop: '1rem' }}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
             item
           >
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel id="leavePeriodType">Leave Period Type</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-multiple-name-shift_name_1"
-                  id="demo-multiple-shift_name_1"
-                  multiple
-                  value={dropdownleavePeriodType}
-                  onChange={(e) => handleChangeDropDown(e, 'leavePeriodType')}
-                  input={<OutlinedInput label="Leave Period Type" />}
-                  MenuProps={MenuProps}
-                  // sx={{minWidth:'300px'}}
-                >
-                  {leavePeriodTypes.map((name) => (
-                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                      {name?.leavePeriodType}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+           
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel id="leaveTypeName">Leave Name</InputLabel>
@@ -402,8 +390,6 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
             </Grid>
           </Grid>
         </DialogContent>

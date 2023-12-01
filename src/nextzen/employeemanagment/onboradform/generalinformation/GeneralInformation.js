@@ -44,7 +44,7 @@ import SnackBar from 'src/nextzen/global/SnackBar';
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { Country, State, City }  from 'country-state-city';
+ import { Country, State, City }  from 'country-state-city';
 
 import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation,ApiHitleavePeriodType,ApiHitleaveNameType} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
@@ -80,22 +80,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     }
   }))
   useEffect(()=>{
-    async function fetchLocations (){
-      try{
-        
-        const obj=Country.getAllCountries();
-        const newArray={...options};
-        newArray.countryOptions=obj;
-        newArray.rcountryOptions=obj;
-        console.log(obj,'ooooooo')
-        setOptions(newArray)
-
-      }
-      catch (e){
-
-      }
-    }
-    fetchLocations()
+    console.log("HIII")
+    const obj=Country.getAllCountries();
+    const newArray={...options};
+    newArray.countryOptions=obj;
+    newArray.rcountryOptions=obj;
+    console.log(obj,'ooooooo')
+    setOptions(newArray)
   },[])
 
   const handleCloseSnackBar=()=>{
@@ -287,7 +278,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     console.log(data,'general information');
 
     try {
-      data.companyID = 'COMP1';
+      data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
 
       if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){
@@ -324,24 +315,24 @@ const   GeneralInformation=forwardRef((props,ref)=> {
        data.religion=data?.religion?.label || "",
        data.nationality=data?.nationality?.nationality || "",
        data.bloodGroup=data?.bloodGroup?.label || "",
-       data.country=data?.country?.name|| "",
-      data.state=data?.state?.name || "",
-      data.city=data?.city?.name || ""
+       data.pCountry=data?.country|| "",
+      data.pState=data?.state || "",
+      data.pCity=data?.city || ""
        
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
         data.rAddressLine2=data.pAddressLine2
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.country||{name:"",isoCode:""},
+        data.rState=data?.state || {name:"",isoCode:""},
+        data.rCity=data?.city || {name:"",isoCode:""},
         data.rPincode=data.pPincode;
      
       }
       else{
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.rCountry||{name:"",isoCode:""},
+        data.rState=data?.rState || {name:"",isoCode:""},
+        data.rCity=data?.rCity || {name:"",isoCode:""}
       }
 
       

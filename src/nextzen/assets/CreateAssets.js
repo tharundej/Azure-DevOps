@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm, reset } from 'react-hook-form';
@@ -23,8 +23,10 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/ho
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreateAssets({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     assetsName: Yup.string().required('Asset Name is Required'),
     poNumber: Yup.string().required('PO Number is Required'),
@@ -36,7 +38,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
     totalAmount: Yup.number().positive().required('Total Amount is Required'),
     quantity: Yup.number().positive(),
     price: Yup.number().positive(),
-    model: Yup.string(),
+    modelName: Yup.string().required(),
   });
 
   const defaultValues = useMemo(
@@ -63,10 +65,10 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       assetsCondition: currentData?.assetCondition || '',
       updatedDate: currentData?.updatedDate || '',
       deleteBit: currentData?.deleteBit || 0,
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || user?.companyID ? user?.companyID : '',
       operationalDays: currentData?.operationalDays || '',
       quantity: currentData?.quantity || 1,
-      model: currentData?.model || '',
+      modelName: currentData?.moduleName || '',
       gstRate: currentData?.gstRate || 0,
       price: currentData?.price || 1,
     }),
@@ -88,7 +90,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
     formState: { isSubmitting },
     errors,
   } = methods;
-
+  const [selectedTaxs, setSelectedTaxs] = useState();
   const HandleChangeTax = (value) => {
     console.log('parsed', value);
     setSelectedTaxs(value);
@@ -149,11 +151,11 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
     updatedDate: defaultValues?.updatedDate ? dayjs(defaultValues?.updatedDate) : dayjs(new Date()),
   });
   const [taxsOptions, setTaxsOptions] = useState([]);
-  const [selectedTaxs, setSelectedTaxs] = useState();
+
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
         const response = await getLocationAPI(data);
         console.log('location success', response);
@@ -171,8 +173,9 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       try {
         const response = await getTaxs();
         console.log('Tax responce:', response);
+        console.log('defaultValues.gstRate', defaultValues.gstRate);
         setTaxsOptions(response);
-        setSelectedTaxs(defaultValues.gstRate || (response.length > 0 ? response[0].value : null));
+        setSelectedTaxs(defaultValues.gstRate || (response.length > 0 ? response[0].value : 0));
         setValue('gstRate', defaultValues.gstRate || (response.length > 0 ? response[0].value : 0));
         updateCalculatedValues();
       } catch (error) {
@@ -272,10 +275,10 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
               value={selectedAssetsType}
               onChange={(event, newValue) => setSelectedAssetsType(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Assets type *" variant="outlined" />
+                <TextField {...params} label="Assets type" variant="outlined" />
               )}
             />
-            <RHFTextField name="model" label="Model Name *" />
+            <RHFTextField name="modelName" label="Model Name *" />
             <RHFTextField name="poNumber" label="PO Number *" />
             <RHFTextField type="number" name="poValue" label="PO Value *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -403,7 +406,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
               name="gstRate"
               id="gstRate"
               options={taxsOptions || []}
-              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              value={taxsOptions.find((option) => option.value === parseInt(selectedTaxs)) || null}
               onChange={(event, newValue) => HandleChangeTax(newValue ? newValue.value : 0)}
               renderInput={(params) => (
                 <TextField {...params} label="Select Tax" variant="outlined" />

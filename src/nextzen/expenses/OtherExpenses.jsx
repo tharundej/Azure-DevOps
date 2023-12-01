@@ -26,7 +26,7 @@ export default function OtherExpenses() {
 		  // },
 		  data: data1,
 		};
-	
+
 		axios
 		  .request(config)
 		  .then((response) => {
@@ -37,16 +37,16 @@ export default function OtherExpenses() {
 			console.log(error);
 		  });
 	  };
-	
+
 	  useEffect(() => {
 		ApiHit();
-		
+
 	  }, []);
 	  const defaultPayload = {
 		count: 5,
 		page: 0,
 		search: '',
-		fcompanyID: 'COMP1',
+		fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 		externalFilters: {
 		  fMaritalStatus: '',
 		  fBloodGroup: '',
@@ -78,7 +78,7 @@ export default function OtherExpenses() {
 		{ id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
 		{ id: 'Date', label: 'Date', type: 'text', minWidth: '180px' },
 		{ id: 'Item Name', label: 'Item Name', type: 'text', minWidth: '180px' },
-		{ id: 'Invoice No.', label: 'Invoide No.', type: 'text', minWidth: '180px' },
+		{ id: 'Invoice No.', label: 'Invoice No.', type: 'text', minWidth: '180px' },
 		{ id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
 		{ id: 'Total Amount', label: 'Total Amount', type: 'text', minWidth: '180px' },
 		{ id: 'Advance Amount', label: 'Advance Amount', type: 'text', minWidth: '180px' },

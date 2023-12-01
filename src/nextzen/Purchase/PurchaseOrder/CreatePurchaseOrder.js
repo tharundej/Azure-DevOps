@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -24,20 +24,30 @@ import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { createPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreatePurchaseOrder({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
-    paymentTerm: Yup.string(),
+    paymentTerm: Yup.string().required(),
+    grandTotalAmount: Yup.number().required(),
+    advanceAmount: Yup.number(),
+    companyBillingGST: Yup.string(),
+    companyBillingPAN: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      companyId: currentData?.companyId || 'COMP1',
+      companyId: currentData?.companyId || user?.companyID ? user?.companyID : '',
       expectedDeliveryDate: currentData?.expectedDeliveryDate || '',
       paymentTerm: currentData?.paymentTerm || '',
       vendorId: currentData?.vendorId || '',
       locationId: currentData?.locationId || '',
       factoryShippingId: currentData?.factoryShippingId || '',
+      grandTotalAmount: currentData?.grandTotalAmount || '',
+      advanceAmount: currentData?.advanceAmount || 0,
+      companyBillingGST: currentData?.companyBillingGST || '',
+      companyBillingPAN: currentData?.companyBillingPAN || '',
     }),
     [currentData]
   );
@@ -70,7 +80,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const fetchVendor = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getVendorAPI(data);
       setVendorOptions(response);
@@ -83,7 +93,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     }
   };
   const fetchLocation = async () => {
-    const data = { companyID: 'COMP1' };
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getLocationAPI(data);
       console.log('location success', response);
@@ -117,7 +127,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     try {
       if (newValue) {
         const vendorMaterialPayload = {
-          companyId: 'COMP1',
+          companyId: user?.companyID ? user?.companyID : '',
           search: '',
           externalFilters: {
             materialName: '',
@@ -147,6 +157,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
 
   const HandleInputChange = (e, index) => {
+    console.log({ index });
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
   };
@@ -155,10 +166,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     if (gstRate) {
       setValue(`addPurchaseMaterial[${index}].rate`, price ? price : 0);
       setValue(`addPurchaseMaterial[${index}].gstRate`, gstRate ? gstRate : 0);
+      setValue(`addPurchaseMaterial[${index}].quantity`, 1);
     }
+    updateCalculatedValues(index);
   };
   const updateCalculatedValues = (index) => {
     const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
+    console.log({ parsedQuantity });
     const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
     const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
@@ -166,17 +180,31 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     setValue(`addPurchaseMaterial[${index}].amount`, amount);
     setValue(`addPurchaseMaterial[${index}].gstAmount`, gstAmount);
     setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
+    calculateGrandTotal();
+  };
+  const calculateGrandTotal = () => {
+    let grandTotal = 0;
+    for (let i = 0; i < watch('addPurchaseMaterial')?.length; i++) {
+      const itemTotalAmount = watch(`addPurchaseMaterial[${i}].totalAmount`) || 0;
+      grandTotal += itemTotalAmount;
+    }
+    setValue('grandTotalAmount', grandTotal);
   };
   const onSubmit = handleSubmit(async (data) => {
-    data.addPurchaseMaterial = data.addPurchaseMaterial.filter((material) => material !== null);
-    data.addPurchaseMaterial.forEach((material, index) => {
-      data.addPurchaseMaterial[index].quantity = parseInt(material.quantity, 10) || 0;
-      data.addPurchaseMaterial[index].rate = parseInt(material.rate, 10) || 0;
-      data.addPurchaseMaterial[index].amount = parseInt(material.amount, 10) || 0;
-      data.addPurchaseMaterial[index].gstRate = parseInt(material.gstRate, 10) || 0;
-      data.addPurchaseMaterial[index].gstAmount = parseInt(material.gstAmount, 10) || 0;
-      data.addPurchaseMaterial[index].discount = parseInt(material.discount, 10) || 0;
-      data.addPurchaseMaterial[index].advanceAmount = parseInt(material.advanceAmount, 10) || 0;
+    data.addPurchaseMaterial = watch('addPurchaseMaterial')?.filter(
+      (material) => material?.materialId !== undefined && material?.materialId !== 0
+    );
+    if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
+      handleCallSnackbar('Please Add at least one Material', 'warning');
+      return;
+    }
+    data?.addPurchaseMaterial?.forEach((material, index) => {
+      data.addPurchaseMaterial[index].quantity = parseFloat(material.quantity) || 0;
+      data.addPurchaseMaterial[index].rate = parseFloat(material.rate) || 0;
+      data.addPurchaseMaterial[index].amount = parseFloat(material.amount) || 0;
+      data.addPurchaseMaterial[index].gstRate = parseFloat(material.gstRate) || 0;
+      data.addPurchaseMaterial[index].gstAmount = parseFloat(material.gstAmount) || 0;
+      data.addPurchaseMaterial[index].discount = parseFloat(material.discount) || 0;
     });
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
@@ -233,11 +261,11 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         options={vendorMaterials || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
-            newValue.id,
+            newValue?.id,
             `addPurchaseMaterial[${index}].materialId`,
             index,
-            newValue.gstRate,
-            newValue.materialPrice
+            newValue?.gstRate,
+            newValue?.materialPrice
           )
         }
         getOptionLabel={(option) => option.materialName}
@@ -307,14 +335,14 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         type="number"
         defaultValue={0}
         label="Discount"
+        onChange={(e) => HandleInputChange(e, index)}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].advanceAmount`}
-        type="number"
-        defaultValue={0}
-        label="Advance Amount"
+        defaultValue=""
+        name={`addPurchaseMaterial[${index}].comments`}
+        label="Comments"
+        onChange={(e) => HandleInputChange(e, index)}
       />
-      <RHFTextField name={`addPurchaseMaterial[${index}].comments`} label="Comments" />
       <Button
         sx={{ height: '40px', marginTop: '3px' }}
         variant="contained"
@@ -326,17 +354,25 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       </Button>
     </Box>
   );
-  const handleDeleteClick = (contentToDelete) => {
-    const updatedList = contentList.filter((content) => content !== contentToDelete);
-    setContentList(updatedList);
+  const handleAddContent = () => {
+    const newIndex = contentList.length;
+    const newContent = initialContent(newIndex);
+    setContentList((prevList) => [...prevList, newContent]);
+    console.log(vendorMaterials, 'vendorMaterials');
   };
-
+  const handleDeleteClick = (index) => {
+    setValue(`addPurchaseMaterial[${index}].totalAmount`, 0);
+    setValue(`addPurchaseMaterial[${index}].materialId`, 0);
+    setContentList((prevList) => {
+      const updatedList = [...prevList];
+      updatedList[index] = '';
+      return updatedList;
+    });
+  };
   const [contentList, setContentList] = useState([initialContent]);
-  const handleButtonClick = () => {
-    const newContent = initialContent;
-    setContentList([...contentList, newContent]);
-  };
-
+  useEffect(() => {
+    calculateGrandTotal();
+  }, [contentList]);
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -369,6 +405,23 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
                 <TextField {...params} label="Select Vendor Name" variant="outlined" />
               )}
             />
+            <RHFTextField name="paymentTerm" label="Payment Term" />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Expected Delivery Date *"
+                  value={datesUsed?.expectedDeliveryDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      expectedDeliveryDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <RHFAutocomplete
               name="locationId"
               id="locationId"
@@ -399,23 +452,21 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
                 <TextField {...params} label="Select Shipping Location" variant="outlined" />
               )}
             />
-            <RHFTextField name="paymentTerm" label="Payment Term" />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Expected Delivery Date *"
-                  value={datesUsed?.expectedDeliveryDate}
-                  defaultValue={dayjs(new Date())}
-                  onChange={(newValue) => {
-                    setDatesUsed((prev) => ({
-                      ...prev,
-                      expectedDeliveryDate: newValue,
-                    }));
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
+            <RHFTextField name="companyBillingGST" label="Company Billing GST" />
+            <RHFTextField name="companyBillingPAN" label="Company Billing PAN" />
+            <RHFTextField
+              defaultValue={0}
+              type="number"
+              name="advanceAmount"
+              label="advanceAmount"
+            />
+            <RHFTextField
+              name="grandTotalAmount"
+              label="Grand Total Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Box>
           <Box
             marginTop={2}
@@ -427,10 +478,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {
-                const newContent = initialContent(contentList.length);
-                setContentList([...contentList, newContent]);
-              }}
+              onClick={handleAddContent}
               startIcon={<Iconify icon="mingcute:add-line" />}
               sx={{ margin: '20px' }}
               disabled={!selectedVendor}
@@ -441,7 +489,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
           {contentList.map((content, index) => (
             <div key={index}>
               {content}
-              {index > 0 && (
+              {index > 0 && content && (
                 <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
               )}
             </div>

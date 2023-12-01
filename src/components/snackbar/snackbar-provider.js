@@ -12,7 +12,8 @@ import { StyledIcon, StyledNotistack } from './styles';
 
 // ----------------------------------------------------------------------
 
-export default function SnackbarProvider({ children }) {
+export default function SnackbarProvider({children }) {
+ 
   const settings = useSettingsContext();
 
   const isRTL = settings.themeDirection === 'rtl';
@@ -27,7 +28,7 @@ export default function SnackbarProvider({ children }) {
       autoHideDuration={3000}
       TransitionComponent={isRTL ? Collapse : undefined}
       variant="success" // Set default variant
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: "top", horizontal:"right" }}
       iconVariant={{
         info: (
           <StyledIcon color="info">

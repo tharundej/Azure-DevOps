@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -12,8 +12,10 @@ import {
 import SnackBarComponent from '../global/SnackBarComponent';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import CreateVendorMaterials from './CreateVendorMaterials';
+import UserContext from '../context/user/UserConext';
 
 const VendorMaterialsTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -26,8 +28,14 @@ const VendorMaterialsTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -90,7 +98,7 @@ const VendorMaterialsTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     search: '',
     externalFilters: {
       materialName: '',
@@ -108,6 +116,7 @@ const VendorMaterialsTable = () => {
     count: 5,
   };
   const [TABLE_HEAD, setTableHead] = useState([
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'vendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
     { id: 'materialName', label: 'Material Name', type: 'text', minWidth: '180px' },
     { id: 'hsnId', label: 'HSN ID', type: 'text', minWidth: '180px' },
@@ -155,6 +164,7 @@ const VendorMaterialsTable = () => {
         rowActions={actions}
         filterName="VendorMaterialsHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

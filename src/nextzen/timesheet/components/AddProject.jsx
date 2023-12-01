@@ -29,8 +29,6 @@ export default function AddProject({handleClose,title,rowData}){
     const [hasFetchedData, setHasFetchedData] = useState(false);
     const [reportingManager,setReportingManagerData]= useState([])
     const [selectedLocationID, setSelectedLocationID] = useState((rowData?.locationId)?rowData?.locationId:null); 
-    const [selectedReportingManagerID, setSelectedReportingManagerID]=useState(); 
-    const [selectedProjectManagerID, setselectedProjectManagerID]=useState(); 
     const [projectManager,setProjectManagers] = useState([])
     const [datesUsed, setDatesUsed] = useState({
         startDate: '',
@@ -57,7 +55,7 @@ export default function AddProject({handleClose,title,rowData}){
             actualStartDate:(rowData?.actualStartDate)?rowData?.actualStartDate:'',
             actualEndDate:(rowData?.actualEndDate)?rowData?.actualEndDate:'',
             projectDescription:(rowData?.projectDescription)?rowData?.projectDescription:'',
-            locationId:"Bangalore"
+            locationId:rowData?.locationId?rowData?.locationId:''
         }),
         []
       );
@@ -75,18 +73,7 @@ export default function AddProject({handleClose,title,rowData}){
       } = methods;
 
       
-const handleLocationSelection = (selectedOption) => {
-  if (selectedOption) {
-    setSelectedLocationID(selectedOption.locationID); 
-  }
-};
 
-const handleSelectedReportingManager=(e)=>{
-  setSelectedReportingManagerID(e.employeeId)
-}
-const handleSelectedProjectManager=(e)=>{
-  setselectedProjectManagerID(e?.employeeId || null); // Update the ID of the selected project manager
-}
 const projectManagersData= {
   companyId:user?.companyID,
   locationId:'',
@@ -108,10 +95,11 @@ const getReportingManagers = async (requestData) => {
 }
 const fetchReportingManagers = async () => {
   try {
-    reportingManagersData.locationId = parseInt(selectedLocationID) || null;
+    {console.log(selectedLocationID,"selectedlocationnnn")}
+    reportingManagersData.locationId = parseInt(selectedLocationID) || parseInt(selectedLocationID?.locationID)||null;
     const reportingManagersData1 = await getReportingManagers(reportingManagersData);
     setReportingManagerData(reportingManagersData1)
-    projectManagersData.locationId = parseInt(selectedLocationID) || null;
+    projectManagersData.locationId = parseInt(selectedLocationID) ||parseInt(selectedLocationID?.locationID)||null;
     const reportingManagersData2 = await getReportingManagers(projectManagersData);
     setProjectManagers(reportingManagersData2)
   } 
@@ -144,9 +132,10 @@ const onSubmit = handleSubmit(async (data) => {
       data.startDate = datesUsed?.startDate;
       data.actualStartDate=datesUsed?.actualStartDate;
       data.actualEndDate=datesUsed?.actualEndDate;
-      data.projectManager=selectedProjectManagerID;
-      data.reportingManager= selectedReportingManagerID;
-      data.locationId = selectedLocationID,
+      data.projectManager=selectedProjectManager?.employeeId,
+      data.reportingManager=selectedReportingManager?.employeeId,
+      data.locationId = selectedLocationID?.locationID,
+      data.locationName=selectedLocationID?.locationName,
       data.companyId = user?.companyID
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
@@ -165,29 +154,22 @@ const onSubmit = handleSubmit(async (data) => {
     }
 });
 
-console.log(selectedLocationID,"selectedlocationn")
 if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === rowData?.locationId && !hasFetchedData)) {
     fetchReportingManagers();
     setHasFetchedData(true); // Update the state to mark that data has been fetched
   }
   
-
+{console.log(selectedLocationID,"Selectedlocation")}
   useEffect(()=> {
     getLocation()
   },[])
-  const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedReportingManager, setSelectedReportingManager] = useState(null);
   const [selectedProjectManager, setSelectedProjectManager] = useState(null);
 
-  const updatedRowData = {
-    ...rowData,
-    locationName: "Banglore" // Insert the received locationName here
-  };
-
   useEffect(() => {
     if (rowData && rowData.locationName && locationList) {
-      const existingLocation = locationList.find(location => location.locationName === rowData.locationName);
-      setSelectedLocation(existingLocation || null);
+      const existingLocation = locationList.find(location => location.locationID === rowData?.locationId);
+      setSelectedLocationID(existingLocation || null);
     }
     if(rowData && rowData?.reportingManagerName && reportingManager){
         const existingReportingmanager = reportingManager.find(manager => manager.employeeId == rowData?.reportingManager);
@@ -215,7 +197,7 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
       data.roleId=user?.roleID,
       data.reportingManager = selectedReportingManager?.employeeId,
       data.projectManager = selectedProjectManager?.employeeId
-
+      data.locationName=rowData?.locationName
       const response = await axios.post(baseUrl+'/updateproject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
@@ -234,6 +216,10 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
     }
 }
 )
+
+const userManager = user?.employeeID == rowData?.projectManager
+
+
     return (
         <>
           <FormProvider methods={methods} onSubmit={title=="Edit Project"?onSubmit1:onSubmit}>
@@ -243,19 +229,22 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
             <Card sx={{ p: 3 }}>
               <Grid container spacing={2}>
                <Grid item md={6} xs={12}>
-                  <RHFTextField name="projectName" label="Project Name" fullWidth value={rowData?.projectName} disabled={title==="Edit Project"}/>
+                  <RHFTextField name="projectName" label="Project Name" fullWidth value={rowData?.projectName} 
+                  disabled={title==="Edit Project" && user?.roleID>1}
+                  />
                 </Grid>
                  <Grid item md={6} xs={12}>
                  <Autocomplete
                  disabled={title==="Edit Project"}
-            // value = {selectedLocation}
             name="locationId"
             label="Location"
             options={locationList}
+            value = {selectedLocationID}
             getOptionLabel={(option) => option.locationName}
             isOptionEqualtoValue={(option) => option.locationId}
-            getOptionSelected={(option) => option.locationName === rowData?.locationName}
-            onChange={(event, selectedOption) => handleLocationSelection(selectedOption)}
+            onChange={(event, selectedOption) => 
+              setSelectedLocationID(selectedOption)
+            }
             renderInput={(params) => (
                 <TextField {...params} label="Location" variant="outlined" />
                 )}
@@ -266,9 +255,10 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
   <Grid container spacing={2} sx={{marginTop:1}}>
      <Grid item md={6} xs={12}>
         <Autocomplete
+        disabled={userManager}
   name="projectManager"
   label="Project Manager"
-  options={projectManager}
+  options={projectManager || []}
   value={selectedProjectManager}
   getOptionLabel={(option) => option.firstName}
   isOptionEqualToValue={(option) => option.employeeId}
@@ -278,16 +268,13 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
     <TextField {...params} label="Project Manager" variant="outlined" />
   )}
   />
-
      </Grid>
-     {console.log(selectedProjectManager,"project",selectedReportingManager)}
      <Grid item md={6} xs={12}>
      <Autocomplete
-    //  value={(selectedReportingManager) ? selectedReportingManager: selectedReportingManagerID}
             name="reportingManager"
             label="Reporting Manager"
             value={selectedReportingManager}
-            options={reportingManager}
+            options={reportingManager || []}
             getOptionLabel={(option) => option.firstName}
             getOptionSelected={(option) => option.firstName == rowData?.reportingManagerName}
             isOptionEqualtoValue={(option) => option.employeeId}

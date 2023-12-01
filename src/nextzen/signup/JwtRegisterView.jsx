@@ -175,7 +175,9 @@ export default function JwtRegisterView() {
       .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
       .required('Pin code is Required'),
     empIdPrefix: Yup.string().required('Employee ID type Required'),
-    //  companyCountry: Yup.string().required('Country is Required'),
+    // companyCountry: Yup.string().required('Please select a country.').matches(/^[A-Za-z]+$/,'Please select a country.'),
+    // companyState:Yup.string().required('Please select a state.').matches(/^[A-Za-z]+$/,'Please select a state.'),
+    // companyCity: Yup.string().required('Please select a city.').matches(/^[A-Za-z]+$/,'Please select a city.'),
   });
 
   const defaultValues = {
@@ -192,9 +194,9 @@ export default function JwtRegisterView() {
     lastName: '',
      companyAddressLine1: '',
      companyAddressLine2: '',
-    // companyCity: '',
-    // companyState: '',
-    // companyPincode: '',
+    companyCity: '',
+    companyState: '',
+    companyPincode: '',
     empIdPrefix: '',
     companyCountry:'',
   };
@@ -391,9 +393,22 @@ export default function JwtRegisterView() {
       setCitiesNames([]);
     }
   };
+  // const base64String = imageData[0]?.data;
+  // console.log( imageData[0]?.data)
+
+  
+  // const base64WithoutHeader = base64String.split(',')[1];
+  //   console.log(base64WithoutHeader);
+  
+  console.log(imageData[0]?.data.split(',')[1]);
+  
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // console.log(data, 'rammmm');
+      // if (!data.companyCountry || !data.companyState || !data.companyCity) {
+      //   setErrorMsg('Please select country, state, and city.');
+      //   console.log('errorrrrrrrrrr')
+      //   return;
+      // }
       console.log(data);
       await register?.(
         data.cin,
@@ -416,7 +431,7 @@ export default function JwtRegisterView() {
         parseInt(data.companyPincode,10),
         data.empIdPrefix,
         data.logoName=imageData[0]?.name,
-        data.companyLogo=imageData[0]?.data,
+        data.companyLogo= imageData[0]?.data.split(',')[1],
       );
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
@@ -443,7 +458,7 @@ export default function JwtRegisterView() {
         <Typography variant="h4">Register</Typography>
 
         <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-          <Typography variant="h4"> Already havse an account? </Typography>
+          <Typography variant="h4"> Already have an account? </Typography>
 
           <Link href={paths.auth.jwt.login} component={RouterLink} variant="h4">
             Sign In
@@ -494,6 +509,7 @@ export default function JwtRegisterView() {
                       CIN<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
+                  placeholder=" Ex: L67190MH2020PLC123456"
                   maxLength={21}
                 />
               </Grid>
@@ -512,7 +528,7 @@ export default function JwtRegisterView() {
                   name="companyRegistrationNo"
                   label={
                     <span>
-                      Registration No<span style={{ color: 'red' }}>*</span>
+                      Registration Number<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={8}
@@ -568,7 +584,7 @@ export default function JwtRegisterView() {
                   name="emailId"
                   label={
                     <span>
-                      Email<span style={{ color: 'red' }}>*</span>
+                      Email ID<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                 />
@@ -716,47 +732,52 @@ export default function JwtRegisterView() {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <div>
-                  <label htmlFor="file-input">
-                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                      Upload Logo<span style={{ color: 'red' }}> *</span>
-                      <input
-                        id="file-input"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: 'none' }}
-                      />
-                    </Button>
-                  </label>
-                  {selectedFile && (
-                    <div>
-                      <p>File Name: {selectedFile.name}</p>
-                      <div
-                        style={{
-                          width: '50px',
-                          height: '50px',
-                          borderRadius: '50%',
-                          overflow: 'hidden',
-                          display: 'inline-block',
-                          marginRight: '10px',
-                        }}
-                      >
-                        <img
-                          src={imageData[0].data}
-                          alt={selectedFile.name}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
-                      </div>
-                      {/* <button onClick={handleDelete}>Delete</button> */}
-                    </div>
-                  )}
-                </div>
-              </Grid>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <label htmlFor="file-input">
+
+        <span style={{display:'flex', flexDirection:'row'}}>
+        <Button style={{height:'fit-content'}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+          Upload Logo<span style={{ color: 'red' }}> *</span>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+        </Button>
+        {selectedFile && (
+      <div>
+        <div
+          style={{
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            display: 'inline-block',
+          }}
+        >
+          <img
+            src={imageData[0]?.data}
+            alt={selectedFile.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        {/* <button onClick={handleDelete}>Delete</button> */}
+      </div>
+    )}</span>
+      </label>
+      {/* Empty space for alignment */}
+      <div style={{ width: '10px' }}></div>
+    </div>
+  </Grid>
+  <Grid item xs={12} md={8}>
+    
+  </Grid>
             </Grid>
           </Stack>
           <CardActions style={{ marginTop: '30px' }}>
@@ -790,7 +811,8 @@ export default function JwtRegisterView() {
     </FormProvider>
   );
 
-  console.log(imageData[0]?.data);
+
+
   return (
     <StyledContainer>
       <div style={{ backgroundColor: '', height: '100%' }}>

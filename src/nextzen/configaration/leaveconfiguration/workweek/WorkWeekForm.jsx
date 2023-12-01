@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { Alert, Snackbar } from '@mui/material';
 // @mui
 import dayjs from 'dayjs';
 // import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -32,10 +33,15 @@ export default function WorkWeekForm({ currentUser}) {
   const [locationType, setLocationType] = useState([]);
   const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
+   const [openEdit, setOpenEdit] = useState(false);
+   const handleCloseEdit = () => setOpenEdit(false);
   const handleClose = () => {
     setOpen(false);
     reset1();
   };
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
     day: Yup.string().required('Day is Required'),
     action: Yup.string().required('Action Required'),
@@ -66,7 +72,7 @@ export default function WorkWeekForm({ currentUser}) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -112,11 +118,28 @@ export default function WorkWeekForm({ currentUser}) {
     data.companyId=localStorage.getItem('companyID')
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
-    handleClose()
+    // handleClose()
     try {
       const response = await axios.post(baseUrl+'/addWorkWeek', data);
-      console.log('sucess',response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response?.data);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -143,9 +166,32 @@ const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     locationName: selectedOption?.locationName,
   });
 };
- 
+const snackBarAlertHandleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setSnackbarOpen(false);
+  setOpen(false);
+};
   return (
     <>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Work Week</Button>

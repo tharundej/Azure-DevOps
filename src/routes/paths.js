@@ -186,7 +186,7 @@ export const paths = {
         leaveconfiguration: `/configurations/leaveconfiguration`,
         compoffconfiguration: `/configurations/compoffconfiguration`,
         appraisalconfiguration: `/configurations/appraisalconfiguration`,
-      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      // expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
       shiftconfiguration: `/configurations/shiftconfiguration`,
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
@@ -283,6 +283,11 @@ export const paths = {
       purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,
       purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/invoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
+    },
+    sale: {
+      saleOrder: `${ROOTS.DASHBOARD}/sale/order`,
+      saleInvoice: `${ROOTS.DASHBOARD}/sale/invoice`,
+      salePayment: `${ROOTS.DASHBOARD}/sale/payment`,
     },
     balancesheet: {
       balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,

@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function Loans({defaultPayload}) {
+export default function Loans({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
@@ -28,21 +28,21 @@ export default function Loans({defaultPayload}) {
     
         },
     
-        { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+        { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
     
-        { id: "requestAmount", label: "Request Amount", minWidth: "7pc", type: "text" },
+        { id: "requestAmount", label: "Request Amount", minWidth: "6pc", type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-        { id: "paidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
-        { id: "noOfInstallments", label: "No of Installments", minWidth: "7pc", type: "text" },
-        { id: "interestRate", label: "Interest Rate", minWidth: "7pc", type: "text" },
-        { id: "approverName", label: " Approver Name", minWidth: "10pc", type: "text" },
-        { id: "comments", label: "User Comments", minWidth: "10pc", type: "text" },
-        { id: "approverComments", label: "Approver Comments", minWidth: "10pc", type: "text" },
-        { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "badge" },
+        { id: "paidDate", label: "Paid Date", minWidth: "7pc", type: "text" },
+        { id: "paidAmount", label: "paid Amount", minWidth: "6pc", type: "text" },
+        { id: "noOfInstallments", label: "Installment Count", minWidth: "7pc", type: "text" },
+        { id: "interestRate", label: "Interest Rate", minWidth: "6pc", type: "text" },
+        { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
+        { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
+        { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
+        { id: "paymentStatus", label: "Payment Status", minWidth: '7pc', type: "text" },
+        { id: "status", label: "Status", minWidth: '7pc', type: "badge" },
          
       ];
     
@@ -397,6 +397,7 @@ bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
+componentPage={componentPage}
 />  
     </>
   );

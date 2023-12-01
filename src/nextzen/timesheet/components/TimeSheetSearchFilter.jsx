@@ -216,7 +216,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
@@ -255,8 +255,8 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     employeeName: '',
     projectId: '1',
     activityId: '2',
-    startTime: '2023-11-20 11:50:02.023',
-    endTime: '2023-11-20 01:50:02.023',
+    startTime: '2023-11-25',
+    endTime: '2023-11-30',
     monday: {
       hours: '',
       task: '',
@@ -325,7 +325,7 @@ console.log(timesheetData,"timesheetData")
 
      console.log(timesheetData,"editDataeditData")
       
-      const response = await axios.post(baseUrl+"/addmytimesheet", timesheetData).then(
+      const response = await axios.post("https://898vmqzh-3001.inc1.devtunnels.ms/erp/addmytimesheet", timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
         },

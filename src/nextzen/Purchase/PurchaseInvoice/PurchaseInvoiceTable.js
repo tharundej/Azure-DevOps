@@ -1,65 +1,106 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const PurchaseInvoiceTable = () => {
+  const { user } = useContext(UserContext);
+  console.log('sdsdsdsd', user);
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
+    // {
+    //   name: 'View',
+    //   icon: 'carbon:view',
+    //   id: 'view',
+    //   type: 'serviceCall',
+    //   endpoint: '',
+    // },
   ];
   const [filterOptions, setFilterOptions] = useState({});
-  const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
-  const ApiHit = () => {};
 
-  useEffect(() => {
-    ApiHit();
-  }, []);
   const defaultPayload = {
-    count: 5,
-    page: 0,
     search: '',
-    fcompanyID: 'COMP1',
+    page: 0,
+    perPage: 10,
+    companyId: user?.companyID ? user?.companyID : '',
+    externalFilters: {
+      invoiceDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      dueDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      poDate: {
+        fromDate: '',
+        toDate: '',
+      },
+      paymentMode: '',
+      status: '',
+    },
+    sort: {
+      orderBy: 'invoiceDate',
+      order: 1,
+    },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
-    { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'ItemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'Total Weight', label: 'Total Weight', type: 'text', minWidth: '180px' },
-    { id: 'Vehicle Weight', label: 'Vehicle Weight', type: 'text', minWidth: '180px' },
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'paymentMode', label: 'paymentMode', type: 'text', minWidth: '180px' },
+    { id: 'netTotalAmount', label: 'netTotalAmount', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'gstAmount', type: 'text', minWidth: '180px' },
     {
-      id: 'Recieved Material Weight',
-      label: 'Recieved Material Weight',
+      id: 'totalAmount',
+      label: 'totalAmount',
       type: 'text',
       minWidth: '180px',
     },
     {
-      id: 'Balance Material Weight',
-      label: 'Balance Material Weight',
+      id: 'status',
+      label: 'status',
       type: 'text',
       minWidth: '180px',
     },
-    { id: 'Rate', label: 'Rate', type: 'text', minWidth: '180px' },
-    { id: ' Unit of Measure', label: ' Unit of Measure', type: 'text', minWidth: '180px' },
-    { id: ' Amount', label: ' Amount', type: 'text', minWidth: '180px' },
-    { id: 'Paid Date', label: 'Paid Date', type: 'text', minWidth: '180px' },
-    { id: 'No of Installments', label: 'No of Installments', type: 'text', minWidth: '180px' },
-    { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
-    { id: 'Payment Method', label: 'Payment Method', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'totalWeight', label: 'totalWeight', type: 'text', minWidth: '180px' },
+    { id: 'vehicleWeight', label: 'vehicleWeight', type: 'text', minWidth: '180px' },
+    { id: 'comments', label: 'comments', type: 'text', minWidth: '180px' },
+    {
+      id: 'receivedMaterialWeight',
+      label: 'receivedMaterialWeight',
+      type: 'text',
+      minWidth: '180px',
+    },
+    {
+      id: 'balanceMaterialWeight',
+      label: 'balanceMaterialWeight',
+      type: 'text',
+      minWidth: '180px',
+    },
+    { id: 'quantity', label: 'quantity', type: 'text', minWidth: '180px' },
+    { id: 'rate', label: 'rate', type: 'text', minWidth: '180px' },
+    { id: 'unitOfMeasure', label: 'unitOfMeasure', type: 'text', minWidth: '180px' },
+    { id: 'amount', label: 'amount', type: 'text', minWidth: '180px' },
+    { id: 'dueDate', label: 'dueDate', type: 'text', minWidth: '180px' },
+    { id: 'PoDate', label: 'PoDate', type: 'text', minWidth: '180px' },
+    { id: 'materialName', label: 'materialName', type: 'text', minWidth: '180px' },
   ]);
+
+  const handleEditRowParent = () => {};
+
   return (
     <>
       <Helmet>
@@ -67,11 +108,12 @@ const PurchaseInvoiceTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchaseOrderDetails"
+        endpoint="/listPurchaseInvoice"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseInvoiceHead"
+        handleEditRowParent={handleEditRowParent}
       />
     </>
   );

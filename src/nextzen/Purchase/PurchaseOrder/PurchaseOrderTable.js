@@ -22,8 +22,14 @@ const PurchaseOrderTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -109,14 +115,6 @@ const PurchaseOrderTable = () => {
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
     { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: 'itemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
-    { id: 'unitOfMeasure', label: 'Unit  Of Measure', type: 'text', minWidth: '180px' },
-    { id: 'rate', label: 'Rate', type: 'text', minWidth: '180px' },
-    { id: 'discount', label: 'Discount', type: 'text', minWidth: '180px' },
-    { id: 'gstAmount', label: 'GST Amount', type: 'text', minWidth: '180px' },
-    { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
-    { id: 'advanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
     {
       id: 'expectedDeliveryDate',
       label: 'Expected Delivery Date',
@@ -145,8 +143,9 @@ const PurchaseOrderTable = () => {
       type: 'text',
       minWidth: '180px',
     },
-    { id: 'comments', label: 'Comments', type: 'text', minWidth: '180px' },
-    { id: 'grandTotal', label: 'Grand Total', type: 'text', minWidth: '180px' },
+    { id: 'grandTotalAmount', label: 'Grand Total', type: 'text', minWidth: '180px' },
+    { id: 'advanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
+    { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -160,6 +159,7 @@ const PurchaseOrderTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseOrderHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );
