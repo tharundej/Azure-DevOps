@@ -55,7 +55,7 @@ export default function AddProject({handleClose,title,rowData}){
             actualStartDate:(rowData?.actualStartDate)?rowData?.actualStartDate:'',
             actualEndDate:(rowData?.actualEndDate)?rowData?.actualEndDate:'',
             projectDescription:(rowData?.projectDescription)?rowData?.projectDescription:'',
-            locationId:rowData?.locationId?rowData?.locationId:''
+            location:rowData?.locationId?rowData?.locationId:''
         }),
         []
       );
@@ -134,8 +134,7 @@ const onSubmit = handleSubmit(async (data) => {
       data.actualEndDate=datesUsed?.actualEndDate;
       data.projectManager=selectedProjectManager?.employeeId,
       data.reportingManager=selectedReportingManager?.employeeId,
-      data.locationId = selectedLocationID?.locationID,
-      data.locationName=selectedLocationID?.locationName,
+      data.location= selectedLocationID
       data.companyId = user?.companyID
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {

@@ -359,7 +359,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     fullWidth
                
                     name="lwfNumber"
-                    label="lwf Number"
+                    label="LWF Number"
                     variant="outlined"
                     id="lwfNumber"
                      value={currentUser?.lwfNumber}
@@ -458,7 +458,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     fullWidth
                     type="number"
                     name="uan"
-                    label="uan"
+                    label="UAN"
                     variant="outlined"
                     id="uan"
                      value={currentUser?.uan}
