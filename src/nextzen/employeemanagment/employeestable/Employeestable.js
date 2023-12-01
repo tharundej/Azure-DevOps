@@ -154,8 +154,8 @@ export default function EmployeeTable() {
     { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
     { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'companyEmail', label: 'Company Email',  type: 'text', minWidth:'180px' },
-    { id: 'personalEmail', label: 'Personal Email',  type: 'text', minWidth:'180px' },
+    { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
     { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
     { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
@@ -167,15 +167,15 @@ export default function EmployeeTable() {
 
 
     { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'p AddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'p AddressLine2',  type: 'text', minWidth:'180px' },
-    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
-    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
+    { id: 'pAddressLine1', label: 'Permanent Address Line 1',  type: 'text', minWidth:'280px' },
+    { id: 'pAddressLine2', label: 'Permanent Address Line 2',  type: 'text', minWidth:'280px' },
+    { id: 'pCity', label: 'Permanent City',  type: 'text', minWidth:'180px' },
+    { id: 'pState', label: 'Permanent State ',  type: 'text', minWidth:'180px' },
+    { id: 'pPincode', label: 'Permanent Pincode',  type: 'text', minWidth:'180px' },
     { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
     { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
     { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
+    { id: 'designationGrade', label: 'Designation Grade',  type: 'text', minWidth:'180px' },
     { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
 
     { id: 'roleName', label: 'Role Name',  type: 'text', minWidth:'180px' }
