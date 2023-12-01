@@ -30,11 +30,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     () => ({
       materialID: currentData?.id || 0,
       vendorID: currentData?.vendorId || 0,
-<<<<<<< HEAD
-      companyID: currentData?.companyID || JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-=======
       companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
->>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       materialName: currentData?.materialName || '',
       hsnId: currentData?.hsnId || '',
       materialType: currentData?.materialType || '',
@@ -66,11 +62,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchVendor = async () => {
-<<<<<<< HEAD
-      const data = { companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID, };
-=======
       const data = { companyID: user?.companyID ? user?.companyID : '' };
->>>>>>> 0f2c7d64a1c157ad2bbd27c34304d34872e5d7ac
       try {
         const response = await getVendorAPI(data);
         setVendorOptions(response);
