@@ -28,7 +28,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';// -----
 
 const OPTIONS = [
   {
-    label: 'Home',
+    label: 'Dashboard',
     linkTo: '/dashboard',
   },
   // {
