@@ -116,16 +116,16 @@ export default function UserTableRow({
                    }}
                  />
                )}
-
+{console.log(ele.type ,"type",row?.status)}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === ('approved' || 'Approved' ) && 'success') ||
-                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
-                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
-                      (row[ele.id] === ('true' || 'True' ) && 'success') ||
-                      (row[ele.id] === ('false' || 'False') && 'warning') ||
+                      (row[ele.id].toLowerCase() === 'approved' && 'success') ||
+                      (row[ele.id].toLowerCase() === 'pending' && 'warning') ||
+                      (row[ele.id].toLowerCase() === 'rejected' && 'error') ||
+                      (row[ele.id].toLowerCase() === 'true' && 'success') ||
+                      (row[ele.id].toLowerCase() === 'false'  && 'warning') ||
                       'default'
                     }
                   >

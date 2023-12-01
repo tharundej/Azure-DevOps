@@ -53,7 +53,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import formatDateToYYYYMMDD from '../../global/GetDateFormat';
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 
 
 
@@ -411,10 +411,10 @@ const handleInputChange = (event) => {
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
-      >
+      > <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Claim`} />
         <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
  
-          <DialogTitle>update claim</DialogTitle>
+          {/* <DialogTitle>Approve Claim</DialogTitle> */}
 
           <DialogContent>
           
@@ -438,16 +438,18 @@ const handleInputChange = (event) => {
               <TextField name="reason" label="Claim Amount"  value={approve?.claimAmount || ''}  InputProps={{
     readOnly: true,
   }}/>
-              <TextField
+
+  {approve?.status === "Approved" &&        <TextField
         name="approvedAmount"
         label="Approval Amount"
-        value={approve.approvedAmount}
+        value={approve?.approvedAmount}
         onChange={handleInputChange}
-      />
+      /> }
+        
       <TextField
         name="approverRemark"
         label="Comments"
-        value={approve.approverRemark}
+        value={approve?.approverRemark}
         onChange={handleInputChange}
       />
             
@@ -467,7 +469,7 @@ const handleInputChange = (event) => {
             </Button >
            
 
-            <LoadingButton type="submit" variant="contained"  loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained"  color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>

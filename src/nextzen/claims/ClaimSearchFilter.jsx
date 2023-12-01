@@ -312,7 +312,7 @@ console.log(selectedFields,"selectedFields 2nd method")
             />
             </Grid>
             <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
-              {addButton && <Button variant='contained'  sx={{borderRadius:"4px"}} onClick={buttonFunction}>{addButton}</Button>}
+              {addButton && <Button variant='contained' color='primary' sx={{borderRadius:"4px"}} onClick={buttonFunction}>{addButton}</Button>}
               
 
             </Grid>
