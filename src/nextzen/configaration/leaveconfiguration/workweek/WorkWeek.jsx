@@ -72,7 +72,7 @@ export default function WorkWeek({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       locationName: '',
     },
@@ -84,7 +84,7 @@ export default function WorkWeek({ currentUser }) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -123,7 +123,7 @@ export default function WorkWeek({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.locationID = (formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
     data.day=valueSelected?.day
     data.action=valueSelected?.action
@@ -136,21 +136,21 @@ export default function WorkWeek({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+        handleClose();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+        handleClose();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('UnExpected Error. Please try again.');
       setSnackbarOpen(true);
-      handleCloseEdit();
+      handleClose();
       console.log('error', error);
     }
   });
@@ -211,7 +211,7 @@ export default function WorkWeek({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
       const response = await axios.post(baseUrl + '/deleteHoliday', data);

@@ -4,7 +4,7 @@ import { baseUrl } from "../BaseUrl";
 const ApiHitLocations = async () => {
   try {
     const data1 = JSON.stringify({
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     });
 
     const config = {
@@ -92,7 +92,7 @@ const ApiHitDesgniationGrade = async (obj) => {
 const ApiHitRoles = async () => {
   try {
     // const data1 = JSON.stringify({
-    //   "companyID": "COMP1"
+    //   "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     // });
 
     const config = {
@@ -117,7 +117,7 @@ const ApiHitRoles = async () => {
   const ApiHitManager = async () => {
     try {
       const data1 = JSON.stringify({
-        "companyID": "COMP1"
+        "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
   
       const config = {
@@ -141,7 +141,7 @@ const ApiHitRoles = async () => {
   const ApiHitDepartmentWithoutLocation = async () => {
     try {
       const data1 = JSON.stringify({
-        "companyID": "COMP1"
+        "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
   
       const config = {
@@ -237,8 +237,8 @@ const ApiHitRoles = async () => {
       };
   
       const response = await axios.request(config);
-      console.log(response.data?.data?.states,'response.data.data' )
-      return response.data.data?.states || [];
+      console.log(response.data?.data,'response.data.dataState' )
+      return response.data.data || [];
     } catch (error) {
       console.error(error);
       return [];

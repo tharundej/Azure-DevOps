@@ -41,6 +41,9 @@ export default function LeaveTypeForm({ currentUser }) {
   };
   const [openEdit, setOpenEdit] = useState(false);
   const handleCloseEdit = () => setOpenEdit(false);
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  }
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -84,7 +87,7 @@ export default function LeaveTypeForm({ currentUser }) {
           count: 5,
           page: 0,
           search: '',
-          companyId: 'COMP1',
+          companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           externalFilters: {
             leavePeriodType: '',
           },
@@ -96,25 +99,25 @@ export default function LeaveTypeForm({ currentUser }) {
         const response = await axios.post(baseUrl + '/getAllLeavePeriod', defaultPayload);
 
         if (response?.data?.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
-          handleCloseEdit();
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response?.data?.message);
+          // setSnackbarOpen(true);
+           handleClose();
           console.log('success', response);
         }
 
         if (response?.data?.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
-          handleCloseEdit();
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response?.data?.message);
+          // setSnackbarOpen(true);
+           handleClose();
           console.log('error', response);
         }
       } catch (error) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-        setSnackbarOpen(true);
-        handleCloseEdit();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+        // setSnackbarOpen(true);
+         handleClose();
         console.log('error', error);
       }
     };
@@ -136,7 +139,7 @@ export default function LeaveTypeForm({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+         handleClose();
 
         console.log('sucess', response);
       }
@@ -144,14 +147,14 @@ export default function LeaveTypeForm({ currentUser }) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
+         handleClose();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       setSnackbarOpen(true);
-      handleCloseEdit();
+       handleClose();
       console.log('error', error);
     }
   });
@@ -250,6 +253,7 @@ export default function LeaveTypeForm({ currentUser }) {
               type="submit"
               variant="contained"
               onClick={onSubmit1}
+             
             >
               Save
             </Button>

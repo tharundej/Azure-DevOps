@@ -82,7 +82,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
 
   }
   //   const employeeStatouryData={
-  //     "companyID": "COMP1",
+  //     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //     "employeeID": "info1",
   //     "employeeName": "nikitha v",
   //     "uan": 123456789,

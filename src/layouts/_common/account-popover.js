@@ -22,12 +22,13 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useContext } from 'react';
 import UserContextProvider from 'src/nextzen/context/user/UserContextProvider';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import Button from '@mui/material/Button';
 
-// ----------------------------------------------------------------------
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';// ----------------------------------------------------------------------
 
 const OPTIONS = [
   {
-    label: 'Home',
+    label: 'Dashboard',
     linkTo: '/dashboard',
   },
   // {
@@ -45,6 +46,7 @@ const OPTIONS = [
 export default function AccountPopover() {
 
   const {user}=useContext(UserContext)
+  console.log(user);
   const router = useRouter();
 
   const { logout } = useAuthContext();
@@ -96,14 +98,14 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.userName[0]}
+          {user?.employeeName ? user?.employeeName[0] : ''}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.userName}
+            {user?.employeeName}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
@@ -129,8 +131,9 @@ export default function AccountPopover() {
         <MenuItem
           onClick={handleLogout}
           sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
+          style={{padding: 0, margin: 0}}
         >
-          Logout
+          <Button  startIcon={<PowerSettingsNewIcon />} variant="contained" size="large" color='error' style={{width: '100%', borderRadius: 0}}>LOGOUT</Button>
         </MenuItem>
       </CustomPopover>
     </>

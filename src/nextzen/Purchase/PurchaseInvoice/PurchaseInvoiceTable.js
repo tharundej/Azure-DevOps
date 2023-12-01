@@ -1,34 +1,39 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const PurchaseInvoiceTable = () => {
+  const { user } = useContext(UserContext);
+  console.log('sdsdsdsd', user);
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
+    // {
+    //   name: 'View',
+    //   icon: 'carbon:view',
+    //   id: 'view',
+    //   type: 'serviceCall',
+    //   endpoint: '',
+    // },
   ];
   const [filterOptions, setFilterOptions] = useState({});
-  const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
-  const ApiHit = () => {};
 
-  useEffect(() => {
-    ApiHit();
-  }, []);
   const defaultPayload = {
     search: '',
     page: 0,
     perPage: 10,
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       invoiceDate: {
         fromDate: '',
@@ -93,6 +98,9 @@ const PurchaseInvoiceTable = () => {
     { id: 'PoDate', label: 'PoDate', type: 'text', minWidth: '180px' },
     { id: 'materialName', label: 'materialName', type: 'text', minWidth: '180px' },
   ]);
+
+  const handleEditRowParent = () => {};
+
   return (
     <>
       <Helmet>
@@ -105,7 +113,7 @@ const PurchaseInvoiceTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseInvoiceHead"
-        handleEditRowParent={() => {}}
+        handleEditRowParent={handleEditRowParent}
       />
     </>
   );

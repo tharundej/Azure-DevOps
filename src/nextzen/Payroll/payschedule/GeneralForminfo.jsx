@@ -114,7 +114,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     console.log('submitted data111', data);
 
     try {
@@ -138,7 +138,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1'
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     console.log('submitted data2222', data);
 
     try {

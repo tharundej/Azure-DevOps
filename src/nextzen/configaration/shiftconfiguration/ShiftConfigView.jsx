@@ -95,11 +95,9 @@ export default function ShiftConfigView({currentUser}) {
 
   const defaultPayload = {
     companyId: 'COMP2',
-    locationId: 32,
     count: 5,
     search: '',
     page: 0,
-    limit: 5,
     externalFilters: {
       shiftName: '',
       startTime: '',
@@ -159,7 +157,7 @@ export default function ShiftConfigView({currentUser}) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -289,7 +287,7 @@ export default function ShiftConfigView({currentUser}) {
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           {/* <DialogTitle>Edit Shift Config</DialogTitle> */}
-          <ModalHeader heading="Edit Shift Config" />
+          <ModalHeader heading="Edit Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}

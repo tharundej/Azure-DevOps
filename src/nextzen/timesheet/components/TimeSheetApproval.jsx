@@ -20,7 +20,7 @@ import { _userList } from 'src/_mock';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
+// import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../Table/BasicTable';
@@ -36,11 +36,17 @@ import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import Stack from '@mui/material/Stack';
-import { Autocomplete, TextField, DialogContent, DialogActions ,MenuItem} from '@mui/material';
+import { Autocomplete, TextField, DialogContent, DialogActions, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
+
+//teatArea
+// import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
+import { styled } from '@mui/system';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { enqueueSnackbar } from 'notistack';
 
 const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const TABLE_HEAD = [
@@ -72,43 +78,60 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
 
     // { id: '', width: 88 },
   ];
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
+  console.log('userrrrrrrrr',user)
   const managerID = localStorage.getItem('reportingManagerID');
   const employeeID = localStorage.getItem('employeeID');
   const companyID = localStorage.getItem('companyID');
   const [selectedActivity, setSelectedActivity] = useState(null);
   const defaultPayload = {
-    companyId: companyID,
-    employeeId: employeeID,
-    page: 0,
-    count: 5,
-    search: '',
-    externalFilters: {
-      projectName: '',
-      Status: '',
-      from: '',
-      to: '',
+    "companyId":"comp1",
+    "employeeId":"info2",
+    "page":0,
+    "count":5,
+    "search":"",
+    "externalFilters":{
+             "projectName":"",
+             "Status":"",
+             "dateOfActivity":{
+             "from":"",
+             "to":""
+             }
     },
-    sort: {
-      key: 0,
-      orderBy: 'p.project_name',
+    "sort":{
+        "key":0,
+        "orderBy":"p.project_name"
+    }
+}
+  const actions = [
+    {
+      name: 'Approve',
+      id: 'approved',
+      type: 'serviceCall',
+      endpoint: '/approveSalaryAdvance',
+      icon: 'charm:circle-tick',
     },
-  };
-  const actions =   [ { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
-  { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},];
+    {
+      name: 'Reject',
+      id: 'rejected',
+      type: 'serviceCall',
+      endpoint: '/approveSalaryAdvance',
+      icon: 'charm:circle-cross',
+    },
+  ];
 
   const [showForm, setShowForm] = useState(false);
-      const [showApproveForm,setApproveForm]= useState(false);
-      const [showRejectForm,setRejectForm]= useState(false);
-      const [showEditForm,setShowEditForm]= useState(false);
-      const [commentsValue,setCommentsValue]=useState("");
+  const [showApproveForm, setApproveForm] = useState(false);
+  const [showRejectForm, setRejectForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [commentsValue, setCommentsValue] = useState('');
   const handleClose = () => {
     setShowForm(false);
     setShowEditForm(false);
     setApproveForm(false);
     setRejectForm(false);
-  }
-  const [rowData,setRowData] = useState();
+  };
+  const [rowData, setRowData] = useState();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -123,17 +146,107 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const [currentProjectData, setCurrentProjectData] = useState({});
   const [currentActivitytData, setCurrentActivitytData] = useState([]);
   const [selectedActivitytData, setSelectedActivitytData] = useState();
+  const [comment ,setComment ] = useState('')
   const NewUserSchema = Yup.object().shape({
-    hrComments:Yup.string(),
-    status:Yup.string(),
-    employeeID:Yup.string()
+    hrComments: Yup.string(),
+    status: Yup.string(),
+    employeeID: Yup.string(),
   });
+
+  //textArea
+
+  const blue = {
+    100: '#DAECFF',
+    200: '#b6daff',
+    400: '#3399FF',
+    500: '#007FFF',
+    600: '#0072E5',
+    900: '#003A75',
+  };
+
+  const grey = {
+    50: '#F3F6F9',
+    100: '#E5EAF2',
+    200: '#DAE2ED',
+    300: '#C7D0DD',
+    400: '#B0B8C4',
+    500: '#9DA8B7',
+    600: '#6B7A90',
+    700: '#434D5B',
+    800: '#303740',
+    900: '#1C2025',
+  };
+
+  // const Textarea = styled(BaseTextareaAutosize)(
+  //   ({ theme }) => `
+  //   width: 100%;
+  //   font-family: IBM Plex Sans, sans-serif;
+  //   font-size: 0.875rem;
+  //   font-weight: 400;
+  //   line-height: 1.5;
+  //   padding: 8px 12px;
+  //   border-radius: 8px;
+  //   color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  //   background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  //   border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+  //   box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+
+  //   &:hover {
+  //     border-color: ${blue[400]};
+  //   }
+
+  //   &:focus {
+  //     border-color: ${blue[400]};
+  //     box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[600] : blue[200]};
+  //   }
+
+  //   // firefox
+  //   &:focus-visible {
+  //     outline: 0;
+  //   }
+  // `
+  // );
+
+//   const Textarea = styled(BaseTextareaAutosize)`
+//   width: 100%;
+//   font-family: 'IBM Plex Sans', sans-serif;
+//   font-size: 0.875rem;
+//   font-weight: 400;
+//   line-height: 1.5;
+//   padding: 8px 12px;
+//   border-radius: 8px;
+//   color: ${({ theme }) => (theme.palette.mode === 'dark' ? grey[300] : grey[900])};
+//   background: ${({ theme }) => (theme.palette.mode === 'dark' ? grey[900] : '#fff')};
+//   border: 1px solid ${({ theme }) => (theme.palette.mode === 'dark' ? grey[700] : grey[200])};
+//   box-shadow: 0px 2px 2px ${({ theme }) =>
+//     theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+
+//   &:hover {
+//     border-color: ${blue[400]};
+//   }
+
+//   &:focus {
+//     border-color: ${blue[400]};
+//     box-shadow: 0 0 0 3px ${({ theme }) =>
+//       theme.palette.mode === 'dark' ? blue[600] : blue[200]};
+//   }
+
+//   // firefox
+//   &:focus-visible {
+//     outline: 0;
+//   }
+// `;
+
+// ...
+
+
+
 
   const defaultValues = useMemo(
     () => ({
-      hrComments:"",
-    status:"approved",
-    employeeID:(user?.employeeID)?user?.employeeID:'',
+      hrComments: '',
+      status: 'approved',
+      employeeID: user?.employeeID ? user?.employeeID : '',
     }),
     [currentUser]
   );
@@ -168,7 +281,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   //     // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
   //     // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
   //     // data.selectedActivity = selectedActivity;
-  //     // data.companyID = "COMP1";
+  //     // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
   //     // data.employeeID = "info4";
 
   //     console.log(data, 'data111ugsghghh');
@@ -356,162 +469,322 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
         handleOpen();
 
         console.log('kl');
-      } 
-      else if(eventData?.name==="Approve")
-      {
-        setRowData(rowData)
-        setApproveForm(true)
-      }
-      else if(eventData?.name==="Reject"){
-        setRowData(rowData)
-        setRejectForm(true)
+      } else if (eventData?.name === 'Approve') {
+        setRowData(rowData);
+        setApproveForm(true);
+      } else if (eventData?.name === 'Reject') {
+        setRowData(rowData);
+        setRejectForm(true);
       }
     } else {
       // navigate[event.eventData.route]
     }
   };
   //Approve
-  const handleApprove=(obj)=>{
+
+  
+  const handleApprove = (obj) => {
     const config = {
       method: 'POST',
-      maxBodyLength:Infinity,
+      maxBodyLength: Infinity,
       url: baseUrl + `/approveSalaryAdvance`,
-      data: obj
-    
-    }
+      data: obj,
+    };
 
-    axios.request(config).then((response) => {
-      enqueueSnackbar(response.data.message,{variant:'success'})
-      handleClose();
-    })
+    axios
+      .request(config)
+      .then((response) => {
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+        handleClose();
+      })
       .catch((error) => {
-        enqueueSnackbar(error.message,{variant:'Error'})
+        enqueueSnackbar(error.message, { variant: 'Error' });
         handleClose();
       });
-  }
-  const onSubmit = handleSubmit(async (data)=>{
-    data.salaryAdvanceID=rowData?.SalaryAdvanceID
+  };
+  const onSubmit = handleSubmit(async (data) => {
+    data.salaryAdvanceID = rowData?.SalaryAdvanceID;
 
-    try{
-      apihit(data)
-    }
-    catch (error){
-      console.error(error)
+    try {
+      apihit(data);
+    } catch (error) {
+      console.error(error);
     }
   });
   // Reject
-  const handleReject=()=>{
-    var payload =
-    {
-      "employeeID":(user?.employeeID)?user?.employeeID:'',
-      "hrComments":commentsValue,
-      "status":"rejected",
-  }
-  const config = {
-    method: 'POST',
-    maxBodyLength:Infinity,
-    url: baseUrl + `/approveSalaryAdvance`,
-    data: payload
-  
-  }
-  axios.request(config).then((response) => {
-    enqueueSnackbar(response.data.message,{variant:'success'})
-  })
-    .catch((error) => {
-      enqueueSnackbar(error.message,{variant:'Error'})
-    });
-  
-  }
+  const handleReject = () => {
+    var payload = {
+      // employeeID: user?.employeeID ? user?.employeeID : '',
+      // hrComments: commentsValue,
+      // status: 'rejected',
+      employee_id:rowData?.employeeId,
+      project_id:JSON.parse (rowData?.projectId ,10),
+      timesheetID:rowData?.timeSheetId,
+      status:'rejected',
+      managerComments: comment
+    };
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+        url: baseUrl + `/updateTimesheetStatus`,
+      //  url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+      data: payload,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+      })
+      .catch((error) => {
+        enqueueSnackbar(error.message, { variant: 'Error' });
+      });
+  };
+console.log(rowData ,"rowDataIN ")
+  const handleAproveStatus = () => {
+    var payload = {
+      // employeeID: user?.employeeID ? user?.employeeID : '',
+      // hrComments: commentsValue,
+      // status: 'rejected',
+      employee_id:rowData?.employeeId,
+    project_id: JSON.parse (rowData?.projectId ,10),
+    status:'approved',
+    timesheetID:rowData?.timeSheetId,
+    managerComments : comment
+    };
+    const config = {
+      method: 'POST',
+      maxBodyLength: Infinity,
+       url: baseUrl + `/updateTimesheetStatus`,
+      //  url :"https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateTimesheetStatus",
+      data: payload,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+      })
+      .catch((error) => {
+        enqueueSnackbar(error.message, { variant: 'Error' });
+      });
+  };
+  const handleComments = (e) => {
+    console.log(e.target.value, 'comment');
+    const { value } = event.target;
+    setComment(value);
+  };
   useEffect(() => {
     getActivityList();
   }, []);
   console.log(timesheetData, 'kkkkkkk');
   console.log(selectedActivity, 'selectedActivity');
+
+  
+const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
+  width: '100%',
+  minHeight: '20px',
+  resize: 'none',
+  fontFamily: theme.typography.fontFamily,
+  fontSize: theme.typography.fontSize,
+  padding: theme.spacing(1),
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  '&:hover': {
+    borderColor: theme.palette.primary.main,
+  },
+  '&:focus': {
+    outline: 'none',
+    borderColor: theme.palette.primary.main,
+    boxShadow: `0 0 0 3px ${theme.palette.primary.light}`,
+  },
+}));
   return (
     <>
       {/* <h1>hello</h1> */}
 
-      {(showEditForm) && (
- <Dialog
- fullWidth
- maxWidth={false}
- open={showEditForm}
- onClose={handleClose}
- PaperProps={{
-   sx: { maxWidth: 500 , overflow:'hidden'},
- }}
- className="custom-dialog"  
->
-    <ModalHeader heading="Edit Request"/>
-  <DialogContent>
-  <Grid container spacing={2}>
-    
-      <Grid  xs={12} md={12} sx={{marginLeft:5,marginTop:2}}>
-      <TextField
-                
+      {showEditForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={showEditForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 500, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <ModalHeader heading="Edit Request" />
+          <DialogContent>
+            <Grid container spacing={2}>
+              <Grid xs={12} md={12} sx={{ marginLeft: 5, marginTop: 2 }}>
+                <TextField
+                  fullWidth
+                  defaultValue={rowData?.requestAmount}
+                  value={amountValue}
+                  onChange={handleChange}
+                  label="Amount"
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <Stack
+            alignItems="flex-end"
+            sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
+          >
+            <Button sx={{ mr: '4px' }} onClick={handleClose} variant="outlined">
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 2 }}
+              color="primary"
+              disabled={amountValue === undefined || 0}
+              onClick={handleEditSalary}
+            >
+              Apply
+            </Button>
+          </Stack>
+        </Dialog>
+      )}
+
+      {showApproveForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={showApproveForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 500, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <FormProvider methods={methods} onSubmit={onSubmit}>
+            <ModalHeader heading="Approve Request" />
+            <DialogContent>
+              <Grid container flexDirection="row" spacing={2}>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    label="Status"
+                    name="status"
+                    value="Approve"
+                    // onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                    disabled
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
+                {/* <Textarea
+                  fullWidth
+                  maxRows={20}
+                  aria-label="maximum height"
+                  placeholder="Comments"
+                  value={comment}
+                  label="Comments"
+                  onChange={(e) => handleComments(e)}
+                /> */}
+
+
+     
+     <TextField
+      label="Comments"
+      multiline
+      minRows={3}
+      maxRows={20}
+      fullWidth
+      value={comment}
+      onChange={handleComments}
+    />
+
+              </Grid>
+              <Grid></Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ float: 'right', right: 5, marginTop: 2, color: 'white' }}
+                // type="submit"
+                onClick={ handleAproveStatus}
+              >
+                Approve Request
+              </Button>
+              <Button
+                sx={{ float: 'right', right: 10, marginTop: 2 }}
+                variant="outlined"
+                onClick={() => setApproveForm(false)}
+              >
+                Cancel
+              </Button>
+            </DialogContent>
+          </FormProvider>
+        </Dialog>
+      )}
+      {showRejectForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={showRejectForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 500, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <ModalHeader heading="Reject Request" />
+          <DialogContent>
+            <Grid container flexDirection="row" spacing={2}>
+              <Grid item xs={12} md={12}>
+                <TextField
+                  label="Status"
+                  name="status"
+                  value="Reject"
+                  // onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
+              {/* <Textarea
                 fullWidth
-                defaultValue={rowData?.requestAmount}
-                value={amountValue}
-                onChange={handleChange}
-                label="Amount"
-              />
-      </Grid>
-     </Grid>
-  </DialogContent>
-  <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-  <Button  sx={{mr:"4px"}} onClick={handleClose} variant="outlined">Cancel</Button>
-               <Button variant="contained" sx={{marginRight:2}} color="primary" disabled={amountValue===undefined || 0} onClick={handleEditSalary}>Apply</Button>
-              </Stack>
-      </Dialog>
-    )}
+                maxRows={20}
+                aria-label="maximum height"
+                placeholder="Comments"
+                label="Comments"
+                value={comment}
+                onChange={(e) => handleComments(e)}
+              /> */}
+                   <TextField
+      label="Comments"
+      multiline
+      minRows={3}
+      maxRows={20}
+      fullWidth
+      value={comment}
+      onChange={handleComments}
+    />
+          
+            </Grid>
+            <Grid></Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ float: 'right', right: 5, marginTop: 2, color: 'white' }}
+              type="submit"
+              onClick={handleReject}
+            >
+              Reject Request
+            </Button>
+            <Button
+              sx={{ float: 'right', right: 10, marginTop: 2 }}
+              variant="outlined"
+              onClick={() => setRejectForm(false)}
+            >
+              Cancel
+            </Button>
+          </DialogContent>
 
-{(showApproveForm) && (
- <Dialog
- fullWidth
- maxWidth={false}
- open={showApproveForm}
- onClose={handleClose}
- PaperProps={{
-   sx: { maxWidth: 500 , overflow:'hidden'},
- }}
- className="custom-dialog"  
->
-<FormProvider methods={methods} onSubmit={onSubmit}>
-    <ModalHeader heading="Approve Request"/>
-<DialogContent>
-<Grid container flexDirection="row" spacing={2}>
-
-<Grid item xs={12} md={12}>
-<RHFSelect name="status" label="Status">
-  <MenuItem value="approve">Approve</MenuItem>
-</RHFSelect>
-
-</Grid>
-</Grid>
-<Grid item xs={12} md={6} sx={{marginTop:2}}>
-  <RHFTextField name="hrComments" label="Comments"/>
-</Grid>
-<Grid>
-
-  </Grid>
-<Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Approve Request</Button>
-<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={()=>setApproveForm(false)}>Cancel</Button>
-</DialogContent>
-</FormProvider>
-      </Dialog>
-    )}
-    {(showRejectForm) && (
-<Dialog
-fullWidth
-maxWidth={false}
-open={showRejectForm}
-onClose={handleClose}
-PaperProps={{
-  sx: { maxWidth: 500 , overflow:'hidden'},
-}}
-className="custom-dialog">
-     <ModalHeader heading="Reject Request"/>
-<TextField 
+          {/* <TextField 
 label="Comments"
 placeholder='comments'
 onChange={(e)=>handleComments(e)}
@@ -520,10 +793,9 @@ sx={{margin:2}}
 <div style={{display:"flex",justifyContent:"right",marginBottom:4}}>
 <Button  onClick={()=>setRejectForm(false)} sx={{marginRight:2}} variant="outlined">Cancel</Button>
 <Button variant="contained" color="primary" sx={{float:'right',right:5}}  onClick={handleReject}>Reject</Button>
-</div>
-</Dialog>
-      )
-    }
+</div> */}
+        </Dialog>
+      )}
 
       <BasicTable
         defaultPayload={defaultPayload}
@@ -531,7 +803,7 @@ sx={{margin:2}}
         rowActions={actions}
         endpoint="/Mytimesheets"
         bodyData="data"
-        filterName="TimeSearchFilter"
+        filterName="ApproveFilters"
         onClickActions={onclickActions}
       />
     </>

@@ -34,7 +34,7 @@ const EmployeePermissions = ({open,type,data,employeeId}) => {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const defaultPayload={
-    "companyId": "COMP1"
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 }
 
 const [TABLE_HEAD,setTableHead] =useState( [
@@ -112,7 +112,7 @@ dropdowns:[
        
             setGroupname(open)
             const obj={
-                "companyId": "COMP1",
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId":open,
               
             }
@@ -210,7 +210,7 @@ dropdowns:[
   const handleSave = () => {
     const obj = {
      
-      companyId: 'COMP1',
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       pages: checkedState,
       employeeId:employeeId
     };

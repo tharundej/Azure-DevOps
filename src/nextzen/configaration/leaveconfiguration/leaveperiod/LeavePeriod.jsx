@@ -87,7 +87,7 @@ export default function LeavePeriod({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       leavePeriodType: '',
     },
@@ -116,7 +116,7 @@ export default function LeavePeriod({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         leavePeriodID: rowdata.leavePeriodID,
       };
       const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
@@ -145,7 +145,7 @@ export default function LeavePeriod({ currentUser }) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -183,7 +183,7 @@ export default function LeavePeriod({ currentUser }) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.leavePeriodType = valueSelected?.leavePeriodType || null;
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
