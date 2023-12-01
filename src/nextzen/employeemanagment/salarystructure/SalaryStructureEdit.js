@@ -146,7 +146,7 @@ export default function SalaryStructureEdit({ editRowIds,openModalEdit,handleClo
     obj.departmentID=optionsValue?.departmentValue?.departmentID || "";
     obj.designationID=optionsValue?.desginationValue?.designationID || "";
     obj.designationGradeID=optionsValue?.desginationGradeValue?.designationGradeID || "";
-    obj.companyID= "JSON.parse(localStorage.getItem('userDetails'))?.companyID,";
+    obj.companyID= JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     ApiHit(obj)
 
   };

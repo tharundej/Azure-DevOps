@@ -102,7 +102,7 @@ export default function RoleConfiguration() {
     count:5,
     page: 0,
     search: "",
-    companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       departmentName: "",
       designationName: "",

@@ -315,24 +315,24 @@ const   GeneralInformation=forwardRef((props,ref)=> {
        data.religion=data?.religion?.label || "",
        data.nationality=data?.nationality?.nationality || "",
        data.bloodGroup=data?.bloodGroup?.label || "",
-       data.country=data?.country?.name|| "",
-      data.state=data?.state?.name || "",
-      data.city=data?.city?.name || ""
+       data.pCountry=data?.country|| "",
+      data.pState=data?.state || "",
+      data.pCity=data?.city || ""
        
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
         data.rAddressLine2=data.pAddressLine2
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.country||{name:"",isoCode:""},
+        data.rState=data?.state || {name:"",isoCode:""},
+        data.rCity=data?.city || {name:"",isoCode:""},
         data.rPincode=data.pPincode;
      
       }
       else{
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.rCountry||{name:"",isoCode:""},
+        data.rState=data?.rState || {name:"",isoCode:""},
+        data.rCity=data?.rCity || {name:"",isoCode:""}
       }
 
       

@@ -169,7 +169,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const ApiHitExperience=()=>{
     const obj={
-      companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId:localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -186,7 +186,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -225,7 +225,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const handleSubmit = () => {
     const obj1={
-      companyId: "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   
       employeeId: localStorage.getItem("employeeId"),
   

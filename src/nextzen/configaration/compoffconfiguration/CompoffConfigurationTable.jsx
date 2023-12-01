@@ -70,7 +70,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       "count": 5,
       "page": 0,
       "search": "",
-      "companyId": "JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "externalFilters": {
         "compensantoryPolicies": ""
       },
@@ -98,7 +98,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       try {
         console.log(rowdata, 'rowData:::::');
         const data = {
-            companyID:"JSON.parse(localStorage.getItem('userDetails'))?.companyID,",
+            companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
              compensantoryConfigurationID: rowdata.compensantoryConfigurationID,
         };
         const response = await axios.post( baseUrl+'/deleteCompensantoryConfiguration', data);
