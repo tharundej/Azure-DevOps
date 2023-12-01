@@ -28,7 +28,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';// -----
 
 const OPTIONS = [
   {
-    label: 'Home',
+    label: 'Dashboard',
     linkTo: '/dashboard',
   },
   // {
@@ -46,6 +46,7 @@ const OPTIONS = [
 export default function AccountPopover() {
 
   const {user}=useContext(UserContext)
+  console.log(user);
   const router = useRouter();
 
   const { logout } = useAuthContext();
@@ -97,14 +98,14 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.userName[0]}
+          {user?.employeeName[0]}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.userName}
+            {user?.employeeName}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
