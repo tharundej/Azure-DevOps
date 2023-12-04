@@ -39,7 +39,6 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
-  const [designation,setDesignation] = useState(editData?.department_name);
   const TABLE_HEAD = [
     { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth: 180 },
     { id: 'department_name', label: 'Department Name', type: 'text', minWidth: 180 },
@@ -52,7 +51,7 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
   ];
 
   const defaultPayload = {
-    company_id: 'COMP1',
+    company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     // employee_id: 'ibm1',
     page: 0,
     count: 5,
@@ -67,9 +66,34 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       key: 0,
     },
   };
-  const dep={
-    companyID:'COMPQ'
-  }
+  const ApiHitDepartment = (obj) => {
+    const config = {
+      method: 'post',
+
+      maxBodyLength: Infinity,
+
+      url: `${baseUrl}/onboardingDepartment`,
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      data: obj,
+    };
+
+    axios
+      .request(config)
+
+      .then((response) => {
+        // console.log(JSON.stringify(response?.data));
+        setDepartmentOptions(response?.data?.data || []);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const ApiHitDesgniation = (obj) => {
     const config = {
       method: 'post',
@@ -91,49 +115,13 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDesginationptions(response?.data?.data || []);
-        setDesignation(response?.data?.data || [])
       })
 
       .catch((error) => {
         console.log(error);
       });
   };
-console.log(designation,' ')
-  const ApiHitDesgniationGrade = (obj) => {
-    const config = {
-      method: 'post',
 
-      maxBodyLength: Infinity,
-
-      url: `${baseUrl}/onboardingDesignationGrade`,
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      data: obj,
-    };
-
-    axios
-      .request(config)
-
-      .then((response) => {
-        // console.log(JSON.stringify(response?.data));
-        setDesginationGradeOptions(response?.data?.data || []);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  useEffect(()=>{
-    const obj={
-     companyID:'COMP2',
-   }
-  //  ApiHitDepartment(obj)
-   ApiHitDesgniation(obj)
-   ApiHitDesgniationGrade()
- },[])
 
   const handleEdit = (rowData) => {
     rowData.company_id = 'COMP2';
@@ -268,14 +256,14 @@ console.log(designation,' ')
       const payload = {
         expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
         expense_name: editData?.expense_name?.type,
-        company_id: 'COMP1',
+        company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         department_id: JSON.parse(editData?.department_id,10),
         designation_id: JSON.parse(editData?.designation_id,10),
         designation_grade_id: JSON.parse(editData?.designation_grade_id,10),
       };
       console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
-      if (response?.data?.code === 200) {
+      if (response?.data?.status === '200') {
         handleCloseEdit();
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
@@ -283,11 +271,11 @@ console.log(designation,' ')
         console.log('sucess', response);
         handleCloseEdit();
       }
-      if (response?.data?.code === 400) {
+      if (response?.data?.status === '400') {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
@@ -299,6 +287,27 @@ console.log(designation,' ')
     }
   };
 
+  // const onSubmit1 = handleSubmit1(async (data) => {
+  //   data.companyId = 'COMP2';
+  //   console.log('submitted data111', data);
+
+  //   try {
+  //     const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
+  //     if (response?.data?.code === 200) {
+  //       handleCloseEdit();
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage('Shift Configuration Added Succuessfully!');
+  //       setSnackbarOpen(true);
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setOpen(false);
+  //     setSnackbarSeverity('error');
+  //     setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+  //     setSnackbarOpen(true);
+  //     console.log('error', error);
+  //   }
+  // });
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
 
   useEffect(() => {
@@ -376,8 +385,8 @@ console.log(designation,' ')
               <Autocomplete
                 name="expense_name"
                 label="Expense Name"
-                options={expenseNames}
-                getOptionLabel={(option) => option.type}
+                options={expenseNames.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
                 value={editData?.expense_name}
                 onChange={(e, newValue) => handleSelectChange('expense_name', newValue || null)}
                 sx={{ width: 300, padding: '8px' }}
@@ -386,10 +395,9 @@ console.log(designation,' ')
               <Autocomplete
                 name="department_name"
                 label="Department Name"
-                options={departmentName}
-                getOptionLabel={(option) => option.type}
-                 value={editData?.department_name}
-                // defaultValue={editData?.department_name}
+                options={departmentName.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
+                value={editData?.department_name}
                 onChange={(e, newValue) => handleSelectChange('department_name', newValue || null)}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Department Name" />}
@@ -397,8 +405,8 @@ console.log(designation,' ')
               <Autocomplete
                 name="designation_name"
                 label="Designation Name"
-                options={designationName}
-                getOptionLabel={(option) => option.type}
+                options={designationName.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
                 value={editData?.designation_name}
                 onChange={(e, newValue) => handleSelectChange('designation_name', newValue || null)}
                 sx={{ width: 300, padding: '8px' }}
@@ -407,8 +415,8 @@ console.log(designation,' ')
               <Autocomplete
                 name="designation_grade_name"
                 label="Designation Grade Name"
-                options={designationGradeName}
-                getOptionLabel={(option) => option.type}
+                options={designationGradeName.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
                 value={editData?.designation_grade_name}
                 onChange={(e, newValue) =>
                   handleSelectChange('designation_grade_name', newValue || null)

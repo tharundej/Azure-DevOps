@@ -17,6 +17,7 @@ import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
 export default function SalaryAdvace({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext)
+  const [count,setCount] = useState(0)
     const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
         {
@@ -31,19 +32,19 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
          
         },
     
-        { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+        { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
     
-        { id: "requestAmount", label: "Request Amount", width: "7pc", type: "text" },
+        { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-        { id: "PaidAmount", label: "paid Amount", width: "7pc", type: "text" },
-        { id: "approverName", label: "Approver Name", width: 100, type: "text" },
-        { id: "commentStatus", label: "User Comments", width: 100, type: "text" },
-        { id: "hrComments", label: "Approver Comments", width: 100, type: "text" },
-        { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100,type: "badge"},
+        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+        { id: "PaidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
+        { id: "approverName", label: "Approver", minWidth: "7pc", type: "text" },
+        { id: "commentStatus", label: "User Remarks", minWidth: "8pc", type: "text" },
+        { id: "hrComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
+        { id: "paymentStatus", label: "Payment Status", minWidth: "9pc", type: "text" },
+        { id: "status", label: "Status", minWidth: "7pc",type: "badge"},
         // { id: '', width: 88 },
     
       ];
@@ -61,11 +62,9 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
         { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
       ]
      
-      // Function to get row actions based on user role
       const generateRowActions = () => {
-        const userRoleID = user?.roleID; // Assuming roleID is available in user object
+        const userRoleID = user?.roleID; 
         const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
-        console.log(actions,"actionsss")
         return actions;
       };
     
@@ -192,6 +191,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
 
     axios.request(config).then((response) => {
       enqueueSnackbar(response.data.message,{variant:'success'})
+      setCount(count+1)
       handleClose();
     })
       .catch((error) => {
@@ -224,8 +224,10 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
   
   }
   axios.request(config).then((response) => {
+      handleClose()
     enqueueSnackbar(response.data.message,{variant:'success'})
-    handleClose()
+    setCount(count+1)
+  
   })
     .catch((error) => {
       enqueueSnackbar(error.message,{variant:'Error'})
@@ -253,9 +255,12 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
   }
   axios.request(config).then((response) => {
     enqueueSnackbar(response.data.message,{variant:'success'})
+    setCount(count+1)
+    handleClose()
   })
     .catch((error) => {
       enqueueSnackbar(error.message,{variant:'Error'})
+      handleClose()
     });
   
   }
@@ -321,17 +326,17 @@ const [amountValue,setAmountValue] = useState();
 </Grid>
 
 <Grid item xs={12} md={6}>
-<RHFSelect name="paymentStatus" label="Payment Status">
+
+<RHFTextField name="hrComments" label="Comments"/>
+
+</Grid>
+</Grid>
+{(user?.roleID>3)?<Grid sx={{marginTop:2}}>
+  <RHFSelect name="paymentStatus" label="Payment Status">
   <MenuItem value="credited">Credited</MenuItem>
-  <MenuItem value="debited">Debited</MenuItem>
+  <MenuItem value="denied">Denied</MenuItem>
 </RHFSelect>
-
-
-</Grid>
-</Grid>
-<Grid sx={{marginTop:2}}>
-  <RHFTextField name="hrComments" label="Comments"/>
-</Grid>
+</Grid>:null}
 <Grid>
 
   </Grid>
@@ -374,6 +379,7 @@ rowActions={actionsBasedOnRoles}
 bodyData="data"
 componentPage={componentPage}
 onClickActions={onClickActions}
+count={count}
 />  
     </>
   );

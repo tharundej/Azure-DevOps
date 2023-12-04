@@ -285,7 +285,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     
    
     // const obj={
-    //   company_id:'COMP1',
+    //   company_id:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     //   reporting_manager_id:newvalue?.employee_id
     // }
 

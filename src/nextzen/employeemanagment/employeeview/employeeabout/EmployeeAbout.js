@@ -23,10 +23,72 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import { Country, State, City }  from 'country-state-city';
+
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
+const genderOptions=[
+  {label:'Male'},
+  {label:'Female'}
+]
 
+const maritalStatusOptions = [
+  { value: 'single', label: 'Single' },
+  { value: 'married', label: 'Married' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'separated', label: 'Separated' }
+];
+
+const religionOptions = [
+  { value: 'christianity', label: 'Christianity' },
+  { value: 'islam', label: 'Islam' },
+  { value: 'hinduism', label: 'Hinduism' },
+  { value: 'buddhism', label: 'Buddhism' },
+  { value: 'sikhism', label: 'Sikhism' },
+  { value: 'judaism', label: 'Judaism' },
+  { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+  { value: 'jainism', label: 'Jainism' },
+  { value: 'shinto', label: 'Shinto' },
+  { value: 'taoism', label: 'Taoism' },
+  { value: 'zoroastrianism', label: 'Zoroastrianism' },
+  { value: 'confucianism', label: 'Confucianism' },
+  { value: 'atheist', label: 'Atheist' },
+  { value: 'agnostic', label: 'Agnostic' },
+  {value:'other',labal:"Other"}
+];
+
+
+const nationalitiesOptions = [
+  { country: "United States", nationality: "American" },
+  { country: "United Kingdom", nationality: "British" },
+  { country: "Canada", nationality: "Canadian" },
+  { country: "Australia", nationality: "Australian" },
+  { country: "Germany", nationality: "German" },
+  { country: "France", nationality: "French" },
+  { country: "China", nationality: "Chinese" },
+  { country: "India", nationality: "Indian" },
+  { country: "Brazil", nationality: "Brazilian" },
+  { country: "Russia", nationality: "Russian" },
+  { country: "South Africa", nationality: "South African" },
+  { country: "Japan", nationality: "Japanese" },
+  { country: "Mexico", nationality: "Mexican" },
+  { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+  { country: "South Korea", nationality: "South Korean" },
+  { country: "Other", nationality: "other" }
+];
+
+const bloodGroupsOptions = [
+  { label: "A+", value: "A positive" },
+  { label: "A-", value: "A negative" },
+  { label: "B+", value: "B positive" },
+  { label: "B-", value: "B negative" },
+  { label: "AB+", value: "AB positive" },
+  { label: "AB-", value: "AB negative" },
+  { label: "O+", value: "O positive" },
+  { label: "O-", value: "O negative" }
+];
 
 
 // ----------------------------------------------------------------------
@@ -34,6 +96,8 @@ import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitR
 export default function 
 
 EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+
+ 
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -68,15 +132,15 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
       if(currentEmployee){
       const fetchLocations = async () => {
         const deptObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           locationID:currentEmployee?.locationID
         }
         const desgObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           departmentID:currentEmployee?.departmentID
         }
         const desgGradeObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           designationID:currentEmployee?.designationID
         }
         try {
@@ -93,7 +157,22 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
             desginationOptions:desgination,
             desginationGradeOptions:desginationGrade,
             rolesOptions:roles,
-            managerOptions:manager
+            managerOptions:manager,
+            bloodGroupsOptions:bloodGroupsOptions,
+            religionOptions:religionOptions,
+            nationalityOptions:nationalitiesOptions,
+            genderOptions:genderOptions || [],
+            maritalStatusOptions:maritalStatusOptions || [],
+            pCountryOptions:Country.getAllCountries() || [],
+            pStateOptions:State.getStatesOfCountry(currentEmployee?.pCountry?.isoCode)|| [],
+            pCityOptions:City.getCitiesOfState(currentEmployee?.pCountry?.isoCode, currentEmployee?.pState?.isoCode)|| [],
+
+            rCountryOptions:Country.getAllCountries() || [],
+            rStateOptions:State.getStatesOfCountry(currentEmployee?.rCountry?.isoCode)|| [],
+            rCityOptions:City.getCitiesOfState(currentEmployee?.rCountry?.isoCode, currentEmployee?.rState?.isoCode)|| [],
+           
+            
+            
 
 
           }
@@ -106,19 +185,32 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
           const rolesValue=funcDropDownValue(roles,'roleID',currentEmployee?.roleID)
           const managerValue=funcDropDownValue(manager,'managerID',currentEmployee?.reportingManagerID)
 
+
           const arrValue={
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,
             desginationGradeValue:desginationGradeValue,
             rolesValue:rolesValue,
-            managerValue:managerValue
+            managerValue:managerValue,
+            bloodGroupValue: { label: currentEmployee?.bloodGroup },
+            religionValue:{label:currentEmployee?.religion},
+            genderValue:{label:currentEmployee?.gender},
+            nationalityValue:{nationality:currentEmployee?.nationality},
+            maritalStatusValue:{label:currentEmployee?.maritalStatus},
+            pCountryValue:currentEmployee?.pCountry || undefined,
+            rCountryValue:currentEmployee?.rCountry || undefined,
+            pStateValue:currentEmployee?.pState || undefined,
+            rStateValue:currentEmployee?.rState || undefined,
+            pCityValue:currentEmployee?.pCity || undefined,
+            rCityValue:currentEmployee?.rCity || undefined,
+
 
           }
 
 
           setDropDownValue(arrValue);
-          console.log(arrValue, 'locationsdepartmentarr');
+          console.log(arr, 'locationsdepartmentarr');
          
           setLocations(locations);
           
@@ -477,28 +569,40 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     {currentEmployee?.pAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent City
+                    Permanent Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pCity}
+                    {currentEmployee?.pCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pState}
+                    {currentEmployee?.pState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Permanent City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.pCity?.name}
+                    </Box>
+                    </Stack>
+                   
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent Pincode
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.Permanent}
+                    {currentEmployee?.pPincode}
                     </Box>
                     </Stack>
                    
@@ -526,22 +630,34 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
                     {currentEmployee?.rAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential City
+                    Residential Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rCity}
+                    {currentEmployee?.rCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rState}
+                    {currentEmployee?.rState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Residential City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.rCity?.name}
+                    </Box>
+                    </Stack>
+                    
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential Pincode

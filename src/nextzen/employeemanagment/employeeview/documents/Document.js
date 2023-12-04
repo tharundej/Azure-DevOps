@@ -12,7 +12,7 @@ const Documets = ({employeeIDForApis}) => {
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeId": employeeIDForApis,
       documents:[ {
           fileType:'',
@@ -33,7 +33,7 @@ const Documets = ({employeeIDForApis}) => {
         console.log(documents,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP1",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           "employeeId": employeeIDForApis,
           documents:[documents?.documents[dataIndex]]
         }
@@ -47,7 +47,7 @@ const Documets = ({employeeIDForApis}) => {
         
 
         let data = JSON.stringify({
-            "companyId": "COMP1",
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "employeeId":employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -70,7 +70,7 @@ const Documets = ({employeeIDForApis}) => {
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP1",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               "employeeId": employeeIDForApis
               ,
             }

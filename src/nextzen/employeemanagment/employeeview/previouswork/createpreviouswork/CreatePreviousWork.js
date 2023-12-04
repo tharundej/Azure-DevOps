@@ -69,7 +69,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
    
 
      const obj={
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
       experience:defaultValues
      }
@@ -87,7 +87,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
       experience:defaultValues
      }

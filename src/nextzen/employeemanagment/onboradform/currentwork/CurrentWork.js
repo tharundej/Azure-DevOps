@@ -83,7 +83,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   }
   useEffect(()=>{
     const obj={
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     }
     ApiHitOptions(obj)
@@ -92,7 +92,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   const currentUser=props.currentUser;
 
   const [currentWorkData,setCurrentWorkData]=useState({
-    "companyID": "COMP1",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     reportingManagerID:currentUser?.reportingManagerID|| undefined,
 
   "employeeID":localStorage.getItem("employeeId"),
@@ -189,7 +189,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitLocations=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     
@@ -388,7 +388,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitManager=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     const config = {
@@ -432,7 +432,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitRoles()
        ApiHitManager()
        const obj={
-        companyID:'COMP1',
+        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
        
       }
 
@@ -588,7 +588,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 departmentID:newvalue
               }))
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 departmentID:newvalue?.departmentID
               }
 
@@ -621,7 +621,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
               }))
 
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 designationID:newvalue?.designationID
                 
               }

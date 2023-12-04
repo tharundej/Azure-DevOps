@@ -437,7 +437,7 @@ const [loading,setLoading] = useState(false);
       <Grid
         container
         spacing={2}
-        style={{ marginTop: '1rem' }}
+      
         direction="row"
         xs={12}
         lg={12}

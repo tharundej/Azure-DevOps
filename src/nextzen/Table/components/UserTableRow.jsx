@@ -81,7 +81,7 @@ export default function UserTableRow({
                     sx={{ mr: 2 }}
                   />
                 )}
- {console.log(row,"rowdataa")}
+ {/* {console.log(row,"rowdataa")} */}
                 {ele.type === 'text' && (
                  
                   <ListItemText
@@ -104,7 +104,7 @@ export default function UserTableRow({
                  
                  <ListItemText
 
-                   primary={(row[ele.id] === "true")?(<span   style={{fontSize: 30,
+                   primary={(row[ele.id] === true)?(<span   style={{fontSize: 30,
                    }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
                    
                   }
@@ -116,20 +116,20 @@ export default function UserTableRow({
                    }}
                  />
                )}
-
+{console.log(row[ele.id]+"" ,"typetypetype",row?.status)}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === ('approved' || 'Approved' ) && 'success') ||
-                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
-                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
-                      (row[ele.id] === ('true' || 'True' ) && 'success') ||
-                      (row[ele.id] === ('false' || 'False') && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'approved' && 'success') ||
+                      (row[ele?.id]?.toLowerCase() === 'pending' && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'rejected' && 'error') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'true' && 'success') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'false' && 'warning') ||
                       'default'
                     }
                   >
-                    {row[ele.id] ? row[ele.id].toString():"False"}
+                    {row[ele?.id] ? row[ele?.id].toString():"False"}
                    
                   </Label>
                 )}

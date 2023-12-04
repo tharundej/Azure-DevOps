@@ -28,7 +28,7 @@ export default function AddProject({handleClose,title,rowData}){
     const [locationList,setLocationList] = useState([])
     const [hasFetchedData, setHasFetchedData] = useState(false);
     const [reportingManager,setReportingManagerData]= useState([])
-    const [selectedLocationID, setSelectedLocationID] = useState((rowData?.locationId)?rowData?.locationId:''); 
+    const [selectedLocationID, setSelectedLocationID] = useState((rowData?.locationId)?rowData?.locationId:null); 
     const [projectManager,setProjectManagers] = useState([])
     const [datesUsed, setDatesUsed] = useState({
         startDate: '',
@@ -55,7 +55,7 @@ export default function AddProject({handleClose,title,rowData}){
             actualStartDate:(rowData?.actualStartDate)?rowData?.actualStartDate:'',
             actualEndDate:(rowData?.actualEndDate)?rowData?.actualEndDate:'',
             projectDescription:(rowData?.projectDescription)?rowData?.projectDescription:'',
-            locationId:rowData?.locationId?rowData?.locationId:''
+            location:rowData?.locationId?rowData?.locationId:''
         }),
         []
       );
@@ -96,10 +96,10 @@ const getReportingManagers = async (requestData) => {
 const fetchReportingManagers = async () => {
   try {
     {console.log(selectedLocationID,"selectedlocationnnn")}
-    reportingManagersData.locationId = parseInt(selectedLocationID) || null;
+    reportingManagersData.locationId = parseInt(selectedLocationID) || parseInt(selectedLocationID?.locationID)||null;
     const reportingManagersData1 = await getReportingManagers(reportingManagersData);
     setReportingManagerData(reportingManagersData1)
-    projectManagersData.locationId = parseInt(selectedLocationID) || null;
+    projectManagersData.locationId = parseInt(selectedLocationID) ||parseInt(selectedLocationID?.locationID)||null;
     const reportingManagersData2 = await getReportingManagers(projectManagersData);
     setProjectManagers(reportingManagersData2)
   } 
@@ -134,7 +134,7 @@ const onSubmit = handleSubmit(async (data) => {
       data.actualEndDate=datesUsed?.actualEndDate;
       data.projectManager=selectedProjectManager?.employeeId,
       data.reportingManager=selectedReportingManager?.employeeId,
-      data.locationId = selectedLocationID?.locationID,
+      data.location= selectedLocationID
       data.companyId = user?.companyID
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
@@ -185,7 +185,7 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
   const onSubmit1 = handleSubmit(async (data) => {
     try {
    
-    data.locationId=selectedLocationID?.locationID
+    data.locationId=rowData?.locationId
     data.projectId=rowData?.projectID
       data.createdDate=rowData?.createdDate
       data.actualStartDate =(datesUsed?.actualStartDate)?datesUsed?.actualStartDate:rowData?.actualStartDate
@@ -196,7 +196,7 @@ if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === 
       data.roleId=user?.roleID,
       data.reportingManager = selectedReportingManager?.employeeId,
       data.projectManager = selectedProjectManager?.employeeId
-
+      data.locationName=rowData?.locationName
       const response = await axios.post(baseUrl+'/updateproject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
@@ -241,7 +241,6 @@ const userManager = user?.employeeID == rowData?.projectManager
             value = {selectedLocationID}
             getOptionLabel={(option) => option.locationName}
             isOptionEqualtoValue={(option) => option.locationId}
-            getOptionSelected={(option) => option.locationName === rowData?.locationName}
             onChange={(event, selectedOption) => 
               setSelectedLocationID(selectedOption)
             }

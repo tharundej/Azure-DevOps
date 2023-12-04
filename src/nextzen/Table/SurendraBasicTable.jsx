@@ -406,15 +406,25 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
 
   }
-  const getRowActionsBasedOnStatus = (status) => {
-    if (status === 'pending' || status===""|| status==="Pending") {
-      return rowActions
-    } 
-    else {
-      return null
-    } 
-  }
-  
+  const getRowActionsBasedOnStatus = (row) => {
+    if (
+      row?.status === 'pending' ||
+      row?.status === '' ||
+      row?.status === 'Pending' ||
+      row?.status === 'Active' ||
+      row?.status === 'InActive' ||
+      row?.status === 'active' ||
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'
+    ) {
+      return rowActions;
+    } else if (!row?.status || row?.status === undefined) {
+      return rowActions;
+    } else {
+      return null;
+    }
+  };
+
  
 
  
@@ -708,6 +718,7 @@ const handleExpandClick = (rowId) => {
      
 
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+         
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFilterOptions} searchData={handleFilterSearch}  
      addButton={button}  buttonFunction={buttonFunction} 
      dialogConfig={filterContent} dialogPayload={dialogPayload}
@@ -843,9 +854,9 @@ const handleExpandClick = (rowId) => {
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
-                          onHandleEditRow={(id) =>{ handleExpandClick(id),setExpandedRowId === row.id,console.log(id,"iddd")}}
+                          onHandleEditRow={(row) =>{ handleExpandClick(row.employeename),setExpandedRowId === row.employeename ,console.log(row,"iddd")}}
 
-                          rowActions={getRowActionsBasedOnStatus(row.status)|| []}
+                          rowActions={getRowActionsBasedOnStatus(row)|| []}
 
                           expandable
           onExpandClick={() => handleExpandClick(row.id)}

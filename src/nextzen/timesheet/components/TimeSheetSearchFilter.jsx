@@ -50,7 +50,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 
 
-const TimeSheetSearchFilter = ({currentUser,filterSearch}) => {
+const TimeSheetSearchFilterm = ({currentUser,filterSearch}) => {
 
 
    // dialog
@@ -216,7 +216,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
@@ -692,4 +692,4 @@ PaperProps={{
   )
 }
 
-export default TimeSheetSearchFilter
+export default TimeSheetSearchFilterm
