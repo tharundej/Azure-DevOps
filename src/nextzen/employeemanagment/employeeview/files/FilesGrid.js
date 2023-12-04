@@ -7,7 +7,7 @@ import FileBox from './FileBox';
 
 const FilesGrid = ({dataFiltered,onEdit,onDelete}) => {
 
-    console.log(dataFiltered,'looool')
+   
     const onSelectItem=(id)=>{
 
     }
