@@ -60,11 +60,19 @@ const bull = (
 
 export default function HrITTab() {
   const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
-  const { user } = useContext(UserContext);
-  console.log(user, 'userDetails ');
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+
+ 
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
+const [loading,setLoading] = useState(false);
+ 
+
+  const [reload, setREload] = useState(false);
+
   const TABLE_HEAD = [
     { id: 'employeeID', label: 'Employee Id ', width: 180, type: 'text' },
 
@@ -164,52 +172,11 @@ export default function HrITTab() {
     console.log('submitted data111', data);
   };
 
-  const updateDepartment = async (data) => {
-    const payload = {
-      departmentID: valueSelected?.departmentID,
-      departmentName: valueSelected?.departmentName,
-      designationName: valueSelected?.designationName,
-      designationGradeName: valueSelected?.designationGradeName,
 
-      designation_id: valueSelected?.designationID,
-
-      designation_grade_id: valueSelected?.designationGradeID,
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      //    url: baseUrl + '/updateSingleDepartmentInfo ',
-      url: baseUrl + '/updateSingleDepartmentInfo',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Designation Added successfully!');
-          setSnackbarOpen(true);
-          //  setHitGetDepartment(!hitGetDepartment)
-          console.log('success', response);
-        }
-      })
-      .catch((error) => {
-        setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
-        console.log(error);
-      });
-  };
   const getEmpItDetails = async (data) => {
     const payload = {
-      employeeID: 'INFO57',
-      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      employeeID: empId,
+      companyID: cmpId,
       financialYear: '2023-2024',
     };
 
