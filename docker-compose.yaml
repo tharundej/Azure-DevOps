@@ -2,7 +2,7 @@ version: "3.9"
 services:
   node_n:
     build: ./ui
-    image: ui_erp:8.0-${BUILD_NUMBER}
+    image: ui_erp:8.0
     container_name: node_n
     environment:
         - TZ=Asia/Kolkata
