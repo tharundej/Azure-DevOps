@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { Country, State, City }  from 'country-state-city';
+import Divider from '@mui/material/Divider';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -205,6 +206,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
           nationality:userdropDownvalue?.nationalityValue?.nationality || "",
           religion:userdropDownvalue?.religionValue?.label || "",
+          employmentType:userdropDownOptions?.employeementTypeValue?.label || "",
 
 
 
@@ -273,9 +275,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-
+             <Grid md={12} xs={12} lg={12}  fullWidth  item>
+             <Typography>General Information</Typography>
+             </Grid>
             
              <Grid md={6} xs={12}  fullWidth  item>
+             
                   <TextField
                     fullWidth
                 
@@ -507,6 +512,30 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={employmentTypeOptions || []}
+                value={userdropDownvalue?.employeementTypeValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.employeementTypeValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
@@ -603,7 +632,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   style={{  width: '100%' }} />}
                 />
                   </Grid>
+                  
+                  <Divider sx={{ borderStyle: 'dashed' }} />
 
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>Address</Typography>
+                    </Grid>
                  
                   <Grid md={6} xs={12} item>
                   <TextField
@@ -643,7 +677,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                  
+                
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
@@ -950,7 +984,9 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>About Role</Typography>
+                    </Grid>
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               
