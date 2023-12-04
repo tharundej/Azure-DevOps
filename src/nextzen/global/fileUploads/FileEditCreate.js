@@ -101,7 +101,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
     const ApiHitCreate=()=>{
         
                 let data = JSON.stringify({
-                "companyId": documents?.companyId,
+                  //"companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 
                 "documents": defaultValues
@@ -132,7 +132,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
 
     const ApiHitAddDocs=()=>{
       let data = JSON.stringify({
-        "companyId": documents?.companyId,
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": employeeIDForApis,
         "mainRecordId":documents?.mainRecordID,
         "documents": defaultValues
