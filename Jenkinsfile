@@ -14,7 +14,7 @@ pipeline {
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
-                    sh '''docker-compose up -d &&
+                    sh '''docker_compose up -d &&
                           docker ps -a
                     '''      
                 }
