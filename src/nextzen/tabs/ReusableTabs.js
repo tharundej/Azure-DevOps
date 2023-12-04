@@ -22,7 +22,7 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab,tabsSx }) {
   
   return (
     <Box>
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box>
     <Tabs 
     value={value} 
     onChange={handleChange} 
