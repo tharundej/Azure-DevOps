@@ -53,7 +53,7 @@ import UserContext from '../context/user/UserConext';
     },
   };
 
-export default function SalarySearchFilter({filterSearch,filterData,componentPage}){
+export default function SalarySearchFilter({filterSearch,filterData,componentPage,getTableData}){
   const {user} = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -282,7 +282,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
  }}
  className="custom-dialog"  
 >
- <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
+ <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  getTableData={getTableData}/>
       </Dialog>
     )}
         <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
