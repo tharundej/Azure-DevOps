@@ -54,12 +54,16 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
-    leaveTypeId:Yup.number(),
+    leaveTypeId:Yup.lazy((value) => {
+    return value === 0
+      ? Yup.number().notOneOf([0], 'Please Select Leave Type').required('Please Select Leave Type')
+      : Yup.number().required('Please Select Leave Type');
+  }),
     companyId:Yup.string(),
     employeeId:Yup.string(),
     fromDate: Yup.string(),
     toDate: Yup.string(),
-    comments: Yup.string(),
+    comments: Yup.string().required('Please Enter Reason'),
     applyDate:Yup.mixed(),
     status:Yup.string(),
     fullday:Yup.string(),
@@ -306,7 +310,7 @@ console.log("startdatee",formatDateToYYYYMMDD(datesUsed?.toDate))
                 </MenuItem>
               ))}
             </RHFSelect> 
-     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Comments" />
+     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Leave Reason" />
      <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
               <DatePicker
