@@ -11,6 +11,8 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 
 import PropTypes from 'prop-types';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import axios from 'axios';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -19,6 +21,13 @@ const bull = (
 );
 
 export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
+
+  const {user} = React.useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+const [cardData ,setCardData] = React.useState()
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text' },
 
@@ -61,7 +70,7 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
   {
       page:0,
       count:5,
-      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      companyID:cmpId,
       employementType:employmentType,
       sort:{
           key:1,
@@ -69,89 +78,7 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
       }        
   }
 
-  const bodyContent = [
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-  ];
+ 
   const [personName, setPersonName] = React.useState();
 
   const handleChange = (event) => {
@@ -162,10 +89,80 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
     // console.log
     moveToPageFunction(event);
   };
+
+ const getPayRunDetails = async () => {
+    // setLoading(true)
+    const payload = {
+     companyID : cmpId,
+    };
+  
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      // url: baseUrl + '/getPayRunCount',
+      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          // setLoading(false)
+          const rowsData = response?.data;
+          setCardData(rowsData)
+          console.log(JSON.stringify(response?.data), 'result');
+        }
+      })
+      .catch((error) => {
+        // setLoading(false)
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+   console.log(cardData, 'resultsreults');
+   React.useEffect(()=>{
+    getPayRunDetails()
+   },[])
+   const data = [
+    {
+        "TDS": 175625.00432533395,
+        "employeeGrossPay": 0,
+        "fromDate": "2023-12-01T00:00:00+05:30",
+        "payrollcost": 0,
+        "showMessage": "User",
+        "toDate": "2023-12-31T23:59:59.999999999+05:30"
+    },
+    {
+        "employeepf": 0,
+        "employerpf": 0,
+        "fromDate": "2023-12-01T00:00:00+05:30",
+        "showMessage": "User",
+        "tds": 0,
+        "toDate": "2023-12-31T23:59:59.999999999+05:30"
+    }
+];
+const formatDate = (dateString) => {
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+  return formattedDate;
+};
+   
   return (
     <Box>
-     <Grid container spacing={3}>
-     <Grid xs={12} md={6} lg={4}>
+    
+{  cardData?.map((item ,idex) =>{
+<>
+<p></p>
+</>
+
+  }) }
+    <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
+     <Grid xs={12} md={6} lg={6}>
   <Stack
     direction="column"
     // alignItems="center"
@@ -191,13 +188,13 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
          opacity:"0.64"
       }}
     >
-      Period : 01/08/2023 to 31/08/2023
+      Period :       ( {cardData && formatDate(cardData[0]?.fromDate)} to  {cardData && formatDate(cardData[0].toDate)})
     </Typography>
 
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
       <div>
         <ListItemText 
-          primary="11,22093802"
+          primary={cardData && cardData[0]?.payrollcost}
           secondary="Payroll Cost"
           primaryTypographyProps={{
             typography: 'subtitle2',
@@ -216,10 +213,10 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
       <div>
         <ListItemText
           sx={{ ml: 3 }}
-          primary="2,500"
+          primary={cardData && cardData[0]?.employeeGrossPay}
           secondary="Employee's Gross Pay"
           primaryTypographyProps={{
-            typography: 'subtitle2',
+            typography: 'subtitle3',
             component: 'span',
             sx: { textAlign: 'center' },
           }}
@@ -281,21 +278,21 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
     variant="subtitle2"
     
   >
-    Taxes
+    TDS
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
   
   >
-    Prs-Tax Deductions
+   Employer PF
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
     
   >
-    Post-Tax Deductions
+ Employee PF
   </Typography>
 
   </div>
@@ -305,21 +302,21 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
     variant="subtitle2"
     
   >
-    11,34,023.09
+  {  cardData && cardData[1]?.tds}
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
    
   >
-   14,023.49
+ {  cardData && cardData[1]?.employerpf}
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
     
   >
-   34,023.00
+  {  cardData && cardData[1]?.employeepf}
   </Typography>
 
   </div>
@@ -342,7 +339,7 @@ export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
       </Grid>
       {/* from ai  */}
      
-      {console.log(bodyContent, 'body content', actions)}
+    
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/getPayRunDetailsContract"
