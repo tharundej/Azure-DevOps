@@ -499,6 +499,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button 
+          sx={{backgroundColor:'#3B82F6'}}
            onClick={handleAddStatuory}
           >+Add Statoury</Button>
           </Grid>

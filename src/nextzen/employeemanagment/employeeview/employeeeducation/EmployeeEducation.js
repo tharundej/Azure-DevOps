@@ -119,7 +119,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}}>+Add Education</Button>
+          <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}} sx={{backgroundColor:'#3B82F6'}} >+Add Education</Button>
           </Grid>
         </Grid>
 

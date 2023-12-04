@@ -488,12 +488,12 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
              
               <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+              <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                   <Select
-                      label="Select a doc Type"
+                      label="Select Document"
                       value={file?.fileType}
                       onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                      name="Select a doc Type"
+                      name="Select Document"
                   >
                       <MenuItem value="salary-slips">Salary Slips</MenuItem>
                       <MenuItem value="seperation-letter">Seperation Letter</MenuItem>

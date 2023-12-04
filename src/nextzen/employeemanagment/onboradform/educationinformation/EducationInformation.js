@@ -542,12 +542,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
                         <MenuItem value="marks-memo">Marks Memo</MenuItem>
