@@ -665,15 +665,15 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                   var newOptiosArray={...userdropDownOptions};
                   
-                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
-                  // newOptiosArray.rCityOptions=[]
+                  newOptiosArray.pStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  newOptiosArray.pCityOptions=[]
 
-                  // setUserDropDownOptions(newOptiosArray)
+                  setUserDropDownOptions(newOptiosArray)
 
                   var newArr = { ...userdropDownvalue };
                   newArr.pCountryValue=newvalue;
                   newArr.pStateValue=undefined;
-                  newArr.PCityValue-undefined;
+                  newArr.pCityValue=undefined;
                  
                   
                   console.log(newArr)
@@ -703,15 +703,15 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                   var newOptiosArray={...userdropDownOptions};
                   
-                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
-                  // newOptiosArray.rCityOptions=[]
 
-                  // setUserDropDownOptions(newOptiosArray)
+                  newOptiosArray.pCityOptions=City.getCitiesOfState(userdropDownvalue?.pCountryValue?.isoCode, newvalue?.isoCode)
+
+                  setUserDropDownOptions(newOptiosArray)
 
                   var newArr = { ...userdropDownvalue };
-                  newArr.pCountryValue=newvalue;
-                  newArr.pStateValue=undefined;
-                  newArr.PCityValue-undefined;
+                
+                  newArr.pStateValue=newvalue;
+                  newArr.pCityValue=undefined;
                  
                   
                   console.log(newArr)
@@ -728,46 +728,49 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               />
                   </Grid>
 
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentcity"
+                options={userdropDownOptions?.pCityOptions || []}
+                value={userdropDownvalue?.pCityValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  // var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                
+                  newArr.pCityValue=newvalue;
+                  
+                 
+                  
+                
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent City"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+
                   
 
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="pCity"
-                    label="City"
-                    variant="outlined"
-                    id="pCity"
-                    value={currentUser?.pCity}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        pAdpCitydressLine1:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
+                 
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="pState"
-                    label="State"
-                    variant="outlined"
-                    id="pState"
-                    value={currentUser?.pState}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        pState:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
+               
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -824,43 +827,119 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+                 
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resentialcountry"
+                options={userdropDownOptions?.rCountryOptions || []}
+                value={userdropDownvalue?.rCountryValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+                  newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  newOptiosArray.rCityOptions=[]
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                  newArr.rCountryValue=newvalue;
+                  newArr.rStateValue=undefined;
+                  newArr.rCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
                 
-                    name="rCity"
-                    label="City"
-                    variant="outlined"
-                    id="rCity"
-                    value={currentUser?.rCity}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        rCity:e?.target.value
-                      }))
-                    }}
-                  />
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential Country"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resenditialstate"
+                options={userdropDownOptions?.rStateOptions || []}
+                value={userdropDownvalue?.rStateValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+
+                  newOptiosArray.rCityOptions=City.getCitiesOfState(userdropDownvalue?.rCountryValue?.isoCode, newvalue?.isoCode)
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
                 
-                    name="rState"
-                    label="State"
-                    variant="outlined"
-                    id="pState"
-                    value={currentUser?.rState}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        rState:e?.target.value
-                      }))
-                    }}
-                  />
+                  newArr.rStateValue=newvalue;
+                  newArr.rCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential State"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resendiatialtcity"
+                options={userdropDownOptions?.rCityOptions || []}
+                value={userdropDownvalue?.rCityValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  // var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                
+                  newArr.rCityValue=newvalue;
+                  
+                 
+                  
+                
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential City"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+                 
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
