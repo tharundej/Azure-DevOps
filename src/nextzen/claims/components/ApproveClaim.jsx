@@ -182,7 +182,10 @@ const actions = [
   // mui modal related
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>{
+    setOpen(false);
+    setApprove(initialApproveState);
+  }
 
   const style = {
     position: 'absolute',
@@ -283,23 +286,23 @@ const actions = [
   
 
 
-  const [approve, setApprove]= React.useState({ 
-    companyId:companyID,
-    employeeId:"",
-    expenseClaimId :"" ,
-    approverManagerId:employeeID,
-    approvedAmount:null,
-    status:"",
-    approverRemark:"",
-    claimAmount:"",
-    claimType:""
- 
-
-  })
+  const initialApproveState = {
+    companyId: companyID,
+    employeeId: "",
+    expenseClaimId: "",
+    approverManagerId: employeeID,
+    approvedAmount: null,
+    status: "",
+    approverRemark: "",
+    claimAmount: "",
+    claimType: ""
+  };
+  
+  const [approve, setApprove] = React.useState(initialApproveState);
 console.log(approve,"approve1233")
 const handleInputChange = (event) => {
   const { name, value } = event.target;
-  const parsedValue = name === "approvedAmount" ? parseFloat(value) : value;
+  const parsedValue = name === "approvedAmount" && value.trim() !== "" ? parseFloat(value) : null;
 
   setApprove((prevApprove) => ({
     ...prevApprove,

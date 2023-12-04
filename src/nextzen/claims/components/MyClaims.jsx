@@ -391,15 +391,6 @@ const values = watch();
 data.expenseStartDate = selectedDate?.expenseStartDate;
 data.expenseEndDate = selectedDate?.expenseEndDate;
 data.file = file;
-// data.expenseStartDate = selectedDate;
-  console.log(data,"defaultValues111")
-  // formData.append("file", null );
-  // formData.append("claimAmount", 1234 );
-  // formData.append("company_id", "COMP2" );
-  // formData.append("employeeId", "ibm3" );
-  // formData.append("currency", "$");
-  // formData.append("expenseConfigId", 2);
-  // formData.append("expense_date", "2023-11-12");
 
   const formDataForRequest = new FormData();
   for (const key in data) {
@@ -408,16 +399,15 @@ data.file = file;
 
 
   try {
-    
-
-    console.log(formData, 'formdata api in check');
-    // baseUrl+`${endpoint}`
+  
     const response = await axios.post(baseUrl+"/applyClaim", formDataForRequest).then(
-      (successData) => {
-        console.log('sucess', successData);
+      (response) => {
+        console.log('responsesss', response);
+        // handleClose()
       },
       (error) => {
         console.log('lllll', error);
+        handleClose()
       }
     );
 
@@ -428,6 +418,7 @@ data.file = file;
     // console.info('DATA', data);
   } catch (error) {
     console.error(error);
+    handleClose()
   }
 });
   // for upload docmunt
@@ -461,7 +452,7 @@ console.log(editData,"editData")
         ...rowData,
         companyId: companyID,
         employeeId:employeeID,
-        claimType: { expenseConfigurationId: 1, expenseName: "hotel" },
+        claimType: { expenseConfigurationId: rowData?.expenseConfigurationId, expenseName: rowData?.claimType },
       };
     
       console.log("updatedRowData",updatedRowData)
@@ -519,9 +510,11 @@ console.log(editData,"editData")
       const response = await axios.post(baseUrl+"/EditMyClaims", editData).then(
         (successData) => {
           console.log('sucess', successData);
+          handleCloseEdit()
         },
         (error) => {
           console.log('lllll', error);
+          handleCloseEdit()
         }
       );
 
@@ -530,6 +523,7 @@ console.log(editData,"editData")
 
       alert("api hit not done")
       console.error(error);
+      handleCloseEdit()
     }
   }
   const onSubmitEdit =  handleSubmit(async(editData) => {

@@ -254,10 +254,11 @@ export default function MyCompoff({ currentUser ,}) {
 
       const updatedRowData = {
         ...rowData,
-  employeeId:employeeID,
+        employeeId:employeeID,
         companyId: companyID,
+        compensantoryPolicies:{   compensantoryConfigurationId: rowData?.compensantoryConfigurationId, compensantoryPolicies: rowData?.compensantoryPolicies,},
       };
-    
+      // {   compensantoryConfigurationId: 11, compensantoryPolicies: "enchachment", id:0 },
       console.log("updatedRowData",updatedRowData)
       // setEditData(updatedRowData.compensantory_policies=== rowData?.compensantory_policies);
       setEditData(updatedRowData);

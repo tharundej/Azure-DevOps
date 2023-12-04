@@ -171,6 +171,7 @@ const externalFilter = {
               employeeId:rowData?.employeeId,
               utilisation:rowData?.utilisation,
               compensatoryRequestId: rowData?.compensantoryRequestId,
+              compensantoryPolicies: rowData?.compensantoryPolicies,
 
           }));
           // handle(approve);
@@ -192,7 +193,7 @@ const externalFilter = {
           employeeId:rowData?.employeeId,
           utilisation:rowData?.utilisation,
           compensatoryRequestId: rowData?.compensantoryRequestId,
-          compensantoryPolicies: rowData?.approve?.compensantoryPolicies,
+          compensantoryPolicies: rowData?.compensantoryPolicies,
       }));
       
 //       handle({...approve, ...{status: "Rejected",
