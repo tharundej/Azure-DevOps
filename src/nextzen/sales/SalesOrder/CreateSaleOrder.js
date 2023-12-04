@@ -271,7 +271,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             justifyContent="space-between" // Align items to the right
             alignItems="center"
           >
-            <h2>Product Details</h2>
+            <h2>Product Sales</h2>
             <Button
               variant="contained"
               color="primary"
