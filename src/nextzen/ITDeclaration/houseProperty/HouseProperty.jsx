@@ -35,6 +35,7 @@ import { _mock } from 'src/_mock';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingScreen } from 'src/components/loading-screen';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -65,7 +66,7 @@ const headings = [
 
 export default function HouseProperty() {
 
-  
+  const {enqueueSnackbar} = useSnackbar()
 // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
   const {user} = useContext(UserContext)
@@ -111,6 +112,7 @@ const [loading,setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(null);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -255,10 +257,11 @@ const [loading,setLoading] = useState(false);
       .then((response) => {
         console.log('success', response, response.data.message);
         if (response.data.code === 201 || 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
 
           setREload(!reload);
           setFormData({
@@ -276,12 +279,14 @@ const [loading,setLoading] = useState(false);
             municipalTaxesPaid: '',
           });
         } else if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
         console.log(error);
       });
@@ -411,29 +416,21 @@ const [loading,setLoading] = useState(false);
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
   {    loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
    <>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      
       <Grid
         container
         spacing={2}
@@ -450,6 +447,7 @@ const [loading,setLoading] = useState(false);
               getOptionLabel={(option) => option.financialYear}
               value={selectedYear}
               onChange={handleYearChange}
+              style={{marginTop:"0.9rem"}}
               renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
             />
           </Grid>

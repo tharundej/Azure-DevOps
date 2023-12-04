@@ -52,7 +52,8 @@ import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgni
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [countruIsoCode,setCoutryIsoCode]=useState("")
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
 
@@ -395,7 +396,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setCoutryIsoCode(obj?.isoCode)
+        setPCoutryIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -417,8 +418,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.cityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
-         console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
+        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
+         //console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
       }
       catch(e){
   
@@ -443,7 +444,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.rstateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setCoutryIsoCode(obj?.isoCode)
+        setCoutryRIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -465,7 +466,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.rcityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
+        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
         // console.log(cityOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -834,7 +835,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rCountry"
                 label="Permanent Country"
-                options={options?.rcountryOptions }
+                options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}
                 renderOption={(props, option) => (
@@ -848,7 +849,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rState"
                 label="Permanent State"
-                options={options?.rstateOptions}
+                options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
                 renderOption={(props, option) => (
@@ -861,7 +862,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                 name="rCity"
                 label="Permanent City"
-                options={options?.rcityOptions}
+                options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}
                 renderOption={(props, option) => (

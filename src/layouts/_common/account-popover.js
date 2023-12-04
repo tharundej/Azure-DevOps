@@ -98,7 +98,7 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.employeeName[0]}
+          {user?.employeeName ? user?.employeeName[0] : ''}
         </Avatar>
       </IconButton>
 

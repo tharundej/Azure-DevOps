@@ -8,6 +8,8 @@ import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
 import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
+import { Dialog } from '@mui/material';
+import ViewPurchaseOrder from './ViewPurchaseOrder';
 
 const PurchaseOrderTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -30,11 +32,19 @@ const PurchaseOrderTable = () => {
       type: 'serviceCall',
       endpoint: '',
     },
+    {
+      name: 'View',
+      icon: 'carbon:view',
+      id: 'view',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteData, setDeleteData] = useState(null);
+  const [viewShowForm, setViewShowForm] = useState(false);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
@@ -44,6 +54,9 @@ const PurchaseOrderTable = () => {
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
       handleDeleteConfirmed();
+    } else if (event?.name === 'View') {
+      setViewShowForm(true);
+      setEditModalData(rowdata);
     }
   };
   const handleCancelDelete = () => {
@@ -59,6 +72,7 @@ const PurchaseOrderTable = () => {
   };
   const handleClose = () => {
     setEditShowForm(false);
+    setViewShowForm(false);
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
@@ -149,6 +163,20 @@ const PurchaseOrderTable = () => {
   ]);
   return (
     <>
+      {viewShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={viewShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000 },
+          }}
+          className="custom-dialog"
+        >
+          <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Dashboard: PurchaseOrder</title>
       </Helmet>
@@ -159,6 +187,7 @@ const PurchaseOrderTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchaseOrderHead"
+        onClickActions={onClickActions}
         handleEditRowParent={() => {}}
       />
     </>

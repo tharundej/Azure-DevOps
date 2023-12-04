@@ -23,10 +23,72 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+import { Country, State, City }  from 'country-state-city';
+
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
+const genderOptions=[
+  {label:'Male'},
+  {label:'Female'}
+]
 
+const maritalStatusOptions = [
+  { value: 'single', label: 'Single' },
+  { value: 'married', label: 'Married' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'separated', label: 'Separated' }
+];
+
+const religionOptions = [
+  { value: 'christianity', label: 'Christianity' },
+  { value: 'islam', label: 'Islam' },
+  { value: 'hinduism', label: 'Hinduism' },
+  { value: 'buddhism', label: 'Buddhism' },
+  { value: 'sikhism', label: 'Sikhism' },
+  { value: 'judaism', label: 'Judaism' },
+  { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+  { value: 'jainism', label: 'Jainism' },
+  { value: 'shinto', label: 'Shinto' },
+  { value: 'taoism', label: 'Taoism' },
+  { value: 'zoroastrianism', label: 'Zoroastrianism' },
+  { value: 'confucianism', label: 'Confucianism' },
+  { value: 'atheist', label: 'Atheist' },
+  { value: 'agnostic', label: 'Agnostic' },
+  {value:'other',labal:"Other"}
+];
+
+
+const nationalitiesOptions = [
+  { country: "United States", nationality: "American" },
+  { country: "United Kingdom", nationality: "British" },
+  { country: "Canada", nationality: "Canadian" },
+  { country: "Australia", nationality: "Australian" },
+  { country: "Germany", nationality: "German" },
+  { country: "France", nationality: "French" },
+  { country: "China", nationality: "Chinese" },
+  { country: "India", nationality: "Indian" },
+  { country: "Brazil", nationality: "Brazilian" },
+  { country: "Russia", nationality: "Russian" },
+  { country: "South Africa", nationality: "South African" },
+  { country: "Japan", nationality: "Japanese" },
+  { country: "Mexico", nationality: "Mexican" },
+  { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+  { country: "South Korea", nationality: "South Korean" },
+  { country: "Other", nationality: "other" }
+];
+
+const bloodGroupsOptions = [
+  { label: "A+", value: "A positive" },
+  { label: "A-", value: "A negative" },
+  { label: "B+", value: "B positive" },
+  { label: "B-", value: "B negative" },
+  { label: "AB+", value: "AB positive" },
+  { label: "AB-", value: "AB negative" },
+  { label: "O+", value: "O positive" },
+  { label: "O-", value: "O negative" }
+];
 
 
 // ----------------------------------------------------------------------
@@ -95,7 +157,22 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
             desginationOptions:desgination,
             desginationGradeOptions:desginationGrade,
             rolesOptions:roles,
-            managerOptions:manager
+            managerOptions:manager,
+            bloodGroupsOptions:bloodGroupsOptions,
+            religionOptions:religionOptions,
+            nationalityOptions:nationalitiesOptions,
+            genderOptions:genderOptions || [],
+            maritalStatusOptions:maritalStatusOptions || [],
+            pCountryOptions:Country.getAllCountries() || [],
+            pStateOptions:State.getStatesOfCountry(currentEmployee?.pCountry?.isoCode)|| [],
+            pCityOptions:City.getCitiesOfState(currentEmployee?.pCountry?.isoCode, currentEmployee?.pState?.isoCode)|| [],
+
+            rCountryOptions:Country.getAllCountries() || [],
+            rStateOptions:State.getStatesOfCountry(currentEmployee?.rCountry?.isoCode)|| [],
+            rCityOptions:City.getCitiesOfState(currentEmployee?.rCountry?.isoCode, currentEmployee?.rState?.isoCode)|| [],
+           
+            
+            
 
 
           }
@@ -108,19 +185,32 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
           const rolesValue=funcDropDownValue(roles,'roleID',currentEmployee?.roleID)
           const managerValue=funcDropDownValue(manager,'managerID',currentEmployee?.reportingManagerID)
 
+
           const arrValue={
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,
             desginationGradeValue:desginationGradeValue,
             rolesValue:rolesValue,
-            managerValue:managerValue
+            managerValue:managerValue,
+            bloodGroupValue: { label: currentEmployee?.bloodGroup },
+            religionValue:{label:currentEmployee?.religion},
+            genderValue:{label:currentEmployee?.gender},
+            nationalityValue:{nationality:currentEmployee?.nationality},
+            maritalStatusValue:{label:currentEmployee?.maritalStatus},
+            pCountryValue:currentEmployee?.pCountry || undefined,
+            rCountryValue:currentEmployee?.rCountry || undefined,
+            pStateValue:currentEmployee?.pState || undefined,
+            rStateValue:currentEmployee?.rState || undefined,
+            pCityValue:currentEmployee?.pCity || undefined,
+            rCityValue:currentEmployee?.rCity || undefined,
+
 
           }
 
 
           setDropDownValue(arrValue);
-          console.log(arrValue, 'locationsdepartmentarr');
+          console.log(arr, 'locationsdepartmentarr');
          
           setLocations(locations);
           
@@ -135,7 +225,8 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": employeeIDForApis
+        "employeeID": employeeIDForApis,
+        // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
        
       const config = {
