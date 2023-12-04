@@ -23,6 +23,14 @@ pipeline {
                 }
             }
         }
+        stage ("docker compose bulid"){
+            steps {
+                script{
+                    sh "docker-compose build"
+                    sh "docker-compose pull"
+                }
+            }
+        }
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
