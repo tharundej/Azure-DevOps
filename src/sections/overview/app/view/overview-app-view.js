@@ -41,7 +41,7 @@ export default function OverviewAppView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <AppWelcome
-            title={`Welcome back 👋  ${user?.userName || ""} `}
+            title={`Welcome back 👋  ${user?.employeeName || ""} `}
             description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
             img={<SeoIllustration />}
             // action={

@@ -123,7 +123,9 @@ import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
+import ApproveFilter from '../timesheet/components/ApproveFilters';
 import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
+import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 
 const defaultFilters = {
   name: '',
@@ -502,6 +504,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterData={handleFIlterOptions}
             />
           )}
+          {filterName === 'ApproveFilters' && (
+            <ApproveFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
+          )}
           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
@@ -741,6 +750,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           )}
  {filterName === 'TaxSectionFilter' && (
             <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+
+{filterName === 'AddRoleFilter' && (
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>
