@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,8 +14,10 @@ import { createFactoryAPI, updateFactoryAPI } from 'src/api/Accounts/Factory';
 import { getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
+  const {user} = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
     locationPhone: Yup.number(),
@@ -31,7 +33,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const defaultValues = useMemo(
     () => ({
       locationID: currentData?.locationID || 0,
-      companyID: currentData?.companyID || 'COMP1',
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
       locationName: currentData?.locationName || '',
       locationPhone: currentData?.locationPhone || '',
       locationEmailID: currentData?.locationEmailid || '',
@@ -65,7 +67,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      const data = { companyID: 'COMP1' };
+      const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);

@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -28,6 +28,9 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
+
 
 export default function LeavePeriodForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -36,6 +39,9 @@ export default function LeavePeriodForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleCloseEdit = () => setOpenEdit(false);
+  const user =useContext(UserContext)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -45,11 +51,13 @@ export default function LeavePeriodForm({ currentUser }) {
   const [locationType, setLocationType] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-
   const handleStartDateChange = (date) => {
     setSelectedStartDate(date);
   };
-
+  const leavePeriodNames=[
+    {type:'Financial Year'},
+    {type:'Year'}
+  ];
   const handleEndDateChange = (date) => {
     setSelectedEndDate(date);
   };
@@ -79,7 +87,7 @@ export default function LeavePeriodForm({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -116,9 +124,29 @@ export default function LeavePeriodForm({ currentUser }) {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const leaveperiod = await ApiHitleavePeriodType(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.leavePeriodType = leaveperiod;
+          // optionsArr.leavePeriodType=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+
+      call();
+    }
+  }, [open]);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1'
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
     // data.locationID = formData?.Location?.locationID;
@@ -134,7 +162,7 @@ export default function LeavePeriodForm({ currentUser }) {
         setSnackbarSeverity('success');
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-        
+         handleClose();
       
       console.log('sucess', response);
 
@@ -143,7 +171,7 @@ export default function LeavePeriodForm({ currentUser }) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
-      
+         handleClose();
       console.log('sucess', response);
 
       }
@@ -152,6 +180,7 @@ export default function LeavePeriodForm({ currentUser }) {
     setSnackbarSeverity('error');
     setSnackbarMessage('Error While Adding Leave Period. Please try again.');
     setSnackbarOpen(true);
+    handleClose();
    console.log('error', error);
  }
   });
@@ -170,12 +199,9 @@ export default function LeavePeriodForm({ currentUser }) {
       locationName: selectedOption?.locationName,
     });
   };
-const leavePeriodNames=[
-  {type:'Financial Year'},
-  {type:'Year'}
-];
-  console.log(formData, 'formdata for location');
 
+  console.log(formData, 'formdata for location');
+ 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -228,7 +254,7 @@ const leavePeriodNames=[
                 sm: 'repeat(2, 1fr)',
               }}
             >
-            <RHFAutocomplete name="leavePeriodType" label="Leave Period Type" options={leavePeriodNames.map((leavePeriodName)=>leavePeriodName.type)}/>
+            <RHFAutocomplete name="leavePeriodType" label="Leave Period Type" options={leavePeriodNames.map((name)=>name?.type)}/>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker

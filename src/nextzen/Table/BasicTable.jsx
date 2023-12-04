@@ -117,9 +117,13 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import UserContext from '../context/user/UserConext';
+import { useContext } from 'react';
+import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
-
+import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
+import ApproveFilter from '../timesheet/components/ApproveFilters';
 const defaultFilters = {
   name: '',
   role: [],
@@ -140,6 +144,8 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  SecondoryTable,
+  componentPage,count
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -160,7 +166,11 @@ const BasicTable = ({
   // const defaultPayloaddata =defaultPayload;
   //   const endpointdata =endpoint;
   // const [TABLE_HEAD, setTABLE_HEAD] = useState();
-
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const TABLE_HEAD = headerData;
   // const[_userList, set_userList] = useState(bodydata);
   const [tableData, setTableData] = useState([]);
@@ -174,7 +184,7 @@ const BasicTable = ({
   useEffect(() => {
     // onclickActions();
     getTableData();
-  }, []);
+  }, [count]);
 
   const getTableData = (payload) => {
     setLoading(false);
@@ -191,6 +201,8 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
+    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
+    // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -201,6 +213,7 @@ const BasicTable = ({
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
+   
       url: baseUrl + `${endpoint}`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -208,7 +221,7 @@ const BasicTable = ({
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDEyNDkyMzQsInVzZYW1lIjoiYW5pbGdAaW5mb2JlbGxpdC5jb20ifQ.s8XkZOwc1PYt4tXKUOKdT5pPzvV6b_Ck7LGE-o1-NOc',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
       },
       data: initialDefaultPayload,
     };
@@ -458,7 +471,11 @@ const BasicTable = ({
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
       return rowActions;
-    } else {
+    } 
+    else if (row?.status === 'Completed') {
+      return [rowActions.find(action => action.name === 'View')];
+    }
+    else {
       return null;
     }
   };
@@ -483,6 +500,13 @@ const BasicTable = ({
             <TimeSheetSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+            />
+          )}
+          {filterName === 'ApproveFilters' && (
+            <ApproveFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
             />
           )}
           {filterName === 'ProjectSearchFilter' && (
@@ -517,14 +541,19 @@ const BasicTable = ({
             <SalarySearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              componentPage = {componentPage}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
+          {filterName === 'LeaveHistoryFilter' && (
+            <LeaveHistoryFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+
           {filterName === 'EmployeeListFilter' && (
             <EmployeeTableFilter filterData={handleFIlterOptions} />
           )}
@@ -600,7 +629,7 @@ const BasicTable = ({
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
@@ -714,6 +743,10 @@ const BasicTable = ({
               searchData={handleFilterSearch}
             />
           )}
+             {filterName === 'HrTabFilter' && (
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -767,7 +800,13 @@ const BasicTable = ({
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => handleEditRowParent(id)}
+                            onHandleEditRow={(id) => 
+                              {
+                                if(handleEditRowParent)
+                              
+                              handleEditRowParent(id)
+                              }
+                            }
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
                             onDeleteRow={() => handleDeleteRow(row.id)}
@@ -776,6 +815,7 @@ const BasicTable = ({
                             }}
                             headerContent={TABLE_HEAD}
                             rowActions={getRowActionsBasedOnStatus(row)}
+                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
                         </>
                       ))}
@@ -871,6 +911,9 @@ BasicTable.propTypes = {
 
 BasicTable.propTypes = {
   bodyData: PropTypes.func,
+};
+BasicTable.propTypes = {
+  SecondoryTable: PropTypes.func,
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.func,

@@ -8,17 +8,12 @@ import ReusableTabs from '../../../tabs/ReusableTabs';
 
 
 import CalendarView from '../Calendar/view/calendar-view';
-import History from './LeaveHistory';
-import PendingLeaves from './PendingLeaves';
-import ApprovedLeaves from './ApprovedLeaves';
+import History from '../../LeaveHistory/LeaveHistory';
 
 export default function LeaveRequest() {
-  const tabLabels = ['Leave Schedule','Pending Requests','Approved Leaves','Leave History'];
+  const tabLabels = ['Leave Schedule','Leave History'];
   const tabContents = [
     <div><CalendarView/></div>,
-   
-    <div><PendingLeaves/></div>,
-    <div><ApprovedLeaves/></div>,
     <div><History/></div>,
   ];
 

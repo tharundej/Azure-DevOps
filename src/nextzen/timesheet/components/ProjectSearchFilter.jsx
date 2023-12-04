@@ -184,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":"Info7"
+    "projectManager":user?.employeeID
   }
   const config={
     method:'POST',
@@ -203,7 +203,7 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":"info7",
+    "projectManager":user?.employeeID,
     "companyID":user?.companyID,
     "locationID":user?.locationID
 }
@@ -279,7 +279,32 @@ const AssignEmployees =()=>{
    })
 }
 
+const roleid  = user?.roleID
+const [projectPermission,setProjectPermission]= useState(false);
+const [assignPermission,setAssignPermission] = useState(false)
+useEffect(()=>{
+  const permission = user?.rolePermissions.timeSheetManagement
+  if (
+    permission &&
+    permission.hasOwnProperty('mainHeading') &&
+    permission.mainHeading &&
+    permission['addProject']
+  )
+  {
+    setProjectPermission(true)
+  }
+  if (
+    permission &&
+    permission.hasOwnProperty('mainHeading') &&
+    permission.mainHeading &&
+    permission['assignEmployees']
+  )
+  {
+    setAssignPermission(true)
+  }
 
+},[user])
+ 
   return (
         <> 
 {
@@ -519,9 +544,8 @@ const AssignEmployees =()=>{
                   input={<OutlinedInput label="status" />}
                   MenuProps={MenuProps}
                 >
-                 <MenuItem value="active" key="active">Active</MenuItem>
-                 <MenuItem value="pending" key="pending">Pending</MenuItem>
-                 <MenuItem value="inProgress" key="inProgress">InProgress</MenuItem>
+                 <MenuItem value="upcoming" key="upcoming">Upcoming</MenuItem>
+                 <MenuItem value="ongoing" key="ongoing">Ongoing</MenuItem>
                  <MenuItem value="completed" key="completed">Completed</MenuItem>
                 </Select>
               </FormControl>
@@ -547,6 +571,7 @@ const AssignEmployees =()=>{
   </Grid>
   <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
    
+   {projectPermission?
     <Button
       variant="contained"
       color="primary"
@@ -555,8 +580,8 @@ const AssignEmployees =()=>{
       sx={{ marginRight:2,marginTop:1 }}
     >
       Add project
-    </Button>
- 
+    </Button>:null}
+    {(assignPermission)?
     <Button   
     variant="contained"
     color="primary"
@@ -564,7 +589,7 @@ const AssignEmployees =()=>{
     onClick={()=>setShowAssignEmployee(true)}
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
-    </Button>
+    </Button>:null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>

@@ -13,7 +13,7 @@ import UserContext from '../context/user/UserConext';
 export default function Requests() {
   const {user} = useContext(UserContext)
   const SalarydefaultPayload={
-    "count": 4,
+    "count": 5,
     "page": 0,
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',
@@ -46,7 +46,7 @@ export default function Requests() {
   }
 
   const loandefaultPayload ={
-    "count": 7,
+    "count": 5,
     "page": 0,
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',
@@ -104,9 +104,9 @@ export default function Requests() {
 }
       const tabLabels = ["Salary Request" , "Loan Request" , "My Deductions"]
       const tabContents = [
-        <div><SalaryAdvace defaultPayload={SalarydefaultPayload}/> </div>,
-        <div> <Loans defaultPayload={loandefaultPayload}/> </div>,
-        <div><Deduction defaultPayload={deductiondefaultpayload}/>  </div>,
+        <div><SalaryAdvace defaultPayload={SalarydefaultPayload} componentPage="MyRequests"/> </div>,
+        <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
+        <div><Deduction defaultPayload={deductiondefaultpayload} componentPage="MyRequests"/>  </div>,
       ]
   return (
     <>

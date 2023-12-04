@@ -78,7 +78,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
 
    const ApiHit=()=>{
     let data = JSON.stringify({
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeId": employeeIDForApis
     });
      

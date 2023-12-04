@@ -18,35 +18,37 @@ const bull = (
   </Box>
 );
 
-export default function CreatePayRun({ moveToPageFunction }) {
+export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
   const TABLE_HEAD = [
-    { id: 'employeeType', label: 'Employee Type', type: 'text' },
+    { id: 'employementType', label: 'Employee Type', type: 'text' },
 
     { id: 'employeeName', label: 'Employee Name', type: 'text' },
 
-    { id: 'employeeid', label: 'Employee id', type: 'text' },
+    { id: 'employeeID', label: 'Employee id', type: 'text' },
 
-    { id: 'salaryMonth', label: 'Salary', type: 'text' },
+    // { id: 'salaryMonth', label: 'Salary', type: 'text' },
 
-    { id: 'CTCOfYear', label: 'CTC Of Year', type: 'text' },
+    { id: 'ctcOfYear', label: 'CTC Of Year', type: 'text' },
 
-    { id: 'CTCOfMonth', label: 'CTC Of Month', type: 'text' },
-    { id: 'basicofMonth', label: 'Basic Of Month', type: 'text' },
+    { id: 'ctcOfMonth', label: 'CTC Of Month', type: 'text' },
+    { id: 'basicMonthSalary', label: 'Basic Of Month', type: 'text' },
     { id: 'hra', label: 'HRA', type: 'text' },
     { id: 'lta', label: 'LTA', type: 'text' },
+    { id: 'esic', label: 'ESIC  Amount', type: 'text' },
+    { id: 'tds', label: 'TDS', type: 'text' },
     { id: 'specialAllowance', label: 'Spacial Alowance', type: 'text' },
 
     { id: 'conveyanceAllowance', label: 'Conveyance Alowance', type: 'text' },
     { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text' },
-    { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
+    // { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
 
-    { id: 'employeePf', label: 'Employee PF', type: 'text' },
+    { id: 'employeePF', label: 'Employee PF', type: 'text' },
 
-    { id: 'employerPf', label: 'Employer PF', type: 'text' },
-    { id: 'esic', label: 'ESIC  Amount', type: 'text' },
-    { id: 'tds', label: 'TDS', type: 'text' },
-    { id: 'grosspay', label: 'Gross Pay', type: 'text' },
+    { id: 'employerPF', label: 'Employer PF', type: 'text' },
+  
+    { id: 'totalGrossPay', label: 'Gross Pay', type: 'text' },
   ];
+
 
   const actions = [
     { name: 'Approve', icon: 'hh', path: 'jjj' },
@@ -55,11 +57,17 @@ export default function CreatePayRun({ moveToPageFunction }) {
 
     { name: 'Edit', icon: 'hh', path: 'jjj' },
   ];
-  const defaultPayload = {
-    Page: 1,
-
-    Count: 5,
-  };
+  const defaultPayload = 
+  {
+      page:0,
+      count:5,
+      companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      employementType:employmentType,
+      sort:{
+          key:1,
+          orderBy:""
+      }        
+  }
 
   const bodyContent = [
     {
@@ -333,91 +341,16 @@ export default function CreatePayRun({ moveToPageFunction }) {
 </Grid>
       </Grid>
       {/* from ai  */}
-      <Grid container spacing={2}>
-        {/* Main Grid 1 */}
-        <Grid item xs={6} alignItems="center">
-          <Grid container spacing={2} alignItems="center">
-            {/* Sub Grid 1.1 */}
-
-            <Grid item>
-              {/* Your content for Sub Grid 1.1 */}
-              <FormControl sx={{ m: 1, minWidth: 220 }} size="large">
-                <InputLabel id="demo-select-small-label"> Employee name</InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={personName}
-                  label="Employee Name"
-                  onChange={handleChange}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="sai">Sai</MenuItem>
-                  <MenuItem value="dharma">Dharma</MenuItem>
-                  <MenuItem value="thej">Theja</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Sub Grid 1.2 */}
-            <Grid item>
-              {/* Your content for Sub Grid 1.2 */}
-              <TextField
-                sx={{ width: '10vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {/* Main Grid 2 */}
-        <Grid item xs={6} container justifyContent="flex-end" alignItems="center">
-          <Grid container spacing={0} alignItems="center">
-            {/* Button 1 */}
-            <Grid item>
-              <Button
-                style={{ backgroundColor: '#007AFF', color: 'white' }}
-                onClick={() => {
-                  moveToPage(3);
-                }}
-              >
-                Calculate Earnings And Deductions
-              </Button>
-            </Grid>
-
-            {/* Icon 1 */}
-            <Grid item>
-              <IconButton color="primary">
-                <Icon icon="vscode-icons:file-type-excel" width="40" height="40" />
-              </IconButton>
-            </Grid>
-            {/* Icon 2 */}
-            <Grid item>
-              <IconButton color="primary">
-                <Icon icon="vscode-icons:file-type-pdf2" width="40" height="40" />
-                {/* <img width="60" height="60" src="https://img.icons8.com/retro/32/pdf.png" alt="pdf"/> */}
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+     
       {console.log(bodyContent, 'body content', actions)}
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listLeave"
+        endpoint="/getPayRunDetailsContract"
         defaultPayload={defaultPayload}
         rowActions={actions}
+        filterName="HrTabFilter"
       />
+
     </Box>
   );
 }

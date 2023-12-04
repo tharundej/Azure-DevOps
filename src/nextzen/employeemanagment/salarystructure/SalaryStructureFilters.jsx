@@ -378,7 +378,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(deptObj);
@@ -429,7 +429,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                         
                           try{
                             const desgGradeObj={
-                              companyID:'COMP1',
+                              companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                               designationID:newvalue?.designationID
                             }
                             const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);

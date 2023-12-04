@@ -109,7 +109,8 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
 
   const values = watch();
   useEffect(() => {
-    getEmployeSwap()
+  
+    getShiftGroupName()
   }, [])
 
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
@@ -120,25 +121,28 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
 
-  const getEmployeSwap = async () => {
+  // states
+  const [shiftGroupName,setShiftGroupName] = useState([])
+  const [ShiftNameDetails,setShiftNameDetails] = useState({})
+
+  const getShiftGroupName= async ()=>{
     try{
-   const data = JSON.stringify({
-      "company_id": "COMP2",
-      "from_shift_group": 2,
-      "to_shift_group": 3,
-      "search": ""
-    });
-        const response = await instance.post('/GetSwapEmployee',data);
-        setEmployeSwapDetails(response.data.Data)
-        
-        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
-      }catch(error){
-    console.error("Error", error);
-    throw error;
-      }
+    const  data= {
+      companyId:"CDAC1",
+      locationId:43,
+      supervisorId:"CDAC_01",
+      };
+      const response = await instance.post('/getShiftGroupName',data);
+      setShiftGroupName(response.data.data)
+      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+    }catch(error){
+  console.error("Error", error);
+  throw error;
+    }
   }
 
 
+  
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
 
@@ -147,8 +151,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   const data = {
     companyId:localStorage.getItem("companyID"),
     employeeId:"ibm4",
-    fromShiftGroup:parseInt( FromShiftGroup_Name1),
-    toShiftGroup:parseInt (ToShiftGroup_Name),
+    toShiftGroupId:parseInt( ShiftNameDetails.employeeShiftGroupId),
     startDate:formatDateToYYYYMMDD( datesUsed.startDate),
     
 
@@ -172,11 +175,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
       console.error(error);
     }
   });
-  const Options = [
-    {id :"2" , name:"shift A"},
-    {id :"3" , name:"shift B"},
-    {id :"4" , name:"shift C"},
-  ]
+
 
   return (
     <div style={{ paddingTop: '20px' }}>
@@ -200,7 +199,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
       }}
     >
 
-      <Autocomplete
+      {/* <Autocomplete
   // multiple hhs
   disablePortal
   id="combo-box-demo"
@@ -216,7 +215,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     
    
     // const obj={
-    //   company_id:'COMP1',
+    //   company_id:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     //   reporting_manager_id:newvalue?.employee_id
     // }
 
@@ -231,20 +230,20 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
-/>
+/> */}
 
 
                       <Autocomplete
   // multiple
   disablePortal
   id="combo-box-demo"
-  options={Options || []} 
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
+  options={shiftGroupName || []} 
+  value={ShiftNameDetails.employeeShiftGroupId }
+  getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
+  onChange={(e,newvalue) => {
+  
    
-   
-    setToShiftGroup_Name(newvalue.id
+    setShiftNameDetails(newvalue
       
     );
     

@@ -602,7 +602,7 @@ export const dashboardRoutes = [
 
       { path: 'appraisalconfiguration', element: <AppraisalConfiguration /> },
 
-      { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
+      // { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
 
       { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
 

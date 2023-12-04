@@ -7,7 +7,7 @@ import {useSnackbar} from '../../components/snackbar';
 import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
-export default function Deduction({defaultPayload}) {
+export default function Deduction({defaultPayload,componentPage}) {
    const {enqueueSnackbar} = useSnackbar()
    const {user} = useContext(UserContext)
   const TABLE_HEAD = [
@@ -21,16 +21,16 @@ export default function Deduction({defaultPayload}) {
 
     },
 
-    { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+    { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
 
-    { id:"deductionType", label: "Deduction Type", minWidth: "8pc", type: "text" },
+    { id:"deductionType", label: "Deduction Type", minWidth: "9pc", type: "text" },
 
-    { id: "takenAmount", label: "Taken Amount", minWidth: "7pc", type: "text" },
+    { id: "takenAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
 
-    { id: "noOfInstallments", label: "Installment No", minWidth: "7pc", type: "text" },
-    { id: "deductedDate", label: "Deducted Date", minWidth: "8pc", type: "text" },
-    { id: "deductedAmount", label: "Deducted Amount", minWidth: "7pc", type: "text" },
-    { id: "balanceAmount", label: "Balance Amount", minWidth: "7pc", type: "text" },
+    { id: "noOfInstallments", label: "Installment", minWidth: "6pc", type: "text" },
+    { id: "deductedDate", label: "Deducted Date", minWidth: "9pc", type: "text" },
+    { id: "deductedAmount", label: "Deducted Amount", minWidth: "10pc", type: "text" },
+    { id: "balanceAmount", label: "Balance Amount", minWidth: "9pc", type: "text" },
     { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
 
   ];
@@ -64,6 +64,7 @@ defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDeductionDetailsHR'
 bodyData='data'
 filterName="DeductionFilter"
+componentPage={componentPage}
 />  
 </>
 );

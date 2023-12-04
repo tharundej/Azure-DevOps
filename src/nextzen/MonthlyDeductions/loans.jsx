@@ -14,8 +14,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function Loans({defaultPayload}) {
+export default function Loans({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext);
+  const [count,setCount] = useState(0)
   const {enqueueSnackbar} = useSnackbar()
       const TABLE_HEAD = [
         {
@@ -28,21 +29,21 @@ export default function Loans({defaultPayload}) {
     
         },
     
-        { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+        { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
     
-        { id: "requestAmount", label: "Request Amount", minWidth: "7pc", type: "text" },
+        { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "text" },
-        { id: "paidAmount", label: "paid Amount", minWidth: "7pc", type: "text" },
-        { id: "noOfInstallments", label: "No of Installments", minWidth: "7pc", type: "text" },
-        { id: "interestRate", label: "Interest Rate", minWidth: "7pc", type: "text" },
-        { id: "approverName", label: " Approver Name", minWidth: "10pc", type: "text" },
-        { id: "comments", label: "User Comments", minWidth: "10pc", type: "text" },
-        { id: "approverComments", label: "Approver Comments", minWidth: "10pc", type: "text" },
-        { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "badge" },
+        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "text" },
+        { id: "paidAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
+        { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
+        { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
+        { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
+        { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
+        { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
+        { id: "paymentStatus", label: "Payment Status", minWidth: '9pc', type: "text" },
+        { id: "status", label: "Status", minWidth: '7pc', type: "badge" },
          
       ];
     
@@ -52,7 +53,7 @@ export default function Loans({defaultPayload}) {
     
         { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
         { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
-    
+        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
       ];
 
       const defaultActions=[
@@ -213,6 +214,7 @@ export default function Loans({defaultPayload}) {
     axios.request(config).then((response) => {
       enqueueSnackbar(response.data.message,{variant:'success'})
      handleClose()
+     setCount(count+1)
     })
       .catch((error) => {
         enqueueSnackbar(error.message,{variant:'error'})
@@ -254,7 +256,9 @@ export default function Loans({defaultPayload}) {
   }
   axios.request(config).then((response) => {
     enqueueSnackbar(response.data.message,{variant:'success'})
+    setCount(count+1)
     handleClose()
+  
   })
     .catch((error) => {
       enqueueSnackbar(error.message,{variant:'Error'})
@@ -343,17 +347,17 @@ export default function Loans({defaultPayload}) {
 <RHFTextField name="interestRate" label="Interest Rate" />
 </Grid>
 <Grid item sx={{marginTop:2}} xs={12} md={6}>
+
+<RHFTextField name="approverComments" label="Comments"/>
+</Grid>
+</Grid>
+{(user?.roleID>3)?<Grid container flexDirection="row" sx={{marginTop:2}} xs={12} md={12}>
+
 <RHFSelect name="paymentStatus" label="Payment Status">
   <MenuItem value="credited">Credited</MenuItem>
-  <MenuItem value="debited">Debited</MenuItem>
+  <MenuItem value="denied">Denied</MenuItem>
 </RHFSelect>
-
-</Grid>
-</Grid>
-<Grid container flexDirection="row" sx={{marginTop:2}} xs={12} md={12}>
-<RHFTextField name="approverComments" label="Comments"/>
-
-</Grid>
+</Grid>:null}
 </Grid>
 
 <Button variant="contained" color="primary" sx={{float:"right",marginTop:2,color:"white"}} type="submit">Approve Loan</Button>
@@ -397,6 +401,8 @@ bodyData='data'
 filterName="LoanSearchFilter"
 rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
+componentPage={componentPage}
+count={count}
 />  
     </>
   );

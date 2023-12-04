@@ -15,13 +15,14 @@ const Project = () => {
 
   const {user} = useContext(UserContext)
   const {enqueueSnackbar} = useSnackbar()
+  const [count,setCount] = useState(0)
   const TABLE_HEAD = [
 
     { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
     { id: "projectManagerName", label: "Project Manager", minWidth: '9pc', type: "text" },
     { id: "reportingManagerName", label: "Reporting Manager", minWidth: '10pc', type: "text" },
     { id: "projectName", label: "Project Name", minWidth: '8pc', type: "text" },
-    // { id: "employeesAssigned", label: "Assigned Employees Count", minWidth: '5pc', type: "text" },
+    { id: "locationName", label: "Location", minWidth: '8pc', type: "text" },
     { id: "startDate", label: "Start Date", minWidth: '7pc', type: "text" },
     { id: "endDate", label: "End Date", minWidth: '7pc', type: "text" },
     { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "text" },
@@ -58,15 +59,29 @@ const Project = () => {
       }
 }
 
-const actions = [
+const actualActions = [
     
-  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},
 
-  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall", endpoint: '/approveLeave'},
-
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall"},
   { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "3", type: "serviceCall", endpoint: '/deleteproject'},
 
 ];
+const defaultActions=[
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+]
+const editActions=[
+  { name: "View", icon: "material-symbols-light:grid-view", id: "2", type: "serviceCall"},
+  { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall"},
+]
+
+const generateRowActions = () => {
+  const userRoleID = user?.roleID; // Assuming roleID is available in user object
+  const actions = (userRoleID==1)?actualActions:(userRoleID==6)?editActions:defaultActions
+  return actions;
+};
+
+const actionsBasedOnRoles = generateRowActions();
 const [viewProject,setViewProject]=useState(false)
 const [editProject,setEditProject] = useState(false)
 const [deleteData, setDeleteData] = useState(null);
@@ -105,7 +120,8 @@ const handleDeleteConfirmed = async () => {
      }
      axios.request(config).then((response)=>{
       enqueueSnackbar(response?.data?.message,{variant:'success'})
-     })
+      setCount(count+1)
+    })
      .catch((error)=>{
       enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
     
@@ -117,6 +133,7 @@ const handleDeleteConfirmed = async () => {
 
 const handleClose =()=>{
   setEditProject(false)
+  setCount(count+1)
   setViewProject(false)
 }
 
@@ -159,7 +176,7 @@ const getEmployeesList =()=>{
 const selectedEmployees = employesListData?.filter(option => selectedIds.includes(option.employeeID));
 useEffect(()=>{
    getEmployeesList()
-},[])
+},[rowData])
 
 const UpdateEmployees=()=>{
   const data ={
@@ -174,19 +191,16 @@ const UpdateEmployees=()=>{
     data:data
    }
    axios.request(config).then((response)=>{
+    console.log(response,"Responsee")
     enqueueSnackbar(response?.data?.message,{variant:'success'})
     handleCloseEmployee()
    })
    .catch((error)=>{
-    enqueueSnackbar(error?.data?.message,{variant:'error'})
+    console.log(error,"error")
+    enqueueSnackbar(error?.response?.data,{variant:'error'})
     handleCloseEmployee()
    })
 }
-
-
-
-
-
 
   return (
     <>
@@ -199,7 +213,9 @@ const UpdateEmployees=()=>{
     </Button>    
         <CardHeader title="Assigned Employees" />
           
-        <Grid item sx={{ flexGrow: 1 }} /> <Button variant="contained" color="primary" onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
+       <Grid item sx={{ flexGrow: 1 }} /> 
+       {(user?.roleName==="Project Manager" || user?.roleName==="Reporting Manager")?
+       <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>:null}
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>
@@ -250,8 +266,8 @@ filterName="ProjectSearchFilter"
 endpoint='/listProject'
 bodyData='data'
 onClickActions={onClickActions}
-rowActions={actions}
-
+rowActions={actionsBasedOnRoles}
+count={count}
 
 /> }
 
