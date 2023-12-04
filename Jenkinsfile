@@ -18,16 +18,8 @@ pipeline {
                         docker stop \$(docker ps -q) &&
                         docker kill \$(docker ps -q) &&
                         docker rm \$(docker ps -a -q) &&S
-                        docker system prune -f
+                        docker system prune -a
                     '''
-                }
-            }
-        }
-        stage ("docker compose bulid"){
-            steps {
-                script{
-                    sh "docker-compose build"
-                    sh "docker-compose pull"
                 }
             }
         }
