@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -42,6 +42,7 @@ import axios from 'axios';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function EditShiftRoaster({ currentUser, editData, handleEditClose }) {
   console.log(
@@ -57,7 +58,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
     offer_date: dayjs(new Date()),
   });
   const router = useRouter();
-
+  const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
@@ -152,8 +153,8 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getDepartment = async () => {
     try {
       const data = {
-        companyID: 'COMP1',
-        locationID: 30,
+        companyID: (user?.companyID)?user?.companyID : '',
+        locationID: (user?.locationID)?user?.locationID : '',
       };
       const response = await instance.post('/onboardingDepartment', data);
       setDepartmentData(response.data.data);
@@ -170,7 +171,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getDesignation = async (newvalue) => {
     try {
       const data = {
-        companyID: 'COMP1',
+        companyID: (user?.companyID)?user?.companyID : '',
         departmentID: newvalue.departmentID,
       };
       const response = await instance.post('/onboardingDesignation', data);
@@ -205,7 +206,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getEmploye = async (newvalue) => {
     try {
       const data = {
-        companyiD: 'COMP1',
+        companyiD:(user?.companyID)?user?.companyID : '',
       };
       const response = await instance.post('/getEmployeeIDDetails', data);
       setEmployeData(response.data.data);
@@ -221,7 +222,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getShiftgroupName = async (newvalue) => {
     try {
       const data = {
-        companyId: 'COMP1',
+        companyId: (user?.companyID)?user?.companyID : '',
       };
       const response = await instance.post('/getShiftGroupName', data);
       setShiftGroupName(response.data.data);
@@ -237,8 +238,8 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getShiftName = async (newvalue) => {
     try {
       const data = {
-        companyId: 'COMP2',
-        locationId: 32,
+        companyId: (user?.companyID)?user?.companyID : '',
+        locationId: (user?.locationID)?user?.locationID : '',
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
@@ -276,14 +277,14 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
         shiftConfigurationId: parseInt(CurrentShiftNameData?.shiftConfigurationId),
         ShiftTerm: 'weekly',
 
-        supervisorId: 'ibm4',
+        supervisorId: (user?.employeeID)?user?.employeeID : '',
         departmentId: JSON.stringify(CurrentDepartmentData?.departmentID),
         designationId: JSON.stringify(CurrentDesignationData?.designationID),
         DesignationGradeId:
           CurrentGradeData?.designationGradeID !== '0'
             ? JSON.stringify(CurrentGradeData.designationGradeID)
             : '',
-        companyId: 'COMP2',
+        companyId:(user?.companyID)?user?.companyID : '',
         employeeId: join(),
       };
       console.log(data, 'data111ugsghghh');

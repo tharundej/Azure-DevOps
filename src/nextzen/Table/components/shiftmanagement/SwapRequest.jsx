@@ -54,8 +54,8 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "companyId":localStorage.getItem('companyID'),
-      "supervisorId":"ibm5",
+      "companyId":(user?.companyID)?user?.companyID:'',
+      "supervisorId":(user?.employeeID)?user?.employeeID:'',
       "count":7,
       "page":0,
       "search":"",

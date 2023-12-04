@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -42,6 +42,7 @@ import axios from 'axios';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function AddEmployeShift({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -50,40 +51,18 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
     offer_date: dayjs(new Date()),
   });
   const router = useRouter();
-
+  const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    employee_id: Yup.string(),
-    Employe_Name: Yup.string(),
-    Project_Name: Yup.string(),
-    Activity_Name: Yup.string(),
-    Monday: Yup.string(),
-    Tuesday: Yup.string(),
-    Wednesday: Yup.string(),
-    Thursday: Yup.string(),
-    Friday: Yup.string(),
-    Saturday: Yup.string(),
-    Sunday: Yup.string(),
-    Total_hours: Yup.string(),
-    Comment: Yup.string(),
+    getShiftgroupName: Yup.string(),
+ 
   });
 
   const defaultValues = useMemo(
     () => ({
-      employee_id: currentUser?.employee_id || '',
-      Employe_Name: currentUser?.Employe_Name || '',
-      Project_Name: currentUser?.Project_Name || '',
-      Activity_Name: currentUser?.Activity_Name || '',
-      Monday: currentUser?.Monday || '',
-      Tuesday: currentUser?.Tuesday || '',
-      Wednesday: currentUser?.Wednesday || '',
-      Thursday: currentUser?.Thursday || '',
-      Friday: currentUser?.Friday || '',
-      Saturday: currentUser?.Saturday || '',
-      Sunday: currentUser?.Sunday || '',
-      Total_hours: currentUser?.Total_hours || '',
-      Comment: currentUser?.Comment || '',
+      getShiftgroupName: currentUser?.getShiftgroupName || '',
+
     }),
     [currentUser]
   );
@@ -108,7 +87,7 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   useEffect(() => {
     getDepartment();
     getEmploye();
-    getShiftgroupName();
+    // getShiftgroupName();
     getShiftName();
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
@@ -130,12 +109,12 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const [CurrentDesignationData, setCurrentDesignationData] = useState({});
   const [gradeData, setgradeData] = useState([]);
   const [employeData, setEmployeData] = useState([]);
-  const [ShiftGroupName, setShiftGroupName] = useState([]);
+  const [ShiftGroupName, setShiftGroupName] = useState('');
   const [ShiftName, setShiftName] = useState([]);
-  console.log(
-    '🚀 ~ file: AddeployeShift.jsx:134 ~ AddEmployeShift ~ ShiftGroupName:',
-    ShiftGroupName
-  );
+  // console.log(
+  //   '🚀 ~ file: AddeployeShift.jsx:134 ~ AddEmployeShift ~ ShiftGroupName:',
+  //   ShiftGroupName
+  // );
   console.log('🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:', employeData);
   const [CurrentGradeData, setCurrentGradeData] = useState({});
   console.log(
@@ -148,8 +127,8 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const getDepartment = async () => {
     try {
       const data = {
-        companyID: localStorage.getItem('companyID'),
-        locationID: 30,
+        companyID: (user?.companyID)?user?.companyID : '',
+        locationID: (user?.locationID)?user?.locationID : '',
       };
       const response = await instance.post('/onboardingDepartment', data);
       setDepartmentData(response.data.data);
@@ -166,7 +145,7 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const getDesignation = async (newvalue) => {
     try {
       const data = {
-        companyID: localStorage.getItem('companyID'),
+        companyID: (user?.companyID)?user?.companyID : '',
         departmentID: newvalue.departmentID,
       };
       const response = await instance.post('/onboardingDesignation', data);
@@ -201,7 +180,7 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const getEmploye = async (newvalue) => {
     try {
       const data = {
-        companyiD: localStorage.getItem('companyID'),
+        companyiD: (user?.companyID)?user?.companyID : '',
       };
       const response = await instance.post('/getEmployeeIDDetails', data);
       setEmployeData(response.data.data);
@@ -214,28 +193,28 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       throw error;
     }
   };
-  const getShiftgroupName = async (newvalue) => {
-    try {
-      const data = {
-        companyId: localStorage.getItem('companyID'),
-      };
-      const response = await instance.post('/getShiftGroupName', data);
-      setShiftGroupName(response.data.data);
-      console.log(
-        '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
-        response.data.data
-      );
-    } catch (error) {
-      console.error('Error', error);
-      throw error;
-    }
-  };
+  // const getShiftgroupName = async (newvalue) => {
+  //   try {
+  //     const data = {
+  //       companyId: (user?.companyID)?user?.companyID : '',
+  //     };
+  //     const response = await instance.post('/getShiftGroupName', data);
+  //     setShiftGroupName(response.data.data);
+  //     console.log(
+  //       '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
+  //       response.data.data
+  //     );
+  //   } catch (error) {
+  //     console.error('Error', error);
+  //     throw error;
+  //   }
+  // };
 
   const getShiftName = async (newvalue) => {
     try {
       const data = {
-        companyId: localStorage.getItem('companyID'),
-        locationId: 30,
+        companyId: (user?.companyID)?user?.companyID : '',
+        locationId: (user?.locationID)?user?.locationID : '',
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
@@ -267,16 +246,17 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log('uyfgv',data.shiftGroupName);
 
     try {
       const data = {
+        shiftGroupName: ShiftGroupName,
         shiftConfigurationId:
           CurrentShiftNameData?.shiftConfigurationId !== undefined
             ? parseInt(CurrentShiftNameData?.shiftConfigurationId)
             : null,
         // ShiftTerm:"weekly"
-        supervisorId: 'ibm4',
+        supervisorId: (user?.employeeID)?user?.employeeID : '',
         toggle: SwitchValue !== '' ? parseInt(SwitchValue) : 0,
         departmentId:
           CurrentDepartmentData?.departmentID !== undefined
@@ -290,9 +270,9 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
           CurrentGradeData?.designationGradeID !== undefined
             ? JSON.stringify(CurrentGradeData.designationGradeID)
             : '',
-        companyId: localStorage.getItem('companyID'),
+        companyId: (user?.companyID)?user?.companyID : '',
         employeeId: join(),
-        locationId: '43',
+        locationId: (user?.locationID)? JSON.stringify(user?.locationID ): '',
       };
       console.log(data, 'data111ugsghghh');
       if (CurrentShiftNameData?.shiftConfigurationId === undefined) {
@@ -317,7 +297,9 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       console.error(error);
     }
   });
-
+const handleShift = (event)=>{
+setShiftGroupName(event.target.value)
+}
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -346,7 +328,12 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
 
 </RHFSelect> */}
 
-                <RHFTextField name="shiftGroupName" label="Shift Group Name " />
+<RHFTextField
+                 
+                  name="shiftGroupName"
+                  label="Shift Group Name "
+                  onChange={handleShift}
+                />
 
                 {/* <RHFSelect name="Select_Shift" label="Select Shift">
 

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -41,6 +41,7 @@ import axios from 'axios';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData,}) {
 
@@ -49,6 +50,7 @@ export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData
     startDate: dayjs(new Date()),
   });
   const router = useRouter();
+  const {user} = useContext(UserContext)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -104,8 +106,8 @@ export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData
   const data = {
     status:status,
     employee_shift_swap_id:parseInt( rowData.employeeShiftSwapId),
-    employee_id:localStorage.getItem('employeeID'),
-    company_id:localStorage.getItem('companyID'),
+    employee_id:(user?.employeeID)?user?.employeeID : '',
+    company_id:(user?.companyID)?user?.companyID : '',
     new_shift_group_id:parseInt(rowData.toShiftGroupId),
     start_date:formatDateToYYYYMMDD( datesUsed.startDate),
     

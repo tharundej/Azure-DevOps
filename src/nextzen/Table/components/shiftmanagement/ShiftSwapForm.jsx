@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -41,6 +41,7 @@ import axios from 'axios';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -49,6 +50,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     // offer_date: dayjs(new Date()),
   });
   const router = useRouter();
+  const {user}= useContext(UserContext)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -135,7 +137,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
    try{
    const data = JSON.stringify({
-      "company_id": localStorage.getItem('companyID'),
+      "company_id": (user?.companyID)?user?.companyID:'',
       "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
       "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
@@ -156,7 +158,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
    try{
    const data = JSON.stringify({
-      "company_id":localStorage.getItem('companyID'),
+      "company_id":(user?.companyID)?user?.companyID:'',
       "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
       "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
@@ -189,9 +191,9 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
-      companyId:"CDAC1",
-      locationId:43,
-      supervisorId:"CDAC_01",
+      companyId:(user?.companyID)?user?.companyID:'',
+      locationId:(user?.locationID)?user?.locationID:'',
+      supervisorId:(user?.employeeID)?user?.employeeID:'',
       };
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
@@ -237,7 +239,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
       "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
     },
-    "company_id":localStorage.getItem('companyID'),
+    "company_id":(user?.companyID)?user?.companyID:'',
     "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
     "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
     
