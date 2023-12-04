@@ -76,32 +76,7 @@ export default function Swaprequest() {
   }
   }
 
-  // const onClickActions=(rowdata,event) => {
-  //   console.log("🚀 ~ file: SwapRequest.jsx:73 ~ onClickActions ~ event:", event?.id)
-    
-  // //   var payload ={
-  // //     "project_id": rowdata?.projectId,
-  // //     "employee_id": rowdata?.employeeId,
-  // //     "status": parseInt( event?.id),          
-  // //  }
-  // // console.log(payload,"requestedddbodyyy")
-  // // const config = {
-  // //   method: 'POST',
-  // //   maxBodyLength:Infinity,
-  // //   url: baseUrl + `/updateTimesheetStatus`,
-  // //   // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
-  // //   data: payload
- 
-  // // }
-  // // axios.request(config).then((response) => {
-  // //   enqueueSnackbar(response.data.Message,{variant:'success'})
-  // // })
-  // //   .catch((error) => {
-  // //     enqueueSnackbar(error.Message,{variant:'Error'})
-  // //     console.log(error);
-  // //   });
- 
-  // }
+  
  const [approveShow  , setApproveShow]= useState(false)
 //  const ApproveClose = ()=> setApproveShow(false)
 const ApproveClose =() =>{

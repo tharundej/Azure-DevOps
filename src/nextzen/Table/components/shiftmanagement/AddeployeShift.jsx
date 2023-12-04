@@ -275,7 +275,7 @@ return arr
         DesignationGradeId: CurrentGradeData?.designationGradeID !== undefined ? JSON.stringify(CurrentGradeData.designationGradeID) : '',
         companyId:localStorage.getItem('companyID'),
         employeeId:join(),
-        locationId:"43"
+        locationId:"30"
       }
           console.log(data, 'data111ugsghghh');
           if (CurrentShiftNameData?.shiftConfigurationId === undefined) {
