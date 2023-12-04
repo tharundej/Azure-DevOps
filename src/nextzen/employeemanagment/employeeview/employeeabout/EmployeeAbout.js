@@ -225,7 +225,8 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": employeeIDForApis
+        "employeeID": employeeIDForApis,
+        // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
        
       const config = {

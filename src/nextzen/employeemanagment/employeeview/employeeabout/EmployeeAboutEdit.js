@@ -200,6 +200,11 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           locationID:userdropDownvalue?.locationValue?.locationID || "",
           reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
           roleID:userdropDownvalue?.rolesValue?.roleID || "",
+          bloodGroup:userdropDownvalue?.bloodGroupValue?.label || "",
+          gender:userdropDownvalue?.genderValue?.label || "",
+          maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
+          nationality:userdropDownvalue?.nationalityValue?.nationality || "",
+          religion:userdropDownvalue?.religionValue?.label || "",
 
 
 
@@ -381,24 +386,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="emergencyContactNumber"
-                    label="Emergency Contact Number"
-                    variant="outlined"
-                    id="emergencyContactNumber"
-                    value={currentUser?.emergencyContactNumber}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
-                      }))
-                    }}
-                  />
-                  </Grid>
+                
                   <Grid md={6} xs={12} item>
                   <DatePicker
                   sx={{width:'100%'}}
@@ -530,7 +518,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 onChange={async(e, newvalue) => {
                 
                   var newArr = { ...userdropDownvalue };
-                  newArr.religionValue=newvalue;
+                  newArr.maritalStatusValue=newvalue;
 
                   setUserDropDownValue(newArr)
                 }
@@ -553,7 +541,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   onChange={async(e, newvalue) => {
                   
                     var newArr = { ...userdropDownvalue };
-                    newArr.religionValue=newvalue;
+                    newArr.nationalityValue=newvalue;
 
                     setUserDropDownValue(newArr)
                   }
@@ -622,7 +610,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine1"
-                    label="Permanent AddressLine1"
+                    label="Permanent Address Line 1"
                     variant="outlined"
                     id="pAddressLine1"
                     value={currentUser?.pAddressLine1}
@@ -641,7 +629,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine2"
-                    label="Permanent AddressLine2"
+                    label="Permanent Address Line 2"
                     variant="outlined"
                     id="pAddressLine2"
                     value={currentUser?.pAddressLine2}
@@ -798,7 +786,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine1"
-                    label="Resendtial AddressLine 1"
+                    label="Resendtial Address Line 1"
                     variant="outlined"
                     id="rAddressLine1"
                     value={currentUser?.rAddressLine1}
@@ -817,7 +805,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine2"
-                    label="Resential AddressLine2"
+                    label="Resential Address Line 2"
                     variant="outlined"
                     id="rAddressLine2"
                     value={currentUser?.rAddressLine2}
@@ -1017,8 +1005,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Autocomplete
                   disablePortal
                   id="departmentName"
-                  options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
-
+                 // options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
+                  options={userdropDownOptions?.departmentOptions  || []}
                   value={userdropDownvalue?.departmentValue}
 
                   getOptionLabel={(option) => option.departmentName}
