@@ -401,6 +401,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   </Grid>
                   <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.dateOfBirth ? dayjs(currentUser?.dateOfBirth).toDate() : null}
                     onChange={(date) => {
@@ -423,6 +424,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Grid md={6} xs={12} item>
                   <DatePicker
                   fullWidth
+                  sx={{width:'100%'}}
                     value={currentUser?.joiningDate ? dayjs(currentUser?.joiningDate).toDate() : null}
                     onChange={(date) => {
                       setcurrentUser(prev => ({
@@ -443,6 +445,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                 <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.offerDate ? dayjs(currentUser?.offerDate).toDate() : null}
                     onChange={(date) => {
@@ -619,7 +622,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine1"
-                    label="pAddressLine1"
+                    label="Permanent AddressLine1"
                     variant="outlined"
                     id="pAddressLine1"
                     value={currentUser?.pAddressLine1}
@@ -638,7 +641,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine2"
-                    label="pAddressLine2"
+                    label="Permanent AddressLine2"
                     variant="outlined"
                     id="pAddressLine2"
                     value={currentUser?.pAddressLine2}
@@ -795,7 +798,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine1"
-                    label="rAddressLine1"
+                    label="Resendtial AddressLine 1"
                     variant="outlined"
                     id="rAddressLine1"
                     value={currentUser?.rAddressLine1}
@@ -814,7 +817,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine2"
-                    label="rAddressLine2"
+                    label="Resential AddressLine2"
                     variant="outlined"
                     id="rAddressLine2"
                     value={currentUser?.rAddressLine2}
