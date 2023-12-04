@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-node_n:
+  node_n:
     build: ./
     image: ui_erp:8.0
     container_name: node_n
