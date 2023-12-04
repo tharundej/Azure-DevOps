@@ -67,7 +67,10 @@ const [loading,setLoading] = useState(false);
    const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
      setSelectedYear(value);
+     localStorage.setItem('selectedYear', JSON.stringify(value));
+
    };
+   console.log(selectedYear , "selectedYear")
    const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -253,29 +256,23 @@ const [loading,setLoading] = useState(false);
     
   }, []);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
+
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
+
   return (
     <div>
    {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <>
-  <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Grid item xs={12}>
+
+      <Grid item xs={12} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Autocomplete
           id="financialYear"
           options={financialYears}

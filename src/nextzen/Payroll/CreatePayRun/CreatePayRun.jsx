@@ -224,7 +224,7 @@ const formatDate = (dateString) => {
             color: 'inherit',
             component: 'span',
             sx: { opacity: 0.64 },
-            typography: 'h4',
+            typography: 'h6',
           }}
         />
       </div>

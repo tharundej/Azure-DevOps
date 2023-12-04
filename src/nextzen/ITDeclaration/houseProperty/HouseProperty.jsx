@@ -112,6 +112,7 @@ const [loading,setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(null);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -415,29 +416,21 @@ const [loading,setLoading] = useState(false);
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
   {    loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
    <>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      
       <Grid
         container
         spacing={2}
@@ -454,6 +447,7 @@ const [loading,setLoading] = useState(false);
               getOptionLabel={(option) => option.financialYear}
               value={selectedYear}
               onChange={handleYearChange}
+              style={{marginTop:"0.9rem"}}
               renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
             />
           </Grid>

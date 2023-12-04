@@ -123,6 +123,7 @@ const [loading,setLoading] = useState(false);
     financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   console.log(selectedYear, 'selectedYear');
@@ -557,7 +558,15 @@ const [loading,setLoading] = useState(false);
     // You can perform additional actions here when landLordDocs changes
   }, [landLordDocs]);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
 
   return (
     <div>
@@ -569,7 +578,7 @@ const [loading,setLoading] = useState(false);
         container
         xs={12}
         spacing={2}
-        style={{ marginBottom: '0.9rem'}}
+        style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}
       >
          <Grid item xs={4}>
         <Autocomplete

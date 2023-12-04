@@ -22,7 +22,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FormProvider, useForm } from 'react-hook-form';
+
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -38,7 +38,24 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {useSnackbar} from '../../../components/snackbar'
+//form alidation 
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
+
+// Create a Yup schema for your form
+const schema = yup.object().shape({
+  policyNumber: yup.string().required('Policy Number is required'),
+  dateOfCommencementOfPolicy: yup.date().required('Date of Commencement is required'),
+  insuredPersonName: yup.string().required('Insured Person Name is required'),
+  sumOfAssured: yup.number().required('Sum of Assured is required'),
+  relationship: yup.string().required('Relationship is required'),
+  premiumAmountForwhichProofAssured: yup.number().required('Premium Amount is required'),
+  premiumAmountFallInDue: yup.number().required('Premium Amount Fall in Due is required'),
+  treatmentForSpecifiedDiseases: yup.string().required('Treatment for Specified Diseases is required'),
+  doesTheInjuredPersonHaveDisability: yup.string().required('Injured Person Disability is required'),
+});
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
@@ -92,25 +109,42 @@ const [loading,setLoading] = useState(false);
     end_date: dayjs(new Date()),
   });
   const [selectedYear, setSelectedYear] = useState(null);
-  const [formData, setFormData] = useState({
-    companyId: cmpId,
-    companyName: '',
-    employeeId: empId,
-    employeeName: '',
-    financialYear:  selectedYear?.financialYear,
-    policyNumber: '',
-    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-    insuredPersonName: '',
-    sumOfAssured: '',
-    relationship: '',
-    premiumAmountForwhichProofAssured: '',
-    premiumAmountFallInDue: '',
-    premiumConsiderForDeduction: '',
-    treatmentForSpecifiedDiseases: '',
-    doesTheInjuredPersonHaveDisability: '',
-    fileName: [],
-    fileContent: [],
+  // const [formData, setFormData] = useState({
+  //   companyId: cmpId,
+  //   companyName: '',
+  //   employeeId: empId,
+  //   employeeName: '',
+  //   financialYear:  selectedYear?.financialYear,
+  //   policyNumber: '',
+  //   dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+  //   insuredPersonName: '',
+  //   sumOfAssured: '',
+  //   relationship: '',
+  //   premiumAmountForwhichProofAssured: '',
+  //   premiumAmountFallInDue: '',
+  //   premiumConsiderForDeduction: '',
+  //   treatmentForSpecifiedDiseases: '',
+  //   doesTheInjuredPersonHaveDisability: '',
+  //   fileName: [],
+  //   fileContent: [],
+  // });
+  //formvalidation 
+  const [formData, setFormData] = useState({}); // Your form data state
+  const methods = useForm({
+    resolver: yupResolver(schema),
   });
+
+  const {
+    reset,
+    watch,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log('uyfgv' ,data);})
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
@@ -122,7 +156,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   var [fileName , setFileName] = useState([])
   var [fileContent, setFileContent] = useState([])
  
-  const methods = useForm();
+
   const currentYear = new Date().getFullYear();
    console.log(currentYear ,"current year")
    const startYear = 2022;
@@ -141,7 +175,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       ...prevFormData,
       financialYear: value?.financialYear,
     }));
-   
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   // handling the file uploader compoent
@@ -545,7 +579,7 @@ const handleRentDeletedID = ( data)=>{
     // }
   };
 
-  const handleSubmit = ()=>{
+  const handleSubmit1 = ()=>{
     isEdit ? editcDetails() :saveLicDetals()
   }
   const handleCancle = ()=>{
@@ -621,13 +655,23 @@ const handleRentDeletedID = ( data)=>{
     setIsEdit(false)
     
   }, [selectedYear?.financialYear ,isreloading]);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
      {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
-  <> <FormProvider {...methods}>
+  <>   
+   <FormProvider >
+
         <Grid container spacing={2} >
   
         <Grid  item xs={12}>
@@ -639,6 +683,7 @@ const handleRentDeletedID = ( data)=>{
               value={selectedYear}
               onChange={handleYearChange}
               renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              style={{marginTop:"0.9rem"}}
             />
        
                 </Grid>
@@ -657,6 +702,8 @@ const handleRentDeletedID = ( data)=>{
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
+                <span>{methods?.errors?.policyNumber?.message}</span>
+         
             </Grid>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -688,6 +735,8 @@ const handleRentDeletedID = ( data)=>{
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
+                <span>{methods?.errors?.insuredPersonName?.message}</span>
+         
             </Grid>
           </Grid>
 
@@ -821,18 +870,19 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
-
+              
                 <Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
       Upload file
-      {/* <VisuallyHiddenInput type="file" /> */}
+  
     </Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={handleSubmit}>
-                  Save
+                <Button aclassName="button"  type="submit" 
+                 onClick={handleSubmit}
+                 >
+                  Save 
                 </Button>
+              
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleCancle}>Cancel</Button>
@@ -858,6 +908,8 @@ const handleRentDeletedID = ( data)=>{
           </Grid>
           </> : null}
         </Grid>
+        {/* </form> */}
+      </FormProvider>
 {policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
@@ -905,7 +957,7 @@ const handleRentDeletedID = ( data)=>{
             </TableBody>
           </Table>
         </TableContainer> :null}
-      </FormProvider>
+     
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

@@ -137,6 +137,7 @@ export default function MedicalPremium() {
    const [selectedYear, setSelectedYear] = useState(null);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   const attchementHandler = () => {
@@ -614,29 +615,21 @@ export default function MedicalPremium() {
     fetchData();
     
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
    {    loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
@@ -647,6 +640,7 @@ export default function MedicalPremium() {
           getOptionLabel={(option) => option.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
+          style={{marginTop:"0.9rem"}}
           renderInput={(params) => <TextField {...params} label="PLease Select Financial Year" />}
         />
       </Grid>
