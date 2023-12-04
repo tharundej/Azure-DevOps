@@ -32,6 +32,7 @@ import AddRoleConfig from './AddRoleConfig';
 import FormProvider from 'src/components/hook-form/form-provider';
 import AddDepartmentConfig from './AddDepartmentConfig';
 import axios from 'axios';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -94,7 +95,7 @@ export default function DepartmentConfig() {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       departmentName: '',
       designationName: '',
@@ -182,7 +183,9 @@ export default function DepartmentConfig() {
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider>
-          <DialogTitle>Edit Department Config</DialogTitle>
+          <DialogTitle></DialogTitle>
+
+          <ModalHeader  heading="Edit Department Config"/>
           <DialogContent>
             <Box
               rowGap={3}

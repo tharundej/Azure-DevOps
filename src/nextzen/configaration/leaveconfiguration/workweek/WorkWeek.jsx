@@ -19,6 +19,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 export default function WorkWeek({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
@@ -71,7 +72,7 @@ export default function WorkWeek({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       locationName: '',
     },
@@ -83,7 +84,7 @@ export default function WorkWeek({ currentUser }) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -122,16 +123,34 @@ export default function WorkWeek({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
-    data.locationID = formData?.Location?.locationID;
-    data.day=valueSelected?.day?.type
-    data.action=valueSelected?.action?.type
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.locationID = (formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
+    data.day=valueSelected?.day
+    data.action=valueSelected?.action
+    data.workweekID=JSON.parse(valueSelected?.workweekID,10)
     console.log('submitted data111', data);
     handleCloseEdit()
     try {
       const response = await axios.post(baseUrl + '/editWorkWeek', data);
-      console.log('sucess', response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -192,7 +211,7 @@ export default function WorkWeek({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
       const response = await axios.post(baseUrl + '/deleteHoliday', data);
@@ -269,7 +288,7 @@ export default function WorkWeek({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Work Week</DialogTitle>
+        <ModalHeader heading="Edit Work Week" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -282,21 +301,22 @@ export default function WorkWeek({ currentUser }) {
               }}
             >
               <Autocomplete
-                options={DayTypes}
+                options={DayTypes.map((name)=>name.type)}
                 name="day"
                 label="Day"
                 value={valueSelected?.day||null}
-                getOptionLabel={(option) => option.type }
+              
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('day', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Day" variant="outlined" />
                 )}
               />
               <Autocomplete
-                options={actionTypes}
+                options={actionTypes.map((name)=>name.type)}
                 name="action"
                 label="Action"
-                getOptionLabel={(option) => option.type }
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('action', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Action" variant="outlined" />
@@ -325,14 +345,22 @@ export default function WorkWeek({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

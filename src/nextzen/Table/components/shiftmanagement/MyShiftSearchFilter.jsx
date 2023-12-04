@@ -228,9 +228,9 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      const handleSearch=debounce((e)=>{
-        filterSearch(e?.target?.value)
-      },1000)
+      // const handleSearch=debounce((e)=>{
+      //   filterSearch(e?.target?.value)
+      // },1000)
     
   
     return (

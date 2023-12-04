@@ -1,10 +1,13 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
+
   Select,
   MenuItem,
   InputLabel,Stack } from '@mui/material'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
 
@@ -13,6 +16,18 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     fileName:'',
     fileContent:''
 }])
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 
 
@@ -65,7 +80,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": "COMP1",
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
@@ -203,7 +218,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                         onChange={(e)=>{handleCategoryChange(e,index)}}
                         name="Select a doc Type"
                     >
-                        <MenuItem value="aadhar">Aadhaar</MenuItem>
+                        <MenuItem value="aadhar">Aadhaar123</MenuItem>
                         <MenuItem value="pan-card">Pan Card</MenuItem>
                         <MenuItem value="pass-port">Passport</MenuItem>
                         
@@ -221,14 +236,17 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                    id={`file-upload-input-${index}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                   
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}

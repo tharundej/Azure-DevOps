@@ -25,7 +25,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
 import { CardContent, Snackbar } from '@mui/material';
-import { Alert as MuiAlert } from '@mui/material';
+import { Alert as MuiAlert ,Button} from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
 import { useState } from 'react';
 
@@ -120,6 +120,7 @@ export default function AmplifyNewPasswordView({emailId}) {
       setSnackbarSeverity('error');
       setSnackbarMessage(response?.data?.message);
       setSnackbarOpen(true);
+      
      console.log('error', error);
     }
   });
@@ -178,14 +179,21 @@ export default function AmplifyNewPasswordView({emailId}) {
         }}
       />
 
-      <LoadingButton
+      {/* <LoadingButton
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
       >
         Create Password
-      </LoadingButton>
+      </LoadingButton> */}
+      <Button
+       size="large"
+       type="submit"
+       variant="contained"
+       loading={isSubmitting}>
+        Create Password
+      </Button>
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}

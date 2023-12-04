@@ -12,7 +12,7 @@ export const createVendorAPI = async (requestBody) => {
 };
 export const getVendorListAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`listVendor`, requestBody, apiHeaders);
+    const response = await instance.post(`ListVendorDetails`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data.data;
   } catch (error) {
@@ -32,7 +32,7 @@ export const updateVendorAPI = async (requestBody) => {
 };
 export const DeleteVendorAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`deleteVendor`, requestBody, apiHeaders);
+    const response = await instance.post(`DeleteVendorDetails`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {

@@ -27,6 +27,7 @@ const defaultFilters = {
   name: '',
   type: [],
   startDate: null,
+  startDate: null,
   endDate: null,
 };
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({

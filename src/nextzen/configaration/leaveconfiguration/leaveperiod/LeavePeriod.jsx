@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {baseUrl} from '../../../global/BaseUrl';
 import {
   Alert,
   Autocomplete,
@@ -27,6 +27,7 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LoadingButton } from '@mui/lab';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeavePeriod({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -86,7 +87,7 @@ export default function LeavePeriod({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       leavePeriodType: '',
     },
@@ -115,7 +116,7 @@ export default function LeavePeriod({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         leavePeriodID: rowdata.leavePeriodID,
       };
       const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
@@ -123,27 +124,28 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
       setSnackbarOpen(true);
+      handleCloseEdit();
       console.log('error', error);
     }
   };
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -181,24 +183,26 @@ export default function LeavePeriod({ currentUser }) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
-    data.leavePeriodType=valueSelected?.leavePeriodType?.type
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.leavePeriodType = valueSelected?.leavePeriodType || null;
     data.startDate = formatDateToYYYYMMDD(selectedDates);
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
+    data.leavePeriodID = valueSelected?.leavePeriodID;
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/editLeavePeriod', data);
       if (response?.data?.code === 200) {
+        handleClose();
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleClose();
 
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
+        handleClose();
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
@@ -250,7 +254,7 @@ export default function LeavePeriod({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(false);
   };
-  
+
   React.useEffect(() => {}, []);
   return (
     <>
@@ -282,7 +286,8 @@ export default function LeavePeriod({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Leave Period</DialogTitle>
+          <ModalHeader heading="Edit Leave Period" />
+
           <DialogContent>
             <Box
               rowGap={3}
@@ -297,13 +302,11 @@ export default function LeavePeriod({ currentUser }) {
               <Autocomplete
                 name="leavePeriodType"
                 label="Leave Period Type"
-                options={leavePeriodNames}
+                options={leavePeriodNames.map((name) => name.type)}
                 value={valueSelected?.leavePeriodType || null}
-                 getOptionLabel={(option) => option.type} // Use 'label' as the display label
+                //  getOptionLabel={(option) => option.type} // Use 'label' as the display label
                 // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('leavePeriodType', newValue || null)
-                }
+                onChange={(e, newValue) => handleSelectChange('leavePeriodType', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Leave Period Type" variant="outlined" />
                 )}
@@ -314,7 +317,8 @@ export default function LeavePeriod({ currentUser }) {
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
                     value={selectedDates2}
-                    onChange={handleDateChanges2}
+                    // onChange={handleDateChanges2}
+                    onChange={(e, newValue) => handleSelectChange('startDate', newValue || null)}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -335,14 +339,22 @@ export default function LeavePeriod({ currentUser }) {
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              variant="contained"
+              onClick={onSubmit1}
+              type="submit"
+            >
+              Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

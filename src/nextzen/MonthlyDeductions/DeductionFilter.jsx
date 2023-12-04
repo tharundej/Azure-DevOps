@@ -21,6 +21,10 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
 import {useSnackbar} from '../../../src/components/snackbar' 
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import ModalHeader from '../global/modalheader/ModalHeader';
 const defaultFilters = {
   name: '',
   type: [],
@@ -47,8 +51,9 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
-export default function DeductionFilter({filterSearch,filterData}){
+export default function DeductionFilter({filterSearch,filterData,componentPage}){
   const theme = useTheme();
+  const {user} = useContext(UserContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const [dropdown,setDropdown]=useState({
@@ -119,7 +124,6 @@ export default function DeductionFilter({filterSearch,filterData}){
   }
   
     const [open,setOpen]=useState(false);
-    const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
     }
@@ -163,7 +167,7 @@ export default function DeductionFilter({filterSearch,filterData}){
 
     const onSubmit = handleSubmit(async (data)=>{
       try{
-        data.companyID=localStorage?.getItem('companyID');
+        data.companyID=(user?.companyID)?user?.companyID:''
 
         const response = await axios.post(baseUrl+`/addDeductionDetails`,data).then(
           (successData)=> {
@@ -238,12 +242,11 @@ export default function DeductionFilter({filterSearch,filterData}){
       } 
       const getEmployeesList = () => {
        const data ={
-        companyID:localStorage?.getItem('companyID')
+        companyID:(user?.companyID)?user?.companyID:'',
        }
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
-          // url: `http://192.168.1.56:3001/erp/getLoanEmployeeDetails`,
           url:baseUrl + `/getLoanEmployeeDetails`,
           data:data
         };
@@ -271,41 +274,37 @@ export default function DeductionFilter({filterSearch,filterData}){
  open={showForm}
  onClose={handleClose}
  PaperProps={{
-   sx: { maxWidth: 770 , overflow:'hidden'},
+   sx: { maxWidth: 500 , overflow:'auto'},
  }}
  className="custom-dialog"  
 >
+  <ModalHeader heading="Add Deduction"/>
 <FormProvider methods={methods} onSubmit={onSubmit}>
-    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Add Deduction
-    </Typography>
 <DialogContent>
-<Grid>
-<RHFSelect name="employeeID" label="Employee">
+  <Grid container>
+<Grid container flexDirection="row" spacing={1}>
+   <Grid item xs={12} md={6}>
+   <RHFSelect name="employeeID" label="Employee">
               {employeesList?.data?.map((employee) => (
                 <MenuItem value={employee?.EmployeeID} key={employee?.EmployeeID}>
                   {employee?.employeeName}
                 </MenuItem>
               ))}
-</RHFSelect>
-</Grid>
-{/* <RHFAutocomplete
-              name="employeeID"
-              label="Employee"
-              options={employeesList?.data?.map((employee) => employee.employeeName)}
-              value={employeesList?.data?.map((employee) => employee.employeeID)}
-            /> */}
-<Grid sx={{marginTop:2}}>
+   </RHFSelect>
+   </Grid>
+<Grid item xs={12} md={6}>
 <RHFSelect name="deductionType" label="Deduction Type">
        <MenuItem value="Salary">Salary</MenuItem> 
        <MenuItem value="Cash">Cash</MenuItem>    
 </RHFSelect>
 </Grid>
-<Grid sx={{marginTop:2}}>
+</Grid>
+<Grid conatiner xs={12} md={12} sx={{marginTop:2}}>
 <RHFTextField name="comments" label="Comments" />
 </Grid>
+</Grid>
 <Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
-<Button sx={{float:"right",right:10,marginTop:2}} onClick={handleDeductionCancel}>Cancel</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={handleDeductionCancel}>Cancel</Button>
 </DialogContent>
 </FormProvider>
       </Dialog>
@@ -321,11 +320,11 @@ export default function DeductionFilter({filterSearch,filterData}){
             </Grid>
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0 }}>Add Deduction</Button>
+            {componentPage!="MyRequests"?<Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>Add Deduction</Button>:null}
             
-               <Button onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
-               <Iconify icon="mi:filter" /> {isMobile?"Filters":null}
-               </Button>
+            {componentPage!="MyRequests"?<Button onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+               <Iconify icon="mi:filter" /> Filters
+               </Button>:null}
       </Grid>
                 </Grid>
      {/* FILTER DIALOG */}
@@ -333,18 +332,20 @@ export default function DeductionFilter({filterSearch,filterData}){
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx:{maxWidth:500,overflow:'auto'}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setOpen(false)} />
         </DialogTitle>
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
           
-          <Grid>
+          <Grid container>
             <Typography>Deducted Date </Typography>
-                <Grid>
             <Grid container flexDirection="row">
-              <Grid item >
+              <Grid item xs={12} md={6}>
              <LocalizationProvider dateAdapter={AdapterDayjs} sx={{minWidth:"20pc"}}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -362,7 +363,7 @@ export default function DeductionFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item xs={12} md={6}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -380,11 +381,10 @@ export default function DeductionFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
+            </Grid>
             
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+               
+                  <Grid container flexDirection="row" marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">Deduction Type</InputLabel>
                 <Select
@@ -403,13 +403,12 @@ export default function DeductionFilter({filterSearch,filterData}){
                 </Select>
               </FormControl>
                    </Grid>
-                </Grid>
               
                </Grid>
            
          </DialogContent>
          <div style={{marginBottom:16,marginTop:3}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+         <Button sx={{float:'right',right:15}} variant="outlined" onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </Dialog>
     </>

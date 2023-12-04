@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState,useEffect } from 'react';
+import { useCallback, useState,useEffect, useContext } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid,CardContent} from '@mui/material';
 
 // utils
 import uuidv4 from 'src/utils/uuidv4';
@@ -28,9 +28,26 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { duration, styled } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose }) {
+
+  const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
   const [listLeave,setListLeave] = useState();
@@ -73,7 +90,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     
   });
 
-  console.log(datesUsed,"datesss")
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
     const selectedValue = data?.day_span;
@@ -84,8 +100,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
 
     const eventData = {
       leaveTypeId:data?.leaveTypeId,
-      companyId: localStorage.getItem('companyID'),
-      employeeId:localStorage.getItem('employeeID'),
+      companyId: (user?.companyID)?user?.companyID:'',
+      employeeId:(user?.employeeID)?user?.employeeID:'',
       comments: data?.comments,
       applyDate: "",
       fromDate:(datesUsed?.fromDate)?formatDateToYYYYMMDD(datesUsed?.fromDate):selectedRange?.start,
@@ -99,39 +115,30 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       color:(data?.leaveTypeId===1)?"#0c1f31":(data?.leaveTypeId===2)?"#d4a085":(data?.leaveTypeId===3)?"#c9de8c":"#ffbed1"
     };
     try {
-      const result = await createEvent(eventData);
-      
+      const result = await createEvent(eventData,user);
       onClose();
-      enqueueSnackbar("Leave applied", { variant: 'success' });
+      enqueueSnackbar(result.message, { variant: 'success' });
       reset();
     } 
     catch (error) {
+      console.log(error,"calendarerror")
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
+      onClose();
       // Handle the error, e.g., show a snackbar.
-      if (error.response && error.response.data && error.response.data.message) {
-        if (error.response.data["show message"] === "user") {
-          // Display the error message from the response
-          enqueueSnackbar(error.response.data.message, { variant: 'error' });
-       }
-       else{
-        enqueueSnackbar('An error occurred while applying the leave.', { variant: 'error' });
-       }
-      } else {
-        // Display a generic error message
-        enqueueSnackbar('An error occurred while creating the event.', { variant: 'error' });
-      }
     }
   });
 
   const onDelete = useCallback(async () => {
     try {
       const {leaveId,employeeId}= currentEvent
-      await deleteEvent(leaveId,employeeId);
+      await deleteEvent(leaveId,employeeId,user);
       enqueueSnackbar('Delete success!');
       onClose();
-    } catch (error) {
-      console.error(error);
+    } 
+    catch (error) {
+      enqueueSnackbar(error.message,{variant:'error'})
     }
-  }, [currentEvent?.leaveId, enqueueSnackbar, onClose]);
+  }, [currentEvent?.leaveId, onClose]);
 
   
   function getBase64(file) {
@@ -145,19 +152,17 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     };
  }
 
+ const [fileName,setFileName] = useState()
  function handleFileSelect(event) {
   const fileInput = event.target;
   const file = fileInput.files[0];
-
+  setFileName(file.name)
   if (file) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
       const base64String = e.target.result;
       setAttachmentString(base64String.split(',')[1]);
-      // setImage( [base64String]);
-      // setViewImage(true);
-      // Here, you can send the `base64String` to your server or perform other actions.
     };
 
     reader.readAsDataURL(file);
@@ -173,16 +178,13 @@ useEffect(()=>{
 const getLeaveList = () => {
   setLoader(true);
   const payload = {
-    // companyId: "C1",
-    // employeeId:"E1"
-    companyId: localStorage.getItem('companyID'),
-    employeeId: localStorage.getItem('employeeID')
+    companyId: (user?.companyID)?user?.companyID:'',
+    employeeId: (user?.employeeID)?user?.employeeID:''
   }
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
     url: baseUrl + `/getLeaveType`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
     data:  payload
   };
 
@@ -192,24 +194,23 @@ const getLeaveList = () => {
   })
 
     .catch((error) => {
+      enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
       console.log(error);
+      setLoader(false);
     });
 }
 
 const AvailableLeaves = () => {
   setLoader(true);
   const payload = {
-    companyId: localStorage.getItem('companyID'),
-     employeeId:localStorage.getItem('employeeID')
-    // companyId:"C1",
-    // employeeId:"E1"
+    companyId: (user?.companyID)?user?.companyID:'',
+     employeeId:(user?.employeeID)?user?.employeeID:''
   }
  
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
     url: baseUrl + `/availableLeave`,
-    // url: `https://qx41jxft-3001.inc1.devtunnels.ms/erp/availableLeave`,
     data:  payload
   };
 
@@ -219,7 +220,9 @@ const AvailableLeaves = () => {
   })
 
     .catch((error) => {
+         enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
       console.log(error);
+      setLoader(false);
     });
 }
 
@@ -230,13 +233,14 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
   <>
   {currentEvent?.leaveStatus==="pending" ? 
   <>
-   <Tooltip title="Delete Event" sx={{float:"right",right:5}}>
+  
+  <Grid sx={{margin:1}}>
+      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}
+      <Tooltip title="Delete Request" sx={{float:"right",right:5}}>
     <IconButton onClick={onDelete}>
       <Iconify icon="solar:trash-bin-trash-bold" />
     </IconButton>
-  </Tooltip>
-  <Grid sx={{marginLeft:1}}>
-      <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
+  </Tooltip></Typography>
       <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
       <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
      <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
@@ -255,12 +259,41 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
   <>
    {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
-<div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
-<Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
-  {availableLeaves?.balances?.map((itm)=> (
-    <Typography>{itm?.leaveTypeName} : {itm?.leaveBalance}</Typography>
-  ))}
-</Stack>
+    <Typography variant="subtitle1" sx={{ px: 4 }}>Available Leaves</Typography>
+<Grid container spacing={1} sx={{ px: 3 , py:2}}>
+
+      {availableLeaves? (
+    availableLeaves?.balances?.map((itm) => (
+          <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+          
+             <Card>
+              <CardContent sx={{ py: 1, px: 1,pt:2}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center' }} flexDirection="row">
+                <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
+
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color:'black'
+                  }}
+                >
+                 {itm?.leaveBalance}
+                </Typography>
+              </Box>
+              </CardContent>
+              </Card>
+            </Stack>
+          </Grid>
+    ))):
+      <Grid item xs={12}>
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          No AvailableLeaves
+        </Typography>
+      </Grid>
+    }
+
+      </Grid>
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
@@ -277,6 +310,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
                 label="From"
                 value={(selectedRange?.start)?dayjs(selectedRange?.start):datesUsed?.fromDate}
                 defaultValue={(selectedRange?.start)?dayjs(selectedRange?.start):dayjs(new Date())}
+                minDate={dayjs().startOf('day')} // Set minDate to today's date (disable past dates)
                 onChange={(newValue) => {
                   setDatesUsed((prev) => ({
                     ...prev,
@@ -295,6 +329,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
             label="To"
             value={(selectedRange?.end)?dayjs(selectedRange?.end):datesUsed?.toDate}
             defaultValue={(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date())}
+            minDate={dayjs().startOf('day')} // Set minDate to today's date (disable past dates)
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
                 ...prev,
@@ -304,7 +339,8 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           />
      </DemoContainer>
      </LocalizationProvider>
-        {(isSameDay)? <RHFRadioGroup
+      <Stack  sx={{ px: 1 }}>
+      {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
               name="day_span"
               label="Day Span"
@@ -316,15 +352,23 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
                 { value: 'second_half', label: 'Second Half' },
               ]}
             />:null}
-<Typography variant="subtitle2">Attachments</Typography>
-<input
+      </Stack>
+<Typography sx={{px:1}} variant="subtitle2">Attachments</Typography>
+<Stack spacing={1} sx={{display:'flex',flexDirection:'row'}}>
+<Button sx={{marginLeft:2}}
+  onChange={(e)=>{ handleFileSelect(e)}}
+  component="label" variant="contained" color="primary" startIcon={<CloudUploadIcon />}>Upload file<VisuallyHiddenInput type="file" />
+  </Button>
+ <Typography variant="subtitle2">{fileName}</Typography>
+ </Stack>
+{/* <input
   type="file"
   accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   id="fileInput"
   onChange={(e)=>{
     handleFileSelect(e)
   }}
-/>
+/> */}
         {/* <Controller
           name="color"
           control={control}
@@ -360,7 +404,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           loading={isSubmitting}
           // disabled={dateError}
         >
-          Save Changes
+          Apply Leave
         </LoadingButton>
       </DialogActions>
     </FormProvider>}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -10,8 +10,11 @@ import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
+import UserContext from '../context/user/UserConext';
 
 const FactoryTable = () => {
+  const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -24,8 +27,14 @@ const FactoryTable = () => {
     setOpenSnackbar(false);
   };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -38,7 +47,7 @@ const FactoryTable = () => {
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
-        companyID: rowdata?.companyID || 'COMP1',
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
@@ -70,7 +79,6 @@ const FactoryTable = () => {
       console.log('API request failed:', error.message);
     }
   };
-
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
@@ -81,7 +89,7 @@ const FactoryTable = () => {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       locationName: '',
       locationPhone: '',
@@ -98,6 +106,7 @@ const FactoryTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Factory Name', type: 'text', minWidth: '180px' },
     { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
     { id: 'locationPhone', label: 'Phone No', type: 'text', minWidth: '180px' },
@@ -149,6 +158,7 @@ const FactoryTable = () => {
         rowActions={actions}
         filterName="FactoryHead"
         onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

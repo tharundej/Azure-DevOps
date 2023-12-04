@@ -2,7 +2,10 @@ import React ,{useEffect, useState,useImperativeHandle,forwardRef} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import dayjs, { Dayjs } from 'dayjs';
 import {
     TextField,
     Button,
@@ -34,6 +37,37 @@ import * as Yup from 'yup';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
+
+
 
 const   EducationInformation=forwardRef((props,ref)=> {
   const [employeeData,setEmployeeData]=useState([ {
@@ -68,8 +102,10 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
 
   const onSave=()=>{
+    const obj1=defaultValues;
+    
     const obj={
-     companyId: "COMP1",
+     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      employeeId: localStorage.getItem('employeeIdCreated'),
      education:defaultValues
     }
@@ -197,7 +233,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
            
         
     
-       // console.log(newArray)
+        console.log(newArray,'newaarrray')
        
        setDefaultValues(newArray);
      };
@@ -305,7 +341,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
      };
      
   
-  
  
   return (
 
@@ -332,18 +367,37 @@ const   EducationInformation=forwardRef((props,ref)=> {
                {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
-                    variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
-                    onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
-                    }}
-                  />
+                 
+
+                  <Autocomplete
+                        options={degreeOptions}
+                        getOptionLabel={(option) => option.label}
+                        fullWidth
+                        onChange={(e,newvalue) => {
+                          //  handleChange(e, index, 'nameOfTheDegree');
+                           const newArray = [...defaultValues];
+                           newArray[index] = {
+                             ...newArray[index],
+                             nameOfTheDegree: newvalue
+                         }
+                         setDefaultValues(newArray)
+                         console.log(newArray)
+
+                         }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            name="nameOfTheDegree"
+                            label="Name Of the Degree"
+                            variant="outlined"
+                            id="name_of_the_degree"
+                            value={item?.nameOfTheDegree}
+                           
+                          />
+                        )}
+                      />
+
+                  
                 </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
@@ -410,21 +464,76 @@ const   EducationInformation=forwardRef((props,ref)=> {
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+               
               </Grid>
+
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+            <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                
+               
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
+
+              <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                fullWidth
+                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="End Date"
+                />
+                
+              </Grid>
+              
+              
+            </Grid>
                   
               {item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -457,14 +566,17 @@ const   EducationInformation=forwardRef((props,ref)=> {
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                  
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}

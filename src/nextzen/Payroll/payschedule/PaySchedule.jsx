@@ -41,6 +41,7 @@ import { useForm } from 'react-hook-form';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
 import { parse } from 'date-fns';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -108,7 +109,7 @@ export default function PaySchedule({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       payscheduleType: '',
       employmentType: '',
@@ -207,7 +208,7 @@ export default function PaySchedule({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyId: 'COMP1',
+        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
@@ -267,7 +268,7 @@ export default function PaySchedule({ currentUser }) {
   const getOptionLabel = (employeepayType) => employeepayType.type;
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     // (data.employementType = valueSelected?.employementType?.type),
    
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
@@ -307,7 +308,7 @@ export default function PaySchedule({ currentUser }) {
   //     event.preventDefault();
   //     const payload={
   //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-  //       "companyId":'COMP1',
+  //       "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
   //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
   //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
@@ -351,7 +352,7 @@ export default function PaySchedule({ currentUser }) {
       event.preventDefault();
       const payload={
         "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-        "companyId":'COMP1',
+        "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       }
       console.log(payload,'payload')
       const response = await axios.post(baseUrl + '/editPaySchedule', payload);
@@ -381,7 +382,7 @@ export default function PaySchedule({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.employementType = valueSelected?.employementType?.type;
     // (data.employementType = valueSelected?.employementType?.type),
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
@@ -475,8 +476,7 @@ export default function PaySchedule({ currentUser }) {
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -568,20 +568,27 @@ export default function PaySchedule({ currentUser }) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit1}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={(event) => onSubmitEdit2(valueSelected, event)}>
-            <DialogTitle>Edit PayRoll</DialogTitle>
-
+           
+            <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
                 rowGap={3}
@@ -631,14 +638,21 @@ export default function PaySchedule({ currentUser }) {
               <Button variant="outlined" onClick={handleCloseEdit}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={(event) => onSubmitEdit2(valueSelected, event)}
                  loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={(event) => onSubmitEdit2(valueSelected, event)}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         )}

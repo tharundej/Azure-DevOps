@@ -261,7 +261,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item  md={6} xs={4}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -269,10 +269,10 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item  md={4} xs={4}>
             <ComoffConfigurationForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item  md={2} xs={4}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -308,7 +308,16 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
             {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
            
-            <Grid container spacing={1}  sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
+            <Grid  container
+            spacing={1}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
+            item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel id="compensantoryPolicies">Compensantory Policies</InputLabel>
@@ -321,7 +330,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                     onChange={(e) => handleChangeDropDown(e, 'compensantoryPolicies')}
                     input={<OutlinedInput label="Compensantory Policies" />}
                     MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
+                    //  sx={{minWidth:'200px'}}
                   >
                     {compensantoryPoliciess.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
@@ -357,8 +366,8 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                     </Select>
                   </FormControl>
                 </Grid> */}
-                <Grid  item xs={12} md={6}>
-                {/* <FormControl fullWidth >
+                {/* <Grid  item xs={12} md={6}>
+                <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
@@ -377,8 +386,8 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                       </MenuItem>
                     ))}
                   </Select>
-              </FormControl> */}
-                   </Grid>
+              </FormControl>
+                   </Grid> */}
             </Grid>
 
            

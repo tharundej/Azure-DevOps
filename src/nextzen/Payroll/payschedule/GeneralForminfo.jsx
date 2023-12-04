@@ -21,6 +21,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function GeneralForminfo({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -113,7 +114,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     console.log('submitted data111', data);
 
     try {
@@ -137,7 +138,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1'
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     console.log('submitted data2222', data);
 
     try {
@@ -206,7 +207,7 @@ export default function GeneralForminfo({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
         Add PayRoll
       </Button>
@@ -222,6 +223,7 @@ export default function GeneralForminfo({ currentUser }) {
         {isTextFieldVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
+            <ModalHeader heading="Add PayRoll" />
             {/* methods1={methods1} onSubmit={onSubmit} */}
             <DialogTitle>Add PayRoll</DialogTitle>
 
@@ -275,20 +277,27 @@ export default function GeneralForminfo({ currentUser }) {
               <Button variant="outlined" onClick={handleClose}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
                 loading={isSubmitting1}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+               sx={{backgroundColor:'#3B82F6'}}
+               variant="contained"
+               onClick={onSubmit1}>
+                Save
+                </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
+            <ModalHeader heading="Add PayRoll" />
             {/* methods1={methods1} onSubmit={onSubmit} */}
-            <DialogTitle>Add PayRoll</DialogTitle>
+            {/* <DialogTitle>Add PayRoll</DialogTitle> */}
 
             <DialogContent>
               <Box
@@ -337,14 +346,21 @@ export default function GeneralForminfo({ currentUser }) {
               <Button variant="outlined" onClick={handleClose2}>
                 Cancel
               </Button>
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit2}
                 loading={isSubmitting2}
               >
                 Save
-              </LoadingButton>
+              </LoadingButton> */}
+              <Button
+             sx={{backgroundColor:'#3B82F6'}}
+             variant="contained"
+             onClick={onSubmit2}
+             type="submit"
+             >Save
+             </Button>
             </DialogActions>
           </FormProvider>
         )}

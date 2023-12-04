@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 // @mui
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -199,7 +200,7 @@ const getActivityName = async ()=>{
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
@@ -256,7 +257,7 @@ const getActivityName = async ()=>{
               setCurrentProjectData(newvalue
               )
               // const obj={
-              //   // companyID:'COMP1',
+              //   // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   projectId:newvalue?.projectId
               // }
  
@@ -283,7 +284,7 @@ const getActivityName = async ()=>{
               setCurrentActivitytData(newvalue
               )
               // const obj={
-              //   // companyID:'COMP1',
+              //   // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   projectId:newvalue?.projectId
               // }
  

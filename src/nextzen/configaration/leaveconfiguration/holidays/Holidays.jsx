@@ -25,8 +25,9 @@ import { LoadingButton } from '@mui/lab';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from 'rsuite';
+import Button from '@mui/material/Button';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function Holidays({ currentUser }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -63,7 +64,7 @@ export default function Holidays({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       holidayName: '',
       holidayDate: '',
@@ -96,7 +97,7 @@ export default function Holidays({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
       const response = await axios.post(baseUrl + '/deleteHoliday', data);
@@ -104,19 +105,21 @@ export default function Holidays({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
+        handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
       setSnackbarOpen(true);
+      handleCloseEdit();
       console.log('error', error);
     }
   };
@@ -199,7 +202,7 @@ export default function Holidays({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -238,18 +241,35 @@ export default function Holidays({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    data.locationID = formData?.Location?.locationID;
+    data.locationID =(formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
     data.holidayName=valueSelected?.holidayName
-    data.repeatAnnualy=valueSelected?.repeatAnnualy?.type
-
+    // data.repeatAnnualy=valueSelected?.repeatAnnualy
+    data.holidayID=valueSelected?.holidayID
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/editHoliday', data);
-      console.log('sucess', response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      handleCloseEdit();
       console.log('error', error);
     }
   });
@@ -297,7 +317,7 @@ export default function Holidays({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Edit Holidays</DialogTitle>
+        <ModalHeader heading="Edit Holiday" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -320,7 +340,9 @@ export default function Holidays({ currentUser }) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Holiday Date"
+                    minDate={dayjs()}
                     // value={editData?.holidayDate}
+                    value={selectedDates}
                     onChange={handleDateChanges}
                   />
                 </DemoContainer>
@@ -329,8 +351,8 @@ export default function Holidays({ currentUser }) {
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
                 value={valueSelected?.fulldayHalfday || null}
-                options={Fullday_halfdays}
-                getOptionLabel={(option) => option.type }
+                options={Fullday_halfdays.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('fulldayHalfday', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Fullday/Halfday" variant="outlined" />
@@ -341,8 +363,8 @@ export default function Holidays({ currentUser }) {
                 label="Repeats Anually"
                 value={valueSelected?.repeatAnnualy}
                 // onChange = {(e) => handleSelectChange('repeatAnnualy', e.target.value)}
-                options={RepeatsAnuallys}
-                getOptionLabel={(option) => option.type}
+                options={RepeatsAnuallys.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
                 onChange={(e, newValue) => handleSelectChange('repeatAnnualy', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Repeat Annualy" variant="outlined" />
@@ -367,17 +389,26 @@ export default function Holidays({ currentUser }) {
           </DialogContent>
 
           <DialogActions>
+           
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+              <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

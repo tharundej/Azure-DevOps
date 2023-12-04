@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,8 +14,11 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateProducts({ currentData, handleClose, getTableData }) {
+  const {user} = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     productName: Yup.string().required('Product Name is Required'),
     productCategory: Yup.string().required('Product Category is Required'),
@@ -27,7 +30,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
   const defaultValues = useMemo(
     () => ({
       productId: currentData?.productID || '',
-      companyId: currentData?.companyID || 'COMP1',
+      companyId: currentData?.companyID || user?.companyID ? user?.companyID : '',
       productName: currentData?.productName || '',
       productCategory: currentData?.productCategory || '',
       HsnId: currentData?.hsnID || '',
@@ -97,9 +100,9 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
     setOpenSnackbar(false);
   };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{currentData?.productID ? 'Edit' : 'Add New'} Products</DialogTitle>
+        <ModalHeader heading={currentData?.productID ? 'Edit Products' : 'Add New Products'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}

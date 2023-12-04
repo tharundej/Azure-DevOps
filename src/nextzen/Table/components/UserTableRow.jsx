@@ -63,7 +63,8 @@ console.log(row,'row data')
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row?.employeeId)}
+              onClick={()=>onHandleEditRow(row)}
+              
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
@@ -107,18 +108,37 @@ console.log(row,'row data')
                     }}
                   />
                 )}
+                 {ele.type === 'bool' && (
+                 
+                 <ListItemText
 
+                   primary={(row[ele.id] === true)?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
+{console.log(row[ele.id]+"" ,"typetypetype",row?.status)}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id] === ('approved' || 'Approved') && 'success') ||
-                      (row[ele.id] === ('pending' || 'Pending') && 'warning') ||
-                      (row[ele.id] === ('rejected' || 'Rejected') && 'error') ||
+                      (row[ele?.id]?.toLowerCase() === 'approved' && 'success') ||
+                      (row[ele?.id]?.toLowerCase() === 'pending' && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'rejected' && 'error') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'true' && 'success') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'false' && 'warning') ||
                       'default'
                     }
                   >
-                    {row[ele.id]}
+                    {row[ele?.id] ? row[ele?.id].toString():"False"}
+                   
                   </Label>
                 )}
               </TableCell>

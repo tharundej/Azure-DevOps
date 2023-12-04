@@ -25,6 +25,7 @@ import axios from 'axios';
 import { MobileTimePicker } from '@mui/x-date-pickers';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ShiftConfigurationForm({ currentUser }) {
   // const [open, setOpen] = useState(false);
@@ -39,8 +40,8 @@ export default function ShiftConfigurationForm({ currentUser }) {
     const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
-  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30')); // State for Start Time
-  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
+  const [startTime, setStartTime] = useState(dayjs()); // State for Start Time
+  const [endTime, setEndTime] = useState(dayjs());
   const NewUserSchema1 = Yup.object().shape({
     ShiftName: Yup.string().required('Shift Name is Required'),
     // ShiftTerm: Yup.string().required('Shift Term is Required'),
@@ -73,19 +74,30 @@ export default function ShiftConfigurationForm({ currentUser }) {
   ];
   // const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
 
-  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(name, selectedValue, selectedOption);
+  const handleAutocompleteChange = (name, selectedOptions) => {
+    console.log(name, selectedOptions);
+    // extra code
+    const selectedValues = selectedOptions.map(option => option.value);
+  const locationIDs = selectedOptions.map(option => option?.locationID);
+  const locationNames = selectedOptions.map(option => option?.locationName);
+    // setFormData({
+    //   ...formData,
+    //   [name]: selectedValue,
+    //   locationID: selectedOption?.locationID,
+    //   locationName: selectedOption?.locationName,
+    // });
     setFormData({
       ...formData,
-      [name]: selectedValue,
-      locationID: selectedOption?.locationID,
-      locationName: selectedOption?.locationName,
+      [name]: selectedValues,
+      locationID: locationIDs,
+      locationName: locationNames,
     });
   };
-
+console.log(formData,'formmmmmm')
+console.log(formData?.locationID,'formmmmmm')
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -126,10 +138,12 @@ export default function ShiftConfigurationForm({ currentUser }) {
     data.companyId = 'COMP2';
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID = formData?.Location?.locationID;
-    console.log('submitted data111', data);
-
+   
     try {
+      data.locationID = formData?.locationID
+
+      console.log('submitted data111', data);
+      console.log('aaa',formData?.locationID);
       const response = await axios.post(baseUrl+'/addShiftConfig', data);
       if(response?.status===200){
         handleClose();
@@ -173,9 +187,9 @@ export default function ShiftConfigurationForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
-        Add Shift Config
+         Add Shift Configuration
       </Button>
       <Dialog
         fullWidth
@@ -187,7 +201,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add Shift Config</DialogTitle>
+        <ModalHeader heading=" Add Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -209,14 +223,14 @@ export default function ShiftConfigurationForm({ currentUser }) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="Start Time"
-                  defaultValue={dayjs('2022-04-17T15:60')}
+                  defaultValue={dayjs()}
                   onChange={(newValue) => setStartTime(newValue)}
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="End Time"
-                  defaultValue={dayjs('2022-04-17T15:30')}
+                  defaultValue={dayjs()}
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>
@@ -229,6 +243,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
               /> */}
 
               <Autocomplete
+                multiple
                 disablePortal
                 name="Location"
                 id="combo-box-demo"
@@ -237,8 +252,8 @@ export default function ShiftConfigurationForm({ currentUser }) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
-                onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                onChange={(event, selectedOptions) =>
+                  handleAutocompleteChange('Location', selectedOptions)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
@@ -249,14 +264,22 @@ export default function ShiftConfigurationForm({ currentUser }) {
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+             <Button 
+             sx={{backgroundColor:'#3B82F6'}}
+            type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+              >
+            Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

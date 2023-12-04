@@ -501,7 +501,7 @@ const [stateOptions,setOptions]=useState([])
 
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        <DialogTitle sx={{textAlign:"start",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -828,7 +828,7 @@ const [stateOptions,setOptions]=useState([])
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         locationID:newvalue?.locationID
                       }
                       const department=await ApiHitDepartment(deptObj);
@@ -880,7 +880,7 @@ const [stateOptions,setOptions]=useState([])
                      
                       try{
                         const desgObj={
-                          companyID:'COMP1',
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                           departmentID:newvalue?.departmentID
                         }
                         const desgination=await ApiHitDesgniation(desgObj);
@@ -926,7 +926,7 @@ const [stateOptions,setOptions]=useState([])
                      
                       try{
                         const desgGradeObj={
-                          companyID:'COMP1',
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                           desginationID:newvalue?.desginationID
                         }
                         const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
@@ -1047,8 +1047,7 @@ const [stateOptions,setOptions]=useState([])
 
            </Grid>
          </DialogContent>
-         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2}>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
          <Button onClick={()=>{
           setDates({
             joiningDateFrom:"",
@@ -1062,6 +1061,10 @@ const [stateOptions,setOptions]=useState([])
 
           
          }}>Reset</Button>
+         <Button 
+         sx={{backgroundColor:'#3B82F6',marginLeft:'5px'}}
+         onClick={()=>{handleApply()}}>Apply</Button>
+         
          </Grid>
    
     </Dialog>

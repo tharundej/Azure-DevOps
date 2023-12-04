@@ -30,7 +30,21 @@ export default function AssignShiftComponent() {
    
       const TABLE_HEAD = [
 
-
+        {
+    
+          id: "",
+    
+          label: " SL_NO",
+    
+          type: "text",
+    
+          containesAvatar: false,
+    
+     
+    
+          secondaryText: "text",
+    
+        },
     
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
@@ -38,10 +52,10 @@ export default function AssignShiftComponent() {
     
         { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "end_time", label: "End Time", width: 100, type: "text" },
+        { id: "end_time", label: "End time", width: 100, type: "text" },
         { id: "start_date", label: "Start Date", width: 100, type: "text" },
         { id: "end_date", label: "End Date", width: 100, type: "text" },
-        { id: "shift_term", label: "Shift Term", width: 100, type: "text" },
+        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -152,8 +166,8 @@ bodyData='data'
 defaultPayload={defaultPayload}
 
 filterName='AssignShiftFilter'
-onClickActions={onClickActions}
 rowActions={actions}
+onClickActions={onClickActions}
 
 />  
     </>

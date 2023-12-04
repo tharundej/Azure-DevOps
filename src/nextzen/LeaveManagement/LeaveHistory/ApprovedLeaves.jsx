@@ -1,11 +1,12 @@
-import {Card,CardContent,Typography,IconButton} from '@mui/material';
-import {useState,useEffect,useCallback} from 'react';
+import {Card,CardContent,Typography,IconButton,Grid} from '@mui/material';
+import {useState,useEffect,useCallback, useContext} from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 import Iconify from 'src/components/iconify';
+import UserContext from 'src/nextzen/context/user/UserConext';
 export default function ApprovedLeaves(){
-   
+   const {user} = useContext(UserContext)
     const [listData,setListData] = useState();
     const [loading,setLoading] = useState(false);
     const [approved,setApproved] = useState(Array(listData?.response?.length).fill(false));
@@ -17,7 +18,7 @@ export default function ApprovedLeaves(){
       const PendingApproved =  useCallback((e) => {
         setLoading(true);
         const payload = {
-          employee_id:localStorage?.getItem('employeeID'),
+          employee_id:(user?.employeeID)?user?.employeeID:'',
           flag:e
         }
         const config = {
@@ -46,9 +47,11 @@ export default function ApprovedLeaves(){
    <>
     {loading ? 
       <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
-    : (
-      listData?.data != null ? (
+    :
+    <Grid container spacing={1} sx={{ px: 3 , py:2}}>
+    {listData?.data != null ? (
         listData?.data?.map((itm, index) => (
+          <Grid item xs={6} md={4} lg={4}>
           <Card sx={{ margin: "10px" }}>
             <CardContent>
               {(!approved[index]) ? (
@@ -77,13 +80,16 @@ export default function ApprovedLeaves(){
               )}
             </CardContent>
           </Card>
+          </Grid>
         ))
       ) : (
         <div style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}>
           No Approved Leaves
         </div>
       )
-    )}
+    }
+    </Grid>
+    }
   </>
 
 </>

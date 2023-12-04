@@ -41,6 +41,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
@@ -151,7 +152,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":"COMP1"
+        "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     }
   
     const config = {
@@ -458,7 +459,8 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
-          <DialogTitle>Role Config</DialogTitle>
+          
+          <ModalHeader  heading="Role Config"/>
           <DialogContent>
             <Box
               rowGap={3}

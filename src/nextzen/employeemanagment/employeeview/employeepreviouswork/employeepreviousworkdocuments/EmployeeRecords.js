@@ -5,6 +5,7 @@ import { Card, Typography } from '@mui/material';
 import axios from 'axios';
 import FilesGrid from '../../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
+import Iconify from 'src/components/iconify';
 
 const styles = {
   container: {
@@ -30,7 +31,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyID": "COMP1",
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeID":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
@@ -61,7 +62,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         console.log(endPointTopass,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP1",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
@@ -100,7 +101,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         
 
         let data = JSON.stringify({
-            "companyId": "COMP1",
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -123,7 +124,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP1",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)
@@ -157,10 +158,14 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
 
 <div style={styles.container}>
       <Typography variant="body1">Documents</Typography>
-      <div style={styles.tooltip} onClick={()=>{
+      <Iconify icon="lets-icons:add-duotone"
+      sx={{cursor:'pointer'}}
+      width={24} onClick={()=>{
         setType('addDocs')
         setOpen(true)
-      }}>+</div>
+      }} />
+
+     
     </div>
 
 

@@ -30,7 +30,7 @@ const tabLabels = [ 'Designation Grade' ];
       <DesignationGradeConfig/>
     </div>,
     <div>
-     {/* <RoleConfiguration/> */}
+     <RoleConfiguration/>
     </div>
   ];
 

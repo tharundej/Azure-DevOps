@@ -42,6 +42,7 @@ import * as Yup from 'yup';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
@@ -68,7 +69,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
    
 
      const obj={
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
       experience:defaultValues
      }
@@ -86,7 +87,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
       experience:defaultValues
      }
@@ -319,9 +320,11 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
       sx: { maxWidth: 720 },
     }}
   >
+       <ModalHeader heading="Add Previous Work"/>
 
             <DialogContent>
-              <Typography>Add Previous Work</Typography>
+             
+            
 
             <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
@@ -375,9 +378,10 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 
-                <Grid md={12} xs={12} lg={12} item>
+                <Grid md={6} xs={12} lg={6} item>
                   <DatePicker
                   fullWidth
+                  sx={{width:'100%'}}
                     value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
                     onChange={(date) => {
 
@@ -404,9 +408,10 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                   />
                   
                 </Grid>
-                <Grid md={12} xs={12} lg={12} item>
+                <Grid md={6} xs={12} lg={6} item>
                   <DatePicker
                   fullWidth
+                  sx={{width:'100%'}}
                     value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
                     onChange={(date) => {
 
