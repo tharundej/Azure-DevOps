@@ -102,6 +102,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     'Virginia Andrews',
     'Kelly Snyder',
   ];
+  
   const employmentTypes=[
     'Permanent',
     'contract'

@@ -71,13 +71,13 @@ export default function PaySchedule({ currentUser }) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text', minWidth: 140 },
-    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 140 },
+    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 180 },
     { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text', minWidth: 120 },
     { id: 'hraPercentage', label: 'HRA %', type: 'text', minWidth: 100 },
     { id: 'daPercentage', label: 'DA %', type: 'text', minWidth: 100 },
     { id: 'ltaPercentage', label: 'LTA %', type: 'text', minWidth: 100 },
-    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 100 },
-    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 100 },
+    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 140 },
+    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 140 },
     { id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth: 100 },
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
   ];

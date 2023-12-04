@@ -94,7 +94,7 @@ export default function ShiftConfigView({currentUser}) {
   ];
 
   const defaultPayload = {
-    companyId: 'COMP2',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     count: 5,
     search: '',
     page: 0,
@@ -195,7 +195,7 @@ export default function ShiftConfigView({currentUser}) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP2';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
     data.locationID =( formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationId
