@@ -6,7 +6,7 @@ pipeline {
                 deleteDir()
             }
         }
-        stage(Git clone){
+        stage("Git clone"){
             steps{
                 checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'frontend_git', url: 'https://github.com/ani0310/BellHrms.git']])
             }
