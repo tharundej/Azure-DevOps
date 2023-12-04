@@ -228,6 +228,10 @@ const AvailableLeaves = () => {
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
 
+useEffect(()=>{
+console.log("startdatee",formatDateToYYYYMMDD(datesUsed?.toDate))
+},[datesUsed?.toDate])
+
   return (
   
   <>

@@ -513,6 +513,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
 
