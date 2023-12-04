@@ -59,7 +59,10 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
+  const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
+    "Contract","Permanent"
   
+  ])
   const onSaveData=()=>{
 
     const arr=defaultValues
@@ -451,6 +454,30 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                   />
                   
                 </Grid>
+                <Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={employeeTypeOptons}
+                value={item?.employmentType}
+                getOptionLabel={(option) => option}
+                onChange={(e,value) => {
+                  console.log(value)
+                  const newArray = [...defaultValues];
+                  newArray[index] = {
+                    ...newArray[index],
+                    employmentType: value
+                }
+                setDefaultValues(newArray);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="Employement Type" />}
+              />
+              </Grid>
+
+
               </Grid>
              
                   
@@ -461,12 +488,12 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="salary-slips">Salary Slips</MenuItem>
                         <MenuItem value="seperation-letter">Seperation Letter</MenuItem>

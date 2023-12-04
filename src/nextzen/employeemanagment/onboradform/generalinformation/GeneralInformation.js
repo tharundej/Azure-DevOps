@@ -835,7 +835,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rCountry"
                 label="Permanent Country"
-                options={options?.rcountryOptions }
+                options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}
                 renderOption={(props, option) => (
@@ -849,7 +849,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rState"
                 label="Permanent State"
-                options={options?.rstateOptions}
+                options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
                 renderOption={(props, option) => (
@@ -862,7 +862,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                 name="rCity"
                 label="Permanent City"
-                options={options?.rcityOptions}
+                options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}
                 renderOption={(props, option) => (
