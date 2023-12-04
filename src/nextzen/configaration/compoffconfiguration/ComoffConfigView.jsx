@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ReusableTabs from '../../tabs/ReusableTabs';
 import CompoffConfigurationTable from './CompoffConfigurationTable';
 
-const tabLabels = ['Comoff Config'];
+const tabLabels = ['Compensantory Configuration'];
   const tabContents = [
     <div>
       <CompoffConfigurationTable/>

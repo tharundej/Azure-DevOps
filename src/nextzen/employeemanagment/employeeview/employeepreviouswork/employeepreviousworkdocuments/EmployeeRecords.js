@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import PropTypes from 'prop-types';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { Card, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import FilesGrid from '../../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
@@ -31,7 +31,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyID": "COMP1",
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "employeeID":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
@@ -62,7 +62,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         console.log(endPointTopass,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP1",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
@@ -101,7 +101,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         
 
         let data = JSON.stringify({
-            "companyId": "COMP1",
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -124,7 +124,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP1",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)
@@ -156,7 +156,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
 
     </Grid> */}
 
-<div style={styles.container}>
+<Grid  style={styles.container}>
       <Typography variant="body1">Documents</Typography>
       <Iconify icon="lets-icons:add-duotone"
       sx={{cursor:'pointer'}}
@@ -166,7 +166,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
       }} />
 
      
-    </div>
+    </Grid>
 
 
     {documents && <FilesGrid onEdit={handleEdit} onDelete={handleDelete} dataFiltered={documents} endpoint={endPointTopass} />}

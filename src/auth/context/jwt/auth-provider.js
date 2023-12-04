@@ -62,70 +62,69 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
-
-  const permission= {
-    "claims": {
-        "claimApprove": true,
-        "compoffApprove": true,
-        "mainHeading": true,
-        "myClaims": true,
-        "myCompoff": true
+  const permission = {
+    claims: {
+      claimApprove: true,
+      compoffApprove: true,
+      mainHeading: true,
+      myClaims: true,
+      myCompoff: true,
     },
-    "configurations": {
-        "appraisalConfigurations": true,
-        "compoffConfigurations": true,
-        "expenseClaimConfigurations": true,
-        "leaveConfigurations": true,
-        "mainHeading": true,
-        "roleConfigurations": true,
-        "shiftConfigurations": true
+    configurations: {
+      appraisalConfigurations: true,
+      compoffConfigurations: true,
+      expenseClaimConfigurations: true,
+      leaveConfigurations: true,
+      mainHeading: true,
+      roleConfigurations: true,
+      shiftConfigurations: true,
     },
-    "employeeManagement": {
-        "employeeTable": true,
-        "mainHeading": true,
-        "salaryStructure": true,
-        "statutory": true
+    employeeManagement: {
+      employeeTable: true,
+      mainHeading: true,
+      salaryStructure: true,
+      statutory: true,
     },
-    "itDeclaration": {
-        "declarationDetails": true,
-        "houseProperty": true,
-        "licPremium": true,
-        "mainHeading": false,
-        "materDetails": true,
-        "medicalInsurancePremium": true,
-        "rentDetails": true
+    itDeclaration: {
+      declarationDetails: true,
+      houseProperty: true,
+      licPremium: true,
+      mainHeading: false,
+      materDetails: true,
+      medicalInsurancePremium: true,
+      rentDetails: true,
     },
-    "leaveManagement": {
-        "approveLeave": true,
-        "leaveCalendar": true,
-        "mainHeading": false
+    leaveManagement: {
+      approveLeave: true,
+      leaveCalendar: true,
+      mainHeading: false,
     },
-    "monthlyAdditionalDeductions": {
-        "loans": true,
-        "mainHeading": false,
-        "myDeductions": true,
-        "salaryAdvance": true
+    monthlyAdditionalDeductions: {
+      loans: true,
+      mainHeading: false,
+      myDeductions: true,
+      salaryAdvance: true,
     },
-    "payroll": {
-        "mainHeading": false,
-        "payRun": true,
-        "paySchedule": true,
-        "payScheduleHistory": true
+    payroll: {
+      mainHeading: false,
+      payRun: true,
+      paySchedule: true,
+      payScheduleHistory: true,
     },
-    "shiftManagement": {
-        "assignShift": true,
-        "mainHeading": false,
-        "myShiftDetails": true,
-        "shiftRoaster": true,
-        "shiftSwap": true
+    shiftManagement: {
+      assignShift: true,
+      mainHeading: false,
+      myShiftDetails: true,
+      shiftRoaster: true,
+      shiftSwap: true,
     },
-    "timeSheetManagement": {
-        "approvals": true,
-        "mainHeading": false,
-        "myTimesheet": true,
-        "projects": true
-    }
-}
+    timeSheetManagement: {
+      approvals: true,
+      mainHeading: false,
+      myTimesheet: true,
+      projects: true,
+    },
+  };
   const { setUser } = useContext(UserContext);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [OptVerify, setOptVerify] = useState(false);
@@ -184,21 +183,21 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
-  
+
   const login = useCallback(async (companyEmail, password) => {
     const data = {
       companyEmail,
       password,
     };
-    
+
     // console.log(data, 'data ......');
     try {
-      const response = await axios.post(baseUrl+'/loginUser', data);
+      const response = await axios.post(baseUrl + '/loginUser', data);
       // const obj = response?.data;
       // obj.permission=permission
       localStorage.setItem('userDetails', JSON.stringify(response?.data));
       setUser(response?.data);
-      const companyEmail = localStorage.setItem('companyEmail',data?.companyEmail);
+      const companyEmail = localStorage.setItem('companyEmail', data?.companyEmail);
       //  const response = await axios.post(endpoints.auth.login, data);
       // const response = await axios.post('https://vshhg43l-3001.inc1.devtunnels.ms/erp/loginUser',data)
       const companyID = localStorage.setItem('companyID', response?.data?.companyID);
@@ -221,7 +220,7 @@ export function AuthProvider({ children }) {
       console.log(response?.data.statusCode, 'response');
       if (response?.data?.statusCode === 200) {
         setSession(accessToken);
-      //  setSession("1")
+        //  setSession("1")
         dispatch({
           type: 'LOGIN',
           payload: {
@@ -242,6 +241,7 @@ export function AuthProvider({ children }) {
       setSnackbarSeverity('error');
       setSnackbarMessage('An unexpected error occurred');
       setSnackbarOpen(true);
+      
     }
   }, []);
   const [datesUsed, setDatesUsed] = useState({
@@ -260,11 +260,17 @@ export function AuthProvider({ children }) {
       phoneNo,
       firstName,
       middleName,
-      lastName
-      // securityQ1,
-      // securityA1,
-      // securityQ2,
-      // securityA2
+      lastName,
+      companyAddressLine1,
+      companyAddressLine2,
+      companyCountry,
+      companyCity,
+      companyState,
+      companyPincode,
+      empIdPrefix,
+      logoName,
+      companyLogo,
+      
     ) => {
       console.log('hiiii');
       const data = {
@@ -279,10 +285,15 @@ export function AuthProvider({ children }) {
         firstName,
         // middleName,
         lastName,
-        // securityQ1,
-        // securityA1,
-        // securityQ2,
-        // securityA2,
+        companyAddressLine1,
+        companyAddressLine2,
+        companyCountry,
+        companyCity,
+        companyState,
+        companyPincode,
+        empIdPrefix,
+        logoName,
+        companyLogo,
       };
       if (companyDateOfIncorporation != 'NaN-NaN-NaN') {
         data.companyDateOfIncorporation = companyDateOfIncorporation;
@@ -291,7 +302,8 @@ export function AuthProvider({ children }) {
         data.middleName = middleName;
       }
       console.log(data, 'data ......');
-      const response = await axios.post(baseUrl+'/signup', data);
+     
+      const response = await axios.post(baseUrl + '/signup', data);
       // const response = await axios.post(endpoints.auth.register, data);
 
       console.log(response);
@@ -379,7 +391,6 @@ export function AuthProvider({ children }) {
   );
 }
 export { reducer }; // Exporting only the reducer function
-
 
 AuthProvider.propTypes = {
   children: PropTypes.node,

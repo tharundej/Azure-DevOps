@@ -13,6 +13,9 @@ import Expenses from 'src/nextzen/expenses/Expenses';
 import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
 import PurchaseInvoice from 'src/nextzen/Purchase/PurchaseInvoice/PurchaseInvoice';
 import PurchasePayment from 'src/nextzen/Purchase/PurchasePayment/PurchasePayment';
+import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
+import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
+import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -421,6 +424,15 @@ export const dashboardRoutes = [
         ],
       },
       {
+        path: 'sale',
+        children: [
+          { element: <SalePayment />, index: true },
+          { path: 'order', element: <SalesOrder /> },
+          { path: 'invoice', element: <SaleInvoice /> },
+          { path: 'payment', element: <SalePayment /> },
+        ],
+      },
+      {
         path: 'balancesheet',
         children: [
           {
@@ -590,7 +602,7 @@ export const dashboardRoutes = [
 
       { path: 'appraisalconfiguration', element: <AppraisalConfiguration /> },
 
-      { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
+      // { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
 
       { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
 

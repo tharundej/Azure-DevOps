@@ -18,11 +18,6 @@ import {  Alert,
   Snackbar,
   TextField, } from '@mui/material';
 import instance from 'src/api/BaseURL';
-// import { BasicTable } from '../Table/BasicTable';
-// import TimeForm from './TimeForm';
-// import ReusableTabs from '../tabs/ReusableTabs';
-// import './Time.css';
-// import AddTimeProject from './AddTimeProject';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import AddTimeProject from 'src/nextzen/TimeSheetManagement/AddTimeProject';
 import AddRoleConfig from './AddRoleConfig';
@@ -34,6 +29,8 @@ import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
+import {useSnackbar} from '../../../components/snackbar'
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -43,10 +40,13 @@ const bull = (
 export default function DesignationGradeConfig() {
 
   const {user}=useContext(UserContext)
-  console.log(user ,"userDetails ")
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
+  const {enqueueSnackbar} = useSnackbar()
+  
   const TABLE_HEAD = [
   
  
@@ -171,19 +171,23 @@ export default function DesignationGradeConfig() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
-             setSnackbarSeverity('success');
-             setSnackbarMessage('Designation Added successfully!');
-             setSnackbarOpen(true);
+        if (response.data.code === 200 || 201) {
+           
+             enqueueSnackbar(response?.data?.message,{variant:'success'})
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
+          handleCloseEdit();
         }
+      else  if (response.data.code === 400) {
+           
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
+         //  setHitGetDepartment(!hitGetDepartment)
+       console.log('success',response);
+     }
       })
       .catch((error) => {
          setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
+         enqueueSnackbar(error.response.data.message,{variant:'error'})
         console.log(error);
       });
   
@@ -281,26 +285,40 @@ export default function DesignationGradeConfig() {
 
        
       
-          <Button onClick={updateDepartment}>Update</Button>
             </Box>
           </DialogContent>
  
+     
+
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEdit}>
-              Cancel
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              // loading={isSubmitting1}
-            >
-              Save
-            </Button> */}
+         
+         <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        updateDepartment()
+       }}
+     >
+       Update
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+        handleCloseEdit();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+    
+         
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} />
       <Container
         sx={{
           display: 'flex',

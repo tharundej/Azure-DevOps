@@ -33,11 +33,13 @@ export default function ShiftSwap() {
     
         { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
-        { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "from_shift_name", label: "Old Shift Name", width: 180, type: "text" },
+        { id: "From_shift_group", label: "Old Shift Group Name", width: 180, type: "text" },
     
         // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "to_shift_name", label: "New Shift Name", width: 220, type: "text" },
+        { id: "to_shift_group", label: "New Shift Group Name", width: 220, type: "text" },
         { id: "start_date", label: "Swap Date", width: 220, type: "text" },
-        { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
         // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     
@@ -52,19 +54,19 @@ export default function ShiftSwap() {
     
      const defaultPayload = {
       "company_id":localStorage.getItem('companyID'),
-      "location_id":32,
+      "approver_id":"INFO22",
       "page":0,
       "Search":"",
       "count": 10,
       "externalFilters":{
       "status": "",
-      "swap_date": {
+      "start_date": {
            "from": "",
           "to": ""
       }
   } ,
       "sort": {
-      "orderby": "",
+      "orderby": "employee_name",
       "key": 0
   } 
    
@@ -114,7 +116,7 @@ export default function ShiftSwap() {
     <BasicTable
 
 headerData={TABLE_HEAD}
-endpoint="/MyShiftSwap"
+endpoint="/selfswap"
 bodyData='data'
 defaultPayload={defaultPayload}
 filterName="SwapSearchFilter"

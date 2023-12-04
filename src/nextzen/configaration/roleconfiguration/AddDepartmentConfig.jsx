@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState  ,useEffect} from 'react';
+import { useCallback, useMemo, useState  ,useEffect, useContext} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -42,8 +42,7 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-
-
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function AddDepartmentConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
@@ -53,9 +52,11 @@ export default function AddDepartmentConfig({ currentUser ,handleCloseAddRoleDil
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -220,26 +221,23 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
        .request(config)
        .then((response) => {
          if (response.data.code === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage(response.data.message);
-           setSnackbarOpen(true);
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+         
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
          }else  if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+        ;
           setHitGetDepartment(!hitGetDepartment)
           console.log("success")
+          handleClose();
         }
    
        })
        .catch((error) => {
-        
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Department Adding. Please try again.');
-         setSnackbarOpen(true);
+     ;
          console.log(error);
    });
    //  console.log(result, 'resultsreults');
@@ -407,26 +405,38 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               />
          
          
-          
+{/*           
               <Button  onClick={onSubmit1}>Add</Button>
-        
+         */}
     
               
             </Box>
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Close
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              loading={isSubmitting1}
-            >
-              Save
-            </Button> */}
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        onSubmit1()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+           handleClose();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+          
           </DialogActions>
         </FormProvider>
       </Dialog>

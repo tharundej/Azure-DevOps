@@ -160,12 +160,12 @@ export function useNavData() {
       key:'configurations',
       children: [
         { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
-        { title: t('Compoff Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
+        { title: t('Compensantory Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
          { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-         { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
+        //  { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
          { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
          { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
-
+         { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
       ],
     },
     // {
@@ -291,12 +291,12 @@ export function useNavData() {
           },
           {
             title: t('sales'),
-            path: paths.dashboard.purchase.purchaseOrder,
+            path: paths.dashboard.sale.salePayment,
             icon: ICONS.g_purchases,
             children: [
-              { title: t('Sales Order'), path: paths.dashboard.purchase.purchaseOrder },
-              { title: t('Sales Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
-              { title: t('Sales Payment'), path: paths.dashboard.purchase.purchasePayment },
+              { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
+              { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
+              { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
             ],
           },
           {

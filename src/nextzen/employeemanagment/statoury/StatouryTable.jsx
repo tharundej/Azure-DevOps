@@ -14,7 +14,7 @@ export const StatouryTable = () => {
      minWidth:'150px'
     },
    
-    { id: 'employeeName', label: 'Employee name',  type: 'text', minWidth:'180px' },
+    { id: 'employeeName', label: 'Employee Name',  type: 'text', minWidth:'180px' },
     { id: 'aadharNumber', label: 'Aadhaar Number',  type: 'text', minWidth:'150px' },
     { id: 'panNumber', label: 'PAN Number', type: 'text', minWidth:'180px' },
     { id: 'uan', label: 'UAN Number', type: 'text', minWidth:'180px' },
@@ -63,11 +63,7 @@ export const StatouryTable = () => {
   
   }
   const actions = [
-   
-
-   
-
-   
+  
   ];
   return (
     <>

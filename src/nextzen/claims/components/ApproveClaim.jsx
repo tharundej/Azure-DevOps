@@ -53,7 +53,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import formatDateToYYYYMMDD from '../../global/GetDateFormat';
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 
 
 
@@ -108,7 +108,7 @@ export default function ApproveClaim({ currentUser }) {
     { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
     { id: "approverName", label: "Approver Name", width: 100, type: "text" },
     { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
-    { id: "paymentStatus", label: "Payment Status", width: 100, type: "text" },
+    { id: "paymentStatus", label: "Payment Status", width: 100, type: "badge" },
     { id: "status", label: "Status", width: 100, type: "badge" },
 
     // { id: '', width: 88 },
@@ -122,7 +122,7 @@ export default function ApproveClaim({ currentUser }) {
   const defaultPayload={
 
     "companyId":companyID,
-    "approverManagerId":managerID,
+    "approverManagerId":employeeID,
     
     "count":5,
     "page":0,
@@ -178,16 +178,7 @@ const actions = [
     { name: "Edit", icon: "hh", id: 'edit' },
     { name: "Delete", icon: "hh", id: 'delete' },
   ];
-  const bodyContent = [
-    {
-      name: "Surendra",
-      email: "suri@infobellIt.com",
-      phoneNumber: "9879876789",
-      company: "Infobell",
-      role: "UI Developer",
-      status: "active",
-    },
-  ];
+
   // mui modal related
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -289,35 +280,33 @@ const actions = [
       console.error(error);
     }
   });
-  // for upload docmunt
-
-  // const onclickActions = (event) => {
-  //   console.log( "my claims from to basic table")
-  //   console.log(event)
-  //   if (event && event?.eventData) {
-  //     if (event?.eventData?.type === 'serviceCall') {
-  //       // serviceCall(event.eventData.endpoint,event.rowData)
-        
-  //     } else {
-  //         // navigate[event.eventData.route]
-  //     }
-  //   }
-  // }
+  
 
 
-  const [approve, setApprove]= React.useState({
-
-    // compensatoryRequestId:"1",
-    //     status: "",
-    //     utilisation: "1"
+  const [approve, setApprove]= React.useState({ 
     companyId:companyID,
     employeeId:"",
     expenseClaimId :"" ,
     approverManagerId:employeeID,
-    status:""
+    approvedAmount:null,
+    status:"",
+    approverRemark:"",
+    claimAmount:"",
+    claimType:""
  
 
   })
+console.log(approve,"approve1233")
+const handleInputChange = (event) => {
+  const { name, value } = event.target;
+  const parsedValue = name === "approvedAmount" ? parseFloat(value) : value;
+
+  setApprove((prevApprove) => ({
+    ...prevApprove,
+    [name]: parsedValue,
+  }));
+  
+};
 
 
   // console.log(approve,"approve data11111111")
@@ -327,33 +316,38 @@ const actions = [
       if (eventData?.type === 'status') {
        
            if (eventData?.name === 'Approve'){
-          //   setApprove(prevState => ({
-          //     ...prevState,
-          //     status: "Approve",
-          //     expenseClaimId :rowData?.expenseClaimId,
-          //     employeeId:rowData?.EmployeeId,
-          // }));
-          handle({...approve, ...{status: "Approve",
-          expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,}});
+            setApprove(prevState => ({
+              ...prevState,
+              status: "Approved",
+              expenseClaimId :rowData?.expenseClaimId,
+              employeeId:rowData?.EmployeeId,
+              claimAmount:rowData?.claimAmount,
+              claimType:rowData?.claimType,
+          }));
+          handleOpen()
+          // handle({...approve, ...{status: "Approved",
+          // expenseClaimId :rowData?.expenseClaimId,
+          // employeeId:rowData?.EmployeeId,}});
        
 
            }
           
         
        else{
-      //   setApprove(prevState => ({
-      //     ...prevState,
-      //     status: "Reject",
-      //     expenseClaimId :rowData?.expenseClaimId,
-      //     employeeId:rowData?.EmployeeId,
-      // }));
-      // handle(approve);
-      handle({...approve, ...{status: "Reject",
+        setApprove(prevState => ({
+          ...prevState,
+          status: "Rejected",
           expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,}});
+          employeeId:rowData?.EmployeeId,
+          claimAmount:rowData?.claimAmount,
+              claimType:rowData?.claimType,
+      }));
+      // handle(approve);
+      // handle({...approve, ...{status: "Rejected",
+      //     expenseClaimId :rowData?.expenseClaimId,
+      //     employeeId:rowData?.EmployeeId,}});
       
-     
+      handleOpen()
 
     }
     
@@ -367,13 +361,13 @@ const actions = [
     }
    
 
-    const  handle =(async (approve) => {
+    const  handle =(async (approve,event) => {
     
       console.log(approve,"approve defaultValues111")
      
   
       try {
-       
+        event.preventDefault();
         // console.log(data, 'formdata api in check');
   
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
@@ -402,24 +396,87 @@ const actions = [
   const serviceCall = (endpoint, payload) => {
 
   }
+  //  
+  
   return (
     <>
       <Helmet>
         <title> Dashboard: ApproveClaim</title>
       </Helmet>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      > <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Claim`} />
+        <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
+ 
+          {/* <DialogTitle>Approve Claim</DialogTitle> */}
 
-      {/* <Button onClick={handleOpen}  variant='outlined' >Apply Claim</Button> */}
-      {/* <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField fullWidth label="Search">o</TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <Button sx={{ alignSelf: "center" }} variant="contained" onClick={handleOpen}>Open modal</Button>
-          <Button variant="contained" >Filter</Button>
-          <Button variant="contained" >exports</Button>
-        </Grid>
-       
-      </Grid> */}
+          <DialogContent>
+          
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              
+
+              <TextField name="reason" label="Claim Type" value={approve?.claimType || ''}  InputProps={{
+    readOnly: true,
+  }} />
+              <TextField name="reason" label="Claim Amount"  value={approve?.claimAmount || ''}  InputProps={{
+    readOnly: true,
+  }}/>
+
+  {approve?.status === "Approved" &&        <TextField
+        name="approvedAmount"
+        label="Approval Amount"
+        value={approve?.approvedAmount}
+        onChange={handleInputChange}
+      /> }
+        
+      <TextField
+        name="approverRemark"
+        label="Comments"
+        value={approve?.approverRemark}
+        onChange={handleInputChange}
+      />
+            
+             
+
+
+
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button >
+           
+
+            <LoadingButton type="submit" variant="contained"  color="primary" loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
+      
 
       
       <SurendraBasicTable

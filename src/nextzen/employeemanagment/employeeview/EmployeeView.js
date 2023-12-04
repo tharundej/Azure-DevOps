@@ -54,6 +54,7 @@ const TABS = [
  
 
 const EmployeeView = () => {
+  console.log(JSON.parse(localStorage.getItem('userDetails'))?.companyID,'JSON.parse(localstorage.getitem')
 
   const roleID=3;
 
@@ -97,7 +98,7 @@ const EmployeeView = () => {
   return (
     <div>
          <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"
@@ -147,7 +148,7 @@ const EmployeeView = () => {
           ))}
         </Tabs>
       </Card>
-      <Grid container justifyContent="flex-end">
+      {/* <Grid container justifyContent="flex-end">
       <Button
         component={RouterLink}
         to={paths.dashboard.employee.changepassword}
@@ -156,13 +157,13 @@ const EmployeeView = () => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: '4px', // Adjust spacing between icon and text
+          gap: '4px', 
         }}
       >
-        {/* <Iconify icon="eva:arrow-ios-back-fill" width={16} /> */}
+       
         Change Password
       </Button>
-        </Grid>
+        </Grid> */}
          {/* <Link
         component={RouterLink}
         href={paths.auth.jwt.login}

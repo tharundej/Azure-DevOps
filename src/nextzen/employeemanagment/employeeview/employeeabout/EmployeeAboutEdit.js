@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { Country, State, City }  from 'country-state-city';
+import Divider from '@mui/material/Divider';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -199,6 +201,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           locationID:userdropDownvalue?.locationValue?.locationID || "",
           reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
           roleID:userdropDownvalue?.rolesValue?.roleID || "",
+          bloodGroup:userdropDownvalue?.bloodGroupValue?.label || "",
+          gender:userdropDownvalue?.genderValue?.label || "",
+          maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
+          nationality:userdropDownvalue?.nationalityValue?.nationality || "",
+          religion:userdropDownvalue?.religionValue?.label || "",
+          employmentType:userdropDownOptions?.employeementTypeValue?.label || "",
 
 
 
@@ -232,6 +240,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           console.error(error);
         }
       });
+
+      
   return (
     <>
 
@@ -265,9 +275,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-
+             <Grid md={12} xs={12} lg={12}  fullWidth  item>
+             <Typography>General Information</Typography>
+             </Grid>
             
              <Grid md={6} xs={12}  fullWidth  item>
+             
                   <TextField
                     fullWidth
                 
@@ -378,26 +391,10 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="emergencyContactNumber"
-                    label="Emergency Contact Number"
-                    variant="outlined"
-                    id="emergencyContactNumber"
-                    value={currentUser?.emergencyContactNumber}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
-                      }))
-                    }}
-                  />
-                  </Grid>
+                
                   <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.dateOfBirth ? dayjs(currentUser?.dateOfBirth).toDate() : null}
                     onChange={(date) => {
@@ -420,6 +417,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Grid md={6} xs={12} item>
                   <DatePicker
                   fullWidth
+                  sx={{width:'100%'}}
                     value={currentUser?.joiningDate ? dayjs(currentUser?.joiningDate).toDate() : null}
                     onChange={(date) => {
                       setcurrentUser(prev => ({
@@ -440,6 +438,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                 <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.offerDate ? dayjs(currentUser?.offerDate).toDate() : null}
                     onChange={(date) => {
@@ -513,86 +512,139 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={employmentTypeOptions || []}
+                value={userdropDownvalue?.employeementTypeValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
                 
-                    name="maritalStatus"
-                    label="mMrital Status"
-                    variant="outlined"
-                    id="motherName"
-                    value={currentUser?.maritalStatus}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        maritalStatus:e?.target.value
-                      }))
-                    }}
-                  />
+                  var newArr = { ...userdropDownvalue };
+                  newArr.employeementTypeValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={userdropDownOptions?.maritalStatusOptions || []}
+                value={userdropDownvalue?.maritalStatusValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.maritalStatusValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Marital Status"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="nationality"
+                  options={userdropDownOptions?.nationalityOptions || []}
+                  value={userdropDownvalue?.nationalityValue}
+                  getOptionLabel={(option) => option?.nationality}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.nationalityValue=newvalue;
+
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                  renderInput={(params) => <TextField {...params} label="Nationality"
+                  style={{  width: '100%' }} />}
+                />
+                  </Grid>
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="religion"
+                  options={userdropDownOptions?.religionOptions || []}
+                  value={userdropDownvalue?.religionValue}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.religionValue=newvalue;
+
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                  renderInput={(params) => <TextField {...params} label="Religion"
+                  style={{  width: '100%' }} />}
+                />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nationality"
-                    label="Nationality"
-                    variant="outlined"
-                    id="nationality"
-                    value={currentUser?.nationality}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        nationality:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="religion"
-                    label="Religion"
-                    variant="outlined"
-                    id="religion"
-                    value={currentUser?.religion}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        religion:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="bloodGroup"
-                    label="Blood Group"
-                    variant="outlined"
-                    id="BloodGroup"
-                    value={currentUser?.bloodGroup}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        bloodGroup:e?.target.value
-                      }))
-                    }}
-                  />
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="bloodGroup"
+                  options={userdropDownOptions?.bloodGroupsOptions || []}
+                  value={userdropDownvalue?.bloodGroupValue}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.bloodGroupValue=newvalue;
+                   
+                    
+                    console.log(newArr)
+                   
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Blood Group"
+                  style={{  width: '100%' }} />}
+                />
                   </Grid>
+                  
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>Address</Typography>
+                    </Grid>
+                 
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
                 
                     name="pAddressLine1"
-                    label="pAddressLine1"
+                    label="Permanent Address Line 1"
                     variant="outlined"
                     id="pAddressLine1"
                     value={currentUser?.pAddressLine1}
@@ -611,7 +663,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine2"
-                    label="pAddressLine2"
+                    label="Permanent Address Line 2"
                     variant="outlined"
                     id="pAddressLine2"
                     value={currentUser?.pAddressLine2}
@@ -624,43 +676,126 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+
                 
-                    name="pCity"
-                    label="City"
-                    variant="outlined"
-                    id="pCity"
-                    value={currentUser?.pCity}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        pAdpCitydressLine1:e?.target.value
-                      }))
-                    }}
-                  />
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentcountry"
+                options={userdropDownOptions?.pCountryOptions || []}
+                value={userdropDownvalue?.pCountryValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+                  newOptiosArray.pStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  newOptiosArray.pCityOptions=[]
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                  newArr.pCountryValue=newvalue;
+                  newArr.pStateValue=undefined;
+                  newArr.pCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent Country"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentstate"
+                options={userdropDownOptions?.pStateOptions || []}
+                value={userdropDownvalue?.pStateValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+
+                  newOptiosArray.pCityOptions=City.getCitiesOfState(userdropDownvalue?.pCountryValue?.isoCode, newvalue?.isoCode)
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
                 
-                    name="pState"
-                    label="State"
-                    variant="outlined"
-                    id="pState"
-                    value={currentUser?.pState}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        pState:e?.target.value
-                      }))
-                    }}
-                  />
+                  newArr.pStateValue=newvalue;
+                  newArr.pCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent State"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentcity"
+                options={userdropDownOptions?.pCityOptions || []}
+                value={userdropDownvalue?.pCityValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  // var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                
+                  newArr.pCityValue=newvalue;
+                  
+                 
+                  
+                
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent City"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+
+                  
+
+
+                 
+
+               
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -685,7 +820,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine1"
-                    label="rAddressLine1"
+                    label="Resendtial Address Line 1"
                     variant="outlined"
                     id="rAddressLine1"
                     value={currentUser?.rAddressLine1}
@@ -704,7 +839,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine2"
-                    label="rAddressLine2"
+                    label="Resential Address Line 2"
                     variant="outlined"
                     id="rAddressLine2"
                     value={currentUser?.rAddressLine2}
@@ -717,43 +852,119 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+                 
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resentialcountry"
+                options={userdropDownOptions?.rCountryOptions || []}
+                value={userdropDownvalue?.rCountryValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+                  newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  newOptiosArray.rCityOptions=[]
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                  newArr.rCountryValue=newvalue;
+                  newArr.rStateValue=undefined;
+                  newArr.rCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
                 
-                    name="rCity"
-                    label="City"
-                    variant="outlined"
-                    id="rCity"
-                    value={currentUser?.rCity}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        rCity:e?.target.value
-                      }))
-                    }}
-                  />
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential Country"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resenditialstate"
+                options={userdropDownOptions?.rStateOptions || []}
+                value={userdropDownvalue?.rStateValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+
+                  newOptiosArray.rCityOptions=City.getCitiesOfState(userdropDownvalue?.rCountryValue?.isoCode, newvalue?.isoCode)
+
+                  setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
                 
-                    name="rState"
-                    label="State"
-                    variant="outlined"
-                    id="pState"
-                    value={currentUser?.rState}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        rState:e?.target.value
-                      }))
-                    }}
-                  />
+                  newArr.rStateValue=newvalue;
+                  newArr.rCityValue=undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential State"
+                style={{  width: '100%' }} />}
+              />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="resendiatialtcity"
+                options={userdropDownOptions?.rCityOptions || []}
+                value={userdropDownvalue?.rCityValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  // var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                
+                  newArr.rCityValue=newvalue;
+                  
+                 
+                  
+                
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Residential City"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+                 
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -773,7 +984,9 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>About Role</Typography>
+                    </Grid>
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               
@@ -793,7 +1006,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     // try{
                     //   const deptObj={
-                    //     companyID:'COMP1',
+                    //     companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                     //     locationID:newvalue?.locationID
                     //   }
                     //   const department=await ApiHitDepartment(deptObj);
@@ -828,8 +1041,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Autocomplete
                   disablePortal
                   id="departmentName"
-                  options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
-
+                 // options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
+                  options={userdropDownOptions?.departmentOptions  || []}
                   value={userdropDownvalue?.departmentValue}
 
                   getOptionLabel={(option) => option.departmentName}
@@ -844,7 +1057,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     try{
                       const desgObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(desgObj);
@@ -890,7 +1103,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                    
                     try{
                       const desgGradeObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         designationID:newvalue?.designationID
                       }
                       const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
@@ -962,7 +1175,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                  
                   // try{
                   //   const deptObj={
-                  //     companyID:'COMP1',
+                  //     companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                   //     locationID:newvalue?.locationID
                   //   }
                   //   const department=await ApiHitDepartment(deptObj);
@@ -987,7 +1200,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                
                 
-                renderInput={(params) => <TextField {...params} label="Assign Manager"
+                renderInput={(params) => <TextField {...params} label="Reporting Manager"
                 style={{  width: '100%' }} />}
               />
               </Grid>
@@ -1007,27 +1220,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                  
                   
                   console.log(newArr)
-                 
-                  // try{
-                  //   const deptObj={
-                  //     companyID:'COMP1',
-                  //     locationID:newvalue?.locationID
-                  //   }
-                  //   const department=await ApiHitDepartment(deptObj);
-                  //   var optionsArr={...userdropDownOptions};
-                  //   optionsArr.departmentOptions=department;
-                  //   optionsArr.desginationGradeOptions=[];
-                  //   optionsArr.desginationOptions=[];
-                  //   console.log(optionsArr,'optionsArroptionsArr')
-                  //   setUserDropDownOptions(optionsArr)
-
-                  // }
-                  // catch(error){
-                    
-                  // }
-
-                 
-                  
+               
                   setUserDropDownValue(newArr)
                 }
                 
@@ -1039,6 +1232,14 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 style={{  width: '100%' }} />}
               />
               </Grid>
+
+
+
+              {/* checking  */}
+
+
+
+             
             
              </Grid>
 

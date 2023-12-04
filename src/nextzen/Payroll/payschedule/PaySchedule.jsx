@@ -109,7 +109,7 @@ export default function PaySchedule({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       payscheduleType: '',
       employmentType: '',
@@ -208,7 +208,7 @@ export default function PaySchedule({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyId: 'COMP1',
+        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
@@ -268,7 +268,7 @@ export default function PaySchedule({ currentUser }) {
   const getOptionLabel = (employeepayType) => employeepayType.type;
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     // (data.employementType = valueSelected?.employementType?.type),
    
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
@@ -308,7 +308,7 @@ export default function PaySchedule({ currentUser }) {
   //     event.preventDefault();
   //     const payload={
   //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-  //       "companyId":'COMP1',
+  //       "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
   //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
   //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
@@ -352,7 +352,7 @@ export default function PaySchedule({ currentUser }) {
       event.preventDefault();
       const payload={
         "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-        "companyId":'COMP1',
+        "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       }
       console.log(payload,'payload')
       const response = await axios.post(baseUrl + '/editPaySchedule', payload);
@@ -382,7 +382,7 @@ export default function PaySchedule({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.employementType = valueSelected?.employementType?.type;
     // (data.employementType = valueSelected?.employementType?.type),
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);

@@ -39,7 +39,7 @@ import FormProvider, {
 import axios from 'axios';
 
 import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
@@ -109,8 +109,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const values = watch();
   useEffect(() => {
     getEmployeSwap()
-  }, [])
+  
 
+  }, [])
+   const [newShift,setnewShift]= useState(false)
+   const [curentShift,setcurentShift]= useState(true)
+   const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
   const [ShiftName,setShiftName] =useState([]) 
@@ -122,7 +126,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
-    getShiftgroupName()
+    getShiftGroupName()
     // getShiftName()
   }, [])
   const getEmployeSwap = async ( toGroup,fromGroup) => {
@@ -167,12 +171,27 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       }
     }
   }
-  const getShiftgroupName= async (newvalue)=>{
+  // const getShiftgroupName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:localStorage.getItem('companyID'),
+       
+  //     };
+  //     const response = await instance.post('/getShiftGroupName',data);
+  //     setShiftGroupName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+  const getShiftGroupName= async ()=>{
     try{
     const  data= {
-      
-      companyId:localStorage.getItem('companyID'),
-       
+      companyId:"CDAC1",
+      locationId:43,
+      supervisorId:"CDAC_01",
       };
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
@@ -182,6 +201,8 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   throw error;
     }
   }
+
+
 
   // const getShiftName= async (newvalue)=>{
   //   try{
@@ -269,105 +290,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     >
 
    
-      {/* <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setFromShiftGroup_Name1(newvalue.id
-      
-    );
-    
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
-/> */}
-<Autocomplete
-disablePortal
-id="combo-box-m"
-options={ShiftGroupName || []}
-value={FromShiftGroup_Name1?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
 
 
-  setFromShiftGroup_Name1(newvalue)
-// getDesignation(newvalue)
-getEmployeSwap(newvalue, ToShiftGroup_Name)
 
 
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
-/>
 
 
-                      {/* <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options || []} 
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name(newvalue.id
-      
-    );
-    
-   
-   
- 
-  }}
- 
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/> */}
-
-<Autocomplete
-disablePortal
-id="combo--dem33"
-options={ShiftGroupName || []}
-value={ToShiftGroup_Name?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
-
-
-  setToShiftGroup_Name(newvalue
-)
-// getDesignation(newvalue)
-getEmployeSwap(newvalue, FromShiftGroup_Name1)
-
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select To Shift Group " />}
-/>
 
       <Autocomplete
   disablePortal
@@ -380,13 +308,32 @@ renderInput={(params) => <TextField {...params} label="Select To Shift Group " /
    
     setCurrentEmployeSwapData(newvalue
     )
-   
+    setcurentShift(true)
  
   }}
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
+/>
+      <Autocomplete
+  disablePortal
+  id="combo-boxSelectshift"
+  options={ShiftGroupName || []}
+  value={currentEmployeSwapData?.employeeShiftGroupId}
+  getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
+  onChange={(e,newvalue)=>{
+   
+   
+    setCurrentEmployeSwapData(newvalue
+    )
+    setnewShift(true)
+ 
+  }}
+  sx={{
+    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+  }}
+  renderInput={(params) => <TextField {...params} label="To Shift Name" />}
 />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
@@ -403,142 +350,44 @@ renderInput={(params) => <TextField {...params} label="Select To Shift Group " /
             }}
           />
         </DemoContainer>
-      </LocalizationProvider>       
-      
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            sx={{ width: '100%', paddingLeft: '3px' }}
-            label="End Date"
-            value={datesUsed?.end_date}
-            defaultValue={dayjs(new Date())}
-            onChange={(newValue) => {
-              setDatesUsed((prev) => ({
-                ...prev,
-                end_date: newValue,
-              }));
-            }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
+      </LocalizationProvider>   
 
-      <br />
-      <Stack>
-        <Typography>
-          Select second Employe To Swap...
-        </Typography>
-      </Stack>
-      <br />
-   
+      <RHFTextField   name="comment" label="Comments " />   
+  { curentShift &&    <Grid>
+      <Typography>
+        Current Shift Details
+        </Typography> 
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      {[0, 1, 2, 3].map((value) => {
+        const labelId = `checkbox-list-label-${value}`;
 
-  {/* <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setFromShiftGroup_Name(newvalue.id
-      
-    );
-    
-   
- 
-  }}
- 
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift GroupName" />}
-/> */}
+        return (
+          <ListItem key={value} disablePadding >
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center", justifyContent:"center",alignContent:"center",  border: "1px solid #ccc" }}>2</span>
+          </ListItem>
+        );
+      })}
+    </List>
+        </Grid>}
+{ newShift &&      <Grid>
+      <Typography>
+        New Shift Details
+        </Typography> 
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      {[0, 1, 2, 3].map((value) => {
+        const labelId = `checkbox-list-label-${value}`;
 
-<Autocomplete
-disablePortal
-id="cobo-box-dem"
-options={ShiftGroupName || []}
-value={FromShiftGroup_Name?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
+        return (
+          <ListItem key={value} disablePadding>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>2</span>
+          </ListItem>
+        );
+      })}
+    </List>
+        </Grid>}
 
-
-  setFromShiftGroup_Name(newvalue
-)
-// getDesignation(newvalue)
-getEmployeSwap1(newvalue, ToShiftGroup_Name1)
-
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
-/>
-  {/* <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name1(newvalue.id
-      
-    );
-    
-   
-   
- 
-  }}
-
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/> */}
-
-<Autocomplete
-disablePortal
-id="combo-box-m"
-options={ShiftGroupName || []}
-value={ToShiftGroup_Name1?.employeeShiftGroupId}
-getOptionLabel={(option) => option.ShiftGroupName}
-onChange={(e,newvalue)=>{
-
-
-  setToShiftGroup_Name1(newvalue
-)
-// getDesignation(newvalue)
-
-getEmployeSwap1(newvalue, FromShiftGroup_Name)
-}}
-sx={{
-width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-}}
-renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
-/>
-         <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={employeSwapDetails || []}
-  value={currentEmployeSwapData1?.employee_shift_swap_id}
-  getOptionLabel={(option) => option.employee_name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setCurrentEmployeSwapData1(newvalue
-    )
-  
- 
-  }}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="Select Employe" />}
-/>
     </Box>
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>

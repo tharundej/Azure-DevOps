@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -15,8 +15,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createCustomerAPI, updateCustomerAPI } from 'src/api/Accounts/Customers';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
 export default function CreateCustomers({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     customer_name: Yup.string().required('Customer Name is Required'),
     customer_company_name: Yup.string().required('Customer Company Name is Required'),
@@ -53,7 +55,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
       customer_pan_no: currentData?.customerPanNo || '',
       customer_tan_no: currentData?.customerTanNo || '',
       status: currentData?.status || '',
-      company_id: currentData?.companyId || 'COMP1',
+      company_id: currentData?.companyId || user?.companyID ? user?.companyID : '',
     }),
     [currentData]
   );

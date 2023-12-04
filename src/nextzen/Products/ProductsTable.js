@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
@@ -9,11 +9,19 @@ import { getProductListAPI, DeleteProductAPI } from 'src/api/Accounts/Product';
 import SnackBarComponent from '../global/SnackBarComponent';
 import CreateProducts from './CreateProducts';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import UserContext from '../context/user/UserConext';
 
 const ProductsTable = () => {
+  const { user } = useContext(UserContext);
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit', type: 'serviceCall', endpoint: '' },
-    { name: 'Delete', icon: 'hh', id: 'delete', type: 'serviceCall', endpoint: '' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, seteditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -89,10 +97,10 @@ const ProductsTable = () => {
     count: 5,
     page: 0,
     search: '',
-    companyID: 'COMP1',
+    companyID: user?.companyID ? user?.companyID : '',
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    // { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'productCategory', label: 'Product Category', type: 'text', minWidth: '180px' },
     { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
@@ -139,6 +147,7 @@ const ProductsTable = () => {
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="ProductsHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

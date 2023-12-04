@@ -46,7 +46,7 @@ export default function CompoffConfigurationTable({currentUser}) {
     const TABLE_HEAD = [
       { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth:280 },
       { id: 'expiryDays', label: 'Expiry Days', type: 'text' , minWidth:280},
-      { id: 'amount', label: 'Amount', type: 'text' , minWidth:280},
+      { id: 'amount', label: '% of Basic Pay', type: 'text' , minWidth:280},
     ];
     const actions = [
       { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' ,endpoint:'/'},
@@ -70,7 +70,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       "count": 5,
       "page": 0,
       "search": "",
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "externalFilters": {
         "compensantoryPolicies": ""
       },
@@ -98,7 +98,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       try {
         console.log(rowdata, 'rowData:::::');
         const data = {
-            companyID:"COMP1",
+            companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
              compensantoryConfigurationID: rowdata.compensantoryConfigurationID,
         };
         const response = await axios.post( baseUrl+'/deleteCompensantoryConfiguration', data);
@@ -136,7 +136,7 @@ export default function CompoffConfigurationTable({currentUser}) {
   const [isTextFieldVisible, setTextFieldVisible] = useState(false);
   const handleAutocompleteChange = (event, newValue) => {
     setSelectedOption(newValue);
-
+    setEditData(newValue)
     // Check if the selected option should show the text field
     if (newValue) {
       if (newValue.type === 'Leave') {
@@ -201,35 +201,74 @@ export default function CompoffConfigurationTable({currentUser}) {
   
   
     const onSubmit1 = handleSubmit1(async (data) => {
-      data.companyId = 'COMP1';
-      data.compensantoryPolicies = selectedOption?.type;
-  
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+      data.compensantoryPolicies = editData?.compensantoryPolicies
+      data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
+      data.expiryDays=editData?.expiryDays
       console.log('submitted data111', data);
   
       try {
         const response = await axios.post(
-          baseUrl+'/addCompensantoryConfiguration',
+          baseUrl+'/editCompensantoryConfiguration',
           data
         );
-        console.log('sucess', response);
+        if (response?.data?.code === 200) {
+          handleCloseEdit();
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          console.log('sucess', response);
+          handleCloseEdit();
+        }
+        if (response?.data?.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+  
+          console.log('sucess', response);
+        }
       } catch (error) {
-        console.log('error', error);
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error While Editing. Please try again.');
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log(' ', error);
       }
     });
   
     const onSubmit2 = handleSubmit2(async (data) => {
-      data.companyId = 'COMP1';
-      data.compensantoryPolicies = selectedOption?.type;
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+      data.compensantoryPolicies = editData?.compensantoryPolicies
+      data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
+      data.amount=editData?.amount
       console.log('submitted data2222', data);
   
       try {
         const response = await axios.post(
-          baseUrl+'/addCompensantoryConfiguration',
+          baseUrl+'/editCompensantoryConfiguration',
           data
         );
-        console.log('sucess', response);
+        if (response?.data?.code === 200) {
+          handleCloseEdit();
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          console.log('sucess', response);
+          handleCloseEdit();
+        }
+        if (response?.data?.code === 400) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+  
+          console.log('sucess', response);
+        }
       } catch (error) {
-        console.log('error', error);
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error While Editing. Please try again.');
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log(' ', error);
       }
     });
 
@@ -273,17 +312,17 @@ export default function CompoffConfigurationTable({currentUser}) {
       >
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <ModalHeader heading="Edit Comoff Config" />
+            <ModalHeader heading="Edit Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete
               disablePortal
               name="compensatory"
               id="combo-box-demo"
-              options={compensatorytypes1}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption?.compensantoryPolicies} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
+              options={compensatorytypes1.map((name)=>name.type)}
+              // getOptionLabel={getOptionLabel}
+              value={editData?.compensantoryPolicies} // Use selectedOption or an empty string
+              onChange={(e, newValue) => handleAutocompleteChange( newValue || null)}
               sx={{ width: 300, padding: '8px' }}
               renderInput={(params) => <TextField {...params} label="Compensatory" />}
             />
@@ -302,6 +341,7 @@ export default function CompoffConfigurationTable({currentUser}) {
                   label="Expiry Days"
                   sx={{width:280,marginLeft:1.5}}
                   value={editData?.expiryDays}
+                  onChange={(e, newValue) => handleAutocompleteChange(newValue || null)}
                 />
               </Box>
             </DialogContent>
@@ -330,17 +370,17 @@ export default function CompoffConfigurationTable({currentUser}) {
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
-           <ModalHeader heading="Edit Comoff Config" />
+           <ModalHeader heading="Edit Compensantory Configuration" />
             
             <DialogContent>
             <Autocomplete
               disablePortal
               name="compensatory"
               id="combo-box-demo"
-              options={compensatorytypes1}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption?.compensantoryPolicies} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
+              options={compensatorytypes1.map((name)=>name.type)}
+              // getOptionLabel={getOptionLabel}
+              value={editData?.compensantoryPolicies} // Use selectedOption or an empty string
+              onChange={(e, newValue) => handleAutocompleteChange( newValue || null)}
               sx={{ width: 300, padding: '8px' }}
               renderInput={(params) => <TextField {...params} label="Compensatory" />}
             />
@@ -360,6 +400,7 @@ export default function CompoffConfigurationTable({currentUser}) {
                     label="Amount"
                     sx={{width:280,marginLeft:1.5}}
                     value={editData?.amount}
+                    onChange={(e, newValue) => handleAutocompleteChange( newValue || null)}
                   />
                 
               </Box>

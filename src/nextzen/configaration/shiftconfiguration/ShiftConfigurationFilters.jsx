@@ -51,6 +51,7 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import ShiftConfigurationForm from './ShiftConfigurationForm';
+import { locationNameApi } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -101,9 +102,15 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     'weekly',
     'Monthly',
   ]
-  const locationName = [
-    'infobell'
-  ];
+  const [locationName, setLocationName] = useState([])
+  useEffect(()=>{
+    async function call() {
+      const arr = await locationNameApi();
+      console.log(arr, 'sairam');
+      setLocationName(arr);
+    }
+    call();
+  },[])
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -136,6 +143,10 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     },
     {
       field: 'shiftTerm',
+      options: [],
+    },
+    {
+      field: 'location',
       options: [],
     },
   ]);
@@ -175,24 +186,13 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(',');
-          arr1[item.field] = commaSeparatedString;
-        }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+  const arr= [];
+      dropdown?.locationName?.forEach((item, index) => {
+       
+        arr.push(item?.locationName);
+       
       });
-      // setDatesData(arr1);
-      resolve(arr1);
+      resolve(arr);
     });
   }
 
@@ -204,7 +204,27 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   const handleClickClose = () => {
     setOpen(false);
   };
+  const [options, setOptions] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: 'COMP1',
+          };
+          const locationName = await locationNameApi(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.locationName = locationName;
+          // optionsArr.locationName=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+      call();
+    }
+  }, [open]);
   const handleChangeDropDown = (event, field) => {
     const {
       target: { value },
@@ -215,7 +235,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'location') {
+    } else if (field === 'locationName') {
       setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
@@ -245,9 +265,13 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   const handleApply = async () => {
     setDatesData([]);
 
-    const data1 = await formWithDropdown();
-    filterData(data1);
-    console.log(data1, ';;;');
+    const data =await formWithDropdown();
+    const comma = data.join(',');
+    const obj = {
+      locationName:comma,
+    }
+    filterData(obj);
+    console.log(obj, 'sairam2222');
 
     //   filterData(data);
     handleClickClose();
@@ -301,8 +325,17 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
 
         <DialogContent  sx={{minWidth:"300px"}}>
          
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex'}} item>
-              <Grid item xs={6} marginTop="10px">
+            <Grid   container
+            spacing={1}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
+            item>
+              {/* <Grid item xs={6} marginTop="10px">
                 <FormControl fullWidth>
                   <InputLabel id="shiftTerm">Shift Term</InputLabel>
                   <Select
@@ -323,8 +356,8 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={6} marginTop="10px" >
+              </Grid> */}
+              {/* <Grid item xs={6} marginTop="10px" >
                   <FormControl fullWidth>
                     <InputLabel id="shiftName">Shift Name</InputLabel>
                     <Select
@@ -349,17 +382,18 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid item xs={6} >
+                </Grid> */}
+               
+                <Grid item xs={6} marginTop="10px" >
                   <FormControl fullWidth>
-                    <InputLabel id="location">Location</InputLabel>
+                    <InputLabel id="locationName">Location</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      onChange={(e) => handleChangeDropDown(e, 'locationName')}
                       input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
@@ -370,33 +404,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                           value={name}
                           style={getStyles(name, personName, theme)}
                         >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="location">Location</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'location')}
-                      input={<OutlinedInput label="Location" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {locationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
+                          {name?.locationName}
                         </MenuItem>
                       ))}
                     </Select>

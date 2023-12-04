@@ -169,7 +169,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const ApiHitExperience=()=>{
     const obj={
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId:localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -186,7 +186,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -225,7 +225,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const handleSubmit = () => {
     const obj1={
-      companyId: "COMP1",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   
       employeeId: localStorage.getItem("employeeId"),
   
@@ -488,12 +488,12 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
              
               <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+              <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                   <Select
-                      label="Select a doc Type"
+                      label="Select Document"
                       value={file?.fileType}
                       onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                      name="Select a doc Type"
+                      name="Select Document"
                   >
                       <MenuItem value="salary-slips">Salary Slips</MenuItem>
                       <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
