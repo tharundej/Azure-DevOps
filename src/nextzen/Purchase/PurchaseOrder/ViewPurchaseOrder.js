@@ -33,7 +33,7 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
     setValue(newValue);
   };
   const gridStyle = { paddingTop: '10px', alignItems: 'center' };
-  const StyledTableCell = { padding: '7px' };
+  const StyledTableCell = { padding: '5px' };
   return (
     <div>
       <DialogContent>
@@ -105,37 +105,36 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
               </Table>
             </TabPanel>
             <TabPanel value="3">
-              <Grid container spacing={2}>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Vendor Name : {currentData?.vendorName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">PAN : {currentData?.vendorPAN}</Typography>
-                </Grid>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">GST : {currentData?.vendorGST}</Typography>
-                </Grid>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">Email : {currentData?.emailID}</Typography>
-                </Grid>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Phone Number : {currentData?.contactNo}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Address : {currentData?.vendorAddress}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Location : {currentData?.vendorLocation}
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableBody>
+                  <TableRow>
+                    <TableCell colSpan={2} style={StyledTableCell}>
+                      Vendor / Location Name
+                    </TableCell>
+                    <TableCell style={StyledTableCell}>
+                      <b>{currentData?.vendorName}</b>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>PAN</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.vendorPAN}</TableCell>
+                    <TableCell style={StyledTableCell}>GST</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.vendorGST}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Email</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.emailID}</TableCell>
+                    <TableCell style={StyledTableCell}>Phone Number</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.contactNo}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Address</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.vendorAddress}</TableCell>
+                    <TableCell style={StyledTableCell}>Location</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.vendorLocation}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </TabPanel>
           </TabContext>
         </Box>
