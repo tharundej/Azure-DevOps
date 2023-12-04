@@ -32,7 +32,8 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const gridStyle = { paddingTop: '10px' };
+  const gridStyle = { paddingTop: '10px', alignItems: 'center' };
+  const StyledTableCell = { padding: '7px' };
   return (
     <div>
       <DialogContent>
@@ -46,74 +47,62 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Grid container spacing={2}>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Order ID : {currentData?.purchaseOrderID}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">PO Number : {currentData?.poNumber}</Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">PO Date : {currentData?.poDate}</Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Expected Delivery Date : {currentData?.expectedDeliveryDate}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Payment Term : {currentData?.paymentTerm}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Grand Total Amount : {currentData?.grandTotalAmount}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Advance Amount : {currentData?.advanceAmount}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Balance Amount : {currentData?.balanceAmount}
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableBody>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Order ID</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.purchaseOrderID}</TableCell>
+                    <TableCell style={StyledTableCell}>PO Number</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.poNumber}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>PO Date</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.poDate}</TableCell>
+                    <TableCell style={StyledTableCell}>Expected Delivery Date</TableCell>
+                    <TableCell style={StyledTableCell}>
+                      {currentData?.expectedDeliveryDate}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Payment Term</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.paymentTerm}</TableCell>
+                    <TableCell style={StyledTableCell}>Grand Total Amount</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.grandTotalAmount}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Advance Amount</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.advanceAmount}</TableCell>
+                    <TableCell style={StyledTableCell}>Balance Amount</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.balanceAmount}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </TabPanel>
             <TabPanel value="2">
-              <Grid container spacing={2}>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Company Name : {currentData?.companyName}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Company Billing GST : {currentData?.companyBillingGST}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Company Billing PAN : {currentData?.companyBillingPAN}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Company Billing Address : {currentData?.companyBillingAddress}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={gridStyle}>
-                  <Typography variant="subtitle2">
-                    Factory Shipping Address : {currentData?.factoryShippingAddress}
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableBody>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Company Name</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.companyName}</TableCell>
+                    <TableCell style={StyledTableCell}>Company Billing GST</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.companyBillingGST}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Company Billing PAN</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.companyBillingPAN}</TableCell>
+                    <TableCell style={StyledTableCell}>Company Billing Address</TableCell>
+                    <TableCell style={StyledTableCell}>
+                      {currentData?.companyBillingAddress}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>Factory Shipping Address</TableCell>
+                    <TableCell style={StyledTableCell}>
+                      {currentData?.factoryShippingAddress}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </TabPanel>
             <TabPanel value="3">
               <Grid container spacing={2}>
