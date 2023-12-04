@@ -18,7 +18,7 @@ pipeline {
                         docker stop \$(docker ps -q) &&
                         docker kill \$(docker ps -q) &&
                         docker rm \$(docker ps -a -q) &&S
-                        docker system prune -a
+                        docker system prune -a -y
                     '''
                 }
             }
