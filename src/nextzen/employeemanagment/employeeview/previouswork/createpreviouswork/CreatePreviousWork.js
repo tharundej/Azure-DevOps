@@ -1,5 +1,6 @@
 import React ,{useEffect, useState} from 'react'
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
@@ -9,6 +10,18 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 import {
     TextField,
@@ -472,14 +485,17 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                   
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                  onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
@@ -544,7 +560,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
         >
           Add Work
         </Button>
-        </Grid>
+          </Grid>
         {/* <Button
           variant="contained"
           color="primary"
