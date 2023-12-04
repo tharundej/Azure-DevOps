@@ -144,6 +144,7 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  SecondoryTable,
   componentPage,count
 }) => {
   const popover = usePopover();
@@ -814,6 +815,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                             }}
                             headerContent={TABLE_HEAD}
                             rowActions={getRowActionsBasedOnStatus(row)}
+                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
                         </>
                       ))}
@@ -909,6 +911,9 @@ BasicTable.propTypes = {
 
 BasicTable.propTypes = {
   bodyData: PropTypes.func,
+};
+BasicTable.propTypes = {
+  SecondoryTable: PropTypes.func,
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.func,

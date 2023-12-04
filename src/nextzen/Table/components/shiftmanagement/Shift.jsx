@@ -11,11 +11,11 @@ const Shift = () => {
 
     }
   const  tabLabels=[
-        "Shift Roaster" , "Assign Shift" , "My Shift Details" , "Shift Swap", "Swap Request"
+        "Shift Roaster" ,  "My Shift Details" , "Self Swap", " Requested Swap"
     ]
     const tabContents=[
         <div><ShiftRoast/> </div>,
-        <div><AssignShiftComponent/> </div>,
+        // <div><AssignShiftComponent/> </div>,
         <div><MyShiftDetails/> </div>,
         <div><ShiftSwap/></div>,
         <div><Swaprequest/></div>,
