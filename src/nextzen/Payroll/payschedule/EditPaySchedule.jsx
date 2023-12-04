@@ -181,7 +181,7 @@
 //     data.employementType=valueSelected.employementType
 //     console.log('valueSelectedaaaaaaaaaa', data);
 
-//     data.company_id = 'COMP1';
+//     data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
 
 //     console.log(data, 'valueSelected111ugsghghh');
 
@@ -202,7 +202,7 @@
 //   });
 //   const onSubmit2 = handleSubmit2(async (data) => {
 //     console.log('data:', data);
-//     data.company_id = 'COMP1';
+//     data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
 //     // data.employee_type = valueSelected?.employementType;
 //     data.employementType=valueSelected.employementType
 //     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);

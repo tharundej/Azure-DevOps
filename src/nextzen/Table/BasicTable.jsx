@@ -123,6 +123,7 @@ import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
 import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
+import ApproveFilter from '../timesheet/components/ApproveFilters';
 const defaultFilters = {
   name: '',
   role: [],
@@ -143,6 +144,7 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  SecondoryTable,
   componentPage,count
 }) => {
   const popover = usePopover();
@@ -500,6 +502,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterData={handleFIlterOptions}
             />
           )}
+          {filterName === 'ApproveFilters' && (
+            <ApproveFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
+          )}
           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
@@ -807,6 +816,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                             }}
                             headerContent={TABLE_HEAD}
                             rowActions={getRowActionsBasedOnStatus(row)}
+                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
                         </>
                       ))}
@@ -902,6 +912,9 @@ BasicTable.propTypes = {
 
 BasicTable.propTypes = {
   bodyData: PropTypes.func,
+};
+BasicTable.propTypes = {
+  SecondoryTable: PropTypes.func,
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.func,

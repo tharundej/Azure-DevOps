@@ -52,7 +52,8 @@ import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgni
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [countruIsoCode,setCoutryIsoCode]=useState("")
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
 
@@ -80,22 +81,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     }
   }))
   useEffect(()=>{
-    async function fetchLocations (){
-      try{
-        
-        const obj=Country.getAllCountries();
-        const newArray={...options};
-        newArray.countryOptions=obj;
-        newArray.rcountryOptions=obj;
-        console.log(obj,'ooooooo')
-        setOptions(newArray)
-
-      }
-      catch (e){
-
-      }
-    }
-    fetchLocations()
+    console.log("HIII")
+    const obj=Country.getAllCountries();
+    const newArray={...options};
+    newArray.countryOptions=obj;
+    newArray.rcountryOptions=obj;
+    console.log(obj,'ooooooo')
+    setOptions(newArray)
   },[])
 
   const handleCloseSnackBar=()=>{
@@ -287,7 +279,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     console.log(data,'general information');
 
     try {
-      data.companyID = 'COMP1';
+      data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
 
       if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){
@@ -324,24 +316,24 @@ const   GeneralInformation=forwardRef((props,ref)=> {
        data.religion=data?.religion?.label || "",
        data.nationality=data?.nationality?.nationality || "",
        data.bloodGroup=data?.bloodGroup?.label || "",
-       data.country=data?.country?.name|| "",
-      data.state=data?.state?.name || "",
-      data.city=data?.city?.name || ""
+       data.pCountry=data?.country|| "",
+      data.pState=data?.state || "",
+      data.pCity=data?.city || ""
        
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
         data.rAddressLine2=data.pAddressLine2
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.country||{name:"",isoCode:""},
+        data.rState=data?.state || {name:"",isoCode:""},
+        data.rCity=data?.city || {name:"",isoCode:""},
         data.rPincode=data.pPincode;
      
       }
       else{
-        data.rCountry=data?.rCountry?.name|| "",
-        data.rState=data?.rState?.name || "",
-        data.rCity=data?.rCity?.name || ""
+        data.rCountry=data?.rCountry||{name:"",isoCode:""},
+        data.rState=data?.rState || {name:"",isoCode:""},
+        data.rCity=data?.rCity || {name:"",isoCode:""}
       }
 
       
@@ -404,7 +396,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setCoutryIsoCode(obj?.isoCode)
+        setPCoutryIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -426,8 +418,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.cityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
-         console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
+        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
+         //console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
       }
       catch(e){
   
@@ -452,7 +444,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.rstateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setCoutryIsoCode(obj?.isoCode)
+        setCoutryRIsoCode(obj?.isoCode)
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -474,7 +466,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.rcityOptions=City.getCitiesOfState(countruIsoCode, obj?.isoCode)
+        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
         // console.log(cityOptions1,'stateOptionsSatet')
       }
       catch(e){

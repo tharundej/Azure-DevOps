@@ -70,7 +70,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       "count": 5,
       "page": 0,
       "search": "",
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       "externalFilters": {
         "compensantoryPolicies": ""
       },
@@ -98,7 +98,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       try {
         console.log(rowdata, 'rowData:::::');
         const data = {
-            companyID:"COMP1",
+            companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
              compensantoryConfigurationID: rowdata.compensantoryConfigurationID,
         };
         const response = await axios.post( baseUrl+'/deleteCompensantoryConfiguration', data);
@@ -201,7 +201,7 @@ export default function CompoffConfigurationTable({currentUser}) {
   
   
     const onSubmit1 = handleSubmit1(async (data) => {
-      data.companyId = 'COMP1';
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       data.compensantoryPolicies = editData?.compensantoryPolicies
       data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
       data.expiryDays=editData?.expiryDays
@@ -237,7 +237,7 @@ export default function CompoffConfigurationTable({currentUser}) {
     });
   
     const onSubmit2 = handleSubmit2(async (data) => {
-      data.companyId = 'COMP1';
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       data.compensantoryPolicies = editData?.compensantoryPolicies
       data.compensantoryConfigurationID=editData?.compensantoryConfigurationID
       data.amount=editData?.amount

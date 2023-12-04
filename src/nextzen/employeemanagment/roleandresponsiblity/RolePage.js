@@ -23,6 +23,7 @@ import {
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 const RolePage = ({open,handleModalClose,type,data}) => {
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
@@ -32,7 +33,7 @@ const RolePage = ({open,handleModalClose,type,data}) => {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const defaultPayload={
-    "companyId": "COMP1"
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 }
 
 const [TABLE_HEAD,setTableHead] =useState( [
@@ -88,7 +89,7 @@ const actions = [
         }else {
             setGroupname(data?.mainHeading)
             const obj={
-                "companyId": "COMP1",
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "groupName":data?.mainHeading,
               
             }
@@ -180,7 +181,7 @@ const actions = [
   const handleSave = () => {
     const obj = {
       groupName: groupname,
-      companyId: 'COMP1',
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       pages: checkedState,
     };
      ApiHitSavePages(obj);
@@ -241,9 +242,10 @@ const actions = [
           sx: { maxWidth: 720 },
         }}
       >
+        <ModalHeader heading="Create View" />
      <DialogContent>
       <Grid container marginTop="10px" spacing={2}>
-        <Grid item xs={12} md={3} lg={4}>
+        <Grid item xs={12} md={3} lg={4} marginBottom="5px">
          
           <TextField
             label="Group Name"

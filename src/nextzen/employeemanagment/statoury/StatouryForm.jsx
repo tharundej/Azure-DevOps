@@ -168,7 +168,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
         console.log(currentUser,'uyfgv');
    
         currentUser.employeeID=employeeIDForApis
-        currentUser.companyID='COMP1'
+        currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
      
          
          
@@ -245,11 +245,11 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     label="Account Number"
                     variant="outlined"
                     id="accountNumber"
-                     value={currentUser?.bankAccountNumber}
+                     value={currentUser?.accountNumber}
                     onChange={(e) => {
                       setCurrentUser(prev=>({
                         ...prev,
-                        bankAccountNumber: parseInt(e.target.value, 10) || ''
+                        accountNumber: parseInt(e.target.value, 10) || ''
                       }
                       ))
                     }}
@@ -359,7 +359,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     fullWidth
                
                     name="lwfNumber"
-                    label="lwf Number"
+                    label="LWF Number"
                     variant="outlined"
                     id="lwfNumber"
                      value={currentUser?.lwfNumber}
@@ -458,7 +458,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     fullWidth
                     type="number"
                     name="uan"
-                    label="uan"
+                    label="UAN"
                     variant="outlined"
                     id="uan"
                      value={currentUser?.uan}

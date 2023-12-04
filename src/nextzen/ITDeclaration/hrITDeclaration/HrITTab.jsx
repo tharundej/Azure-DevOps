@@ -141,7 +141,7 @@ export default function HrITTab() {
     count: 5,
     page: 0,
     search: 'INFO57',
-    companyID: 'COMP1',
+    companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     financialYear: '2023-2024',
     externalFilters: {
       fPDesignationName: '',
@@ -209,7 +209,7 @@ export default function HrITTab() {
   const getEmpItDetails = async (data) => {
     const payload = {
       employeeID: 'INFO57',
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       financialYear: '2023-2024',
     };
 

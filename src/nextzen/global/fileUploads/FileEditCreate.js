@@ -53,7 +53,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
       console.log(employeeIDForApis,'employeeIDForApis')
         if(type==="edit"){
            const obj={
-                "companyId": "COMP1",
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 "id":defaultValues[0].id,
 

@@ -54,6 +54,7 @@ const TABS = [
  
 
 const EmployeeView = () => {
+  console.log(JSON.parse(localStorage.getItem('userDetails'))?.companyID,'JSON.parse(localstorage.getitem')
 
   const roleID=3;
 
@@ -97,7 +98,7 @@ const EmployeeView = () => {
   return (
     <div>
          <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"

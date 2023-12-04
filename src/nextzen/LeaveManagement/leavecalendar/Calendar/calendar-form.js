@@ -30,7 +30,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { styled } from '@mui/material/styles';
+import { duration, styled } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 

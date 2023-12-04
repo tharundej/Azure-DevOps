@@ -64,7 +64,7 @@ export default function Holidays({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       holidayName: '',
       holidayDate: '',
@@ -97,7 +97,7 @@ export default function Holidays({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
       const response = await axios.post(baseUrl + '/deleteHoliday', data);
@@ -202,7 +202,7 @@ export default function Holidays({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -241,7 +241,7 @@ export default function Holidays({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
     data.locationID =(formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
     data.holidayName=valueSelected?.holidayName

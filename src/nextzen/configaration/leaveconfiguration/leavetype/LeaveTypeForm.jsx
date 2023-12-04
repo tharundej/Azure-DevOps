@@ -87,7 +87,7 @@ export default function LeaveTypeForm({ currentUser }) {
           count: 5,
           page: 0,
           search: '',
-          companyId: 'COMP1',
+          companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           externalFilters: {
             leavePeriodType: '',
           },
@@ -99,24 +99,24 @@ export default function LeaveTypeForm({ currentUser }) {
         const response = await axios.post(baseUrl + '/getAllLeavePeriod', defaultPayload);
 
         if (response?.data?.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response?.data?.message);
+          // setSnackbarOpen(true);
            handleClose();
           console.log('success', response);
         }
 
         if (response?.data?.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response?.data?.message);
+          // setSnackbarOpen(true);
            handleClose();
           console.log('error', response);
         }
       } catch (error) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+        // setSnackbarOpen(true);
          handleClose();
         console.log('error', error);
       }
