@@ -41,7 +41,7 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 
 export default function CompoffApprove({ currentUser ,}) {
   const {enqueueSnackbar} = useSnackbar()
@@ -191,7 +191,8 @@ const externalFilter = {
           status: "Rejected",
           employeeId:rowData?.employeeId,
           utilisation:rowData?.utilisation,
-          compensatoryRequestId: rowData?.compensantory_request_id,
+          compensatoryRequestId: rowData?.compensantoryRequestId,
+          compensantoryPolicies: rowData?.approve?.compensantoryPolicies,
       }));
       
 //       handle({...approve, ...{status: "Rejected",
@@ -238,7 +239,7 @@ const externalFilter = {
     () => ({
       amount: currentUser?.amount || null ,
       comment: currentUser?.comment || '',
-      type_oc_claim: currentUser?.type_oc_claim|| '',
+      // type_oc_claim: currentUser?.type_oc_claim|| '',
       // currency:currentUser?.currency|| '',
 
       // company_id:currentUser?.company_id|| '',
@@ -333,7 +334,7 @@ console.log(defaultValues,"defaultValues")
       console.error(error);
     }
   });
-
+console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
   return (
     <>
       <Helmet>
@@ -349,9 +350,10 @@ console.log(defaultValues,"defaultValues")
           sx: { maxWidth: 720 },
         }}
       >
+         <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Compoff`} />
         <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Update Compoff</DialogTitle>
+          {/* <DialogTitle>Update Compoff</DialogTitle> */}
 
           <DialogContent>
     
@@ -367,7 +369,9 @@ console.log(defaultValues,"defaultValues")
             >
              
              
-             
+             <TextField  label="Compensantory Policies" value={approve?.compensantoryPolicies || ''}  InputProps={{
+    readOnly: true,
+  }} />
 
               <TextField name="comment" label="Comment" 
                value={approve.comment}
@@ -387,7 +391,7 @@ console.log(defaultValues,"defaultValues")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>

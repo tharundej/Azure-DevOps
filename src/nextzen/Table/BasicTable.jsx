@@ -147,7 +147,8 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
-  componentPage
+  SecondoryTable,
+  componentPage,count
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -186,7 +187,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   useEffect(() => {
     // onclickActions();
     getTableData();
-  }, []);
+  }, [count]);
 
   const getTableData = (payload) => {
     setLoading(false);
@@ -808,7 +809,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => handleEditRowParent(id)}
+                            onHandleEditRow={(id) => 
+                              {
+                                if(handleEditRowParent)
+                              
+                              handleEditRowParent(id)
+                              }
+                            }
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
                             onDeleteRow={() => handleDeleteRow(row.id)}
@@ -817,6 +824,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                             }}
                             headerContent={TABLE_HEAD}
                             rowActions={getRowActionsBasedOnStatus(row)}
+                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
                         </>
                       ))}
@@ -912,6 +920,9 @@ BasicTable.propTypes = {
 
 BasicTable.propTypes = {
   bodyData: PropTypes.func,
+};
+BasicTable.propTypes = {
+  SecondoryTable: PropTypes.func,
 };
 BasicTable.propTypes = {
   rowActions: PropTypes.func,

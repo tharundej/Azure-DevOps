@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { Country, State, City }  from 'country-state-city';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -515,80 +516,104 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={userdropDownOptions?.maritalStatusOptions || []}
+                value={userdropDownvalue?.maritalStatusValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
                 
-                    name="maritalStatus"
-                    label="mMrital Status"
-                    variant="outlined"
-                    id="motherName"
-                    value={currentUser?.maritalStatus}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        maritalStatus:e?.target.value
-                      }))
-                    }}
-                  />
+                  var newArr = { ...userdropDownvalue };
+                  newArr.religionValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Marital Status"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="nationality"
+                  options={userdropDownOptions?.nationalityOptions || []}
+                  value={userdropDownvalue?.nationalityValue}
+                  getOptionLabel={(option) => option?.nationality}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.religionValue=newvalue;
+
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                  renderInput={(params) => <TextField {...params} label="Nationality"
+                  style={{  width: '100%' }} />}
+                />
+                  </Grid>
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="religion"
+                  options={userdropDownOptions?.religionOptions || []}
+                  value={userdropDownvalue?.religionValue}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.religionValue=newvalue;
+
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                  renderInput={(params) => <TextField {...params} label="Religion"
+                  style={{  width: '100%' }} />}
+                />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nationality"
-                    label="Nationality"
-                    variant="outlined"
-                    id="nationality"
-                    value={currentUser?.nationality}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        nationality:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="religion"
-                    label="Religion"
-                    variant="outlined"
-                    id="religion"
-                    value={currentUser?.religion}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        religion:e?.target.value
-                      }))
-                    }}
-                  />
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+                <Autocomplete
+                  disablePortal
+                  id="bloodGroup"
+                  options={userdropDownOptions?.bloodGroupsOptions || []}
+                  value={userdropDownvalue?.bloodGroupValue}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.bloodGroupValue=newvalue;
+                   
+                    
+                    console.log(newArr)
+                   
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Blood Group"
+                  style={{  width: '100%' }} />}
+                />
                   </Grid>
 
-                  <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="bloodGroup"
-                    label="Blood Group"
-                    variant="outlined"
-                    id="BloodGroup"
-                    value={currentUser?.bloodGroup}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        bloodGroup:e?.target.value
-                      }))
-                    }}
-                  />
-                  </Grid>
+                 
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -626,6 +651,86 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
+
+                  
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentcountry"
+                options={userdropDownOptions?.pCountryOptions || []}
+                value={userdropDownvalue?.pCountryValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                  newArr.pCountryValue=newvalue;
+                  newArr.pStateValue=undefined;
+                  newArr.PCityValue-undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent Country"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="permanentstate"
+                options={userdropDownOptions?.pStateOptions || []}
+                value={userdropDownvalue?.pStateValue}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+
+                  var newOptiosArray={...userdropDownOptions};
+                  
+                  // newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
+                  // newOptiosArray.rCityOptions=[]
+
+                  // setUserDropDownOptions(newOptiosArray)
+
+                  var newArr = { ...userdropDownvalue };
+                  newArr.pCountryValue=newvalue;
+                  newArr.pStateValue=undefined;
+                  newArr.PCityValue-undefined;
+                 
+                  
+                  console.log(newArr)
+                 
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="Permanent State"
+                style={{  width: '100%' }} />}
+              />
+                  </Grid>
+
+                  
+
+
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth

@@ -34,7 +34,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 // ----------------------------------------------------------------------
 import { _userList } from "src/_mock";
 import { paths } from 'src/routes/paths';
@@ -465,9 +465,10 @@ console.log(editData,"ppppppppppppppppppppp")
           sx: { maxWidth: 720 },
         }}
       >
+         <ModalHeader heading="Apply Compoff"/>
         <FormProvider methods={methods} onSubmit={onSubmit}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Apply My Compoff</DialogTitle>
+          {/* <DialogTitle>Apply My Compoff</DialogTitle> */}
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -582,7 +583,7 @@ console.log(editData,"ppppppppppppppppppppp")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -599,9 +600,10 @@ console.log(editData,"ppppppppppppppppppppp")
           sx: { maxWidth: 720 },
         }}
       >
+        <ModalHeader heading="Edit Compoff"/>
         <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(editData, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Edit My Compoff</DialogTitle>
+          {/* <DialogTitle>Edit My Compoff</DialogTitle> */}
 
           <DialogContent>
             {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
@@ -693,7 +695,7 @@ console.log(editData,"ppppppppppppppppppppp")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
