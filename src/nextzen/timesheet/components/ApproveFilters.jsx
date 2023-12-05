@@ -41,7 +41,7 @@ import { useContext } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { useSnackbar } from 'notistack';
 import UserContext from 'src/nextzen/context/user/UserConext';
 const defaultFilters = {

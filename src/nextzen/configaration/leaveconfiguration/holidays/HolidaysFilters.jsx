@@ -47,7 +47,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import HolidaysForm from './HolidaysForm';
@@ -226,7 +226,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const holidayNames = await holidayTypeName(Obj);
           var optionsArr = { ...options };
@@ -241,7 +241,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       async function call2() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const locationName = await locationNameApi(Obj);
           var optionsArr = { ...options };

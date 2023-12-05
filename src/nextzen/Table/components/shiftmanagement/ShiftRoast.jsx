@@ -14,6 +14,7 @@ import AddEmployeShift from './AddeployeShift';
 import instance from 'src/api/BaseURL';
 import { enqueueSnackbar } from 'notistack';
 import EditShiftRoaster from './EditShiftRoaster';
+import ShiftRoasterEmployeList from './ShiftRoasterEmployeList';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -34,54 +35,62 @@ export default function ShiftRoast() {
    
     
         
-        { id: "employee_id", label: "Employee Id", width: 180, type: "text" },
-        
-        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
-        
-        { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
+        { id: "shiftGroupName", label: "Shift Group Name", width: 180, type: "text" },
         
         
-        { id: "start_time", label: "Start Time", width: 180, type: "text" },
+        { id: "shiftName", label: "Shift Name", width: 180, type: "text" },
         
-        { id: "end_time", label: "End Time", width: 100, type: "text" },
-        { id: "shift_term", label: "Shift Term", width: 100, type: "text" },
-        { id: "shift_group", label: "Shift Group", width: 220, type: "text" },
-        { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
         
-        { id: "start_date", label: " Start Date", width: 100, type: "text" },
-        { id: "end_date", label: "End Date", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "badge" },
+        { id: "", label: "Employees", width: 180,eyeIcon:true, type: "text" },
+        
+        { id: "departmentName", label: "Department", width: 100, type: "text" },
+        { id: "designationName", label: "Designation", width: 100, type: "text" },
+        { id: "gradeName", label: "Grade", width: 220, type: "text" },
+        // { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
+        
+        // { id: "start_date", label: " Start Date", width: 100, type: "text" },
+        // { id: "end_date", label: "End Date", width: 100, type: "text" },
+        // { id: "status", label: "Status", width: 100, t ype: "badge" },
         // { id: '', width: 88 },
     
       ];
     
       const defaultPayload={
-        "company_id":localStorage.getItem('companyID'),
-        "page":0,
-        "search":"ram",
-        "externalFilters":{
-          "shift_name":"",
-          "shift_term":"",
-          "shift_group":"",
-          "supervisor_name":""
+        "cid":localStorage.getItem('companyID'),
+        "locationId": 32,
+        "search": "",
+        "page": 1,
+        "count": 10,
+        "externalFilters": {
+            "shiftName": "",
+            "shiftTerm": "",
+            "startDate": {
+                "from": "",
+                "to": ""
+            },
+            "endDate": {
+                "from": "",
+                "to": ""
+            }
         },
-        "count":6,
-       "sort":{
-          "key":0,
-          "orderBy":""
+        "sort": {
+            "key": 0,
+            "orderBy": ""
         }
-      }
+    }
     
       const actions = [
     
-        { name: "Edit", icon: "hh", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-        { name: "Delete", icon: "hh", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
+        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
     
 
     
       ];
     
- 
+      const [employeListDialog,SetEmployeListDialog]=useState(false)
+      const [roasterRowData,setRoasterRowData]=useState([])
+      const closeEmployeList = ()=> SetEmployeListDialog(false)
       const [showEdit, setShowEdit] = useState  (false);
       const handleClose = () => setShowEdit(false);
       const [editData,setEditData]=useState({})
@@ -121,6 +130,19 @@ export default function ShiftRoast() {
         setShowEdit(true);
         setEditData(rowdata)
       }
+      const SecondoryTable = async (rowdata,event) => {
+        console.log("🚀 ~ file: ShiftRoast.jsx:131 ~ SecondoryTable ~ rowdata:",rowdata)
+       setRoasterRowData(rowdata.EmpList)
+        SetEmployeListDialog(true)
+
+      }
+      const handleEditRowParent = async (rowdata,event) => {
+
+   
+        // alert("yes yes yes")
+      }
+
+
   return (
     <>
       {showEdit && (
@@ -137,6 +159,22 @@ export default function ShiftRoast() {
  <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
       </Dialog>
     )}
+ {employeListDialog && 
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={employeListDialog}
+ onClose={closeEmployeList}
+ PaperProps={{
+  sx:{maxWidth:770,overflow:"hidden"},
+ }}
+ className="custom-dialog"  
+ >
+<ShiftRoasterEmployeList onClose={closeEmployeList} roasterRowData={roasterRowData} />
+ </Dialog>
+
+ }
+
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
@@ -147,11 +185,13 @@ headerData={TABLE_HEAD}
 defaultPayload={defaultPayload}
 filterName="ShiftRoastFilter"
 bodyData='data'
-endpoint='/ShiftRoaster'
+endpoint='/getAssignshift'
 rowActions={actions}
 onClickActions={onClickActions}
-
+SecondoryTable={SecondoryTable}
+handleEditRowParent={handleEditRowParent}
 />  
     </>
   );
 }
+ 

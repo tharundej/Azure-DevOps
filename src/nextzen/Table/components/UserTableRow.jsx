@@ -21,9 +21,10 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { ASSETS_API } from 'src/config-global';
 // import UserQuickEditForm from './UserQuickEditForm';
 import { useRouter } from 'src/routes/hooks';
-import { styled } from '@mui/system'; 
+
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
+import { formatDate } from 'src/nextzen/global/GetDateFormat';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,8 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
-  onHandleEditRow
+  onHandleEditRow,
+  SecondoryTable
 
 }) {
   const confirm = useBoolean();
@@ -48,6 +50,18 @@ export default function UserTableRow({
   //   { name: 'view', icon: 'hh', path: 'jjj' },
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
+const renderCellContent = (columnId, value) => {
+  const column = headerContent.find((col) => col.id === columnId);
+  if (column && column.type === 'date') {
+    return formatDate(value); // Apply date formatting
+  }
+  else if (value !== undefined && value !== null) {
+    return value; // Return the value as is if it's not a date column
+  }
+  else {
+    return value
+  }
+};
 
   return (
     <>
@@ -66,7 +80,6 @@ export default function UserTableRow({
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
-                  height:1,
                   cursor:'pointer'
                 }}
               >
@@ -81,25 +94,38 @@ export default function UserTableRow({
                     sx={{ mr: 2 }}
                   />
                 )}
- {/* {console.log(row,"rowdataa")} */}
+                {ele.eyeIcon && (
+                  <Avatar
+                    alt={row[ele.id]}
+                    src={
+                      row && row.avatarURL && row.avatarURL.length > 0
+                        ? row.avatarURL
+                        : `${ASSETS_API}/assets/images/avatar/avatar_0.jpg`
+                    }
+                    onClick={(row)=>{SecondoryTable(row)}}
+
+                    sx={{ mr: 2 }}
+                  />
+                )}
+
                 {ele.type === 'text' && (
-                 
                   <ListItemText
-                    primary={row[ele.id] || <span   style={{
-                      // display: 'flex',
-                      // justifyContent: 'center',
-                      // alignItems: 'center',
-                      // height: '100%', // Adjust the height if needed
-                      fontSize: 30,
-                    }}>-</span>}
+                    primary={row[ele.id] || '-'}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-                    primaryTypographyProps={{ typography: 'body2'}}
+                    primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
                     }}
                   />
                 )}
+
+                {
+                 ele.type==="date" && (
+                    renderCellContent(ele.id, row[ele.id])
+                  )
+                }
+              
                  {ele.type === 'bool' && (
                  
                  <ListItemText
@@ -116,7 +142,23 @@ export default function UserTableRow({
                    }}
                  />
                )}
-{console.log(row[ele.id]+"" ,"typetypetype",row?.status)}
+
+                 {ele.type === 'icon' && (
+             
+                 <ListItemText
+
+                   primary={(row[ele.id] === "")?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="" color="green" /></span>) : <Iconify icon="lets-icons:view" color="green" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
@@ -188,6 +230,7 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
+  SecondoryTable: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
   headerContent: PropTypes.any,

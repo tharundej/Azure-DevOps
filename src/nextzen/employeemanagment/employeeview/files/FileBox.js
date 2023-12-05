@@ -13,7 +13,7 @@ const FileBox = ({file,onDelete,onEdit,sx,index}) => {
      (
         <Grid sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                     <Grid item>
-                 <FileThumbnail file={file?.type || " "} sx={{ width: 36, height: 36 }} />
+                 <FileThumbnail file="text" sx={{ width: 36, height: 36 }} />
                 </Grid>
                 <Grid item>
 

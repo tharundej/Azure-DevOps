@@ -19,18 +19,15 @@ import {  Alert,
   Snackbar,
   TextField, } from '@mui/material';
 import instance from 'src/api/BaseURL';
-
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-
-
-
 import FormProvider from 'src/components/hook-form/form-provider';
-
 import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import AddTaxSectionConfig from './AddTaxSectionConfig';
+import {useSnackbar} from '../../../components/snackbar'
+
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
     •
@@ -38,26 +35,28 @@ const bull = (
 );
 
 export default function TAxSectionConfig() {
-const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+// const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+const {enqueueSnackbar} = useSnackbar()
   const {user}=useContext(UserContext)
-  console.log(user ,"userDetails ")
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
     // State for Snackbar
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [snackbarMessage, setSnackbarMessage] = useState('');
-  
+  const [isReload ,setIsReload] = useState(false)
   const TABLE_HEAD = [
   
  
-    { id: 'taxSection', label: 'Tax Section', width: 180, type: 'text' },
+    { id: 'taxSection', label: 'Tax Section', width: 350, type: 'text' },
 
 
-    { id: 'taxScheme', label: 'Tax Scheme', width: 180, type: 'text' },
+    { id: 'taxScheme', label: 'Tax Scheme', width: 350, type: 'text' },
     
-    { id: 'taxLimit', label: 'Limit', width: 220, type: 'text' },
+   { id: 'taxLimit', label: 'Limit', width: 280, type: 'text' },
 
    
     // { id: '', width: 88 },
@@ -101,7 +100,6 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
   const handleTimeForm = () => {
     setShowForm(true);
     setOpenAddRoleConfig(true)
-    console.log('🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:', showForm);
   };
 
   const handleCloseAddRoleDilog = () =>{
@@ -110,16 +108,12 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
   }
 
   const [tableData, SetTableData] = useState({});
-  console.log('🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:', tableData);
 
   const defaultPayload = 
   {
     companyId:cmpId
     }
   const handleSelectChange = (field, value ,e) => {
-    // console.log('values:', value);
-    // console.log('event', event.target.value);
-    // setSelectedOption(value);
     console.log(field, value, 'valllllllllll');
     setValueSelected((prevData) => ({
       ...prevData,
@@ -140,7 +134,7 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
        configId:valueSelected?.configId,
        taxSection:valueSelected?.taxSection,
        taxScheme:valueSelected?.taxScheme,
-       taxLimit:valueSelected?.taxLimit
+       taxLimit:parseInt(valueSelected?.taxLimit)
        }
 
     const config = {
@@ -158,24 +152,21 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
-             setSnackbarSeverity('success');
-             setSnackbarMessage(response.data.message);
-             setSnackbarOpen(true);
-            //  setHitGetDepartment(!hitGetDepartment)
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          setIsReload(!isReload)
+          handleCloseEdit();
+         
           console.log('success',response);
         }else   if (response.data.code === 400) {
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-           //  setHitGetDepartment(!hitGetDepartment)
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          
          console.log('success',response);
        }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
          setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
+      
         console.log(error);
       });
   
@@ -200,24 +191,28 @@ const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
-             setSnackbarSeverity('success');
-             setSnackbarMessage(response.data.message);
-             setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+            //  setSnackbarSeverity('success');
+            //  setSnackbarMessage(response.data.message);
+            //  setSnackbarOpen(true);
+             setIsReload(!isReload)
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
         }else   if (response.data.code === 400) {
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+            // setSnackbarSeverity('error');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
            //  setHitGetDepartment(!hitGetDepartment)
          console.log('success',response);
        }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
          setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
+        //  setSnackbarSeverity('error');
+        //  setSnackbarMessage('Error Designation Adding . Please try again.');
+        //  setSnackbarOpen(true);
         console.log(error);
       });
   
@@ -260,7 +255,7 @@ const  deleteFunction =(rowdata, event)=>{
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
           
-          <ModalHeader  heading="Edit Designation Grade Config"/>
+          <ModalHeader  heading="Edit Tax Section Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -311,23 +306,41 @@ const  deleteFunction =(rowdata, event)=>{
 
        
       
-          <Button onClick={updateDepartment}>Update</Button>
             </Box>
           </DialogContent>
  
+         
+
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEdit}>
+         
+         <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        updateDepartment()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+        handleCloseEdit();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+     </DialogActions>
+            {/* <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
-            </Button>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              // loading={isSubmitting1}
-            >
-              Save
             </Button> */}
-          </DialogActions>
+          
+       
         </FormProvider>
       </Dialog>
     

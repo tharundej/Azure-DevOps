@@ -47,7 +47,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 export default function TimeForm({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -189,7 +189,7 @@ const getActivityName = async ()=>{
     console.log('uyfgv');
 
     try {
-      data.company_id = 'COMP2';
+      data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       data.activity_id =String( currentActivitytData.activityId);;
       data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));

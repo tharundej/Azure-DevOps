@@ -52,7 +52,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 
 
@@ -182,7 +182,10 @@ const actions = [
   // mui modal related
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>{
+    setOpen(false);
+    setApprove(initialApproveState);
+  }
 
   const style = {
     position: 'absolute',
@@ -263,7 +266,7 @@ const actions = [
       console.log(data, 'data111ugsghghh');
 
       const response = await axios.post(baseUrl+'onboarding', data).then(
-        (successData) => {
+        (res) => {
           console.log('sucess', successData);
         },
         (error) => {
@@ -283,23 +286,23 @@ const actions = [
   
 
 
-  const [approve, setApprove]= React.useState({ 
-    companyId:companyID,
-    employeeId:"",
-    expenseClaimId :"" ,
-    approverManagerId:employeeID,
-    approvedAmount:null,
-    status:"",
-    approverRemark:"",
-    claimAmount:"",
-    claimType:""
- 
-
-  })
+  const initialApproveState = {
+    companyId: companyID,
+    employeeId: "",
+    expenseClaimId: "",
+    approverManagerId: employeeID,
+    approvedAmount: null,
+    status: "",
+    approverRemark: "",
+    claimAmount: "",
+    claimType: ""
+  };
+  
+  const [approve, setApprove] = React.useState(initialApproveState);
 console.log(approve,"approve1233")
 const handleInputChange = (event) => {
   const { name, value } = event.target;
-  const parsedValue = name === "approvedAmount" ? parseFloat(value) : value;
+  const parsedValue = name === "approvedAmount" && value.trim() !== "" ? parseFloat(value) : null;
 
   setApprove((prevApprove) => ({
     ...prevApprove,
@@ -371,23 +374,19 @@ const handleInputChange = (event) => {
         // console.log(data, 'formdata api in check');
   
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
-          (successData) => {
-            console.log('sucess', successData);
-            // enqueueSnackbar(response?.data?.message,{variant:'success'})
+          (res) => {
+            console.log('sucess', res);
+            enqueueSnackbar(res?.data?.message,{variant:'success'})
           },
           (error) => {
             console.log('lllll', error);
-            // enqueueSnackbar(response?.data?.message,{variant:'error'})
+            enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
           }
         );
   
-        // await new Promise((resolve) => setTimeout(resolve, 500));
-        // reset();
-        // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-        // router.push(paths.dashboard.user.list);
-        // console.info('DATA', data);
+       
       } catch (error) {
-        // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
         // alert("api hit not done")
         console.error(error);
       }

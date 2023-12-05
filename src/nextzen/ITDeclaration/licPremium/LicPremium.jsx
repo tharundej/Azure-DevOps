@@ -22,7 +22,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FormProvider, useForm } from 'react-hook-form';
+
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -37,7 +37,25 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
+//form alidation 
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
+
+// Create a Yup schema for your form
+const schema = yup.object().shape({
+  policyNumber: yup.string().required('Policy Number is required'),
+  dateOfCommencementOfPolicy: yup.date().required('Date of Commencement is required'),
+  insuredPersonName: yup.string().required('Insured Person Name is required'),
+  sumOfAssured: yup.number().required('Sum of Assured is required'),
+  relationship: yup.string().required('Relationship is required'),
+  premiumAmountForwhichProofAssured: yup.number().required('Premium Amount is required'),
+  premiumAmountFallInDue: yup.number().required('Premium Amount Fall in Due is required'),
+  treatmentForSpecifiedDiseases: yup.string().required('Treatment for Specified Diseases is required'),
+  doesTheInjuredPersonHaveDisability: yup.string().required('Injured Person Disability is required'),
+});
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
@@ -62,6 +80,7 @@ const headings = [
 
 export default function LicPremium() {
  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+ const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
@@ -70,7 +89,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
 const [loading,setLoading] = useState(false);
  
-
   // const cmpName =localStorage.getItem('accessToken')
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
@@ -91,25 +109,42 @@ const [loading,setLoading] = useState(false);
     end_date: dayjs(new Date()),
   });
   const [selectedYear, setSelectedYear] = useState(null);
-  const [formData, setFormData] = useState({
-    companyId: cmpId,
-    companyName: '',
-    employeeId: empId,
-    employeeName: '',
-    financialYear:  selectedYear?.financialYear,
-    policyNumber: '',
-    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-    insuredPersonName: '',
-    sumOfAssured: '',
-    relationship: '',
-    premiumAmountForwhichProofAssured: '',
-    premiumAmountFallInDue: '',
-    premiumConsiderForDeduction: '',
-    treatmentForSpecifiedDiseases: '',
-    doesTheInjuredPersonHaveDisability: '',
-    fileName: [],
-    fileContent: [],
+  // const [formData, setFormData] = useState({
+  //   companyId: cmpId,
+  //   companyName: '',
+  //   employeeId: empId,
+  //   employeeName: '',
+  //   financialYear:  selectedYear?.financialYear,
+  //   policyNumber: '',
+  //   dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+  //   insuredPersonName: '',
+  //   sumOfAssured: '',
+  //   relationship: '',
+  //   premiumAmountForwhichProofAssured: '',
+  //   premiumAmountFallInDue: '',
+  //   premiumConsiderForDeduction: '',
+  //   treatmentForSpecifiedDiseases: '',
+  //   doesTheInjuredPersonHaveDisability: '',
+  //   fileName: [],
+  //   fileContent: [],
+  // });
+  //formvalidation 
+  const [formData, setFormData] = useState({}); // Your form data state
+  const methods = useForm({
+    resolver: yupResolver(schema),
   });
+
+  const {
+    reset,
+    watch,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log('uyfgv' ,data);})
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
@@ -121,7 +156,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   var [fileName , setFileName] = useState([])
   var [fileContent, setFileContent] = useState([])
  
-  const methods = useForm();
+
   const currentYear = new Date().getFullYear();
    console.log(currentYear ,"current year")
    const startYear = 2022;
@@ -140,7 +175,7 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       ...prevFormData,
       financialYear: value?.financialYear,
     }));
-   
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   // handling the file uploader compoent
@@ -305,9 +340,7 @@ const handleRentDeletedID = ( data)=>{
           setLoading(false)
           const rowsData = response?.data?.data;
           setPolicyData(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
+        
         }
       })
       .catch((error) => {
@@ -339,10 +372,11 @@ const handleRentDeletedID = ( data)=>{
       .then((response) => {
        
           if (response.data.status === 200) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            setSnackbarSeverity('success');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarSeverity('success');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             
             setISReloading(!isreloading);
             setFormData({
@@ -366,20 +400,22 @@ const handleRentDeletedID = ( data)=>{
             })
             getLicPremium()
           }else    if (response.data.status === 400) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarSeverity('error');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
           
       
           }
         }
       )
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Lic details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving Lic details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -388,9 +424,7 @@ const handleRentDeletedID = ( data)=>{
     setLoading(true)
     console.log(" i am calling fine info042" , formData)
     const payload = {
-      
-      
-                  licPremiumID: formData.licPremiumID,
+        licPremiumID: formData.licPremiumID,
                   companyID: formData.companyId,
                   employeeID: formData.employeeId,
                   employeeName: formData.employeeName,
@@ -430,10 +464,11 @@ const handleRentDeletedID = ( data)=>{
      
         console.log(response , "success")
           if(response.data.status === 200){
+            enqueueSnackbar(response.data.message,{variant:'success'})
             setLoading(false)
             console.log('success',response);
             setISReloading(!isreloading);
-            setSnackbarSeverity('success');
+            // setSnackbarSeverity('success');
             setFormData({
               companyId: cmpId,
               companyName: '',
@@ -453,18 +488,19 @@ const handleRentDeletedID = ( data)=>{
               fileName: [],
               fileContent: [],
             })
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             setIsEdit(false)
             getLicPremium()
           }
           else if(response.data.status === 400){
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
             console.log('success',response);
             // setISReloading(!isreloading);
-            setSnackbarSeverity('error');
+            // setSnackbarSeverity('error');
            
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
             // setIsEdit(false)
           }
          
@@ -472,11 +508,12 @@ const handleRentDeletedID = ( data)=>{
         }
       )
       .catch((error) => {
+        enqueueSnackbar(response.data.message,{variant:'success'})
         setLoading(false)
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response.message   );
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response.message   );
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -542,7 +579,7 @@ const handleRentDeletedID = ( data)=>{
     // }
   };
 
-  const handleSubmit = ()=>{
+  const handleSubmit1 = ()=>{
     isEdit ? editcDetails() :saveLicDetals()
   }
   const handleCancle = ()=>{
@@ -618,13 +655,23 @@ const handleRentDeletedID = ( data)=>{
     setIsEdit(false)
     
   }, [selectedYear?.financialYear ,isreloading]);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
      {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
-  <> <FormProvider {...methods}>
+  <>   
+   <FormProvider >
+
         <Grid container spacing={2} >
   
         <Grid  item xs={12}>
@@ -636,6 +683,7 @@ const handleRentDeletedID = ( data)=>{
               value={selectedYear}
               onChange={handleYearChange}
               renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              style={{marginTop:"0.9rem"}}
             />
        
                 </Grid>
@@ -654,6 +702,8 @@ const handleRentDeletedID = ( data)=>{
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
+                <span>{methods?.errors?.policyNumber?.message}</span>
+         
             </Grid>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -685,6 +735,8 @@ const handleRentDeletedID = ( data)=>{
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
               />
+                <span>{methods?.errors?.insuredPersonName?.message}</span>
+         
             </Grid>
           </Grid>
 
@@ -818,18 +870,19 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
-
+              
                 <Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
       Upload file
-      {/* <VisuallyHiddenInput type="file" /> */}
+  
     </Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={handleSubmit}>
-                  Save
+                <Button aclassName="button"  type="submit" 
+                 onClick={handleSubmit}
+                 >
+                  Save 
                 </Button>
+              
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleCancle}>Cancel</Button>
@@ -855,6 +908,8 @@ const handleRentDeletedID = ( data)=>{
           </Grid>
           </> : null}
         </Grid>
+        {/* </form> */}
+      </FormProvider>
 {policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
@@ -902,7 +957,7 @@ const handleRentDeletedID = ( data)=>{
             </TableBody>
           </Table>
         </TableContainer> :null}
-      </FormProvider>
+     
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

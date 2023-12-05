@@ -35,6 +35,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import {useSnackbar} from '../../../components/snackbar'
+
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
@@ -66,9 +68,10 @@ const cardData = [
 
 export default function MedicalPremium() {
   // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
-  const {user} = useContext(UserContext)
+
   // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
-  
+  const {enqueueSnackbar} = useSnackbar()
+  const {user} = useContext(UserContext)
     const empId =  (user?.employeeID)?user?.employeeID:''
     const cmpId= (user?.companyID)?user?.companyID:''
   const roleId = (user?.roleID)?user?.roleID:''
@@ -134,6 +137,7 @@ export default function MedicalPremium() {
    const [selectedYear, setSelectedYear] = useState(null);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   const attchementHandler = () => {
@@ -271,10 +275,11 @@ export default function MedicalPremium() {
       .then((response) => {
        
         if (response.data.code === 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           
           setISReloading(!isreloading);
           setFormData({
@@ -293,20 +298,22 @@ export default function MedicalPremium() {
           })
      
         }else    if (response.data.code === 400) {
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         
     
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -342,7 +349,7 @@ export default function MedicalPremium() {
       maxBodyLength: Infinity,
       // url: baseUrl +'updateMedicalInsuranceDetails',
       url: baseUrl+'/updateMedicalInsuranceDetails',
-      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
       headers: {
         Authorization:
        token,
@@ -357,10 +364,11 @@ export default function MedicalPremium() {
        
 
         if (response.data.code === 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           
           setISReloading(!isreloading);
           setFormData({
@@ -379,27 +387,22 @@ export default function MedicalPremium() {
           })
      
         }else    if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         
     
         }
-        // if (response.data. === 200) {
-        //   setISReloading(!isreloading);
-        //   setSnackbarSeverity('success');
-        //   setSnackbarMessage('Medical Insurance  Updated successfully!');
-        //   setSnackbarOpen(true);
-        //   console.log('success');
-          
-        // }
+      
       })
       .catch((error) => {
-        setLoading(false)
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        setLoading(false) 
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -612,29 +615,21 @@ export default function MedicalPremium() {
     fetchData();
     
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
    {    loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
@@ -645,6 +640,7 @@ export default function MedicalPremium() {
           getOptionLabel={(option) => option.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
+          style={{marginTop:"0.9rem"}}
           renderInput={(params) => <TextField {...params} label="PLease Select Financial Year" />}
         />
       </Grid>

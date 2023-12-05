@@ -11,7 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../src/components/hook-form'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from 'src/api/BaseURL';
@@ -20,7 +20,7 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import {useSnackbar} from '../../../components/snackbar';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
-export default function AddProject({handleClose,title,rowData}){
+export default function AddProject({handleClose,title,rowData,getTableData}){
 
     console.log(rowData,"rowdataa")
     const {enqueueSnackbar} = useSnackbar();
@@ -76,13 +76,11 @@ export default function AddProject({handleClose,title,rowData}){
 
 const projectManagersData= {
   companyId:user?.companyID,
-  locationId:'',
   roleId:6
 };
 
 const reportingManagersData={
   companyId:user?.companyID,
-  locationId:'',
   roleId:7
 }
 const getReportingManagers = async (requestData) => {
@@ -95,11 +93,9 @@ const getReportingManagers = async (requestData) => {
 }
 const fetchReportingManagers = async () => {
   try {
-    {console.log(selectedLocationID,"selectedlocationnnn")}
-    reportingManagersData.locationId = parseInt(selectedLocationID) || parseInt(selectedLocationID?.locationID)||null;
+  
     const reportingManagersData1 = await getReportingManagers(reportingManagersData);
     setReportingManagerData(reportingManagersData1)
-    projectManagersData.locationId = parseInt(selectedLocationID) ||parseInt(selectedLocationID?.locationID)||null;
     const reportingManagersData2 = await getReportingManagers(projectManagersData);
     setProjectManagers(reportingManagersData2)
   } 
@@ -139,6 +135,7 @@ const onSubmit = handleSubmit(async (data) => {
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
+          getTableData()
           handleClose()
           reset()
         },
@@ -153,14 +150,10 @@ const onSubmit = handleSubmit(async (data) => {
     }
 });
 
-if ((selectedLocationID !== null && !hasFetchedData) || (selectedLocationID === rowData?.locationId && !hasFetchedData)) {
-    fetchReportingManagers();
-    setHasFetchedData(true); // Update the state to mark that data has been fetched
-  }
-  
 {console.log(selectedLocationID,"Selectedlocation")}
   useEffect(()=> {
     getLocation()
+    fetchReportingManagers()
   },[])
   const [selectedReportingManager, setSelectedReportingManager] = useState(null);
   const [selectedProjectManager, setSelectedProjectManager] = useState(null);

@@ -60,11 +60,24 @@ const bull = (
 
 export default function HrITTab() {
   const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
-  const { user } = useContext(UserContext);
-  console.log(user, 'userDetails ');
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+
+ 
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
+const [loading,setLoading] = useState(false);
+ 
+
+  const [reload, setREload] = useState(false);
+  const [financialYears, setFinancialYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const handleYearChange = (_, value) => {
+   setSelectedYear(value);
+   localStorage.setItem('selectedYear', JSON.stringify(value));
+ };
   const TABLE_HEAD = [
     { id: 'employeeID', label: 'Employee Id ', width: 180, type: 'text' },
 
@@ -72,7 +85,7 @@ export default function HrITTab() {
     { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
     { id: 'declaration', label: 'Declaration', width: 220, type: 'bool' },
     { id: 'rentDetails', label: 'Rent Details', width: 220, type: 'bool' },
-    { id: 'licPremium', label: 'Lic Details', width: 220, type: 'bool' },
+    { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
     { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
     { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
     { id: 'status', label: 'Status', width: 220, type: 'bool' },
@@ -98,6 +111,22 @@ export default function HrITTab() {
   const [open, setOpen] = useState(false);
 
   const [expanded, setExpanded] = React.useState(false);
+
+  const [declaationrMessage, setDeclaationrMessage] = useState('');
+  const [rentMessage, setRentMessage] = useState('');
+  const [LicrMessage, setLicrMessage] = useState('');
+  const [medicalMessage, setMedicalMessage] = useState('');
+ const [houseMessage, setHouseMessage] = useState('');
+
+ const [message ,setMessage] = useState({
+  "declaationrMessage":"",
+"rentMessage":'',
+"licrMessage":"",
+"houseMessage":'',
+"medicalMessage":"",
+
+
+})
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -140,9 +169,9 @@ export default function HrITTab() {
   const defaultPayload = {
     count: 5,
     page: 0,
-    search: 'INFO57',
-    companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    financialYear: '2023-2024',
+    search: '',
+    companyID: cmpId,
+    financialYear: selectedYear?.financialYear,
     externalFilters: {
       fPDesignationName: '',
       fDepartmentName: '',
@@ -164,53 +193,12 @@ export default function HrITTab() {
     console.log('submitted data111', data);
   };
 
-  const updateDepartment = async (data) => {
-    const payload = {
-      departmentID: valueSelected?.departmentID,
-      departmentName: valueSelected?.departmentName,
-      designationName: valueSelected?.designationName,
-      designationGradeName: valueSelected?.designationGradeName,
 
-      designation_id: valueSelected?.designationID,
-
-      designation_grade_id: valueSelected?.designationGradeID,
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      //    url: baseUrl + '/updateSingleDepartmentInfo ',
-      url: baseUrl + '/updateSingleDepartmentInfo',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Designation Added successfully!');
-          setSnackbarOpen(true);
-          //  setHitGetDepartment(!hitGetDepartment)
-          console.log('success', response);
-        }
-      })
-      .catch((error) => {
-        setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
-        console.log(error);
-      });
-  };
   const getEmpItDetails = async (data) => {
     const payload = {
-      employeeID: 'INFO57',
-      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      financialYear: '2023-2024',
+      employeeID: empId,
+      companyID: cmpId,
+      financialYear: selectedYear?.financialYear,
     };
 
     const config = {
@@ -271,6 +259,115 @@ export default function HrITTab() {
     // Handle document click logic (e.g., open a modal to display the document)
     console.log('Document clicked:', document);
   };
+
+
+  const approveHnadler = async (type) => {
+    
+
+    const payload ={
+      declarationDetailsComments: message?.declaationrMessage,
+      housingPropertyDetailsComments: message?.houseMessage,
+      licDataComments: message?.licrMessage,
+      medicalDataComments: message?.medicalMessage,
+      RentDetailsComments: message?.rentMessage,
+      companyID: cmpId,
+      EmployeeID: empId,
+      financialYear: selectedYear?.financialYear,
+      status: type
+  }
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl +'/ItApprove',
+      headers: {
+        Authorization:
+         token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+
+  
+    const result = await axios
+      .request(config)
+      .then((response) => {
+       
+          if (response.data.status === 200) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
+            setLoading(false)
+        
+          }else    if (response.data.status === 400) {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
+            setLoading(false)
+            // setSnackbarSeverity('error');
+            // setSnackbarMessage(response.data.message);
+            // setSnackbarOpen(true);
+          
+      
+          }
+        }
+      )
+      .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+     
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+
+  const handleMessage = (event) => {
+    const { name, value } = event.target;
+  
+
+    setMessage({ ...message, [name]: value });
+    console.log(message);
+  };
+
+  const getFinancialYear = async () => {
+    setLoading(true)
+    const payload = {
+      companyID: cmpId,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setLoading(false)
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
+    };
+    fetchData();
+    
+  }, []);
+  useEffect(() => {
+  console.log("")
+    
+  }, [selectedYear?.financialYear])
   return (
     <>
       {showForm && (
@@ -361,6 +458,23 @@ export default function HrITTab() {
                       </TableBody>
                     </Table>
                   </TableContainer>
+                
+                    <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+     {' '}
+     <Grid item xs={4}>
+              <TextField
+                label="Comment "
+                variant="outlined"
+                fullWidth
+                name="declaationrMessage"
+                value={message?.declaationrMessage}
+                // onChange={(e) => handleFormChange(e, rowIndex)}
+                onChange={handleMessage}
+              />
+            </Grid>
+  
+  
+   </div>
                 </AccordionDetails>
               </Accordion>
               <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
@@ -459,6 +573,22 @@ export default function HrITTab() {
                       </Grid>
                     </Grid>
                   )}
+                                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+     {' '}
+     <Grid item xs={4}>
+              <TextField
+                label="Comment "
+                variant="outlined"
+                fullWidth
+                name="rentMessage"
+                value={message?.rentMessage}
+                // onChange={(e) => handleFormChange(e, rowIndex)}
+                onChange={handleMessage}
+              />
+            </Grid>
+  
+  
+   </div>
                 </AccordionDetails>
               </Accordion>
               <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -521,6 +651,22 @@ export default function HrITTab() {
                       ))}
                     </Grid>
                   )}
+                                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+     {' '}
+     <Grid item xs={4}>
+              <TextField
+                label="Comment "
+                variant="outlined"
+                fullWidth
+                name="licrMessage"
+                value={message?.licrMessage}
+                // onChange={(e) => handleFormChange(e, rowIndex)}
+                onChange={handleMessage}
+              />
+            </Grid>
+   
+  
+   </div>
                 </AccordionDetails>
               </Accordion>
               <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
@@ -532,7 +678,7 @@ export default function HrITTab() {
                   <Typography>Housing Property Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {itDetails?.housingPropertyDetails[0] && (
+                  {itDetails?.housingPropertyDetails && itDetails.housingPropertyDetails.length > 0 && (
                     <Grid container spacing={2}>
                       {Object.entries(itDetails.housingPropertyDetails[0]).map(([key, value]) => (
                         <React.Fragment key={key}>
@@ -571,6 +717,22 @@ export default function HrITTab() {
                       </Grid>
                     </Grid>
                   )}
+                                        <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+     {' '}
+     <Grid item xs={4}>
+              <TextField
+                label="Comment "
+                variant="outlined"
+                fullWidth
+                name="houseMessage"
+                value={message?.houseMessage}
+                // onChange={(e) => handleFormChange(e, rowIndex)}
+                onChange={handleMessage}
+              />
+            </Grid>
+     
+  
+   </div>
                 </AccordionDetails>
               </Accordion>
 
@@ -632,6 +794,23 @@ export default function HrITTab() {
                       ))}
                     </Grid>
                   )}
+
+<div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+     {' '}
+     <Grid item xs={4}>
+              <TextField
+                label="Comment "
+                variant="outlined"
+                fullWidth
+                name="medicalMessage"
+                value={message?.medicalMessage}
+                // onChange={(e) => handleFormChange(e, rowIndex)}
+                onChange={handleMessage}
+              />
+            </Grid>
+    
+  
+   </div>
                 </AccordionDetails>
               </Accordion>
 
@@ -648,10 +827,20 @@ export default function HrITTab() {
             color="primary"
             sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
-                AddTaxConfiguration()
+              approveHnadler("approve")
             }}
           >
             Approve
+          </Button>
+          <Button
+            variant="outlined"
+            // color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+              approveHnadler("onHold")
+            }}
+          >
+           On Hold
           </Button>
           <Button
             sx={{ float: 'right', right: 15 }}
@@ -683,7 +872,22 @@ export default function HrITTab() {
         </Button> */}
       </Container>
 
-      <BasicTable
+      <Grid  item xs={12}>
+            
+            <Autocomplete
+              id="financialYear"
+              options={financialYears}
+              getOptionLabel={(option) => option.financialYear}
+              value={selectedYear}
+              onChange={handleYearChange}
+              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              style={{marginTop:"0.9rem" ,marginBottom :"0.9rem" }}
+            />
+       
+                </Grid>
+  {   selectedYear?.financialYear && (
+        
+        <BasicTable
         headerData={TABLE_HEAD}
         defaultPayload={defaultPayload}
         endpoint="/ItDeclarationDetailsHr"
@@ -691,7 +895,7 @@ export default function HrITTab() {
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="HrTabFilter"
-      />
+      />)}
     </>
   );
 }

@@ -28,7 +28,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import Stack from '@mui/material/Stack';
 import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 const MyTimeSheet = ({currentUser,filterSearch}) => {
     const TABLE_HEAD = [
 
@@ -167,7 +167,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     console.log('uyfgv');
 
     try {
-      data.company_id = 'COMP2';
+      data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       data.activity_id =String( currentActivitytData.activityId);;
       data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
@@ -456,6 +456,7 @@ PaperProps={{
 }}
 
          >
+          <ModalHeader heading="ADD  TIMELINE "/>
       <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
       <DialogContent>
       <Box
@@ -469,9 +470,9 @@ PaperProps={{
               >
 
 <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'8px'}}>
-                ADD YOUR TIMELINE TO PROJECT IS HERE .....
-              </Typography>
+              {/* <Typography sx={{marginLeft:'8px'}}>
+                ADD  TIMELINE 
+              </Typography> */}
               <Typography sx={{marginLeft:'8px'}}>
                 Time Sheet
               </Typography>
@@ -563,10 +564,10 @@ PaperProps={{
             
              <DialogActions>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Add  Timeline'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}  onClick={handleCloseEdit}>Cancel</Button>
+                <Button  onClick={handleCloseEdit}>Cancel</Button>
               </Stack>
              </DialogActions>
            

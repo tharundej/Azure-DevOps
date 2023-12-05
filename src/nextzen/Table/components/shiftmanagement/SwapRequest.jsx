@@ -11,6 +11,7 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
+import ApproveSwap from './ApproveSwap';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -28,23 +29,9 @@ export default function Swaprequest() {
    
       const TABLE_HEAD = [
 
-        {
+      
     
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
-    
-        { id: "employeeShiftSwapId", label: "Employe Shift Swap ID", width: 180, type: "text" },
+        { id: "employeeShiftSwapId", label: "Employee Shift Swap ID", width: 180, type: "text" },
 
         { id: "employeeName", label: "Employee Name", width: 180, type: "text" },
         { id: "fromShiftGroup", label: "From Shift Group", width: 180, type: "text" },
@@ -57,7 +44,7 @@ export default function Swaprequest() {
         { id: "requestDate", label: "Request Date", width: 100, type: "text" },
         // { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
         { id: "startDate", label: "Start Date", width: 100, type: "text" },
-        { id: "endDate", label: "End Date", width: 100, type: "text" },
+        // { id: "endDate", label: "End Date", width: 100, type: "text" },
         { id: "comment", label: "Comment", width: 100, type: "text" },
         
         { id: "status", label: "Status", width: 100, type: "badge" },
@@ -67,30 +54,61 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "companyId":"COMP2",
-      "count":5,
+      "companyId":localStorage.getItem('companyID'),
+      "supervisorId":"ibm5",
+      "count":7,
       "page":0,
       "search":"",
-      "externalFilter":{
-      "requestDate":"",
-      "startDate":"",
-      "endDate":"",
+      "externalFilters":{
+      "requestDate":{
+      "fromRequestDate":"",
+      "toRequestDate":""
+      },
+      "startDate":{
+      "fromStartDate":"",
+      "toStartDate":""
+      },
       "status":""
   }, 
       "sort":{
       "key":0,
-      "order":""
+      "order":"employeeName"
   }
   }
-      const actions = [
+
+  
+ const [approveShow  , setApproveShow]= useState(false)
+//  const ApproveClose = ()=> setApproveShow(false)
+const ApproveClose =() =>{
+  setApproveShow(false)
+}
+ const [rowData,setRowData]= useState([])
+ const [status,setStatus]= useState()
+  const onClickActions=(rowdata,event)=>{
+    if(event?.name==="Approve"){
+      setApproveShow(true)
+      setRowData(rowdata)
+      setStatus(event.id)
+      
+    }
+    else if(event?.name==="Reject"){
+      setApproveShow(true)
+      setStatus(event.id)
+      
+    }
+  }
+
+  const handleApproveAPICALL= (rowdata,event)=>{
     
-        { name: "approve", icon: "hh", path: "jjj" },
+
+  } 
+  const actions = [
     
-        { name: "view", icon: "hh", path: "jjj" },
-    
-        { name: "eerr", icon: "hh", path: "jjj" },
-    
-      ];
+    { name: "Approve",  icon: "charm:circle-tick", id: "Approve", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+
+    { name: "Reject", icon: "charm:circle-cross", id: "Reject", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
+
+  ];
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -102,7 +120,22 @@ export default function Swaprequest() {
     
   return (
     <>
-      {showForm && (
+    {
+      approveShow &&
+      <Dialog
+      fullWidth
+      maxWidth={false}
+      open={approveShow}
+      onClose={ApproveClose}
+      PaperProps={{
+        sx:{maxWidth:700, overflow:"hidden"}
+      }}
+      className="custom-dialog" 
+      >
+        <ApproveSwap currentUser={{}} ApproveClose={ApproveClose} status={status} rowData={rowData}   />
+         </Dialog>
+    }
+      {/* {showForm && (
  <Dialog
  fullWidth
  maxWidth={false}
@@ -115,7 +148,7 @@ export default function Swaprequest() {
 >
  <AssignShift currentUser={{}} />
       </Dialog>
-    )}
+    )} */}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}
@@ -129,7 +162,8 @@ headerData={TABLE_HEAD}
 endpoint='/getallSwapDetails'
 bodyData='data'
 rowActions={actions}
-filterName='RequestSwapSerachFilter'
+onClickActions={onClickActions}
+filterName='SwapRequestSearchFilter'
 />  
     </>
   );
