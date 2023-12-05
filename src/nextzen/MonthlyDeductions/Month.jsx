@@ -53,8 +53,6 @@ export default function Month() {
       }
      
     });
-    arrLabels.push('My Requests');
-    arrContents.push(<Requests key="myRequest" />)
     setTabLabels(arrLabels);
     setTabContents(arrContents);
   }, [user]);
