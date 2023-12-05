@@ -21,10 +21,10 @@ const OrderPreview = ({ currentData, handleClose }) => {
   };
   return (
     <div style={{ padding: 20, margin: 'auto' }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom style={{ textAlign: 'center' }}>
         Purchase Order Details
       </Typography>
-      <Grid container spacing={3} style={{ marginBottom: 20 }}>
+      <Grid container spacing={3} style={{ marginBottom: 20, marginTop: 10 }}>
         <Grid item xs={6}>
           <Typography variant="h5" gutterBottom>
             Vendor Details
@@ -115,8 +115,10 @@ const OrderPreview = ({ currentData, handleClose }) => {
                   </TableRow>
                 ))}
               <TableRow>
-                <TableCell colSpan={6} component="th"></TableCell>
-                <TableCell component="th">Grand Total</TableCell>
+                <TableCell colSpan={5} component="th"></TableCell>
+                <TableCell colSpan={2} component="th">
+                  Grand Total
+                </TableCell>
                 <TableCell component="th">{currentData.grandTotalAmount}</TableCell>
               </TableRow>
             </TableBody>

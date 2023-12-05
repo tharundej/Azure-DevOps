@@ -87,6 +87,7 @@ const PurchaseOrderTable = () => {
   const handleClose = () => {
     setEditShowForm(false);
     setViewShowForm(false);
+    setPreviewShowForm(false);
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
