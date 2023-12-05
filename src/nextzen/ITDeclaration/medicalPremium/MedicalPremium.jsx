@@ -94,7 +94,7 @@ export default function MedicalPremium() {
   ];
   const [isreloading, setISReloading] = useState(false);
   const policyCItizenshipType = [{ type: 'Normal' }, { type: 'Senior Citizen' }];
-  const payMode = [{ type: 'Cahs ' }, { type: 'Other Than Cash' }];
+  const payMode = [{ type: 'Cash ' }, { type: 'Other Than Cash' }];
   const [medicalTableData, setMedicalTableData] = useState([]);
   const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
   const [formData, setFormData] = useState({
@@ -246,7 +246,7 @@ export default function MedicalPremium() {
       employeeID: empId,
       type: formData?.type,
       policyNumber: formData?.policyNumber,
-      dateOfCommencementOfPolicy: '2023-10-15',
+      dateOfCommencementOfPolicy: formData?.dateOfCommencementOfPolicy,
       insuredPersonName: formData?.insuredPersonName,
       relationshipType: formData?.relationshipType,
       payMode: formData?.payMode,
@@ -273,14 +273,12 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-       
-        if (response.data.code === 200) {
-          enqueueSnackbar(response.data.message,{variant:'success'})
+       console.log(response.data ,"responseresponse"  )
+        if (response?.data?.statusCode=== "200") {
+          console.log("i am comming here")
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
           setLoading(false)
-          // setSnackbarSeverity('success');
-          // setSnackbarMessage(response.data.message);
-          // setSnackbarOpen(true);
-          
+       
           setISReloading(!isreloading);
           setFormData({
             companyID: cmpId,
@@ -297,8 +295,8 @@ export default function MedicalPremium() {
             documents: [],
           })
      
-        }else    if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+        }else    if (response?.data?.StatusCode === 400) {
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
           setLoading(false)
           // setSnackbarSeverity('error');
           // setSnackbarMessage(response.data.message);
@@ -308,7 +306,8 @@ export default function MedicalPremium() {
         }
       })
       .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        console.log("catch calling")
+        // enqueueSnackbar(error?.message,{variant:'error'})
         setLoading(false)
         setOpen(true);
         // setSnackbarSeverity('error');
@@ -363,8 +362,8 @@ export default function MedicalPremium() {
       .then((response) => {
        
 
-        if (response.data.code === 200) {
-          enqueueSnackbar(response.data.message,{variant:'success'})
+        if (response?.data?.statusCode === "200") {
+          enqueueSnackbar(response?.message,{variant:'success'})
           setLoading(false)
           // setSnackbarSeverity('success');
           // setSnackbarMessage(response.data.message);
@@ -386,8 +385,9 @@ export default function MedicalPremium() {
             documents: [],
           })
      
-        }else    if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+        }else    if (response?.data?.StatusCode=== 400) {
+          enqueueSnackbar(response?.message,{variant:'error'})
+          setLoading(false)
           // setSnackbarSeverity('error');
           // setSnackbarMessage(response.data.message);
           // setSnackbarOpen(true);
@@ -397,7 +397,7 @@ export default function MedicalPremium() {
       
       })
       .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar(response?.message,{variant:'error'})
         setLoading(false) 
         setOpen(true);
         // setSnackbarSeverity('error');
@@ -636,12 +636,15 @@ export default function MedicalPremium() {
           <Grid item xs={12}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
           value={selectedYear}
           onChange={handleYearChange}
           style={{marginTop:"0.9rem"}}
-          renderInput={(params) => <TextField {...params} label="PLease Select Financial Year" />}
+          renderInput={(params) => <TextField {...params}
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
         />
       </Grid>
     { selectedYear?.financialYear && !loading? <>

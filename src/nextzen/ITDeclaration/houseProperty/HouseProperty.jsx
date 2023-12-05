@@ -74,7 +74,7 @@ export default function HouseProperty() {
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
-
+const payMode = [{ type: 'Yes ' }, { type: 'No' }];
 const [loading,setLoading] = useState(false);
  
 
@@ -188,7 +188,7 @@ const [loading,setLoading] = useState(false);
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
       url: baseUrl + '/getHousingProperty',
-
+// url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getHousingProperty",
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',
@@ -425,6 +425,19 @@ const [loading,setLoading] = useState(false);
       setSelectedYear(parsedValue);
     }
   }, []);
+  const handleAutocompleteChange = (name, selectedValue) => {
+    let mappedValue;
+
+    if (selectedValue === 'Yes') {
+      mappedValue = 1;
+    } else if (selectedValue === 'No') {
+      mappedValue = 0;
+    } else {
+      mappedValue = selectedValue;
+    }
+
+    setFormData({ ...formData, [name]: mappedValue });
+  };
   return (
     <div>
   {    loading ? 
@@ -443,12 +456,15 @@ const [loading,setLoading] = useState(false);
         <Grid item xs={12}>
             <Autocomplete
               id="financialYear"
-              options={financialYears}
-              getOptionLabel={(option) => option.financialYear}
+              options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
               value={selectedYear}
               onChange={handleYearChange}
               style={{marginTop:"0.9rem"}}
-              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              renderInput={(params) => <TextField {...params} 
+              label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
             />
           </Grid>
   {selectedYear?.financialYear?
@@ -567,15 +583,17 @@ const [loading,setLoading] = useState(false);
               />
             </Grid>
             <Grid item xs={4}>
-              {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
-              <TextField
-                label="Is The Property Self Occupied Or Let out?[See Notebelow]"
-                name="isPropertySelfOccupiedOrLetOu"
-                value={formData.isPropertySelfOccupiedOrLetOu}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
+            
+                <Autocomplete
+                  disablePortal
+                  name="isPropertySelfOccupiedOrLetOu"
+                  id="combo-box-demo"
+                  options={payMode.map((employeepayType) => employeepayType.type)}
+                  value={formData.payMode}
+                  onChange={(event, newValue) => handleAutocompleteChange('isPropertySelfOccupiedOrLetOu', newValue)}
+                  // sx={{ width: 300 }}
+                  renderInput={(params) => <TextField {...params} label="Self Occupied Property" />}
+                />
             </Grid>
           </Grid>
 
@@ -584,7 +602,7 @@ const [loading,setLoading] = useState(false);
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
-                label="IF Joint Property, Then Enter The Share Of Intrest[%]"
+                label="IF Joint Property,Enter Share[%]"
                 name="ifJointPropertyThenEnterInterestRate"
                 value={formData.ifJointPropertyThenEnterInterestRate}
                 onChange={handleChange}

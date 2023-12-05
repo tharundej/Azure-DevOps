@@ -44,18 +44,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 
-// Create a Yup schema for your form
-const schema = yup.object().shape({
-  policyNumber: yup.string().required('Policy Number is required'),
-  dateOfCommencementOfPolicy: yup.date().required('Date of Commencement is required'),
-  insuredPersonName: yup.string().required('Insured Person Name is required'),
-  sumOfAssured: yup.number().required('Sum of Assured is required'),
-  relationship: yup.string().required('Relationship is required'),
-  premiumAmountForwhichProofAssured: yup.number().required('Premium Amount is required'),
-  premiumAmountFallInDue: yup.number().required('Premium Amount Fall in Due is required'),
-  treatmentForSpecifiedDiseases: yup.string().required('Treatment for Specified Diseases is required'),
-  doesTheInjuredPersonHaveDisability: yup.string().required('Injured Person Disability is required'),
-});
+
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
@@ -77,8 +66,50 @@ const headings = [
   'Action',
 ];
 
-
+const validationSchema = yup.object().shape({
+  policyNumber: yup.string().required('Policy Number is required'),
+  dateOfCommencementOfPolicy: yup.date().required('Date of Commencement is required'),
+  insuredPersonName: yup.string().required('Insured Person Name is required'),
+  sumOfAssured: yup
+  .number('Sum of Assured must be a number')
+  .typeError('Sum of Assured must be a number')
+  .required('Sum of Assured is required')
+  .nullable(),
+  relationship: yup.string().required('Relationship is required'),
+  premiumAmountForwhichProofAssured: yup.number().required('Premium Amount is required'),
+  premiumAmountFallInDue: yup.number().required('Premium Amount Fall in Due is required'),
+  treatmentForSpecifiedDiseases: yup.string().required('Treatment for Specified Diseases is required'),
+  doesTheInjuredPersonHaveDisability: yup.string().required('Injured Person Disability is required'),
+  // Add more fields and validation rules as needed
+});
 export default function LicPremium() {
+
+  // Create a Yup schema for your form
+const mySchema = yup.object().shape({
+  policyNumber: yup.number().required("Error"),
+  dateOfCommencementOfPolicy: yup.date().required('Date of Commencement is required'),
+  insuredPersonName: yup.number().required('Insured Person Name is required'),
+  sumOfAssured: yup.number().required('Sum of Assured is required'),
+  relationship: yup.string().required('Relationship is required'),
+  premiumAmountForwhichProofAssured: yup.number().required('Premium Amount is required'),
+  premiumAmountFallInDue: yup.number().required('Premium Amount Fall in Due is required'),
+  treatmentForSpecifiedDiseases: yup.string().required('Treatment for Specified Diseases is required'),
+  doesTheInjuredPersonHaveDisability: yup.string().required('Injured Person Disability is required'),
+});
+
+const methods = useForm({
+  resolver: yupResolver(validationSchema),
+  defaultValues: {
+    policyNumber: '',
+    // Initialize other fields with default values
+  },
+});
+const { register, handleSubmit, control, formState: { errors } } = methods;
+
+const onSubmit = (data) => {
+  // Handle form submission
+  console.log("datadatadata",data);
+};
  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
@@ -109,42 +140,68 @@ const [loading,setLoading] = useState(false);
     end_date: dayjs(new Date()),
   });
   const [selectedYear, setSelectedYear] = useState(null);
-  // const [formData, setFormData] = useState({
-  //   companyId: cmpId,
-  //   companyName: '',
-  //   employeeId: empId,
-  //   employeeName: '',
-  //   financialYear:  selectedYear?.financialYear,
-  //   policyNumber: '',
-  //   dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-  //   insuredPersonName: '',
-  //   sumOfAssured: '',
-  //   relationship: '',
-  //   premiumAmountForwhichProofAssured: '',
-  //   premiumAmountFallInDue: '',
-  //   premiumConsiderForDeduction: '',
-  //   treatmentForSpecifiedDiseases: '',
-  //   doesTheInjuredPersonHaveDisability: '',
-  //   fileName: [],
-  //   fileContent: [],
-  // });
-  //formvalidation 
-  const [formData, setFormData] = useState({}); // Your form data state
-  const methods = useForm({
-    resolver: yupResolver(schema),
+  const [formData, setFormData] = useState({
+    companyId: cmpId,
+    companyName: '',
+    employeeId: empId,
+    employeeName: '',
+    financialYear:  selectedYear?.financialYear,
+    policyNumber: '',
+    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForwhichProofAssured: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseases: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
   });
+  //formvalidation 
+  // const [formData, setFormData] = useState({}); 
+  // const methods = useForm({
+  //   resolver: yupResolver(mySchema),
+  //   // defaultValues,
+  // });
+  // const {
+  //   reset,
+  //   watch,
+  //   control,
+  //   setValue,
+  //   handleSubmit,
+  //   formState: { isSubmitting },
+  // } = methods;
+ 
 
-  const {
-    reset,
-    watch,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  // const onSubmit = handleSubmit( (data ,event ) => {
+  //   event.preventDefault()
+  //   console.log("calling me finen")
+  //   console.log('uyfgv' ,data);
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv' ,data);})
+  // })
+
+  // const onSubmit4 = handleSubmit(async (data) => {
+  //   console.log('uyfgv' ,data);})
+
+
+  // const validationSchema = yup.object().shape({
+  //   policyNumber: yup.string().required('Policy Number is required')
+  //   // .matches(/your_regex_pattern/, 'Invalid Policy Number'),
+  //   // Add other fields and their validation rules
+  // });
+  
+
+    // const methods = useForm({
+    //   resolver: yupResolver(validationSchema),
+    // });
+    // const { handleSubmit, register, formState: { errors } } = methods;
+    // const onSubmit = handleSubmit(async (data) => {
+    //   // Your logic for handling form submission
+    //   console.log('Form data:', data);
+    //   // Additional logic like making API calls, updating state, etc.
+    // });
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
@@ -370,15 +427,11 @@ const handleRentDeletedID = ( data)=>{
     const result = await axios
       .request(config)
       .then((response) => {
-       
+       console.log(response ,"responseresponse")
           if (response.data.status === 200) {
-            enqueueSnackbar(error.response.data.message,{variant:'error'})
+            enqueueSnackbar(response.data.message,{variant:'success'})
             setLoading(false)
-            // setSnackbarSeverity('success');
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
-            
-            setISReloading(!isreloading);
+           setISReloading(!isreloading);
             setFormData({
               companyId: cmpId,
               companyName: '',
@@ -399,26 +452,19 @@ const handleRentDeletedID = ( data)=>{
               fileContent: [],
             })
             getLicPremium()
-          }else    if (response.data.status === 400) {
-            enqueueSnackbar(error.response.data.message,{variant:'error'})
+          }else    if (response.data.code === 400) {
+            enqueueSnackbar(response.data.message,{variant:'error'})
             setLoading(false)
-            // setSnackbarSeverity('error');
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
-          
-      
+
           }
         }
       )
       .catch((error) => {
         enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
-        // setSnackbarSeverity('error');
-        // setSnackbarMessage('Error saving Lic details. Please try again.');
-        // setSnackbarOpen(true);
+ 
         console.log(error);
       });
-    //  console.log(result, 'resultsreults');
   };
   const editcDetails = async () => {
     setLoading(true)
@@ -488,20 +534,15 @@ const handleRentDeletedID = ( data)=>{
               fileName: [],
               fileContent: [],
             })
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
+          
             setIsEdit(false)
             getLicPremium()
           }
           else if(response.data.status === 400){
-            enqueueSnackbar(error.response.data.message,{variant:'error'})
+            enqueueSnackbar(response.data.message,{variant:'error'})
+            setLoading(false)
             console.log('success',response);
-            // setISReloading(!isreloading);
-            // setSnackbarSeverity('error');
-           
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
-            // setIsEdit(false)
+            
           }
          
           
@@ -511,12 +552,8 @@ const handleRentDeletedID = ( data)=>{
         enqueueSnackbar(response.data.message,{variant:'success'})
         setLoading(false)
         setOpen(true);
-        // setSnackbarSeverity('error');
-        // setSnackbarMessage(response.message   );
-        // setSnackbarOpen(true);
         console.log(error);
       });
-    //  console.log(result, 'resultsreults');
   };
 
 
@@ -570,16 +607,11 @@ const handleRentDeletedID = ( data)=>{
     treatmentForSpecifiedDiseases: rowData.treatmentForSpecifiedDiseases,
     doesTheInjuredPersonHaveDisability: rowData.doesTheInjuredPersonHaveDisability,
  
-      // Add other fields as needed
     });
 
-    // Set the attached documents if available
-    // if (rowData.documents && rowData.documents.length > 0) {
-    //   setMedicalTableDataDoc([...rowData.documents]);
-    // }
   };
 
-  const handleSubmit1 = ()=>{
+  const handleSubmit10 = ()=>{
     isEdit ? editcDetails() :saveLicDetals()
   }
   const handleCancle = ()=>{
@@ -664,25 +696,31 @@ const handleRentDeletedID = ( data)=>{
       setSelectedYear(parsedValue);
     }
   }, []);
-  console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
   return (
     <div>
      {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <>   
-   <FormProvider >
+   <FormProvider 
+   methods={methods} 
+  //  onSubmit={onSubmit}
+   >
 
+   <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2} >
   
         <Grid  item xs={12}>
             
             <Autocomplete
               id="financialYear"
-              options={financialYears}
-              getOptionLabel={(option) => option.financialYear}
+              options={financialYears || []}
+              getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+            
               value={selectedYear}
               onChange={handleYearChange}
-              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              renderInput={(params) => <TextField {...params}
+              label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
               style={{marginTop:"0.9rem"}}
             />
        
@@ -701,8 +739,27 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.policyNumber}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                // {...register('policyNumber', {
+                //   // Add any validation rules here if needed
+                // })}
               />
-                <span>{methods?.errors?.policyNumber?.message}</span>
+             {/* below work for validation */}
+               {/* <TextField
+              label="Policy Number"
+              variant="outlined"
+              // fullWidth
+              onChange={handleChange} */}
+              {/* // {...register('policyNumber')}
+              // error={!!errors.policyNumber}
+              // helperText={errors.policyNumber?.message} */}
+            {/* /> */}
+                        {/* {errors.policyNumber?.message && (
+      <Typography color="error" variant="caption">
+        {errors.policyNumber?.message}
+      </Typography>
+    )} */}
+               {/* <span>{errors.policyNumber?.message}</span> */}
+                {/* <span>{methods?.errors?.policyNumber?.message}</span> */}
          
             </Grid>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
@@ -734,9 +791,12 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.insuredPersonName}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                // {...register('insuredPersonName')}
+                // error={!!errors.insuredPersonName}
+                // helperText={errors.insuredPersonName?.message}
               />
-                <span>{methods?.errors?.insuredPersonName?.message}</span>
-         
+                {/* <span>{methods?.errors?.insuredPersonName?.message}</span> */}
+                {/* <span>{errors.insuredPersonName?.message}</span> */}
             </Grid>
           </Grid>
 
@@ -754,7 +814,11 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.sumOfAssured}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                // {...register('sumOfAssured')}
+                // error={!!errors.sumOfAssured}
+                // helperText={errors.sumOfAssured?.message}
               />
+               {/* <span>{errors.sumOfAssured?.message}</span> */}
             </Grid>
             <Grid item xs={4}>
               <Autocomplete
@@ -877,8 +941,10 @@ const handleRentDeletedID = ( data)=>{
     </Button>
               </Grid>
               <Grid item>
-                <Button aclassName="button"  type="submit" 
-                 onClick={handleSubmit}
+                <Button className="button"  
+                // type="submit"
+                  onClick={handleSubmit10}
+                // onClick={handleSubmit((event)=>onSubmit(event))}
                  >
                   Save 
                 </Button>
@@ -909,6 +975,7 @@ const handleRentDeletedID = ( data)=>{
           </> : null}
         </Grid>
         {/* </form> */}
+        </form>
       </FormProvider>
 {policyData?.length > 0 ?
         <TableContainer component={Paper}>
