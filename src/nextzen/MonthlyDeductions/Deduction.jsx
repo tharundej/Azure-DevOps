@@ -28,7 +28,7 @@ export default function Deduction({defaultPayload,componentPage}) {
     { id: "takenAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
 
     { id: "noOfInstallments", label: "Installment", minWidth: "6pc", type: "text" },
-    { id: "deductedDate", label: "Deducted Date", minWidth: "9pc", type: "text" },
+    { id: "deductedDate", label: "Deducted Date", minWidth: "9pc", type: "date" },
     { id: "deductedAmount", label: "Deducted Amount", minWidth: "10pc", type: "text" },
     { id: "balanceAmount", label: "Balance Amount", minWidth: "9pc", type: "text" },
     { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
