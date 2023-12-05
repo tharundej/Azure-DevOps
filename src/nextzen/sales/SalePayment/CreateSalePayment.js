@@ -15,6 +15,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 // import ModalHeader from '../global/modalheader/ModalHeader';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 export default function CreateSalePayment({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
@@ -88,11 +93,43 @@ export default function CreateSalePayment({ currentData, handleClose }) {
           >
             <RHFTextField name="SO Number" label="SO Number" />
             <RHFTextField name="Invoice Number" label="Invoice Number" />
-            <RHFTextField name="Invoice Date" label="Invoice Date" />
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Invoice Date"
+                  // value={datesUsed?.expectedDeliveryDate}
+                  defaultValue={dayjs(new Date())}
+                  // onChange={(newValue) => {
+                  //   setDatesUsed((prev) => ({
+                  //     ...prev,
+                  //     expectedDeliveryDate: newValue,
+                  //   }));
+                  // }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <RHFTextField name="EWay Bill" label="EWay Bill" />
-            <RHFTextField name="No of Instalments" label="No of Instalments" />
-            <RHFTextField name="Received Amount" label="Received Amount" />
-            <RHFTextField name="Due Date" label="Due Date" />
+            <RHFTextField type="number" name="No of Instalments" label="No of Instalments" />
+            <RHFTextField type="number" name="Received Amount" label="Received Amount" />
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Due Date"
+                  // value={datesUsed?.expectedDeliveryDate}
+                  defaultValue={dayjs(new Date())}
+                  // onChange={(newValue) => {
+                  //   setDatesUsed((prev) => ({
+                  //     ...prev,
+                  //     expectedDeliveryDate: newValue,
+                  //   }));
+                  // }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
 
 
           </Box>

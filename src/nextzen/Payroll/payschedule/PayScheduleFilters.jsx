@@ -47,7 +47,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import PayScheduleform from './PayScheduleform';
@@ -326,11 +326,13 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+       <DialogTitle sx={{ paddingBottom: 0, paddingTop: 2 }}>
           Filters
-          <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
-            <Iconify icon="iconamoon:close-thin" />
-          </Button>
+          {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+          <CancelOutlinedIcon
+            sx={{ cursor: 'pointer', float: 'right' }}
+            onClick={() => setOpen(false)}
+          />
         </DialogTitle>
 
         <DialogContent  sx={{minWidth:"300px"}}>
@@ -413,15 +415,28 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+        
+        <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+              handleApply();
+            }}
+          >
+            Apply
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => 
+              handleClickClose()
+            }
+          >
+            Close
+          </Button>
         </div>
       </BootstrapDialog>
     </>

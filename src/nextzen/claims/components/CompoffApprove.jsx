@@ -41,7 +41,7 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 
 export default function CompoffApprove({ currentUser ,}) {
   const {enqueueSnackbar} = useSnackbar()
@@ -78,7 +78,7 @@ export default function CompoffApprove({ currentUser ,}) {
 
       secondaryText: "email",
     },
-    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 180, type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 220, type: "text" },
     { id: "startDate", label: "Start Date", width: 220, type: "text" },
     { id: "endDate", label: "End Date", width: 180, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
@@ -171,6 +171,7 @@ const externalFilter = {
               employeeId:rowData?.employeeId,
               utilisation:rowData?.utilisation,
               compensatoryRequestId: rowData?.compensantoryRequestId,
+              compensantoryPolicies: rowData?.compensantoryPolicies,
 
           }));
           // handle(approve);
@@ -191,7 +192,8 @@ const externalFilter = {
           status: "Rejected",
           employeeId:rowData?.employeeId,
           utilisation:rowData?.utilisation,
-          compensatoryRequestId: rowData?.compensantory_request_id,
+          compensatoryRequestId: rowData?.compensantoryRequestId,
+          compensantoryPolicies: rowData?.compensantoryPolicies,
       }));
       
 //       handle({...approve, ...{status: "Rejected",
@@ -238,7 +240,7 @@ const externalFilter = {
     () => ({
       amount: currentUser?.amount || null ,
       comment: currentUser?.comment || '',
-      type_oc_claim: currentUser?.type_oc_claim|| '',
+      // type_oc_claim: currentUser?.type_oc_claim|| '',
       // currency:currentUser?.currency|| '',
 
       // company_id:currentUser?.company_id|| '',
@@ -312,28 +314,24 @@ console.log(defaultValues,"defaultValues")
       // console.log(data, 'formdata api in check');
 
       const response = await axios.post(baseUrl+'/UpdateMycompoffdetails', approve).then(
-        (response) => {
-          console.log('sucess', response);
-          // enqueueSnackbar(response?.data?.message,{variant:'success'})
+        (res) => {
+          console.log('sucess', res);
+          enqueueSnackbar(res?.data?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
-          // enqueueSnackbar(response?.data?.message,{variant:'error'})
+          enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
         }
       );
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
+      
     } catch (error) {
-      // enqueueSnackbar(response?.data?.message,{variant:'error'})
+      enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
     }
   });
-
+console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
   return (
     <>
       <Helmet>
@@ -349,9 +347,10 @@ console.log(defaultValues,"defaultValues")
           sx: { maxWidth: 720 },
         }}
       >
+         <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Compoff`} />
         <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Update Compoff</DialogTitle>
+          {/* <DialogTitle>Update Compoff</DialogTitle> */}
 
           <DialogContent>
     
@@ -367,7 +366,9 @@ console.log(defaultValues,"defaultValues")
             >
              
              
-             
+             <TextField  label="Compensantory Policies" value={approve?.compensantoryPolicies || ''}  InputProps={{
+    readOnly: true,
+  }} />
 
               <TextField name="comment" label="Comment" 
                value={approve.comment}
@@ -387,7 +388,7 @@ console.log(defaultValues,"defaultValues")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>

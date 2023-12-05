@@ -1,7 +1,7 @@
 import PropTypes, { element } from 'prop-types';
 import React,{ useEffect, useState,useCallback } from 'react';
 import axios from 'axios';
-import { styled } from '@mui/system';
+import { minWidth, styled } from '@mui/system';
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
@@ -20,11 +20,13 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import  "./filtershift.css"
 const defaultFilters = {
   name: '',
   type: [],
+  startDate: null,
   startDate: null,
   endDate: null,
 };
@@ -266,12 +268,15 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
                 <Grid>
             <Typography>Request Date</Typography>
      
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+            <Grid container flexDirection="row" flexWrap="nowrap" ms={12} lg={12} xs={12}>
+              <Grid ms={8} lg={8} xs={8} item>
+               
+
+             <LocalizationProvider     dateAdapter={AdapterDayjs}>
+                  <DemoContainer     components={['DatePicker']}>
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
+                    className="datepiker-ui"
+                      sx={{ width: '100%'  ,paddingLeft: '3px'}}
                       label="From Date"
                       value={dates?.applyDatefrom ? dayjs(dates.applyDatefrom) : null}
                       defaultValue={dayjs(new Date())}
@@ -284,12 +289,16 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                
                 </Grid>
-                <Grid item>
+                <Grid ms={8} lg={8} xs={8} item>
+                 
+
              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                  <DemoContainer    components={['DatePicker']}>
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
+                    className="datepiker-ui"
+                      sx={{ width: '100%',paddingLeft: '3px' }}
                       label="To Date"
                       value={dates?.applyDateto ? dayjs(dates.applyDateto) : null}
                       defaultValue={dayjs(new Date())}
@@ -302,6 +311,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                  
                 </Grid>
                 </Grid>
                 </Grid>
@@ -309,11 +319,12 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
 
              <Typography>Start Date</Typography>
      
-     <Grid container flexDirection="row">
+     <Grid container flexDirection="row" flexWrap="nowrap">
        <Grid item>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
+             className="datepiker-ui"
                sx={{ width: '100%', paddingLeft: '3px' }}
                label="From Date"
                value={dates?.fromDatefrom ? dayjs(dates.fromDatefrom) : null}
@@ -332,6 +343,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
+             className="datepiker-ui"
                sx={{ width: '100%', paddingLeft: '3px' }}
                label="To Date"
                value={dates?.fromDateto ? dayjs(dates.fromDateto) : null}
@@ -352,11 +364,12 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
 
       <Typography>End Date</Typography>
      
-     <Grid container flexDirection="row">
+     <Grid container flexDirection="row" flexWrap="nowrap">
        <Grid item>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
+             className="datepiker-ui"
                sx={{ width: '100%', paddingLeft: '3px' }}
                label="From Date"
                value={dates?.toDatefrom ? dayjs(dates.toDatefrom) : null}
@@ -375,6 +388,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
       <LocalizationProvider dateAdapter={AdapterDayjs}>
            <DemoContainer components={['DatePicker']}>
              <DatePicker
+             className="datepiker-ui"
                sx={{ width: '100%', paddingLeft: '3px' }}
                label="To Date"
                value={dates?.toDateto ? dayjs(dates.toDateto) : null}

@@ -406,15 +406,25 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
 
   }
-  const getRowActionsBasedOnStatus = (status) => {
-    if (status === 'pending' || status===""|| status==="Pending") {
-      return rowActions
-    } 
-    else {
-      return null
-    } 
-  }
-  
+  const getRowActionsBasedOnStatus = (row) => {
+    if (
+      row?.status === 'pending' ||
+      row?.status === '' ||
+      row?.status === 'Pending' ||
+      row?.status === 'Active' ||
+      row?.status === 'InActive' ||
+      row?.status === 'active' ||
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'
+    ) {
+      return rowActions;
+    } else if (!row?.status || row?.status === undefined) {
+      return rowActions;
+    } else {
+      return null;
+    }
+  };
+
  
 
  
@@ -846,7 +856,7 @@ const handleExpandClick = (rowId) => {
                           headerContent={TABLE_HEAD}
                           onHandleEditRow={(row) =>{ handleExpandClick(row.employeename),setExpandedRowId === row.employeename ,console.log(row,"iddd")}}
 
-                          rowActions={getRowActionsBasedOnStatus(row.status)|| []}
+                          rowActions={getRowActionsBasedOnStatus(row)|| []}
 
                           expandable
           onExpandClick={() => handleExpandClick(row.id)}
@@ -934,7 +944,7 @@ const handleExpandClick = (rowId) => {
 
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
 
-          dense={table.dense}
+          // dense={table.dense}
 
           onChangeDense={table.onChangeDense}
 

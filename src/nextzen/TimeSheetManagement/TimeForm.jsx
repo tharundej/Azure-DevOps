@@ -47,7 +47,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 export default function TimeForm({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
