@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
+import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -19,7 +21,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import UserContext from 'src/nextzen/context/user/UserConext';
 export default function CreateSaleOrder({ currentData, handleClose }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -31,6 +35,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       ProductCategory: currentData?.ProductCategory || '',
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
+      vendorId: currentData?.vendorId || '',
     }),
     [currentData]
   );
@@ -51,6 +56,23 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const values = watch();
   const [vendorMaterials, setVendorMaterials] = useState([]);
   const [unitOptions, setUnitOptions] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [vendorOptions, setVendorOptions] = useState([]);
+  const [selectedVendor, setSelectedVendor] = useState();
+  const fetchVendor = async () => {
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
+    try {
+      const response = await getVendorAPI(data);
+      setVendorOptions(response);
+      setSelectedVendor(
+        defaultValues.vendorId || (response.length > 0 ? response[0].vendorId : null)
+      );
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -91,6 +113,55 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       console.error(error);
     }
   });
+  const fetchUnits = async () => {
+    try {
+      const response = await getUnitOfMeasure();
+      setUnitOptions(response);
+      setSelectedUnit(response.length > 0 ? response[0] : null);
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnits();
+    fetchVendor();
+  }, []);
+
+  const [selectedVendorMaterial, setSelectedVendorMaterial] = useState(null);
+  const handleVendorChange = async (event, newValue) => {
+    try {
+      if (newValue) {
+        const vendorMaterialPayload = {
+          companyId: user?.companyID ? user?.companyID : '',
+          search: '',
+          externalFilters: {
+            materialName: '',
+            hsnId: '',
+            gstRate: 0,
+            vendorId: newValue.vendorID || 0,
+            vendorName: '',
+            materialPrice: 0,
+          },
+          sort: {
+            key: 1,
+            orderBy: 'hsnId',
+          },
+          page: 0,
+          count: 5,
+        };
+        setSelectedVendor(newValue.vendorID || 0);
+        const vendorMaterialResponse = await getVendorMaterialListAPI(vendorMaterialPayload);
+        setVendorMaterials(vendorMaterialResponse);
+        setSelectedVendorMaterial(vendorMaterialResponse ? vendorMaterialResponse[0].id : null);
+        console.log('Vendor Material Response:', vendorMaterialResponse);
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
   const initialContent = (index) => (
     <Box
       key={index}
@@ -121,7 +192,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           <TextField {...params} label="Select Product" variant="outlined" />
         )}
       />
-      <RHFAutocomplete
+
+       <RHFAutocomplete
         name={`addPurchaseMaterial[${index}].unitOfMeasure`}
         id={`addPurchaseMaterial[${index}].unitOfMeasure`}
         options={unitOptions || []}
@@ -258,6 +330,28 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             </LocalizationProvider>
             <RHFTextField name="Company Name" label="Company Name" />
             <RHFTextField name="Factory Name" label="Factory Name" />
+            <RHFAutocomplete
+              name="vendorId"
+              id="vendorId"
+              options={vendorOptions || []}
+              onChange={handleVendorChange}
+              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
+              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
+              renderInput={(params) => (
+                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+              )}
+            />
+             <RHFAutocomplete
+              name="vendorId"
+              id="vendorId"
+              options={vendorOptions || []}
+              onChange={handleVendorChange}
+              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
+              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
+              renderInput={(params) => (
+                <TextField {...params} label="Select Factory Name" variant="outlined" />
+              )}
+            />
             <RHFTextField name="Factory Address" label="Factory Address" />
             <RHFTextField name="Customer Name" label="Customer Name" />
             <RHFTextField name="Customer Address" label="Customer Address" />
