@@ -20,12 +20,18 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
-    locationPhone: Yup.number(),
-    locationEmailID: Yup.string(),
+    locationPhone: Yup.string().matches(
+      /^[1-9]\d{9}$/,
+      'Phone must be 10 digits and should not start with 0'
+    ),
+    locationEmailID: Yup.string().email('Invalid email format').required('Email is required'),
     locationAddressLine1: Yup.string(),
     locationAddressLine2: Yup.string(),
     locationCity: Yup.string(),
-    locationPincode: Yup.number(),
+    locationPincode: Yup.string().matches(
+      /^[1-9]\d{5}$/,
+      'Pincode must be 6 digits and should not start with 0'
+    ),
     locationState: Yup.string(),
     status: Yup.string(),
   });
