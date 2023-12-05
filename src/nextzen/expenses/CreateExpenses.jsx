@@ -32,6 +32,7 @@ import { getVendorAPI } from 'src/api/Accounts/Common';
 import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
+import { getFactoryListAPI } from 'src/api/Accounts/Factory';
 
 export default function CreateExpenses({ currentData, handleClose }) {
   const { user } = useContext(UserContext);
@@ -80,8 +81,8 @@ export default function CreateExpenses({ currentData, handleClose }) {
   });
   const [type, setType] = useState(true);
   const [selectedValue, setSelectedValue] = useState('Fuel');
-  const [vendorOptions, setVendorOptions] = useState([]);
-  const [selectedVendor, setSelectedVendor] = useState();
+  const [factoryOptions, setFactoryOptions] = useState([]);
+  const [selectedFactory, setSelectedFactory] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
@@ -90,26 +91,45 @@ export default function CreateExpenses({ currentData, handleClose }) {
     setSelectedValue(event.target.value);
     event.target.value == 'Others' ? setType(false) : setType(true);
   };
-  const fetchVendor = async () => {
-    const data = { companyID: user?.companyID ? user?.companyID : '' };
+  const fetchFactory = async () => {
+    const data = {
+      count: 5,
+      page: 0,
+      search: '',
+      companyId: user?.companyID ? user?.companyID : '',
+      externalFilters: {
+        locationName: '',
+        locationPhone: '',
+        locationEmailid: '',
+        locationCity: '',
+        locationPincode: '',
+        locationState: '',
+        locationStateCode: '',
+        locationCountry: '',
+      },
+      sort: {
+        key: 1,
+        orderBy: '',
+      },
+    };
     try {
-      const response = await getVendorAPI(data);
-      setVendorOptions(response);
-      setSelectedVendor(defaultValues.locationID);
+      const response = await getFactoryListAPI(data);
+      setFactoryOptions(response);
+      setSelectedFactory(defaultValues.locationID);
     } catch (error) {
       setErrorMessage(error.message);
       console.log('API request failed:', error.message);
     }
   };
   useEffect(() => {
-    fetchVendor();
+    fetchFactory();
   }, []);
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
     data.expenseDate = formatDateToYYYYMMDD(datesUsed?.expenseDate);
     data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
-    data.locationID = selectedVendor;
+    data.locationID = selectedFactory;
     data.expenseType = selectedValue;
     try {
       console.log(data, 'data111ugsghghh');
@@ -192,12 +212,14 @@ export default function CreateExpenses({ currentData, handleClose }) {
             <RHFAutocomplete
               name="locationID"
               id="locationID"
-              options={vendorOptions || []}
-              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
-              onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
-              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
+              options={factoryOptions || []}
+              value={factoryOptions.find((option) => option.locationID === selectedFactory) || null}
+              onChange={(event, newValue) =>
+                setSelectedFactory(newValue ? newValue.locationID : null)
+              }
+              getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
-                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+                <TextField {...params} label="Select Factory / Location Name" variant="outlined" />
               )}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
