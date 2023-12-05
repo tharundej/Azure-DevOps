@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import instance from 'src/api/BaseURL';
 import formatDateToYYYYMMDD from '../global/GetDateFormat';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -28,11 +27,10 @@ import {
 } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import UserContext from '../context/user/UserConext';
-import { getVendorAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI } from 'src/api/Accounts/Common';
 import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
-import { getFactoryListAPI } from 'src/api/Accounts/Factory';
 
 export default function CreateExpenses({ currentData, handleClose }) {
   const { user } = useContext(UserContext);
@@ -92,28 +90,9 @@ export default function CreateExpenses({ currentData, handleClose }) {
     event.target.value == 'Others' ? setType(false) : setType(true);
   };
   const fetchFactory = async () => {
-    const data = {
-      count: 5,
-      page: 0,
-      search: '',
-      companyId: user?.companyID ? user?.companyID : '',
-      externalFilters: {
-        locationName: '',
-        locationPhone: '',
-        locationEmailid: '',
-        locationCity: '',
-        locationPincode: '',
-        locationState: '',
-        locationStateCode: '',
-        locationCountry: '',
-      },
-      sort: {
-        key: 1,
-        orderBy: '',
-      },
-    };
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
-      const response = await getFactoryListAPI(data);
+      const response = await getLocationAPI(data);
       setFactoryOptions(response);
       setSelectedFactory(defaultValues.locationID);
     } catch (error) {
