@@ -124,6 +124,9 @@ import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
 import ApproveFilter from '../timesheet/components/ApproveFilters';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
+import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
+
 const defaultFilters = {
   name: '',
   role: [],
@@ -748,7 +751,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
              {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
+ {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
 
+{filterName === 'AddRoleFilter' && (
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer
