@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
