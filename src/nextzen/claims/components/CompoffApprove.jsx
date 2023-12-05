@@ -78,7 +78,7 @@ export default function CompoffApprove({ currentUser ,}) {
 
       secondaryText: "email",
     },
-    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 180, type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 220, type: "text" },
     { id: "startDate", label: "Start Date", width: 220, type: "text" },
     { id: "endDate", label: "End Date", width: 180, type: "text" },
     { id: "status", label: "Status", width: 100, type: "badge" },
@@ -314,23 +314,19 @@ console.log(defaultValues,"defaultValues")
       // console.log(data, 'formdata api in check');
 
       const response = await axios.post(baseUrl+'/UpdateMycompoffdetails', approve).then(
-        (response) => {
-          console.log('sucess', response);
-          // enqueueSnackbar(response?.data?.message,{variant:'success'})
+        (res) => {
+          console.log('sucess', res);
+          enqueueSnackbar(res?.data?.message,{variant:'success'})
         },
         (error) => {
           console.log('lllll', error);
-          // enqueueSnackbar(response?.data?.message,{variant:'error'})
+          enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
         }
       );
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
+      
     } catch (error) {
-      // enqueueSnackbar(response?.data?.message,{variant:'error'})
+      enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
     }

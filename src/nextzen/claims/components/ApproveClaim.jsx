@@ -266,7 +266,7 @@ const actions = [
       console.log(data, 'data111ugsghghh');
 
       const response = await axios.post(baseUrl+'onboarding', data).then(
-        (successData) => {
+        (res) => {
           console.log('sucess', successData);
         },
         (error) => {
@@ -374,23 +374,19 @@ const handleInputChange = (event) => {
         // console.log(data, 'formdata api in check');
   
         const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
-          (successData) => {
-            console.log('sucess', successData);
-            // enqueueSnackbar(response?.data?.message,{variant:'success'})
+          (res) => {
+            console.log('sucess', res);
+            enqueueSnackbar(res?.data?.message,{variant:'success'})
           },
           (error) => {
             console.log('lllll', error);
-            // enqueueSnackbar(response?.data?.message,{variant:'error'})
+            enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
           }
         );
   
-        // await new Promise((resolve) => setTimeout(resolve, 500));
-        // reset();
-        // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-        // router.push(paths.dashboard.user.list);
-        // console.info('DATA', data);
+       
       } catch (error) {
-        // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
         // alert("api hit not done")
         console.error(error);
       }

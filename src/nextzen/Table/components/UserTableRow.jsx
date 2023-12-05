@@ -116,7 +116,25 @@ export default function UserTableRow({
                    }}
                  />
                )}
-{console.log(ele.type ,"type",row?.status)}
+
+
+                 {ele.type === 'icon' && (
+             
+                 <ListItemText
+
+                   primary={(row[ele.id] === "")?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="" color="green" /></span>) : <Iconify icon="lets-icons:view" color="green" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
+{/* {console.log(ele.type ,"type",row?.status)} */}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
