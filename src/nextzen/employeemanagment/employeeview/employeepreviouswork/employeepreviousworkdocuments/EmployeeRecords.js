@@ -42,9 +42,10 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
     const [documents,setDocuments]=useState()
     useEffect(()=>{
       if(docsData){
-        console.log(docsData,'docsdata')
+        //console.log(docsData,'docsdata')
         //setDocumentsData(docsData);
-        setDocuments(docsData.documents)
+        console.log(docsData,'docsData.documents')
+        setDocuments(docsData)
         setEndpointTOPass(endpoint)
       }
     },[docsData])

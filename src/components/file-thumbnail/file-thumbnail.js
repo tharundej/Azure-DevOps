@@ -12,7 +12,8 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
   
   const { fileName = '', fileContent = '', fileType = '' } = fileData(file);
 
-  const format = fileFormat(fileContent || fileType);
+  const format = 'pdf'
+  // fileFormat(fileContent || fileType);
 
   const renderContent =
     format === 'image' && imageView ? (
