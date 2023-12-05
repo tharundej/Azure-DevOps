@@ -239,12 +239,28 @@ export default function Holidays({ currentUser }) {
     };
     fetchData();
   }, []);
-
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+    console.log(selectedValue,'ooooo')
+    setFormData({
+      ...formData,
+      [name]: selectedValue,
+      locationID: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
+    });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
+    
+  };
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    console.log("formData", formData)
-    data.locationID = formData?.Location?.locationID? (formData?.Location?.locationID):(valueSelected?.locationID)
+    console.log("aaaaaaaaaa", formData)
+    data.locationID = valueSelected?.locationID
     data.holidayName=valueSelected?.holidayName
     // data.repeatAnnualy=valueSelected?.repeatAnnualy
     data.holidayID=valueSelected?.holidayID
@@ -277,16 +293,8 @@ export default function Holidays({ currentUser }) {
   const handleDateChanges = (date) => {
     setSelectedDates(date);
   };
-  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(name, selectedValue, selectedOption);
-    setFormData({
-      ...formData,
-      [name]: selectedValue,
-      locationID: selectedOption?.locationID,
-      locationName: selectedOption?.locationName,
-    });
-  };
 
+console.log(valueSelected,'kkkk')
   console.log(formData, 'formdata for location');
   return (
     <>
@@ -382,7 +390,7 @@ export default function Holidays({ currentUser }) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />

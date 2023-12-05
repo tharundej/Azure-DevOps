@@ -61,9 +61,10 @@ import { Axios } from 'axios';
 import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
 import SignUpDialog from './SignUpDialog';
+import { color } from '@mui/system';
 
-export default function JwtRegisterView({onHandleNextIncrement}) {
-  console.log(onHandleNextIncrement,'onHandleNextIncrement')
+export default function JwtRegisterView({ onHandleNextIncrement }) {
+  console.log(onHandleNextIncrement, 'onHandleNextIncrement');
   const { register } = useAuthContext();
   const theme = useTheme();
 
@@ -436,10 +437,10 @@ export default function JwtRegisterView({onHandleNextIncrement}) {
         (data.companyLogo = imageData[0]?.data.split(',')[1])
       );
 
-      onHandleNextIncrement()
-      
+      onHandleNextIncrement();
+
       // router.push(returnTo || PATH_AFTER_LOGIN);
-      router.push(returnTo || PATH_FOR_VERIFY);
+      // router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {
       // onHandleNextIncrement()
 
@@ -460,18 +461,6 @@ export default function JwtRegisterView({onHandleNextIncrement}) {
           m: { xs: 2, md: 5 },
         }}
       /> */}
-
-      <Stack spacing={2} sx={{ mb: 5, position: 'relative', alignItems: 'center' }}>
-        {/* <Typography variant="h4">Register</Typography> */}
-
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-          <Typography variant="h4"> Already have an account? </Typography>
-
-          <Link href={paths.auth.jwt.login} component={RouterLink} variant="h4">
-            Sign In
-          </Link>
-        </Stack>
-      </Stack>
     </>
   );
 
@@ -613,7 +602,7 @@ export default function JwtRegisterView({onHandleNextIncrement}) {
                   name="firstName"
                   label={
                     <span>
-                    Contact Person First Name<span style={{ color: 'red' }}>*</span>
+                      Contact Person First Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={30}
@@ -621,14 +610,19 @@ export default function JwtRegisterView({onHandleNextIncrement}) {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <RHFTextField name="middleName" label="Contact Person Middle Name" maxLength={30} type="text" />
+                <RHFTextField
+                  name="middleName"
+                  label="Contact Person Middle Name"
+                  maxLength={30}
+                  type="text"
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
                   name="lastName"
                   label={
                     <span>
-                    Contact Person    Last Name<span style={{ color: 'red' }}>*</span>
+                      Contact Person Last Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={30}
@@ -738,78 +732,93 @@ export default function JwtRegisterView({onHandleNextIncrement}) {
                   type="text"
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <label htmlFor="file-input">
-                    <span style={{ display: 'flex', flexDirection: 'row' }}>
-                      <Button
-                        style={{ height: 'fit-content', backgroundColor:'#3B82F6'}}
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}
-                      >
-                        Upload Logo<span style={{ color: 'red' }}> *</span>
-                        <input
-                          id="file-input"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                          style={{ display: 'none' }}
-                        />
-                      </Button>
-                      {selectedFile && (
-                        <div>
-                          <div
-                            style={{
-                              width: '100px',
-                              height: '100px',
-                              borderRadius: '50%',
-                              overflow: 'hidden',
-                              display: 'inline-block',
-                            }}
-                          >
-                            <img
-                              src={imageData[0]?.data}
-                              alt={selectedFile.name}
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                              }}
-                            />
-                          </div>
-                          {/* <button onClick={handleDelete}>Delete</button> */}
-                        </div>
-                      )}
-                    </span>
-                  </label>
-                  {/* Empty space for alignment */}
-                  <div style={{ width: '10px' }}></div>
-                </div>
-              </Grid>
+             
               <Grid item xs={12} md={8}></Grid>
             </Grid>
           </Stack>
-          <CardActions style={{ marginTop: '30px',display: 'flex', flexDirection: 'column', alignItems: 'center'  }}>
-            <Stack direction="row" alignItems="center" spacing={1} style={{marginBottom:'10px'}}>
-            <Typography variant="h5"> Already have an account? </Typography>
+          <CardActions
+  style={{
+    marginTop: '30px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent:'space-between',
+    // maxWidth: '600px', // Adjust the max height as needed
+    // overflow: 'hidden', // Hide overflow content
+  }}
+>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label htmlFor="file-input">
+      <Button
+        style={{ height: 'fit-content', backgroundColor: '#3B82F6' }}
+        component="label"
+        variant="contained"
+        startIcon={<CloudUploadIcon />}
+      >
+        Upload Logo<span style={{ color: 'red' }}> *</span>
+        <input
+          id="file-input"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </Button>
+    </label>
+    {selectedFile && (
+      <div>
+        <div
+          style={{
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            display: 'inline-block',
+          }}
+        >
+          <img
+            src={imageData[0]?.data}
+            alt={selectedFile.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+      </div>
+    )}
+  </div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+  <Button
+    color="inherit"
+    size="large"
+    type="submit"
+    variant="contained"
+    onClick={onSubmit}
+    style={{ margin: '20px 0', backgroundColor: '#3B82F6' }}
+  >
+    Create Account
+  </Button>
+  <Stack direction="column" alignItems="center" spacing={1}>
+    <Typography variant="subtitle2" style={{ marginTop: '-10px' ,color:'black'}}>
+      OR
+    </Typography>
+    <Typography variant="subtitle2" style={{color:'black'}}> Already have an account? </Typography>
+    <Link
+      href={paths.auth.jwt.login}
+      component={RouterLink}
+      variant="subtitle1"
+      style={{ textDecoration: 'none', color: '#3B82F6' }}
+    >
+      Sign In
+    </Link>
+  </Stack>
+</div>
 
-            <Link href={paths.auth.jwt.login} component={RouterLink} variant="h5">
-              Sign In
-            </Link>
-            </Stack>
-            <Button
-              color="inherit"
-              size="large"
-              type="submit"
-              variant="contained"
-              onClick={onSubmit}
-              //  loading={isSubmitting}
-              style={{ display: 'block', margin: '5 auto', backgroundColor: '#3B82F6' }}
-            >
-              Create Account
-            </Button>
-          </CardActions>
+
+</CardActions>
+
           {/* </Card> */}
         </Box>
       </Stack>

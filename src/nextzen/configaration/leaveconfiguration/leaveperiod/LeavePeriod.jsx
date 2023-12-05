@@ -310,6 +310,7 @@ export default function LeavePeriod({ currentUser }) {
                 renderInput={(params) => (
                   <TextField {...params} label="Leave Period Type" variant="outlined" />
                 )}
+                sx={{marginTop:'8px'}}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
@@ -365,6 +366,7 @@ export default function LeavePeriod({ currentUser }) {
         rowActions={actions}
         filterName="LeavePeriodFilterSearch"
         onClickActions={onClickActions}
+        
       />
     </>
   );

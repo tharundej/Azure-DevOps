@@ -222,7 +222,7 @@ export default function HolidaysForm({ currentUser }) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    sx={{ width: '100%', paddingLeft: '3px' ,marginTop:'-7px'}}
                     label="Holiday Date"
                     // value={selectedDates}
                     value={null}

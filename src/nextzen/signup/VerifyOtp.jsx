@@ -97,7 +97,7 @@ export default function VerifyOtp({onHandleNextIncrement}) {
 
         console.log('sucess', response);
 
-        router.push(paths.auth.jwt.createpassword);
+        // router.push(paths.auth.jwt.createpassword);
       }
       if (response?.data?.code === 400 ||401) {
         setSnackbarSeverity('error');

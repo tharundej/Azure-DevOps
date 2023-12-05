@@ -51,7 +51,7 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import ShiftConfigurationForm from './ShiftConfigurationForm';
-import { locationNameApi } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+import { locationApi } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -105,7 +105,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   const [locationName, setLocationName] = useState([])
   useEffect(()=>{
     async function call() {
-      const arr = await locationNameApi();
+      const arr = await locationApi();
       console.log(arr, 'sairam');
       setLocationName(arr);
     }
@@ -212,7 +212,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
           const Obj = {
             companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
-          const locationName = await locationNameApi(Obj);
+          const locationName = await locationApi(Obj);
           var optionsArr = { ...options };
 
           optionsArr.locationName = locationName;

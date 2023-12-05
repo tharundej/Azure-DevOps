@@ -102,6 +102,7 @@ export default function ShiftConfigView({currentUser}) {
       shiftName: '',
       startTime: '',
       endTime: '',
+      locationFilter:'',
     },
     sort: {
       key: 0,
@@ -153,6 +154,13 @@ export default function ShiftConfigView({currentUser}) {
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
   };
 
   const getLocation = async () => {
@@ -198,7 +206,7 @@ export default function ShiftConfigView({currentUser}) {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID =( formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationId
+    data.locationID =valueSelected?.locationId
     data.shiftName=valueSelected?.shiftName
     data.shiftConfigId=valueSelected?.shiftConfigId
     console.log('submitted data111', data);
@@ -337,7 +345,7 @@ export default function ShiftConfigView({currentUser}) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
