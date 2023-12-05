@@ -49,16 +49,16 @@ const [TABLE_HEAD,setTableHead] =useState( [
     minWidth:'180px',
     secondaryText: 'name',
   },
-  { id: 'configurations', label: 'Configurations',  type: 'badge', minWidth:'180px' },
-  { id: 'claims', label: 'Claims',  type: 'badge', minWidth:'180px' },
-  { id: 'employeeManagement', label: 'Employee Management',  type: 'badge', minWidth:'180px' },
-  { id: 'itDeclaration', label: 'IT Declaration',  type: 'badge', minWidth:'180px' },
-  { id: 'leaveManagement', label: 'Leave Management',  type: 'badge', minWidth:'180px' },
-  { id: 'monthlyAdditionalDeductions', label: 'MonthlyAdditional Deductions',  type: 'badge', minWidth:'180px' },
+  { id: 'configurations', label: 'Configurations',  type: 'bool', minWidth:'180px' },
+  { id: 'claims', label: 'Claims',  type: 'bool', minWidth:'180px' },
+  { id: 'employeeManagement', label: 'Employee Management',  type: 'bool', minWidth:'180px' },
+  { id: 'itDeclaration', label: 'IT Declaration',  type: 'bool', minWidth:'180px' },
+  { id: 'leaveManagement', label: 'Leave Management',  type: 'bool', minWidth:'180px' },
+  { id: 'monthlyAdditionalDeductions', label: 'MonthlyAdditional Deductions',  type: 'bool', minWidth:'180px' },
 
-  { id: 'payroll', label: 'payroll',  type: 'badge', minWidth:'180px' },
-  { id: 'shiftManagement', label: 'Shift Management',  type: 'badge', minWidth:'180px' },
-  { id: 'timeSheetManagement', label: 'Time Sheet Management',  type: 'badge', minWidth:'180px' },
+  { id: 'payroll', label: 'payroll',  type: 'bool', minWidth:'180px' },
+  { id: 'shiftManagement', label: 'Shift Management',  type: 'bool', minWidth:'180px' },
+  { id: 'timeSheetManagement', label: 'Time Sheet Management',  type: 'bool', minWidth:'180px' },
   
  
   

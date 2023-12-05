@@ -17,7 +17,7 @@ import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
     locationPhone: Yup.number(),
@@ -148,7 +148,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Name" />
+            <RHFTextField name="locationName" label="Factory / location Name" />
             <RHFTextField name="locationPhone" label="Phone" />
             <RHFTextField name="locationEmailID" label="EmailID" />
             <RHFTextField name="locationAddressLine1" label="AddressLine1" />
@@ -177,6 +177,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               )}
             />
           </Box>
+
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>

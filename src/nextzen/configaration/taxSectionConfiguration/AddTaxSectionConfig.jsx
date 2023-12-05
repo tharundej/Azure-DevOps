@@ -43,6 +43,7 @@ import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
+
 export default function AddTaxSectionConfig({
   currentUser,
   handleCloseAddRoleDilog,
@@ -55,7 +56,8 @@ export default function AddTaxSectionConfig({
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+// const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+
   const empId = localStorage.getItem('employeeID');
   const cmpId = localStorage.getItem('companyID');
   const token = localStorage.getItem('accessToken');
@@ -64,11 +66,6 @@ const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
   const [designationType, setDesignationType] = useState([]);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
-  // State for Snackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [hitGetDepartment, setHitGetDepartment] = useState(false);
 
@@ -143,76 +140,8 @@ const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     // setOpen(false);
   };
  
-  const getDepartment = async () => {
-    const payload = {
-      companyID: cmpId,
-      //  "locationID": 30
-    };
+ 
 
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + '/onboardingDepartment',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setDepartmentType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
-  const getDesignation = async (id) => {
-    console.log(id, 'id id id ');
-    const payload = {
-      companyID: cmpId,
-      departmentID: id ? id : formData?.Department?.departmentID,
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + '/onboardingDesignation',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setDesignationType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
 
   const AddTaxConfiguration = async () => {
     const payload = 
@@ -238,31 +167,31 @@ const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+         
           setHitGetDepartment(!hitGetDepartment);
-          console.log('success');
+          handleClose()
+      
         } else if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+       
           setHitGetDepartment(!hitGetDepartment);
-          console.log('success');
+       
         }
       })
       .catch((error) => {
         //  setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+      
         console.log(error);
       });
-    //  console.log(result, 'resultsreults');
+   
   };
  
 
-
+useEffect(()=>{
+  console.log("")
+}, [hitGetDepartment])
 
   console.log(departmentType, 'DEPARTMENT TYPE    ');
   console.log(formData, 'formdata ');
@@ -274,24 +203,7 @@ const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
         alignItems: 'center',
       }}
     >
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
+    
       {/* sai  */}
 
       <Button

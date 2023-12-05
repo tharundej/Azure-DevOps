@@ -265,26 +265,22 @@ setHitGetDepartment(!hitGetDepartment)
        .request(config)
        .then((response) => {
          if (response.data.code === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage(response.data.message);
-           setSnackbarOpen(true);
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+        
            setHitGetDepartment(!hitGetDepartment)
+           handleClose();
            console.log("success")
          }else  if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
           setHitGetDepartment(!hitGetDepartment)
           console.log("success")
+
         }
    
        })
        .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+      
          console.log(error);
    });
    //  console.log(result, 'resultsreults');
@@ -480,62 +476,6 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
           
 
        
-              <Button onClick={AddDesignation}>Add</Button>
-              
-          
-
-{/*          
-            <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={designationType?.map((employeepayType) => ({
-                label: employeepayType.designationName,
-                value: employeepayType.designationName,
-                ...employeepayType,
-              }))}
-              value={formData.Designation}
-              onChange={(event, newValue, selectedOption) =>
-                handleDesignationGradeChange('Designation', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Designation " />}
-              />
-          
-              <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-          
-              <Button onClick={AddDesignationGrade}>Add</Button>
-          */}
-
-          {/*       
-        <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
-        <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-         */}
-          {/* <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-            style={{ marginBottom: '1rem', textAlign: 'center' }}
-          >
-            <Grid item xs={2}>
-              <Button className="button">Save</Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button className="button">Cancel</Button>
-            </Grid>
-          </Grid> */}
-      
-              
             </Box>
           </DialogContent>
  

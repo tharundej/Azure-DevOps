@@ -21,7 +21,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { ASSETS_API } from 'src/config-global';
 // import UserQuickEditForm from './UserQuickEditForm';
 import { useRouter } from 'src/routes/hooks';
-import { styled } from '@mui/system'; 
+
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
 
@@ -35,7 +35,8 @@ export default function UserTableRow({
   onDeleteRow,
   headerContent,
   rowActions,
-  onHandleEditRow
+  onHandleEditRow,
+  SecondoryTable
 
 }) {
   const confirm = useBoolean();
@@ -49,6 +50,8 @@ export default function UserTableRow({
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
 
+console.log(row,'row data')
+  
   return (
     <>
      
@@ -66,7 +69,6 @@ export default function UserTableRow({
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
-                  height:1,
                   cursor:'pointer'
                 }}
               >
@@ -81,19 +83,25 @@ export default function UserTableRow({
                     sx={{ mr: 2 }}
                   />
                 )}
- {/* {console.log(row,"rowdataa")} */}
+                {ele.eyeIcon && (
+                  <Avatar
+                    alt={row[ele.id]}
+                    src={
+                      row && row.avatarURL && row.avatarURL.length > 0
+                        ? row.avatarURL
+                        : `${ASSETS_API}/assets/images/avatar/avatar_0.jpg`
+                    }
+                    onClick={(row)=>{SecondoryTable(row)}}
+
+                    sx={{ mr: 2 }}
+                  />
+                )}
+
                 {ele.type === 'text' && (
-                 
                   <ListItemText
-                    primary={row[ele.id] || <span   style={{
-                      // display: 'flex',
-                      // justifyContent: 'center',
-                      // alignItems: 'center',
-                      // height: '100%', // Adjust the height if needed
-                      fontSize: 30,
-                    }}>-</span>}
+                    primary={row[ele.id]}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-                    primaryTypographyProps={{ typography: 'body2'}}
+                    primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
@@ -104,7 +112,7 @@ export default function UserTableRow({
                  
                  <ListItemText
 
-                   primary={(row[ele.id] === "true")?(<span   style={{fontSize: 30,
+                   primary={(row[ele.id] === true)?(<span   style={{fontSize: 30,
                    }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
                    
                   }
@@ -134,20 +142,19 @@ export default function UserTableRow({
                    }}
                  />
                )}
-{/* {console.log(ele.type ,"type",row?.status)} */}
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
                     color={
-                      (row[ele.id].toLowerCase() === 'approved' && 'success') ||
-                      (row[ele.id].toLowerCase() === 'pending' && 'warning') ||
-                      (row[ele.id].toLowerCase() === 'rejected' && 'error') ||
-                      (row[ele.id].toLowerCase() === 'true' && 'success') ||
-                      (row[ele.id].toLowerCase() === 'false'  && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'approved' && 'success') ||
+                      (row[ele?.id]?.toLowerCase() === 'pending' && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'rejected' && 'error') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'true' && 'success') ||
+                      (row[ele?.id]+""?.toLowerCase() === 'false' && 'warning') ||
                       'default'
                     }
                   >
-                    {row[ele.id] ? row[ele.id].toString():"False"}
+                    {row[ele?.id] ? row[ele?.id].toString():"False"}
                    
                   </Label>
                 )}
@@ -206,6 +213,7 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
+  SecondoryTable: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
   headerContent: PropTypes.any,

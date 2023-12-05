@@ -7,11 +7,8 @@ import { useTheme } from '@mui/material/styles';
 import { useContext, useState } from 'react';
 
 import {useSnackbar} from '../../../components/snackbar'
-
-import {Typography,CardContent,Grid,Card,TextField,InputAdornment} from '@mui/material';
-
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import Iconify from 'src/components/iconify/iconify';
-import LeaveFilter from '../LeaveFilter';
  import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import UserContext from 'src/nextzen/context/user/UserConext';
 export default function Approveleave(){
@@ -46,7 +43,7 @@ export default function Approveleave(){
           "orderby": "al.apply_date"
       }
   }
-    
+
       const [TABLE_HEAD,setTableHead] =useState( [
         {
               id: "employeeId",
@@ -63,8 +60,7 @@ export default function Approveleave(){
             {id: "endDate",label:"End Date",minWidth:"7pc",type:"text"},
             {id: "requestedDuration",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "approvedBy",label:"Approver",minWidth:"7pc",type:"text"},
-            {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
-            // { id: '', width: 88 },
+            {id: 'status',label:'Status',minWidth:"4pc",type: "badge"}
 
        ]);
     
@@ -80,36 +76,50 @@ export default function Approveleave(){
         return actions;
       };
       const actionsBasedOnRoles = generateRowActions();
+      const [confirmApproveOpen, setConfirmApproveOpen] = useState(false);
+      const [approveData, setApproveData] = useState(null);
+      const [count,setCount] = useState(0)
 
 const onClickActions=(rowdata,event)=>{
-        var payload ={
-          "leave_id": parseInt(rowdata?.applyLeaveId),
-          "emp_id": rowdata?.employeeId,
-          "status": event?.id,           
-          "leave_type_id":parseInt(rowdata?.leaveTypeId),
-          "duration": parseInt(rowdata?.requestedDuration),
-          "approvedBy":(user?.employeeID)?user?.employeeID:''
-       }
-      const config = {
-        method: 'POST',
-        maxBodyLength:Infinity,
-        url: baseUrl + `/approveLeave`,
-        data: payload
-      
-      }
-      axios.request(config).then((response) => {
-        enqueueSnackbar(response.data.message,{variant:'success'})
-      })
-        .catch((error) => {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
-          console.log(error);
-        });
-      
-      }
-      const handleEditRowParent =()=>{
-        return null
+  if(event?.name==="Approve" || event?.name==="Reject"){
+    const approveData = {
+      "leave_id": parseInt(rowdata?.applyLeaveId),
+      "emp_id": rowdata?.employeeId,
+      "status": event?.id,           
+      "leave_type_id":parseInt(rowdata?.leaveTypeId),
+      "duration": parseInt(rowdata?.requestedDuration),
+      "approvedBy":(user?.employeeID)?user?.employeeID:''
+   };
+   setApproveData(approveData)
+   setConfirmApproveOpen(true);
+   handleApproveConfirmed();
+  }
+}
+  const handleApproveConfirmed = async () => {
+        if (approveData) {
+          const config={
+            method:'POST',
+            maxBodyLength:Infinity,
+            url:baseUrl + '/approveLeave',
+            data:approveData
+           }
+           axios.request(config).then((response) => {
+            enqueueSnackbar(response.data.message,{variant:'success'})
+            setCount(count+1)
+          })
+            .catch((error) => {
+              enqueueSnackbar(error.response.data.message,{variant:'error'})
+              console.log(error);
+            });
+          setApproveData(null);
+          setConfirmApproveOpen(false);
+        }
       };
-
+  const handleCancelApprove = () => {
+        setApproveData(null);
+        setConfirmApproveOpen(false);
+  };
+console.log(count,"countt")
  return (
   <>
   <BasicTable 
@@ -120,7 +130,17 @@ const onClickActions=(rowdata,event)=>{
   bodyData = 'appliedLeave'
   filterName="LeavelistFilter"
   onClickActions={onClickActions}
-  handleEditRowParent={handleEditRowParent}/>
+  count={count}
+/>
+
+<ConfirmationDialog
+        open={confirmApproveOpen}
+        onClose={handleCancelApprove}
+        onConfirm={handleApproveConfirmed}
+        itemName={(approveData?.status=="1")?"Approve Leave":"Reject Leave"}
+        confirmButtonText={(approveData?.status=="1")?"Approve":"Reject"}
+        message={(approveData?.status=="1")?"Are you sure you want to Approve Leave?":"Are you sure you want to Reject Leave?"}
+      />
   
   </>
  )

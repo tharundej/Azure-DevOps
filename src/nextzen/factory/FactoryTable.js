@@ -107,7 +107,7 @@ const FactoryTable = () => {
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Factory Name', type: 'text', minWidth: '180px' },
+    { id: 'locationName', label: 'Factory / location Name', type: 'text', minWidth: '190px' },
     { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
     { id: 'locationPhone', label: 'Phone No', type: 'text', minWidth: '180px' },
     { id: 'address', label: 'Address', type: 'text', minWidth: '180px' },

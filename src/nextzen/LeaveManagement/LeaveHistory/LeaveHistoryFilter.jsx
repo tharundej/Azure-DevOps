@@ -144,8 +144,8 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
     }
     
     const handleCancel = async()=>{
-      setDropdownStatus("")
-      setDropdownLeaveType("")
+      setDropdownStatus([])
+      setDropdownLeaveType([])
       setDates({
         applyDatefrom: "",
         applyDateto: "",

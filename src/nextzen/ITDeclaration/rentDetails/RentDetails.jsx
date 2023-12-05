@@ -32,6 +32,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -57,6 +58,7 @@ export default function RentDetails() {
 
     // Add more months as needed
   ]);
+  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
@@ -121,6 +123,7 @@ const [loading,setLoading] = useState(false);
     financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   console.log(selectedYear, 'selectedYear');
@@ -308,23 +311,26 @@ const [loading,setLoading] = useState(false);
       .then((response) => {
         if (response.data.code === 200) {
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
         setOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving rent details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving rent details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -370,15 +376,17 @@ const [loading,setLoading] = useState(false);
         console.log('success', response);
         if (response.data.code === 200) {
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
@@ -550,7 +558,15 @@ const [loading,setLoading] = useState(false);
     // You can perform additional actions here when landLordDocs changes
   }, [landLordDocs]);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
 
   return (
     <div>
@@ -562,7 +578,7 @@ const [loading,setLoading] = useState(false);
         container
         xs={12}
         spacing={2}
-        style={{ marginBottom: '0.9rem'}}
+        style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}
       >
          <Grid item xs={4}>
         <Autocomplete
