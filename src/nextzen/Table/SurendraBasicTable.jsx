@@ -944,7 +944,7 @@ const handleExpandClick = (rowId) => {
 
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
 
-          dense={table.dense}
+          // dense={table.dense}
 
           onChangeDense={table.onChangeDense}
 

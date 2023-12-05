@@ -51,7 +51,7 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
-export default function DeductionFilter({filterSearch,filterData,componentPage}){
+export default function DeductionFilter({filterSearch,filterData,componentPage,getTableData}){
   const theme = useTheme();
   const {user} = useContext(UserContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -172,7 +172,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage})
         const response = await axios.post(baseUrl+`/addDeductionDetails`,data).then(
           (successData)=> {
             enqueueSnackbar(successData?.data?.message,{variant:'success'})
-            console.log(successData,"Success")
+            getTableData()
             handleClose()
           },
           (error)=>{

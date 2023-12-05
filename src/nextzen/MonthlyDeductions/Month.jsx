@@ -51,8 +51,8 @@ export default function Month() {
         arrLabels.push(item.label);
         arrContents.push(item.content);
       }
+     
     });
-
     setTabLabels(arrLabels);
     setTabContents(arrContents);
   }, [user]);

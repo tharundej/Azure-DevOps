@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { Country, State, City }  from 'country-state-city';
+import Divider from '@mui/material/Divider';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -200,6 +201,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           locationID:userdropDownvalue?.locationValue?.locationID || "",
           reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
           roleID:userdropDownvalue?.rolesValue?.roleID || "",
+          bloodGroup:userdropDownvalue?.bloodGroupValue?.label || "",
+          gender:userdropDownvalue?.genderValue?.label || "",
+          maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
+          nationality:userdropDownvalue?.nationalityValue?.nationality || "",
+          religion:userdropDownvalue?.religionValue?.label || "",
+          employmentType:userdropDownOptions?.employeementTypeValue?.label || "",
 
 
 
@@ -268,9 +275,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-
+             <Grid md={12} xs={12} lg={12}  fullWidth  item>
+             <Typography>General Information</Typography>
+             </Grid>
             
              <Grid md={6} xs={12}  fullWidth  item>
+             
                   <TextField
                     fullWidth
                 
@@ -381,26 +391,10 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="emergencyContactNumber"
-                    label="Emergency Contact Number"
-                    variant="outlined"
-                    id="emergencyContactNumber"
-                    value={currentUser?.emergencyContactNumber}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
-                      }))
-                    }}
-                  />
-                  </Grid>
+                
                   <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.dateOfBirth ? dayjs(currentUser?.dateOfBirth).toDate() : null}
                     onChange={(date) => {
@@ -423,6 +417,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Grid md={6} xs={12} item>
                   <DatePicker
                   fullWidth
+                  sx={{width:'100%'}}
                     value={currentUser?.joiningDate ? dayjs(currentUser?.joiningDate).toDate() : null}
                     onChange={(date) => {
                       setcurrentUser(prev => ({
@@ -443,6 +438,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
 
                 <Grid md={6} xs={12} item>
                   <DatePicker
+                  sx={{width:'100%'}}
                   fullWidth
                     value={currentUser?.offerDate ? dayjs(currentUser?.offerDate).toDate() : null}
                     onChange={(date) => {
@@ -516,6 +512,30 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={employmentTypeOptions || []}
+                value={userdropDownvalue?.employeementTypeValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.employeementTypeValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
@@ -527,7 +547,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 onChange={async(e, newvalue) => {
                 
                   var newArr = { ...userdropDownvalue };
-                  newArr.religionValue=newvalue;
+                  newArr.maritalStatusValue=newvalue;
 
                   setUserDropDownValue(newArr)
                 }
@@ -550,7 +570,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   onChange={async(e, newvalue) => {
                   
                     var newArr = { ...userdropDownvalue };
-                    newArr.religionValue=newvalue;
+                    newArr.nationalityValue=newvalue;
 
                     setUserDropDownValue(newArr)
                   }
@@ -612,14 +632,19 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   style={{  width: '100%' }} />}
                 />
                   </Grid>
+                  
+                  <Divider sx={{ borderStyle: 'dashed' }} />
 
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>Address</Typography>
+                    </Grid>
                  
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
                 
                     name="pAddressLine1"
-                    label="pAddressLine1"
+                    label="Permanent Address Line 1"
                     variant="outlined"
                     id="pAddressLine1"
                     value={currentUser?.pAddressLine1}
@@ -638,7 +663,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="pAddressLine2"
-                    label="pAddressLine2"
+                    label="Permanent Address Line 2"
                     variant="outlined"
                     id="pAddressLine2"
                     value={currentUser?.pAddressLine2}
@@ -652,7 +677,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                  
+                
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
@@ -795,7 +820,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine1"
-                    label="rAddressLine1"
+                    label="Resendtial Address Line 1"
                     variant="outlined"
                     id="rAddressLine1"
                     value={currentUser?.rAddressLine1}
@@ -814,7 +839,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     fullWidth
                 
                     name="rAddressLine2"
-                    label="rAddressLine2"
+                    label="Resential Address Line 2"
                     variant="outlined"
                     id="rAddressLine2"
                     value={currentUser?.rAddressLine2}
@@ -959,7 +984,9 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                
+                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
+                    <Typography>About Role</Typography>
+                    </Grid>
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               
@@ -1014,8 +1041,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 <Autocomplete
                   disablePortal
                   id="departmentName"
-                  options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
-
+                 // options={typeof userdropDownOptions?.departmentOptions===undefined ? []:userdropDownOptions?.departmentOptions}
+                  options={userdropDownOptions?.departmentOptions  || []}
                   value={userdropDownvalue?.departmentValue}
 
                   getOptionLabel={(option) => option.departmentName}

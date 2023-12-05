@@ -129,7 +129,7 @@ const PreviousWork = ({employeeIDForApis}) => {
       <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
+          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}} sx={{backgroundColor:'#3B82F6'}}>+Add Work</Button>
           </Grid>
         </Grid>
 
