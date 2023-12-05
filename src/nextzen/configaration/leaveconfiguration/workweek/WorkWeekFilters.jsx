@@ -196,7 +196,7 @@ export default function WorkWeekFilters({ filterData, filterOptions, filterSearc
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const locationName = await locationNameApi(Obj);
           var optionsArr = { ...options };

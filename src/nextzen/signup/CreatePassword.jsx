@@ -32,7 +32,7 @@ import { useState } from 'react';
 // ----------------------------------------------------------------------
 
 
-export default function AmplifyNewPasswordView({emailId}) {
+export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) {
   const { newPassword, forgotPassword } = useAuthContext();
   const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
@@ -91,7 +91,7 @@ export default function AmplifyNewPasswordView({emailId}) {
 
       const payload ={
         "password":data.password,
-        "jwtTokenString":localStorage.getItem('jwt_access_token')
+        'email':localStorage.getItem('email')
         
     }
     const response = await axios.post(baseUrl+'/createPassword', payload);
@@ -116,10 +116,11 @@ export default function AmplifyNewPasswordView({emailId}) {
       // await newPassword?.(data.email, data.code, data.password);
 
       // router.push(paths.auth.jwt.login);
+      onHandleNextIncrement()
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage(response?.data?.message);
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage(response?.data?.message);
+      // setSnackbarOpen(true);
       
      console.log('error', error);
     }

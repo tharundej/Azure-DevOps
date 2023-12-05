@@ -226,7 +226,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       async function call() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const holidayNames = await holidayTypeName(Obj);
           var optionsArr = { ...options };
@@ -241,7 +241,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       async function call2() {
         try {
           const Obj = {
-            companyID: 'COMP1',
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
           const locationName = await locationNameApi(Obj);
           var optionsArr = { ...options };

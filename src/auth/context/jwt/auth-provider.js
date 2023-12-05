@@ -307,13 +307,15 @@ export function AuthProvider({ children }) {
       // const response = await axios.post(endpoints.auth.register, data);
 
       console.log(response);
-      if (!response?.data?.data?.jwt) {
-        console.log('failed');
-        return;
-      }
+      // if (!response?.data?.data?.jwt) {
+      //   console.log('failed');
+      //   return;
+      // }
       const accessToken = response?.data?.data?.jwt;
       console.log(accessToken, 'accessssss');
+      console.log(response?.data?.data?.email)
       localStorage.setItem('jwt_access_token', accessToken);
+      localStorage.setItem('email',response?.data?.data?.email);
       // sessionStorage.setItem(STORAGE_KEY, accessToken);
       // dispatch({
       //   type: 'REGISTER',
