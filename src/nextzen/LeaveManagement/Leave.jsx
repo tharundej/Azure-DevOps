@@ -30,7 +30,7 @@ export default function BasicCard() {
       content: <Approveleave key="approveLeave" />,
     },
     {
-      id: 'leaveCalendar',
+      id: 'leaveOverview',
       label: 'Leave Overview',
       content: <LeaveRequest key="leaveCalendar" />,
     },

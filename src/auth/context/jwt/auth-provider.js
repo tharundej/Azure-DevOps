@@ -5,7 +5,7 @@ import axios, { endpoints } from 'src/utils/axios';
 import dayjs from 'dayjs';
 //
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
 import AmplifyNewPasswordView from 'src/nextzen/signup/CreatePassword';
 import { useRouter } from 'src/routes/hooks';

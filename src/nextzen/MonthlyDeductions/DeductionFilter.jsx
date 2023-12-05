@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { Today } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
@@ -285,11 +285,14 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
 <Grid container flexDirection="row" spacing={1}>
    <Grid item xs={12} md={6}>
    <RHFSelect name="employeeID" label="Employee">
-              {employeesList?.data?.map((employee) => (
+              {(employeesList?.data!=null)? (employeesList?.data?.map((employee) => (
                 <MenuItem value={employee?.EmployeeID} key={employee?.EmployeeID}>
                   {employee?.employeeName}
                 </MenuItem>
-              ))}
+              ))
+              ):<>No Employees</>
+            }
+
    </RHFSelect>
    </Grid>
 <Grid item xs={12} md={6}>

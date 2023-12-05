@@ -40,7 +40,7 @@ import { _userList } from "src/_mock";
 import { paths } from 'src/routes/paths';
 
 import { useRouter } from 'src/routes/hooks';
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';

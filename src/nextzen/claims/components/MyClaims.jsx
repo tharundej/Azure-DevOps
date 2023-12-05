@@ -51,7 +51,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../../global/BaseUrl';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';

@@ -20,7 +20,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { createAssetsAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
 import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from 'src/nextzen/context/user/UserConext';
