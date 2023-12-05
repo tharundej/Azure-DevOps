@@ -576,7 +576,7 @@ const handleSnackBar=()=>{
   </Grid>
   <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
    
-   {/* {projectPermission? */}
+   {projectPermission?
     <Button
       variant="contained"
       color="primary"
@@ -586,8 +586,8 @@ const handleSnackBar=()=>{
     >
       Add project
     </Button>
-    {/* :null} */}
-    {/* {(assignPermission)? */}
+    :null} 
+ {(assignPermission)? 
     <Button   
     variant="contained"
     color="primary"
@@ -596,7 +596,7 @@ const handleSnackBar=()=>{
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
     </Button>
-    {/* :null} */}
+   :null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>
