@@ -15,6 +15,7 @@ const Project = () => {
 
   const {user} = useContext(UserContext)
   const {enqueueSnackbar} = useSnackbar()
+  const [count,setCount] = useState(0)
   const TABLE_HEAD = [
 
     { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
@@ -119,7 +120,8 @@ const handleDeleteConfirmed = async () => {
      }
      axios.request(config).then((response)=>{
       enqueueSnackbar(response?.data?.message,{variant:'success'})
-     })
+      setCount(count+1)
+    })
      .catch((error)=>{
       enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
     
@@ -131,6 +133,7 @@ const handleDeleteConfirmed = async () => {
 
 const handleClose =()=>{
   setEditProject(false)
+  setCount(count+1)
   setViewProject(false)
 }
 
@@ -199,11 +202,6 @@ const UpdateEmployees=()=>{
    })
 }
 
-
-
-
-
-
   return (
     <>
     {viewProject?
@@ -215,8 +213,9 @@ const UpdateEmployees=()=>{
     </Button>    
         <CardHeader title="Assigned Employees" />
           
-        <Grid item sx={{ flexGrow: 1 }} /> 
-        <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
+       <Grid item sx={{ flexGrow: 1 }} /> 
+       {(user?.roleName==="Project Manager" || user?.roleName==="Reporting Manager")?
+       <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>:null}
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>
@@ -268,7 +267,7 @@ endpoint='/listProject'
 bodyData='data'
 onClickActions={onClickActions}
 rowActions={actionsBasedOnRoles}
-
+count={count}
 
 /> }
 

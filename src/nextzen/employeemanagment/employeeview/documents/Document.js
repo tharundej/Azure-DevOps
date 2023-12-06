@@ -97,8 +97,11 @@ const Documets = ({employeeIDForApis}) => {
     <Button onClick={()=>{
       setType('create')
      setOpen(true)
+     
         
-    }}>Upload Documents</Button>
+    }}
+    sx={{backgroundColor:'#3B82F6'}}
+    >Upload Documents</Button>
 
     </Grid>
 

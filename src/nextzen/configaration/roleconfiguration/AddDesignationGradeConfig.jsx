@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect, useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -42,6 +42,8 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
+
 
 export default function AddDesignationGradeConfig({
   currentUser,
@@ -55,15 +57,17 @@ export default function AddDesignationGradeConfig({
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+const {enqueueSnackbar} = useSnackbar()
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+ 
 
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -287,24 +291,22 @@ export default function AddDesignationGradeConfig({
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Designation Added successfully!');
-          setSnackbarOpen(true);
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+       
           setHitGetDepartment(!hitGetDepartment);
+          handleClose();
           console.log('success');
         } else if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          
           setHitGetDepartment(!hitGetDepartment);
           console.log('success');
         }
       })
       .catch((error) => {
         //  setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+       
         console.log(error);
       });
     //  console.log(result, 'resultsreults');

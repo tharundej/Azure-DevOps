@@ -19,7 +19,7 @@ import { Button } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
 import UserContext from '../context/user/UserConext';
 import ModalHeader from '../global/modalheader/ModalHeader';
-export default function SalaryAdvanceForm({ handleClose }) {
+export default function SalaryAdvanceForm({ handleClose ,getTableData}) {
  
   const router = useRouter();
   const {user} = useContext(UserContext)
@@ -61,6 +61,7 @@ const [sendData, setSendData] = useState({
       const response = await instance.post(baseUrl+'/addSalaryAdvance', data).then(
         (successData) => {
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
+          getTableData()
           handleClose()
         },
         (error) => {

@@ -47,18 +47,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-
-  
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
-export default function MyShiftSearchFilter({filterData,filterOptions,searchData}){
+export default function MyShiftSearchFilter({filterSearch,filterData}){
   const theme = useTheme();
   const [leaveType,SetLeaveType]= useState();
   const getLeaveType = () => {
@@ -87,15 +76,6 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
   const [dropdown,setDropdown]=useState({
 // 
   })
-
-  const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
-
   const [dateError,setDataError]=useState("")
   const [filters,setFilters]=useState(defaultFilters)
   const [personName, setPersonName] = React.useState([]);
@@ -259,9 +239,7 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
             <Grid md={8} xs={8} item>
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch}
-            onChange={(e) => handleSearch(e.target.value)}
-
+            onChange={e=>{handleSearch(e)}}
             />
             </Grid>
             <Grid md={4} xs={4} item>
@@ -471,14 +449,6 @@ export default function MyShiftSearchFilter({filterData,filterOptions,searchData
     
 }
 MyShiftSearchFilter.propTypes={
-    filterData: PropTypes.func,
-}
-
-MyShiftSearchFilter.propTypes={
-    filterOptions: PropTypes.arrayOf(
-        PropTypes.shape({
-          fieldName: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string)
-        })
-      ),
+    filterSearch:PropTypes.any,
+    filterData: PropTypes.any,
 }

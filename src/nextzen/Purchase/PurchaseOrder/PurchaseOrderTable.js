@@ -161,6 +161,10 @@ const PurchaseOrderTable = () => {
     { id: 'advanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
     { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
   ]);
+  const handleEditRowParent = (rowdata, event) => {
+    setViewShowForm(true);
+    setEditModalData(rowdata);
+  };
   return (
     <>
       {viewShowForm && (
@@ -188,7 +192,7 @@ const PurchaseOrderTable = () => {
         rowActions={actions}
         filterName="PurchaseOrderHead"
         onClickActions={onClickActions}
-        handleEditRowParent={() => {}}
+        handleEditRowParent={handleEditRowParent}
       />
     </>
   );
