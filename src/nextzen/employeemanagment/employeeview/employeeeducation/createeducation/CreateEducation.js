@@ -316,6 +316,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
               
             
                 <>
+                
                 {defaultValues?.map((item, index) => (
                   <Grid  container flexDirection="row">
                 <Grid md={10} xs={10} lg={10} padding="5px" item>
@@ -477,6 +478,8 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       
                                       
                                     </Grid>
+
+                                    
                                           
                                       {item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
