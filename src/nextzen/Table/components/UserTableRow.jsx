@@ -164,11 +164,14 @@ const renderCellContent = (columnId, value) => {
                   <Label
                     variant="soft"
                     color={
-                      (row[ele?.id]?.toLowerCase() === 'approved' && 'success') ||
+                      (row[ele?.id]?.toLowerCase() === 'approved' && 'success') || 
                       (row[ele?.id]?.toLowerCase() === 'pending' && 'warning') ||
                       (row[ele?.id]?.toLowerCase() === 'rejected' && 'error') ||
                       (row[ele?.id]+""?.toLowerCase() === 'true' && 'success') ||
                       (row[ele?.id]+""?.toLowerCase() === 'false' && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'completed' && 'success') ||
+                      (row[ele?.id]?.toLowerCase() === 'upcoming' && 'warning') ||
+                      (row[ele?.id]?.toLowerCase() === 'ongoing' && 'secondary') ||
                       'default'
                     }
                   >
