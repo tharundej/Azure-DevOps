@@ -22,6 +22,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { width } from '@mui/system';
+import {Snackbar,Alert} from '@mui/material'
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ComoffConfigurationForm({ currentUser }) {
@@ -31,6 +32,14 @@ export default function ComoffConfigurationForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+  const handleCloseEdit = () => setOpenEdit(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const handleClose2 = () => {
     setOpen(false);
     reset2();
@@ -115,8 +124,25 @@ export default function ComoffConfigurationForm({ currentUser }) {
         baseUrl+'/addCompensantoryConfiguration',
         data
       );
-      console.log('sucess', response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+   handleClose();
+        console.log('sucess', response?.data?.message);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+   handleClose();
+        console.log('sucess', response?.data?.code);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -131,19 +157,59 @@ export default function ComoffConfigurationForm({ currentUser }) {
         baseUrl+'/addCompensantoryConfiguration',
         data
       );
-      console.log('sucess', response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+   handleClose();
+        console.log('sucess', response?.data?.code);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+   handleClose();
+        console.log('sucess', response?.data?.code);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
+      setSnackbarOpen(true);
+ handleClose();
       console.log('error', error);
     }
   });
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <>
+     <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
+        sx={{margin:'20px',backgroundColor:'#3B82F6'}}
       >
         Add Compensantory Configuration
       </Button>

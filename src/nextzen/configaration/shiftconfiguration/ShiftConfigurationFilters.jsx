@@ -102,12 +102,12 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     'weekly',
     'Monthly',
   ]
-  const [locationName, setLocationName] = useState([])
+  const [locationID, setLocationID] = useState([])
   useEffect(()=>{
     async function call() {
       const arr = await locationApi();
       console.log(arr, 'sairam');
-      setLocationName(arr);
+      setLocationID(arr);
     }
     call();
   },[])
@@ -187,9 +187,9 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   function formWithDropdown() {
     return new Promise((resolve) => {
   const arr= [];
-      dropdown?.locationName?.forEach((item, index) => {
+      dropdown?.locationID?.forEach((item, index) => {
        
-        arr.push(item?.locationName);
+        arr.push(item?.locationID);
        
       });
       resolve(arr);
@@ -212,10 +212,10 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
           const Obj = {
             companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           };
-          const locationName = await locationApi(Obj);
+          const locationID = await locationApi(Obj);
           var optionsArr = { ...options };
 
-          optionsArr.locationName = locationName;
+          optionsArr.locationID = locationID;
           // optionsArr.locationName=desgination;
           console.log(optionsArr, 'optionsArr');
 
@@ -235,7 +235,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'locationName') {
+    } else if (field === 'locationID') {
       setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
@@ -268,7 +268,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     const data =await formWithDropdown();
     const comma = data.join(',');
     const obj = {
-      locationName:comma,
+      locationFilter:comma,
     }
     filterData(obj);
     console.log(obj, 'sairam2222');
@@ -386,19 +386,19 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                
                 <Grid item xs={6} marginTop="10px" >
                   <FormControl fullWidth>
-                    <InputLabel id="locationName">Location</InputLabel>
+                    <InputLabel id="locationID">Location</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'locationName')}
+                      onChange={(e) => handleChangeDropDown(e, 'locationID')}
                       input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {locationName.map((name) => (
+                      {locationID.map((name) => (
                         <MenuItem
                           key={name}
                           value={name}

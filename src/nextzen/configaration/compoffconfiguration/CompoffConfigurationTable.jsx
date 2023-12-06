@@ -146,7 +146,7 @@ export default function CompoffConfigurationTable({currentUser}) {
       }
     }
   };
-
+    
     const getOptionLabel = (compensatory) => compensatory.type;
 
     const NewUserSchema1 = Yup.object().shape({

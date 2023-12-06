@@ -51,7 +51,7 @@ export default function HolidaysForm({ currentUser }) {
   });
 
   const RepeatsAnuallys = [{ type: 'Yes' }, { type: 'No' }];
-  const Fullday_halfdays = [{ type: 'Fullday' }, { type: 'Halfday' }];
+  const Fullday_halfdays = [{ type: 'Full Day' }, { type: 'First Half' },{type: 'Second Half'}];
 
   const defaultValues1 = useMemo(
     () => ({
