@@ -201,6 +201,19 @@ const UpdateEmployees=()=>{
     handleCloseEmployee()
    })
 }
+const [assignPermission,setAssignPermission] = useState(false)
+useEffect(()=>{
+  const permission = user?.rolePermissions.timeSheetManagement
+  if (
+    permission &&
+    permission.hasOwnProperty('mainHeading') &&
+    permission.mainHeading &&
+    permission['assignEmployees']
+  )
+  {
+    setAssignPermission(true)
+  }
+},[user])
 
   return (
     <>
@@ -214,9 +227,9 @@ const UpdateEmployees=()=>{
         <CardHeader title="Assigned Employees" />
           
        <Grid item sx={{ flexGrow: 1 }} /> 
-       {/* {(user?.roleName==="Project Manager" || user?.roleName==="Reporting Manager")? */}
+       {(assignPermission)?
        <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
-       {/* :null} */}
+       :null}
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>

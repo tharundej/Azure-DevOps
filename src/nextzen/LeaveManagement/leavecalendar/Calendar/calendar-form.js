@@ -244,7 +244,8 @@ const lossOfPay = ()=>{
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    url:baseUrl+'/getLossOfPay',
     data:  payload
   };
   axios.request(config).then((response) => {
