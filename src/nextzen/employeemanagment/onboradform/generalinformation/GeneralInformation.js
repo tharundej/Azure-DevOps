@@ -81,12 +81,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     }
   }))
   useEffect(()=>{
-    console.log("HIII")
+   
     const obj=Country.getAllCountries();
     const newArray={...options};
     newArray.countryOptions=obj;
     newArray.rcountryOptions=obj;
-    console.log(obj,'ooooooo')
+   
     setOptions(newArray)
   },[])
 
@@ -294,6 +294,24 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   const onSubmit = handleSubmit(async (data) => {
     
 
+    fetch(data?.avatarUrl?.preview)
+  .then(response => response.blob())
+  .then(blob => {
+    // Convert Blob to Base64
+    var reader = new FileReader();
+    reader.onload = function () {
+      var base64Data = reader.result.split(',')[1];
+      data.imageData=base64Data;
+      data.imageName=data?.avatarUrl?.path;
+      console.log(data,'base64Data');
+      ApiHitGeneralInformation(data);
+    };
+    reader.readAsDataURL(blob);
+  })
+  .catch(error => console.error('Error fetching the file:', error));
+
+  console.log(data?.avatarUrl?.preview,'general information');
+
     try {
       data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
@@ -330,14 +348,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.offerDate = (datesUsed?.offer_date);
       data.joiningDate = (datesUsed?.joining_date);
       data.dateOfBirth = (datesUsed?.date_of_birth);
-       data.gender=data?.gender?.label|| "",
+       data.gender=data?.gender?.label|| "";
        data.maritalStatus=data?.maritalStatus?.label || ""
-       data.religion=data?.religion?.label || "",
-       data.nationality=data?.nationality?.nationality || "",
-       data.bloodGroup=data?.bloodGroup?.label || "",
-       data.pCountry=data?.country|| "",
-      data.pState=data?.state || "",
-      data.pCity=data?.city || ""
+       data.religion=data?.religion?.label || "";
+       data.nationality=data?.nationality?.nationality || "";
+       data.bloodGroup=data?.bloodGroup?.label || "";
+       data.pCountry=data?.country|| {name:"",isoCode:""};
+      data.pState=data?.state || {name:"",isoCode:""};
+      data.pCity=data?.city || {name:"",isoCode:""}
        
 
       if(isSameAsPermanent){
@@ -360,7 +378,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
      
 
       
-       ApiHitGeneralInformation(data);
+       
       // const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
       //   (successData) => {
       //     console.log('sucess', successData);

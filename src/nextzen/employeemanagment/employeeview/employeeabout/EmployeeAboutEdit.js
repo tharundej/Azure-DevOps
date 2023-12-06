@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { Country, State, City }  from 'country-state-city';
-import Divider from '@mui/material/Divider';
+import Switch from '@mui/material/Switch';
 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
@@ -42,6 +42,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
+   const [isSameAsResendtial,setIsSameAsResendtial]=useState(false);
   useEffect(()=>{
     if(dropDownOptions){
      console.log(dropDownOptions,'dropDownOptions')
@@ -195,21 +196,36 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
         console.log(currentUser,userdropDownvalue,'userdropDownvalue')
         const obj={
           ...currentUser,
-          departmentID:userdropDownvalue?.departmentValue?.departmentID || "",
-          designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID || "",
-          designationID:userdropDownvalue?.desginationValue?.designationID || "",
-          locationID:userdropDownvalue?.locationValue?.locationID || "",
-          reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
-          roleID:userdropDownvalue?.rolesValue?.roleID || "",
+          departmentID:userdropDownvalue?.departmentValue?.departmentID || null,
+          designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID ||null,
+          designationID:userdropDownvalue?.desginationValue?.designationID || null,
+          locationID:userdropDownvalue?.locationValue?.locationID || null,
+          reportingManagerID:userdropDownvalue?.managerValue?.managerID || null,
+          roleID:userdropDownvalue?.rolesValue?.roleID || null,
           bloodGroup:userdropDownvalue?.bloodGroupValue?.label || "",
           gender:userdropDownvalue?.genderValue?.label || "",
           maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
           nationality:userdropDownvalue?.nationalityValue?.nationality || "",
           religion:userdropDownvalue?.religionValue?.label || "",
-          employmentType:userdropDownOptions?.employeementTypeValue?.label || "",
+          pCountry:userdropDownvalue?.pCountryValue || {name:" " ,isCode: ""},
+          pState:userdropDownvalue?.pStateValue || {name:" " ,isCode: ""},
+          pCity:userdropDownvalue?.pCityValue || {name:" " ,isCode: ""},
+          ImageData:''
 
 
 
+        }
+        if(isSameAsResendtial){
+          obj.rCountry=userdropDownvalue?.pCountryValue || {name:" " ,isCode: ""};
+          obj.rState=userdropDownvalue?.pStateValue || {name:" " ,isCode: ""};
+          obj.rCity=userdropDownvalue?.pCityValue || {name:" " ,isCode: ""};
+        }
+        else{
+          if(isSameAsResendtial){
+            obj.rCountry=userdropDownvalue?.rCountryValue || {name:" " ,isCode: ""};
+            obj.rState=userdropDownvalue?.rStateValue || {name:" " ,isCode: ""};
+            obj.rCity=userdropDownvalue?.rCityValue || {name:" " ,isCode: ""};
+          }
         }
     
         try {
@@ -275,10 +291,10 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               {/* <Grid container>      */}
 
              <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-             <Grid md={12} xs={12} lg={12}  fullWidth  item>
-             <Typography>General Information</Typography>
-             </Grid>
-            
+
+             <Grid md={12} xs={12} lg={12} item fullWidth>
+              <Typography variant='h6'>General Information</Typography>
+            </Grid>
              <Grid md={6} xs={12}  fullWidth  item>
              
                   <TextField
@@ -470,7 +486,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        emergencyContactNumber:e?.target.value
+                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
                       }))
                     }}
                   />
@@ -632,12 +648,11 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   style={{  width: '100%' }} />}
                 />
                   </Grid>
-                  
-                  <Divider sx={{ borderStyle: 'dashed' }} />
 
-                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
-                    <Typography>Address</Typography>
-                    </Grid>
+
+                  <Grid md={12} xs={12} lg={12} item fullWidth>
+                    <Typography variant='h6'>Address</Typography>
+                  </Grid>
                  
                   <Grid md={6} xs={12} item>
                   <TextField
@@ -701,7 +716,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   newArr.pCityValue=undefined;
                  
                   
-                  console.log(newArr)
+                  //console.log(newArrm)
                  
                   setUserDropDownValue(newArr)
                 }
@@ -814,7 +829,17 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
-
+                  <Grid style={{ display: 'flex', alignItems: 'center' }} md={12} lg={12} xs={12} >
+                  <Switch
+                    checked={isSameAsResendtial}
+                    onChange={()=>{
+                      setIsSameAsResendtial((prevValue) => !prevValue);
+                    }}
+                    inputProps={{ 'aria-label': 'Toggle' }}
+                  />
+                  <Typography component="p">Same As Permanent</Typography>
+              </Grid>
+                  {!isSameAsResendtial &&<>
                   <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -984,9 +1009,10 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                  <Grid md={12} xs={12} lg={12}  fullWidth  item>
-                    <Typography>About Role</Typography>
-                    </Grid>
+                   </>}
+                   <Grid md={12} xs={12} lg={12} item fullWidth>
+                    <Typography variant='h6'>Role</Typography>
+                  </Grid>
               
               <Grid item xs={12} md={6} paddingLeft='16px'>
               

@@ -75,9 +75,11 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     const tabIndex=1;
 
     const handleExpanded=(index)=>{
-        const newExpanded = [...expanded];
+      setExpanded((prevExpanded) => {
+        const newExpanded = [...prevExpanded];
         newExpanded[index] = !newExpanded[index];
-        setExpanded(newExpanded);
+        return newExpanded;
+      });
       }
      
   
@@ -136,54 +138,39 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
          
                 {
                   employeeEducation?.map((itm,index) => (
+
                    
-                      <Card sx={{padding:"10px",margin:'10px',boxShadow:'3'}}>
+                   
+                      <Card sx={{padding:"10px",margin:'10px',boxShadow:'3',minWidth:'400px'}}>
 
                       
                           
-               { (!expanded[index])?  <>
-               <Grid container alignItems="center" justifyContent="center" flexDirection="column" minHeight="200px" minWidth="200px">
+              <>
+               <Grid container alignItems="center" justifyContent="center" flexDirection="column" minHeight="200px" maxWidth="500px">
                <Typography>
                 <span style={{fontWeight:700}}> </span> {itm?.nameOfTheDegree}  
-                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>{
+                <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
                             const item=itm;
                             delete item.documents;
                             handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>
+                
              
               </Typography>
+              <Typography>@</Typography>
+              <IconButton sx={{position: 'absolute',top: 35,right: 0}} onClick={()=>{
+                            const item=itm;
+                            delete item.documents;
+                            handleExpanded(index)}}><Iconify icon="mdi:eye"/></IconButton>
                 <Typography><span style={{fontWeight:600}}>  </span>  {itm?.universityName}</Typography>
+               
                 <Typography ><span style={{fontWeight:600}}>  </span>  {itm?.startDate}  - {itm?.endDate}
                   <Stack  lg={12} ></Stack>
                 </Typography>
-                <EmployeeRecords callApi={ApiHit} docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} />
+                
+               <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </>
                 </Grid>
                   </>
-                 :<>
-                                <Typography>
-                            <span style={{fontWeight:700}}>Name Of The Degree : </span> {itm?.nameOfTheDegree}  
-
-                            <Grid>
-                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>{
-                            const item=itm;
-                            delete item.documents;
-                            handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>}
-                           </Grid>
-                            </Typography>
-                          
-                            <Typography><span style={{fontWeight:600}}>Stream :  </span>  {itm?.stream}</Typography>
-
-                            <Typography><span style={{fontWeight:600}}>University Name :  </span>  {itm?.universityName}</Typography>
-                            <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate} </Typography>
-                            <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate} </Typography>
-                          <Typography><span style={{fontWeight:600}}>Grade Type : </span> {itm?.gradeType}</Typography>
-                          <Typography><span style={{fontWeight:600}}>Grade : </span> {itm?.grade}</Typography>
-
-                        {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords callApi={ApiHit} docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} />
-                       
-
-                          </>}
+                 
                        
                       </Card>
                     )

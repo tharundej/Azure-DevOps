@@ -302,13 +302,6 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   
   
   
- 
-  
-
-  
-
-  
-  
   const renderAbout = (
     <>
     
@@ -465,9 +458,6 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   );
 
  
-
- 
-
   const dataa= {
     "companyID": "",
     "employeeID": "",
