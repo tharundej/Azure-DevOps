@@ -36,7 +36,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import SalaryAdvanceForm from './SalaryAdvaceForm';
 import { baseUrl } from '../global/BaseUrl';
 import UserContext from '../context/user/UserConext';

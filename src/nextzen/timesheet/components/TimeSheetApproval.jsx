@@ -85,7 +85,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
   const companyID = localStorage.getItem('companyID');
   const [selectedActivity, setSelectedActivity] = useState(null);
   const defaultPayload = {
-    "companyId":"comp1",
+    "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     "employeeId":"info2",
     "page":0,
     "count":5,

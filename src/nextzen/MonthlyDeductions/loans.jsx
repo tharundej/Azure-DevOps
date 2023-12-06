@@ -31,11 +31,11 @@ export default function Loans({defaultPayload,componentPage}) {
     
         { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
-        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
+        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
     
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "text" },
+        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "date" },
         { id: "paidAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
         { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
@@ -63,7 +63,7 @@ export default function Loans({defaultPayload,componentPage}) {
       // Function to get row actions based on user role
       const generateRowActions = () => {
         const userRoleID = user?.roleID; // Assuming roleID is available in user object
-        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        const actions = (userRoleID==1)?actualActions:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
         console.log(actions,"actionsss")
         return actions;
       };
