@@ -203,9 +203,8 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":user?.employeeID,
-    "companyID":user?.companyID,
-    "locationID":user?.locationID
+   
+    "companyID":user?.companyID
 }
   const config={
     method:'POST',
