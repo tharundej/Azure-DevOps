@@ -319,10 +319,12 @@ console.log(defaultValues,"defaultValues")
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message,{variant:'success'})
           setCount(count+1)
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
           enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+          handleClose()
         }
       );
 
@@ -331,6 +333,7 @@ console.log(defaultValues,"defaultValues")
       enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
+      handleClose()
     }
   });
 console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
@@ -412,6 +415,7 @@ console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
            filterName="claimSearchFilter"
         // filterName="claimSearchFilter"
          onclickActions={onclickActions}
+         count={count}
       />
     </>
   );

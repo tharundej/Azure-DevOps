@@ -128,8 +128,10 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     try {
     
       const data = {
-        manager_id: managerID,
-        // employee
+        
+          employeeId:employeeID,
+          companyId:companyID,
+         
         // Other data properties as needed
       };
       const response = await axios.post(baseUrl+'/listmanagersproject', data).then(
@@ -529,8 +531,8 @@ PaperProps={{
             // disablePortal
             id="cobo-box-demo"
             options={projectDetails || []}
-            value={currentProjectData.projectId}
-            getOptionLabel={(option) => option.projectcdName}
+            value={currentProjectData?.projectId }
+            getOptionLabel={(option) => option?.projectcdName }
             onChange={(e,newvalue)=>{
              
              
@@ -543,7 +545,7 @@ PaperProps={{
             renderInput={(params) => <TextField {...params} label="Project Name" />}
           /></Grid>
           <Grid item  xs={12} sm={6} fullWidth>
-                <Autocomplete
+                {/* <Autocomplete
             disablePortal
             id="combo-box-dmo"
             options={activityData || []}
@@ -560,7 +562,18 @@ PaperProps={{
             }}
          
             renderInput={(params) => <TextField {...params} label="Activity Name" />}
-          />
+          /> */}
+          <TextField 
+              
+              label="Activity Name" 
+              fullWidth
+              inputProps={{
+                pattern: '[0-9]', 
+                maxLength: 2, 
+              }}
+              // value={timesheetData.monday.hours}
+              // onChange={handleDayInputChange('monday', 'hours')}
+              />
           </Grid>
 
           
@@ -572,7 +585,7 @@ PaperProps={{
     value={timeSheetWeek?.workWeek} // Set the default selected value as per your requirement
     onChange={(e, newValue) => {
       if (newValue) {
-        console.log(newValue.workWeek);
+        console.log(newValue?.workWeek);
         // Handle the selected value
       }
     }}

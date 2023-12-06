@@ -186,7 +186,7 @@ export const paths = {
         leaveconfiguration: `/configurations/leaveconfiguration`,
         compoffconfiguration: `/configurations/compoffconfiguration`,
         appraisalconfiguration: `/configurations/appraisalconfiguration`,
-      // expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
       shiftconfiguration: `/configurations/shiftconfiguration`,
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,

@@ -207,15 +207,24 @@ export default function ApproveClaim({ currentUser }) {
   console.log(approve, "approve1233")
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const parsedValue = name === "approvedAmount" && value.trim() !== "" ? parseFloat(value) : null;
-
-    setApprove((prevApprove) => ({
-      ...prevApprove,
-      [name]: parsedValue,
-    }));
-
+    console.log(name, value, "1998-10-07");
+  
+    // Handle approvedAmount separately
+    if (name === "approvedAmount") {
+      const parsedValue = value.trim() !== "" ? parseFloat(value) : null;
+      setApprove((prevApprove) => ({
+        ...prevApprove,
+        [name]: parsedValue,
+      }));
+    } else {
+      // For other fields like approverRemark, handle them normally
+      setApprove((prevApprove) => ({
+        ...prevApprove,
+        [name]: value,
+      }));
+    }
   };
-
+  
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData, eventData) => {
@@ -228,7 +237,7 @@ export default function ApproveClaim({ currentUser }) {
             ...prevState,
             status: "Approved",
             expenseClaimId: rowData?.expenseClaimId,
-            employeeId: rowData?.EmployeeId,
+            employeeId: rowData?.employeeId,
             claimAmount: rowData?.claimAmount,
             claimType: rowData?.claimType,
           }));
@@ -246,7 +255,7 @@ export default function ApproveClaim({ currentUser }) {
             ...prevState,
             status: "Rejected",
             expenseClaimId: rowData?.expenseClaimId,
-            employeeId: rowData?.EmployeeId,
+            employeeId: rowData?.employeeId,
             claimAmount: rowData?.claimAmount,
             claimType: rowData?.claimType,
           }));
@@ -277,10 +286,12 @@ export default function ApproveClaim({ currentUser }) {
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message, { variant: 'success' })
           setCount(count + 1)
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          handleClose()
         }
       );
 
@@ -288,6 +299,7 @@ export default function ApproveClaim({ currentUser }) {
     } catch (error) {
       enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       console.error(error);
+      handleClose()
     }
   });
 
@@ -367,7 +379,7 @@ export default function ApproveClaim({ currentUser }) {
         dialogPayload={externalFilter}
         onclickActions={onclickActions}
       // searchFilterheader={searchFilterheader}
-
+      count={count}
       />
     </>
   );

@@ -719,6 +719,7 @@ const handleCancelDelete = () => {
       dialogPayload={externalFilter}
          filterName="claimSearchFilter"
          onclickActions={onclickActions}
+         count={count}
       />
     </>
   );
