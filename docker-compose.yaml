@@ -1,9 +1,9 @@
 version: "3.9"
 services:
-  node_frontend:
+  node_n:
     build: 
-    image: ui_erp:anil-${BUILD_NUMBER}
-    container_name: node_frontend
+    image: ui_erp:latest-${BUILD_NUMBER}
+    container_name: node_n
     environment:
         - TZ=Asia/Kolkata
     volumes:

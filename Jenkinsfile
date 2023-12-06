@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent dev
     stages{
          stage("Env Variables") {
             steps {
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker ps  | xargs docker stop node_frontend  | xargs docker rm node_frontend &&
+                        docker ps  | xargs docker stop node_n  | xargs docker rm node_n &&
                         docker system prune -a 
                     '''
                 }
