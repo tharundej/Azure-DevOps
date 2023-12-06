@@ -196,12 +196,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
         console.log(currentUser,userdropDownvalue,'userdropDownvalue')
         const obj={
           ...currentUser,
-          departmentID:userdropDownvalue?.departmentValue?.departmentID || "",
-          designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID || "",
-          designationID:userdropDownvalue?.desginationValue?.designationID || "",
-          locationID:userdropDownvalue?.locationValue?.locationID || "",
-          reportingManagerID:userdropDownvalue?.managerValue?.managerID || "",
-          roleID:userdropDownvalue?.rolesValue?.roleID || "",
+          departmentID:userdropDownvalue?.departmentValue?.departmentID || null,
+          designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID ||null,
+          designationID:userdropDownvalue?.desginationValue?.designationID || null,
+          locationID:userdropDownvalue?.locationValue?.locationID || null,
+          reportingManagerID:userdropDownvalue?.managerValue?.managerID || null,
+          roleID:userdropDownvalue?.rolesValue?.roleID || null,
           bloodGroup:userdropDownvalue?.bloodGroupValue?.label || "",
           gender:userdropDownvalue?.genderValue?.label || "",
           maritalStatus:userdropDownvalue?.maritalStatusValue?.label || "",
@@ -210,6 +210,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           pCountry:userdropDownvalue?.pCountryValue || {name:" " ,isCode: ""},
           pState:userdropDownvalue?.pStateValue || {name:" " ,isCode: ""},
           pCity:userdropDownvalue?.pCityValue || {name:" " ,isCode: ""},
+          ImageData:''
 
 
 
@@ -484,7 +485,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                       
                       setcurrentUser(prev=>({
                         ...prev,
-                        emergencyContactNumber:e?.target.value
+                        emergencyContactNumber: parseInt(e.target.value, 10) || ''
                       }))
                     }}
                   />

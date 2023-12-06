@@ -138,8 +138,10 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
          
                 {
                   employeeEducation?.map((itm,index) => (
+
                    
-                      <Card sx={{padding:"10px",margin:'10px',boxShadow:'3'}}>
+                   
+                      <Card sx={{padding:"10px",margin:'10px',boxShadow:'3',minWidth:'400px'}}>
 
                       
                           
@@ -165,7 +167,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                   <Stack  lg={12} ></Stack>
                 </Typography>
                 
-                {expanded[index] && <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </>}
+               <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </>
                 </Grid>
                   </>
                  

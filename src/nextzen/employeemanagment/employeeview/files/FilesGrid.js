@@ -39,7 +39,7 @@ const FilesGrid = ({dataFiltered,onEdit,onDelete}) => {
                   
                   onEdit={onEdit}
                   onDelete={onDelete}
-                  sx={{ maxWidth: 'auto' }}/>
+                  sx={{ minWidth: '550px' }}/>
                 
                 
                 )
