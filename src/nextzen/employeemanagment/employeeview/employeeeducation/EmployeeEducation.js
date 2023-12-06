@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { bgGradient } from 'src/theme/css';
 
+
 const employeeData=[ {
   nameOfTheDegree:  '',
     stream:  '',
@@ -166,7 +167,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                 <span style={{fontWeight:700}}> </span> {itm?.nameOfTheDegree}  
                 <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
                             const item=itm;
-                            delete item.documents;
+                          
                             handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>
                 
              

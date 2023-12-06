@@ -40,6 +40,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from './FilesDisplay';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -479,9 +480,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       
                                     </Grid>
 
-                                    
-                                          
-                                      {item?.documents?.map((file,index1)=>(
+                                    {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
+                                         { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
+                                      {  item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                                         <Grid item xs={10} md={6} >
