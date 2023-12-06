@@ -136,10 +136,10 @@ const handleClose =()=>{
   setCount(count+1)
   setViewProject(false)
 }
-
+const [selectedIds, setSelectedIds] = useState([]);
 const handleCloseEmployee=()=>{
-  
   setEditEmployee(false)
+  setSelectedIds([])
 }
 const [showAll, setShowAll] = useState(false);
 
@@ -147,7 +147,7 @@ const visibleItemsCount = 6
 
 const visibleEmployees = showAll ? rowData?.employees : rowData?.employees?.slice(0, visibleItemsCount);
 let employeeIDs = [];
-const [selectedIds, setSelectedIds] = useState([]);
+
 useEffect(() => {
   if (rowData) {
     employeeIDs = rowData?.employees?.map(employees => employees.employeeId);
@@ -158,7 +158,7 @@ const [editEmployee,setEditEmployee] = useState(false)
 const [employesListData,setEmployesListData]= useState([])
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":rowData?.projectManager
+    companyID:user?.companyID
   }
   const config={
     method:'POST',
@@ -302,7 +302,7 @@ count={count}
         aria-labelledby="customized-dialog-title"
         open={editEmployee}
         PaperProps={{
-           sx: { maxWidth: 770},
+           sx: { width: 500,overflow:'auto'},
          }}
          >
           <ModalHeader heading="Edit Assigned Employees"/>
