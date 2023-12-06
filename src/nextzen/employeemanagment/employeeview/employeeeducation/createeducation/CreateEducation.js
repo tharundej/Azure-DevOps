@@ -492,8 +492,8 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                                                 name="Select Document"
                                             >
-                                                <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                                                <MenuItem value="marks-memo">Marks Memo</MenuItem>
+                                                <MenuItem value="ssccard">SSC Cardss</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
                                                 <MenuItem value="degree">Degree</MenuItem>
                                                 {/* Add more categories here */}
                                             </Select>

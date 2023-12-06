@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle, useEffect} from 'react';
+import React,{ useCallback, useMemo, useState ,forwardRef,useImperativeHandle, useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -52,11 +52,11 @@ import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgni
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  
   const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
-
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
@@ -275,6 +275,22 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   }
 
+  // function blobToBase64(blob) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  
+  //     reader.onloadend = () => {
+  //       resolve(reader.result.split(',')[1]);
+  //     };
+  
+  //     reader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  
+  //     reader.readAsDataURL(blob);
+  //   });
+  // }
+ 
   const onSubmit = handleSubmit(async (data) => {
     
 
@@ -299,6 +315,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     try {
       data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
+      // data.imageData=blobToBase64(data?.avatarUrl?.preview);
+      // data.imageName=data.avatarUrl.path;
+      // console.log(blobToBase64(data?.avatarUrl?.preview),'general information');
 
       if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){
         const obj={
@@ -414,7 +433,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setPCoutryIsoCode(obj?.isoCode)
+        setPCoutryIsoCode(obj?.isoCode|| "")
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){

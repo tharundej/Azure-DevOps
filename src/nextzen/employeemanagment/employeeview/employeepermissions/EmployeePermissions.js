@@ -290,17 +290,17 @@ dropdowns:[
   {checkedState &&
     Object.entries(checkedState).map(([group, values], index) => (
       <Grid container direction="column" key={index}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              id={`main-heading-${group}`}
-              checked={values.mainHeading}
-              onChange={() => handleMainHeadingChange(group)}
-              style={{ color: '#001F3F', transform: 'scale(1.2)' }}
-            />
-          }
-          label={`${formatLabel(group)}`}
-        />
+       <FormControlLabel
+        control={
+          <Checkbox
+            id={`main-heading-${group}`}
+            checked={values.mainHeading}
+            onChange={() => handleMainHeadingChange(group)}
+            style={{ color: '#3b5bf6', transform: 'scale(1.2)' }}
+          />
+        }
+        label={<span style={{ fontWeight: 'bold' }}>{formatLabel(group)}</span>}
+      />
         {values.mainHeading &&
           <Grid container marginLeft='20px'>
             {Object.keys(values).map((key) =>

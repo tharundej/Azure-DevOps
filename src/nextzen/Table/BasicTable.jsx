@@ -516,6 +516,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
 
@@ -545,10 +546,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               componentPage = {componentPage}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -632,7 +634,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
@@ -809,11 +811,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => 
+                            onHandleEditRow={(ele) => 
                               {
                                 if(handleEditRowParent)
                               
-                              handleEditRowParent(id)
+                              handleEditRowParent(ele)
                               }
                             }
                             selected={table.selected.includes(row.id)}

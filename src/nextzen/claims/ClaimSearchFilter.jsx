@@ -136,97 +136,10 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
   const onClose = () => {
     setOpen(false);
   };
-
-  // const  externalFilter = {
-    
-  //     claimStartDate:"",
-  //     claimEndDate:"",
-
- 
-    
-  //     expensestartdate:"",
-  //     expenseenddate:"",
-
-   
-   
-  //     status:"",
-  //     paymentstatus:""
-    
-    
-  // }
-  // const [selectedDate, setSelectedDate] = useState(externalFilter);
+const cancel = ()=>{
+  setOpen(false);
+}
   
-  // const handleDateChange = ( field, date) => {
-  //   // const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-  //   setSelectedDate(prevDates => ({
-  //     ...prevDates,
-     
-       
-  //       [field]: date,
-     
-  //   }));
-
-    
-   
-  // };
-  
-  // console.log(selectedDate,"SelectedDate1234------>")
-
-
-  // const [selectedValue, setSelectedValue] = useState(externalFilter);
-
-// const handleSelectChange = (field, value) => {
-//   // setSelectedValue(prevValues => ({
-//   //   ...prevValues,
-//   //   [fieldName]: value,
-//   // }));
-//   // console.log(value,"value......")
-
-//   setSelectedDate(prevFilter => ({
-//     ...prevFilter,
-//     [field]: value,}))
-
-//   // if (fieldName === 'status') {
-//   //   setSelectedDate(prevFilter => ({
-//   //     ...prevFilter,
-//   //     status: value,
-//   //   }));
-//   // }
-// };
-
-// const handleMultiSelectChange = (fieldName, newValue) => {
-//   setSelectedValue(prevValues => ({
-//     ...prevValues,
-//     [fieldName]: newValue,
-//   }));
-// };
-// const handleFieldChange = (type, category, field, value) => {
-//   if (type === 'datePicker') {
-//     const formattedDate = `${String(value.getDate()).padStart(2, '0')}/${String(value.getMonth() + 1).padStart(2, '0')}/${value.getFullYear()}`;
-//     setSelectedDate(prevDates => ({
-//       ...prevDates,
-//       [category]: {
-//         ...prevDates[category],
-//         [field]: formattedDate,
-//       },
-//     }));
-//   } else if (type === 'Select') {
-//     setSelectedValue(prevValues => ({
-//       ...prevValues,
-//       [field]: value,
-//     }));
-//   } else if (type === 'multiSelect') {
-//     setSelectedValue(prevValues => ({
-//       ...prevValues,
-//       [field]: value,
-//     }));
-//   }
-// };
-
-
-
-// trial 2 method
-// console.log(dialogPayload,"dialogPayload----")
 const [selectedFields, setSelectedFields] = useState(dialogPayload);
 
 const handleFieldChange = (fieldtype,field, value) => {
@@ -260,6 +173,8 @@ const handleFieldChange = (fieldtype,field, value) => {
 const handleReset = () => {
   // Handle reset logic here
   setSelectedFields({});
+  
+  filterData(dialogPayload)
   // setIsBlinking(false)
   setBadgeContent(false)
   onClose();
@@ -366,7 +281,7 @@ console.log(selectedFields,"selectedFields 2nd method")
       <DialogTitle>{title}</DialogTitle>
       </Grid>
       <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
-      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={handleApply} />
+      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={onClose} />
       </Grid>
       </Grid>
 
@@ -379,7 +294,7 @@ console.log(selectedFields,"selectedFields 2nd method")
           {field.type === 'datePicker' && (
             <DatePicker
               label={field.label}
-              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): ''}
+              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): null}
               onChange={(date) => handleFieldChange(field.type,field.name, date)}
               renderInput={(params) => <TextField {...params} variant="outlined" />}
             />

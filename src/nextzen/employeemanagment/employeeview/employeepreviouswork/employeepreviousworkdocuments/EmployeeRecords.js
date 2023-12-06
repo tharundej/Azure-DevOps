@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import PropTypes from 'prop-types';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { Card, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import FilesGrid from '../../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
@@ -157,7 +157,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
 
     </Grid> */}
 
-<div style={styles.container}>
+<Grid  style={styles.container}>
       <Typography variant="body1">Documents</Typography>
       <Iconify icon="lets-icons:add-duotone"
       sx={{cursor:'pointer'}}
@@ -167,7 +167,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
       }} />
 
      
-    </div>
+    </Grid>
 
 
     {documents && <FilesGrid onEdit={handleEdit} onDelete={handleDelete} dataFiltered={documents} endpoint={endPointTopass} />}

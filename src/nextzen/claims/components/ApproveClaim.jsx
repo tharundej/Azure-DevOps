@@ -59,34 +59,8 @@ import ModalHeader from '../../global/modalheader/ModalHeader';
 
 
 export default function ApproveClaim({ currentUser }) {
-  
+  const [count, setCount] = useState(0)
 
-  // const defaultPayload = {
-  //   "count":5,
-  //   "page":0
-  // }
-  // const TABLE_HEAD = [
-  //   {
-  //     // id: "name",
-  //     id: "employee_name",
-  //     label: " Employee Name",
-      
-  //     type: "text",
-  //     containesAvatar: false,
-
-  //     secondaryText: "email",
-  //   },
-  //   { id: "claim_type", label: "Claim Type",  type: "text" },
-  //   { id: "claim_date", label: "Claim Date",  type: "text" },
-  //   { id: "claim_amount", label: "Claim Amount",  type: "text" },
-  //   { id: "expense_date", label: "Expense Date",  type: "text" },
-  //   { id: "approve_amount", label: "Approval Amount",  type: "text" },
-  //   { id: "approver_name", label: "Approver Name",  type: "text" },
-  //   { id: "status", label: "Status",  type: "badge" },
-  //   // { id: "leave_type", label: "Comments", width: 100, type: "badge" },
-  //   // { id: "leave_type", label: "Status", width: 100, type: "badge" },
-  //   // { id: '', width: 88 },
-  // ]
   const TABLE_HEAD = [
     {
       id: "employeeName",
@@ -94,17 +68,15 @@ export default function ApproveClaim({ currentUser }) {
       width: 180,
       type: "text",
       containesAvatar: false,
-
       secondaryText: "email",
     },
     { id: "claimType", label: "Claim Type", width: 180, type: "text" },
     { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
     { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-   
-  
     { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
     { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
     { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
     { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
     { id: "approverName", label: "Approver Name", width: 100, type: "text" },
     { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
@@ -114,75 +86,63 @@ export default function ApproveClaim({ currentUser }) {
     // { id: '', width: 88 },
   ]
 
-  
-  const managerID =localStorage.getItem('reportingManagerID');
-  const employeeID =localStorage.getItem('employeeID');
-  const companyID =localStorage.getItem('companyID');
 
-  const defaultPayload={
+  const managerID = localStorage.getItem('reportingManagerID');
+  const employeeID = localStorage.getItem('employeeID');
+  const companyID = localStorage.getItem('companyID');
 
-    "companyId":companyID,
-    "approverManagerId":employeeID,
-    
-    "count":5,
-    "page":0,
-    "search":"",
-    "externalFilter":{
-    "claimType":"",
-    "claimStartDate":"",
-    "claimEndDate":"",
-    "status":""
-}, 
-    "sort":{
-    "key":0,
-    "order":""
-}
-   
-}
-const handleClick=()=>{
+  const defaultPayload = {
+    "companyId": companyID,
+    "approverManagerId": employeeID,
+    "count": 5,
+    "page": 0,
+    "search": "",
+    "externalFilter": {
+      "claimType": "",
+      "claimStartDate": "",
+      "claimEndDate": "",
+      "status": ""
+    },
+    "sort": {
+      "key": 0,
+      "order": ""
+    }
+
+  }
+  const handleClick = () => {
     console.log("fn passing ")
-}
+  }
 
-const externalFilter = {
-  // claimStartDate: "",
-  // claimEndDate: "",
-  expenseStartDate: "",
-  expenseEndDate: "",
-  // status: "",
-  paymentstatus: ""
-}
+  const externalFilter = {
+    // claimStartDate: "",
+    // claimEndDate: "",
+    expenseStartDate: "",
+    expenseEndDate: "",
+    // status: "",
+    paymentstatus: ""
+  }
 
 
-const dialogConfig={
-  title: 'Approve Claim Filters',
-  fields: [
-
-    { type: 'datePicker', label: 'Expense Start Date', name: 'expenseStartDate',category:"expense", value: new Date() },
-    { type: 'datePicker', label: 'Expense End Date', name: 'expenseEndDate',category:"expense", value: new Date() },
-    // { type: 'datePicker', label: 'Claim Start Date', name: 'claimStartDate',category:"claim",  },
-    // { type: 'datePicker', label: 'Claim End Date', name: 'claimEndDate',category:"claim",  },
-    // { type: 'Select', label: 'Select Options', category:"status",name:"status", options: ['Option 1', 'Option 2', 'Option 3'] },
-    { type: 'Select', label: 'Status',name: 'paymentstatus', category:"paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
-    // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
-  ],
-} 
-const actions = [
-  { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
-  { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
-  // { name: "eerr", icon: "hh", path: "jjj" },
-];
-  const searchFilterheader = [
-
-    { name: "Approve", icon: "hh", id: 'approve', type: "serviceCall", endpoint: '/accept' },
-    { name: "View", icon: "hh", id: 'view' },
-    { name: "Edit", icon: "hh", id: 'edit' },
-    { name: "Delete", icon: "hh", id: 'delete' },
+  const dialogConfig = {
+    title: 'Approve Claim Filters',
+    fields: [
+      { type: 'datePicker', label: 'Expense Start Date', name: 'expenseStartDate', category: "expense", value: new Date() },
+      { type: 'datePicker', label: 'Expense End Date', name: 'expenseEndDate', category: "expense", value: new Date() },
+      { type: 'Select', label: 'Status', name: 'paymentstatus', category: "paymentstatus", options: ['Approve', 'Reject', 'Pending'] },
+    ],
+  }
+  const actions = [
+    { name: "Approve", icon: "charm:circle-tick", path: "jjj", type: "status" },
+    { name: "Reject", icon: "charm:circle-cross", path: "jjj", type: "status" },
   ];
-
+  
   // mui modal related
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setApprove(initialApproveState);
+  }
 
   const style = {
     position: 'absolute',
@@ -196,28 +156,12 @@ const actions = [
     boxShadow: 24,
     p: 4,
   };
-  // form related data
-
-  const handleChangeDate = (newValue, index, name) => {
-    // const newObj = defaultValues;
-    // newObj[index][name] = new Date(newValue);
-    // setDefaultValues(newObj);
-  };
-  const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
-  });
+  
   const router = useRouter();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const NewUserSchema = Yup.object().shape({
     claim_amount: Yup.string().required('Claim Amount is Required'),
     comments: Yup.string(),
-
-
-
 
   });
 
@@ -227,8 +171,6 @@ const actions = [
       comments: currentUser?.comments || '',
       // image_name: currentUser?.image_name || '',
       // image_data: currentUser?.image_data || '',
-
-
     }),
     [currentUser]
   );
@@ -249,155 +191,111 @@ const actions = [
 
   const values = watch();
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+  const initialApproveState = {
+    companyId: companyID,
+    employeeId: "",
+    expenseClaimId: "",
+    approverManagerId: employeeID,
+    approvedAmount: null,
+    status: "",
+    approverRemark: "",
+    claimAmount: "",
+    claimType: ""
+  };
 
-    try {
-      data.company_id = '0001';
-      data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+  const [approve, setApprove] = React.useState(initialApproveState);
+  console.log(approve, "approve1233")
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    const parsedValue = name === "approvedAmount" && value.trim() !== "" ? parseFloat(value) : null;
 
-      console.log(data, 'data111ugsghghh');
+    setApprove((prevApprove) => ({
+      ...prevApprove,
+      [name]: parsedValue,
+    }));
 
-      const response = await axios.post(baseUrl+'onboarding', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-  
-
-
-  const [approve, setApprove]= React.useState({ 
-    companyId:companyID,
-    employeeId:"",
-    expenseClaimId :"" ,
-    approverManagerId:employeeID,
-    approvedAmount:null,
-    status:"",
-    approverRemark:"",
-    claimAmount:"",
-    claimType:""
- 
-
-  })
-console.log(approve,"approve1233")
-const handleInputChange = (event) => {
-  const { name, value } = event.target;
-  const parsedValue = name === "approvedAmount" ? parseFloat(value) : value;
-
-  setApprove((prevApprove) => ({
-    ...prevApprove,
-    [name]: parsedValue,
-  }));
-  
-};
+  };
 
 
   // console.log(approve,"approve data11111111")
-  const onclickActions = (rowData,eventData) => {
-    console.log(rowData,eventData, "CompoffAprrove from to basic table")
+  const onclickActions = (rowData, eventData) => {
+    console.log(rowData, eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
       if (eventData?.type === 'status') {
-       
-           if (eventData?.name === 'Approve'){
-            setApprove(prevState => ({
-              ...prevState,
-              status: "Approved",
-              expenseClaimId :rowData?.expenseClaimId,
-              employeeId:rowData?.EmployeeId,
-              claimAmount:rowData?.claimAmount,
-              claimType:rowData?.claimType,
+
+        if (eventData?.name === 'Approve') {
+          setApprove(prevState => ({
+            ...prevState,
+            status: "Approved",
+            expenseClaimId: rowData?.expenseClaimId,
+            employeeId: rowData?.EmployeeId,
+            claimAmount: rowData?.claimAmount,
+            claimType: rowData?.claimType,
           }));
           handleOpen()
           // handle({...approve, ...{status: "Approved",
           // expenseClaimId :rowData?.expenseClaimId,
           // employeeId:rowData?.EmployeeId,}});
-       
 
-           }
-          
-        
-       else{
-        setApprove(prevState => ({
-          ...prevState,
-          status: "Rejected",
-          expenseClaimId :rowData?.expenseClaimId,
-          employeeId:rowData?.EmployeeId,
-          claimAmount:rowData?.claimAmount,
-              claimType:rowData?.claimType,
-      }));
-      // handle(approve);
-      // handle({...approve, ...{status: "Rejected",
-      //     expenseClaimId :rowData?.expenseClaimId,
-      //     employeeId:rowData?.EmployeeId,}});
-      
-      handleOpen()
 
+        }
+
+
+        else {
+          setApprove(prevState => ({
+            ...prevState,
+            status: "Rejected",
+            expenseClaimId: rowData?.expenseClaimId,
+            employeeId: rowData?.EmployeeId,
+            claimAmount: rowData?.claimAmount,
+            claimType: rowData?.claimType,
+          }));
+          // handle(approve);
+          // handle({...approve, ...{status: "Rejected",
+          //     expenseClaimId :rowData?.expenseClaimId,
+          //     employeeId:rowData?.EmployeeId,}});
+
+          handleOpen()
+
+        }
+
+      }
     }
-    
+
+    else {
+      // navigate[event.eventData.route]
+
     }
   }
-    
-    else {
-          // navigate[event.eventData.route]
 
-      }
+
+  const handle = (async (approve, event) => {
+    try {
+      event.preventDefault();
+      const response = await axios.post(baseUrl + '/updateClaimStatus', approve).then(
+        (res) => {
+          console.log('sucess', res);
+          enqueueSnackbar(res?.data?.message, { variant: 'success' })
+          setCount(count + 1)
+        },
+        (error) => {
+          console.log('lllll', error);
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        }
+      );
+
+
+    } catch (error) {
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      console.error(error);
     }
-   
-
-    const  handle =(async (approve,event) => {
-    
-      console.log(approve,"approve defaultValues111")
-     
-  
-      try {
-        event.preventDefault();
-        // console.log(data, 'formdata api in check');
-  
-        const response = await axios.post(baseUrl+'/updateClaimStatus', approve).then(
-          (successData) => {
-            console.log('sucess', successData);
-            // enqueueSnackbar(response?.data?.message,{variant:'success'})
-          },
-          (error) => {
-            console.log('lllll', error);
-            // enqueueSnackbar(response?.data?.message,{variant:'error'})
-          }
-        );
-  
-        // await new Promise((resolve) => setTimeout(resolve, 500));
-        // reset();
-        // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-        // router.push(paths.dashboard.user.list);
-        // console.info('DATA', data);
-      } catch (error) {
-        // enqueueSnackbar(response?.data?.message,{variant:'error'})
-        // alert("api hit not done")
-        console.error(error);
-      }
-    });
+  });
 
   const serviceCall = (endpoint, payload) => {
 
   }
   //  
-  
+
   return (
     <>
       <Helmet>
@@ -411,15 +309,9 @@ const handleInputChange = (event) => {
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
-      > <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Claim`} />
+      > <ModalHeader heading={`${(approve?.status === "Approved") ? "Approve" : "Reject"}  Claim`} />
         <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
- 
-          {/* <DialogTitle>Approve Claim</DialogTitle> */}
-
           <DialogContent>
-          
-
-
             <Box
               rowGap={3}
               columnGap={2}
@@ -430,68 +322,52 @@ const handleInputChange = (event) => {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              
+              <TextField name="reason" label="Claim Type" value={approve?.claimType || ''} InputProps={{
+                readOnly: true,
+              }} />
+              <TextField name="reason" label="Claim Amount" value={approve?.claimAmount || ''} InputProps={{
+                readOnly: true,
+              }} />
 
-              <TextField name="reason" label="Claim Type" value={approve?.claimType || ''}  InputProps={{
-    readOnly: true,
-  }} />
-              <TextField name="reason" label="Claim Amount"  value={approve?.claimAmount || ''}  InputProps={{
-    readOnly: true,
-  }}/>
+              {approve?.status === "Approved" && <TextField
+                name="approvedAmount"
+                label="Approval Amount"
+                value={approve?.approvedAmount}
+                onChange={handleInputChange}
+              />}
 
-  {approve?.status === "Approved" &&        <TextField
-        name="approvedAmount"
-        label="Approval Amount"
-        value={approve?.approvedAmount}
-        onChange={handleInputChange}
-      /> }
-        
-      <TextField
-        name="approverRemark"
-        label="Comments"
-        value={approve?.approverRemark}
-        onChange={handleInputChange}
-      />
-            
-             
-
-
-
+              <TextField
+                name="approverRemark"
+                label="Comments"
+                value={approve?.approverRemark}
+                onChange={handleInputChange}
+              />
 
             </Box>
-
-
           </DialogContent>
-
           <DialogActions>
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button >
-           
-
-            <LoadingButton type="submit" variant="contained"  color="primary" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
         </FormProvider>
       </Dialog>
 
-      
-
-      
       <SurendraBasicTable
-
-      endpoint="/getAllClaims"
-      defaultPayload={defaultPayload}
-      headerData={TABLE_HEAD}
-      rowActions={actions}
-      bodyData = 'data'
-      filterName="claimSearchFilter"
-      filterContent={dialogConfig}
-      dialogPayload={externalFilter}
-      onclickActions={onclickActions}
+        endpoint="/getAllClaims"
+        defaultPayload={defaultPayload}
+        headerData={TABLE_HEAD}
+        rowActions={actions}
+        bodyData='data'
+        filterName="claimSearchFilter"
+        filterContent={dialogConfig}
+        dialogPayload={externalFilter}
+        onclickActions={onclickActions}
       // searchFilterheader={searchFilterheader}
-       
+
       />
     </>
   );

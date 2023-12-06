@@ -124,7 +124,25 @@ console.log(row,'row data')
                    }}
                  />
                )}
-{console.log(row[ele.id]+"" ,"typetypetype",row?.status)}
+
+
+                 {ele.type === 'icon' && (
+             
+                 <ListItemText
+
+                   primary={(row[ele.id] === "")?(<span   style={{fontSize: 30,
+                   }}> <Iconify icon="" color="green" /></span>) : <Iconify icon="lets-icons:view" color="green" />
+                   
+                  }
+                   secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                   primaryTypographyProps={{ typography: 'body2'}}
+                   secondaryTypographyProps={{
+                     component: 'span',
+                     color: 'text.disabled',
+                   }}
+                 />
+               )}
+
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"

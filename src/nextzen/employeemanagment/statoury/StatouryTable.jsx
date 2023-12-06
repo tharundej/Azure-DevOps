@@ -65,11 +65,7 @@ export const StatouryTable = () => {
   
   }
   const actions = [
-   
-
-   
-
-   
+  
   ];
   return (
     <>

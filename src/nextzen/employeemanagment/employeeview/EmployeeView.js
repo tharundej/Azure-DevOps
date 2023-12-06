@@ -1,6 +1,7 @@
 import React,{useState,useCallback} from 'react'
 import { useParams } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
 import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
@@ -18,6 +19,7 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
+import { useEffect } from 'react';
 
 const TABS = [
     {
@@ -60,8 +62,11 @@ const TABS = [
 
 const EmployeeView = () => {
   console.log(JSON.parse(localStorage.getItem('userDetails'))?.companyID,'JSON.parse(localstorage.getitem')
+  const [userData,setUserData]=useState({})
 
   const roleID=3;
+  
+  
 
 
 
@@ -71,6 +76,36 @@ const EmployeeView = () => {
 
   const params = useParams();
   const { id } = params;
+  const ApiHit=()=>{
+         
+      let data = JSON.stringify({
+        "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+        "employeeID": id
+      });
+      
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMiniOnboardingDetails',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data.data,'setUserData'));
+        setUserData(response.data.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(()=>{
+    ApiHit()
+  },[])
 
 
   const HandleCloseSnackbar=()=>{
@@ -124,9 +159,10 @@ const EmployeeView = () => {
         }}
       >
         <ProfileCover
-          role="Hr Manager"
-          name="Name"
-          avatarUrl={user?.photoURL}
+          role={userData?.roleName}
+          name={userData?.firstName}
+           avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
+          //avatarUrl='https://2d56hsdn-3001.inc1.devtunnels.ms/erp/download?file=s.jpg'
           coverUrl="aaa"
         />
 

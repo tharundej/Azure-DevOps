@@ -296,6 +296,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               <Typography variant='h6'>General Information</Typography>
             </Grid>
              <Grid md={6} xs={12}  fullWidth  item>
+             
                   <TextField
                     fullWidth
                 
@@ -527,6 +528,30 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                     }}
                   />
                   </Grid>
+
+                  <Grid item xs={12} md={6} paddingLeft='16px'>
+              
+              <Autocomplete
+                disablePortal
+                id="martialStatus"
+                options={employmentTypeOptions || []}
+                value={userdropDownvalue?.employeementTypeValue}
+                getOptionLabel={(option) => option?.label}
+                onChange={async(e, newvalue) => {
+                
+                  var newArr = { ...userdropDownvalue };
+                  newArr.employeementTypeValue=newvalue;
+
+                  setUserDropDownValue(newArr)
+                }
+                
+              }
+
+                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                style={{  width: '100%' }} />}
+              />
+                 </Grid>
+
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
@@ -667,7 +692,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                   />
                   </Grid>
 
-                  
+                
                   <Grid item xs={12} md={6} paddingLeft='16px'>
               
               <Autocomplete
