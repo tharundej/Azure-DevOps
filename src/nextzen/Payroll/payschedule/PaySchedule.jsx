@@ -83,7 +83,13 @@ export default function PaySchedule({ currentUser }) {
   ];
 
   const actions = [
-    { name: 'Edit', icon: 'solar:pen-bold', id: '1', type: 'serviceCall', endpoint: '/updateTimesheetStatus' },
+    {
+      name: 'Edit',
+      icon: 'solar:pen-bold',
+      id: '1',
+      type: 'serviceCall',
+      endpoint: '/updateTimesheetStatus',
+    },
     {
       name: 'Delete',
       icon: 'solar:trash-bin-trash-bold',
@@ -270,7 +276,7 @@ export default function PaySchedule({ currentUser }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     // (data.employementType = valueSelected?.employementType?.type),
-   
+
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
       (data.employementType = valueSelected?.employementType),
       (data.basicPayPercentage = JSON.parse(valueSelected?.basicPayPercentage, 10)),
@@ -282,8 +288,8 @@ export default function PaySchedule({ currentUser }) {
       (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
       (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
       (data.payScheduleId = valueSelected?.payScheduleId);
-      (data.employementType = valueSelected?.employementType?.type),
-      (data.payPcheduleType=valueSelected?.payPcheduleType?.type)
+    (data.employementType = valueSelected?.employementType?.type),
+      (data.payPcheduleType = valueSelected?.payPcheduleType?.type);
     console.log('valueSelectedaaaaaaaaaa', data);
 
     console.log(valueSelected?.employementType?.type, 'abc');
@@ -347,14 +353,14 @@ export default function PaySchedule({ currentUser }) {
   //   }
   // };
   const onSubmitEdit2 = async (valueSelected, event) => {
-    console.log(valueSelected,'editData')
+    console.log(valueSelected, 'editData');
     try {
       event.preventDefault();
-      const payload={
-        "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-        "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      }
-      console.log(payload,'payload')
+      const payload = {
+        tdsPercentage: JSON.parse(valueSelected?.tdsPercentage, 10),
+        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      };
+      console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/editPaySchedule', payload);
       if (response?.data?.code === 200 || 201) {
         handleClose();
@@ -363,8 +369,7 @@ export default function PaySchedule({ currentUser }) {
         setSnackbarOpen(true);
 
         console.log('sucess', response);
-      }
-      else if(response?.data?.code ===400 || 401) {
+      } else if (response?.data?.code === 400 || 401) {
         handleClose();
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
@@ -422,7 +427,7 @@ export default function PaySchedule({ currentUser }) {
     console.log(field, 'field');
     setSelectedOption(value);
     if (value) {
-      if (value.type === 'Permanent' ) {
+      if (value.type === 'Permanent') {
         setTextFieldVisible(true);
         const updatedValueSelected = { ...valueSelected };
 
@@ -496,15 +501,19 @@ export default function PaySchedule({ currentUser }) {
                   getOptionLabel={getOptionLabel}
                   value={selectedOption?.employementType} // Use tableEDitData or an empty string
                   onChange={handleAutocompleteChange}
-                  sx={{ width: 300, padding: '8px' }}
+                  sx={{
+                    width: 330,
+                    margin: 'auto',
+                    marginTop: '-1px',
+                  }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
                 <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
                   value={valueSelected?.payPcheduleType || null}
-                  options={payPcheduleTypes}
-                  getOptionLabel={(option) => option.type}
+                  options={payPcheduleTypes.map((name) => name.type)}
+                  // getOptionLabel={(option) => option.type}
                   onChange={(e, newValue) =>
                     handleSelectChange('payPcheduleType', newValue || null)
                   }
@@ -577,17 +586,20 @@ export default function PaySchedule({ currentUser }) {
                 Save
               </LoadingButton> */}
               <Button
-             sx={{backgroundColor:'#3B82F6'}}
-             variant="contained"
-             onClick={onSubmit1}
-             type="submit"
-             >Save
-             </Button>
+                sx={{ backgroundColor: '#3B82F6' }}
+                variant="contained"
+                onClick={onSubmit1}
+                type="submit"
+              >
+                Save
+              </Button>
             </DialogActions>
           </FormProvider>
         ) : (
-          <FormProvider methods={methods2} onSubmit={(event) => onSubmitEdit2(valueSelected, event)}>
-           
+          <FormProvider
+            methods={methods2}
+            onSubmit={(event) => onSubmitEdit2(valueSelected, event)}
+          >
             <ModalHeader heading="Edit PayRoll" />
             <DialogContent>
               <Box
@@ -608,15 +620,19 @@ export default function PaySchedule({ currentUser }) {
                   getOptionLabel={getOptionLabel}
                   value={selectedOption?.employementType} // Use tableEDitData or an empty string
                   onChange={handleAutocompleteChange}
-                  sx={{ width: 300, padding: '8px' }}
+                  sx={{
+                    width: 330,
+                    margin: 'auto',
+                    marginTop: '-1px',
+                  }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
                 <Autocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
                   value={valueSelected?.payPcheduleType || null}
-                  options={payPcheduleTypes}
-                  getOptionLabel={(option) => option.type}
+                  options={payPcheduleTypes.map((name) => name.type)}
+                  // getOptionLabel={(option) => option.type}
                   onChange={(e, newValue) =>
                     handleSelectChange('payPcheduleType', newValue || null)
                   }
@@ -647,12 +663,13 @@ export default function PaySchedule({ currentUser }) {
                 Save
               </LoadingButton> */}
               <Button
-             sx={{backgroundColor:'#3B82F6'}}
-             variant="contained"
-             onClick={(event) => onSubmitEdit2(valueSelected, event)}
-             type="submit"
-             >Save
-             </Button>
+                sx={{ backgroundColor: '#3B82F6' }}
+                variant="contained"
+                onClick={(event) => onSubmitEdit2(valueSelected, event)}
+                type="submit"
+              >
+                Save
+              </Button>
             </DialogActions>
           </FormProvider>
         )}

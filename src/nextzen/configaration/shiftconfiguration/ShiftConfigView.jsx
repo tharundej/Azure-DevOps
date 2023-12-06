@@ -103,7 +103,7 @@ export default function ShiftConfigView({currentUser}) {
       shiftName: '',
       startTime: '',
       endTime: '',
-      locationFilter:[],
+      locationFilter:'',
     },
     sort: {
       key: 0,

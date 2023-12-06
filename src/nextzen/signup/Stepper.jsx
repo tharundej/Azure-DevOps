@@ -131,7 +131,10 @@ const handleCallSnackbar=(message,severity)=>{
   }
 
   return (
-    <Box sx={{ width: '100%',marginTop:'15px' }} >
+    <Box sx={{ marginTop:'15px' }} >
+      <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'10px'}}>
+        <Typography variant="h4" >Company Registration</Typography>
+        </Box>
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (

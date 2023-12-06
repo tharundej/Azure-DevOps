@@ -22,7 +22,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { width } from '@mui/system';
-import {Snackbar,Alert} from '@mui/material'
+import { Snackbar, Alert } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ComoffConfigurationForm({ currentUser }) {
@@ -54,7 +54,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
     if (newValue) {
       if (newValue.type === 'Leave') {
         setTextFieldVisible(true);
-      } else if (newValue.type === 'Incashment') {
+      } else if (newValue.type === 'Encashment') {
         setTextFieldVisible(false);
       }
     }
@@ -73,7 +73,6 @@ export default function ComoffConfigurationForm({ currentUser }) {
   const defaultValues1 = useMemo(
     () => ({
       expiryDays: currentUser?.expiryDays || null,
-
     }),
     [currentUser]
   );
@@ -81,7 +80,6 @@ export default function ComoffConfigurationForm({ currentUser }) {
   const defaultValues2 = useMemo(
     () => ({
       amount: currentUser?.amount || null,
-
     }),
     [currentUser]
   );
@@ -110,8 +108,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
     reset: reset2,
   } = methods2;
 
-  const compensatorytypes1 = [{ type: 'Leave' }, { type: 'Incashment' }];
-
+  const compensatorytypes1 = [{ type: 'Leave' }, { type: 'Encashment' }];
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
@@ -120,22 +117,19 @@ export default function ComoffConfigurationForm({ currentUser }) {
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(
-        baseUrl+'/addCompensantoryConfiguration',
-        data
-      );
+      const response = await axios.post(baseUrl + '/addCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-   handleClose();
+        handleClose();
         console.log('sucess', response?.data?.message);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-   handleClose();
+        handleClose();
         console.log('sucess', response?.data?.code);
       }
     } catch (error) {
@@ -153,29 +147,26 @@ export default function ComoffConfigurationForm({ currentUser }) {
     console.log('submitted data2222', data);
 
     try {
-      const response = await axios.post(
-        baseUrl+'/addCompensantoryConfiguration',
-        data
-      );
+      const response = await axios.post(baseUrl + '/addCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-   handleClose();
+        handleClose();
         console.log('sucess', response?.data?.code);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-   handleClose();
+        handleClose();
         console.log('sucess', response?.data?.code);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
       setSnackbarOpen(true);
- handleClose();
+      handleClose();
       console.log('error', error);
     }
   });
@@ -188,7 +179,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
   };
   return (
     <>
-     <Snackbar
+      <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}
         onClose={snackBarAlertHandleClose}
@@ -209,9 +200,9 @@ export default function ComoffConfigurationForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',backgroundColor:'#3B82F6'}}
+        sx={{ margin: '20px', backgroundColor: '#3B82F6' }}
       >
-        Add Compensantory Configuration
+        Add Configuration
       </Button>
       <Dialog
         fullWidth
@@ -225,19 +216,19 @@ export default function ComoffConfigurationForm({ currentUser }) {
         {isTextFieldVisible ? (
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <ModalHeader heading=" Add Compensantory Configuration" />
-            
+
             <DialogContent>
-            <Autocomplete
-              disablePortal
-              name="compensatory"
-              id="combo-box-demo"
-              options={compensatorytypes1}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px' ,marginTop:'15px'}}
-              renderInput={(params) => <TextField {...params} label="Compensatory" />}
-            />
+              <Autocomplete
+                disablePortal
+                name="compensatory"
+                id="combo-box-demo"
+                options={compensatorytypes1}
+                getOptionLabel={getOptionLabel}
+                value={selectedOption} // Use selectedOption or an empty string
+                onChange={handleAutocompleteChange}
+                sx={{ width: 300, padding: '8px', marginTop: '15px' }}
+                renderInput={(params) => <TextField {...params} label="Compensatory" />}
+              />
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -251,7 +242,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
                 <RHFTextField
                   name="expiryDays"
                   label="Expiry Days"
-                  sx={{width:280,marginLeft:1.5}}
+                  sx={{ width: 280, marginLeft: 1.5 }}
                 />
               </Box>
             </DialogContent>
@@ -268,32 +259,32 @@ export default function ComoffConfigurationForm({ currentUser }) {
               >
                 Save
               </LoadingButton> */}
-               <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
-              variant="contained"
-              onClick={onSubmit1}
+              <Button
+                sx={{ backgroundColor: '#3B82F6' }}
+                type="submit"
+                variant="contained"
+                onClick={onSubmit1}
               >
-            Save
-            </Button>
+                Save
+              </Button>
             </DialogActions>
           </FormProvider>
         ) : (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
             <ModalHeader heading=" Add Compensantory Configuration" />
-            
+
             <DialogContent>
-            <Autocomplete
-              disablePortal
-              name="compensatory"
-              id="combo-box-demo"
-              options={compensatorytypes1}
-              getOptionLabel={getOptionLabel}
-              value={selectedOption} // Use selectedOption or an empty string
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300, padding: '8px',marginTop:'15px' }}
-              renderInput={(params) => <TextField {...params} label="Compensatory" />}
-            />
+              <Autocomplete
+                disablePortal
+                name="compensatory"
+                id="combo-box-demo"
+                options={compensatorytypes1}
+                getOptionLabel={getOptionLabel}
+                value={selectedOption} // Use selectedOption or an empty string
+                onChange={handleAutocompleteChange}
+                sx={{ width: 300, padding: '8px', marginTop: '15px' }}
+                renderInput={(params) => <TextField {...params} label="Compensatory" />}
+              />
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -304,13 +295,11 @@ export default function ComoffConfigurationForm({ currentUser }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-
-                  <RHFTextField
-                    name="amount"
-                    label="% of Basic Pay"
-                    sx={{width:280,marginLeft:1.5}}
-                  />
-                
+                <RHFTextField
+                  name="amount"
+                  label="% of Basic Pay"
+                  sx={{ width: 280, marginLeft: 1.5 }}
+                />
               </Box>
             </DialogContent>
 
@@ -326,14 +315,14 @@ export default function ComoffConfigurationForm({ currentUser }) {
               >
                 Save
               </LoadingButton> */}
-               <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
-              variant="contained"
-              onClick={onSubmit2}
+              <Button
+                sx={{ backgroundColor: '#3B82F6' }}
+                type="submit"
+                variant="contained"
+                onClick={onSubmit2}
               >
-            Save
-            </Button>
+                Save
+              </Button>
             </DialogActions>
           </FormProvider>
         )}

@@ -62,6 +62,7 @@ import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
 import SignUpDialog from './SignUpDialog';
 import { color } from '@mui/system';
+import { baseUrl } from '../global/BaseUrl';
 
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');
@@ -148,9 +149,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         /^[A-Za-z0-9\s@\-_.*#!^<>%+$^(){}|]+$/,
         'Company Name must contain only alphanumeric characters and Spichal Charters'
       ),
-    companyRegistrationNo: Yup.string()
-      .required('Registration Number is Required')
-      .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
+    companyRegistrationNo: Yup.number()
+      .required('Registration Number is Required'),
+      // .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
     companyCeoName: Yup.string()
       .required('CEO Name is Required')
       .matches(/^[A-Za-z ]+$/, 'CEO Name must contain only letters and spaces'),
@@ -158,9 +159,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     emailId: Yup.string()
       .required('Email is Required')
       .email('Email must be a valid email address'),
-    phoneNo: Yup.string()
-      .required('Phone No is Required')
-      .matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
+    phoneNo: Yup.number()
+      .required('Phone No is Required'),
+      //.matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
     firstName: Yup.string()
       .required('First Name is Required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must contain only letters and spaces'),
@@ -175,8 +176,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyAddressLine2: Yup.string(),
     // companyCity: Yup.string().required('City is Required'),
     // companyState: Yup.string().required('State is Required'),
-    companyPincode: Yup.string()
-      .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
+    companyPincode: Yup.number()
+      // .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
       .required('Pin code is Required'),
     empIdPrefix: Yup.string().required('Employee ID type Required'),
     // companyCountry: Yup.string().required('Please select a country.').matches(/^[A-Za-z]+$/,'Please select a country.'),
@@ -187,12 +188,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const defaultValues = {
     cin: '',
     companyName: '',
-    companyRegistrationNo: null,
+    companyRegistrationNo: '',
     companyCeoName: '',
     companyDateOfIncorporation: '',
     companyType: '',
     emailId: '',
-    phoneNo: null,
+    phoneNo: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -422,7 +423,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         data.companyCeoName,
         data.companyType,
         data.emailId,
-        parseInt(data.phoneNo, 10),
+        parseInt(data.phoneNo,10),
         data.firstName,
         data.middleName,
         data.lastName,
@@ -451,6 +452,67 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       // setSnackbarOpen(true);
     }
   });
+// Inside JwtRegisterView component
+const handleCINChange = async (newValue) => {
+  try {
+    const response = await axiosInstance.post(baseUrl + '/getCompany', {
+      cin: newValue,
+    });
+
+    if (response?.data?.code === 200) {
+      const keyMappings = {
+        company_id: 'companyId',
+        cin: 'cin',
+        company_name: 'companyName',
+        company_registration_no: 'companyRegistrationNo',
+        company_date_of_incorporation: 'companyDateOfIncorporation',
+        company_email_id: 'emailId',
+        company_ceo_name: 'companyCeoName',
+        company_type: 'companyType',
+        company_phone_no: 'phoneNo',
+        company_address_line1: 'companyAddressLine1',
+        company_address_line2: 'companyAddressLine2',
+        company_city: 'companyCity',
+        company_state: 'companyState',
+        company_country: 'companyCountry',
+        company_pincode: 'companyPincode',
+        company_logo: 'companyLogo',
+        emp_id_prefix: 'empIdPrefix',
+      };
+
+      const dataFromResponse = response?.data?.data;
+      Object.keys(keyMappings).forEach((key) => {
+        if (dataFromResponse.hasOwnProperty(key)) {
+          if(key==="company_phone_no" || key==="company_registration_no"){
+            console.log(typeof dataFromResponse[key].toString(),'dataFromResponse[key]')
+            methods.setValue(keyMappings[key], dataFromResponse[key]);
+          }
+          else{
+            methods.setValue(keyMappings[key], dataFromResponse[key]);
+          }
+         
+        }
+      });
+
+      console.log('success', response);
+    }
+
+    if (response?.data?.code === 400) {
+      console.log('success', response);
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
+useEffect(() => {
+  const cinValue = methods.getValues('cin');
+  handleCINChange(cinValue);
+}, [methods.getValues('cin')]);
+
+
+
+// Rest of your component...
 
   const renderHead = (
     <>
@@ -507,6 +569,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   placeholder=" Ex: L67190MH2020PLC123456"
                   maxLength={21}
+                  onBlur={() => {
+                    const cinValue = methods.getValues('cin');
+                    handleCINChange(cinValue);
+                  }}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -789,21 +855,21 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       </div>
     )}
   </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
   <Button
     color="inherit"
     size="large"
     type="submit"
     variant="contained"
     onClick={onSubmit}
-    style={{ margin: '20px 0', backgroundColor: '#3B82F6' }}
+    style={{  backgroundColor: '#3B82F6' }}
   >
     Create Account
   </Button>
   <Stack direction="column" alignItems="center" spacing={1}>
-    <Typography variant="subtitle2" style={{ marginTop: '-10px' ,color:'black'}}>
+    {/* <Typography variant="subtitle2" style={{ marginTop: '-10px' ,color:'black'}}>
       OR
-    </Typography>
+    </Typography> */}
     <Typography variant="subtitle2" style={{color:'black'}}> Already have an account? </Typography>
     <Link
       href={paths.auth.jwt.login}
@@ -827,7 +893,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
 
   return (
     <StyledContainer>
-      <div style={{ backgroundColor: '', height: '100%' }}>
+      <div style={{ backgroundColor: '',  }}>
         {renderForm}
 
         {/* {renderHead} */}
@@ -848,7 +914,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         </Snackbar>
       </div>
 
-      <SignUpDialog />
+      {/* <SignUpDialog /> */}
     </StyledContainer>
   );
 }
