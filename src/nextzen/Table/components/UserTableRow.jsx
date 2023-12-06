@@ -74,7 +74,7 @@ const renderCellContent = (columnId, value) => {
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row)}
+              onClick={()=>onHandleEditRow(row,ele.id)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
@@ -159,6 +159,7 @@ const renderCellContent = (columnId, value) => {
                    }}
                  />
                )}
+
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"

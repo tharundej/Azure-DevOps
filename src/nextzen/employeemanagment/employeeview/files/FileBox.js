@@ -11,11 +11,11 @@ const FileBox = ({file,onDelete,onEdit,sx,index}) => {
 
     const renderIcon =
      (
-        <Grid sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+        <Grid sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between',minWidth:'100px'}}>
                     <Grid item>
-                 <FileThumbnail file="text" sx={{ width: 36, height: 36 }} />
+                 <FileThumbnail file={file?.type || " "} sx={{ width: 56, height: 36 }} />
                 </Grid>
-                <Grid item>
+                <Grid sx={{display:'flex',flexDirection:'row'}} item>
 
                     <Iconify 
                   sx={{cursor: "pointer",color:'black',width:'30px',height:"20px"}}

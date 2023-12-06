@@ -128,7 +128,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     try {
     
       const data = {
-        manager_id: "INFO22",
+        manager_id: managerID,
         // employee
         // Other data properties as needed
       };
@@ -268,8 +268,8 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     employeeName: '',
     projectId: '1',
     activityId: '2',
-    startTime: '2023-11-25',
-    endTime: '2023-11-30',
+    startTime: '2023-12-04',
+    endTime: '2023-12-10',
     monday: {
       hours: '',
       task: '',
@@ -338,7 +338,7 @@ console.log(timesheetData,"timesheetData")
 
      console.log(timesheetData,"editDataeditData")
       
-      const response = await axios.post("https://898vmqzh-3001.inc1.devtunnels.ms/erp/addmytimesheet", timesheetData).then(
+      const response = await axios.post("https://mallard-blessed-lobster.ngrok-free.app/erp/addmytimesheet", timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -500,7 +500,7 @@ PaperProps={{
 }}
 
          >
-           <ModalHeader heading="Add TimeSheet"/>
+           <ModalHeader heading="Add Timesheet"/>
       <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
       <DialogContent>
       <Box
@@ -757,10 +757,11 @@ PaperProps={{
             
              <DialogActions>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+              <Button  variant='outlined' onClick={handleClose}sx={{mr:1}} >Cancel</Button>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting} color="primary">
-                  {!currentUser ? 'Create User' : 'Add  Timeline'}
+                  {!currentUser ? 'Add Timeline' : 'Add  Timeline'}
                 </LoadingButton>
-                <Button  onClick={handleClose}>Cancel</Button>
+                
               </Stack>
              </DialogActions>
            

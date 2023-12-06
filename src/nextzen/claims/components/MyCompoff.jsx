@@ -56,6 +56,7 @@ export default function MyCompoff({ currentUser ,}) {
    
 
   ]
+  const [count,setCount] = useState(0)
   const compoff_type_edit = [
     { compensantoryConfigurationId: null, compensantoryPolicies:""  },
     {   compensantoryConfigurationId: 11, compensantoryPolicies: "enchachment", id:0 },
@@ -151,8 +152,8 @@ export default function MyCompoff({ currentUser ,}) {
     },
   ];
   const [selectedDates, setSelectedDates] = useState({
-    startDate: "",
-    endDate:"",
+    startDate: null,
+    endDate:null,
   });
 
   const handleDateChange = (date, dateType) => {
@@ -228,6 +229,7 @@ export default function MyCompoff({ currentUser ,}) {
           console.log('sucess', res);
          enqueueSnackbar(res?.data?.message,{variant:'success'})
           handleCloseEdit()
+          setCount(count+1)
           // enqueueSnackbar(res?.data?.message,{variant:'success'})
         },
         (error) => {
@@ -356,7 +358,7 @@ console.log(editData,"ppppppppppppppppppppp")
       companyId:currentUser?.companyId|| companyID,
       employeeId:currentUser?.employeeId|| employeeID,
       // compensantory_configuration_id:currentUser?.compoffId|| 11,
-      compensantoryPolicies:compoffId || currentUser?.compensantoryPolicies || 9,
+      compensantoryPolicies:compoffId || currentUser?.compensantoryPolicies ,
       startDate:currentUser?.startDate|| '',
       endDate:currentUser?.endDate|| '',
       approverId: currentUser?.approverId || managerID,
@@ -393,19 +395,20 @@ console.log(editData,"ppppppppppppppppppppp")
  console.log(defaultValues,"defaultValues")
   const onSubmit = handleSubmit(async (data) => {
     
-    console.log(data,"defaultValues111")
+    console.log(data,"defaultValues11122")
    
     data.startDate= selectedDates?.startDate;
     data.endDate= selectedDates?.endDate;
     try {
      
-      console.log(data, 'formdata api in check');
+      console.log(data, 'formdata api in check233');
 
       const response = await axios.post(baseUrl+'/AddMycompoffdetails', data).then(
         (res) => {
-          console.log('sucess', res);
+          console.log('sucesspppp', res);
           handleClose()
           enqueueSnackbar(res?.data?.message,{variant:'success'})
+          setCount(count+1)
         },
         (error) => {
           console.log('lllll', error);
@@ -443,6 +446,7 @@ console.log(editData,"ppppppppppppppppppppp")
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message,{variant:'success'})
           handleCancelDelete()
+          setCount(count+1)
         },
         (error) => {
           console.log('lllll', error);
@@ -522,14 +526,22 @@ const handleCancelDelete = () => {
                 isOptionEqualToValue={(option, value) => option === value}
            
               />
-    
+     {/* <RHFAutocomplete
+               name="compensantoryPolicies"
+               label="Select Compoff Type"
+                required
+                options={compoff_type.map((compoffType) => compoffType.compensantoryPolicies)}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option, value) => option === value}
+
+              /> */}
 
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Start Date"
+                    label="Compoff Start Date"
                     value={selectedDates?.startDate}
                       onChange={(newValue) => handleDateChange(newValue, 'startDate')}
                   />
@@ -541,7 +553,7 @@ const handleCancelDelete = () => {
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="End Date"
+                    label="Compoff End Date"
                     value={selectedDates.endDate}
                      onChange={(newValue) => handleDateChange(newValue, 'endDate')}
                   />
@@ -631,7 +643,7 @@ const handleCancelDelete = () => {
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Start Date"
+                    label="Compoff Start Date"
                     value={ dayjs( editData['startDate'] || null)}
                     onChange={(newValue) => {
                       
@@ -646,7 +658,7 @@ const handleCancelDelete = () => {
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="End Date"
+                    label="Compoff End Date"
                     value={ dayjs( editData['endDate'] || null)}
                     onChange={(newValue) => {
                       

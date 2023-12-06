@@ -45,6 +45,7 @@ import ModalHeader from '../../global/modalheader/ModalHeader';
 
 export default function CompoffApprove({ currentUser ,}) {
   const {enqueueSnackbar} = useSnackbar()
+  const [count,setCount] = useState(0)
   const claim_type = [
     { code: '', label: '', phone: '' },
     { code: 'AD', label: 'Travel', phone: '376' },
@@ -317,6 +318,7 @@ console.log(defaultValues,"defaultValues")
         (res) => {
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message,{variant:'success'})
+          setCount(count+1)
         },
         (error) => {
           console.log('lllll', error);
