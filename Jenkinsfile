@@ -21,8 +21,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker ps  | xargs docker stop node_n  | xargs docker rm node_n &&
-                        docker system prune -a 
+                         docker stop node_n
+                         docker rm node_n
+                         docker system prune -a
                     '''
                 }
             }
