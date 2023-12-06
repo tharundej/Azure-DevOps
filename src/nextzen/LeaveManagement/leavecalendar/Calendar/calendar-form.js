@@ -232,7 +232,7 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
-
+const [lop,setLOP] = useState()
 const lossOfPay = ()=>{
   const payload = {
   companyId: user?.companyID,
@@ -244,12 +244,13 @@ const lossOfPay = ()=>{
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
-    url:baseUrl+'/getLossOfPay',
+    url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    // url:baseUrl+'/getLossOfPay',
     data:  payload
   };
   axios.request(config).then((response) => {
-    enqueueSnackbar((response?.data?.lop || response?.data?.message ), { variant: 'success' ,autoHideDuration:5000});
+    setLOP(response?.data)
+    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
    console.log(response,"response dataa")
   })
 
@@ -262,7 +263,7 @@ const lossOfPay = ()=>{
 
 useEffect(()=>{
 lossOfPay()
-},[datesUsed?.endDate,leaveType])
+},[leaveType,datesUsed?.toDate])
 
 
   return (
@@ -310,8 +311,8 @@ lossOfPay()
             <Stack direction="row" alignItems="center" spacing={1}>
           
              <Card>
-              <CardContent sx={{ py: 1, px: 1,pt:2}}>
-              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center' }} flexDirection="row">
+              <CardContent sx={{ px: 1,pt:1}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center',paddingBottom:0}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
 
                 <Typography
