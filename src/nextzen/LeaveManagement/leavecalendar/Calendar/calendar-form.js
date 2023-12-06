@@ -248,20 +248,21 @@ const lossOfPay = ()=>{
     data:  payload
   };
   axios.request(config).then((response) => {
+    enqueueSnackbar((response?.data?.lop || response?.data?.message ), { variant: 'success' ,autoHideDuration:5000});
    console.log(response,"response dataa")
   })
 
     .catch((error) => {
-      enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
-      console.log(error);
-      
+      console.log(error,"error in loss of pay");
+     
     });
 
 }
 
 useEffect(()=>{
-// lossOfPay()
-},[datesUsed?.toDate,leaveType])
+lossOfPay()
+},[datesUsed?.endDate,leaveType])
+
 
   return (
   
@@ -448,7 +449,13 @@ useEffect(()=>{
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>}</>
+    </>}
+    
+{/* Confirmation Dialog I need to keeppppp */}
+
+
+
+    </>
   );
 
 }
