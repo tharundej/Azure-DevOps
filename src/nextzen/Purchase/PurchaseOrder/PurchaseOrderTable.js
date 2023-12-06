@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -10,8 +10,11 @@ import { BasicTable } from '../../Table/BasicTable';
 import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import { Dialog } from '@mui/material';
 import ViewPurchaseOrder from './ViewPurchaseOrder';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import OrderPreview from './OrderPreview';
 
 const PurchaseOrderTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -39,12 +42,20 @@ const PurchaseOrderTable = () => {
       type: 'serviceCall',
       endpoint: '',
     },
+    {
+      name: 'Preview',
+      icon: 'gridicons:print',
+      id: 'view',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteData, setDeleteData] = useState(null);
   const [viewShowForm, setViewShowForm] = useState(false);
+  const [previewShowForm, setPreviewShowForm] = useState(false);
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
@@ -56,6 +67,9 @@ const PurchaseOrderTable = () => {
       handleDeleteConfirmed();
     } else if (event?.name === 'View') {
       setViewShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Preview') {
+      setPreviewShowForm(true);
       setEditModalData(rowdata);
     }
   };
@@ -73,6 +87,7 @@ const PurchaseOrderTable = () => {
   const handleClose = () => {
     setEditShowForm(false);
     setViewShowForm(false);
+    setPreviewShowForm(false);
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
@@ -104,6 +119,7 @@ const PurchaseOrderTable = () => {
     page: 0,
     search: '',
     roleid: 1,
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       poDate: {
         from: '',
@@ -157,6 +173,10 @@ const PurchaseOrderTable = () => {
       type: 'text',
       minWidth: '180px',
     },
+    { id: 'CGST', label: 'CGST', type: 'text', minWidth: '180px' },
+    { id: 'SGST', label: 'SGST', type: 'text', minWidth: '180px' },
+    { id: 'IGST', label: 'IGST', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'gstAmount', type: 'text', minWidth: '180px' },
     { id: 'grandTotalAmount', label: 'Grand Total', type: 'text', minWidth: '180px' },
     { id: 'advanceAmount', label: 'Advance Amount', type: 'text', minWidth: '180px' },
     { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
@@ -179,6 +199,20 @@ const PurchaseOrderTable = () => {
           className="custom-dialog"
         >
           <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
+      {previewShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={previewShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000 },
+          }}
+          className="custom-dialog"
+        >
+          <OrderPreview currentData={editModalData} handleClose={handleClose} />
         </Dialog>
       )}
       <Helmet>

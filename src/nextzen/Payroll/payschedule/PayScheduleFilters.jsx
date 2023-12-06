@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import {
   Card,
   TextField,
@@ -51,7 +51,8 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import PayScheduleform from './PayScheduleform';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import { payScheduleType } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+
 const defaultFilters = {
   name: '',
   type: [],
@@ -102,14 +103,24 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     'Virginia Andrews',
     'Kelly Snyder',
   ];
+  
   const employmentTypes=[
     'Permanent',
     'contract'
   ];
-  const payscheduleTypes=[
-    '52-Once a week',
-    '26-Once in a two weeks',
-  ];  
+  // const payscheduleTypes=[
+  //   '52-Once a week',
+  //   '26-Once in a two weeks',
+  // ];  
+  const [payscheduleTypes, setPayscheduleTypes] = useState([])
+  useEffect(() => {
+    async function call() {
+      const arr = await payScheduleType();
+      console.log(arr, 'sairam');
+      setPayscheduleTypes(arr);
+    }
+    call();
+  }, []);
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -181,22 +192,14 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   function formWithDropdown() {
     return new Promise((resolve) => {
       const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(',');
-          arr1[item.field] = commaSeparatedString;
-        }
+      console.log(dropdown?.payScheduleType,'ppoooo')
+      // arr1.payScheduleType=dropdown?.payScheduleType?.join(',') || "";
+      // arr1.employmentType=dropdown?.employmentType?.join(',') || "";
+      
 
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+      dropdown?.payScheduleType?.forEach((item, index) => {
+        arr1.push(item?.payScheduleType);
       });
-      // setDatesData(arr1);
       resolve(arr1);
     });
   }
@@ -211,6 +214,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   };
 
   const handleChangeDropDown = (event, field) => {
+    console.log('1',event?.target?.value)
     const {
       target: { value },
     } = event;
@@ -225,9 +229,10 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'payscheduleType') {
+    } else if (field === 'payScheduletype') {
+      console.log(value,'ppppp')
       setdropdownpayscheduleType(value);
-      const obj = dropdown;
+      const obj = {...dropdown};
       obj[field] = value;
       setDropdown(obj);
     } else if (field === 'employmentType') {
@@ -247,17 +252,41 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     searchData(searchTerm)
     console.log(searchTerm,"search ........")
     };
-  const handleApply = async () => {
-    setDatesData([]);
-
-    const data1 = await formWithDropdown();
-    filterData(data1);
-    console.log(data1, ';;;');
-
-    //   filterData(data);
-    handleClickClose();
-  };
-
+    const handleApply = async () => {
+ 
+      const data = await formWithDropdown();
+  
+    const comma = data.join(',');
+      const obj = {
+        payScheduleType: comma,
+      };
+     
+      filterData(obj);
+      
+      console.log(obj, 'ram');
+      handleClickClose();
+    };
+    const [options, setOptions] = useState({});
+    useEffect(() => {
+      if (open) {
+        async function call() {
+          try {
+            const Obj = {
+              companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+            };
+            const payScheduleTypees = await payScheduleType(Obj);
+            var optionsArr = { ...options };
+  
+            optionsArr.payScheduleType = payScheduleTypees;
+            // optionsArr.payScheduleTypeType=desgination;
+            console.log(optionsArr, 'optionsArr');
+  
+            setOptions(optionsArr);
+          } catch (error) {}
+        }
+        call();
+      }
+    }, [open]);
   return (
     <>
       <Grid
@@ -333,25 +362,25 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="payscheduleType">Pay Schedule Type</InputLabel>
+                    <InputLabel id="payScheduletype">Pay Schedule Type</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownpayscheduleType}
-                      onChange={(e) => handleChangeDropDown(e, 'payscheduleType')}
+                      onChange={(e) => handleChangeDropDown(e, 'payScheduletype')}
                       input={<OutlinedInput label="Pay Schedule Type" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {payscheduleTypes.map((name) => (
+                      {payscheduleTypes.map((name,index) => (
                         <MenuItem
-                          key={name}
-                          value={name}
+                          key={index}
+                          value={name?.payScheduletype}
                           style={getStyles(name, personName, theme)}
                         >
-                          {name}
+                          {name?.payScheduletype}
                         </MenuItem>
                       ))}
                     </Select>

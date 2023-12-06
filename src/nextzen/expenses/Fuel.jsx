@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { _userList } from '../../_mock';
 import { BasicTable } from '../Table/BasicTable';
+import UserContext from '../context/user/UserConext';
 
 export default function Fuel() {
+	const { user } = useContext(UserContext);
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -15,7 +17,7 @@ export default function Fuel() {
     count: 5,
     page: 1,
     search: '',
-    companyId: 'COMP1',
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       expenseDate: {
         fromDate: '',

@@ -80,11 +80,6 @@ const FactoryTable = () => {
     }
   };
   const [filterOptions, setFilterOptions] = useState({});
-  const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
   const defaultPayload = {
     count: 5,
     page: 0,
