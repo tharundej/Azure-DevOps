@@ -27,7 +27,7 @@ const Project = () => {
     { id: "endDate", label: "End Date", minWidth: '7pc', type: "text" },
     { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "text" },
     { id: "actualEndDate", label: "Actual End Date", minWidth: '9pc', type: "text" },
-    { id: "status", label: "Status", minWidth: 75, type: "text" },
+    { id: "status", label: "Status", minWidth: '9pc', type: "badge" },
 
   ];
 
