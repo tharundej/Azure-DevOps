@@ -1,9 +1,11 @@
 version: "3.9"
 services:
   node_n:
-    build: .
     image: ui_erp:5.0-${BUILD_NUMBER}
     container_name: node_n
+    build: .
+    # image: ui_erp:5.0-${BUILD_NUMBER}
+    # container_name: node_n
     environment:
         - TZ=Asia/Kolkata
     volumes:
