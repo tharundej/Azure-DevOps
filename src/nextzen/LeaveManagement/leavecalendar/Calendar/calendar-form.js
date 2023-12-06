@@ -232,7 +232,7 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
-
+const [lop,setLOP] = useState()
 const lossOfPay = ()=>{
   const payload = {
   companyId: user?.companyID,
@@ -249,7 +249,8 @@ const lossOfPay = ()=>{
     data:  payload
   };
   axios.request(config).then((response) => {
-    enqueueSnackbar((response?.data?.lop || response?.data?.message ), { variant: 'success' ,autoHideDuration:5000});
+    setLOP(response?.data)
+    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
    console.log(response,"response dataa")
   })
 
@@ -262,7 +263,7 @@ const lossOfPay = ()=>{
 
 useEffect(()=>{
 lossOfPay()
-},[datesUsed?.endDate,leaveType])
+},[leaveType,datesUsed?.toDate])
 
 
   return (
@@ -309,9 +310,9 @@ lossOfPay()
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
             <Stack direction="row" alignItems="center" spacing={1}>
           
-             <Card>
-              <CardContent sx={{ py: 1, px: 1,pt:2}}>
-              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center' }} flexDirection="row">
+             <Card >
+              <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
 
                 <Typography
@@ -336,6 +337,7 @@ lossOfPay()
     }
 
       </Grid>
+      
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
@@ -381,6 +383,9 @@ lossOfPay()
           />
      </DemoContainer>
      </LocalizationProvider>
+     <Stack sx={{px: 1,display:'flex',flexDirection:'row'}}>
+        {(lop?.lop) ? <>Loss of Pay : <span style={{color:'red'}}>{lop?.lop}</span></>:null}
+      </Stack>
       <Stack  sx={{ px: 1 }}>
       {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
