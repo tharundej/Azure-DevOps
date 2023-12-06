@@ -53,7 +53,6 @@ export default function Loans({defaultPayload,componentPage}) {
     
         { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
         { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
       ];
 
       const defaultActions=[
@@ -62,8 +61,9 @@ export default function Loans({defaultPayload,componentPage}) {
      
       // Function to get row actions based on user role
       const generateRowActions = () => {
+        console.log(componentPage,"componentpagee")
         const userRoleID = user?.roleID; // Assuming roleID is available in user object
-        const actions = (userRoleID==1)?actualActions:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        const actions = (componentPage=="MyRequests")?defaultActions:actualActions
         console.log(actions,"actionsss")
         return actions;
       };

@@ -244,8 +244,8 @@ const lossOfPay = ()=>{
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
-    // url:baseUrl+'/getLossOfPay',
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    url:baseUrl+'/getLossOfPay',
     data:  payload
   };
   axios.request(config).then((response) => {
@@ -310,9 +310,9 @@ lossOfPay()
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
             <Stack direction="row" alignItems="center" spacing={1}>
           
-             <Card>
-              <CardContent sx={{ px: 1,pt:1}}>
-              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center',paddingBottom:0}} flexDirection="row">
+             <Card >
+              <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
 
                 <Typography
@@ -337,6 +337,7 @@ lossOfPay()
     }
 
       </Grid>
+      
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
@@ -382,6 +383,9 @@ lossOfPay()
           />
      </DemoContainer>
      </LocalizationProvider>
+     <Stack sx={{px: 1,display:'flex',flexDirection:'row'}}>
+        {(lop?.lop) ? <>Loss of Pay : <span style={{color:'red'}}>{lop?.lop}</span></>:null}
+      </Stack>
       <Stack  sx={{ px: 1 }}>
       {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
