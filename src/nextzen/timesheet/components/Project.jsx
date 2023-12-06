@@ -23,11 +23,11 @@ const Project = () => {
     { id: "reportingManagerName", label: "Reporting Manager", minWidth: '10pc', type: "text" },
     { id: "projectName", label: "Project Name", minWidth: '8pc', type: "text" },
     { id: "locationName", label: "Location", minWidth: '8pc', type: "text" },
-    { id: "startDate", label: "Start Date", minWidth: '7pc', type: "text" },
-    { id: "endDate", label: "End Date", minWidth: '7pc', type: "text" },
-    { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "text" },
-    { id: "actualEndDate", label: "Actual End Date", minWidth: '9pc', type: "text" },
-    { id: "status", label: "Status", minWidth: '9pc', type: "badge" },
+    { id: "startDate", label: "Start Date", minWidth: '8pc', type: "date" },
+    { id: "endDate", label: "End Date", minWidth: '8pc', type: "date" },
+    { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "date" },
+    { id: "actualEndDate", label: "Actual End Date", minWidth: '9pc', type: "date" },
+    { id: "status", label: "Status", minWidth: '8pc', type: "badge" },
 
   ];
 
