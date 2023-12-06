@@ -154,7 +154,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload,count}) => {
 
   // const popover = usePopover();
 
@@ -224,7 +224,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     getTableData(initialDefaultPayload);
     
-  }, [initialDefaultPayload])
+  }, [initialDefaultPayload,count])
 
  
 
@@ -701,14 +701,33 @@ const [sortColumn, setSortColumn]=useState("")
 // table expanded
 const [expandedRowId, setExpandedRowId] = useState(null);
 
-const handleExpandClick = (rowId) => {
-  setExpandedRowId(expandedRowId === rowId ? null :rowId );
+const handleExpandClick = (rowId, update , rowIndex) => {
+  console.log(expandedRowId,"klkl",rowId)
+  setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
 
 
 
+// file view and download
+const handleButtonClick = (file) => {
+  // Replace 'YOUR_SERVER_BASE_URL' and 'YOUR_FILE_PATH' with the actual server base URL and file path
+  const serverBaseUrl = 'http://192.168.1.199:3001/erp';
+  const filePath = file;
 
-  
+  // Encode the file path component
+  const encodedFilePath = encodeURIComponent(filePath);
+
+  // Construct the full file URL
+  const fileUrl = `${serverBaseUrl}/servefile?filepath=${encodedFilePath}`;
+
+  // Open the file URL in a new browser tab or window
+  window.open(fileUrl, '_blank');
+};
+
+
+// index setting
+const [index, setIndex]=useState("");
+{console.log(index,"indexindex",expandedRowId)}
   return (
 
     <>
@@ -834,7 +853,7 @@ const handleExpandClick = (rowId) => {
 
                      
 
-                      .map((row) => (
+                      .map((row, index) => (
 
                         <>
                           <React.Fragment key={row.id}>
@@ -854,19 +873,33 @@ const handleExpandClick = (rowId) => {
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
-                          onHandleEditRow={(row) =>{ handleExpandClick(row.employeename),setExpandedRowId === row.employeename ,console.log(row,"iddd")}}
+                          onHandleEditRow={(row, clickedElementId) => {
+                            if (clickedElementId === 'reciept') {
+                              handleButtonClick(row.reciept);
+                              // setExpandedRowId(row.employeename);
+                              console.log(row, "iddd");
+                            }
+                            else if (clickedElementId === 'claimType') {
+                              // handleButtonClick(row.reciept);
+                              // setExpandedRowId(index);
+                              setIndex(index);
+                              setExpandedRowId(index)
+                              handleExpandClick(row.expenseClaimId, null, index)
+                              // console.log(row, "iddd");
+                            }
+                          }}
 
                           rowActions={getRowActionsBasedOnStatus(row)|| []}
 
                           expandable
-          onExpandClick={() => handleExpandClick(row.id)}
-          isExpanded={expandedRowId === row.id}
+          onExpandClick={() => handleExpandClick(index)}
+          isExpanded={expandedRowId === index}
 
                         />
 {console.log(expandedRowId,row.id,row,"table expanded")}
                         
          {/* Expanded Row */}
-         {expandedRowId === row.employeename && (
+         {expandedRowId === index && (
                     <TableRow>
                       
                       <TableCell colSpan={TABLE_HEAD.length + 1}>

@@ -60,7 +60,7 @@ export default function UserTableRow({
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row)}
+              onClick={()=>onHandleEditRow(row,ele.id)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
@@ -134,7 +134,7 @@ export default function UserTableRow({
                    }}
                  />
                )}
-{/* {console.log(ele.type ,"type",row?.status)} */}
+
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"

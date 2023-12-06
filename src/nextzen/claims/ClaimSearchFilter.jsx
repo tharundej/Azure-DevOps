@@ -294,7 +294,7 @@ console.log(selectedFields,"selectedFields 2nd method")
           {field.type === 'datePicker' && (
             <DatePicker
               label={field.label}
-              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): ''}
+              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): null}
               onChange={(date) => handleFieldChange(field.type,field.name, date)}
               renderInput={(params) => <TextField {...params} variant="outlined" />}
             />

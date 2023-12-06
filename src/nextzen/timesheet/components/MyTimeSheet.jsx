@@ -565,7 +565,7 @@ PaperProps={{
              <DialogActions>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Add  Timeline'}
+                  {!currentUser ? 'Update Timesheet' : 'Add  Timeline'}
                 </LoadingButton>
                 <Button  onClick={handleCloseEdit}>Cancel</Button>
               </Stack>
