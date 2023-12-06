@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Autocomplete,
+  Card,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
@@ -31,6 +32,10 @@ import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
+
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -62,12 +67,19 @@ const cardData = [
 ];
 
 export default function MedicalPremium() {
-  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/';
+  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+  const {enqueueSnackbar} = useSnackbar()
+  const {user} = useContext(UserContext)
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
+  
+  const [loading,setLoading] = useState(false);
    
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-  // State for Snackbar
+ // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -125,6 +137,7 @@ export default function MedicalPremium() {
    const [selectedYear, setSelectedYear] = useState(null);
    const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   const attchementHandler = () => {
@@ -226,7 +239,9 @@ export default function MedicalPremium() {
   };
 
   const saveMedicalDetails = async () => {
+    setLoading(true)
     const payload = {
+      financialYear: selectedYear?.financialYear,
       companyID: cmpId,
       employeeID: empId,
       type: formData?.type,
@@ -246,9 +261,11 @@ export default function MedicalPremium() {
       method: 'post',
       maxBodyLength: Infinity,
       url: baseUrl + '/addMedicalInsuranceDetails',
+      // url : 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addMedicalInsuranceDetails',
       headers: {
         Authorization:
         token,
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -258,9 +275,11 @@ export default function MedicalPremium() {
       .then((response) => {
        
         if (response.data.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          setLoading(false)
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           
           setISReloading(!isreloading);
           setFormData({
@@ -279,31 +298,36 @@ export default function MedicalPremium() {
           })
      
         }else    if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          setLoading(false)
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         
     
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        setLoading(false)
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
   };
 
   const editMedicalDetails = async () => {
+    setLoading(true)
     console.log(" i am calling fine info042" , formData)
     const payload = {
      
     
           companyID: formData.companyID,
           employeeID:formData.employeeID,
-         
+          financialYear: selectedYear?.financialYear,
           employeeName: formData.employeeName,
           premiumID: formData?.premiumID,
           type: formData?.type,
@@ -325,9 +349,11 @@ export default function MedicalPremium() {
       maxBodyLength: Infinity,
       // url: baseUrl +'updateMedicalInsuranceDetails',
       url: baseUrl+'/updateMedicalInsuranceDetails',
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
       headers: {
         Authorization:
        token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -338,9 +364,11 @@ export default function MedicalPremium() {
        
 
         if (response.data.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          setLoading(false)
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           
           setISReloading(!isreloading);
           setFormData({
@@ -359,43 +387,41 @@ export default function MedicalPremium() {
           })
      
         }else    if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         
     
         }
-        // if (response.data. === 200) {
-        //   setISReloading(!isreloading);
-        //   setSnackbarSeverity('success');
-        //   setSnackbarMessage('Medical Insurance  Updated successfully!');
-        //   setSnackbarOpen(true);
-        //   console.log('success');
-          
-        // }
+      
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        setLoading(false) 
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: empId };
+    setLoading(true)
+    const payload = { employeeId: empId ,financialYear: selectedYear?.financialYear,};
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
       url:baseUrl +'/getMedicalInsuranceDetails',
-
+// url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
       headers: {
         Authorization:
        token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -404,6 +430,7 @@ export default function MedicalPremium() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           setMedicalTableData(rowsData);
           console.log(JSON.stringify(response?.data), 'resultMedical');
@@ -412,6 +439,7 @@ export default function MedicalPremium() {
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     console.log(result, 'resultsreults');
@@ -492,7 +520,7 @@ export default function MedicalPremium() {
     };
     fetchData();
     setIsEdit(false)
-  }, [isreloading]);
+  }, [isreloading , selectedYear?.financialYear,]);
 
   // handling documents
  
@@ -530,6 +558,7 @@ export default function MedicalPremium() {
     setIsEdit(false)
      setFormData({
       companyID: cmpId,
+      financialYear: selectedYear?.financialYear,
       employeeID: empId,
       type: '',
       policyNumber: '',
@@ -546,8 +575,10 @@ export default function MedicalPremium() {
   }
 
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
+     
     };
 
     const config = {
@@ -565,12 +596,14 @@ export default function MedicalPremium() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -582,31 +615,24 @@ export default function MedicalPremium() {
     fetchData();
     
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+   {    loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <>
+      
       <FormProvider {...methods}>
         <Grid container spacing={2}>
           {/* grid 1 */}
-        
-          <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
           <Grid item xs={12}>
         <Autocomplete
           id="financialYear"
@@ -614,12 +640,16 @@ export default function MedicalPremium() {
           getOptionLabel={(option) => option.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          style={{marginTop:"0.9rem"}}
+          renderInput={(params) => <TextField {...params} label="PLease Select Financial Year" />}
         />
       </Grid>
+    { selectedYear?.financialYear && !loading? <>
+          <Grid item container spacing={2}  xs={12} lg={8} md={8} style={{ marginTop: '1rem' }}>
+      
             {/* Row 1 */}
             <Grid item container xs={12} spacing={2}>
-      
+          
               <Grid item xs={4}>
                 <Autocomplete
                   disablePortal
@@ -748,9 +778,9 @@ export default function MedicalPremium() {
                 />
               </Grid>
             </Grid>
-            {/* <Grid item container xs={12} spacing={2}>
-          
-            </Grid> */}
+            <Grid item container xs={12} spacing={2}>
+           
+            </Grid>
             {/* My buttons  */}
             <Grid item container xs={12} spacing={2}>
               <Grid
@@ -831,6 +861,8 @@ Upload file
         </TableContainer> 
             
           </Grid>
+
+          </>: null}
           {/* grid 2 end  */}
         </Grid>
 {medicalTableData?.length > 0?
@@ -951,6 +983,7 @@ Upload file
           handleDeletedID={handleRentDeletedID}
         />
       ) : null}
+      </>}
     </div>
   );
 

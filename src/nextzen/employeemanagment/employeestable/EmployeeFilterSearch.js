@@ -36,7 +36,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
 
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
@@ -828,7 +828,7 @@ const [stateOptions,setOptions]=useState([])
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         locationID:newvalue?.locationID
                       }
                       const department=await ApiHitDepartment(deptObj);
@@ -880,7 +880,7 @@ const [stateOptions,setOptions]=useState([])
                      
                       try{
                         const desgObj={
-                          companyID:'COMP1',
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                           departmentID:newvalue?.departmentID
                         }
                         const desgination=await ApiHitDesgniation(desgObj);
@@ -926,7 +926,7 @@ const [stateOptions,setOptions]=useState([])
                      
                       try{
                         const desgGradeObj={
-                          companyID:'COMP1',
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                           desginationID:newvalue?.desginationID
                         }
                         const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);

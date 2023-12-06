@@ -26,7 +26,7 @@ import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function Holidays({ currentUser }) {
@@ -64,7 +64,7 @@ export default function Holidays({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       holidayName: '',
       holidayDate: '',
@@ -92,35 +92,37 @@ export default function Holidays({ currentUser }) {
     setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
-  const deleteFunction = async (rowdata, event) => {
-    console.log('iam here ');
-    try {
-      console.log(rowdata, 'rowData:::::');
-      const data = {
-        companyID: 'COMP1',
-        holidayID: rowdata.holidayID,
-      };
-      const response = await axios.post(baseUrl + '/deleteHoliday', data);
-      if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        console.log('sucess', response);
-      }
-      if (response?.data?.code === 400) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-    } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
-      setSnackbarOpen(true);
-      console.log('error', error);
-    }
-  };
+  // const deleteFunction = async (rowdata, event) => {
+  //   console.log('iam here ');
+  //   try {
+  //     console.log(rowdata, 'rowData:::::');
+  //     const data = {
+  //       companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  //       holidayID: rowdata.holidayID,
+  //     };
+  //     const response = await axios.post(baseUrl + '/deleteHoliday', data);
+  //     if (response?.data?.code === 200) {
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       handleCloseEdit();
+  //       console.log('sucess', response);
+  //     }
+  //     if (response?.data?.code === 400) {
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       handleCloseEdit();
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setSnackbarSeverity('error');
+  //     setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
+  //     setSnackbarOpen(true);
+  //     handleCloseEdit();
+  //     console.log('error', error);
+  //   }
+  // };
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -200,7 +202,7 @@ export default function Holidays({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -237,36 +239,62 @@ export default function Holidays({ currentUser }) {
     };
     fetchData();
   }, []);
-
-  const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
-    data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    data.locationID = formData?.Location?.locationID;
-    data.holidayName=valueSelected?.holidayName
-    data.repeatAnnualy=valueSelected?.repeatAnnualy?.type
-
-    console.log('submitted data111', data);
-
-    try {
-      const response = await axios.post(baseUrl + '/editHoliday', data);
-      console.log('sucess', response);
-    } catch (error) {
-      console.log('error', error);
-    }
-  });
-  const handleDateChanges = (date) => {
-    setSelectedDates(date);
-  };
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(name, selectedValue, selectedOption);
+    console.log(selectedValue,'ooooo')
     setFormData({
       ...formData,
       [name]: selectedValue,
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
+    
+  };
+  const onSubmit1 = handleSubmit1(async (data) => {
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.holidayDate = formatDateToYYYYMMDD(selectedDates);
+    console.log("aaaaaaaaaa", formData)
+    data.locationID = valueSelected?.locationID
+    data.holidayName=valueSelected?.holidayName
+    // data.repeatAnnualy=valueSelected?.repeatAnnualy
+    data.holidayID=valueSelected?.holidayID
+    console.log('submitted data111', data);
+
+    try {
+      const response = await axios.post(baseUrl + '/editHoliday', data);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      handleCloseEdit();
+      console.log('error', error);
+    }
+  });
+  const handleDateChanges = (date) => {
+    setSelectedDates(date);
   };
 
+console.log(valueSelected,'kkkk')
   console.log(formData, 'formdata for location');
   return (
     <>
@@ -323,6 +351,7 @@ export default function Holidays({ currentUser }) {
                     label="Holiday Date"
                     minDate={dayjs()}
                     // value={editData?.holidayDate}
+                    value={selectedDates}
                     onChange={handleDateChanges}
                   />
                 </DemoContainer>
@@ -331,8 +360,8 @@ export default function Holidays({ currentUser }) {
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
                 value={valueSelected?.fulldayHalfday || null}
-                options={Fullday_halfdays}
-                getOptionLabel={(option) => option.type }
+                options={Fullday_halfdays.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('fulldayHalfday', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Fullday/Halfday" variant="outlined" />
@@ -343,8 +372,8 @@ export default function Holidays({ currentUser }) {
                 label="Repeats Anually"
                 value={valueSelected?.repeatAnnualy}
                 // onChange = {(e) => handleSelectChange('repeatAnnualy', e.target.value)}
-                options={RepeatsAnuallys}
-                getOptionLabel={(option) => option.type}
+                options={RepeatsAnuallys.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type}
                 onChange={(e, newValue) => handleSelectChange('repeatAnnualy', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Repeat Annualy" variant="outlined" />
@@ -361,7 +390,7 @@ export default function Holidays({ currentUser }) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />

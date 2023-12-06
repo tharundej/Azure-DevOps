@@ -114,7 +114,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     console.log('submitted data111', data);
 
     try {
@@ -138,7 +138,7 @@ export default function GeneralForminfo({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = 'COMP1'
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     console.log('submitted data2222', data);
 
     try {
@@ -225,7 +225,7 @@ export default function GeneralForminfo({ currentUser }) {
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <ModalHeader heading="Add PayRoll" />
             {/* methods1={methods1} onSubmit={onSubmit} */}
-            <DialogTitle>Add PayRoll</DialogTitle>
+            {/* <DialogTitle>Add PayRoll</DialogTitle> */}
 
             <DialogContent>
               <Box
@@ -249,9 +249,9 @@ export default function GeneralForminfo({ currentUser }) {
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
                   sx={{
-                    width: 300,
+                    width: 330,
                     margin: 'auto',
-                    marginTop: 1,
+                    marginTop: '-1px',
                   }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
@@ -260,6 +260,7 @@ export default function GeneralForminfo({ currentUser }) {
                   name="payPcheduleType"
                   label="Pay Schedule Type"
                   options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
+
                 />
                 <RHFTextField name="basicPayPercentage" label="Basic Pay %" />
 
@@ -321,9 +322,9 @@ export default function GeneralForminfo({ currentUser }) {
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
                   sx={{
-                    width: 300,
+                    width: 330,
                     margin: 'auto',
-                    marginTop: 1,
+                    marginTop: '-1px',
                   }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />

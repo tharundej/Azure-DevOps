@@ -11,6 +11,7 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
+import ViewTeamMates from './ViewTeamMates';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -28,23 +29,9 @@ export default function MyShiftDetails() {
    
       const TABLE_HEAD = [
 
-        {
+        
     
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
-    
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee ID", width: 180, type: "text" },
 
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
@@ -53,10 +40,10 @@ export default function MyShiftDetails() {
     
         { id: "start_time", label: "Start Time", width: 180, type: "text" },
     
-        { id: "end_time", label: "End time", width: 100, type: "text" },
-        { id: "start_date", label: "Start Date", width: 100, type: "text" },
-        { id: "end_date ", label: "End Date", width: 100, type: "text" },
-        { id: "shift_term", label: "Sift Term", width: 100, type: "text" },
+        { id: "end_time", label: "End Time", width: 100, type: "text" },
+        // { id: "start_date", label: "Start Date", width: 100, type: "text" },
+        // { id: "end_date ", label: "End Date", width: 100, type: "text" },
+        { id: "", label: "View Team Mates", width: 100,eyeIcon:true, type: "text" },
     
         // { id: '', width: 88 },
     
@@ -64,33 +51,30 @@ export default function MyShiftDetails() {
     
      
     const defaultPayload ={
-      "company_id":"COMP2",
-      "employee_id":"ibm1",
+      "company_id":localStorage.getItem("companyID"),
+      "employee_id":localStorage.getItem("employeeID"),
       "page":0,
-      "count":3,
-      "Search":"r",
+      "count":50,
+      "Search":"",
       "externalFilters":{
-      "shift_name": "",
-      "shift_term": "",
-      "startdate":"",
-      "enddate":""
+      "shift_name": ""
    
   },
       "sort": {
-      "orderby": "shift_name",
+      "orderby": "",
       "key": 0
   } 
    
   }
-      const actions = [
+      // const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+      //   { name: "approve", icon: "hh", path: "jjj" },
     
-        { name: "view", icon: "hh", path: "jjj" },
+      //   { name: "view", icon: "hh", path: "jjj" },
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+      //   { name: "eerr", icon: "hh", path: "jjj" },
     
-      ];
+      // ];
     
     
       const [showForm, setShowForm] = useState  (false);
@@ -99,9 +83,41 @@ export default function MyShiftDetails() {
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
       }
+      const [employeListDialog,SetEmployeListDialog]=useState(false)
+
+      const [RowDate,setRowDate] = useState([])
+      const closeEmployeList = ()=> SetEmployeListDialog(false)
+      const SecondoryTable = async (rowdata,event) => {
+        console.log("🚀 ~ file: ShiftRoast.jsx:131 ~ SecondoryTable ~ rowdata:",rowdata)
+      //  setRoasterRowData(rowdata.EmpList)
+        SetEmployeListDialog(true)
+        setRowDate(rowdata)
+
+      }
+
     
+      const handleEditRowParent = async (rowdata,event) => {
+
+
+        // alert("yes yes yes")
+      }
   return (
     <>
+     {employeListDialog && 
+ <Dialog
+ fullWidth
+ maxWidth={false}
+ open={employeListDialog}
+ onClose={closeEmployeList}
+ PaperProps={{
+  sx:{maxWidth:770,overflow:"hidden"},
+ }}
+ className="custom-dialog"  
+ >
+<ViewTeamMates onClose={closeEmployeList} RowDate={RowDate} />
+ </Dialog>
+
+ }
       {showForm && (
  <Dialog
  fullWidth
@@ -128,8 +144,11 @@ defaultPayload={defaultPayload}
 headerData={TABLE_HEAD}
 endpoint='/Myshiftdetails'
 bodyData='data'
-rowActions={actions}
+
+// rowActions={actions}
 filterName='MyShiftFilter'
+SecondoryTable={SecondoryTable}
+handleEditRowParent={handleEditRowParent}
 />  
     </>
   );

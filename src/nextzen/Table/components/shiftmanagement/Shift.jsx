@@ -11,11 +11,11 @@ const Shift = () => {
 
     }
   const  tabLabels=[
-        "Shift roaster" , "Assign shift" , "My Shift Details" , "Shift Swap", "Swap Request"
+        "Shift Roaster" ,  "My Shift Details" , "Self Swap", " Requested Swap"
     ]
     const tabContents=[
         <div><ShiftRoast/> </div>,
-        <div><AssignShiftComponent/> </div>,
+        // <div><AssignShiftComponent/> </div>,
         <div><MyShiftDetails/> </div>,
         <div><ShiftSwap/></div>,
         <div><Swaprequest/></div>,
@@ -24,7 +24,8 @@ const Shift = () => {
     ]
   return (
     <>
-    <ReusableTabs tabContents={tabContents} tabLabels={tabLabels}/>
+    <ReusableTabs tabContents={tabContents} tabLabels={tabLabels} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
+    
     </>
   )
 }

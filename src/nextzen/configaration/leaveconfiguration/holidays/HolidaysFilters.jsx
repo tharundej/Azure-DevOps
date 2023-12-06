@@ -47,10 +47,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import HolidaysForm from './HolidaysForm';
+import { holidayTypeName, locationNameApi } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 
 const defaultFilters = {
@@ -91,13 +92,29 @@ function getStyles(name, personName, theme) {
 
 export default function HolidaysFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const holidayNames = [
-    'Diwali',
-    'Gandhi Jayanthi'
-  ];
-  const locationName = [
-    'infobell'
-  ]
+  // const holidayNames = [
+  //   'Diwali',
+  //   'Gandhi Jayanthi'
+  // ];
+  const [holidayTypesNames,setHolidayTypesNames] = useState([])
+  const [locationName, setLocationName] = useState([])
+  useEffect(()=>{
+    async function call() {
+      const arr = await holidayTypeName();
+      console.log(arr, 'sairam');
+      setHolidayTypesNames(arr);
+    }
+    call();
+    async function call2() {
+      const arr = await locationNameApi();
+      console.log(arr, 'sairam');
+      setLocationName(arr);
+    }
+    call2();
+  },[])
+  // const locationName = [
+  //   'infobell'
+  // ]
 
   // const designationGradeName = [
   //   'senior',
@@ -134,7 +151,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       options: [],
     },
     {
-      field: 'holiday_name',
+      field: 'holidayName',
       options: [],
     },
   ]);
@@ -174,27 +191,27 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
-          arr1[item.field] = commaSeparatedString;
-        }
-
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+      const arr1 = [];
+     
+      dropdown?.holidayName?.forEach((item, index) => {
+        arr1.push(item?.holidayName);
       });
+    
       // setDatesData(arr1);
       resolve(arr1);
     });
   }
-
+  function formWithDropdown2() {
+    return new Promise((resolve1) => {
+  const arr2= [];
+      dropdown?.locationName?.forEach((item, index) => {
+       
+        arr2.push(item?.locationName);
+       
+      });
+      resolve1(arr2);
+    });
+  }
   const [open, setOpen] = useState(false);
   const [openDateRange, setOpendateRange] = useState(false);
   const handleClickOpen = () => {
@@ -203,7 +220,44 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
   const handleClickClose = () => {
     setOpen(false);
   };
+  const [options, setOptions] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const holidayNames = await holidayTypeName(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.holidayNames = holidayNames;
+          // optionsArr.holidayNames=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+      async function call2() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const locationName = await locationNameApi(Obj);
+          var optionsArr = { ...options };
+
+          optionsArr.locationName = locationName;
+          // optionsArr.locationName=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+
+      call();
+      call2();
+    }
+  }, [open]);
   const handleChangeDropDown = (event, field) => {
     const {
       target: { value },
@@ -219,12 +273,12 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'location') {
+    } else if (field === 'locationName') {
       setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'holiday_name') {
+    } else if (field === 'holidayName') {
       setdropdownDepartmentname(value);
       const obj = dropdown;
       obj[field] = value;
@@ -240,9 +294,20 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
   const handleApply = async () => {
     setDatesData([]);
     const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
-
+    const comma = data.join(',');
+    const obj = {
+      holidayName: comma,
+    };
+    filterData(obj);
+    console.log(obj, 'sairam');
+    
+    const data1 =await formWithDropdown2();
+    const comma1 = data1.join(',');
+    const obj1 = {
+      locationName:comma1,
+    }
+    filterData(obj1);
+    console.log(obj1, 'sairam2222');
     //   filterData(data);
     handleClickClose();
   };
@@ -311,21 +376,21 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="holiday_name">Holiday Name</InputLabel>
+                  <InputLabel id="holidayName">Holiday Name</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
                     value={dropdownHolidayname}
-                    onChange={(e) => handleChangeDropDown(e, 'holiday_name')}
+                    onChange={(e) => handleChangeDropDown(e, 'holidayName')}
                     input={<OutlinedInput label="Holiday Name" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {holidayNames.map((name) => (
+                    {holidayTypesNames.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
+                        {name?.holidayName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -333,14 +398,14 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="location">Location</InputLabel>
+                    <InputLabel id="locationName">Location</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'location')}
+                      onChange={(e) => handleChangeDropDown(e, 'locationName')}
                       input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
@@ -351,7 +416,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
                           value={name}
                           style={getStyles(name, personName, theme)}
                         >
-                          {name}
+                          {name?.locationName}
                         </MenuItem>
                       ))}
                     </Select>

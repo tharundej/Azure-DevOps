@@ -103,6 +103,12 @@ import ProductsHead from '../Products/ProductsHeader';
 import CustomersHead from '../Customers/CustomersHeader';
 import PurchaseOrderHead from '../Purchase/PurchaseOrder/PurchaseOrderHeader';
 import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
+import SwapRequestSearchFilter from './components/shiftmanagement/SwapRequestSearchFilter';
+import PurchaseInvoiceHead from '../Purchase/PurchaseInvoice/PurchaseInvoiceHeader';
+import PurchasePaymentHead from '../Purchase/PurchasePayment/PurchasePaymentHeader';
+import SaleInvoiceHead from '../sales/SaleInvoice/SaleInvoiceHeader';
+import SalePaymentHead from '../sales/SalePayment/SalePaymentHeader';
+import SaleOrderHead from '../sales/SalesOrder/SaleOrderHeader';
 import DesignationSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationSearchFilter';
 import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfilter/DeparrtmentSearchFilter';
 // import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
@@ -111,7 +117,15 @@ import DeparrtmentSearchFilter from '../configaration/roleconfiguration/searchfi
 // import DesignationGradeSearchFilter from '../configaration/roleconfiguration/searchfilter/DesignationGradeSearchFilter';
 // import ClaimSearchFilter from '../claims/ClaimSearchFilter';
 import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
+import UserContext from '../context/user/UserConext';
+import { useContext } from 'react';
 import HrFilter from '../ITDeclaration/hrITDeclaration/hrFilters/HrFilter';
+import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
+import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
+import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
+import ApproveFilter from '../timesheet/components/ApproveFilters';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
+import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 
 const defaultFilters = {
   name: '',
@@ -133,6 +147,8 @@ const BasicTable = ({
   deleteFunction,
   handleEditRowParent,
   handleOpenModal,
+  SecondoryTable,
+  componentPage,count
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -153,7 +169,11 @@ const BasicTable = ({
   // const defaultPayloaddata =defaultPayload;
   //   const endpointdata =endpoint;
   // const [TABLE_HEAD, setTABLE_HEAD] = useState();
-
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const TABLE_HEAD = headerData;
   // const[_userList, set_userList] = useState(bodydata);
   const [tableData, setTableData] = useState([]);
@@ -167,7 +187,7 @@ const BasicTable = ({
   useEffect(() => {
     // onclickActions();
     getTableData();
-  }, []);
+  }, [count]);
 
   const getTableData = (payload) => {
     setLoading(false);
@@ -184,6 +204,8 @@ const BasicTable = ({
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
+    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
+    // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
       maxBodyLength: Infinity,
@@ -193,10 +215,13 @@ const BasicTable = ({
       // url: `http://192.168.0.184:3001/erp/${endpoint}`,
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
+      // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
+   
       url: baseUrl + `${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
-     // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
+      // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
@@ -214,7 +239,13 @@ const BasicTable = ({
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
-        console.log(response?.data?.data, 'total no of records-->');
+        console.log(
+          response?.data,
+          'total no of records-->',
+          response?.count,
+          'responsss',
+          response
+        );
 
         // leave list api
         console.log('leave list api integration');
@@ -435,12 +466,19 @@ const BasicTable = ({
       row?.status === '' ||
       row?.status === 'Pending' ||
       row?.status === 'Active' ||
-      row?.status === 'InActive'
+      row?.status === 'InActive' ||
+      row?.status === 'active' ||
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
       return rowActions;
-    } else {
+    } 
+    else if (row?.status === 'Completed') {
+      return [rowActions.find(action => action.name === 'View')];
+    }
+    else {
       return null;
     }
   };
@@ -454,17 +492,34 @@ const BasicTable = ({
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
-          {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
-          {filterName === 'TimeSearchFilter' && (
-            <TimeSheetSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
-          )}
-           {filterName === 'ProjectSearchFilter' && (
-            <ProjectSearchFilter
+          {filterName === 'SwapRequestSearchFilter' && (
+            <SwapRequestSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
           )}
-        
+          {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
+          {filterName === 'TimeSearchFilter' && (
+            <TimeSheetSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
+          )}
+          {filterName === 'ApproveFilters' && (
+            <ApproveFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
+          )}
+          {filterName === 'ProjectSearchFilter' && (
+            <ProjectSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
               filterSearch={handleFilterSearch}
@@ -490,14 +545,20 @@ const BasicTable = ({
             <SalarySearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              componentPage = {componentPage}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
+          {filterName === 'LeaveHistoryFilter' && (
+            <LeaveHistoryFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+          )}
+
           {filterName === 'EmployeeListFilter' && (
             <EmployeeTableFilter filterData={handleFIlterOptions} />
           )}
@@ -573,14 +634,25 @@ const BasicTable = ({
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
             <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
           )}
           {filterName === 'VendorHead' && (
-            <VendorHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <VendorHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'VendorMaterialsHead' && (
+            <VendorMaterialsHeader
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'MaterialsHead' && (
             <MaterialsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -607,22 +679,84 @@ const BasicTable = ({
             />
           )}
           {filterName === 'PurchaseOrderHead' && (
-            <PurchaseOrderHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <PurchaseOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchaseInvoiceHead' && (
+            <PurchaseInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'PurchasePaymentHead' && (
+            <PurchasePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
           {filterName === 'BalanceSheetHead' && (
-            <BalanceSheetHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <BalanceSheetHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
           )}
-           {filterName === 'DepartmentFilterSearch' && (
-            <DeparrtmentSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'SaleInvoiceHead' && (
+            <SaleInvoiceHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'SaleOrderHead' && (
+            <SaleOrderHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'SalePaymentHead' && (
+            <SalePaymentHead
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'DepartmentFilterSearch' && (
+            <DeparrtmentSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
           {filterName === 'DesignationFilterSearch' && (
-            <DesignationSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <DesignationSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
-            {filterName === 'DesignationGradeFilterSearch' && (
-            <DesignationGradeSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          {filterName === 'DesignationGradeFilterSearch' && (
+            <DesignationGradeSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+            />
           )}
-            {filterName === 'HrTabFilter' && (
+             {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+ {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
+
+{filterName === 'AddRoleFilter' && (
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
           {/* accounts  */}
           <Card>
@@ -677,7 +811,13 @@ const BasicTable = ({
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => handleEditRowParent(id)}
+                            onHandleEditRow={(id) => 
+                              {
+                                if(handleEditRowParent)
+                              
+                              handleEditRowParent(id)
+                              }
+                            }
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
                             onDeleteRow={() => handleDeleteRow(row.id)}
@@ -686,10 +826,11 @@ const BasicTable = ({
                             }}
                             headerContent={TABLE_HEAD}
                             rowActions={getRowActionsBasedOnStatus(row)}
+                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
                         </>
                       ))}
-
+                    {console.log(rowActions, 'rowActionss')}
                     <TableNoData notFound={notFound} />
                   </TableBody>
                 </Table>
@@ -705,13 +846,13 @@ const BasicTable = ({
               // rowsPerPage={25}
               onPageChange={onPageChangeHandeler}
               onRowsPerPageChange={onChangeRowsPerPageHandeler}
-              dense={table.dense}
+              // dense={table.dense}
               onChangeDense={table.onChangeDense}
             />
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
               <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
-                   
+
             </Grid >
             <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
             <Pagination
@@ -721,9 +862,9 @@ const BasicTable = ({
             onChange={handleChange}
             shape="rounded"
             />
- 
+
             </Grid>
-           
+
             </Grid> */}
           </Card>
         </Container>
@@ -736,9 +877,8 @@ function applyFilter({ inputData, comparator, filters }) {
   console.log(inputData, 'inputData checkingggggggggggg');
   const { name, status, role } = filters;
   var stabilizedThis;
-  
-  if(inputData)
-  stabilizedThis = inputData?.map((el, index) => [el, index]);
+
+  if (inputData) stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -784,6 +924,9 @@ BasicTable.propTypes = {
   bodyData: PropTypes.func,
 };
 BasicTable.propTypes = {
+  SecondoryTable: PropTypes.func,
+};
+BasicTable.propTypes = {
   rowActions: PropTypes.func,
   handleOpenModal: PropTypes.func,
 };
@@ -801,9 +944,4 @@ BasicTable.propTypes = {
   handleEditRowParent: PropTypes.any,
 };
 
-
-
 export { BasicTable };
-
-
-

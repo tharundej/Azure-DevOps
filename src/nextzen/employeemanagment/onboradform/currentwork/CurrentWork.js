@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle,useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
+import FormGroup from '@mui/material/FormGroup';
+
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 
 import { Autocomplete,TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -51,7 +52,7 @@ import {
     JOB_WORKING_SCHEDULE_OPTIONS,
   } from 'src/_mock';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
@@ -83,7 +84,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   }
   useEffect(()=>{
     const obj={
-      "companyId": "COMP1",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     }
     ApiHitOptions(obj)
@@ -92,7 +93,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   const currentUser=props.currentUser;
 
   const [currentWorkData,setCurrentWorkData]=useState({
-    "companyID": "COMP1",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     reportingManagerID:currentUser?.reportingManagerID|| undefined,
 
   "employeeID":localStorage.getItem("employeeId"),
@@ -110,7 +111,8 @@ const CurrentWork=forwardRef((props,ref)=> {
   "ctc":currentUser?.ctc || undefined,
 
 
-  "roleID":currentUser?.roleID || undefined
+  "roleID":currentUser?.roleID || undefined,
+  salaryStructure:false
   })
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
@@ -189,7 +191,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitLocations=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     
@@ -388,7 +390,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitManager=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     const config = {
@@ -432,7 +434,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitRoles()
        ApiHitManager()
        const obj={
-        companyID:'COMP1',
+        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
        
       }
 
@@ -588,7 +590,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 departmentID:newvalue
               }))
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 departmentID:newvalue?.departmentID
               }
 
@@ -621,7 +623,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
               }))
 
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 designationID:newvalue?.designationID
                 
               }
@@ -720,7 +722,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             sx={{
               width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
-            renderInput={(params) => <TextField {...params} label="Assign Manager" />}
+            renderInput={(params) => <TextField {...params} label="Reporting Manager" />}
           />
 
 
@@ -737,6 +739,21 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             }))
           }}
           />
+
+
+<FormGroup>
+  <FormControlLabel control={<Checkbox  onChange={(e)=>{
+                  setCurrentWorkData(prev=>({
+                    ...prev,
+                    salaryStructure:!prev?.salaryStructure
+                  }))
+                  console.log(currentWorkData,'currentWorkData')
+                }} />} label="Follow Salary Structure?" />
+  
+  
+</FormGroup>
+
+      
 
 
           <Autocomplete

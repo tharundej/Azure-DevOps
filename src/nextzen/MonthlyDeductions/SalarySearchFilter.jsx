@@ -36,7 +36,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import SalaryAdvanceForm from './SalaryAdvaceForm';
 import { baseUrl } from '../global/BaseUrl';
 import UserContext from '../context/user/UserConext';
@@ -53,7 +53,7 @@ import UserContext from '../context/user/UserConext';
     },
   };
 
-export default function SalarySearchFilter({filterSearch,filterData}){
+export default function SalarySearchFilter({filterSearch,filterData,componentPage,getTableData}){
   const {user} = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -282,7 +282,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
  }}
  className="custom-dialog"  
 >
- <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  />
+ <SalaryAdvanceForm handleClose={handleClose} currentUser={{}} close={{handleClose}}  getTableData={getTableData}/>
       </Dialog>
     )}
         <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
@@ -297,6 +297,7 @@ export default function SalarySearchFilter({filterSearch,filterData}){
   </Grid>
 
   <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+    {componentPage=="MyRequests"?
     <Button
       variant="contained"
       color="primary"
@@ -305,11 +306,11 @@ export default function SalarySearchFilter({filterSearch,filterData}){
       sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
     >
       Apply Salary Advance
-    </Button>
+    </Button>:null}
 
-    <Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+    {componentPage!="MyRequests"?<Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
-    </Button>
+    </Button>:null}
   </Grid>
 </Grid>
 

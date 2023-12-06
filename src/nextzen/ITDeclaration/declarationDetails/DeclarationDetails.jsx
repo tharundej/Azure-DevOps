@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Button,Autocomplete
+  Button,Autocomplete, Card
 } from '@mui/material';
 Autocomplete
 import InputAdornment from '@mui/material/InputAdornment';
@@ -21,6 +21,9 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -28,11 +31,18 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
+  const {enqueueSnackbar} = useSnackbar()
+  const {user} = useContext(UserContext)
+// const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
-  const empId = localStorage.getItem('employeeID')
-  const cmpId= localStorage.getItem('companyID')
-  const token = localStorage.getItem('accessToken')
-  console.log(empId ,"emp")
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+
+const [loading,setLoading] = useState(false);
+ 
+
   const [data, setData] = useState();
   const [reloading, setReloading] = useState(false);
 
@@ -57,7 +67,10 @@ const DeclarationDetails = () => {
    const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
      setSelectedYear(value);
+     localStorage.setItem('selectedYear', JSON.stringify(value));
+
    };
+   console.log(selectedYear , "selectedYear")
    const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -106,7 +119,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: selectedYear,
+      financialYear: selectedYear?.financialYear,
 
       rowsPerPage: rowsPerPage,
 
@@ -144,10 +157,11 @@ const DeclarationDetails = () => {
     };
     fetchData();
     
-  }, [reloading]);
+  }, [reloading ,selectedYear?.financialYear]);
 
 
   const updateDeclarationsList = async () => {
+    setLoading(true)
     const newArray = data?.map((item) => ({
       configId: item.configId,
       declared: parseInt(item.declared, 10),
@@ -158,7 +172,7 @@ const DeclarationDetails = () => {
 
       companyId: cmpId,
 
-      financialYear: selectedYear,
+      financialYear: selectedYear?.financialYear,
 
       records: newArray,
     };
@@ -177,24 +191,31 @@ const DeclarationDetails = () => {
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          setLoading(false)
           setReloading(!reloading);
-          console.log(JSON.stringify(response.data));
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
-          console.log("response", response)
+          // console.log(JSON.stringify(response.data));
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
+          // console.log("response", response)
         }
         else if(response.data.code === 400){
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          setLoading(false)
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        setLoading(false)
         console.log(error);
       });
   };
   const getFinancialYear = async () => {
+    setLoading(true)
     const payload = {
       companyID: cmpId,
     };
@@ -217,9 +238,11 @@ const DeclarationDetails = () => {
           const rowsData = response?.data?.data;
           console.log(rowsData, 'finacial year');
           setFinancialYears(rowsData);
+          setLoading(false)
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -233,36 +256,35 @@ const DeclarationDetails = () => {
     
   }, []);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
+
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
+
   return (
     <div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Grid item xs={12}>
+   {loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <>
+
+      <Grid item xs={12} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Autocomplete
           id="financialYear"
           options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          getOptionLabel={(option) => option?.financialYear}
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          renderInput={(params) => <TextField {...params} label=" Please Select Financial Year" />}
         />
       </Grid>
-      <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
+  { selectedYear?.financialYear?  
+  <>
+  <TableContainer component={Paper} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -342,6 +364,8 @@ const DeclarationDetails = () => {
           </Grid>
         </Grid>
       </Grid>
+      </> : null}
+      </>}
     </div>
   );
 };

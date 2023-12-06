@@ -1,4 +1,4 @@
-import {Card,CardContent,Typography,IconButton} from '@mui/material';
+import {Card,CardContent,Typography,IconButton,Grid} from '@mui/material';
 import {useState,useEffect,useCallback, useContext} from 'react';
 import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
@@ -44,13 +44,15 @@ export default function PendingLeaves(){
 
 
     return (
-   <>
   <>
   {loading ? 
    <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
-   : (
-    listData?.data != null ? (
+   : 
+   
+   <Grid container spacing={1} sx={{ px: 3 , py:2}}>
+    {listData?.data != null ? (
       listData?.data?.map((itm, index) => (
+        <Grid item xs={6} md={4} lg={4}>
         <Card sx={{ margin: "10px" }}>
           <CardContent>
             {!pending[index] ? (
@@ -87,14 +89,19 @@ export default function PendingLeaves(){
             )}
           </CardContent>
         </Card>
+        </Grid>
       ))
     ) : (
       <div style={{ textAlign: "center", justifyContent: "center", alignItems: "center" }}>
         No Pending Leaves
       </div>
     )
-  )}
-</>
-</>
-    )
+    }
+    
+    </Grid>
 }
+  
+</>
+    
+)}
+

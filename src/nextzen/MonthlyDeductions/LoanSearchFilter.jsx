@@ -20,7 +20,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
 import ApplyLoan from './ApplyLoan';
 import { baseUrl } from '../global/BaseUrl';
@@ -39,7 +39,7 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
     },
   };
   
-export default function LoanSearchFilter({filterSearch,filterData}){
+export default function LoanSearchFilter({filterSearch,filterData,componentPage,getTableData}){
   const theme = useTheme();
   const {user} = useContext(UserContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -237,7 +237,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
  }}
  className="custom-dialog"  
 >
- <ApplyLoan currentUser={{}} handleClose={handleClose} />
+ <ApplyLoan currentUser={{}} handleClose={handleClose} getTableData={getTableData}/>
       </Dialog>
     )}
           <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
@@ -249,7 +249,7 @@ export default function LoanSearchFilter({filterSearch,filterData}){
             </Grid>
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                  
-               <Button 
+            {componentPage=="MyRequests"? <Button 
                  sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
                 variant='contained' 
                 color='primary'
@@ -257,10 +257,10 @@ export default function LoanSearchFilter({filterSearch,filterData}){
                  onClick={handleTimeForm}
                  >
                   Apply Loan
-                </Button>
-               <Button  onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+                </Button>:null}
+                {componentPage!="MyRequests"? <Button  onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
                <Iconify icon="mi:filter"/>Filters
-               </Button>
+               </Button>:null}
       </Grid>
                 </Grid>
      

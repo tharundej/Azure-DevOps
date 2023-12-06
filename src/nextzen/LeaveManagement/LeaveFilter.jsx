@@ -20,7 +20,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import UserContext from '../context/user/UserConext';
@@ -105,7 +105,7 @@ export default function LeaveFilter({filterSearch,filterData}){
   const [dropdownFiledArray,setDropdownFiledArray]=useState(
     [
       {
-        field:'Status',
+        field:'status',
         options:[]
       },
       {
@@ -122,7 +122,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    Status: "",         // Add default value for "Status"
+    status: "",         // Add default value for "status"
     leave_type_name: "",  // Add default value for "leave_type_name"
   })
   function formDateDataStructure(){
@@ -148,7 +148,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     return new Promise((resolve) => {
      
       const arr1 = {
-        Status: "",
+        status: "",
         leave_type_name: "",
       };
   
@@ -161,7 +161,7 @@ export default function LeaveFilter({filterSearch,filterData}){
         }
          
         })
-        arr1.Status = data.Status;
+        arr1.status = data.status;
         arr1.leave_type_name = data.leave_type_name;
         resolve(arr1)
         
@@ -189,7 +189,7 @@ export default function LeaveFilter({filterSearch,filterData}){
         obj[field]=value;
         setDropdown(obj);
       }
-      else if(field==="Status"){
+      else if(field==="status"){
         setDropdownStatus(value)
         const obj=dropdown;
         obj[field]=value;
@@ -215,7 +215,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     fromDateto:"",
     toDatefrom:"",
     toDateto:"",
-    Status: "",        
+    status: "",        
     leave_type_name: "",  
       })
       setOpen(false);
@@ -397,15 +397,15 @@ export default function LeaveFilter({filterSearch,filterData}){
       <Grid container flexDirection="row" spacing={1}>
                   <Grid item marginTop="10px" xs={12} md={6}>
                 <FormControl fullWidth >
-                <InputLabel fullWidth id="Status">status</InputLabel>
+                <InputLabel fullWidth id="status">status</InputLabel>
                 <Select
                 fullWidth
                   labelId="demo-multiple-name-status_1"
                   id="demo-multiple-status_1"
                   multiple
                   value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'Status')}
-                  input={<OutlinedInput label="Status" />}
+                  onChange={(e)=>handleChangeDropDown(e,'status')}
+                  input={<OutlinedInput label="status" />}
                   MenuProps={MenuProps}
                 >
                  

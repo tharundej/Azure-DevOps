@@ -50,7 +50,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import SalaryStructureForm from './SalaryStructureForm';
@@ -378,7 +378,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(deptObj);
@@ -429,7 +429,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                         
                           try{
                             const desgGradeObj={
-                              companyID:'COMP1',
+                              companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                               designationID:newvalue?.designationID
                             }
                             const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);

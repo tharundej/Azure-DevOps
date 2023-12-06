@@ -50,6 +50,25 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
+
+
+
 const   EducationInformation=forwardRef((props,ref)=> {
   const [employeeData,setEmployeeData]=useState([ {
     nameOfTheDegree:  '',
@@ -83,8 +102,10 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
 
   const onSave=()=>{
+    const obj1=defaultValues;
+    
     const obj={
-     companyId: "COMP1",
+     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      employeeId: localStorage.getItem('employeeIdCreated'),
      education:defaultValues
     }
@@ -198,7 +219,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
          ...newArray[index],
          [field]: parseInt(value,10)
      }
+    }if(field==="nameOfTheDegree"){
 
+      newObj[index][field]=e?.target?.value ;
+      newArray[index] = {
+        ...newArray[index],
+        [field]: value?.label,
+        nameOfTheDegreeObject:value
+    }
 
       }else{
 
@@ -212,7 +240,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
            
         
     
-       // console.log(newArray)
+        console.log(newArray,'newaarrray')
        
        setDefaultValues(newArray);
      };
@@ -320,7 +348,6 @@ const   EducationInformation=forwardRef((props,ref)=> {
      };
      
   
-  
  
   return (
 
@@ -347,18 +374,38 @@ const   EducationInformation=forwardRef((props,ref)=> {
                {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
-                    variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
-                    onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
-                    }}
-                  />
+                 
+
+                  <Autocomplete
+                        options={degreeOptions}
+                        getOptionLabel={(option) => option.label}
+                        fullWidth
+                        onChange={(e,newvalue) => {
+                          //  handleChange(e, index, 'nameOfTheDegree');
+                           const newArray = [...defaultValues];
+                           newArray[index] = {
+                             ...newArray[index],
+                             nameOfTheDegree: newvalue?.label,
+                             nameOfTheDegreeObject:newvalue
+                         }
+                         setDefaultValues(newArray)
+                         console.log(newArray)
+
+                         }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            name="nameOfTheDegree"
+                            label="Name Of the Degree"
+                            variant="outlined"
+                            id="name_of_the_degree"
+                            value={item?.nameOfTheDegreeObject}
+                           
+                          />
+                        )}
+                      />
+
+                  
                 </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
@@ -503,12 +550,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
                         <MenuItem value="marks-memo">Marks Memo</MenuItem>

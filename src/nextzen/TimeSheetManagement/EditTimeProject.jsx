@@ -34,7 +34,7 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 export default function EditTimeProject({ currentUser,handleClose ,tableEDitData}) { 
   console.log("🚀 ~ file: EditTimeProject.jsx:40 ~ EditTimeProject ~ tableEDitData:", tableEDitData)
@@ -144,7 +144,7 @@ console.log("🚀 ~ file: EditTimeProject.jsx:102 ~ EditTimeProject ~ reportingM
 const getEmployeReport1 = async ()=>{
   try{
   const  data= {
-      companyId:'COMP1',
+      companyId:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      
     };
     const response = await instance.post('/getReportingmanager',data);
@@ -158,7 +158,7 @@ throw error;
 let getEmployeList1 = async (props)=>{
   try{
   const  data= {
-      companyId:'COMP1',
+      companyId:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       reportinManagerId:currentReportingData[0]?.employeeId,
     };
     data.reportingManagerId =props;
@@ -352,7 +352,7 @@ const join=()=>{
               
              
               // const obj={
-              //   company_id:'COMP1',
+              //   company_id:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   reporting_manager_id:newvalue?.employeeId
               // }
  
@@ -387,7 +387,7 @@ const join=()=>{
               
              
               // const obj={
-              //   company_id:'COMP1',
+              //   company_id:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   reporting_manager_id:newvalue?.employeeId
               // }
  

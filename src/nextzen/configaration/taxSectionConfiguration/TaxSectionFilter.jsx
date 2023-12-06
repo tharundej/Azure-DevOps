@@ -47,7 +47,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
@@ -115,6 +115,10 @@ export default function TaxSectionFilter({
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownDesignation, setdropdownDesignation] = useState([]);
   const [dropdownleavePeriodType, setdropdownleavePeriodType] = useState([]);
+  // State for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -433,19 +437,19 @@ export default function TaxSectionFilter({
           />
         </Grid>
         <Grid item  md={3} xs={3} direction="row" >
-     <AddTaxSectionConfig /> working
+     <AddTaxSectionConfig /> 
        </Grid>
     
-        <Grid item md={1} xs={1}>
+        {/* <Grid item md={1} xs={1}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-              
+
             </Stack>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
 
 {/*       

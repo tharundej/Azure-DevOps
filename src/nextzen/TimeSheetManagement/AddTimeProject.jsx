@@ -35,7 +35,7 @@ import instance  from 'src/api/BaseURL';
 import { Autocomplete } from '@mui/lab';
 import { Button } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 export default function AddTimeProject({ handleClose }) {
  
@@ -99,7 +99,7 @@ const getEmployeReport = async ()=>{
   try
   {
   const  data= {
-      companyId:'COMP1'
+      companyId:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
     const response = await instance.post('getReportingmanager',data);
     setReportingManagerData(response.data.list)
@@ -112,7 +112,7 @@ let getEmployeList = async (props)=>{
  
   try{
   const  data= {
-      companyId:'COMP1',
+      companyId:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       reportingManagerId:'',
     };
     data.reportingManagerId =props;
@@ -135,7 +135,7 @@ let getEmployeList = async (props)=>{
       data.projectManager=data?.projectManager?.employeeId;
       data.reportingManager= data?.reportingManager?.employeeId;
       data.locationId = selectedLocationID,
-      data.companyId = "COMP1";
+      data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       const response = await axios.post('https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/addProject', data).then(
         (successData) => {
           handleClose()
@@ -159,7 +159,7 @@ let getEmployeList = async (props)=>{
   console.log(selectedLocationID,"selectedlocationID")
   const getLocation=()=>{
     const data={
-      "companyID":"COMP1"
+      "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     }
      const config={
       method:'POST',

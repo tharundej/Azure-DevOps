@@ -71,13 +71,13 @@ export default function PaySchedule({ currentUser }) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text', minWidth: 140 },
-    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 140 },
+    { id: 'payPcheduleType', label: 'Pay Schedule Type', type: 'text', minWidth: 180 },
     { id: 'basicPayPercentage', label: 'Basic Pay %', type: 'text', minWidth: 120 },
     { id: 'hraPercentage', label: 'HRA %', type: 'text', minWidth: 100 },
     { id: 'daPercentage', label: 'DA %', type: 'text', minWidth: 100 },
     { id: 'ltaPercentage', label: 'LTA %', type: 'text', minWidth: 100 },
-    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 100 },
-    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 100 },
+    { id: 'employeePfPercentage', label: 'Employee PF %', type: 'text', minWidth: 140 },
+    { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 140 },
     { id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth: 100 },
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
   ];
@@ -109,7 +109,7 @@ export default function PaySchedule({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       payscheduleType: '',
       employmentType: '',
@@ -208,7 +208,7 @@ export default function PaySchedule({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyId: 'COMP1',
+        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
@@ -268,7 +268,7 @@ export default function PaySchedule({ currentUser }) {
   const getOptionLabel = (employeepayType) => employeepayType.type;
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     // (data.employementType = valueSelected?.employementType?.type),
    
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
@@ -308,7 +308,7 @@ export default function PaySchedule({ currentUser }) {
   //     event.preventDefault();
   //     const payload={
   //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-  //       "companyId":'COMP1',
+  //       "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
   //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
   //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
@@ -352,7 +352,7 @@ export default function PaySchedule({ currentUser }) {
       event.preventDefault();
       const payload={
         "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-        "companyId":'COMP1',
+        "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       }
       console.log(payload,'payload')
       const response = await axios.post(baseUrl + '/editPaySchedule', payload);
@@ -382,7 +382,7 @@ export default function PaySchedule({ currentUser }) {
 
   const onSubmit2 = handleSubmit2(async (data) => {
     console.log('data:', data);
-    data.companyID = 'COMP1';
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.employementType = valueSelected?.employementType?.type;
     // (data.employementType = valueSelected?.employementType?.type),
     data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);

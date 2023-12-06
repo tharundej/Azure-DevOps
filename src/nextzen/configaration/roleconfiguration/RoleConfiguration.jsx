@@ -39,14 +39,8 @@ export default function RoleConfiguration() {
   const TABLE_HEAD = [
   
  
-    { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
+    { id: 'departmentName', label: 'Role Name', width: 180, type: 'text' },
 
-    { id: 'designationGradeName', label: 'Designation Grade Name', width: 220, type: 'text' },
-
-    { id: 'designationName', label: 'Designation Name', width: 180, type: 'text' },
-
-   
-    // { id: '', width: 88 },
   ];
 
   const actions = [
@@ -102,7 +96,7 @@ export default function RoleConfiguration() {
     count:5,
     page: 0,
     search: "",
-    companyId: "COMP1",
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       departmentName: "",
       designationName: "",
@@ -180,128 +174,59 @@ export default function RoleConfiguration() {
         
            
               <TextField
-                label="Department "
-                name="department"
+                label="Role Name "
+                name="role"
                 value={valueSelected?.departmentName ||  null}
                 onChange={(e, newValue) =>
-                  handleSelectChange('department', newValue || null)
+                  handleSelectChange('role', newValue || null)
                 }
                 variant="outlined"
                 fullWidth
               />
-         
-           
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={locationType?.map((employeepayType) => ({
-                label: employeepayType.locationName,
-                value: employeepayType.locationName,
-                ...employeepayType,
-              }))}
-              value={formData.Location}
-              onChange={(event, newValue, selectedOption) =>
-                handleAutocompleteChange('Location', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              /> */}
-         
-          
-              {/* <Button  onClick={AddDepartment}>Add</Button>
-         */}
-          {/* Row 2 */}
-
          
       
-          
-              {/* <Autocomplete
-                disablePortal
-                name="Department"
-                id="combo-box-demo"
-                options={departmentType?.map((department) => ({
-                    label: department.departmentName,
-                    value: department.departmentName,
-                    ...department,
-                  }))}
-                value={formData.Department}
-                onChange={(event, newValue ,selectedOption) => handleDesignationChange('Department', newValue ,selectedOption)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Department" />}
-              /> */}
-           
-         
-              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
-
-              <TextField
-                label="Designation"
-                name="designation"
-                value={valueSelected?.designationName || null}
-                onChange={(e, newValue) =>
-                  handleSelectChange('designation', newValue || null)
-                }
-                variant="outlined"
-                fullWidth
-              />
-          
-
-       
-              {/* <Button onClick={AddDesignation}>Add</Button>
-              
-           */}
-
-         
-            {/* <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={designationType?.map((employeepayType) => ({
-                label: employeepayType.designationName,
-                value: employeepayType.designationName,
-                ...employeepayType,
-              }))}
-              value={formData.Designation}
-              onChange={(event, newValue, selectedOption) =>
-                handleDesignationGradeChange('Designation', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Designation " />}
-              /> */}
-          
-              <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={valueSelected?.designationGradeName || null}
-                 onChange={(e, newValue) =>
-                  handleSelectChange('designationGrade', newValue || null)
-                }
-                variant="outlined"
-                fullWidth
-              />
-          
-             
-
-       
       
               
             </Box>
           </DialogContent>
- 
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEdit}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              onClick={onSubmit1}
-              // loading={isSubmitting1}
-            >
-              Save
-            </Button>
-          </DialogActions>
+
+<div style={{ marginBottom: 12, marginTop: 4 }}>
+{' '}
+<Button
+variant="contained"
+color="primary"
+sx={{ float: 'right', marginRight: 2 }}
+onClick={() => {
+  onSubmit1()
+}}
+>
+Submit
+</Button>
+<Button
+sx={{ float: 'right', right: 15 }}
+variant="outlined"
+onClick={() => {
+  handleCloseEdit();
+}}
+>
+Cancel
+</Button>
+</div>
+ 
+  {/* <LoadingButton
+    type="submit"
+    variant="contained"
+    onClick={()=> {console.log("hi")}}
+    loading={()=> {console.log("hi")}}
+  >
+    Save
+  </LoadingButton> */}
+</DialogActions>
+          
         </FormProvider>
       </Dialog>
-      <hr style={{ height: '2px', margin: '20px', backgroundColor: 'blac' }} />
+    
       <Container
         sx={{
           display: 'flex',
@@ -312,9 +237,9 @@ export default function RoleConfiguration() {
         }}
       >
         {/* <div>Content Here</div> */}
-        <Button className="button" onClick={handleTimeForm}>
+        {/* <Button className="button" onClick={handleTimeForm}>
           Add Role
-        </Button>
+        </Button> */}
       </Container>
       <BasicTable
         headerData={TABLE_HEAD}
@@ -323,6 +248,7 @@ export default function RoleConfiguration() {
         bodyData="data"
         rowActions={actions}
         onClickActions={onClickActions}
+        filterName="AddRoleFilter"
       />
     </>
   );

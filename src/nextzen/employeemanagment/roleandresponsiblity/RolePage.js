@@ -23,6 +23,7 @@ import {
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 const RolePage = ({open,handleModalClose,type,data}) => {
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
@@ -32,7 +33,7 @@ const RolePage = ({open,handleModalClose,type,data}) => {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const defaultPayload={
-    "companyId": "COMP1"
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 }
 
 const [TABLE_HEAD,setTableHead] =useState( [
@@ -74,30 +75,6 @@ const actions = [
    
     
 ];
-const [filterOptions,setFilterOptions]=useState({
-  dates:[
-    {
-    display:'Joining Date',
-    field_name:'joining_date'
-  },
-  {
-    display:'Offer Date',
-    field_name:'offer_date'
-  }
-],
-dropdowns:[
-  {
-    display:'Status',
-    options:["active","inactive"],
-    field_name:'status'
-  },
-  {
-    display:'Employement Type',
-    options:["Permanent","Contract"],
-    field_name:'employement_type'
-  }
-]
-})
 
 
 
@@ -112,7 +89,7 @@ dropdowns:[
         }else {
             setGroupname(data?.mainHeading)
             const obj={
-                "companyId": "COMP1",
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "groupName":data?.mainHeading,
               
             }
@@ -204,7 +181,7 @@ dropdowns:[
   const handleSave = () => {
     const obj = {
       groupName: groupname,
-      companyId: 'COMP1',
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       pages: checkedState,
     };
      ApiHitSavePages(obj);
@@ -265,9 +242,10 @@ dropdowns:[
           sx: { maxWidth: 720 },
         }}
       >
+        <ModalHeader heading="Create View" />
      <DialogContent>
       <Grid container marginTop="10px" spacing={2}>
-        <Grid item xs={12} md={3} lg={4}>
+        <Grid item xs={12} md={3} lg={4} marginBottom="5px">
          
           <TextField
             label="Group Name"
@@ -280,38 +258,43 @@ dropdowns:[
         </Grid>
       </Grid>
       <FormGroup>
-        {checkedState &&
-          Object.entries(checkedState).map(([group, values], index) => (
-            <Box key={index}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id={`main-heading-${group}`}
-                    checked={values.mainHeading}
-                    onChange={() => handleMainHeadingChange(group)}
-                    style={{ color: '#00FF00', transform: 'scale(1.2)' }}
+  {checkedState &&
+    Object.entries(checkedState).map(([group, values], index) => (
+      <Grid container direction="column" key={index}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              id={`main-heading-${group}`}
+              checked={values.mainHeading}
+              onChange={() => handleMainHeadingChange(group)}
+              style={{ color: '#001F3F', transform: 'scale(1.2)' }}
+            />
+          }
+          label={`${formatLabel(group)}`}
+        />
+        {values.mainHeading &&
+          <Grid container marginLeft='20px'>
+            {Object.keys(values).map((key) =>
+              key !== 'mainHeading' ? (
+                <Grid item key={key} style={{ marginRight: '20px' }}>
+                  {/* Add some gap using marginRight */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        id={`checkbox-${group}-${key}`}
+                        checked={values[key]}
+                        onChange={() => handleCheckboxChange(group, key)}
+                      />
+                    }
+                    label={`${formatLabel(key)}`}
                   />
-                }
-                label={`${formatLabel(group)}`}
-              />
-              {values.mainHeading &&
-                Object.keys(values).map((key) =>
-                  key !== 'mainHeading' ? (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          id={`checkbox-${group}-${key}`}
-                          checked={values[key]}
-                          onChange={() => handleCheckboxChange(group, key)}
-                        />
-                      }
-                      label={`${formatLabel(key)}`}
-                    />
-                  ) : null
-                )}
-            </Box>
-          ))}
+                </Grid>
+              ) : null
+            )}
+          </Grid>
+        }
+      </Grid>
+    ))}
       </FormGroup>
       <Grid 
       margin='10px'
@@ -320,14 +303,14 @@ dropdowns:[
       flexDirection='row'
       
       alignItems='flex-end'
-      justifyContent='space-between'
+      justifyContent='flex-end'
       
       sx={{
        
       }}
       >
-      <Grid item>
-      <Button variant="contained" color="primary" onClick={handleModalClose} marginRight="5px">
+      <Grid marginRight="15px" item>
+      <Button variant="contained"  onClick={handleModalClose} >
         Cancel
       </Button></Grid>
       <Grid item>

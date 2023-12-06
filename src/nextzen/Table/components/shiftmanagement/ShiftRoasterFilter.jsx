@@ -36,7 +36,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import AddEmployeShift from './AddeployeShift';
@@ -323,7 +323,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employe To Shift</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employee To Shift</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
@@ -497,7 +497,8 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 
            
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </BootstrapDialog>
     </>

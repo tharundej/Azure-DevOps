@@ -38,15 +38,15 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
-import { Autocomplete, TextField } from '@mui/material';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    end_date: dayjs(new Date()),
+    start_date: dayjs(new Date()),
+    // offer_date: dayjs(new Date()),
   });
   const router = useRouter();
 
@@ -109,22 +109,35 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const values = watch();
   useEffect(() => {
     getEmployeSwap()
-  }, [])
+  
 
+  }, [])
+   const [newShift,setnewShift]= useState(false)
+   const [curentShift,setcurentShift]= useState(true)
+   const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
+  const [ShiftGroupName,setShiftGroupName] =useState([])
+  const [ShiftName,setShiftName] =useState([]) 
   const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
   const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
   const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
   const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
+  console.log("🚀 ~ file: ShiftSwapForm.jsx:121 ~ ShiftSwapForm ~ ToShiftGroup_Name:", ToShiftGroup_Name)
   const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
+  useEffect(() => {
+    getShiftGroupName()
+    // getShiftName()
+  }, [])
+  const getEmployeSwap = async ( toGroup,fromGroup) => {
+  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
 
-  const getEmployeSwap = async () => {
-    try{
+   
+   try{
    const data = JSON.stringify({
-      "company_id": "COMP2",
-      "from_shift_group": 2,
-      "to_shift_group": 3,
+      "company_id": localStorage.getItem('companyID'),
+      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
+      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
     });
         const response = await instance.post('/GetSwapEmployee',data);
@@ -135,8 +148,78 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     console.error("Error", error);
     throw error;
       }
+    }
+  }
+  const getEmployeSwap1 = async ( toGroup,fromGroup) => {
+  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+
+   
+   try{
+   const data = JSON.stringify({
+      "company_id":localStorage.getItem('companyID'),
+      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
+      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
+      "search": ""
+    });
+        const response = await instance.post('/GetSwapEmployee',data);
+        setEmployeSwapDetails(response.data.Data)
+        
+        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+      }catch(error){
+    console.error("Error", error);
+    throw error;
+      }
+    }
+  }
+  // const getShiftgroupName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:localStorage.getItem('companyID'),
+       
+  //     };
+  //     const response = await instance.post('/getShiftGroupName',data);
+  //     setShiftGroupName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+  const getShiftGroupName= async ()=>{
+    try{
+    const  data= {
+      companyId:"CDAC1",
+      locationId:43,
+      supervisorId:"CDAC_01",
+      };
+      const response = await instance.post('/getShiftGroupName',data);
+      setShiftGroupName(response.data.data)
+      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+    }catch(error){
+  console.error("Error", error);
+  throw error;
+    }
   }
 
+
+
+  // const getShiftName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:"COMP2",
+  //     locationId:32
+       
+  //     };
+  //     const response = await instance.post('/getShiftConfig',data);
+  //     setShiftName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('uyfgv');
@@ -145,23 +228,23 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     
   const data = {
     "employee_1":{
-      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name),
-      "employee_id":"ibm4", //  currentEmployeSwapData1.employee_shift_swap_id
+      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
+      "employee_id":   currentEmployeSwapData?.employee_shift_swap_id ? currentEmployeSwapData?.employee_shift_swap_id : '',
     },
     "employee_2":{
-      "employee_shift_swap_id":parseInt(FromShiftGroup_Name),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name1),
-      "employee_id":"ibm4"  //  currentEmployeSwapData1.employee_shift_swap_id
+      "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
+      "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
+      "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
     },
-    "company_id":"COMP2",
+    "company_id":localStorage.getItem('companyID'),
     "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
     "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
     
   }
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('/ ', data).then(
+      const response = await instance.post('/SwapShift', data).then(
         (successData) => {
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
@@ -192,7 +275,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 <Grid xs={12} md={12}>
   <Grid sx={{ padding: '8px' }}>
     <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here ...
+      Employee Shift Swap Here
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -207,64 +290,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     >
 
    
-      <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setFromShiftGroup_Name1(newvalue.id
-      
-    );
-    
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
-/>
 
 
-                      <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options || []} 
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name(newvalue.id
-      
-    );
-    
-   
-   
- 
-  }}
- 
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/>
+
+
+
+
 
       <Autocomplete
   disablePortal
@@ -277,13 +308,32 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
     setCurrentEmployeSwapData(newvalue
     )
-   
+    setcurentShift(true)
  
   }}
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
+/>
+      <Autocomplete
+  disablePortal
+  id="combo-boxSelectshift"
+  options={ShiftGroupName || []}
+  value={currentEmployeSwapData?.employeeShiftGroupId}
+  getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
+  onChange={(e,newvalue)=>{
+   
+   
+    setCurrentEmployeSwapData(newvalue
+    )
+    setnewShift(true)
+ 
+  }}
+  sx={{
+    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+  }}
+  renderInput={(params) => <TextField {...params} label="To Shift Name" />}
 />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
@@ -300,110 +350,53 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
             }}
           />
         </DemoContainer>
-      </LocalizationProvider>       
-      
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            sx={{ width: '100%', paddingLeft: '3px' }}
-            label="End Date"
-            value={datesUsed?.end_date}
-            defaultValue={dayjs(new Date())}
-            onChange={(newValue) => {
-              setDatesUsed((prev) => ({
-                ...prev,
-                end_date: newValue,
-              }));
-            }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
+      </LocalizationProvider>   
 
-      <br />
-      <Stack>
-        <Typography>
-          Select second Employe To Swap...
-        </Typography>
-      </Stack>
-      <br />
-   
+      <RHFTextField   name="comment" label="Comments " />   
+  { curentShift &&    <Grid>
+      <Typography>
+        Current Shift Details
+        </Typography> 
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      {[0, 1, 2, 3].map((value) => {
+        const labelId = `checkbox-list-label-${value}`;
 
-  <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setFromShiftGroup_Name(newvalue.id
-      
-    );
-    
-   
- 
-  }}
- 
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift GroupName" />}
-/>
-  <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name1(newvalue.id
-      
-    );
-    
-   
-   
- 
-  }}
+        return (
+          <ListItem key={value} disablePadding >
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center", justifyContent:"center",alignContent:"center",  border: "1px solid #ccc" }}>2</span>
+          </ListItem>
+        );
+      })}
+    </List>
+        </Grid>}
+{ newShift &&      <Grid>
+      <Typography>
+        New Shift Details
+        </Typography> 
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      {[0, 1, 2, 3].map((value) => {
+        const labelId = `checkbox-list-label-${value}`;
 
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/>
-         <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={employeSwapDetails || []}
-  value={currentEmployeSwapData1?.employee_shift_swap_id}
-  getOptionLabel={(option) => option.employee_name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setCurrentEmployeSwapData1(newvalue
-    )
-  
- 
-  }}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="Select Employe" />}
-/>
+        return (
+          <ListItem key={value} disablePadding>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
+            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>2</span>
+          </ListItem>
+        );
+      })}
+    </List>
+        </Grid>}
+
     </Box>
-
-    <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Swap Shift'}
-      </LoadingButton>
-      {/* <Button type='submit'></Button> */}
-      <Button onClick={handleClose} sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
-    </Stack>
+    <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Swap Shift'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
   </Card>
+
 </Grid>
 </Grid>
       </FormProvider>

@@ -94,16 +94,15 @@ export default function ShiftConfigView({currentUser}) {
   ];
 
   const defaultPayload = {
-    companyId: 'COMP2',
-    locationId: 32,
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     count: 5,
     search: '',
     page: 0,
-    limit: 5,
     externalFilters: {
       shiftName: '',
       startTime: '',
       endTime: '',
+      locationFilter:'',
     },
     sort: {
       key: 0,
@@ -155,11 +154,18 @@ export default function ShiftConfigView({currentUser}) {
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
   };
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -197,30 +203,37 @@ export default function ShiftConfigView({currentUser}) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP2';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID = formData?.Location?.locationID;
-    data.shiftName=valueSelected?.shiftName?.type
+    data.locationID =valueSelected?.locationId
+    data.shiftName=valueSelected?.shiftName
     data.shiftConfigId=valueSelected?.shiftConfigId
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl+'/editShitConfig', data);
-      if(response?.status===200){
-        handleClose();
+      if (response?.data?.status === '200') {
+        handleCloseEdit();
         setSnackbarSeverity('success');
-         setSnackbarMessage('Shift Configuration Added Succuessfully!');
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+        handleCloseEdit();
+      }
+      if (response?.data?.status === '400') {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
       }
     } catch (error) {
-      setOpen(true);
-       setSnackbarSeverity('error');
-       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-       setSnackbarOpen(true);
-      console.log('error', error);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Editing. Please try again.');
+      setSnackbarOpen(true);
+      handleCloseEdit();
+      console.log(' ', error);
     }
   });
   const [locationType, setLocationType] = useState([]);
@@ -282,7 +295,7 @@ export default function ShiftConfigView({currentUser}) {
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           {/* <DialogTitle>Edit Shift Config</DialogTitle> */}
-          <ModalHeader heading="Edit Shift Config" />
+          <ModalHeader heading="Edit Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -300,8 +313,8 @@ export default function ShiftConfigView({currentUser}) {
                 label="Shift Name"
                 name="ShiftName"
                 value={valueSelected?.shiftName}
-                options={ShiftNames}
-                getOptionLabel={(option) => option.type }
+                options={ShiftNames.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('shiftName', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Shift Name" variant="outlined" />
@@ -332,7 +345,7 @@ export default function ShiftConfigView({currentUser}) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />

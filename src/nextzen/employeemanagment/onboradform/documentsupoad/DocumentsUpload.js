@@ -80,7 +80,7 @@ const VisuallyHiddenInput = styled('input')({
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": "COMP1",
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
@@ -211,12 +211,12 @@ const VisuallyHiddenInput = styled('input')({
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="aadhar">Aadhaar123</MenuItem>
                         <MenuItem value="pan-card">Pan Card</MenuItem>

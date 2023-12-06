@@ -17,7 +17,8 @@ import DocumentsUpload from './documentsupoad/DocumentsUpload';
 import CurrentWork from './currentwork/CurrentWork'
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
-
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
@@ -28,6 +29,7 @@ export default function OnBoardForm() {
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
   const [severity,setSeverity]=useState("")
+  const router=useRouter()
 
   const childref=useRef(null);
 
@@ -94,7 +96,7 @@ export default function OnBoardForm() {
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    router.push(paths.dashboard.employee.root)
   };
 
   const handleStep = (step) => () => {
@@ -132,10 +134,10 @@ const handleCallSnackbar=(message,severity)=>{
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
             <StepButton color="inherit"
-            // onClick={handleStep(index)}
+             onClick={handleStep(index)}
             
             >
-              {label}
+            {label}
             </StepButton>
           </Step>
         ))}
@@ -154,7 +156,7 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
               <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
@@ -171,24 +173,24 @@ const handleCallSnackbar=(message,severity)=>{
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
-                color="inherit"
-                disabled={activeStep === 0}
-               // onClick={handleBack}
-                sx={{ mr: 1 }}
+                // color="inherit"
+                //disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white' }}
               >
                 Cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep+1!==5 &&
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
+              <Button onClick={handleNext}  sx={{backgroundColor:'#3B82F6', mr: 1, color:'white'}}>
                 Save and Continue
               </Button>}
               {activeStep+1===5 &&
-              <Button onClick={handleSubmit} sx={{ mr: 1 }}>
+              <Button onClick={handleSubmit} sx={{backgroundColor:'#3B82F6', mr: 1, color:'white' }}>
                 Submit
               </Button>}
               {(activeStep+1!==1 && activeStep+1!==5)&&(
-              <Button onClick={handleNextIncrement} sx={{ mr: 1 }}>
+              <Button onClick={handleNextIncrement} sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white' }}>
                 Skip
               </Button>)
               }

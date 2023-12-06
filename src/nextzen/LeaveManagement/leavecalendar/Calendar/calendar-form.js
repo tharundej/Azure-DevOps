@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid,CardContent} from '@mui/material';
 
 // utils
 import uuidv4 from 'src/utils/uuidv4';
@@ -25,13 +25,27 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 import UserContext from 'src/nextzen/context/user/UserConext';
-// ----------------------------------------------------------------------
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { duration, styled } from '@mui/material/styles';
+import Label from 'src/components/label/label';
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose }) {
+
   const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
@@ -39,12 +53,16 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
-    leaveTypeId:Yup.number(),
+    leaveTypeId:Yup.lazy((value) => {
+    return value === 0
+      ? Yup.number().notOneOf([0], 'Please Select Leave Type').required('Please Select Leave Type')
+      : Yup.number().required('Please Select Leave Type');
+  }),
     companyId:Yup.string(),
     employeeId:Yup.string(),
     fromDate: Yup.string(),
     toDate: Yup.string(),
-    comments: Yup.string(),
+    comments: Yup.string().required('Please Enter Reason'),
     applyDate:Yup.mixed(),
     status:Yup.string(),
     fullday:Yup.string(),
@@ -74,6 +92,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     toDate:(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date()),
     
   });
+
+  const [leaveType,setLeaveType] = useState();
 
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
@@ -106,7 +126,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       reset();
     } 
     catch (error) {
-      enqueueSnackbar(error.message,{variant:'error'})
+      console.log(error,"calendarerror")
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       onClose();
       // Handle the error, e.g., show a snackbar.
     }
@@ -136,19 +157,17 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     };
  }
 
+ const [fileName,setFileName] = useState()
  function handleFileSelect(event) {
   const fileInput = event.target;
   const file = fileInput.files[0];
-
+  setFileName(file.name)
   if (file) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
       const base64String = e.target.result;
       setAttachmentString(base64String.split(',')[1]);
-      // setImage( [base64String]);
-      // setViewImage(true);
-      // Here, you can send the `base64String` to your server or perform other actions.
     };
 
     reader.readAsDataURL(file);
@@ -213,6 +232,39 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
+const [lop,setLOP] = useState()
+const lossOfPay = ()=>{
+  const payload = {
+  companyId: user?.companyID,
+  employeeId: user?.employeeID,
+  leaveTypeId: leaveType,
+  fromDate: formatDateToYYYYMMDD(datesUsed?.fromDate),
+  toDate: formatDateToYYYYMMDD(datesUsed?.toDate)
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    url:baseUrl+'/getLossOfPay',
+    data:  payload
+  };
+  axios.request(config).then((response) => {
+    setLOP(response?.data)
+    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
+   console.log(response,"response dataa")
+  })
+
+    .catch((error) => {
+      console.log(error,"error in loss of pay");
+     
+    });
+
+}
+
+useEffect(()=>{
+lossOfPay()
+},[leaveType,datesUsed?.toDate])
+
 
   return (
   
@@ -222,44 +274,79 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
   
   <Grid sx={{margin:1}}>
       <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}
-      <Tooltip title="Delete Event" sx={{float:"right",right:5}}>
+      <Tooltip title="Delete Request" sx={{float:"right",right:5}}>
     <IconButton onClick={onDelete}>
       <Iconify icon="solar:trash-bin-trash-bold" />
     </IconButton>
   </Tooltip></Typography>
-      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
-      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
-     <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+      <Typography variant="subtitle2">From Date: {formatDate(currentEvent?.fromDate)}</Typography>
+      <Typography variant="subtitle2">To Date: {formatDate(currentEvent?.toDate)}</Typography>
+     <Typography variant="subtitle2">Status: 
+     <Label variant="soft" color={(currentEvent?.leaveStatus=="Pending" || currentEvent?.leaveStatus=="pending")?"warning":"success"}>
+     {currentEvent?.leaveStatus}
+      </Label></Typography>
       
   </Grid>
    
   </>
   : (currentEvent?.leaveStatus==="approved")?
-  <Grid sx={{marginLeft:1}}>
+  <Grid sx={{margin:1}}>
       <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
-      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
-      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
-      <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+      <Typography variant="subtitle2">From Date: {formatDate(currentEvent?.fromDate)}</Typography>
+      <Typography variant="subtitle2">To Date: {formatDate(currentEvent?.toDate)}</Typography>
+      <Typography variant="subtitle2">Status:   <Label variant="soft" color={(currentEvent?.leaveStatus=="Pending" || currentEvent?.leaveStatus=="pending")?"warning":"success"}>
+     {currentEvent?.leaveStatus}
+      </Label></Typography>
   </Grid>
   :
   <>
    {loader?<Card sx={{height:"70vh"}}><LoadingScreen/></Card>:  
     <FormProvider methods={methods} onSubmit={onSubmit}>
-<div style={{marginLeft:"25px",fontWeight:"700"}}>Available Leaves</div>
-<Stack spacing={1} sx={{display:"flex",px:3,mb:2}}> 
-  {availableLeaves?.balances?.map((itm)=> (
-    <Typography>{itm?.leaveTypeName} : {itm?.leaveBalance}</Typography>
-  ))}
-</Stack>
+    <Typography variant="subtitle1" sx={{ px: 4 }}>Available Leaves</Typography>
+<Grid container spacing={1} sx={{ px: 3 , py:2}}>
+
+      {availableLeaves? (
+    availableLeaves?.balances?.map((itm) => (
+          <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+          
+             <Card >
+              <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
+                <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
+
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color:'black'
+                  }}
+                >
+                 {itm?.leaveBalance}
+                </Typography>
+              </Box>
+              </CardContent>
+              </Card>
+            </Stack>
+          </Grid>
+    ))):
+      <Grid item xs={12}>
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          No AvailableLeaves
+        </Typography>
+      </Grid>
+    }
+
+      </Grid>
+      
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
-                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}>
+                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}  onClick={() => setLeaveType(status.leaveTypeID)}>
                   {status.leaveTypeName}
                 </MenuItem>
               ))}
             </RHFSelect> 
-     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Comments" />
+     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Leave Reason" />
      <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
               <DatePicker
@@ -267,6 +354,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
                 label="From"
                 value={(selectedRange?.start)?dayjs(selectedRange?.start):datesUsed?.fromDate}
                 defaultValue={(selectedRange?.start)?dayjs(selectedRange?.start):dayjs(new Date())}
+                minDate={dayjs().startOf('day')} // Set minDate to today's date (disable past dates)
                 onChange={(newValue) => {
                   setDatesUsed((prev) => ({
                     ...prev,
@@ -285,6 +373,7 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
             label="To"
             value={(selectedRange?.end)?dayjs(selectedRange?.end):datesUsed?.toDate}
             defaultValue={(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date())}
+            minDate={dayjs().startOf('day')} // Set minDate to today's date (disable past dates)
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
                 ...prev,
@@ -294,7 +383,11 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           />
      </DemoContainer>
      </LocalizationProvider>
-        {(isSameDay)? <RHFRadioGroup
+     <Stack sx={{px: 1,display:'flex',flexDirection:'row'}}>
+        {(lop?.lop) ? <>Loss of Pay : <span style={{color:'red'}}>{lop?.lop}</span></>:null}
+      </Stack>
+      <Stack  sx={{ px: 1 }}>
+      {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
               name="day_span"
               label="Day Span"
@@ -306,15 +399,23 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
                 { value: 'second_half', label: 'Second Half' },
               ]}
             />:null}
-<Typography variant="subtitle2">Attachments</Typography>
-<input
+      </Stack>
+<Typography sx={{px:1}} variant="subtitle2">Attachments</Typography>
+<Stack spacing={1} sx={{display:'flex',flexDirection:'row'}}>
+<Button sx={{marginLeft:2}}
+  onChange={(e)=>{ handleFileSelect(e)}}
+  component="label" variant="contained" color="primary" startIcon={<CloudUploadIcon />}>Upload file<VisuallyHiddenInput type="file" />
+  </Button>
+ <Typography variant="subtitle2">{fileName}</Typography>
+ </Stack>
+{/* <input
   type="file"
   accept="image/*,.pdf,.txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   id="fileInput"
   onChange={(e)=>{
     handleFileSelect(e)
   }}
-/>
+/> */}
         {/* <Controller
           name="color"
           control={control}
@@ -350,11 +451,17 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           loading={isSubmitting}
           // disabled={dateError}
         >
-          Save Changes
+          Apply Leave
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>}</>
+    </>}
+    
+{/* Confirmation Dialog I need to keeppppp */}
+
+
+
+    </>
   );
 
 }

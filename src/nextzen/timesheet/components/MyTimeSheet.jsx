@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React from 'react';
+import { useCallback, useEffect, useMemo, useState,} from 'react';
 import Box from '@mui/material/Box';
 
 import Card from '@mui/material/Card';
@@ -27,7 +28,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import Stack from '@mui/material/Stack';
 import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
-
+import ModalHeader from '../../global/modalheader/ModalHeader';
 const MyTimeSheet = ({currentUser,filterSearch}) => {
     const TABLE_HEAD = [
 
@@ -92,7 +93,9 @@ const MyTimeSheet = ({currentUser,filterSearch}) => {
     
       ];
     
-   
+      const [currentDate, setCurrentDate] = useState(new Date());
+     
+      console.log(currentDate,"currentDate")
       const [showForm, setShowForm] = useState  (false);
       const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
@@ -164,7 +167,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     console.log('uyfgv');
 
     try {
-      data.company_id = 'COMP2';
+      data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       data.activity_id =String( currentActivitytData.activityId);;
       data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
@@ -175,7 +178,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
@@ -328,8 +331,13 @@ console.log(timesheetData,"vvvvvvvvvvv")
 
       if (eventData?.type === 'edit') {
         handleOpen()
+      //   calculateDays()
+      // generateDaysArray(numberOfDays);
+      // getCurrentDate();
+      const endDate = getCurrentDate();
+      const startDate = rowData?.startTime;
+      calculateDaysAndGenerateArray(startDate,endDate,0)
         
-        console.log("kl")
       
       }
       
@@ -346,7 +354,91 @@ console.log(timesheetData,"vvvvvvvvvvv")
 
       }
     }
-// edit
+    useEffect(()=>{
+      // calculateDays()
+      // generateDaysArray(numberOfDays);
+      getCurrentDate();
+      // calculateDaysAndGenerateArray(startDate,endDate,2)
+    },[])
+
+// get current Date
+function getCurrentDate() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(currentDate.getDate()).padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day}`;
+  return formattedDate;
+}
+
+
+
+// day wise rendering the textfields
+const [days, setDays] = useState([]);
+// const [numberOfDays, setNumberOfDays] = useState();
+function calculateDays(startDate, endDate) {
+  // Convert the input strings to Date objects
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Calculate the difference in milliseconds
+  const timeDifference = end - start;
+
+  // Calculate the number of days
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  return daysDifference;
+}
+
+// Example usage:
+// const startDate = timesheetData?.startTime;
+
+// const endDate = getCurrentDate();
+// console.log(startDate,endDate,"timeiii")
+// const numberOfDays = calculateDays(startDate, endDate); 
+// console.log(numberOfDays,"numberOfDays");
+
+function generateDaysArray(value) {
+  const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  if (value >= 1 && value <= 7) {
+    setDays(allDays.slice(0, value));
+    return allDays.slice(0, value);
+  } else {
+    // Handle invalid values if needed
+    console.error('Invalid value. Please provide a value between 1 and 7.');
+    return [];
+  }
+}
+console.log(days,"allDays")
+
+
+// second method
+function calculateDaysAndGenerateArray(startDate, endDate, value) {
+  // Convert the input strings to Date objects
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+console.log(startDate,"start",endDate,"end",value,"3333")
+  // Calculate the difference in milliseconds
+  const timeDifference = end - start;
+
+  // Calculate the number of days
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+  console.log(daysDifference,"daysDifference")
+  
+  // Call generateDaysArray only if the value is valid
+  if (daysDifference >= 1 && daysDifference <= 7) {
+    const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    setDays(allDays.slice(0, daysDifference));
+    return { days: allDays.slice(0, daysDifference), daysDifference };
+  } else {
+    // Handle invalid values if needed
+    console.error('Invalid daysDifference. Please provide a value between 1 and 7.');
+    return { days: [], daysDifference };
+  }
+}
+
 
 
      
@@ -364,6 +456,7 @@ PaperProps={{
 }}
 
          >
+          <ModalHeader heading="ADD  TIMELINE "/>
       <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
       <DialogContent>
       <Box
@@ -377,9 +470,9 @@ PaperProps={{
               >
 
 <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'8px'}}>
-                ADD YOUR TIMELINE TO PROJECT IS HERE .....
-              </Typography>
+              {/* <Typography sx={{marginLeft:'8px'}}>
+                ADD  TIMELINE 
+              </Typography> */}
               <Typography sx={{marginLeft:'8px'}}>
                 Time Sheet
               </Typography>
@@ -426,185 +519,55 @@ PaperProps={{
           />
           </Grid>
           </Grid>
-          <Typography>Monday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField 
-              
-                label="Monday Hours" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData?.monday?.hours}
-                onChange={handleDayInputChange('monday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField 
-                 label="Monday Task" 
-                 fullWidth
-                value={timesheetData?.monday?.task}
-                onChange={handleDayInputChange('monday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField 
-                 label="Monday Comments"
-                 fullWidth
-                value={timesheetData?.monday?.comments}
-                onChange={handleDayInputChange('monday', 'comments')}
-                 />
-                </Grid>
-               
+         
                 
+          {days.map((day) => (
+    <React.Fragment key={day}>
+      <Typography>{day}</Typography>
+      <Grid container spacing={1}>
+        <Grid item sm={4}>
+          <TextField
+            label={`${day} Hours`}
+            fullWidth
+            inputProps={{
+              pattern: '[0-9]',
+              maxLength: 2,
+            }}
+            value={timesheetData?.[day.toLowerCase()]?.hours}
+            onChange={handleDayInputChange(day.toLowerCase(), 'hours')}
+          />
+        </Grid>
+        <Grid item sm={4}>
+          <TextField
+            label={`${day} Task`}
+            fullWidth
+            value={timesheetData?.[day.toLowerCase()]?.task}
+            onChange={handleDayInputChange(day.toLowerCase(), 'task')}
+          />
+        </Grid>
+        <Grid item sm={4}>
+          <TextField
+            label={`${day} Comments`}
+            fullWidth
+            value={timesheetData?.[day.toLowerCase()]?.comments}
+            onChange={handleDayInputChange(day.toLowerCase(), 'comments')}
+          />
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  ))}     
 
-                </Grid>
-                <Typography>Tuesday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField 
-                 label="Tuesday Hours"
-                 fullWidth
-                 
-                 inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData?.tuesday?.hours}
-                onChange={handleDayInputChange('tuesday', 'hours')}
-                 />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Tuesday Task" 
-                fullWidth
-                value={timesheetData?.tuesday?.task}
-                onChange={handleDayInputChange('tuesday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Tuesday Comments" 
-                fullWidth
-                value={timesheetData?.tuesday?.comments}
-                onChange={handleDayInputChange('tuesday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Wednesday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField  label="Wednesday Hours" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData?.wednesday?.hours}
-                onChange={handleDayInputChange('wednesday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField name="wednesdayTask" label="Wednesday Task" 
-                fullWidth
-                value={timesheetData?.wednesday?.task}
-                onChange={handleDayInputChange('wednesday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField label="Wednesday Comments"
-                 fullWidth
-                 value={timesheetData?.wednesday?.comments}
-                 onChange={handleDayInputChange('wednesday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Thursday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField name="thursdayHours" label="Thursday Hours" 
-                 fullWidth
-                 inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                 value={timesheetData?.thursday?.hours}
-                 onChange={handleDayInputChange('thursday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Thursday Task" 
-                  fullWidth
-                  value={timesheetData?.thursday?.task}
-                  onChange={handleDayInputChange('thursday', 'task')}
-                
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField label="Thursday Comments" 
-                fullWidth
-                value={timesheetData?.thursday?.comments}
-                onChange={handleDayInputChange('thursday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Friday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField name="Friday" label="Friday" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData?.friday?.hours}
-                onChange={handleDayInputChange('friday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField name="fridayTask" label="Friday Task" 
-                fullWidth
-                value={timesheetData?.friday?.task}
-                onChange={handleDayInputChange('friday', 'task')}
-                
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Friday Comments"
-                fullWidth
-                value={timesheetData?.friday?.comments}
-                onChange={handleDayInputChange('friday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                
+ 
              
               </Box>
     
             
              <DialogActions>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!currentUser ? 'Create User' : 'Add  Timeline'}
+                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
+                  {!currentUser ? 'Update Timesheet' : 'Add  Timeline'}
                 </LoadingButton>
-                <Button sx={{backgroundColor:"#d12317",ml:"5px"}}  onClick={handleCloseEdit}>Cancel</Button>
+                <Button  onClick={handleCloseEdit}>Cancel</Button>
               </Stack>
              </DialogActions>
            

@@ -115,7 +115,7 @@ export default function CreateMaterials({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             Save
           </LoadingButton>
         </DialogActions>

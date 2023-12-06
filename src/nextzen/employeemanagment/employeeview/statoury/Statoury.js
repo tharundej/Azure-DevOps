@@ -82,7 +82,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
 
   }
   //   const employeeStatouryData={
-  //     "companyID": "COMP1",
+  //     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //     "employeeID": "info1",
   //     "employeeName": "nikitha v",
   //     "uan": 123456789,
@@ -302,13 +302,6 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   
   
   
- 
-  
-
-  
-
-  
-  
   const renderAbout = (
     <>
     
@@ -362,10 +355,10 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Accountholder Name
+          Account Holder Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {employeeStatouryData?.accountholderName}
+          {employeeStatouryData?.accountHolderName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -404,7 +397,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
           Bank Account Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {employeeStatouryData?.bankAccountNumber}
+          {employeeStatouryData?.accountNumber}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -441,7 +434,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          lwf Number
+          LWF Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {employeeStatouryData?.lwfNumber}
@@ -465,9 +458,6 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   );
 
  
-
- 
-
   const dataa= {
     "companyID": "",
     "employeeID": "",
@@ -499,6 +489,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button 
+          sx={{backgroundColor:'#3B82F6'}}
            onClick={handleAddStatuory}
           >+Add Statoury</Button>
           </Grid>

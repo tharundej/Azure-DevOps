@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -24,10 +24,12 @@ import axios from 'axios';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 export default function LeavePeriodForm({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -36,6 +38,9 @@ export default function LeavePeriodForm({ currentUser }) {
     setOpen(false);
     reset1();
   };
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleCloseEdit = () => setOpenEdit(false);
+  const user = useContext(UserContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -45,11 +50,28 @@ export default function LeavePeriodForm({ currentUser }) {
   const [locationType, setLocationType] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-
+  const [leavePeriodType, setLeavePeriodType] = useState('');
   const handleStartDateChange = (date) => {
     setSelectedStartDate(date);
   };
+  const leavePeriodNames = [{ type: 'Financial Year' }, { type: 'Year' }];
+  const handleLeavePeriodTypeChange = (event, value) => {
+    setLeavePeriodType(value);
 
+    // Set start and end dates based on the selected leave period type
+    const currentYear = dayjs().year(); // Get the current year
+
+    if (value === 'Year') {
+      // For 'Year' type, set start date to January 1st of the current year and end date to December 31st of the same year
+      setSelectedStartDate(dayjs(`${currentYear}-01-01`));
+      setSelectedEndDate(dayjs(`${currentYear}-12-31`));
+    } else if (value === 'Financial Year') {
+      // For 'Financial Year' type, set start date to April 1st of the current year and end date to March 31st of the following year
+      const nextYear = currentYear + 1;
+      setSelectedStartDate(dayjs(`${currentYear}-04-01`));
+      setSelectedEndDate(dayjs(`${nextYear}-03-31`));
+    }
+  };
   const handleEndDateChange = (date) => {
     setSelectedEndDate(date);
   };
@@ -79,13 +101,13 @@ export default function LeavePeriodForm({ currentUser }) {
   //   const values = watch();
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+'/locationOnboardingDepartment',
+      url: baseUrl + '/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -116,50 +138,65 @@ export default function LeavePeriodForm({ currentUser }) {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const leaveperiod = await ApiHitleavePeriodType(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.leavePeriodType = leaveperiod;
+          // optionsArr.leavePeriodType=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+
+      call();
+    }
+  }, [open]);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1'
-    data.startDate = formatDateToYYYYMMDD(selectedDates);
+    (data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID),
+      (data.startDate = formatDateToYYYYMMDD(selectedDates));
     data.endDate = formatDateToYYYYMMDD(selectedDates2);
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(
-        baseUrl+'/addLeavePeriod',
-        data
-      );
-      if(response?.data?.code===200  ){
-        handleClose()
+      const response = await axios.post(baseUrl + '/addLeavePeriod', data);
+      if (response?.data?.code === 200) {
+        handleClose();
         setSnackbarSeverity('success');
-         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-        
-      
-      console.log('sucess', response);
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
 
+        console.log('sucess', response);
       }
-      if(response?.data?.code===400  ){
+      if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
-
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
       }
-    
-  } catch (error) {
-    setSnackbarSeverity('error');
-    setSnackbarMessage('Error While Adding Leave Period. Please try again.');
-    setSnackbarOpen(true);
-   console.log('error', error);
- }
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Adding Leave Period. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
+      console.log('error', error);
+    }
   });
   const handleDateChanges = (date) => {
     setSelectedDates(date);
   };
-  const handleDateChanges2=(date)=>{
-    setSelectedDates2(date)
+  const handleDateChanges2 = (date) => {
+    setSelectedDates2(date);
   };
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(name, selectedValue, selectedOption);
@@ -170,39 +207,40 @@ export default function LeavePeriodForm({ currentUser }) {
       locationName: selectedOption?.locationName,
     });
   };
-const leavePeriodNames=[
-  {type:'Financial Year'},
-  {type:'Year'}
-];
+
   console.log(formData, 'formdata for location');
 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-  setSnackbarOpen(false)
+    setSnackbarOpen(false);
     setOpen(false);
   };
   return (
     <>
-    <Snackbar
-    open={snackbarOpen}
-    autoHideDuration={4000}
-    onClose={snackBarAlertHandleClose}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-  >
-    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-      {snackbarMessage}
-    </Alert>
-  </Snackbar>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
+        sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
         Add Leave Period
       </Button>
@@ -216,7 +254,7 @@ const leavePeriodNames=[
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-        <ModalHeader heading="Add Leave Period" />
+          <ModalHeader heading="Add Leave Period" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -228,16 +266,23 @@ const leavePeriodNames=[
                 sm: 'repeat(2, 1fr)',
               }}
             >
-            <RHFAutocomplete name="leavePeriodType" label="Leave Period Type" options={leavePeriodNames.map((leavePeriodName)=>leavePeriodName.type)}/>
+              <RHFAutocomplete
+                name="leavePeriodType"
+                label="Leave Period Type"
+                options={leavePeriodNames.map((name) => name?.type)}
+                value={leavePeriodType}
+                onChange={handleLeavePeriodTypeChange}
+                sx={{marginBottom:'-1px'}}
+              />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    sx={{ width: '100%', paddingLeft: '3px', marginTop: '-4px' }}
                     label="Start Date"
                     value={selectedStartDate}
                     onChange={handleStartDateChange}
                     // value={null}
-                    maxDate={new dayjs}
+                    maxDate={new dayjs()}
                     // onChange={handleDateChanges2}
                   />
                 </DemoContainer>
@@ -248,8 +293,8 @@ const leavePeriodNames=[
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
                     value={selectedEndDate}
-            minDate={selectedStartDate} // Ensure end date cannot be before the selected start date
-            onChange={handleEndDateChange}
+                    minDate={selectedStartDate} // Ensure end date cannot be before the selected start date
+                    onChange={handleEndDateChange}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -268,13 +313,13 @@ const leavePeriodNames=[
             >
               Save
             </LoadingButton> */}
-            <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
               variant="contained"
               onClick={onSubmit1}
-              >
-            Save
+            >
+              Save
             </Button>
           </DialogActions>
         </FormProvider>

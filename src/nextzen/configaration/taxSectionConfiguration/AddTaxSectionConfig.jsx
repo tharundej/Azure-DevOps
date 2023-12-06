@@ -43,6 +43,7 @@ import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
+
 export default function AddTaxSectionConfig({
   currentUser,
   handleCloseAddRoleDilog,
@@ -55,6 +56,7 @@ export default function AddTaxSectionConfig({
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+// const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
   const empId = localStorage.getItem('employeeID');
   const cmpId = localStorage.getItem('companyID');
@@ -64,11 +66,6 @@ export default function AddTaxSectionConfig({
   const [designationType, setDesignationType] = useState([]);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
-  // State for Snackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [hitGetDepartment, setHitGetDepartment] = useState(false);
 
@@ -88,6 +85,19 @@ export default function AddTaxSectionConfig({
     setOpen(false);
     // reset1();
   };
+  //fromProvider
+  const methods = useForm({
+    
+  });
+
+  const {
+    reset,
+    watch,
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
@@ -101,7 +111,7 @@ export default function AddTaxSectionConfig({
     setFormData({
       ...formData,
       [name]: integerValue,
-      eligibleDeduction: calculatedEligibleDeduction,
+      
     });
 
     // setFormData({ ...formData, [name]: integerValue });
@@ -120,28 +130,7 @@ export default function AddTaxSectionConfig({
     });
   };
 
-  const handleDesignationChange = (name, selectedValue, selectedOption) => {
-    const id = selectedValue?.departmentID;
-    if (name === 'Department') {
-      console.log('calling me ', selectedValue?.departmentID);
-      getDesignation(id);
-    }
-    console.log(name, selectedValue, selectedOption, 'name, selectedValue, selectedOption');
-    setFormData({
-      ...formData,
-      [name]: selectedValue,
-      departmentID: selectedOption?.departmentID,
-      departmentName: selectedOption?.departmentName,
-    });
-  };
-  const handleDesignationGradeChange = (name, selectedValue, selectedOption) => {
-    setFormData({
-      ...formData,
-      [name]: selectedValue,
-      departmentID: selectedOption?.departmentID,
-      departmentName: selectedOption?.departmentName,
-    });
-  };
+
 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -150,122 +139,23 @@ export default function AddTaxSectionConfig({
     setSnackbarOpen(false);
     // setOpen(false);
   };
-  const getLocation = async () => {
-    const payload = {
-      companyID: cmpId,
-    };
+ 
+ 
+
+
+  const AddTaxConfiguration = async () => {
+    const payload = 
+    {
+        companyId:cmpId,
+        taxSection:formData?.taxSection,
+        taxScheme:formData?.taxScheme,
+        taxLimit:formData?.taxLimit
+    }
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      //   url : baseUrl + "getRentDeclarationDetails",
-      url: baseUrl + '/locationOnboardingDepartment',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setLocationType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
-  const getDepartment = async () => {
-    const payload = {
-      companyID: cmpId,
-      //  "locationID": 30
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + '/onboardingDepartment',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setDepartmentType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
-  const getDesignation = async (id) => {
-    console.log(id, 'id id id ');
-    const payload = {
-      companyID: cmpId,
-      departmentID: id ? id : formData?.Department?.departmentID,
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + '/onboardingDesignation',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setDesignationType(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-
-  const AddDesignationGrade = async () => {
-    const payload = {
-      companyID: cmpId,
-      designationID: formData?.Designation?.designationID,
-      designationGradeName: formData?.designationGrade,
-    };
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: baseUrl + '/addDesignationGrade ',
+      url: baseUrl + '/configureDeclarations ',
       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
       headers: {
         Authorization: token,
@@ -277,57 +167,31 @@ export default function AddTaxSectionConfig({
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Designation Added successfully!');
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+         
           setHitGetDepartment(!hitGetDepartment);
-          console.log('success');
+          handleClose()
+      
         } else if (response.data.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+       
           setHitGetDepartment(!hitGetDepartment);
-          console.log('success');
+       
         }
       })
       .catch((error) => {
         //  setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
+      
         console.log(error);
       });
-    //  console.log(result, 'resultsreults');
+   
   };
-  useEffect(() => {
-    console.log('Calling getLocation');
-    const fetchData = async () => {
-      console.log('Calling getLocation234');
-      // getDesignation()
-      getDepartment();
-    };
-    fetchData();
-  }, [open]);
+ 
 
-  useEffect(() => {
-    console.log('Calling getLocation');
-    const fetchData = async () => {
-      console.log('Calling getLocation234');
-      getDepartment();
-      getDesignation();
-    };
-    fetchData();
-  }, [hitGetDepartment]);
-  useEffect(() => {
-    console.log('i m calling in useEffect ');
-    const fetchData = async () => {
-      console.log('Calling getLocation');
-      getLocation();
-      getDepartment();
-      getDesignation();
-    };
-    fetchData();
-  }, []);
+useEffect(()=>{
+  console.log("")
+}, [hitGetDepartment])
 
   console.log(departmentType, 'DEPARTMENT TYPE    ');
   console.log(formData, 'formdata ');
@@ -339,24 +203,7 @@ export default function AddTaxSectionConfig({
         alignItems: 'center',
       }}
     >
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
+    
       {/* sai  */}
 
       <Button
@@ -365,7 +212,7 @@ export default function AddTaxSectionConfig({
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
-        Add Tax Section
+        Tax Section
       </Button>
       <Dialog
         fullWidth
@@ -378,7 +225,7 @@ export default function AddTaxSectionConfig({
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider>
-          <ModalHeader heading="Designation Grade Config" />
+          <ModalHeader heading="Tax Section Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -393,7 +240,7 @@ export default function AddTaxSectionConfig({
             >
               <TextField
                 label="Tax Section "
-                name="taxsection"
+                name="taxSection"
                 value={null}
                 onChange={handleChange}
                 variant="outlined"
@@ -402,7 +249,7 @@ export default function AddTaxSectionConfig({
 
               <TextField
                 label="Tax Scheme"
-                name="taxscheme"
+                name="taxScheme"
                 value={null}
                 onChange={handleChange}
                 variant="outlined"
@@ -411,14 +258,14 @@ export default function AddTaxSectionConfig({
 
               <TextField
                 label="Limit"
-                name="limit"
+                name="taxLimit"
                 value={null}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
               />
 
-              <Button onClick={AddDesignationGrade}>Add</Button>
+              {/* <Button onClick={AddTaxConfiguration}>Add working</Button> */}
 
           
               {/* <Grid
@@ -440,19 +287,31 @@ export default function AddTaxSectionConfig({
           </Grid> */}
             </Box>
           </DialogContent>
-
+        
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Close
-            </Button>
-            {/* <LoadingButton
-              type="submit"
-              variant="contained"
-              onClick={()=> {console.log("hi")}}
-              loading={()=> {console.log("hi")}}
-            >
-              Save
-            </LoadingButton> */}
+         
+              <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+                AddTaxConfiguration()
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => {
+                handleClose();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
           </DialogActions>
         </FormProvider>
       </Dialog>

@@ -17,43 +17,49 @@ import Documents from "../../employeemanagment/employeeview/documents/Document"
 import EmployeePermissions from './employeepermissions/EmployeePermissions';
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
-import ChangePassword from 'src/nextzen/signup/ChangePassword';
+import ChangePassword from './changepassword/ChangePassword';
 
 const TABS = [
     {
       value: 'About',
       label: 'About',
-      icon: <Iconify icon="solar:user-id-bold" width={24} />,
+      icon: <Iconify icon="solar:user-id-bold" width={18} />,
     },
     {
       value: 'Education',
       label: 'Education',
-      icon: <Iconify icon="mdi:education-outline" width={24} />,
+      icon: <Iconify icon="mdi:education-outline" width={18} />,
     },
     {
       value: 'Experience',
       label: 'Experience',
-      icon: <Iconify icon="solar:users-group-rounded-bold" width={24} />,
+      icon: <Iconify icon="solar:users-group-rounded-bold" width={18} />,
     },
     {
       value: 'Statoury',
       label: 'Statoury',
-      icon: <Iconify icon="mdi:card-account-details-star" width={24} />,
+      icon: <Iconify icon="mdi:card-account-details-star" width={18} />,
     },
     {
       value: 'Documents',
       label: 'Documents',
-      icon: <Iconify icon="et:documents" width={24} />,
+      icon: <Iconify icon="et:documents" width={18} />,
     },
     {
       value: 'EmployeePermission',
       label: 'Employee Permission',
-      icon: <Iconify icon="fluent-mdl2:permissions-solid" width={24} />,
+      icon: <Iconify icon="mdi:checkbox-outline" width={18} />,
+    },
+    {
+      value: 'ChangePassword',
+      label: 'Change Password',
+      icon: <Iconify icon="ic:round-password" width={18} />,
     },
   ];
  
 
 const EmployeeView = () => {
+  console.log(JSON.parse(localStorage.getItem('userDetails'))?.companyID,'JSON.parse(localstorage.getitem')
 
   const roleID=3;
 
@@ -97,7 +103,7 @@ const EmployeeView = () => {
   return (
     <div>
          <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"
@@ -147,7 +153,7 @@ const EmployeeView = () => {
           ))}
         </Tabs>
       </Card>
-      <Grid container justifyContent="flex-end">
+      {/* <Grid container justifyContent="flex-end">
       <Button
         component={RouterLink}
         to={paths.dashboard.employee.changepassword}
@@ -156,13 +162,13 @@ const EmployeeView = () => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: '4px', // Adjust spacing between icon and text
+          gap: '4px', 
         }}
       >
-        {/* <Iconify icon="eva:arrow-ios-back-fill" width={16} /> */}
+       
         Change Password
       </Button>
-        </Grid>
+        </Grid> */}
          {/* <Link
         component={RouterLink}
         href={paths.auth.jwt.login}
@@ -182,6 +188,7 @@ const EmployeeView = () => {
       {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Documents' && <Documents handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='EmployeePermission' && <EmployeePermissions open={id}  employeeId={id}  />}
+      {currentTab==='ChangePassword' && <ChangePassword open={id}  employeeId={id}  />}
 
     
       {/* // {currentTab === 'friends' && (

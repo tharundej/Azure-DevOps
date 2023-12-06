@@ -72,7 +72,7 @@ export default function WorkWeek({ currentUser }) {
     count: 5,
     page: 0,
     search: '',
-    companyId: 'COMP1',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     externalFilters: {
       locationName: '',
     },
@@ -84,7 +84,7 @@ export default function WorkWeek({ currentUser }) {
 
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
@@ -123,16 +123,34 @@ export default function WorkWeek({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP1';
-    data.locationID = formData?.Location?.locationID;
-    data.day=valueSelected?.day?.type
-    data.action=valueSelected?.action?.type
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.locationID = valueSelected?.locationID
+    data.day=valueSelected?.day
+    data.action=valueSelected?.action
+    data.workweekID=JSON.parse(valueSelected?.workweekID,10)
     console.log('submitted data111', data);
     handleCloseEdit()
     try {
       const response = await axios.post(baseUrl + '/editWorkWeek', data);
-      console.log('sucess', response);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
     } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -158,6 +176,13 @@ export default function WorkWeek({ currentUser }) {
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
   };
   const DayTypes = [
     { type: 'Monday' },
@@ -193,7 +218,7 @@ export default function WorkWeek({ currentUser }) {
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyID: 'COMP1',
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
       const response = await axios.post(baseUrl + '/deleteHoliday', data);
@@ -283,21 +308,22 @@ export default function WorkWeek({ currentUser }) {
               }}
             >
               <Autocomplete
-                options={DayTypes}
+                options={DayTypes.map((name)=>name.type)}
                 name="day"
                 label="Day"
                 value={valueSelected?.day||null}
-                getOptionLabel={(option) => option.type }
+              
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('day', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Day" variant="outlined" />
                 )}
               />
               <Autocomplete
-                options={actionTypes}
+                options={actionTypes.map((name)=>name.type)}
                 name="action"
                 label="Action"
-                getOptionLabel={(option) => option.type }
+                // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('action', newValue || null)}
                 renderInput={(params) => (
                   <TextField {...params} label="Action" variant="outlined" />
@@ -315,11 +341,11 @@ export default function WorkWeek({ currentUser }) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
-            </Box>
+            </Box> 
           </DialogContent>
 
           <DialogActions>
