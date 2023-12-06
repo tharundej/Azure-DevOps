@@ -574,7 +574,7 @@ export default function MyClaims({ currentUser, }) {
                 name="type_oc_claim"
                 label="Type Of Claim"
                 required
-                options={claimTypeOptions.map((claimtype) => claimtype.expenseName)}
+                options={(claimTypeOptions?.map((claimtype) => claimtype.expenseName)) || []}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
               />
@@ -582,7 +582,7 @@ export default function MyClaims({ currentUser, }) {
                 name="currency"
                 label="currency"
                 required
-                options={currency.map((claimtype) => claimtype.label)}
+                options={(currency?.map((claimtype) => claimtype.label)) || []}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
               />
@@ -599,7 +599,7 @@ export default function MyClaims({ currentUser, }) {
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
-                {selectedDate.error && (
+                {selectedDate?.error && (
                   <Typography color="error" variant="caption">
                     {selectedDate.error}
                   </Typography>
