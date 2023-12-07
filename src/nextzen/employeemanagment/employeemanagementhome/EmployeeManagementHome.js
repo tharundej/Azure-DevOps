@@ -52,6 +52,9 @@ function EmployeeManagementHome  () {
         arr1.push(item.content)
       }
       });
+      arr.push("Roles")
+      arr1.push(<RoleAndResponsiblity/>)
+      console.log(arr,'arrrr')
       
       setTabLabels(arr);
       setTabContents(arr1)

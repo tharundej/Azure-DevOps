@@ -70,21 +70,30 @@ export default function CompoffApprove({ currentUser ,}) {
 
 
   const TABLE_HEAD = [
+     { id: "employeeId", label: "Employee Id", minWidth: "7pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
-      width: 180,
+      minWidth: "7pc",
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 220, type: "text" },
-    { id: "startDate", label: "Start Date", width: 220, type: "text" },
-    { id: "endDate", label: "End Date", width: 180, type: "text" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
-    { id: "expireDate", label: "Expire Date", width: 180, type: "text" },
-    { id: "approverName", label: "Approver Name", width: 180, type: "text" },
+      // { id: "projectName", label: "Project Name", width: 180, type: "text" },
+      { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "7pc", type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "7pc", type: "text" },
+    { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
+    { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },
+    { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
+    { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
+    { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "User Comment ", minWidth: "7pc", type: "text" },
+    // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approver Date", minWidth: "7pc", type: "text" },
+    { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
+    { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     // { id: '', width: 88 },
   ]
   const managerID =localStorage.getItem('reportingManagerID');
@@ -319,10 +328,12 @@ console.log(defaultValues,"defaultValues")
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message,{variant:'success'})
           setCount(count+1)
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
           enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+          handleClose()
         }
       );
 
@@ -331,6 +342,7 @@ console.log(defaultValues,"defaultValues")
       enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
       // alert("api hit not done")
       console.error(error);
+      handleClose()
     }
   });
 console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
@@ -412,6 +424,7 @@ console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
            filterName="claimSearchFilter"
         // filterName="claimSearchFilter"
          onclickActions={onclickActions}
+         count={count}
       />
     </>
   );

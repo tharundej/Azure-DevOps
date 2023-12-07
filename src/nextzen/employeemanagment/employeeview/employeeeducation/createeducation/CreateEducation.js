@@ -3,6 +3,8 @@ import React ,{useEffect, useState} from 'react'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -74,6 +76,76 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
   const [defaultValues, setDefaultValues] = useState([]);
   
+
+  // new documents 
+
+  const [addDocuments,setAddDocuments]=useState([]);
+
+  const handleAddDocumentNew=()=>{
+    const newArray = [...addDocuments];
+    const obj={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+  newArray.push(obj)
+  setAddDocuments(newArray)
+
+  }
+  const handleRemoveDocumentNew=(index1)=>{
+    const updatedItems = addDocuments.filter((item,index3) => index3 !== index1);
+
+     setAddDocuments(updatedItems);
+  }
+
+  const handleFileUploadNew = (event,index) => {
+        
+    const file = event.target.files[0];
+    // const { value, id } = e.target;
+    // const newObj = defaultValues;
+
+      let base64String=1;
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+    const base64String = event.target.result.split(',')[1];
+    console.log(base64String);
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ...newArray[index],
+      fileName: file.name,
+      fileContent:base64String
+    };
+    console.log(index,'newArraynewArraynewArray')
+    setAddDocuments(newArray);
+
+    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    };
+
+  reader.readAsDataURL(file);
+    
+
+    
+
+    //setSelectedFile(file);
+  };
+
+  const handleCategoryChangeNew = (e,index) => {
+    const { value, id } = e.target;
+    // const newObj = defaultValues;
+    
+
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    
+    
+    setAddDocuments(newArray);
+  };
   
     const onSave=()=>{
      const obj={
@@ -525,8 +597,110 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                     </Grid>
 
                                     {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
-                                         { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
-                                      {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
+                                         { endpoint!=='addEducation' &&<>
+                                         
+                                         <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
+                                                Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
+                                              </Typography>
+                                        
+                                         <FilesDisplay dataOfFiles={item?.documents} />
+
+                                         {  addDocuments &&
+                                      
+                                      addDocuments.map((file,index1)=>(
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+
+                                        <Grid item xs={12} md={6} >
+
+                                      
+                                        <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                                            <Select
+                                                label="Select Document"
+                                                value={file?.fileType}
+                                                onChange={(e)=>{handleCategoryChangeNew(e,index)}}
+                                                name="Select Document"
+                                            >
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                                <MenuItem value="degree">Degree</MenuItem>
+                                                {/* Add more categories here */}
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                        <Grid>
+
+                                          <Grid item>
+                                        
+                                          <input
+                                          id={`file-upload-input-${index}-${index1}`}
+                                            type="file"
+                                            accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                          
+                                            style={{ display: 'none' }}
+                                          
+                                        />
+                                      <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
+                                        <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+
+                                        <Button
+                                        onChange={(e)=>{handleFileUploadNew(e,index)}}
+                                        component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                    Upload file
+                                                    <VisuallyHiddenInput type="file" />
+                                                  </Button>
+                                        </label>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                        
+                                          
+                                         
+                                            
+                                              <Button 
+                                              onClick={()=>{
+                                                handleRemoveDocumentNew(index1)
+                                              }
+                                              
+                                                
+                                              
+                                                
+
+                                              }
+                                              >Delete</Button>
+                                            
+
+                                          
+                                          </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
+
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
+
+                                         
+                                         </> }
+                                      {  endpoint==='addEducation' &&
+                                      
+                                      item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                                         <Grid item xs={12} md={6} >
@@ -624,8 +798,11 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       
                                           
 
-                                      </Grid>
-                                      ))}
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
                                     
                       </Grid>
                  
