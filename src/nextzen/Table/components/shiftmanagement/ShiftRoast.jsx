@@ -158,7 +158,7 @@ export default function ShiftRoast() {
  }}
  className="custom-dialog"  
 >
- <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
+ <EditShiftRoaster currentUser={{}} handleClose={handleClose} editData={editData} />
       </Dialog>
     )}
  {employeListDialog && 

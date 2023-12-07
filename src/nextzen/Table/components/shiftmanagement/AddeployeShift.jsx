@@ -130,7 +130,7 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
         companyID: (user?.companyID)?user?.companyID : '',
         locationID: (user?.locationID)?user?.locationID : '',
       };
-      const response = await instance.post('/onboardingDepartment', data);
+      const response = await instance.post('/getDepartment', data);
       setDepartmentData(response.data.data);
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',

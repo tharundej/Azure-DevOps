@@ -43,8 +43,9 @@ import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { async } from '@firebase/util';
 
-export default function EditShiftRoaster({ currentUser, editData, handleEditClose }) {
+export default function EditShiftRoaster({ currentUser, editData, handleClose }) {
   console.log(
     ' edit data for shift:',
     editData
@@ -118,6 +119,8 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
     getEmploye();
     getShiftgroupName();
     getShiftName();
+  
+   
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
 
@@ -150,6 +153,23 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
     CurrentGradeData.designationGradeID
   );
 
+  console.log("checking ",ShiftName.find(option => option.shiftConfigurationId == editData?.shiftConfigId) )
+  const [ShiftDefault,setShiftDefault]= useState([])
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:156 ~ EditShiftRoaster ~ ShiftDefault:", ShiftDefault)
+  const [shiftArr,setshiftArr]= useState(null)
+  const [foundShift,setfoundShift]=useState([])
+  const defaultValueShift = async (value) =>{
+    console.log("iama here ")
+    await   setfoundShift ( value?.find(option => option?.shiftConfigurationId == editData?.shiftConfigId));
+    console.log("🚀 ~ file: EditShiftRoaster.jsx:160 ~ EditShiftRoaster ~ foundShift:", foundShift)
+
+    if (foundShift) {
+      setshiftArr(  parseInt(foundShift.shiftConfigurationId));
+      // Now you can use shiftConfigurationId as needed
+      console.log('1233445:', ShiftName[shiftArr]);
+    }
+
+  }
   const getDepartment = async () => {
     try {
       const data = {
@@ -243,6 +263,8 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
+       if(response?.data?.data){ defaultValueShift(response?.data?.data)}
+       
       console.log(
         '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
         response.data.data
@@ -274,7 +296,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
 
     try {
       const data = {
-        shiftConfigurationId: parseInt(CurrentShiftNameData?.shiftConfigurationId),
+        shiftConfigurationId: parseInt(foundShift?.shiftConfigurationId),
         ShiftTerm: 'weekly',
 
         supervisorId: (user?.employeeID)?user?.employeeID : '',
@@ -291,7 +313,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
 
       const response = await instance.post('/addShiftDetails', data).then(
         (successData) => {
-          handleEditClose();
+          handleClose();
           enqueueSnackbar(response.data.message, { variant: 'success' });
 
           console.log('sucess', successData);
@@ -386,10 +408,11 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   disablePortal
                   id="combo-box-dem33"
                   options={ShiftName || []}
-                  value={CurrentShiftNameData?.shiftConfigurationId}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={(foundShift?.length !== 0)? foundShift : null}
                   getOptionLabel={(option) => option.shiftName}
                   onChange={(e, newvalue) => {
-                    setCurrentShiftNameData(newvalue);
+                    setfoundShift(newvalue);
                     // getDesignation(newvalue)
                   }}
                   sx={{
@@ -509,7 +532,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   {!currentUser ? 'Create User' : 'Save Employe To Shift'}
                 </LoadingButton>
 
-                <Button sx={{ ml: '5px' }} onClick={handleEditClose}>
+                <Button sx={{ ml: '5px' }} onClick={handleClose}>
                   Cancel
                 </Button>
               </Stack>
@@ -523,5 +546,5 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
 
 EditShiftRoaster.propTypes = {
   currentUser: PropTypes.object,
-  handleEditClose: PropTypes.func,
+  handleClose: PropTypes.func,
 };

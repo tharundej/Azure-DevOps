@@ -109,13 +109,9 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   } = methods;
 
   const values = watch();
-  useEffect(() => {
-    getEmployeSwap()
-  
 
-  }, [])
    const [newShift,setnewShift]= useState(false)
-   const [curentShift,setcurentShift]= useState(true)
+   const [curentShift,setcurentShift]= useState(false)
    const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
@@ -129,17 +125,17 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
     getShiftGroupName()
+    getEmployeSwap()
     // getShiftName()
   }, [])
   const getEmployeSwap = async ( toGroup,fromGroup) => {
-  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+  // if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
 
    
    try{
    const data = JSON.stringify({
       "company_id": (user?.companyID)?user?.companyID:'',
-      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
-      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
+        "supervisor_id" :(user?.employeeID)?user?.employeeID:'',
       "search": ""
     });
         const response = await instance.post('/GetSwapEmployee',data);
@@ -150,7 +146,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     console.error("Error", error);
     throw error;
       }
-    }
+    // }
   }
   const getEmployeSwap1 = async ( toGroup,fromGroup) => {
   if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
@@ -377,13 +373,14 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         New Shift Details
         </Typography> 
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+      {currentEmployeSwapData.map((value,index) => {
+        const labelId = `checkbox-list-label-${index}`;
 
         return (
           <ListItem key={value} disablePadding>
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>2</span>
+           <span style={{ display: 'flex', minWidth: '100px', alignItems: 'center', justifyContent: 'center', alignContent: 'center', border: '1px solid #ccc' }}>
+              {value.employee_name}
+            </span>
           </ListItem>
         );
       })}
