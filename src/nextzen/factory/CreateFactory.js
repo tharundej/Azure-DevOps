@@ -129,6 +129,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       }
     }
   });
+
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);

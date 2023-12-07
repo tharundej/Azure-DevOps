@@ -243,7 +243,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
 
     const ApproversList = () => {
       const payload = {

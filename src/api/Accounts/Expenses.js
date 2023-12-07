@@ -32,7 +32,7 @@ export const updateExpensesAPI = async (requestBody) => {
 };
 export const DeleteExpensesAPI = async (requestBody) => {
   try {
-    const response = await instance.post(``, requestBody, apiHeaders);
+    const response = await instance.post(`deleteExpenses`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {

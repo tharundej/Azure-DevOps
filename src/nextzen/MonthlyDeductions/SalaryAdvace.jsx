@@ -95,6 +95,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters": {
   "requestDate": {
    
@@ -117,7 +118,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     },
     "sort": {
       "key": 1,
-      "orderBy": ""
+      "orderBy": "sa_id"
     }
   }
   const onClickActions=(rowdata,event)=>{
