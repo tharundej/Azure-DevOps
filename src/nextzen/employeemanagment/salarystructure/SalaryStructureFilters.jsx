@@ -297,6 +297,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
             placeholder="Search...."
              fullWidth
              onChange={handleSearch}
+             size="small"
           />
           
         </Grid>
@@ -307,7 +308,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         onClick={onHandleOpen} 
          variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add SalaryStructure</Button>
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add SalaryStructure</Button>
 
             </Grid>
             <Grid item  >

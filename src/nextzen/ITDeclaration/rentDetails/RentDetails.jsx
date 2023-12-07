@@ -43,18 +43,18 @@ export default function RentDetails() {
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
-    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'May', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'June', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'July', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'August', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'September', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'October', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'November', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'April', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'May', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'June', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'July', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'August', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'September', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'October', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'November', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'December', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'January', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'February', cityType: '', rentAmount: '', submittedAmount: '' },
 
     // Add more months as needed
   ]);
@@ -79,7 +79,7 @@ const [loading,setLoading] = useState(false);
   const [isPanValueThere, setIsPanValueThere] = useState(false);
   const [isPanValueNumber, setIsPanValueNumber] = useState('');
   const [declarationSelectedValue, setSeclarationSelectedValue] = useState('');
-  var [isShowDeclaration, setIsShowDeclaration] = useState(false);
+  var [isShowDeclaration, setIsShowDeclaration] = useState(true);
   const [isShowUpload, setIsShowUpload] = useState(false);
   const [open, setOpen] = useState(true);
   var [panNumbers, setPanNumbers] = useState(['', '', '']); // Initialize with three empty strings
@@ -111,13 +111,6 @@ const [loading,setLoading] = useState(false);
   console.log(currentYear, 'current year');
   const startYear = 2022;
   const endYear = 2030;
-
-  //    const financialYears = [];
-  //    for (let year = startYear; year <= endYear; year++) {
-  //      financialYears.push(`${year}-${year + 1}`);
-  //    }
-  //  console.log(financialYears ,
-  //   "financialYears")
   const [selectedYear, setSelectedYear] = useState(null);
   const [
     financialYears, setFinancialYears] = useState([]);
@@ -184,7 +177,7 @@ const [loading,setLoading] = useState(false);
 
   const handleRoleChange = (index, newValue) => {
     const newData = [...data];
-    newData[index].city_type = newValue;
+    newData[index].cityType = newValue;
     setData(newData);
     console.log(newData);
   };
@@ -271,7 +264,7 @@ const [loading,setLoading] = useState(false);
   };
   const updatedData = data?.map((entry) => ({
     month: entry.month,
-    city_type: entry.city_type,
+    cityType: entry.cityType,
     rentAmount: entry.rentAmount !== '' ? parseInt(entry.rentAmount, 10) : null,
     submittedAmount: entry.submittedAmount !== '' ? parseInt(entry.submittedAmount, 10) : null,
   }));
@@ -348,7 +341,7 @@ const [loading,setLoading] = useState(false);
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
       panOfTheLandlord: isShowPannumber,
-      declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      declarationReceivedFromLandlord: declarationSelectedValue == 'Yes' ? true : false ,
       // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
@@ -429,13 +422,13 @@ const [loading,setLoading] = useState(false);
           if (rowsData !== null || undefined) {
             setIsPreviousData(true);
           }
-          console.log(rowsData);
+          console.log(response?.data?.data?.declarationReceivedFromLandlord ,"response?.data?.data?.declarationReceivedFromLandlord");
           setRendDetailsData(rowsData);
           setLandLardName(response?.data?.data?.nameOfLandlord);
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
-          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
-          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
-          setSelectedValue(response?.data?.data?.panOfTheLandlord);
+          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord? "Yes" : "No");
+          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
+          // setSelectedValue(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
           response?.data?.data?.panOfTheLandlord
             ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
             : '';
@@ -469,7 +462,7 @@ const [loading,setLoading] = useState(false);
                 // If the month exists in the API response, update the data
                 return {
                   ...existingMonth,
-                  city_type: matchingMonth.cityType,
+                  cityType: matchingMonth.cityType,
                   rentAmount: matchingMonth.rentAmount,
                   submittedAmount: matchingMonth.submittedAmount,
                 };
@@ -489,6 +482,8 @@ const [loading,setLoading] = useState(false);
     //  console.log(result, 'resultsreults');
   };
 
+  console.log(declarationSelectedValue ,"declarationSelectedValuedeclarationSelectedValue" ,)
+console.log(selectedValue ,"SelectedValue")
   const getFinancialYear = async () => {
     setLoading(true)
     const payload = {
@@ -583,11 +578,14 @@ const [loading,setLoading] = useState(false);
          <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          renderInput={(params) => <TextField {...params}
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
         />
       </Grid>
       
@@ -634,7 +632,7 @@ const [loading,setLoading] = useState(false);
                 <TableCell style={{ padding: '4px !important' }}>{row.month}</TableCell>
                 <TableCell style={{ width: '150px' }}>
                   <Autocomplete
-                    value={row.city_type}
+                    value={row.cityType}
                     onChange={(event, newValue) => handleRoleChange(index, newValue)}
                     options={['Metro', 'Non-Metro']}
                     renderInput={(params) => <TextField {...params} label="Select" />}
@@ -730,7 +728,7 @@ const [loading,setLoading] = useState(false);
             <RadioGroup
               aria-label="options"
               name="options"
-              value={selectedValue ? 'Yes' : 'No'}
+              value={selectedValue ? 'Yes' :(selectedValue === "" || undefined) ? undefined : 'No'}
               onChange={handleChange}
               row // align radio buttons horizontally
             >

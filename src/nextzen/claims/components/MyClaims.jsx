@@ -87,8 +87,10 @@ export default function MyClaims({ currentUser, }) {
 
 
   const TABLE_HEAD = [
-    { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
+    { id: "expenseClaimId", label: "Expense Claim Id", minWidth: "7pc", type: "text" },
+    { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "expand" },
     { id: "claimDate", label: "Claim Date", minWidth: "8pc", type: "text" },
+    { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
     { id: "claimAmount", label: "Claim Amount", minWidth: "9pc", type: "text" },
     { id: "expenseStartDate", label: "Expense Start Date", minWidth: "10pc", type: "text" },
     { id: "expenseEndDate", label: "Expense End Date", minWidth: "10pc", type: "text" },
@@ -97,6 +99,8 @@ export default function MyClaims({ currentUser, }) {
     { id: "approverName", label: "Approver Name", minWidth: "10pc", type: "text" },
     { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
     { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+    { id: "userComment", label: "User Comment", minWidth: "9pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "9pc", type: "text" },
     { id: "PaymentStatus", label: "Payment Status", minWidth: "9pc", type: "badge" },
     { id: "status", label: "Status", minWidth: "6pc", type: "badge" },
     // { id: '', width: 88 },
@@ -574,7 +578,7 @@ export default function MyClaims({ currentUser, }) {
                 name="type_oc_claim"
                 label="Type Of Claim"
                 required
-                options={claimTypeOptions.map((claimtype) => claimtype.expenseName)}
+                options={(claimTypeOptions?.map((claimtype) => claimtype.expenseName)) || []}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
               />
@@ -582,7 +586,7 @@ export default function MyClaims({ currentUser, }) {
                 name="currency"
                 label="currency"
                 required
-                options={currency.map((claimtype) => claimtype.label)}
+                options={(currency?.map((claimtype) => claimtype.label)) || []}
                 getOptionLabel={(option) => option}
                 isOptionEqualToValue={(option, value) => option === value}
               />
@@ -599,7 +603,7 @@ export default function MyClaims({ currentUser, }) {
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
-                {selectedDate.error && (
+                {selectedDate?.error && (
                   <Typography color="error" variant="caption">
                     {selectedDate.error}
                   </Typography>

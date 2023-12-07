@@ -645,7 +645,9 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                  
                   
                   renderInput={(params) => <TextField {...params} label="Blood Group"
-                  style={{  width: '100%' }} />}
+                  style={{  width: '100%' }} />
+                
+                }
                 />
                   </Grid>
 

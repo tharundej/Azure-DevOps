@@ -9,6 +9,9 @@ import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocumen
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { bgGradient } from 'src/theme/css';
+import { formatDate } from 'src/nextzen/global/GetDateFormat';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 
 
 const employeeData=[ {
@@ -87,6 +90,9 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       }
      
   
+    const ApiHitDelete=()=>{
+      
+    }
 
    const ApiHit=()=>{
     let data = JSON.stringify({
@@ -130,11 +136,11 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     <>
     
       <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
-        <Grid container alignItems="center" justifyContent="flex-end" >
+        {/* <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}} sx={{backgroundColor:'#3B82F6'}} >+Add Education</Button>
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <Grid container margin='5px' >
 
@@ -146,49 +152,94 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
 
                    
                    
-                      <Card   sx={{
-                        ...bgGradient({
-                          direction: '135deg',
-                          startColor: alpha(theme.palette[color].light, 0.2),
-                          endColor: alpha(theme.palette[color].main, 0.2),
-                        }),
-                        p: 3,
-                        borderRadius: 2,
-                        color: `${color}.darker`,
-                        backgroundColor: 'common.white',
-                        padding:"10px",margin:'10px',boxShadow:'3',minWidth:'250px'
-                      }}>
-
-                      
-                          
-              <>
-               <Grid container alignItems="center" justifyContent="center" flexDirection="column" >
-               <Typography>
-                <span style={{fontWeight:700}}> </span> {itm?.nameOfTheDegree}  
-                <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
-                            const item=itm;
-                          
-                            handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>
-                
-             
-              </Typography>
-              <Typography>@</Typography>
-              
-                <Typography><span style={{fontWeight:600}}>  </span>  {itm?.universityName}</Typography>
-               
-                <Typography ><span style={{fontWeight:600}}>  </span>  {itm?.startDate}  - {itm?.endDate}
-                  <Stack  lg={12} ></Stack>
-                </Typography>
-                
-               {/* <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </> */}
-                </Grid>
-                  </>
-                 
-                       
-                      </Card>
+                    <Grid
+                    lg={5}
+                    md={5}
+                    xs={12}
+                    sx={{
+                      ...bgGradient({
+                        direction: '135deg',
+                        startColor: alpha(theme.palette[color].light, 0.2),
+                        endColor: alpha(theme.palette[color].main, 0.2),
+                      }),
+                      p: 3,
+                      borderRadius: 2,
+                      color: `${color}.darker`,
+                      backgroundColor: 'common.white',
+                      padding: '10px',
+                      margin: '10px',
+                      boxShadow: '3',
+                     
+                    }}
+                  >
+                    <>
+                    <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
+                            <IconButton onClick={() => {
+                              const item = itm;
+                              handleAddEducation([item], "updateEducationDetails");
+                            }}>
+                              <Iconify icon="material-symbols:edit" />
+                            </IconButton>
+                            <IconButton onClick={() => {
+                              const item = itm;
+                              handleAddEducation([item], "updateEducationDetails");
+                            }} sx={{ marginLeft: 1 }}>
+                              <Iconify icon="material-symbols:delete" />
+                            </IconButton>
+                          </Grid>
+                      <Grid container alignItems="center" justifyContent="center" flexDirection="column">
+                        <Typography variant='h5'>
+                          {itm?.nameOfTheDegree?.label}
+                         
+                        </Typography>
+                  
+                        <Typography variant='h6'>@</Typography>
+                  
+                        <Typography variant='h6'> {itm?.universityName}</Typography>
+                  
+                        <Typography component="span">
+                          {formatDate(itm?.startDate)} - {formatDate(itm?.endDate)}
+                          <Stack lg={12}></Stack>
+                        </Typography>
+                      </Grid>
+                    </>
+                  </Grid>
+                  
                     )
                   )
                }
+
+    <Grid  
+lg={5}
+md={5}
+xs={12}
+      sx={{
+        ...bgGradient({
+          direction: '135deg',
+          startColor: alpha(theme.palette[color].light, 0.1),
+          endColor: alpha(theme.palette[color].main, 0.2
+            ),
+        }),
+        p: 3,
+        borderRadius: 2,
+        color: `${color}.darker`,
+        backgroundColor: 'common.white',
+        padding: "10px",
+        margin: '10px',
+        boxShadow: 3,
+       
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        cursor: 'pointer',
+      }}
+      onClick={()=>{handleAddEducation(employeeData,"addEducation")}}
+    >
+      <AddCircleIcon sx={{ fontSize: 60 }} />
+     
+    </Grid>
         
       </>}
       </Grid>
