@@ -482,7 +482,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
                                     {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
                                          { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
-                                      {  item?.documents?.map((file,index1)=>(
+                                      {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                                         <Grid item xs={10} md={6} >
@@ -588,7 +588,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                    </Grid>
 
                    <Grid md={2} xs={2} lg={2} padding="5px" item>
-                     {index===0 &&    <Button
+                     {(index===0 &&  endpoint==='addEducation') &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
                    onClick={() => {

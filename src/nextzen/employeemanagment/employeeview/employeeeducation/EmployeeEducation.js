@@ -9,6 +9,8 @@ import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocumen
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { bgGradient } from 'src/theme/css';
+import { formatDate } from 'src/nextzen/global/GetDateFormat';
+
 
 
 const employeeData=[ {
@@ -163,8 +165,8 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                           
               <>
                <Grid container alignItems="center" justifyContent="center" flexDirection="column" >
-               <Typography>
-                <span style={{fontWeight:700}}> </span> {itm?.nameOfTheDegree}  
+               <Typography variant='h5'>
+                 {itm?.nameOfTheDegree}  
                 <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
                             const item=itm;
                           
@@ -172,11 +174,11 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                 
              
               </Typography>
-              <Typography>@</Typography>
+              <Typography variant='h6'>@</Typography>
               
-                <Typography><span style={{fontWeight:600}}>  </span>  {itm?.universityName}</Typography>
+                <Typography variant='h6'> {itm?.universityName}</Typography>
                
-                <Typography ><span style={{fontWeight:600}}>  </span>  {itm?.startDate}  - {itm?.endDate}
+                <Typography variant='h6'>   {formatDate( itm?.startDate)}  - {formatDate(itm?.endDate)}
                   <Stack  lg={12} ></Stack>
                 </Typography>
                 
