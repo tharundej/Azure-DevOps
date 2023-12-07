@@ -112,7 +112,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
       icon: 'charm:circle-tick',
     },
     {
-      name: 'Reject',
+      name: 'On Hold',
       id: 'rejected',
       type: 'serviceCall',
       endpoint: '/approveSalaryAdvance',
@@ -436,9 +436,9 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
         console.log(response?.data?.data, 'sucesslist');
       });
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Editing. Please try again.');
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Editing. Please try again.');
+      // setSnackbarOpen(true);
       console.log(' ', error);
     }
   };
@@ -472,7 +472,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
       } else if (eventData?.name === 'Approve') {
         setRowData(rowData);
         setApproveForm(true);
-      } else if (eventData?.name === 'Reject') {
+      } else if (eventData?.name === 'On Hold') {
         setRowData(rowData);
         setRejectForm(true);
       }
@@ -520,7 +520,7 @@ const TimeSheetApproval = ({ currentUser, filterSearch }) => {
       employee_id:rowData?.employeeId,
       project_id:JSON.parse (rowData?.projectId ,10),
       timesheetID:rowData?.timeSheetId,
-      status:'rejected',
+      status:'On Hold',
       managerComments: comment
     };
     const config = {
@@ -729,14 +729,14 @@ const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
           }}
           className="custom-dialog"
         >
-          <ModalHeader heading="Reject Request" />
+          <ModalHeader heading="On Hold Request" />
           <DialogContent>
             <Grid container flexDirection="row" spacing={2}>
               <Grid item xs={12} md={12}>
                 <TextField
                   label="Status"
                   name="status"
-                  value="Reject"
+                  value="On Hold"
                   // onChange={handleChange}
                   variant="outlined"
                   fullWidth
@@ -773,7 +773,7 @@ const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
               type="submit"
               onClick={handleReject}
             >
-              Reject Request
+              On Hold Request
             </Button>
             <Button
               sx={{ float: 'right', right: 10, marginTop: 2 }}

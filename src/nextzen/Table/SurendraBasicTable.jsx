@@ -127,6 +127,7 @@ import Style from "../styles/Style.module.css";
 import { baseUrl } from '../global/BaseUrl';
 
 import Box from '@mui/material/Box';
+
  
 
  
@@ -415,7 +416,8 @@ const [filterHeaders, setFilterHeaders]=useState([])
       row?.status === 'InActive' ||
       row?.status === 'active' ||
       row?.status === 'Upcoming' ||
-      row?.status === 'Ongoing'
+      row?.status === 'Ongoing'  ||
+      row?.status === 'On Hold'  
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -698,13 +700,6 @@ const [sortColumn, setSortColumn]=useState("")
   getTableData(payload)
 };
 
-// table expanded
-const [expandedRowId, setExpandedRowId] = useState(null);
-
-const handleExpandClick = (rowId, update , rowIndex) => {
-  console.log(expandedRowId,"klkl",rowId)
-  setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
-};
 
 
 
@@ -724,10 +719,23 @@ const handleButtonClick = (file) => {
   window.open(fileUrl, '_blank');
 };
 
+// table expanded
+const [expandedRowId, setExpandedRowId] = useState(null);
 
-// index setting
-const [index, setIndex]=useState("");
+const handleExpandClick = (rowId, update , rowIndex) => {
+  console.log(expandedRowId,"klkl",rowId)
+  setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
+};
+
+
+const [index, setIndex]=useState(""); // index setting
 {console.log(index,"indexindex",expandedRowId)}
+
+// table expansion Icon code
+const IconOpen =()=>{
+  setOpen(!open)
+}
+
   return (
 
     <>
@@ -876,14 +884,10 @@ const [index, setIndex]=useState("");
                           onHandleEditRow={(row, clickedElementId) => {
                             if (clickedElementId === 'reciept') {
                               handleButtonClick(row.reciept);
-                              // setExpandedRowId(row.employeename);
                               console.log(row, "iddd");
                             }
                             else if (clickedElementId === 'claimType') {
-                              // handleButtonClick(row.reciept);
-                              // setExpandedRowId(index);
                               setIndex(index);
-                              setExpandedRowId(index)
                               handleExpandClick(row.expenseClaimId, null, index)
                               // console.log(row, "iddd");
                             }
@@ -891,10 +895,10 @@ const [index, setIndex]=useState("");
 
                           rowActions={getRowActionsBasedOnStatus(row)|| []}
 
-                          expandable
-          onExpandClick={() => handleExpandClick(index)}
-          isExpanded={expandedRowId === index}
-
+                          // expandable
+          // onExpandClick={() => handleExpandClick(index)}
+          // isExpanded={expandedRowId === index}
+           
                         />
 {console.log(expandedRowId,row.id,row,"table expanded")}
                         
@@ -937,223 +941,61 @@ const [index, setIndex]=useState("");
                         </>
 
                       ))}
-                      
-
-       
-
- 
-
- 
-
                     <TableNoData notFound={notFound} />
-
                   </TableBody>
-
-             
-
               </Table>
 
             </Scrollbar>
-
           </TableContainer>
-
- 
-
           <TablePaginationCustom
-
             count={totalRecordsCount}
-
             // count={countValue}
-
-           
-
             page={initialDefaultPayload?.page}
-
             rowsPerPage={initialDefaultPayload?.count}
-
             // rowsPerPage={25}
-
             onPageChange={onPageChangeHandeler}
-
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
-
           // dense={table.dense}
-
           onChangeDense={table.onChangeDense}
-
           />
-
-          {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
-
-            <Grid item xs={1.5} >
-
-              <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
-
-                   
-
-            </Grid >
-
-            <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
-
-            <Pagination
-
-            count={Math.ceil(tableData.length / pageSize)}
-
-            // count={10}
-
-            page={page}
-
-            onChange={handleChange}
-
-            shape="rounded"
-
-            />
-
- 
-
-            </Grid>
-
-           
-
-            </Grid> */}
-
         </Card>
-
       </Container>
-
- 
-
-     
-
     </>
 
   );
 
 };
 
- 
-
-// function applyFilter({ inputData, comparator, filters }) {
-
-//   console.log(inputData, "inputData checkingggggggggggg")
-
-//   const { name, status, role } = filters;
-
- 
-
-//   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
- 
-
-//   stabilizedThis?.sort((a, b) => {
-
-//     const order = comparator(a[0], b[0]);
-
-//     if (order !== 0) return order;
-
-//     return a[1] - b[1];
-
-//   });
-
- 
-
-//   inputData = stabilizedThis?.map((el) => el[0]);
-
- 
-
-//   if (name) {
-
-//     inputData = inputData?.filter(
-
-//       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-
-//     );
-
-//   }
-
- 
-
-//   if (status !== 'all') {
-
-//     inputData = inputData?.filter((user) => user?.status === status);
-
-//   }
-
- 
-
-//   if (role.length) {
-
-//     inputData = inputData?.filter((user) => role?.includes(user.role));
-
-//   }
-
- 
-
-//   return inputData;
-
-// }
-
- 
-
 SurendraBasicTable.propTypes = {
-
   endpoint: PropTypes.string,
-
 };
-
- 
-
 SurendraBasicTable.propTypes = {
-
   defaultPayload: PropTypes.object,
-
 };
-
 SurendraBasicTable.propTypes = {
-
   headerData: PropTypes.any,
-
 };
-
- 
-
 SurendraBasicTable.propTypes = {
-
   bodyData: PropTypes.any,
-
 };
-
 SurendraBasicTable.propTypes = {
-
    rowActions: PropTypes.func
-
 };
 SurendraBasicTable.propTypes = {
-
   buttonFunction: PropTypes.func
-
 };
 SurendraBasicTable.propTypes = {
-
   filterContent: PropTypes.any
-
 };
-
 SurendraBasicTable.propTypes = {
-
   filterName: PropTypes.any
-
 };
 SurendraBasicTable.propTypes = {
-
   button: PropTypes.any
-
 };
-
 SurendraBasicTable.propTypes = {
   dialogPayload: PropTypes.any
 };
-
 SurendraBasicTable.propTypes = {
   onclickActions: PropTypes.any
 };

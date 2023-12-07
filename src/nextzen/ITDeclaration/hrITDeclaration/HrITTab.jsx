@@ -51,6 +51,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -59,7 +60,7 @@ const bull = (
 );
 
 export default function HrITTab() {
-  const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
 
  
   const {user} = useContext(UserContext)
@@ -88,7 +89,7 @@ const [loading,setLoading] = useState(false);
     { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
     { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
     { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
-    { id: 'status', label: 'Status', width: 220, type: 'bool' },
+    { id: 'status', label: 'Status', width: 220, type: 'badge' },
     // { id: '', width: 88 },
   ];
 
@@ -141,11 +142,14 @@ const [loading,setLoading] = useState(false);
       setEditData(rowdata);
       setValueSelected(rowdata);
       handleOpenEdit();
+      setREload(!reload)
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
   };
+
+  console.log(editData , valueSelected , " detailscomming")
   const [openEdit, setOpenEdit] = React.useState(false);
   const handleOpenEdit = () => {
     setOpenEdit(true);
@@ -195,8 +199,9 @@ const [loading,setLoading] = useState(false);
 
 
   const getEmpItDetails = async (data) => {
+    setLoading(true)
     const payload = {
-      employeeID: empId,
+      employeeID: editData?.employeeID,
       companyID: cmpId,
       financialYear: selectedYear?.financialYear,
     };
@@ -217,7 +222,9 @@ const [loading,setLoading] = useState(false);
       .then((response) => {
         console.log('successresponse1', response);
         setItDetailsFromApi(response?.data);
+        setItDetails(response?.data)
         if (response.status === 200) {
+          setLoading(false)
           setSnackbarSeverity('success');
           setSnackbarMessage('Designation Added successfully!');
           setSnackbarOpen(true);
@@ -237,18 +244,23 @@ const [loading,setLoading] = useState(false);
   const handleOpen = () => setOpen(true);
 
   const handleCloseEdit = () => setOpenEdit(false);
-  useEffect(() => {
-    getEmpItDetails();
-  }, []);
-  useEffect(() => {
-    const responseData = itDetailsFromApi;
-    setItDetails(responseData);
-  }, [itDetailsFromApi]);
+  // useEffect(() => {
+  //   getEmpItDetails();
+  // }, []);
+  // useEffect(() => {
+  //   const responseData = itDetailsFromApi;
+  //   setItDetails(responseData);
+  // }, [itDetailsFromApi]);
 
   //   if (!itDetails) {
   //     return <div>Loading...</div>;
   //   }
+useEffect(()=>{
 
+  getEmpItDetails()
+  const responseData = itDetailsFromApi;
+  setItDetails(responseData);
+},[reload])
   function camelCaseToSentence(camelCase) {
     // Add a space before all capital letters, then convert to lowercase
     const string = camelCase.replace(/([A-Z])/g, ' $1').toLowerCase();
@@ -275,7 +287,7 @@ const [loading,setLoading] = useState(false);
       financialYear: selectedYear?.financialYear,
       status: type
   }
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -300,11 +312,7 @@ const [loading,setLoading] = useState(false);
           }else    if (response.data.status === 400) {
             enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            // setSnackbarSeverity('error');
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
           
-      
           }
         }
       )
@@ -368,6 +376,7 @@ const [loading,setLoading] = useState(false);
   console.log("")
     
   }, [selectedYear?.financialYear])
+  console.log(itDetails ,"itDetails")
   return (
     <>
       {showForm && (
@@ -404,7 +413,11 @@ const [loading,setLoading] = useState(false);
         <FormProvider>
           <ModalHeader heading="IT Declaration " />
           <DialogContent>
-            <Box
+           {loading  ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+
+         
+         <Box
               rowGap={3}
               columnGap={2}
               display="grid"
@@ -436,9 +449,10 @@ const [loading,setLoading] = useState(false);
                           <TableCell>Declared</TableCell>
                         </TableRow>
                       </TableHead>
+                      {itDetails?.declarationDetails ? (
                       <TableBody>
-                        {itDetails &&
-                          itDetails.declarationDetails?.map((row, index) => (
+                        {itDetails?.declarationDetails &&
+                          itDetails?.declarationDetails?.map((row, index) => (
                             <TableRow
                               style={{
                                 height: '20px',
@@ -456,22 +470,25 @@ const [loading,setLoading] = useState(false);
                             </TableRow>
                           ))}
                       </TableBody>
+                      ) : (
+                        <p>No Declaration Details available.</p>
+                      )}
                     </Table>
                   </TableContainer>
                 
                     <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
-     <Grid item xs={4}>
+     {/* <Grid item xs={4}>
               <TextField
                 label="Comment "
                 variant="outlined"
                 fullWidth
                 name="declaationrMessage"
-                value={message?.declaationrMessage}
+                value={message?.declaationrMessage ? message?.declaationrMessage  : ''}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleMessage}
               />
-            </Grid>
+            </Grid> */}
   
   
    </div>
@@ -486,6 +503,9 @@ const [loading,setLoading] = useState(false);
                   <Typography>Rent Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ margin: '16px 0' }}>
+                {itDetails?.rentDetails ? (
+                  <>
+                  {console.log(itDetails ,"itdetailsinsidedilog")}
                   {itDetails?.rentDetails && (
                     <Grid container spacing={2}>
                       {Object.entries(itDetails.rentDetails).map(([key, value]) =>
@@ -539,11 +559,11 @@ const [loading,setLoading] = useState(false);
                             {itDetails.rentDetails.rentDocs.map((doc, index) => (
                               <li key={index}>
                                 <Link
-                                  href={doc.fileContent}
+                                  href={doc.fileContent !== "" ?doc.fileContent  : null }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {`Document ${index + 1}: ${doc.fileName}`}
+                                  {`Document ${index + 1}: ${doc.fileName }`}
                                 </Link>
                               </li>
                             ))}
@@ -559,13 +579,10 @@ const [loading,setLoading] = useState(false);
                           <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
                             {itDetails.rentDetails.landLordDocs.map((doc, index) => (
                               <li key={index}>
-                                <Link
-                                  href={doc.fileContent}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {`Document ${index + 1}: ${doc.fileName}`}
-                                </Link>
+                            <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
+  {`Document ${index + 1}: ${doc.fileName}`}
+</Link>
+
                               </li>
                             ))}
                           </ul>
@@ -573,19 +590,23 @@ const [loading,setLoading] = useState(false);
                       </Grid>
                     </Grid>
                   )}
+                </>  ) : (
+                    <p>No Rent details available.</p>
+                  )}
+                       
                                 <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
-     <Grid item xs={4}>
+     {/* <Grid item xs={4}>
               <TextField
                 label="Comment "
                 variant="outlined"
                 fullWidth
                 name="rentMessage"
-                value={message?.rentMessage}
+                value={message?.rentMessage?message?.rentMessage : ''}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleMessage}
               />
-            </Grid>
+            </Grid> */}
   
   
    </div>
@@ -600,6 +621,8 @@ const [loading,setLoading] = useState(false);
                   <Typography>LIC Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ margin: '16px 0' }}>
+                {itDetails?.licData ? ( 
+                  <>
                   {itDetails?.licData && (
                     <Grid container spacing={2}>
                       {itDetails.licData.map((licItem, index) => (
@@ -626,14 +649,14 @@ const [loading,setLoading] = useState(false);
                                     Documents:
                                   </Typography>
                                   <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                                    {licItem.documents.map((doc, docIndex) => (
+                                    {licItem?.documents?.map((doc, docIndex) => (
                                       <li key={docIndex}>
                                         <Link
-                                          href={doc.fileContent}
+                                          href={doc.fileContent !== "" ?doc.fileContent  : null }
                                           target="_blank"
                                           rel="noopener noreferrer"
                                         >
-                                          {`Document ${docIndex + 1}: ${doc.fileName}`}
+                                          {`Document ${docIndex + 1}: ${doc.fileName !== "" ?doc.fileName  : null }`}
                                         </Link>
                                       </li>
                                     ))}
@@ -651,19 +674,23 @@ const [loading,setLoading] = useState(false);
                       ))}
                     </Grid>
                   )}
+                  </>
+                  ) : (
+                    <p>No LIC  Details available.</p>
+                  )}
                                 <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
-     <Grid item xs={4}>
+     {/* <Grid item xs={4}>
               <TextField
                 label="Comment "
                 variant="outlined"
                 fullWidth
                 name="licrMessage"
-                value={message?.licrMessage}
+                value={message?.licrMessage?message?.licrMessage : ''}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleMessage}
               />
-            </Grid>
+            </Grid> */}
    
   
    </div>
@@ -678,6 +705,8 @@ const [loading,setLoading] = useState(false);
                   <Typography>Housing Property Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
+                {itDetails?.housingPropertyDetails ? (
+                  <>
                   {itDetails?.housingPropertyDetails && itDetails.housingPropertyDetails.length > 0 && (
                     <Grid container spacing={2}>
                       {Object.entries(itDetails.housingPropertyDetails[0]).map(([key, value]) => (
@@ -696,15 +725,12 @@ const [loading,setLoading] = useState(false);
                                 Documents:
                               </Typography>
                               <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                                {value.map((doc, docIndex) => (
+                                {value?.map((doc, docIndex) => (
                                   <li key={docIndex}>
-                                    <Link
-                                      href={doc.fileContent}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      {`Document ${docIndex + 1}: ${doc.fileName}`}
-                                    </Link>
+                                  <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
+  {`Document ${docIndex + 1}: ${doc.fileName}`}
+</Link>
+
                                   </li>
                                 ))}
                               </ul>
@@ -717,19 +743,23 @@ const [loading,setLoading] = useState(false);
                       </Grid>
                     </Grid>
                   )}
+</>
+) : (
+  <p>No Housing Property Details available.</p>
+)}
                                         <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
-     <Grid item xs={4}>
+     {/* <Grid item xs={4}>
               <TextField
                 label="Comment "
                 variant="outlined"
                 fullWidth
                 name="houseMessage"
-                value={message?.houseMessage}
+                value={message?.houseMessage?message?.houseMessage : "" }
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleMessage}
               />
-            </Grid>
+            </Grid> */}
      
   
    </div>
@@ -745,6 +775,9 @@ const [loading,setLoading] = useState(false);
                   <Typography>Medical Insurance Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ margin: '16px 0' }}>
+             
+                {itDetails?.medicalData ? (
+               <>
                   {itDetails?.medicalData && (
                     <Grid container spacing={2}>
                       {itDetails.medicalData.map((medicalItem, index) => (
@@ -773,13 +806,10 @@ const [loading,setLoading] = useState(false);
                                   <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
                                     {medicalItem.documents.map((doc, docIndex) => (
                                       <li key={docIndex}>
-                                        <Link
-                                          href={doc.fileContent}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {`Document ${docIndex + 1}: ${doc.fileName}`}
-                                        </Link>
+                                      <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
+  {`Document ${index + 1}: ${doc.fileName}`}
+</Link>
+
                                       </li>
                                     ))}
                                   </ul>
@@ -794,20 +824,24 @@ const [loading,setLoading] = useState(false);
                       ))}
                     </Grid>
                   )}
+</>
 
+) : (
+  <p>No Medical Dtails available.</p>
+)}
 <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
-     <Grid item xs={4}>
+     {/* <Grid item xs={4}>
               <TextField
                 label="Comment "
                 variant="outlined"
                 fullWidth
                 name="medicalMessage"
-                value={message?.medicalMessage}
+                value={message?.medicalMessage ?message?.medicalMessage: ""}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleMessage}
               />
-            </Grid>
+            </Grid> */}
     
   
    </div>
@@ -816,6 +850,8 @@ const [loading,setLoading] = useState(false);
 
               {/* <Button onClick={updateDepartment}>Approve</Button> */}
             </Box>
+            
+            }
           </DialogContent>
 
           <DialogActions>
@@ -827,7 +863,7 @@ const [loading,setLoading] = useState(false);
             color="primary"
             sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
-              approveHnadler("approve")
+              approveHnadler("Approved")
             }}
           >
             Approve
@@ -837,7 +873,7 @@ const [loading,setLoading] = useState(false);
             // color="primary"
             sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
-              approveHnadler("onHold")
+              approveHnadler("OnHold")
             }}
           >
            On Hold
