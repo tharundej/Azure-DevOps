@@ -117,7 +117,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     },
     "sort": {
       "key": 1,
-      "orderBy": ""
+      "orderBy": "sa_id"
     }
   }
   const onClickActions=(rowdata,event)=>{

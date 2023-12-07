@@ -41,7 +41,7 @@ export default function Requests() {
     },
     "sort": {
       "key": 1,
-      "orderBy": ""
+      "orderBy": "sa_id"
     }
   }
 
@@ -77,8 +77,8 @@ export default function Requests() {
       "interestRate" : ""
     },
     "sort": {
-      "key":null ,
-      "orderBy": ""
+      "key":1,
+      "orderBy": "loan_id"
     }
   }
 
@@ -98,8 +98,8 @@ export default function Requests() {
         }
     },
     "sort":{
-        "key":0,
-        "orderby":""
+        "key":1,
+        "orderby":"deduction_id"
     }
 }
       const tabLabels = ["Salary Requests" , "Loan Requests" , "My Deductions"]

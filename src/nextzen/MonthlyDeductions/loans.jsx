@@ -120,8 +120,8 @@ export default function Loans({defaultPayload,componentPage}) {
       "interestRate" : ""
     },
     "sort": {
-      "key":null ,
-      "orderBy": ""
+      "key":1 ,
+      "orderBy": "loan_id"
     }
   }
   const onClickActions=(rowdata,event)=>{
