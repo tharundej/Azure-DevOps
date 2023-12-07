@@ -39,7 +39,7 @@ import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
@@ -218,7 +218,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     console.log('uyfgv');
 
     try {
-      data.company_id = 'COMP2';
+      data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       data.activity_id =String( currentActivitytData.activityId);;
       data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));

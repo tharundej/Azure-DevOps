@@ -124,7 +124,7 @@ export default function WorkWeek({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
-    data.locationID = (formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationID
+    data.locationID = valueSelected?.locationID
     data.day=valueSelected?.day
     data.action=valueSelected?.action
     data.workweekID=JSON.parse(valueSelected?.workweekID,10)
@@ -176,6 +176,13 @@ export default function WorkWeek({ currentUser }) {
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
+    const filed ='locationID'
+    const filed2='locationName'
+    setValueSelected((prevData) => ({
+      ...prevData,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
   };
   const DayTypes = [
     { type: 'Monday' },
@@ -334,11 +341,11 @@ export default function WorkWeek({ currentUser }) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
-            </Box>
+            </Box> 
           </DialogContent>
 
           <DialogActions>

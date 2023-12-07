@@ -25,7 +25,7 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},

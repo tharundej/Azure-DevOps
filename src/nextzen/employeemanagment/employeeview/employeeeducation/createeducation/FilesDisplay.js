@@ -1,5 +1,6 @@
 import React from 'react'
-import { Stack,Box } from '@mui/material'
+import { Stack,Box,Grid,IconButton,Typography } from '@mui/material'
+import Iconify from 'src/components/iconify';
 
 const FilesDisplay = ({dataOfFiles}) => {
     console.log(dataOfFiles,'dataOfFiles')
@@ -13,20 +14,28 @@ const FilesDisplay = ({dataOfFiles}) => {
   
   return (
     <>
-    <Stack spacing={3} sx={{ px: 3, pb: 5 }}>
-        {dataOfFiles?.map((category) => 
-          <Stack key={category.name} spacing={2} direction="row" alignItems="center">
-            <Box sx={{ width: 40, height: 40 }}><Box component="img" src="/assets/icons/files/ic_img.svg" /></Box>
+  <Grid container spacing={5}>
+  {dataOfFiles?.map((category) => (
+    <Grid key={category.name} item xs={12} md={6} lg={6} container flexDirection="row" alignItems="center" justifyContent="space-between">
+      <Grid  item>
+        <Box sx={{ width: 40, height: 40 }}>
+          <Box component="img" src="/assets/icons/files/ic_img.svg" />
+        </Box>
+       
+      </Grid>
+      <Grid item>
+      <Typography>{category?.fileName}</Typography>
 
+      </Grid>
 
-            {category?.fileName}
-          
-
-            {/* <Box sx={{ typography: 'subtitle2' }}> {fData(category.usedStorage)} </Box> */}
-        
-          </Stack>
-        )}
-        </Stack>
+      <Grid item>
+        <IconButton>
+          <Iconify icon="material-symbols:edit" />
+        </IconButton>
+      </Grid>
+    </Grid>
+  ))}
+</Grid>
         
    </>
   )

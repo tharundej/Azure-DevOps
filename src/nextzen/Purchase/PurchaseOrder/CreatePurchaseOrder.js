@@ -14,7 +14,7 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -182,11 +182,15 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
   const calculateGrandTotal = () => {
     let grandTotal = 0;
+    let grandGstAmount = 0;
     for (let i = 0; i < watch('addPurchaseMaterial')?.length; i++) {
       const itemTotalAmount = watch(`addPurchaseMaterial[${i}].totalAmount`) || 0;
       grandTotal += itemTotalAmount;
+      const itemTotalGstAmount = watch(`addPurchaseMaterial[${i}].gstAmount`) || 0;
+      grandGstAmount += itemTotalGstAmount;
     }
     setValue('grandTotalAmount', grandTotal);
+    setValue('gstAmount', grandGstAmount);
   };
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -402,7 +406,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField {...params} label="Select Vendor / Location Name" variant="outlined" />
+                <TextField {...params} label="Select Vendor" variant="outlined" />
               )}
             />
             <RHFTextField name="paymentTerm" label="Payment Term" />
@@ -459,6 +463,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               type="number"
               name="advanceAmount"
               label="advanceAmount"
+            />
+            <RHFTextField
+              name="gstAmount"
+              label="GST Amount"
+              InputProps={{
+                readOnly: true,
+              }}
             />
             <RHFTextField
               name="grandTotalAmount"

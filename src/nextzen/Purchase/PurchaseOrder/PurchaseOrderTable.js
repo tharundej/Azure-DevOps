@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -10,8 +10,10 @@ import { BasicTable } from '../../Table/BasicTable';
 import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import { Dialog } from '@mui/material';
 import ViewPurchaseOrder from './ViewPurchaseOrder';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const PurchaseOrderTable = () => {
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -104,6 +106,7 @@ const PurchaseOrderTable = () => {
     page: 0,
     search: '',
     roleid: 1,
+    companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       poDate: {
         from: '',

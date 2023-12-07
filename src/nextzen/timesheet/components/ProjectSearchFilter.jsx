@@ -12,7 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../src/components/hook-form'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from 'src/api/BaseURL';
@@ -576,7 +576,7 @@ const handleSnackBar=()=>{
   </Grid>
   <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
    
-   {/* {projectPermission? */}
+   {projectPermission?
     <Button
       variant="contained"
       color="primary"
@@ -586,8 +586,8 @@ const handleSnackBar=()=>{
     >
       Add project
     </Button>
-    {/* :null} */}
-    {/* {(assignPermission)? */}
+    :null} 
+ {(assignPermission)? 
     <Button   
     variant="contained"
     color="primary"
@@ -596,7 +596,7 @@ const handleSnackBar=()=>{
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
     </Button>
-    {/* :null} */}
+   :null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>

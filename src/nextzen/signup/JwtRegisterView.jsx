@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import test from 'yup';
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -44,7 +45,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { borderColor } from '@mui/system';
 import { number } from 'prop-types';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -59,8 +60,12 @@ import { bgGradient } from 'src/theme/css';
 import { Axios } from 'axios';
 import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
+import SignUpDialog from './SignUpDialog';
+import { color } from '@mui/system';
+import { baseUrl } from '../global/BaseUrl';
 
-export default function JwtRegisterView() {
+export default function JwtRegisterView({ onHandleNextIncrement }) {
+  console.log(onHandleNextIncrement, 'onHandleNextIncrement');
   const { register } = useAuthContext();
   const theme = useTheme();
 
@@ -100,7 +105,7 @@ export default function JwtRegisterView() {
       reader.readAsDataURL(file);
     }
   };
- 
+
   const RegisterSchema = Yup.object().shape({
     cin: Yup.string()
       .required('CIN is Required')
@@ -144,9 +149,9 @@ export default function JwtRegisterView() {
         /^[A-Za-z0-9\s@\-_.*#!^<>%+$^(){}|]+$/,
         'Company Name must contain only alphanumeric characters and Spichal Charters'
       ),
-    companyRegistrationNo: Yup.string()
-      .required('Registration Number is Required')
-      .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
+    companyRegistrationNo: Yup.number()
+      .required('Registration Number is Required'),
+      // .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
     companyCeoName: Yup.string()
       .required('CEO Name is Required')
       .matches(/^[A-Za-z ]+$/, 'CEO Name must contain only letters and spaces'),
@@ -154,9 +159,9 @@ export default function JwtRegisterView() {
     emailId: Yup.string()
       .required('Email is Required')
       .email('Email must be a valid email address'),
-    phoneNo: Yup.string()
-      .required('Phone No is Required')
-      .matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
+    phoneNo: Yup.number()
+      .required('Phone No is Required'),
+      //.matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
     firstName: Yup.string()
       .required('First Name is Required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must contain only letters and spaces'),
@@ -167,12 +172,12 @@ export default function JwtRegisterView() {
     lastName: Yup.string()
       .required('Last Name is Required')
       .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
-     companyAddressLine1: Yup.string().required('Address Line 1 is Required'),
-     companyAddressLine2: Yup.string(),
+    companyAddressLine1: Yup.string().required('Address Line 1 is Required'),
+    companyAddressLine2: Yup.string(),
     // companyCity: Yup.string().required('City is Required'),
     // companyState: Yup.string().required('State is Required'),
-    companyPincode: Yup.string()
-      .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
+    companyPincode: Yup.number()
+      // .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
       .required('Pin code is Required'),
     empIdPrefix: Yup.string().required('Employee ID type Required'),
     // companyCountry: Yup.string().required('Please select a country.').matches(/^[A-Za-z]+$/,'Please select a country.'),
@@ -183,22 +188,22 @@ export default function JwtRegisterView() {
   const defaultValues = {
     cin: '',
     companyName: '',
-    companyRegistrationNo: null,
+    companyRegistrationNo: '',
     companyCeoName: '',
     companyDateOfIncorporation: '',
     companyType: '',
     emailId: '',
-    phoneNo: null,
+    phoneNo: '',
     firstName: '',
     middleName: '',
     lastName: '',
-     companyAddressLine1: '',
-     companyAddressLine2: '',
+    companyAddressLine1: '',
+    companyAddressLine2: '',
     companyCity: '',
     companyState: '',
     companyPincode: '',
     empIdPrefix: '',
-    companyCountry:'',
+    companyCountry: '',
   };
 
   const methods = useForm({
@@ -354,9 +359,9 @@ export default function JwtRegisterView() {
       });
   };
   console.log(countrySelected, 'kkk');
-  const handleCity =(value)=>{
-    setCitySelected(value)
-  }
+  const handleCity = (value) => {
+    setCitySelected(value);
+  };
   const handleStateChange = (value) => {
     setValueSelected(value);
 
@@ -396,12 +401,11 @@ export default function JwtRegisterView() {
   // const base64String = imageData[0]?.data;
   // console.log( imageData[0]?.data)
 
-  
   // const base64WithoutHeader = base64String.split(',')[1];
   //   console.log(base64WithoutHeader);
-  
-  console.log(imageData[0]?.data.split(',')[1]);
-  
+
+  // console.log(imageData[0]?.data.split(',')[1]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       // if (!data.companyCountry || !data.companyState || !data.companyCity) {
@@ -419,30 +423,96 @@ export default function JwtRegisterView() {
         data.companyCeoName,
         data.companyType,
         data.emailId,
-        parseInt(data.phoneNo, 10),
+        parseInt(data.phoneNo,10),
         data.firstName,
         data.middleName,
         data.lastName,
         data.companyAddressLine1,
-         data.companyAddressLine2,
-         data.companyCountry=countrySelected,
-         data.companyCity=citySelected,
-        data.companyState=valueSelected,
-        parseInt(data.companyPincode,10),
+        data.companyAddressLine2,
+        (data.companyCountry = countrySelected),
+        (data.companyCity = citySelected),
+        (data.companyState = valueSelected),
+        parseInt(data.companyPincode, 10),
         data.empIdPrefix,
-        data.logoName=imageData[0]?.name,
-        data.companyLogo= imageData[0]?.data.split(',')[1],
+        (data.logoName = imageData[0]?.name),
+        (data.companyLogo = imageData[0]?.data.split(',')[1])
       );
 
+      onHandleNextIncrement();
+
       // router.push(returnTo || PATH_AFTER_LOGIN);
-      router.push(returnTo || PATH_FOR_VERIFY);
+      // router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {
+      // onHandleNextIncrement()
+
       console.error(error);
       // reset();
+
       setErrorMsg(typeof error === 'string' ? error : error.message);
       // setSnackbarOpen(true);
     }
   });
+// Inside JwtRegisterView component
+const handleCINChange = async (newValue) => {
+  try {
+    const response = await axiosInstance.post(baseUrl + '/getCompany', {
+      cin: newValue,
+    });
+
+    if (response?.data?.code === 200) {
+      const keyMappings = {
+        company_id: 'companyId',
+        cin: 'cin',
+        company_name: 'companyName',
+        company_registration_no: 'companyRegistrationNo',
+        company_date_of_incorporation: 'companyDateOfIncorporation',
+        company_email_id: 'emailId',
+        company_ceo_name: 'companyCeoName',
+        company_type: 'companyType',
+        company_phone_no: 'phoneNo',
+        company_address_line1: 'companyAddressLine1',
+        company_address_line2: 'companyAddressLine2',
+        company_city: 'companyCity',
+        company_state: 'companyState',
+        company_country: 'companyCountry',
+        company_pincode: 'companyPincode',
+        company_logo: 'companyLogo',
+        emp_id_prefix: 'empIdPrefix',
+      };
+
+      const dataFromResponse = response?.data?.data;
+      Object.keys(keyMappings).forEach((key) => {
+        if (dataFromResponse.hasOwnProperty(key)) {
+          if(key==="company_phone_no" || key==="company_registration_no"){
+            console.log(typeof dataFromResponse[key].toString(),'dataFromResponse[key]')
+            methods.setValue(keyMappings[key], dataFromResponse[key]);
+          }
+          else{
+            methods.setValue(keyMappings[key], dataFromResponse[key]);
+          }
+         
+        }
+      });
+
+      console.log('success', response);
+    }
+
+    if (response?.data?.code === 400) {
+      console.log('success', response);
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
+useEffect(() => {
+  const cinValue = methods.getValues('cin');
+  handleCINChange(cinValue);
+}, [methods.getValues('cin')]);
+
+
+
+// Rest of your component...
 
   const renderHead = (
     <>
@@ -453,18 +523,6 @@ export default function JwtRegisterView() {
           m: { xs: 2, md: 5 },
         }}
       /> */}
-
-      <Stack spacing={2} sx={{ mb: 5, position: 'relative', alignItems: 'center' }}>
-        <Typography variant="h4">Register</Typography>
-
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-          <Typography variant="h4"> Already have an account? </Typography>
-
-          <Link href={paths.auth.jwt.login} component={RouterLink} variant="h4">
-            Sign In
-          </Link>
-        </Stack>
-      </Stack>
     </>
   );
 
@@ -511,6 +569,10 @@ export default function JwtRegisterView() {
                   }
                   placeholder=" Ex: L67190MH2020PLC123456"
                   maxLength={21}
+                  onBlur={() => {
+                    const cinValue = methods.getValues('cin');
+                    handleCINChange(cinValue);
+                  }}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -594,7 +656,7 @@ export default function JwtRegisterView() {
                   name="phoneNo"
                   label={
                     <span>
-                      Phone No<span style={{ color: 'red' }}>*</span>
+                      Phone Number<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={10}
@@ -606,7 +668,7 @@ export default function JwtRegisterView() {
                   name="firstName"
                   label={
                     <span>
-                      First Name<span style={{ color: 'red' }}>*</span>
+                      Contact Person First Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={30}
@@ -614,14 +676,19 @@ export default function JwtRegisterView() {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <RHFTextField name="middleName" label="Middle Name" maxLength={30} type="text" />
+                <RHFTextField
+                  name="middleName"
+                  label="Contact Person Middle Name"
+                  maxLength={30}
+                  type="text"
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
                   name="lastName"
                   label={
                     <span>
-                      Last Name<span style={{ color: 'red' }}>*</span>
+                      Contact Person Last Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
                   maxLength={30}
@@ -693,7 +760,7 @@ export default function JwtRegisterView() {
                   options={citiesNames}
                   value={citySelected || null}
                   getOptionLabel={(option) => option}
-                  onChange={(e,value)=>handleCity(value)}
+                  onChange={(e, value) => handleCity(value)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -731,22 +798,40 @@ export default function JwtRegisterView() {
                   type="text"
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <label htmlFor="file-input">
-
-        <span style={{display:'flex', flexDirection:'row'}}>
-        <Button style={{height:'fit-content'}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-          Upload Logo<span style={{ color: 'red' }}> *</span>
-          <input
-            id="file-input"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-        </Button>
-        {selectedFile && (
+             
+              <Grid item xs={12} md={8}></Grid>
+            </Grid>
+          </Stack>
+          <CardActions
+  style={{
+    marginTop: '30px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent:'space-between',
+    // maxWidth: '600px', // Adjust the max height as needed
+    // overflow: 'hidden', // Hide overflow content
+  }}
+>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label htmlFor="file-input">
+      <Button
+        style={{ height: 'fit-content', backgroundColor: '#3B82F6' }}
+        component="label"
+        variant="contained"
+        startIcon={<CloudUploadIcon />}
+      >
+        Upload Logo<span style={{ color: 'red' }}> *</span>
+        <input
+          id="file-input"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </Button>
+    </label>
+    {selectedFile && (
       <div>
         <div
           style={{
@@ -767,58 +852,51 @@ export default function JwtRegisterView() {
             }}
           />
         </div>
-        {/* <button onClick={handleDelete}>Delete</button> */}
       </div>
-    )}</span>
-      </label>
-      {/* Empty space for alignment */}
-      <div style={{ width: '10px' }}></div>
-    </div>
-  </Grid>
-  <Grid item xs={12} md={8}>
-    
-  </Grid>
-            </Grid>
-          </Stack>
-          <CardActions style={{ marginTop: '30px' }}>
-            {/* <LoadingButton
-                // fullWidth
-                color="inherit"
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-                style={{ display: 'block', margin: '0 auto' }}
-              >
-                Create account
-              </LoadingButton> */}
-            <Button
-              color="inherit"
-              size="large"
-              type="submit"
-              variant="contained"
-               onClick={onSubmit}
-              
-              //  loading={isSubmitting}
-              style={{ display: 'block', margin: '0 auto', backgroundColor: '#3B82F6' }}
-            >
-              Create account
-            </Button>
-          </CardActions>
+    )}
+  </div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
+  <Button
+    color="inherit"
+    size="large"
+    type="submit"
+    variant="contained"
+    onClick={onSubmit}
+    style={{  backgroundColor: '#3B82F6' }}
+  >
+    Create Account
+  </Button>
+  <Stack direction="column" alignItems="center" spacing={1}>
+    {/* <Typography variant="subtitle2" style={{ marginTop: '-10px' ,color:'black'}}>
+      OR
+    </Typography> */}
+    <Typography variant="subtitle2" style={{color:'black'}}> Already have an account? </Typography>
+    <Link
+      href={paths.auth.jwt.login}
+      component={RouterLink}
+      variant="subtitle1"
+      style={{ textDecoration: 'none', color: '#3B82F6' }}
+    >
+      Sign In
+    </Link>
+  </Stack>
+</div>
+
+
+</CardActions>
+
           {/* </Card> */}
         </Box>
       </Stack>
     </FormProvider>
   );
 
-
-
   return (
     <StyledContainer>
-      <div style={{ backgroundColor: '', height: '100%' }}>
-        {renderHead}
-
+      <div style={{ backgroundColor: '',  }}>
         {renderForm}
+
+        {/* {renderHead} */}
 
         {renderTerms}
         <Snackbar
@@ -835,7 +913,11 @@ export default function JwtRegisterView() {
           </MuiAlert>
         </Snackbar>
       </div>
+
+      {/* <SignUpDialog /> */}
     </StyledContainer>
   );
 }
-// ram
+JwtRegisterView.propTypes = {
+  onHandleNextIncrement: PropTypes.func,
+};

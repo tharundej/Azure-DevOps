@@ -24,6 +24,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
+import { formatDate } from 'src/nextzen/global/GetDateFormat';
 
 // ----------------------------------------------------------------------
 
@@ -49,9 +50,19 @@ export default function UserTableRow({
   //   { name: 'view', icon: 'hh', path: 'jjj' },
   //   { name: 'eerr', icon: 'hh', path: 'jjj' },
   // ];
+const renderCellContent = (columnId, value) => {
+  const column = headerContent.find((col) => col.id === columnId);
+  if (column && column.type === 'date') {
+    return formatDate(value); // Apply date formatting
+  }
+  else if (value !== undefined && value !== null) {
+    return value; // Return the value as is if it's not a date column
+  }
+  else {
+    return value
+  }
+};
 
-console.log(row,'row data')
-  
   return (
     <>
      
@@ -99,7 +110,7 @@ console.log(row,'row data')
 
                 {ele.type === 'text' && (
                   <ListItemText
-                    primary={row[ele.id]}
+                    primary={row[ele.id] || '-'}
                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
                     primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
@@ -108,6 +119,13 @@ console.log(row,'row data')
                     }}
                   />
                 )}
+
+                {
+                 ele.type==="date" && (
+                    renderCellContent(ele.id, row[ele.id])
+                  )
+                }
+              
                  {ele.type === 'bool' && (
                  
                  <ListItemText
@@ -124,7 +142,6 @@ console.log(row,'row data')
                    }}
                  />
                )}
-
 
                  {ele.type === 'icon' && (
              

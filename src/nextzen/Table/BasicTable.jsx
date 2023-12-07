@@ -582,6 +582,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <PayScheduleFilters
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'ShiftConfigurationFilterSearch' && (
@@ -589,16 +591,20 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'LeavePeriodFilterSearch' && (
             <LeavePeriodFilters
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
+              searchData={handleFilterSearch}
             />
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
-            <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
+            getTableData={getTableData} searchData={handleFilterSearch}/>
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -616,6 +622,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
           {filterName === 'CompoffFilterSearch' && (
@@ -623,6 +630,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
           {filterName === 'holidaysFilterSearch' && (
@@ -630,6 +638,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
 

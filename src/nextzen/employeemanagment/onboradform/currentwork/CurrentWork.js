@@ -52,7 +52,7 @@ import {
     JOB_WORKING_SCHEDULE_OPTIONS,
   } from 'src/_mock';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
