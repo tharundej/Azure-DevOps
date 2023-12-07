@@ -126,6 +126,7 @@ import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilt
 import ApproveFilter from '../timesheet/components/ApproveFilters';
 import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
+import LeaveTypeForm from '../configaration/leaveconfiguration/leavetype/LeaveTypeForm';
 
 const defaultFilters = {
   name: '',
@@ -578,6 +579,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'PayScheduleFilterSearch' && (
@@ -606,7 +608,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
-            getTableData={getTableData} searchData={handleFilterSearch}/>
+            getTableData={getTableData} searchData={handleFilterSearch}/>,
+            <LeaveTypeForm getTableData={getTableData}/>
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />

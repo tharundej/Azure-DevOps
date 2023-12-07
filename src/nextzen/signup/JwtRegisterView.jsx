@@ -30,7 +30,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { Country, State, City }  from 'country-state-city';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 import Logo from 'src/components/logo';
@@ -62,15 +62,19 @@ import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
 import SignUpDialog from './SignUpDialog';
 import { color } from '@mui/system';
-import { baseUrl } from '../global/BaseUrl';
+import { baseImageUrl, baseUrl } from '../global/BaseUrl';
 
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
   const { register } = useAuthContext();
   const theme = useTheme();
-
+  const [options,setOptions]=useState({
+    countryOptions:[],
+    stateOptions:[]
+  })
   const [datesUsed, setDatesUsed] = useState({
-    companyDateOfIncorporation: new Date(),
+    companyDateOfIncorporation: null,
   });
 
   const router = useRouter();
@@ -92,6 +96,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const [citySelected, setCitySelected] = useState(null);
   const [countrySelected, setCountrySelected] = useState(null);
   const [valueSelected, setValueSelected] = useState(null);
+  const [button, setButton] = useState(true)
+  const [companyId,setCompanyId] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const [empIdPrefix, setEmpIdPrefix] = useState(false)
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -172,16 +180,16 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
     companyAddressLine1: Yup.string().required('Address Line 1 is Required'),
     companyAddressLine2: Yup.string(),
-    // companyCity: Yup.string().required('City is Required'),
-    // companyState: Yup.string().required('State is Required'),
-    companyPincode: Yup.number()
-      // .matches(/^[0-9]+$/, 'Pin Code must contain only numbers')
+    companyCity: Yup.object().required('City is Required'),
+     companyState: Yup.object().required('State is required'),
+     companyDateOfIncorporation:Yup.string(),
+    companyCountry:Yup.object().required('Country is Required'),
+    companyPincode: Yup.number('Pincode is Required')
       .required('Pin code is Required'),
     empIdPrefix: Yup.string().required('Employee ID type Required'),
-    // companyCountry: Yup.string().required('Please select a country.').matches(/^[A-Za-z]+$/,'Please select a country.'),
-    // companyState:Yup.string().required('Please select a state.').matches(/^[A-Za-z]+$/,'Please select a state.'),
-    // companyCity: Yup.string().required('Please select a city.').matches(/^[A-Za-z]+$/,'Please select a city.'),
   });
+
+
 
   const defaultValues = {
     cin: '',
@@ -201,7 +209,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyState: '',
     companyPincode: '',
     empIdPrefix: '',
-    companyCountry: '',
+    companyCity: undefined,
+    companyState: undefined,
+    companyCountry :  undefined,
   };
 
   const methods = useForm({
@@ -221,181 +231,62 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-  //  const handleState =(e,value)=>{
-  //   setValueSelected(value);
-  //   console.log(value)
-  //     let data = JSON.stringify({
-  //       "country": "India",
-  //       "state": valueSelected
-  //     });
-
-  //     let config = {
-  //       method: 'post',
-  //       maxBodyLength: Infinity,
-  //       url: 'https://countriesnow.space/api/v0.1/countries/state/cities',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       data : data
-  //     };
-
-  //     axiosInstance.request(config)
-  //     .then((response) => {
-  //       console.log(JSON.stringify(response.data));
-  //       setCitesNames(response?.data)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-  //  }
-  // const states = ()=>{
-  //   let data = JSON.stringify({
-  //     "country": "India"
-  //   });
-
-  //   let config = {
-  //     method: 'post',
-  //     maxBodyLength: Infinity,
-  //     url: 'https://countriesnow.space/api/v0.1/countries/states',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     data : data
-  //   };
-
-  //   axiosInstance.request(config)
-  //   .then((response) => {
-  //     console.log("response.data.states", response.data.data.states);
-  //     setStateNames(response?.data?.data?.states)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-  // // const cites = ()=>{
-  // //   let data = JSON.stringify({
-  // //     "country": "India",
-  // //     "state": ""
-  // //   });
-
-  // //   let config = {
-  // //     method: 'post',
-  // //     maxBodyLength: Infinity,
-  // //     url: 'https://countriesnow.space/api/v0.1/countries/state/cities',
-  // //     headers: {
-  // //       'Content-Type': 'application/json'
-  // //     },
-  // //     data : data
-  // //   };
-
-  // //   axiosInstance.request(config)
-  // //   .then((response) => {
-  // //     console.log(JSON.stringify(response.data));
-  // //   })
-  // //   .catch((error) => {
-  // //     console.log(error);
-  // //   });
-  // // }
-  // useEffect(()=>{
-  //   states()
-  //   handleState()
-  // },[])
-  useEffect(() => {
-    fetchCountry();
-    handleCountry();
-    handleStateChange();
-  }, []);
-
-  const handleCountry = (value) => {
-    setCountrySelected(value);
-    if (value) {
-      let data = {
-        country: value,
-      };
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://countriesnow.space/api/v0.1/countries/states',
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-        data: data,
-      };
-
-      axiosInstance
-        .request(config)
-        .then((response) => {
-          setStateNames(response?.data?.data?.states || []);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setStateNames([]);
+  useEffect(()=>{
+   
+    const obj=Country.getAllCountries();
+    const newArray={...options};
+    newArray.countryOptions=obj;
+    // newArray.rcountryOptions=obj;
+   
+    setOptions(newArray)
+  },[])
+  const onChnageAutoComplete=(obj)=>{
+    console.log(obj,'objjjjj')
+    const objCountry={
+      country:obj?.name
     }
-  };
-  const fetchCountry = () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: 'https://countriesnow.space/api/v0.1/countries/states/',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-    };
+    const newArray={...options};
 
-    axiosInstance
-      .request(config)
-      .then((response) => {
-        setCountryNames(response?.data?.data || []);
-        console.log(response?.data?.data, 'country');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  console.log(countrySelected, 'kkk');
-  const handleCity = (value) => {
-    setCitySelected(value);
-  };
-  const handleStateChange = (value) => {
-    setValueSelected(value);
-
-    // if (!valueSelected) {
-    //   setError('Please select a state.'); // Set error if no value is selected
-    //   return; // Prevent form submission
-    // }
-    if (value) {
-      let data = {
-        country: countrySelected,
-        state: value,
-      };
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://countriesnow.space/api/v0.1/countries/state/cities',
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-        data: data,
-      };
-
-      axiosInstance
-        .request(config)
-        .then((response) => {
-          setCitiesNames(response?.data?.data || []);
-          console.log(response?.data?.data, 'cites');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setCitiesNames([]);
+    async function stateOptions(){
+      try {
+        // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
+        // const stateOptions1=await ApiHitStates(objCountry)
+        newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
+        setPCoutryIsoCode(obj?.isoCode|| "")
+        // console.log(stateOptions1,'stateOptionsSatet')
+      }
+      catch(e){
+  
+      }
     }
-  };
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+  const onChnageAutoCompleteState=(obj)=>{
+   
+    const objState={
+      country:obj?.name
+    }
+    const newArray={...options};
+
+    async function stateOptions(){
+      try {
+        // const cityOptions1=await ApiHitCities(objState)
+        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
+         console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode),'stateOptionsSatet')
+      }
+      catch(e){
+        console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode),'stateOptionsSatet')
+      }
+    }
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+
   // const base64String = imageData[0]?.data;
   // console.log( imageData[0]?.data)
 
@@ -427,9 +318,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         data.lastName,
         data.companyAddressLine1,
         data.companyAddressLine2,
-        (data.companyCountry = countrySelected),
-        (data.companyCity = citySelected),
-        (data.companyState = valueSelected),
+        data.companyCountry=data?.country||{name:"",isoCode:""},
+        data.companyCity=data?.state || {name:"",isoCode:""},
+        data.companyState=data?.city || {name:"",isoCode:""},
         parseInt(data.companyPincode, 10),
         data.empIdPrefix,
         (data.logoName = imageData[0]?.name),
@@ -458,6 +349,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       });
 
       if (response?.data?.code === 200) {
+        setCompanyId(response?.data?.data?.companyId);
+        setSelectedFile(true)
+        setEmpIdPrefix(true)
+        setImageUrl(baseImageUrl+response?.data?.data?.logoName)
         const keyMappings = {
           companyId: 'companyId',
           cin: 'cin',
@@ -474,19 +369,26 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
           companyState: 'companyState',
           companyCountry: 'companyCountry',
           companyPincode: 'companyPincode',
-          logoName: 'companyLogo',
+          companyLogo: 'https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=COMP22_GANG1_20231207153242_131847__fnss__Email%20Marketing__fnse__.png',
           empIdPrefix: 'empIdPrefix',
           firstName: 'firstName',
           lastName: 'lastName',
           middleName: 'middleName',
         };
 
+
         const dataFromResponse = response?.data?.data;
         Object.keys(keyMappings).forEach((key) => {
           if (dataFromResponse.hasOwnProperty(key)) {
-            if (key === 'company_phone_no' || key === 'company_registration_no') {
-              console.log(typeof dataFromResponse[key].toString(), 'dataFromResponse[key]');
-              methods.setValue(keyMappings[key], dataFromResponse[key]);
+
+            if (key === 'companyDateOfIncorporation' ) {
+              const obj={
+                companyDateOfIncorporation:dataFromResponse[key]
+              }
+              setDatesUsed(obj)
+
+              console.log(dataFromResponse[key], 'dataFromResponse[key]',dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
+             // methods.setValue(keyMappings[key], dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
             } else {
               methods.setValue(keyMappings[key], dataFromResponse[key]);
             }
@@ -494,6 +396,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         });
 
         console.log('success', response);
+        setButton(false)
       }
 
       if (response?.data?.code === 400) {
@@ -503,7 +406,46 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       console.log('error', error);
     }
   };
-
+  const onSubmit1 = handleSubmit(async (data) => {
+    try {
+      const payload = {
+        cin: data.cin,
+        companyName: data.companyName,
+        companyRegistrationNo: parseInt(data.companyRegistrationNo, 10),
+        companyDateOfIncorporation: formatDateToYYYYMMDD(
+          datesUsed.companyDateOfIncorporation
+        ),
+        companyCeoName: data.companyCeoName,
+        companyType: data.companyType,
+        companyEmailId: data.emailId,
+        companyPhoneNo: parseInt(data.phoneNo, 10),
+        firstName: data.firstName,
+        middleName: data.middleName,
+        lastName: data.lastName,
+        companyAddressLine1: data.companyAddressLine1,
+        companyAddressLine2: data.companyAddressLine2,
+        companyCountry: data?.country||{name:"",isoCode:""},
+        companyCity: data?.city||{name:"",isoCode:""},
+        companyState: data?.state||{name:"",isoCode:""},
+        companyPincode: parseInt(data.companyPincode, 10),
+        empIdPrefix: data.empIdPrefix,
+        logoName: imageData[0]?.name,
+        companyLogo: imageData[0]?.data.split(',')[1],
+        companyId:companyId
+      };
+  
+      console.log(payload);
+      
+      const response = await axiosInstance.post(baseUrl + '/updateCompany', payload);
+      console.log(response);
+      onHandleNextIncrement();
+    } catch (error) {
+      console.error(error);
+      setErrorMsg(typeof error === 'string' ? error : error.message);
+      // setSnackbarOpen(true);
+    }
+  });
+  
   useEffect(() => {
     const cinValue = methods.getValues('cin');
     handleCINChange(cinValue);
@@ -544,7 +486,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       .
     </Typography>
   );
-
+    
   const companyTypes = [{ type: 'Public' }, { type: 'Private' }];
 
   const renderForm = (
@@ -595,25 +537,28 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px', marginTop: '-7px' }}
-                      label="Date of Incorporation"
-                      // value={datesUsed.date_of_incorporation || dayjs(new Date())}
-                      value={null}
-                      //  defaultValue={dayjs(new Date())}
-                      minDate={dayjs().subtract(300, 'year')}
-                      maxDate={dayjs()}
-                      onChange={(newValue) => {
-                        console.log(newValue);
-                        setDatesUsed((prev) => ({
-                          companyDateOfIncorporation: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
+                  sx={{width:'100%'}}
+                  fullWidth
+                  value={datesUsed?.companyDateOfIncorporation ? dayjs(datesUsed?.companyDateOfIncorporation).toDate() : null}
+                  // minDate={dayjs().subtract(300, 'year')}
+                  // maxDate={dayjs()}
+                  onChange={(newValue) => {
+                    console.log(newValue);
+                    setDatesUsed((prev) => ({
+                      companyDateOfIncorporation: newValue,
+                    }));
+                  }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="companyDateOfIncorporation"
+                  />
+                  
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
@@ -713,63 +658,50 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <Autocomplete
-                  name="companyCountry"
-                  value={countrySelected || null}
-                  onChange={(event, value) => handleCountry(value)}
-                  options={countryNames.map((countries) => countries.name)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={
-                        <span>
-                          Country <span style={{ color: 'red' }}>*</span>
-                        </span>
-                      }
-                      variant="outlined"
-                    />
-                  )}
-                />
+              <RHFAutocomplete
+                name="companyCountry"
+                label="Country"
+                options={options?.countryOptions || [] }
+                getOptionLabel={(option) => option.name}
+                onChnageAutoComplete={onChnageAutoComplete}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+
+              />
               </Grid>
               <Grid item xs={12} md={4}>
-                <Autocomplete
-                  name="companyState"
-                  id="companyState"
-                  value={valueSelected || null}
-                  onChange={(event, value) => handleStateChange(value)}
-                  options={stateNames.map((state) => state.name)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={
-                        <span>
-                          State <span style={{ color: 'red' }}>*</span>
-                        </span>
-                      }
-                      variant="outlined"
-                    />
-                  )}
-                />
+              <RHFAutocomplete
+                name="companyState"
+                label="State"
+                options={options?.stateOptions || []}
+                getOptionLabel={(option) => option.name}
+                onChnageAutoComplete={onChnageAutoCompleteState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+              />
               </Grid>
               <Grid item xs={12} md={4}>
-                <Autocomplete
-                  id="companyCity"
-                  options={citiesNames}
-                  value={citySelected || null}
-                  getOptionLabel={(option) => option}
-                  onChange={(e, value) => handleCity(value)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={
-                        <span>
-                          City <span style={{ color: 'red' }}>*</span>
-                        </span>
-                      }
-                      variant="outlined"
-                    />
-                  )}
-                />
+              <RHFAutocomplete
+                name="companyCity"
+                label="City"
+                options={options?.cityOptions || []}
+                getOptionLabel={(option) => option.name}
+                // onChnageAutoComplete={onChnageAutoCompleteState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+              />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
@@ -793,6 +725,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   maxLength={4}
                   type="text"
+                  disabled={empIdPrefix}
                 />
               </Grid>
 
@@ -828,6 +761,15 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   />
                 </Button>
               </label>
+              {/* <img
+                      src={imageUrl}
+                      // alt={selectedFile.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    /> */}
               {selectedFile && (
                 <div>
                   <div
@@ -840,7 +782,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                     }}
                   >
                     <img
-                      src={imageData[0]?.data}
+                      src={imageUrl}
                       alt={selectedFile.name}
                       style={{
                         width: '100%',
@@ -861,6 +803,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                 flex: 1,
               }}
             >
+              {button ? (
               <Button
                 color="inherit"
                 size="large"
@@ -871,6 +814,16 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
               >
                 Create Account
               </Button>
+              ):(<Button
+                color="inherit"
+                size="large"
+                type="submit"
+                variant="contained"
+                onClick={onSubmit1}
+                style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+              >
+                Update Account
+              </Button>)}
               <Stack direction="column" alignItems="center" spacing={1}>
                 <Typography variant="subtitle2" style={{ color: 'black' }}>
                   Already have an account?{' '}
