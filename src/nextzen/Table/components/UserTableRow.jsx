@@ -27,6 +27,7 @@ import SvgColor from 'src/components/svg-color/svg-color';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 // ----------------------------------------------------------------------
 
@@ -133,24 +134,26 @@ const [open, setOpen] = useState(false);
                 {ele.type === 'expand' && (
   <>
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <ListItemText
-        primary={row[ele.id]}
-        secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
-        primaryTypographyProps={{ typography: 'body2', alignItems:"center", textAlign:"center"}}
-        secondaryTypographyProps={{
-          component: 'span',
-          color: 'text.disabled',
-        }}
-      />
-      {/* <IconButton
+    <IconButton
         aria-label="expand row"
         size="small"
         onClick={() => setOpen(!open)}
         style={{ fontSize: '90px',  }} 
         
       >
-        {open ? <KeyboardArrowUpIcon style={{ fontSize: '18px' }} /> : <KeyboardArrowDownIcon style={{ fontSize: '18px' }}  />}
-      </IconButton> */}
+        {open ? <KeyboardArrowUpIcon style={{ fontSize: '18px' }} /> : <KeyboardArrowRightIcon style={{ fontSize: '18px' }}  />}
+      </IconButton>
+      <ListItemText
+        primary={row[ele.id]}
+        secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+        primaryTypographyProps={{ typography: 'body2', }}
+        secondaryTypographyProps={{
+          component: 'span',
+          color: 'text.disabled',
+        }}
+        onClick={() => setOpen(!open)}
+      />
+    
     </div>
   </>
 )}

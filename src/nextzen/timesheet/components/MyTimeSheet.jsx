@@ -47,7 +47,7 @@ const MyTimeSheet = ({currentUser,filterSearch}) => {
         //   secondaryText: "text",
     
         // },
-        { id: "projectId", label: "Project Id", width: 180, type: "text" },
+        { id: "projectId", label: "Project Id", width: 180, type: "expand" },
     
         { id: "projectName", label: "Project Name", width: 220, type: "text" },
     
