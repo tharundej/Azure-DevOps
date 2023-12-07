@@ -44,6 +44,7 @@ export default function CreateExpenses({ currentData, handleClose }) {
   const defaultValues = useMemo(
     () => ({
       companyID: user?.companyID ? user?.companyID : '',
+      expensesID: currentData?.expenseID || '',
       locationID: currentData?.locationID || '',
       expenseType: currentData?.expenseType || '',
       expenseDate: currentData?.expenseDate || '',
@@ -113,7 +114,7 @@ export default function CreateExpenses({ currentData, handleClose }) {
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
-      if (currentData?.id) {
+      if (currentData?.expenseID) {
         response = await updateExpensesAPI(data);
       } else {
         response = await createExpensesAPI(data);
