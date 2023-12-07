@@ -32,7 +32,7 @@ import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses'
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateExpenses({ currentData, handleClose }) {
+export default function CreateExpenses({ currentData, handleClose, setCount, count }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     invoiceNO: Yup.string().required(),
@@ -51,6 +51,7 @@ export default function CreateExpenses({ currentData, handleClose }) {
       vehicleRegNO: currentData?.vehicleRegNO || '',
       vehicleType: currentData?.vehicleType || '',
       totalLiter: currentData?.totalLiter || '0',
+      fuelType: currentData?.fuelType || '',
       itemName: currentData?.itemName || '',
       invoiceNO: currentData?.invoiceNO || '',
       invoiceDate: currentData?.invoiceDate || '',
@@ -119,6 +120,7 @@ export default function CreateExpenses({ currentData, handleClose }) {
       } else {
         response = await createExpensesAPI(data);
       }
+      setCount(count + 1);
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
@@ -237,9 +239,10 @@ export default function CreateExpenses({ currentData, handleClose }) {
             </LocalizationProvider>
             {type && (
               <>
-                <RHFTextField name="vehicleRegNO" label="Vehicle No" />
                 <RHFTextField name="vehicleType" label="Vehicle Type" />
+                <RHFTextField name="vehicleRegNO" label="Vehicle No" />
                 <RHFTextField type="number" name="totalLiter" label="Total Liter" />
+                <RHFTextField name="fuelType" label="Fuel Type" />
               </>
             )}
             {type == false && <RHFTextField name="itemName" label="Item Name" />}

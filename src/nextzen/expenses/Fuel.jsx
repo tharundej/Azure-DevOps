@@ -12,14 +12,11 @@ import { Dialog } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
 
 export default function Fuel() {
-	const { user } = useContext(UserContext);
-  // const actions = [
-  //   { name: 'Edit', icon: 'hh', id: 'edit' },
-  //   { name: 'Delete', icon: 'hh', id: 'delete' },
-  // ];
+  const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -47,18 +44,11 @@ export default function Fuel() {
       setEditShowForm(true);
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
-      // const deleteData = {
-      //   locationID: rowdata?.locationID || 0,
-      //   companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
-      //   title: rowdata?.locationName || '',
-      // };
       const deleteData = {
-        expenseID: rowdata?.expenseID || 0,
+        expensesID: rowdata?.expenseID || 0,
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
-        // productName: rowdata.productName,
       };
-      // const deleteData = { locationID: rowdata?.locationID || 0, title: rowdata?.expenseDate || '', };
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
       handleDeleteConfirmed();
@@ -82,6 +72,7 @@ export default function Fuel() {
     try {
       const response = await DeleteExpensesAPI(deleteData);
       console.log('Delete Api Call', response);
+      setCount(count + 1);
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
@@ -121,6 +112,7 @@ export default function Fuel() {
     { id: 'vehicleRegNO', label: 'Vehicle NO', type: 'text', minWidth: '180px' },
     { id: 'vehicleType', label: 'Vehicle Type', type: 'text', minWidth: '180px' },
     { id: 'totalLiter', label: 'Total Liter', type: 'text', minWidth: '180px' },
+    { id: 'fuelType', label: 'Fuel Type', type: 'text', minWidth: '180px' },
     { id: 'invoiceNO', label: 'Invoice NO', type: 'text', minWidth: '180px' },
     { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
@@ -130,20 +122,20 @@ export default function Fuel() {
   ]);
   return (
     <>
-    <SnackBarComponent
+      <SnackBarComponent
         open={openSnackbar}
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
         snacbarMessage={snacbarMessage}
       />
-     <ConfirmationDialog
+      <ConfirmationDialog
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
         itemName="Delete Fuel Expense"
         message={`Are you sure you want to delete ${deleteData?.title}?`}
       />
-     {editShowForm && (
+      {editShowForm && (
         <Dialog
           fullWidth
           maxWidth={false}
@@ -154,7 +146,12 @@ export default function Fuel() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={editModalData}
+            handleClose={handleClose}
+            setCount={setCount}
+            count={count}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -169,6 +166,7 @@ export default function Fuel() {
         filterName="FuelHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );
