@@ -4,17 +4,93 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 import { BasicTable } from '../Table/BasicTable';
 import UserContext from '../context/user/UserConext';
+import CreateExpenses from './CreateExpenses';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import { Dialog } from '@mui/material';
+import SnackBarComponent from '../global/SnackBarComponent';
+import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 
 export default function OtherExpenses() {
 	const { user } = useContext(UserContext);
+  // const actions = [
+  //   { name: 'Edit', icon: 'hh', id: 'edit' },
+  //   { name: 'Delete', icon: 'hh', id: 'delete' },
+  // ];
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
+  const [editShowForm, setEditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      setEditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      // const deleteData = {
+      //   locationID: rowdata?.locationID || 0,
+      //   companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+      //   title: rowdata?.locationName || '',
+      // };
+      const deleteData = {
+        expenseID: rowdata?.expenseID || 0,
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+        title: rowdata?.locationName || '',
+        // productName: rowdata.productName,
+      };
+      // const deleteData = { locationID: rowdata?.locationID || 0, title: rowdata?.expenseDate || '', };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    setEditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      const response = await DeleteExpensesAPI(deleteData);
+      console.log('Delete Api Call', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
     count: 5,
-    page: 1,
+    page: 0,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
@@ -52,6 +128,33 @@ export default function OtherExpenses() {
   ]);
   return (
     <>
+    <SnackBarComponent
+        open={openSnackbar}
+        severity={severity}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+      />
+     <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Other Expenses"
+        message={`Are you sure you want to delete ${deleteData?.title}?`}
+      />
+     {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Dashboard: Other Expenses</title>
       </Helmet>
@@ -62,6 +165,8 @@ export default function OtherExpenses() {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="OtherExpensesHead"
+        onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );
