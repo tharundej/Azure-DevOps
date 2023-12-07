@@ -19,6 +19,7 @@ const VendorMaterialsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setcount] = useState(0);
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -72,6 +73,7 @@ const VendorMaterialsTable = () => {
       console.log(deleteData, 'deleteData');
       const response = await DeleteVendorMaterialAPI(deleteData);
       console.log('Delete success', response);
+      setcount(count + 1);
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
@@ -165,6 +167,7 @@ const VendorMaterialsTable = () => {
         filterName="VendorMaterialsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );
