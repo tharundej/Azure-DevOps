@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import {Card,CardContent,Typography,IconButton,Button,Grid,Stack} from '@mui/material'
+import { useTheme, alpha } from '@mui/material/styles';
 import Iconify from 'src/components/iconify';
 import FilesGrid from '../files/FilesGrid';
 import CreateEducation from './createeducation/CreateEducation';
@@ -7,6 +8,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { bgGradient } from 'src/theme/css';
+
 
 const employeeData=[ {
   nameOfTheDegree:  '',
@@ -29,6 +32,7 @@ const employeeData=[ {
 ]
 
 const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
+  const theme = useTheme();
   const dottedLineStyle = {
     borderBottom: '1px dotted #000', // Adjust the color as needed
     marginBottom: '8px', // Adjust the spacing as needed
@@ -120,6 +124,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
    const handleCallSnackbarP=(msg,sev)=>{
     handleCallSnackbar(msg,sev)
    }
+   const color='primary'
    
   return (
     <>
@@ -141,33 +146,41 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
 
                    
                    
-                      <Card sx={{padding:"10px",margin:'10px',boxShadow:'3',minWidth:'400px'}}>
+                      <Card   sx={{
+                        ...bgGradient({
+                          direction: '135deg',
+                          startColor: alpha(theme.palette[color].light, 0.2),
+                          endColor: alpha(theme.palette[color].main, 0.2),
+                        }),
+                        p: 3,
+                        borderRadius: 2,
+                        color: `${color}.darker`,
+                        backgroundColor: 'common.white',
+                        padding:"10px",margin:'10px',boxShadow:'3',minWidth:'250px'
+                      }}>
 
                       
                           
               <>
-               <Grid container alignItems="center" justifyContent="center" flexDirection="column" minHeight="200px" maxWidth="500px">
+               <Grid container alignItems="center" justifyContent="center" flexDirection="column" >
                <Typography>
                 <span style={{fontWeight:700}}> </span> {itm?.nameOfTheDegree}  
                 <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
                             const item=itm;
-                            delete item.documents;
+                          
                             handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>
                 
              
               </Typography>
               <Typography>@</Typography>
-              <IconButton sx={{position: 'absolute',top: 35,right: 0}} onClick={()=>{
-                            const item=itm;
-                            delete item.documents;
-                            handleExpanded(index)}}><Iconify icon="mdi:eye"/></IconButton>
+              
                 <Typography><span style={{fontWeight:600}}>  </span>  {itm?.universityName}</Typography>
                
                 <Typography ><span style={{fontWeight:600}}>  </span>  {itm?.startDate}  - {itm?.endDate}
                   <Stack  lg={12} ></Stack>
                 </Typography>
                 
-               <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </>
+               {/* <><EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> </> */}
                 </Grid>
                   </>
                  

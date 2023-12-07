@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState,useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -59,38 +59,38 @@ export default function BasicCard() {
   ];
 
   const userDetailsString = localStorage.getItem('userDetails');
-const userDetails = JSON.parse(userDetailsString);
+  const userDetails = JSON.parse(userDetailsString);
   // console.log(userDetails?.rolePermissions,"claimsPermissions")
-  const [permissions, setPermissions]=useState({})
+  const [permissions, setPermissions] = useState({})
 
 
-const permissionsData=()=>{
-   if (userDetails && userDetails.rolePermissions && userDetails.rolePermissions.claims) {
-    const claimsPermissions = userDetails.rolePermissions.claims;
-    console.log(claimsPermissions,"claimsPermissions11");
-    setPermissions(claimsPermissions);
-  } else {
-    console.error('Unable to retrieve claims permissions from localStorages.');
+  const permissionsData = () => {
+    if (userDetails && userDetails.rolePermissions && userDetails.rolePermissions.claims) {
+      const claimsPermissions = userDetails.rolePermissions.claims;
+      console.log(claimsPermissions, "claimsPermissions11");
+      setPermissions(claimsPermissions);
+    } else {
+      console.error('Unable to retrieve claims permissions from localStorages.');
+    }
+
   }
-
-}
-// useState(()=>{
-//   permissionsData()
-// },[])
-const {user}=useContext(UserContext)
-const [tabLabels, setTabLabels] = useState([]);
+  // useState(()=>{
+  //   permissionsData()
+  // },[])
+  const { user } = useContext(UserContext)
+  const [tabLabels, setTabLabels] = useState([]);
   const [tabContents, setTabContents] = useState([]);
- 
+
   const dataObj = [
     {
       id: 'myClaims',
       label: 'My Claims',
-      content: <MyClaims currentUser={{}}/>
+      content: <MyClaims currentUser={{}} />
     },
     {
       id: 'claimApprove',
       label: 'Claim Approve',
-      content: <ApproveClaim  />,
+      content: <ApproveClaim />,
     },
     {
       id: 'myCompoff',
@@ -104,51 +104,36 @@ const [tabLabels, setTabLabels] = useState([]);
     },
     // Add other data as needed
   ];
-useEffect(() => {
-  const arrLabels = [];
-  const arrContents = [];
+  useEffect(() => {
+    const arrLabels = [];
+    const arrContents = [];
 
-  dataObj?.forEach((item) => {
-    const permission = user?.rolePermissions.claims;
+    dataObj?.forEach((item) => {
+      const permission = user?.rolePermissions.claims;
 
-    if (
-      permission &&
-      permission.hasOwnProperty('mainHeading') &&
-      permission.mainHeading &&
-      permission[item.id]
-    ) {
-      arrLabels.push(item.label);
-      arrContents.push(item.content);
-    }
-  });
+      if (
+        permission &&
+        permission.hasOwnProperty('mainHeading') &&
+        permission.mainHeading &&
+        permission[item.id]
+      ) {
+        arrLabels.push(item.label);
+        arrContents.push(item.content);
+      }
+    });
 
-  setTabLabels(arrLabels);
-  setTabContents(arrContents);
-}, [user]);
-  
-console.log(permissions,permissions?.myClaims,"permissions")
-  // const tabLabels = ['My Claims', 'Claim Approve', 'My Compoff', 'Compoff Approve'];
-  // const tabContents = [
-  //   <div>
+    setTabLabels(arrLabels);
+    setTabContents(arrContents);
+  }, [user]);
 
-  //   <MyClaims currentUser={{}}/>
-  //   </div>,
-  //   <div><ApproveClaim  /></div>,
-  //   <div>
-  //     <MyCompoff />
-  //   </div>,
-  //   <div><CompoffApprove /></div>,
-  // ];
+  console.log(permissions, permissions?.myClaims, "permissions")
+
 
   return (
-   
-    
+
     <>
-      
-   
-  
-    <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
-    
+      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom: "3px solid #3b82f6 !important" }} />
+
     </>
   );
 }

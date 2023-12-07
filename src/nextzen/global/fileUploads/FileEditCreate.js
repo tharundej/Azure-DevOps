@@ -101,7 +101,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
     const ApiHitCreate=()=>{
         
                 let data = JSON.stringify({
-                  //"companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 
                 "documents": defaultValues
@@ -330,7 +330,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                         name="Select Document"
                     >
                         {docType?.map((type, idx) => (
-                        <MenuItem key={idx} value={type.toLowerCase().replace(' ', '-')}>
+                        <MenuItem key={idx} value={type}>
                             {type}
                         </MenuItem>
                         ))}

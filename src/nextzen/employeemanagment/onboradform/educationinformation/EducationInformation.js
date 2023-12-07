@@ -149,9 +149,9 @@ const   EducationInformation=forwardRef((props,ref)=> {
    const obj =   {
        nameOfTheDegree:  '',
        stream:  '',
-       university:  '',
+       universityName:  '',
        yearOfPassing: undefined,
-       document_data:'',
+       
        gradeType:'',
        grade:undefined,
        documents:[
@@ -225,7 +225,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
       newArray[index] = {
         ...newArray[index],
         [field]: value?.label,
-        nameOfTheDegreeObject:value
+       // nameOfTheDegreeObject:value
     }
 
       }else{

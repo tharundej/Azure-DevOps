@@ -45,7 +45,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import { borderColor } from '@mui/system';
 import { number } from 'prop-types';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -149,9 +149,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         /^[A-Za-z0-9\s@\-_.*#!^<>%+$^(){}|]+$/,
         'Company Name must contain only alphanumeric characters and Spichal Charters'
       ),
-    companyRegistrationNo: Yup.number()
-      .required('Registration Number is Required'),
-      // .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
+    companyRegistrationNo: Yup.number().required('Registration Number is Required'),
+    // .matches(/^[0-9]+$/, 'Registration Number must contain only numbers'),
     companyCeoName: Yup.string()
       .required('CEO Name is Required')
       .matches(/^[A-Za-z ]+$/, 'CEO Name must contain only letters and spaces'),
@@ -159,9 +158,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     emailId: Yup.string()
       .required('Email is Required')
       .email('Email must be a valid email address'),
-    phoneNo: Yup.number()
-      .required('Phone No is Required'),
-      //.matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
+    phoneNo: Yup.number().required('Phone No is Required'),
+    //.matches(/^[0-9]+$/, 'Phone No must contain only numbers'),
     firstName: Yup.string()
       .required('First Name is Required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must contain only letters and spaces'),
@@ -423,7 +421,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         data.companyCeoName,
         data.companyType,
         data.emailId,
-        parseInt(data.phoneNo,10),
+        parseInt(data.phoneNo, 10),
         data.firstName,
         data.middleName,
         data.lastName,
@@ -452,67 +450,66 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       // setSnackbarOpen(true);
     }
   });
-// Inside JwtRegisterView component
-const handleCINChange = async (newValue) => {
-  try {
-    const response = await axiosInstance.post(baseUrl + '/getCompany', {
-      cin: newValue,
-    });
-
-    if (response?.data?.code === 200) {
-      const keyMappings = {
-        company_id: 'companyId',
-        cin: 'cin',
-        company_name: 'companyName',
-        company_registration_no: 'companyRegistrationNo',
-        company_date_of_incorporation: 'companyDateOfIncorporation',
-        company_email_id: 'emailId',
-        company_ceo_name: 'companyCeoName',
-        company_type: 'companyType',
-        company_phone_no: 'phoneNo',
-        company_address_line1: 'companyAddressLine1',
-        company_address_line2: 'companyAddressLine2',
-        company_city: 'companyCity',
-        company_state: 'companyState',
-        company_country: 'companyCountry',
-        company_pincode: 'companyPincode',
-        company_logo: 'companyLogo',
-        emp_id_prefix: 'empIdPrefix',
-      };
-
-      const dataFromResponse = response?.data?.data;
-      Object.keys(keyMappings).forEach((key) => {
-        if (dataFromResponse.hasOwnProperty(key)) {
-          if(key==="company_phone_no" || key==="company_registration_no"){
-            console.log(typeof dataFromResponse[key].toString(),'dataFromResponse[key]')
-            methods.setValue(keyMappings[key], dataFromResponse[key]);
-          }
-          else{
-            methods.setValue(keyMappings[key], dataFromResponse[key]);
-          }
-         
-        }
+  // Inside JwtRegisterView component
+  const handleCINChange = async (newValue) => {
+    try {
+      const response = await axiosInstance.post(baseUrl + '/getCompany', {
+        cin: newValue,
       });
 
-      console.log('success', response);
+      if (response?.data?.code === 200) {
+        const keyMappings = {
+          companyId: 'companyId',
+          cin: 'cin',
+          companyName: 'companyName',
+          companyRegistrationNo: 'companyRegistrationNo',
+          companyDateOfIncorporation: 'companyDateOfIncorporation',
+          companyEmailId: 'emailId',
+          companyCeoName: 'companyCeoName',
+          companyType: 'companyType',
+          companyPhoneNo: 'phoneNo',
+          companyAddressLine1: 'companyAddressLine1',
+          companyAddressLine2: 'companyAddressLine2',
+          companyCity: 'companyCity',
+          companyState: 'companyState',
+          companyCountry: 'companyCountry',
+          companyPincode: 'companyPincode',
+          logoName: 'companyLogo',
+          empIdPrefix: 'empIdPrefix',
+          firstName: 'firstName',
+          lastName: 'lastName',
+          middleName: 'middleName',
+        };
+
+        const dataFromResponse = response?.data?.data;
+        Object.keys(keyMappings).forEach((key) => {
+          if (dataFromResponse.hasOwnProperty(key)) {
+            if (key === 'company_phone_no' || key === 'company_registration_no') {
+              console.log(typeof dataFromResponse[key].toString(), 'dataFromResponse[key]');
+              methods.setValue(keyMappings[key], dataFromResponse[key]);
+            } else {
+              methods.setValue(keyMappings[key], dataFromResponse[key]);
+            }
+          }
+        });
+
+        console.log('success', response);
+      }
+
+      if (response?.data?.code === 400) {
+        console.log('success', response);
+      }
+    } catch (error) {
+      console.log('error', error);
     }
+  };
 
-    if (response?.data?.code === 400) {
-      console.log('success', response);
-    }
-  } catch (error) {
-    console.log('error', error);
-  }
-};
+  useEffect(() => {
+    const cinValue = methods.getValues('cin');
+    handleCINChange(cinValue);
+  }, [methods.getValues('cin')]);
 
-useEffect(() => {
-  const cinValue = methods.getValues('cin');
-  handleCINChange(cinValue);
-}, [methods.getValues('cin')]);
-
-
-
-// Rest of your component...
+  // Rest of your component...
 
   const renderHead = (
     <>
@@ -601,7 +598,7 @@ useEffect(() => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      sx={{ width: '100%', paddingLeft: '3px', marginTop: '-7px' }}
                       label="Date of Incorporation"
                       // value={datesUsed.date_of_incorporation || dayjs(new Date())}
                       value={null}
@@ -798,92 +795,97 @@ useEffect(() => {
                   type="text"
                 />
               </Grid>
-             
+
               <Grid item xs={12} md={8}></Grid>
             </Grid>
           </Stack>
           <CardActions
-  style={{
-    marginTop: '30px',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent:'space-between',
-    // maxWidth: '600px', // Adjust the max height as needed
-    // overflow: 'hidden', // Hide overflow content
-  }}
->
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-    <label htmlFor="file-input">
-      <Button
-        style={{ height: 'fit-content', backgroundColor: '#3B82F6' }}
-        component="label"
-        variant="contained"
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload Logo<span style={{ color: 'red' }}> *</span>
-        <input
-          id="file-input"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-      </Button>
-    </label>
-    {selectedFile && (
-      <div>
-        <div
-          style={{
-            width: '100px',
-            height: '100px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            display: 'inline-block',
-          }}
-        >
-          <img
-            src={imageData[0]?.data}
-            alt={selectedFile.name}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              marginTop: '30px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              // maxWidth: '600px', // Adjust the max height as needed
+              // overflow: 'hidden', // Hide overflow content
             }}
-          />
-        </div>
-      </div>
-    )}
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
-  <Button
-    color="inherit"
-    size="large"
-    type="submit"
-    variant="contained"
-    onClick={onSubmit}
-    style={{  backgroundColor: '#3B82F6' }}
-  >
-    Create Account
-  </Button>
-  <Stack direction="column" alignItems="center" spacing={1}>
-    {/* <Typography variant="subtitle2" style={{ marginTop: '-10px' ,color:'black'}}>
-      OR
-    </Typography> */}
-    <Typography variant="subtitle2" style={{color:'black'}}> Already have an account? </Typography>
-    <Link
-      href={paths.auth.jwt.login}
-      component={RouterLink}
-      variant="subtitle1"
-      style={{ textDecoration: 'none', color: '#3B82F6' }}
-    >
-      Sign In
-    </Link>
-  </Stack>
-</div>
-
-
-</CardActions>
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <label htmlFor="file-input">
+                <Button
+                  style={{ height: 'fit-content', backgroundColor: '#3B82F6' }}
+                  component="label"
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Logo<span style={{ color: 'red' }}> *</span>
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                </Button>
+              </label>
+              {selectedFile && (
+                <div>
+                  <div
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      display: 'inline-block',
+                    }}
+                  >
+                    <img
+                      src={imageData[0]?.data}
+                      alt={selectedFile.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+                flex: 1,
+              }}
+            >
+              <Button
+                color="inherit"
+                size="large"
+                type="submit"
+                variant="contained"
+                onClick={onSubmit}
+                style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+              >
+                Create Account
+              </Button>
+              <Stack direction="column" alignItems="center" spacing={1}>
+                <Typography variant="subtitle2" style={{ color: 'black' }}>
+                  Already have an account?{' '}
+                  <Link
+                    href={paths.auth.jwt.login}
+                    component={RouterLink}
+                    variant="subtitle1"
+                    style={{ textDecoration: 'none', color: '#3B82F6' }}
+                  >
+                    Sign In
+                  </Link>
+                </Typography>
+              </Stack>
+            </div>
+          </CardActions>
 
           {/* </Card> */}
         </Box>
@@ -893,7 +895,7 @@ useEffect(() => {
 
   return (
     <StyledContainer>
-      <div style={{ backgroundColor: '',  }}>
+      <div style={{ backgroundColor: '' }}>
         {renderForm}
 
         {/* {renderHead} */}

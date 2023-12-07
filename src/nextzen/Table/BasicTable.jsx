@@ -469,7 +469,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       row?.status === 'InActive' ||
       row?.status === 'active' ||
       row?.status === 'Upcoming' ||
-      row?.status === 'Ongoing'
+      row?.status === 'Ongoing' ||
+      row?.status === 'On Hold' 
+
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -820,11 +822,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => 
+                            onHandleEditRow={(ele) => 
                               {
                                 if(handleEditRowParent)
                               
-                              handleEditRowParent(id)
+                              handleEditRowParent(ele)
                               }
                             }
                             selected={table.selected.includes(row.id)}

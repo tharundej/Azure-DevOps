@@ -159,6 +159,7 @@ const renderCellContent = (columnId, value) => {
                    }}
                  />
                )}
+
                 {ele.type === 'badge' && (
                   <Label
                     variant="soft"
