@@ -64,7 +64,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
      
       const generateRowActions = () => {
         const userRoleID = user?.roleID; 
-        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        const actions = (componentPage==="MyRequests")?defaultActions:actualActions
         return actions;
       };
     

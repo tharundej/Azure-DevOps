@@ -184,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":user?.employeeID
+    "companyID":user?.companyID
   }
   const config={
     method:'POST',
@@ -203,9 +203,8 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":user?.employeeID,
-    "companyID":user?.companyID,
-    "locationID":user?.locationID
+   
+    "companyID":user?.companyID
 }
   const config={
     method:'POST',
@@ -665,7 +664,7 @@ const handleSnackBar=()=>{
       />
     ))
   }
-  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
+  getOptionLabel={(option) => `${option?.employeeName}`}
   getOptionSelected={(option, value) => option.employeeID === value.employeeID}
   onChange={(event, newValue) => {
     setSelectedIds(newValue.map((option) => option.employeeID));

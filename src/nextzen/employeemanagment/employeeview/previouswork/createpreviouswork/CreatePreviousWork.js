@@ -48,9 +48,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
 
 
-import { useForm, Controller,useFormContext } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
@@ -345,20 +342,15 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
             <Stack sx={{paddingTop:'20px'}}>
       <form style={{ padding: '4px' }}>
         <>
-          {defaultValues?.map((item, index) => (
-            <Grid sx={{ padding: '40px' }}>
 
-                {index!==0 &&(
-                <Grid sx={{display:'flex',alignItems:'center',justifyContent:'flex-end',paddingBottom:'2px'}}  item>
-                 <Iconify
-                        // key={label}
-                        icon='material-symbols:delete'
-                        width={28}
-                        sx={{ mr: 1,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'flex-end' }}
-                        onClick={()=>handleDelete(index)}
-                      />
-                    </Grid>
-                )}
+          {defaultValues?.map((item, index) => (
+            <Grid  container flexDirection="row">
+            <Grid md={10} xs={10} lg={10} padding="5px" item>
+            <Card padding="5px">
+            <Grid >
+
+
+
                {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
@@ -572,22 +564,40 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
               </Grid>
               ))}
+              </Grid>
+              
+
+             </Card>
+              </Grid>
+
+              <Grid md={2} xs={2} lg={2} padding="5px" item>
+                     {index===0 &&    <Button
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleAdd();
+                   }}
+                 >
+                   Add Education
+                 </Button>}
+                 {index!==0 &&    <Button
+                 fullWidth
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleDelete(index);
+                   }}
+                 >
+                   Remove
+                 </Button>}
+               </Grid>
              
             
             </Grid>
           ))}
+          
         </>
-          <Grid container alignItems="center" justifyContent="end">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            handleAdd();
-          }}
-        >
-          Add Work
-        </Button>
-          </Grid>
+        
         {/* <Button
           variant="contained"
           color="primary"

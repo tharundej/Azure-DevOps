@@ -35,7 +35,7 @@ export default function LeaveType({ currentUser }) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
-
+  const [count,setCount] = useState(0)
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -141,6 +141,7 @@ export default function LeaveType({ currentUser }) {
         setSnackbarOpen(true);
         // handleClose();
         handleCloseEdit();
+        setCount(count+1)
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -340,6 +341,7 @@ export default function LeaveType({ currentUser }) {
         rowActions={actions}
         filterName="LeaveTypeFilterSearch"
         onClickActions={onClickActions}
+        count={count}
       />
     </>
   );

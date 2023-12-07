@@ -36,11 +36,12 @@ export default function Holidays({ currentUser }) {
   const [open, setOpen] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState({});
+  const [count,setCount] = useState(0)
   const TABLE_HEAD = [
     { id: 'holidayName', label: 'Holiday Name', type: 'text', minWidth: 180 },
     { id: 'holidayDate', label: 'Holiday Date', type: 'text', minWidth: 180 },
     { id: 'fulldayHalfday', label: 'Full Day/Half Day', type: 'text', minWidth: 180 },
-    { id: 'repeatAnnualy', label: 'Repeats Anually', type: 'text', minWidth: 180 },
+    { id: 'repeatAnnualy', label: 'Repeats Annually', type: 'text', minWidth: 180 },
     { id: 'locationName', label: 'Locations', type: 'text', minWidth: 180 },
   ];
   const actions = [
@@ -166,7 +167,7 @@ export default function Holidays({ currentUser }) {
   });
 
   const RepeatsAnuallys = [{ type: 'Yes' }, { type: 'No' }];
-  const Fullday_halfdays = [{ type: 'Fullday' }, { type: 'Halfday' }];
+  const Fullday_halfdays = [{ type: 'Full Day' }, { type: 'First Half' },{type: 'Second Half'}];
 
   const defaultValues1 = useMemo(
     () => ({
@@ -262,7 +263,8 @@ export default function Holidays({ currentUser }) {
     console.log("aaaaaaaaaa", formData)
     data.locationID = valueSelected?.locationID
     data.holidayName=valueSelected?.holidayName
-    // data.repeatAnnualy=valueSelected?.repeatAnnualy
+     data.repeatAnnualy=valueSelected?.repeatAnnualy
+     data.fulldayHalfday=valueSelected?.fulldayHalfday
     data.holidayID=valueSelected?.holidayID
     console.log('submitted data111', data);
 
@@ -273,6 +275,7 @@ export default function Holidays({ currentUser }) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleCloseEdit();
+        setCount(count+1)
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -428,6 +431,7 @@ console.log(valueSelected,'kkkk')
         rowActions={actions}
         filterName="holidaysFilterSearch"
         onClickActions={onClickActions}
+        count={count}
       />
     </>
   );

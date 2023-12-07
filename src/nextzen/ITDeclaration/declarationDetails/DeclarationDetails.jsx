@@ -275,11 +275,12 @@ const [loading,setLoading] = useState(false);
       <Grid item xs={12} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option?.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label=" Please Select Financial Year" />}
+          renderInput={(params) => <TextField {...params} 
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
         />
       </Grid>
   { selectedYear?.financialYear?  
