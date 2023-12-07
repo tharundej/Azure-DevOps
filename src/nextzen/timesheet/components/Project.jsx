@@ -23,11 +23,11 @@ const Project = () => {
     { id: "reportingManagerName", label: "Reporting Manager", minWidth: '10pc', type: "text" },
     { id: "projectName", label: "Project Name", minWidth: '8pc', type: "text" },
     { id: "locationName", label: "Location", minWidth: '8pc', type: "text" },
-    { id: "startDate", label: "Start Date", minWidth: '7pc', type: "text" },
-    { id: "endDate", label: "End Date", minWidth: '7pc', type: "text" },
-    { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "text" },
-    { id: "actualEndDate", label: "Actual End Date", minWidth: '9pc', type: "text" },
-    { id: "status", label: "Status", minWidth: 75, type: "text" },
+    { id: "startDate", label: "Start Date", minWidth: '8pc', type: "date" },
+    { id: "endDate", label: "End Date", minWidth: '8pc', type: "date" },
+    { id: "actualStartDate", label: "Actual Start Date", minWidth: '10pc', type: "date" },
+    { id: "actualEndDate", label: "Actual End Date", minWidth: '9pc', type: "date" },
+    { id: "status", label: "Status", minWidth: '8pc', type: "badge" },
 
   ];
 
@@ -136,10 +136,10 @@ const handleClose =()=>{
   setCount(count+1)
   setViewProject(false)
 }
-
+const [selectedIds, setSelectedIds] = useState([]);
 const handleCloseEmployee=()=>{
-  
   setEditEmployee(false)
+  setSelectedIds([])
 }
 const [showAll, setShowAll] = useState(false);
 
@@ -147,7 +147,7 @@ const visibleItemsCount = 6
 
 const visibleEmployees = showAll ? rowData?.employees : rowData?.employees?.slice(0, visibleItemsCount);
 let employeeIDs = [];
-const [selectedIds, setSelectedIds] = useState([]);
+
 useEffect(() => {
   if (rowData) {
     employeeIDs = rowData?.employees?.map(employees => employees.employeeId);
@@ -158,7 +158,7 @@ const [editEmployee,setEditEmployee] = useState(false)
 const [employesListData,setEmployesListData]= useState([])
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":rowData?.projectManager
+    companyID:user?.companyID
   }
   const config={
     method:'POST',
@@ -201,6 +201,19 @@ const UpdateEmployees=()=>{
     handleCloseEmployee()
    })
 }
+const [assignPermission,setAssignPermission] = useState(false)
+useEffect(()=>{
+  const permission = user?.rolePermissions.timeSheetManagement
+  if (
+    permission &&
+    permission.hasOwnProperty('mainHeading') &&
+    permission.mainHeading &&
+    permission['assignEmployees']
+  )
+  {
+    setAssignPermission(true)
+  }
+},[user])
 
   return (
     <>
@@ -214,8 +227,9 @@ const UpdateEmployees=()=>{
         <CardHeader title="Assigned Employees" />
           
        <Grid item sx={{ flexGrow: 1 }} /> 
-       {(user?.roleName==="Project Manager" || user?.roleName==="Reporting Manager")?
-       <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>:null}
+       {(assignPermission)?
+       <Button onClick={(e)=>setEditEmployee(true)}>Edit Employees</Button>
+       :null}
         </Grid>
      
       <Grid container spacing={3} sx={{ p: 3 }}>
@@ -301,7 +315,7 @@ count={count}
         aria-labelledby="customized-dialog-title"
         open={editEmployee}
         PaperProps={{
-           sx: { maxWidth: 770},
+           sx: { width: 500,overflow:'auto'},
          }}
          >
           <ModalHeader heading="Edit Assigned Employees"/>

@@ -1,6 +1,12 @@
 pipeline {
     agent any
     stages{
+         stage("Env Variables") {
+            steps {
+                echo "The current build number is ${env.BUILD_NUMBER}"
+                echo "Another method is to use \${BUILD_NUMBER}, which is ${BUILD_NUMBER}"
+            }
+        }
         stage('Clean Workspace') {
             steps {
                 deleteDir()
@@ -15,10 +21,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker stop \$(docker ps -q) &&
-                        docker kill \$(docker ps -q) &&
-                        docker rm \$(docker ps -a -q) &&S
-                        docker system prune -a 
+                         docker stop node_n
+                         docker rm node_n
+                         docker system prune -a
                     '''
                 }
             }
@@ -26,8 +31,8 @@ pipeline {
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
-                    sh '''docker-compose up -d &&
-                          docker ps -a
+                    sh '''docker-compose up --bulid &&
+                          docker ps
                     '''      
                 }
             }

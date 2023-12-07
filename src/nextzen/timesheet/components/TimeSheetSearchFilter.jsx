@@ -128,7 +128,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     try {
     
       const data = {
-        manager_id: "INFO22",
+        manager_id: managerID,
         // employee
         // Other data properties as needed
       };
@@ -500,7 +500,7 @@ PaperProps={{
 }}
 
          >
-           <ModalHeader heading="Add TimeSheet"/>
+           <ModalHeader heading="Add Timesheet"/>
       <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
       <DialogContent>
       <Box

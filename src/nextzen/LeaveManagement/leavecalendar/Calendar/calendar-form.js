@@ -232,7 +232,7 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
-
+const [lop,setLOP] = useState()
 const lossOfPay = ()=>{
   const payload = {
   companyId: user?.companyID,
@@ -244,24 +244,27 @@ const lossOfPay = ()=>{
   const config = {
     method: 'POST',
     maxBodyLength: Infinity,
-    url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    url:baseUrl+'/getLossOfPay',
     data:  payload
   };
   axios.request(config).then((response) => {
+    setLOP(response?.data)
+    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
    console.log(response,"response dataa")
   })
 
     .catch((error) => {
-      enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
-      console.log(error);
-      
+      console.log(error,"error in loss of pay");
+     
     });
 
 }
 
 useEffect(()=>{
-// lossOfPay()
-},[datesUsed?.toDate,leaveType])
+lossOfPay()
+},[leaveType,datesUsed?.toDate])
+
 
   return (
   
@@ -307,9 +310,9 @@ useEffect(()=>{
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
             <Stack direction="row" alignItems="center" spacing={1}>
           
-             <Card>
-              <CardContent sx={{ py: 1, px: 1,pt:2}}>
-              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center' }} flexDirection="row">
+             <Card >
+              <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
 
                 <Typography
@@ -334,6 +337,7 @@ useEffect(()=>{
     }
 
       </Grid>
+      
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
@@ -379,6 +383,9 @@ useEffect(()=>{
           />
      </DemoContainer>
      </LocalizationProvider>
+     <Stack sx={{px: 1,display:'flex',flexDirection:'row'}}>
+        {(lop?.lop) ? <>Loss of Pay : <span style={{color:'red'}}>{lop?.lop}</span></>:null}
+      </Stack>
       <Stack  sx={{ px: 1 }}>
       {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
@@ -448,7 +455,13 @@ useEffect(()=>{
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>}</>
+    </>}
+    
+{/* Confirmation Dialog I need to keeppppp */}
+
+
+
+    </>
   );
 
 }
