@@ -147,8 +147,8 @@ export default function EmployeeTable() {
       id: 'employeeId',
       label: 'Employee ID',
       type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
+      
+    minWidth:'180px',
       secondaryText: 'name',
     },
     { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
