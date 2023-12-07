@@ -62,7 +62,7 @@ const headings = [
   ' Under 80U',
   'Under 80DDB',
   'Sum Assured',
-  'Premium Amount For Which Proofs Attached Now',
+  'Premium Amount For Which Proofs Attached',
   'Premium Amout Fall In Due',
   // "Annual Premuium ",
   'Premium Considered For Deduction',
@@ -73,7 +73,7 @@ const headings = [
 export default function LicPremium() {
 
  
- // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+//  const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
@@ -190,20 +190,41 @@ const [loading,setLoading] = useState(false);
     }
   
     // Validation for premiumAmountForwhichProofAssured
-    if (!formData.premiumAmountForwhichProofAssured) {
-      newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached Now is required';
+    if (formData.premiumAmountForwhichProofAssured) {
+      // newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached  is required';
+      console.log(fileContent.length ,"formData.fileContent.length" ,fileContent )
+      if(fileContent.length <= 0 || fileName.length <= 0)
+      {
+        console.log("file add madu maga ")
+        enqueueSnackbar("Please Upload Required Doccument For Proof",{variant:'success'})
+        isValid = false;
+      }     
+      
+     
+    } else 
+    
+    if (isNaN(formData.premiumAmountForwhichProofAssured)) {
+      newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached  must be a valid number';
+     console.log(fileContent.length ,"formData.fileContent.length")
+      if(fileContent.length <= 0 || fileName.length <= 0)
+      {
+        console.log("file add madu maga ")
+        enqueueSnackbar("Please Upload Required Doccument For Proof",{variant:'success'})
+        
       isValid = false;
-    } else if (isNaN(formData.premiumAmountForwhichProofAssured)) {
-      newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached Now must be a valid number';
-      isValid = false;
+      }     
+      
     }
   
     // Validation for premiumAmountFallInDue
     if (!formData.premiumAmountFallInDue) {
       newFieldErrors.premiumAmountFallInDue = 'Premium Amount Fall in Due is required';
+
       isValid = false;
-    } else if (isNaN(formData.premiumAmountFallInDue)) {
+    } 
+    else if (isNaN(formData.premiumAmountFallInDue)) {
       newFieldErrors.premiumAmountFallInDue = 'Premium Amount Fall in Due must be a valid number';
+      
       isValid = false;
     }
   
@@ -211,6 +232,8 @@ const [loading,setLoading] = useState(false);
     // Validation for premiumConsiderForDeduction
     if (!formData.premiumConsiderForDeduction) {
       newFieldErrors.premiumConsiderForDeduction = 'Premium Considered for Deduction is required';
+    
+
       isValid = false;
     } else if (isNaN(formData.premiumConsiderForDeduction)) {
       newFieldErrors.premiumConsiderForDeduction = 'Premium Considered for Deduction must be a valid number';
@@ -509,7 +532,7 @@ console.log(isValid , "isValidisValid")
                   companyId: cmpId,
                   companyName: '',
                   employeeId: empId,
-                  employeeName: '',
+                  employeeName: empName,
                   financialYear:  selectedYear?.financialYear,
                   policyNumber: '',
                   dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
@@ -963,7 +986,7 @@ console.log(isValid , "isValidisValid")
             </Grid>
             <Grid item xs={4}>
               <TextField
-                label="Premium Amount For Which Proof Attched Now "
+                label="Premium Amount For Which Proof Attched  "
                 variant="outlined"
                 fullWidth
                 name="premiumAmountForwhichProofAssured"
@@ -1021,7 +1044,7 @@ console.log(isValid , "isValidisValid")
             }}
                 renderInput={(params) => (
                   <>
-                    <TextField {...params} label="Treatment For Specific Disease Under 80DDB" />
+                    <TextField {...params} label="Treatment For Specific Disease" />
                     {fieldErrors.treatmentForSpecifiedDiseases && (
                       <Typography color="error" variant="caption">
                         {fieldErrors.treatmentForSpecifiedDiseases}
@@ -1051,7 +1074,7 @@ console.log(isValid , "isValidisValid")
             }}
                 renderInput={(params) => (
                   <>
-                    <TextField {...params} label="Does The Injured Person Have Disability under 80U" />
+                    <TextField {...params} label="Injured Person Have Disability" />
                     {fieldErrors.doesTheInjuredPersonHaveDisability && (
                       <Typography color="error" variant="caption">
                         {fieldErrors.doesTheInjuredPersonHaveDisability}
