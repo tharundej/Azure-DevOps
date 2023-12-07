@@ -603,12 +603,12 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
                                               </Typography>
                                         
-                                         <FilesDisplay dataOfFiles={item?.documents} />
+                                         <FilesDisplay dataOfFiles={item?.documents}  />
 
                                          {  addDocuments &&
                                       
                                       addDocuments.map((file,index1)=>(
-                                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px',marginTop:'15px' }} container flexDirection="row" item>
 
                                         <Grid item xs={12} md={6} >
 

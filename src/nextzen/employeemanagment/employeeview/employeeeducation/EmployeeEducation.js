@@ -204,8 +204,9 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       sx={{
         ...bgGradient({
           direction: '135deg',
-          startColor: alpha(theme.palette[color].light, 0.2),
-          endColor: alpha(theme.palette[color].main, 0.2),
+          startColor: alpha(theme.palette[color].light, 0.1),
+          endColor: alpha(theme.palette[color].main, 0.2
+            ),
         }),
         p: 3,
         borderRadius: 2,
