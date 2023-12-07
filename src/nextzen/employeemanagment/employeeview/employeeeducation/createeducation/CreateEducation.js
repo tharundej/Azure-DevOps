@@ -40,6 +40,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from './FilesDisplay';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -316,6 +317,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
               
             
                 <>
+                
                 {defaultValues?.map((item, index) => (
                   <Grid  container flexDirection="row">
                 <Grid md={10} xs={10} lg={10} padding="5px" item>
@@ -477,8 +479,10 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       
                                       
                                     </Grid>
-                                          
-                                      {item?.documents?.map((file,index1)=>(
+
+                                    {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
+                                         { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
+                                      {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                                         <Grid item xs={10} md={6} >
@@ -492,8 +496,8 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                                                 name="Select Document"
                                             >
-                                                <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                                                <MenuItem value="marks-memo">Marks Memo</MenuItem>
+                                                <MenuItem value="ssccard">SSC Cardss</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
                                                 <MenuItem value="degree">Degree</MenuItem>
                                                 {/* Add more categories here */}
                                             </Select>
@@ -584,7 +588,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                    </Grid>
 
                    <Grid md={2} xs={2} lg={2} padding="5px" item>
-                     {index===0 &&    <Button
+                     {(index===0 &&  endpoint==='addEducation') &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
                    onClick={() => {

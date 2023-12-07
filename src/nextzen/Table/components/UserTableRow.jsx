@@ -74,7 +74,7 @@ const renderCellContent = (columnId, value) => {
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row,ele.id)}
+              onClick={()=>onHandleEditRow(row)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',

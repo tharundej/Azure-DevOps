@@ -51,6 +51,7 @@ export default function LeavePeriod({ currentUser }) {
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
   const [valueSelected, setValueSelected] = useState();
+  const [count,setCount] = useState(0)
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string(),
   });
@@ -198,7 +199,7 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        setCount(count+1)
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -366,7 +367,7 @@ export default function LeavePeriod({ currentUser }) {
         rowActions={actions}
         filterName="LeavePeriodFilterSearch"
         onClickActions={onClickActions}
-        
+        count={count}
       />
     </>
   );

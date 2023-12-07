@@ -304,17 +304,17 @@ export default function LeavePeriodFilters({
         md={12}
         xs={12}
       >
-        <Grid item lg={8} md={6} xs={4}>
+      <Grid item lg={6} md={6} xs={12} sm={6}>
           <TextField
             placeholder="Search...."
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={2}>
+         <Grid item lg={3} md={3} xs={6} sm={3}>
           <LeavePeriodForm />
         </Grid>
-        <Grid item lg={2} md={2} xs={2}>
+         <Grid item lg={3} md={3} xs={6} sm={3}>
           <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>

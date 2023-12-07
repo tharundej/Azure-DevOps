@@ -74,7 +74,7 @@ export default function HouseProperty() {
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
-
+const payMode = [{ type: 'Yes ' }, { type: 'No' }];
 const [loading,setLoading] = useState(false);
  
 
@@ -114,6 +114,131 @@ const [loading,setLoading] = useState(false);
     setSelectedYear(value);
     localStorage.setItem('selectedYear', JSON.stringify(value));
   };
+  const [formData, setFormData] = useState({
+    propertyReferenceSlNo: null,
+    name_of_the_owners: '',
+    addressOfProperty: '',
+    panOfTheLanders: '',
+    amountOfHousingloanTakenFromTheProperty: '',
+    purposeOfLoan: '',
+    dateOfSanction: dayjs().format('YYYY-MM-DD'),
+    interestPaybleOnYear: '',
+    isPropertySelfOccupiedOrLetOu: '',
+    ifJointPropertyThenEnterInterestRate: '',
+    grossRentalAmount: '',
+    municipalTaxesPaid: '',
+  });
+
+
+  const [fieldErrors, setFieldErrors] = useState({
+    propertyReferenceSlNo: null,
+    name_of_the_owners: '',
+    addressOfProperty: '',
+    panOfTheLanders: '',
+    amountOfHousingloanTakenFromTheProperty: '',
+    purposeOfLoan: '',
+    dateOfSanction: '',
+    interestPaybleOnYear: '',
+    isPropertySelfOccupiedOrLetOu: '',
+    ifJointPropertyThenEnterInterestRate: '',
+    grossRentalAmount: '',
+    municipalTaxesPaid: '',
+    fileContent: [],
+  });
+  const validateFormData = () => {
+    let isValid = true;
+    const newFieldErrors = {};
+    
+    console.log('Before Validation1:', isValid);
+
+  
+ 
+    // Validation for policyNumber
+    if (!formData.propertyReferenceSlNo) {
+      newFieldErrors.propertyReferenceSlNo = 'Property Reference Sl No is required';
+      isValid = false;
+    
+    }
+   
+    // Validation for dateOfCommencementOfPolicy
+    if (!formData.name_of_the_owners) {
+      newFieldErrors.name_of_the_owners = 'Name Of The Owner is required';
+      isValid = false;
+     
+    }
+   
+    // Validation for insuredPersonName
+    if (!formData.addressOfProperty) {
+      newFieldErrors.addressOfProperty = 'Address  is required';
+      isValid = false;
+    
+    }
+    ;
+    // Validation for sumOfAssured
+    if (!formData.amountOfHousingloanTakenFromTheProperty) {
+      newFieldErrors.amountOfHousingloanTakenFromTheProperty = 'This Field is required';
+      isValid = false;
+     
+    } else if (isNaN(formData.amountOfHousingloanTakenFromTheProperty)) {
+      newFieldErrors.amountOfHousingloanTakenFromTheProperty = 'This Field must be a valid number';
+      isValid = false;
+      
+    }
+   
+    // Validation for relationship
+    if (!formData.interestPaybleOnYear) {
+      newFieldErrors.interestPaybleOnYear = 'Interest Payble On Year is required';
+      isValid = false;
+     
+    }
+    if (!formData.panOfTheLanders) {
+      newFieldErrors.panOfTheLanders = 'Pan Of The Landers is required';
+      isValid = false;
+     
+    }
+    if (!formData.purposeOfLoan) {
+      newFieldErrors.purposeOfLoan = 'Purpose Of Loan is required';
+      isValid = false;
+     
+    }
+    if (!formData.ifJointPropertyThenEnterInterestRate) {
+      newFieldErrors.ifJointPropertyThenEnterInterestRate = 'This Field is required';
+      isValid = false;
+     
+    }
+    if (!formData.isPropertySelfOccupiedOrLetOu) {
+      newFieldErrors.isPropertySelfOccupiedOrLetOu = 'This Field is required';
+      isValid = false;
+     
+    }
+    // Validation for premiumAmountForwhichProofAssured
+    if (!formData.grossRentalAmount) {
+      newFieldErrors.grossRentalAmount = 'This Filed is required';
+      isValid = false;
+    } else if (isNaN(formData.grossRentalAmount)) {
+      newFieldErrors.grossRentalAmount = 'This Field must be a valid number';
+      isValid = false;
+    }
+  
+    // Validation for premiumAmountFallInDue
+    if (!formData.municipalTaxesPaid) {
+      newFieldErrors.municipalTaxesPaid = 'This Filed is required';
+      isValid = false;
+    } else if (isNaN(formData.municipalTaxesPaid)) {
+      newFieldErrors.municipalTaxesPaid = 'This Filed  must be a valid number';
+      isValid = false;
+    }
+  
+  
+ 
+    setFieldErrors(newFieldErrors);
+  
+    return isValid;
+  };
+  const hasError = (fieldName) => !!fieldErrors[fieldName];
+
+  const getHelperText = (fieldName) => fieldErrors[fieldName] || '';
+ 
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -154,22 +279,13 @@ const [loading,setLoading] = useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+     // Clear the error when the user starts typing
+     setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
 
-  const [formData, setFormData] = useState({
-    propertyReferenceSlNo: null,
-    name_of_the_owners: '',
-    addressOfProperty: '',
-    panOfTheLanders: '',
-    amountOfHousingloanTakenFromTheProperty: '',
-    purposeOfLoan: '',
-    dateOfSanction: dayjs().format('YYYY-MM-DD'),
-    interestPaybleOnYear: '',
-    isPropertySelfOccupiedOrLetOu: '',
-    ifJointPropertyThenEnterInterestRate: '',
-    grossRentalAmount: '',
-    municipalTaxesPaid: '',
-  });
 
   // Send the payload to your API
   // console.log(payload);
@@ -188,7 +304,7 @@ const [loading,setLoading] = useState(false);
       maxBodyLength: Infinity,
       // url: baseUrl+'getMedicalInsuranceDetails',
       url: baseUrl + '/getHousingProperty',
-
+// url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getHousingProperty",
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',
@@ -214,82 +330,113 @@ const [loading,setLoading] = useState(false);
     console.log(result, 'resultsreults');
   };
   const addHousingProperity = useCallback(async () => {
-    setLoading(true)
-    console.log(formData.dateOfSanction, 'date ');
-    const payload = {
-      companyId: cmpId,
-      employeeId: empId,
-      financialYear: selectedYear?.financialYear,
-      nameOfTheOwners: formData.name_of_the_owners,
-      propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
-      addressOfProperty: formData.addressOfProperty,
-      panOfTheLanders: formData.panOfTheLanders,
-      amountOfHousingloanTakenFromTheProperty: parseFloat(
-        formData.amountOfHousingloanTakenFromTheProperty
-      ),
-      purposeOfLoan: formData.purposeOfLoan,
-      // dateOfSanctionOfLoan: formData.dateOfSanction,
-      dateOfSanctionOfLoan: formData.dateOfSanction,
-      interestPaybleOnYear: parseFloat(formData.interestPaybleOnYear),
-      isPropertySelfOccupiedOrLetOut: formData.isPropertySelfOccupiedOrLetOu,
-      ifJointPropertyThenEnterInterestRate: parseFloat(
-        formData.ifJointPropertyThenEnterInterestRate
-      ),
-      grossRentalAmount: parseFloat(formData.grossRentalAmount),
-      muncipalTaxPaid: parseFloat(formData.municipalTaxesPaid),
-      documents: landLordDocs,
-      oldFields: landLordDeletedId,
-    };
-
-    console.log(payload, 'payload');
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: baseUrl + '/housingProperty',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    axios
-      .request(config)
-      .then((response) => {
-        console.log('success', response, response.data.message);
-        if (response.data.code === 201 || 200) {
-          enqueueSnackbar(response.data.message,{variant:'success'})
-          setLoading(false)
-          // setSnackbarSeverity('success');
-          // setSnackbarMessage(response.data.message);
-          // setSnackbarOpen(true);
-
-          setREload(!reload);
-          setFormData({
-            propertyReferenceSlNo: null,
-            name_of_the_owners: '',
-            addressOfProperty: '',
-            panOfTheLanders: '',
-            amountOfHousingloanTakenFromTheProperty: '',
-            purposeOfLoan: '',
-            dateOfSanction: dayjs().format('YYYY-MM-DD'),
-            interestPaybleOnYear: '',
-            isPropertySelfOccupiedOrLetOu: '',
-            ifJointPropertyThenEnterInterestRate: '',
-            grossRentalAmount: '',
-            municipalTaxesPaid: '',
+    try {
+      const isValid = validateFormData();
+console.log(isValid , "isValidisValid")
+      if (isValid) {
+        setLoading(true)
+        console.log(formData.dateOfSanction, 'date ');
+        const payload = {
+          companyId: cmpId,
+          employeeId: empId,
+          financialYear: selectedYear?.financialYear,
+          nameOfTheOwners: formData.name_of_the_owners,
+          propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
+          addressOfProperty: formData.addressOfProperty,
+          panOfTheLanders: formData.panOfTheLanders,
+          amountOfHousingloanTakenFromTheProperty: parseFloat(
+            formData.amountOfHousingloanTakenFromTheProperty
+          ),
+          purposeOfLoan: formData.purposeOfLoan,
+          // dateOfSanctionOfLoan: formData.dateOfSanction,
+          dateOfSanctionOfLoan: formData.dateOfSanction,
+          interestPaybleOnYear: parseFloat(formData.interestPaybleOnYear),
+          isPropertySelfOccupiedOrLetOut: formData.isPropertySelfOccupiedOrLetOu,
+          ifJointPropertyThenEnterInterestRate: parseFloat(
+            formData.ifJointPropertyThenEnterInterestRate
+          ),
+          grossRentalAmount: parseFloat(formData.grossRentalAmount),
+          muncipalTaxPaid: parseFloat(formData.municipalTaxesPaid),
+          documents: landLordDocs,
+          oldFields: landLordDeletedId,
+        };
+    
+        console.log(payload, 'payload');
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: baseUrl + '/housingProperty',
+          headers: {
+            Authorization: token,
+            'Content-Type': 'text/plain',
+          },
+          data: payload,
+        };
+        axios
+          .request(config)
+          .then((response) => {
+            console.log('success', response, response.data.message);
+            if (response.data.code === 201 || 200) {
+              enqueueSnackbar(response.data.message,{variant:'success'})
+              setLoading(false)
+              // setSnackbarSeverity('success');
+              // setSnackbarMessage(response.data.message);
+              // setSnackbarOpen(true);
+    
+              setREload(!reload);
+              setFormData({
+                propertyReferenceSlNo: null,
+                name_of_the_owners: '',
+                addressOfProperty: '',
+                panOfTheLanders: '',
+                amountOfHousingloanTakenFromTheProperty: '',
+                purposeOfLoan: '',
+                dateOfSanction: dayjs().format('YYYY-MM-DD'),
+                interestPaybleOnYear: '',
+                isPropertySelfOccupiedOrLetOu: '',
+                ifJointPropertyThenEnterInterestRate: '',
+                grossRentalAmount: '',
+                municipalTaxesPaid: '',
+              });
+              setFieldErrors({
+                propertyReferenceSlNo: null,
+                name_of_the_owners: '',
+                addressOfProperty: '',
+                panOfTheLanders: '',
+                amountOfHousingloanTakenFromTheProperty: '',
+                purposeOfLoan: '',
+                dateOfSanction: '',
+                interestPaybleOnYear: '',
+                isPropertySelfOccupiedOrLetOu: '',
+                ifJointPropertyThenEnterInterestRate: '',
+                grossRentalAmount: '',
+                municipalTaxesPaid: '',
+                fileContent: [],
+              })
+            } else if (response.data.code === 400) {
+              enqueueSnackbar(error.response.data.message,{variant:'error'})
+              // setSnackbarSeverity('error');
+              // setSnackbarMessage(response.data.message);
+              // setSnackbarOpen(true);
+            }
+          })
+          .catch((error) => {
+            enqueueSnackbar(error.response.data.message,{variant:'error'})
+            setLoading(false)
+            console.log(error);
           });
-        } else if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
-          // setSnackbarSeverity('error');
-          // setSnackbarMessage(response.data.message);
-          // setSnackbarOpen(true);
-        }
-      })
-      .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
-        setLoading(false)
-        console.log(error);
-      });
+      
+      } else {
+        console.log('Form is invalid');
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+            setLoading(false)
+     
+            console.log(error);
+    }
+
+    
   }, [formData, landLordDocs]);
 
   useEffect(() => {
@@ -425,6 +572,19 @@ const [loading,setLoading] = useState(false);
       setSelectedYear(parsedValue);
     }
   }, []);
+  const handleAutocompleteChange = (name, selectedValue) => {
+    let mappedValue;
+
+    if (selectedValue === 'Yes') {
+      mappedValue = 1;
+    } else if (selectedValue === 'No') {
+      mappedValue = 0;
+    } else {
+      mappedValue = selectedValue;
+    }
+
+    setFormData({ ...formData, [name]: mappedValue });
+  };
   return (
     <div>
   {    loading ? 
@@ -443,12 +603,15 @@ const [loading,setLoading] = useState(false);
         <Grid item xs={12}>
             <Autocomplete
               id="financialYear"
-              options={financialYears}
-              getOptionLabel={(option) => option.financialYear}
+              options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
               value={selectedYear}
               onChange={handleYearChange}
               style={{marginTop:"0.9rem"}}
-              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              renderInput={(params) => <TextField {...params} 
+              label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
             />
           </Grid>
   {selectedYear?.financialYear?
@@ -466,6 +629,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('propertyReferenceSlNo')}
+                helperText={getHelperText('propertyReferenceSlNo')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -477,6 +643,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('name_of_the_owners')}
+                helperText={getHelperText('name_of_the_owners')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -488,6 +657,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('addressOfProperty')}
+                helperText={getHelperText('addressOfProperty')}
+               
               />
             </Grid>
           </Grid>
@@ -505,6 +677,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('panOfTheLanders')}
+                helperText={getHelperText('panOfTheLanders')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -516,6 +691,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('amountOfHousingloanTakenFromTheProperty')}
+                helperText={getHelperText('amountOfHousingloanTakenFromTheProperty')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -527,6 +705,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('purposeOfLoan')}
+                helperText={getHelperText('purposeOfLoan')}
+               
               />
             </Grid>
           </Grid>
@@ -564,18 +745,34 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('interestPaybleOnYear')}
+                helperText={getHelperText('interestPaybleOnYear')}
+               
               />
             </Grid>
             <Grid item xs={4}>
-              {/* <Typography >Is The Property Self Occupied Or Let out?[See Notebelow]</Typography> */}
-              <TextField
-                label="Is The Property Self Occupied Or Let out?[See Notebelow]"
-                name="isPropertySelfOccupiedOrLetOu"
-                value={formData.isPropertySelfOccupiedOrLetOu}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
+            
+                <Autocomplete
+                  disablePortal
+                  name="isPropertySelfOccupiedOrLetOu"
+                  id="combo-box-demo"
+                  options={payMode.map((employeepayType) => employeepayType.type)}
+                  value={formData.payMode}
+                  onChange={(event, newValue) => handleAutocompleteChange('isPropertySelfOccupiedOrLetOu', newValue)}
+                  // sx={{ width: 300 }}
+              
+
+                  renderInput={(params) => (
+                    <>
+                      <TextField {...params} label="Self Occupied Property" />
+                      {fieldErrors.isPropertySelfOccupiedOrLetOu && (
+                        <Typography color="error" variant="caption">
+                          {fieldErrors.isPropertySelfOccupiedOrLetOu}
+                        </Typography>
+                      )}
+                    </>
+                 )}
+                />
             </Grid>
           </Grid>
 
@@ -584,12 +781,15 @@ const [loading,setLoading] = useState(false);
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
-                label="IF Joint Property, Then Enter The Share Of Intrest[%]"
+                label="IF Joint Property,Enter Share[%]"
                 name="ifJointPropertyThenEnterInterestRate"
                 value={formData.ifJointPropertyThenEnterInterestRate}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('ifJointPropertyThenEnterInterestRate')}
+                helperText={getHelperText('ifJointPropertyThenEnterInterestRate')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -601,6 +801,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('grossRentalAmount')}
+                helperText={getHelperText('grossRentalAmount')}
+               
               />
             </Grid>
             <Grid item xs={4}>
@@ -612,6 +815,9 @@ const [loading,setLoading] = useState(false);
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                error={hasError('municipalTaxesPaid')}
+                helperText={getHelperText('municipalTaxesPaid')}
+               
               />
             </Grid>
           </Grid>

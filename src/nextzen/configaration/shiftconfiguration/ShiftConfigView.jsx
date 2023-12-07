@@ -31,6 +31,7 @@ export default function ShiftConfigView({currentUser}) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const [count,setCount] = useState(0)
   const TABLE_HEAD = [
     { id: 'shiftName', label: 'Shift Name', type: 'text', minWidth: 180 },
     { id: 'startTime', label: 'Start Time', type: 'text', minWidth: 180 },
@@ -148,20 +149,21 @@ export default function ShiftConfigView({currentUser}) {
   };
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(name, selectedValue, selectedOption);
-    setFormData({
-      ...formData,
+    setFormData(prevFormData => ({
+      ...prevFormData,
       [name]: selectedValue,
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
-    });
-    const filed ='locationID'
-    const filed2='locationName'
-    setValueSelected((prevData) => ({
-      ...prevData,
+    }));
+    const filed = 'locationId';
+    const filed2 = 'locationName';
+    setValueSelected(prevValueSelected => ({
+      ...prevValueSelected,
       [filed]: selectedValue?.locationID,
       [filed2]: selectedValue?.locationName,
     }));
   };
+  
 
   const getLocation = async () => {
     const payload = {
@@ -218,6 +220,7 @@ export default function ShiftConfigView({currentUser}) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
+        setCount(count+1)
         console.log('sucess', response);
         handleCloseEdit();
       }
@@ -382,6 +385,7 @@ export default function ShiftConfigView({currentUser}) {
       rowActions={actions}
       onClickActions={onClickActions}
       filterName="ShiftConfigurationFilterSearch"
+      count={count}
     />
     </>
   );
