@@ -14,7 +14,7 @@ export default function OtherExpenses() {
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
     count: 5,
-    page: 0,
+    page: 1,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {

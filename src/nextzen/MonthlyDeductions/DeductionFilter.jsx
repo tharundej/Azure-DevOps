@@ -248,6 +248,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
           method: 'POST',
           maxBodyLength: Infinity,
           url:baseUrl + `/getLoanEmployeeDetails`,
+          // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLoanEmployeeDetails`,
           data:data
         };
       

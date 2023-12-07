@@ -75,6 +75,18 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
                     <TableCell style={StyledTableCell}>Balance Amount</TableCell>
                     <TableCell style={StyledTableCell}>{currentData?.balanceAmount}</TableCell>
                   </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>CGST</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.CGST}</TableCell>
+                    <TableCell style={StyledTableCell}>SGST</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.SGST}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={StyledTableCell}>IGST</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.IGST}</TableCell>
+                    <TableCell style={StyledTableCell}>GST Amount</TableCell>
+                    <TableCell style={StyledTableCell}>{currentData?.gstAmount}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TabPanel>
@@ -163,7 +175,6 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
                   <TableCell>Quantity</TableCell>
                   <TableCell>Rate</TableCell>
                   <TableCell>GST Rate</TableCell>
-                  <TableCell>GST Amount</TableCell>
                   <TableCell>Discount</TableCell>
                   <TableCell>Total Amount</TableCell>
                   <TableCell>Comments</TableCell>
@@ -183,7 +194,6 @@ export default function ViewPurchaseOrder({ currentData, handleClose, getTableDa
                       <TableCell>{row.quantity}</TableCell>
                       <TableCell>{row.rate}</TableCell>
                       <TableCell>{row.gstRate}</TableCell>
-                      <TableCell>{row.gstAmount}</TableCell>
                       <TableCell>{row.discount}</TableCell>
                       <TableCell>{row.totalAmount}</TableCell>
                       <TableCell>{row.comments}</TableCell>

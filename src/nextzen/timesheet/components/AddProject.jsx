@@ -369,7 +369,7 @@ const userManager = user?.employeeID == rowData?.projectManager
                 
                   <Button variant="outlined" onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>
                   <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
-                  save Project
+                  Save Project
                   </LoadingButton>
                 </Stack>
                </Card>
