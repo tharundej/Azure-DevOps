@@ -188,7 +188,7 @@ export default function LoanSearchFilter({filterSearch,filterData,componentPage,
       };
         const handleSearch=debounce((e)=>{
           filterSearch(e?.target?.value)
-        },1000)
+        },500)
   
       const handleCancel = async()=>{
         setDropdownStatus([]);

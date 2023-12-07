@@ -232,7 +232,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
     
   
     return (
