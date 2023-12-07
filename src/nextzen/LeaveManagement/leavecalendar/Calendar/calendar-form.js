@@ -146,8 +146,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const onDelete = useCallback(async () => {
     try {
       const {leaveId,employeeId}= currentEvent
-      await deleteEvent(leaveId,employeeId,user);
-      enqueueSnackbar('Delete success!');
+      const result =  await deleteEvent(leaveId,employeeId,user);
+      enqueueSnackbar(result.message,{variant:'success'});
       onClose();
     } 
     catch (error) {

@@ -18,7 +18,8 @@ export default function Requests() {
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
-    "roleID":0,
+    "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"",
     "externalFilters": {
   "requestDate": {
    
@@ -51,7 +52,8 @@ export default function Requests() {
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
-    "roleID":0,
+    "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"",
     "externalFilters": {
   "requestDate": {
    
@@ -88,7 +90,8 @@ export default function Requests() {
     "search":"",
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
-    "roleID":0,
+    "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"",
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",

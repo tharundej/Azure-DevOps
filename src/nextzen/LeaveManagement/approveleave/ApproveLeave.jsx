@@ -60,7 +60,7 @@ export default function Approveleave(){
             {id: "endDate",label:"End Date",minWidth:"8pc",type:"date"},
             {id: "requestedDuration",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "approvedBy",label:"Approver",minWidth:"7pc",type:"text"},
-            {id:'lop',label:"Loss of Pay",minWidth:'7pc',type:"text"},
+            {id:'lossOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},
             {id: 'status',label:'Status',minWidth:"4pc",type: "badge"}
 
        ]);

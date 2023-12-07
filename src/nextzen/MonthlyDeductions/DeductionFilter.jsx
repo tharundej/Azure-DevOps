@@ -221,7 +221,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
   
       const handleCancel = async()=>{
         setdropdowndeductiontype([]);

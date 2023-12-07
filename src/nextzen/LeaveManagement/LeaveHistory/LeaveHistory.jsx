@@ -49,7 +49,8 @@ export default function History(){
             {id: "toDate",label:"End Date",minWidth:"7pc",type:"text"},
             {id: "leaveDays",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "comments",label:"Leave Reason",minWidth:"7pc",type:"text"},
-            {id:'approvedBy',label:"Approval Manager",minWidth:'9pc',type:'text'},
+            {id:'loseOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},
+            {id:'approvedBy',label:"Approver",minWidth:'9pc',type:'text'},
             {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
 
        ]);
