@@ -62,6 +62,7 @@ export default function ApproveClaim({ currentUser }) {
   const [count, setCount] = useState(0)
 
   const TABLE_HEAD = [
+    { id: "employeeId", label: "Employee Id", minWidth: "7.2pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
@@ -70,18 +71,22 @@ export default function ApproveClaim({ currentUser }) {
       containesAvatar: false,
       secondaryText: "email",
     },
-    { id: "claimType", label: "Claim Type", width: 180, type: "text" },
-    { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
-    { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
-    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
-    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "expenseClaimId", label: "Expense Claim Id", minWidth: "7pc", type: "text" },
+    { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
+    { id: "claimDate", label: "Claim Date", minWidth: "7pc", type: "text" },
+    { id: "claimAmount", label: "Claim Amount", minWidth: "7pc", type: "text" },
+    { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
+    { id: "expenseStartDate", label: "Expense Start Date", minWidth: "7pc", type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", minWidth: "7pc", type: "text" },
+    { id: "totalDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
-    { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
-    { id: "approverName", label: "Approver Name", width: 100, type: "text" },
-    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
-    { id: "paymentStatus", label: "Payment Status", width: 100, type: "badge" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
+    { id: "approveAmount", label: "Approved Amount",minWidth: "7pc", type: "text" },
+    { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "User Comment", minWidth: "9pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "9pc", type: "text" },
+    { id: "paymentStatus", label: "Payment Status", minWidth: "7pc", type: "badge" },
+    { id: "status", label: "Status",minWidth: "7pc", type: "badge" },
 
     // { id: '', width: 88 },
   ]

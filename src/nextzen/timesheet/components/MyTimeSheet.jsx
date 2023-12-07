@@ -200,13 +200,14 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
 
    // edit dialog form data
    const [timesheetData, setTimesheetData] = useState({
-    timesheetId: '',
-    flag :3,
+    // timesheetId: '',
+    // flag :3,
     companyId: companyID,
     employeeId: employeeID,
     employeeName: '',
-    projectId: '1',
-    activityId: '2',
+    projectId: '',
+    projectName:'',
+    activityName: '',
     startTime: '',
     endTime: '',
     monday: {
@@ -321,8 +322,7 @@ console.log(timesheetData,"vvvvvvvvvvv")
       
       const updatedRowData = {
         ...rowData,
-        flag:3,
-        // company_id: 'COMP2',
+        
        
       };
     
@@ -456,7 +456,7 @@ PaperProps={{
 }}
 
          >
-          <ModalHeader heading="ADD  TIMELINE "/>
+          <ModalHeader heading="Edit Timeline "/>
       <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
       <DialogContent>
       <Box
@@ -480,43 +480,53 @@ PaperProps={{
             
                <Grid container spacing={1} >
                 <Grid item xs={12} sm={6} fullWidth>
-                < Autocomplete
+                {/* < Autocomplete
                 
             // disablePortal
             id="cobo-box-demo"
             options={projectDetails || []}
             value={currentProjectData.projectId}
             getOptionLabel={(option) => option.projectcdName}
-            onChange={(e,newvalue)=>{
-             
-             
-              setCurrentProjectData(newvalue
-              )
-              
-           
+            onChange={(e,newvalue)=>{   
+              setCurrentProjectData(newvalue)
             }}
-          
             renderInput={(params) => <TextField {...params} label="Project Name" />}
-          /></Grid>
+          /> */}
+
+<TextField 
+              
+              label="Project" 
+              disabled
+              fullWidth
+              // inputProps={{
+              //   pattern: '[0-9]', 
+              //   maxLength: 2, 
+              // }}
+              value={timesheetData?.projectName}
+             
+           
+              />
+          </Grid>
           <Grid item  xs={12} sm={6} fullWidth>
-                <Autocomplete
+                {/* <Autocomplete
             disablePortal
             id="combo-box-dmo"
             options={activityData || []}
             value={currentActivitytData.activityId}
             getOptionLabel={(option) => option.activityName}
             onChange={(e,newvalue)=>{
-             
-             
-              setCurrentActivitytData(newvalue
-              )
-             
-           
-           
-            }}
-         
+              setCurrentActivitytData(newvalue)  
+            }}         
             renderInput={(params) => <TextField {...params} label="Activity Name" />}
-          />
+          /> */}
+            <TextField 
+              
+              label="Activity Name" 
+              fullWidth
+             disabled
+             value={timesheetData?.activityName}
+             
+              />
           </Grid>
           </Grid>
          

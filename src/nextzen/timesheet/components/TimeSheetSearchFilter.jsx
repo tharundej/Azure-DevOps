@@ -262,14 +262,16 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       const companyID =localStorage.getItem('companyID');
 
   // add dialog form data
+  const [projectIdUpdate, setProjectIdUpdate]=useState("")
+  console.log(projectIdUpdate,"projectIdUpdate")
   const [timesheetData, setTimesheetData] = useState({
-    timesheetId: null,
+    // timesheetId: null,
     
     companyId: companyID,
     employeeId: employeeID,
     employeeName: '',
-    projectId: '1',
-    activityId: '2',
+    projectId: projectIdUpdate,
+    activityName: '',
     startTime: '2023-12-04',
     endTime: '2023-12-10',
     monday: {
@@ -331,16 +333,16 @@ console.log(timesheetData,"timesheetData")
 
   const onSubmitEdit2 = async(timesheetData, event) => {
 
-   
+    //  timesheetData?.projectId = projectIdUpdate;
     
     console.log(timesheetData,"editDataeditData222")
     try {
       event.preventDefault();
       // timesheetData.claim_type=timesheetData?.claim_type?.label
-
+      // timesheetData?.projectId = projectIdUpdate;
      console.log(timesheetData,"editDataeditData")
       
-      const response = await axios.post("https://mallard-blessed-lobster.ngrok-free.app/erp/addmytimesheet", timesheetData).then(
+      const response = await axios.post(baseUrl+'/addmytimesheet12', timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -455,6 +457,7 @@ console.log(timesheetData,"timesheetData")
     setOpen(false);
   };
 
+ 
 
   return (
     <>
@@ -528,7 +531,7 @@ PaperProps={{
                 <Grid item xs={12} sm={6} fullWidth>
                 < Autocomplete
                 
-            // disablePortal
+            
             id="cobo-box-demo"
             options={projectDetails || []}
             value={currentProjectData?.projectId }
@@ -536,9 +539,15 @@ PaperProps={{
             onChange={(e,newvalue)=>{
              
              
-              setCurrentProjectData(newvalue
-              )
+              // setCurrentProjectData(newvalue)
+              setProjectIdUpdate(newvalue?.projectId)
+              setTimesheetData(prevState => ({
+                ...prevState,
+                projectId: JSON.stringify(newvalue?.projectId)
+                ,
+              }));
               
+              console.log(newvalue?.projectId,"newvaluenewvalue")
            
             }}
           
@@ -567,12 +576,19 @@ PaperProps={{
               
               label="Activity Name" 
               fullWidth
-              inputProps={{
-                pattern: '[0-9]', 
-                maxLength: 2, 
-              }}
+              // inputProps={{
+              //   pattern: '[0-9]', 
+              //   maxLength: 2, 
+              // }}
               // value={timesheetData.monday.hours}
-              // onChange={handleDayInputChange('monday', 'hours')}
+              onChange={(event)=>{
+                console.log("eventevent",event?.target?.value)
+                setTimesheetData(prevState => ({
+                  ...prevState,
+                  activityName: event?.target?.value
+                  ,
+                }));
+              }}
               />
           </Grid>
 
@@ -585,7 +601,13 @@ PaperProps={{
     value={timeSheetWeek?.workWeek} // Set the default selected value as per your requirement
     onChange={(e, newValue) => {
       if (newValue) {
-        console.log(newValue?.workWeek);
+        // console.log(newValue?.workWeek);
+        setTimesheetData(prevState => ({
+          ...prevState,
+          startTime: newValue?.startWeekDate,
+          endTime: newValue?.endWeekDate
+          ,
+        }));
         // Handle the selected value
       }
     }}

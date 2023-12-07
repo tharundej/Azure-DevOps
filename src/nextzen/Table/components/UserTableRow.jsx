@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import Button from '@mui/material/Button';
@@ -24,6 +24,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +38,8 @@ export default function UserTableRow({
   headerContent,
   rowActions,
   onHandleEditRow,
-  SecondoryTable
+  SecondoryTable,
+  
 
 }) {
   const confirm = useBoolean();
@@ -51,6 +54,7 @@ export default function UserTableRow({
   // ];
 
 console.log(row,'row data')
+const [open, setOpen] = useState(false);
   
   return (
     <>
@@ -108,6 +112,31 @@ console.log(row,'row data')
                     }}
                   />
                 )}
+                {ele.type === 'expand' && (
+  <>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <ListItemText
+        primary={row[ele.id]}
+        secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+        primaryTypographyProps={{ typography: 'body2', alignItems:"center", textAlign:"center"}}
+        secondaryTypographyProps={{
+          component: 'span',
+          color: 'text.disabled',
+        }}
+      />
+      {/* <IconButton
+        aria-label="expand row"
+        size="small"
+        onClick={() => setOpen(!open)}
+        style={{ fontSize: '90px',  }} 
+        
+      >
+        {open ? <KeyboardArrowUpIcon style={{ fontSize: '18px' }} /> : <KeyboardArrowDownIcon style={{ fontSize: '18px' }}  />}
+      </IconButton> */}
+    </div>
+  </>
+)}
+
                  {ele.type === 'bool' && (
                  
                  <ListItemText
