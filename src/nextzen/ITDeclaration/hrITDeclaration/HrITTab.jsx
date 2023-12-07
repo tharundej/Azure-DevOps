@@ -88,7 +88,7 @@ const [loading,setLoading] = useState(false);
     { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
     { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
     { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
-    { id: 'status', label: 'Status', width: 220, type: 'bool' },
+    { id: 'status', label: 'Status', width: 220, type: 'badge' },
     // { id: '', width: 88 },
   ];
 
@@ -275,7 +275,7 @@ const [loading,setLoading] = useState(false);
       financialYear: selectedYear?.financialYear,
       status: type
   }
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -300,11 +300,7 @@ const [loading,setLoading] = useState(false);
           }else    if (response.data.status === 400) {
             enqueueSnackbar(error.response.data.message,{variant:'error'})
             setLoading(false)
-            // setSnackbarSeverity('error');
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
           
-      
           }
         }
       )
@@ -827,7 +823,7 @@ const [loading,setLoading] = useState(false);
             color="primary"
             sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
-              approveHnadler("approve")
+              approveHnadler("Approved")
             }}
           >
             Approve
@@ -837,7 +833,7 @@ const [loading,setLoading] = useState(false);
             // color="primary"
             sx={{ float: 'right', marginRight: 2 }}
             onClick={() => {
-              approveHnadler("onHold")
+              approveHnadler("OnHold")
             }}
           >
            On Hold

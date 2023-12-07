@@ -81,7 +81,7 @@ export default function LicPremium() {
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
 const empName =(user?.employeeName)?user?.employeeName:''
-console.log(user , "userDetails")
+console.log(user , "userDetails" ,empName ,"empName")
 const [loading,setLoading] = useState(false);
  
   // const cmpName =localStorage.getItem('accessToken')
@@ -108,7 +108,7 @@ const [loading,setLoading] = useState(false);
     companyId: cmpId,
     companyName: '',
     employeeId: empId,
-    employeeName: '',
+    employeeName: empName,
     financialYear:  selectedYear?.financialYear,
     policyNumber: '',
     dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
@@ -465,7 +465,7 @@ console.log(isValid , "isValidisValid")
           companyName:formData.companyName,
           employeeID: formData.employeeId,
           employeeName: formData.employeeName,
-          financialYear: formData.financialYear,
+          financialYear: selectedYear.financialYear,
                     policyNumber: formData.policyNumber,
                     dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
                     insuredPersonName: formData.insuredPersonName,
@@ -474,7 +474,7 @@ console.log(isValid , "isValidisValid")
                     premiumAmountForWhichProofAttachedNow: parseFloat(formData.premiumAmountForwhichProofAssured),
                     premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
                     premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
-                    treatmentForSpecifiedDiseas: parseInt(formData.treatmentForSpecifiedDiseases),
+                    treatmentForSpecifiedDiseas: formData.treatmentForSpecifiedDiseases,
                     doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
                     fileName: fileName,
                     fileContent: fileContent,
@@ -560,6 +560,8 @@ console.log(isValid , "isValidisValid")
       
       } else {
         console.log('Form is invalid');
+        
+        setLoading(false)
       }
     } catch (error) {
       enqueueSnackbar("Something Went Wrong!",{variant:'error'})
@@ -590,7 +592,7 @@ console.log(isValid , "isValidisValid")
                       premiumAmountForwhichProofAssured: parseFloat(formData.premiumAmountForwhichProofAssured),
                       premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
                       premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
-                      treatmentForSpecifiedDiseases: parseInt(formData.treatmentForSpecifiedDiseases),
+                      treatmentForSpecifiedDiseases: formData.treatmentForSpecifiedDiseases,
                       doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
                       documents :landLordDocs,
                       oldFields:landLordDeletedId

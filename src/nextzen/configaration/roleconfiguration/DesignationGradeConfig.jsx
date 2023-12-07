@@ -40,7 +40,7 @@ const bull = (
 export default function DesignationGradeConfig() {
 
   const {user}=useContext(UserContext)
-
+  const [count,setCount] = useState(0)
     const empId =  (user?.employeeID)?user?.employeeID:''
     const cmpId= (user?.companyID)?user?.companyID:''
   const roleId = (user?.roleID)?user?.roleID:''
@@ -50,12 +50,12 @@ export default function DesignationGradeConfig() {
   const TABLE_HEAD = [
   
  
-    { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
+    { id: 'departmentName', label: 'Department Name', width: 330, type: 'text' },
 
 
-    { id: 'designationName', label: 'Designation Name', width: 180, type: 'text' },
+    { id: 'designationName', label: 'Designation Name', width: 330, type: 'text' },
     
-    { id: 'designationGradeName', label: 'Designation Grade Name', width: 220, type: 'text' },
+    { id: 'designationGradeName', label: 'Designation Grade Name', width: 330, type: 'text' },
 
    
     // { id: '', width: 88 },
@@ -175,7 +175,9 @@ export default function DesignationGradeConfig() {
            
              enqueueSnackbar(response?.data?.message,{variant:'success'})
             //  setHitGetDepartment(!hitGetDepartment)
+          setCount(count+1)
           console.log('success',response);
+          
           handleCloseEdit();
         }
       else  if (response.data.code === 400) {
@@ -226,7 +228,7 @@ export default function DesignationGradeConfig() {
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider >
           
-          <ModalHeader  heading="Edit Designation Grade Config"/>
+          <ModalHeader  heading="Edit Configuration"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -342,6 +344,7 @@ export default function DesignationGradeConfig() {
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="DesignationGradeFilterSearch"
+        count={count}
       />
     </>
   );
