@@ -97,6 +97,7 @@ export default function TaxSectionFilter({
   filterOptions,
   filterSearch,
   searchData,
+  getTableData
 }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
@@ -437,7 +438,7 @@ export default function TaxSectionFilter({
           />
         </Grid>
         <Grid item  md={3} xs={3} direction="row" >
-     <AddTaxSectionConfig /> 
+     <AddTaxSectionConfig  getTableData={getTableData}/> 
        </Grid>
     
         {/* <Grid item md={1} xs={1}>

@@ -70,7 +70,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
    
   ];
-
+  const [count,setCount] = useState(0)
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
   const [valueSelected, setValueSelected] = useState();
@@ -155,7 +155,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           enqueueSnackbar(response?.data?.message,{variant:'success'})
           setIsReload(!isReload)
           handleCloseEdit();
-         
+          setCount(count+1)
           console.log('success',response);
         }else   if (response.data.code === 400) {
           enqueueSnackbar(error.response.data.message,{variant:'error'})
@@ -192,27 +192,20 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       .then((response) => {
         if (response.data.code === 200) {
           enqueueSnackbar(response.data.message,{variant:'success'})
-            //  setSnackbarSeverity('success');
-            //  setSnackbarMessage(response.data.message);
-            //  setSnackbarOpen(true);
+          setCount(count+1)
              setIsReload(!isReload)
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
         }else   if (response.data.code === 400) {
           enqueueSnackbar(error.response.data.message,{variant:'error'})
-            // setSnackbarSeverity('error');
-            // setSnackbarMessage(response.data.message);
-            // setSnackbarOpen(true);
-           //  setHitGetDepartment(!hitGetDepartment)
+          
          console.log('success',response);
        }
       })
       .catch((error) => {
         enqueueSnackbar(error.response.data.message,{variant:'error'})
          setOpen(true);
-        //  setSnackbarSeverity('error');
-        //  setSnackbarMessage('Error Designation Adding . Please try again.');
-        //  setSnackbarOpen(true);
+     
         console.log(error);
       });
   
@@ -367,6 +360,7 @@ const  deleteFunction =(rowdata, event)=>{
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="TaxSectionFilter"
+        count={count}
       />
     </>
   );

@@ -48,6 +48,7 @@ export default function AddTaxSectionConfig({
   currentUser,
   handleCloseAddRoleDilog,
   openAddRoleConfig,
+  getTableData
 }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
@@ -168,7 +169,7 @@ export default function AddTaxSectionConfig({
       .then((response) => {
         if (response.data.code === 200) {
           enqueueSnackbar(response.data.message,{variant:'success'})
-         
+          getTableData()
           setHitGetDepartment(!hitGetDepartment);
           handleClose()
       
