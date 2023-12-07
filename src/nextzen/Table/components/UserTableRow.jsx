@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import Button from '@mui/material/Button';
@@ -25,6 +25,9 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +40,8 @@ export default function UserTableRow({
   headerContent,
   rowActions,
   onHandleEditRow,
-  SecondoryTable
+  SecondoryTable,
+  
 
 }) {
   const confirm = useBoolean();
@@ -62,6 +66,7 @@ const renderCellContent = (columnId, value) => {
     return value
   }
 };
+const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -74,7 +79,7 @@ const renderCellContent = (columnId, value) => {
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row)}
+              onClick={()=>onHandleEditRow(row,ele?.id)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
@@ -126,6 +131,33 @@ const renderCellContent = (columnId, value) => {
                   )
                 }
               
+                {ele.type === 'expand' && (
+  <>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <IconButton
+        aria-label="expand row"
+        size="small"
+        onClick={() => setOpen(!open)}
+        style={{ fontSize: '90px',  }} 
+        
+      >
+        {open ? <KeyboardArrowUpIcon style={{ fontSize: '18px' }} /> : <KeyboardArrowRightIcon style={{ fontSize: '18px' }}  />}
+      </IconButton>
+      <ListItemText
+        primary={row[ele.id]}
+        secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+        primaryTypographyProps={{ typography: 'body2', }}
+        secondaryTypographyProps={{
+          component: 'span',
+          color: 'text.disabled',
+        }}
+        onClick={() => setOpen(!open)}
+      />
+    
+    </div>
+  </>
+)}
+
                  {ele.type === 'bool' && (
                  
                  <ListItemText

@@ -107,6 +107,7 @@ export default function BasicCard() {
   useEffect(() => {
     const arrLabels = [];
     const arrContents = [];
+    
 
     dataObj?.forEach((item) => {
       const permission = user?.rolePermissions.claims;
