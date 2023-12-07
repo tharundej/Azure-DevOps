@@ -52,7 +52,7 @@ function EmployeeManagementHome  () {
         arr1.push(item.content)
       }
       });
-      arr.push("Roles")
+      arr.push("Permissions")
       arr1.push(<RoleAndResponsiblity/>)
       console.log(arr,'arrrr')
       
