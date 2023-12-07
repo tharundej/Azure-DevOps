@@ -16,25 +16,30 @@ function EmployeeManagementHome  () {
   const {user}=useContext(UserContext)
   console.log(user,'from contest')
   const [tabLabels,setTabLabels]=useState([])
+  const [tabContents,setTabContents]=useState([])
    // const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
     const dataObj=[
       {
         id:'employeeTable',
-        label:'Employees'
+        label:'Employees',
+        content: <EmployeeTable/>
       },
       {
         id:'statutory',
-        label:'Statutory'
+        label:'Statutory',
+        content: <StatouryTable/>
       },
       {
         id:'salaryStructure',
-        label:'Salary Structure'
+        label:'Salary Structure',
+        content: <SalaryStructure/>
       },
 
     ]
 
     useEffect(()=>{
       var arr = [];
+      var arr1=[]
 
       dataObj?.forEach((item) => {
         const permission = user?.rolePermissions.employeeManagement;
@@ -44,14 +49,17 @@ function EmployeeManagementHome  () {
         console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
 
         arr.push(item.label);
+        arr1.push(item.content)
       }
       });
-      arr.push("Roles")
+      
       setTabLabels(arr);
+      setTabContents(arr1)
+      
     },[user])
 
     
-  const tabContents = [
+  const tabContents1 = [
     <div>
 
      <EmployeeTable/>

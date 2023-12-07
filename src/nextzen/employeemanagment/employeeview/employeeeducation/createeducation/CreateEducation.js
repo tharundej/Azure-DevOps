@@ -54,6 +54,22 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
 const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCallSnackbar}) => {
 
   const [defaultValues, setDefaultValues] = useState([]);
@@ -105,7 +121,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     const obj =   {
         nameOfTheDegree:  '',
         stream:  '',
-        university:  '',
+        universityName:  '',
        
        
         gradeType:'',
@@ -164,6 +180,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
            
       const handleChange = (e, index, field) => {
+      
         const { value, id } = e.target;
         const newObj = defaultValues;
         const newArray = [...defaultValues];
@@ -319,16 +336,16 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                 <>
                 
                 {defaultValues?.map((item, index) => (
-                  <Grid  container flexDirection="row">
-                <Grid md={10} xs={10} lg={10} padding="5px" item>
-                  <Card padding="5px">
+                 
+                <Grid md={12} xs={12} lg={12} padding="5px" >
+                
                   <Grid margin="5px">
 
                      
                  
                     <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                       <Grid md={6} xs={12} item>
-                        <TextField
+                        {/* <TextField
                           fullWidth
                       
                           name="nameOfTheDegree"
@@ -339,7 +356,34 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                           onChange={(e) => {
                             handleChange(e, index, 'nameOfTheDegree');
                           }}
-                        />
+                        /> */}
+
+                <Autocomplete
+                  disablePortal
+                  id="degree"
+                  options={degreeOptions || []}
+                  value={item?.nameOfTheDegree || ''}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={(e, newValue) => {
+                  
+                    const newArray = [...defaultValues];
+                    newArray[index] = {
+                      ...newArray[index],
+                      nameOfTheDegree: newValue
+                    };
+                    setDefaultValues(newArray);
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Name Of The Degree"
+                  style={{  width: '100%' }} />
+                
+                }
+                />
+                       
                       </Grid>
                       <Grid md={6} xs={12} item>
                         <TextField
@@ -378,7 +422,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                             fullWidth
                                             type="number"
                                             name="grade"
-                                            label="Grade"
+                                            label={item?.gradeType==="cgpa"?'Points':(item?.gradeType==="percentage"?'Percentage %':'Points')}
                                             id="yearOfPassing"
                                             placeholder='80,8,..'
                                           
@@ -446,7 +490,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                         
                                       </Grid>
 
-                                      <Grid md={6} xs={10} lg={6} item>
+                                      <Grid md={6} xs={12} lg={6} item>
                                         <DatePicker
                                         sx={{width:'100%'}}
                                         fullWidth
@@ -485,7 +529,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
-                                        <Grid item xs={10} md={6} >
+                                        <Grid item xs={12} md={6} >
 
                                       
                                         <FormControl fullWidth>
@@ -496,7 +540,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                                                 name="Select Document"
                                             >
-                                                <MenuItem value="ssccard">SSC Cardss</MenuItem>
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
                                                 <MenuItem value="marksmemo">Marks Memo</MenuItem>
                                                 <MenuItem value="degree">Degree</MenuItem>
                                                 {/* Add more categories here */}
@@ -584,10 +628,15 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       ))}
                                     
                       </Grid>
-                  </Card>
-                   </Grid>
+                 
+                </Grid>
 
-                   <Grid md={2} xs={2} lg={2} padding="5px" item>
+              
+   
+             
+                ))}
+              </>
+                   {/* <Grid md={2} xs={2} lg={2} padding="5px" item>
                      {(index===0 &&  endpoint==='addEducation') &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
@@ -607,11 +656,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                  >
                    Remove
                  </Button>}
-                   </Grid>
-   
-               </Grid>
-                ))}
-              </>
+                   </Grid> */}
                
 
 

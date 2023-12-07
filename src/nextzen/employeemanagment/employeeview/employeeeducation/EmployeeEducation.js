@@ -90,6 +90,9 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       }
      
   
+    const ApiHitDelete=()=>{
+      
+    }
 
    const ApiHit=()=>{
     let data = JSON.stringify({
@@ -159,7 +162,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                         borderRadius: 2,
                         color: `${color}.darker`,
                         backgroundColor: 'common.white',
-                        padding:"10px",margin:'10px',boxShadow:'3',minWidth:'250px'
+                        padding:"10px",margin:'10px',boxShadow:'3'
                       }}>
 
                       
@@ -167,11 +170,15 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
               <>
                <Grid container alignItems="center" justifyContent="center" flexDirection="column" >
                <Typography variant='h5'>
-                 {itm?.nameOfTheDegree}  
-                <IconButton sx={{position: 'absolute',top: 5,right: 0}} onClick={()=>{
+                 {itm?.nameOfTheDegree?.label}  
+                        <IconButton sx={{alignSelf:'end'}} onClick={()=>{
                             const item=itm;
                           
                             handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:edit"/></IconButton>
+                        <IconButton sx={{alignSelf:'end'}} onClick={()=>{
+                            const item=itm;
+                          
+                            handleAddEducation([item],"updateEducationDetails")}}><Iconify icon="material-symbols:delete"/></IconButton>
                 
              
               </Typography>
@@ -179,7 +186,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
               
                 <Typography variant='h6'> {itm?.universityName}</Typography>
                
-                <Typography variant='h6'>   {formatDate( itm?.startDate)}  - {formatDate(itm?.endDate)}
+                <Typography component="span">   {formatDate( itm?.startDate)}  - {formatDate(itm?.endDate)}
                   <Stack  lg={12} ></Stack>
                 </Typography>
                 
@@ -217,8 +224,8 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       }}
       onClick={()=>{handleAddEducation(employeeData,"addEducation")}}
     >
-      <AddCircleIcon sx={{ fontSize: 40 }} />
-      <p>Add Education</p>
+      <AddCircleIcon sx={{ fontSize: 60 }} />
+     
     </Card>
         
       </>}
