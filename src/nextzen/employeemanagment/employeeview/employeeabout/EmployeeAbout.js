@@ -225,7 +225,8 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": employeeIDForApis
+        "employeeID": employeeIDForApis,
+        // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
        
       const config = {
@@ -241,7 +242,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
        
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data),'nithinn');
         setCurrentEmployee(response.data.data)
         currentEmployeeData=response.data.data
         handleCallSnackbar(response.data.message,'success')

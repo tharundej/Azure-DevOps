@@ -40,6 +40,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from './FilesDisplay';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -313,307 +314,309 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
       sx: { maxWidth: 720 },
     }}
   >  <ModalHeader heading={(endpoint==='addEducation'?"Add ":"Edit ")+"Education"}/>
-
-            <DialogContent>
-
-            {defaultValues[0]?.documents?.length && 
-          <Grid container alignItems="center" justifyContent="end" marginTop="5px">
-        <Button
-          variant="contained"
-          sx={{backgroundColor:"#3B82F6"}}
-          onClick={() => {
-            handleAdd();
-          }}
-        >
-          Add Education
-        </Button>
-        </Grid>}
-
-            <Stack sx={{paddingTop:'20px'}}>
-            
-      <form style={{ padding: '4px' }}>
-        <>
-          {defaultValues?.map((item, index) => (
-            <Grid sx={{ padding: '40px' }}>
-
-                {index!==0 &&(
-                <Grid sx={{display:'flex',alignItems:'center',justifyContent:'flex-end',paddingBottom:'2px'}}  item>
-                 <Iconify
-                        // key={label}
-                        icon='material-symbols:delete'
-                        width={28}
-                        sx={{ mr: 1,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'flex-end' }}
-                        onClick={()=>handleDelete(index)}
-                      />
-                    </Grid>
-                )}
-               {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
-                    variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
-                    onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
-                    }}
-                  />
-                </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    
-                    name="Stream"
-                    label="Stream"
-                    id="stream"
-                     value={item?.stream}
-                    onChange={(e) => {
-                      handleChange(e, index, 'stream');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-              </Grid>
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-              <Grid md={6} xs={12} item>
-      <TextField
-        fullWidth
-        select  // Use 'select' to render a dropdown
-        name="gradeType"
-        label="Grade Type"
-        id="gradeType"
-        value={item?.gradeType}
-        onChange={(e) => handleChange(e, index, 'gradeType')}
-        variant="outlined"
-      >
-        {/* Define the dropdown options */}
-        <MenuItem value="cgpa">CGPA</MenuItem>
-        <MenuItem value="percentage">Percentage</MenuItem>
-      </TextField>
-              </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                     type="number"
-                    name="grade"
-                    label="Grade"
-                    id="yearOfPassing"
-                    placeholder='80,8,..'
-                   
-                     value={item?.grade}
-                    onChange={(e) => {
-                      handleChange(e, index, 'grade');
-                    }}
-                    variant="outlined"
-                    inputProps={{
-                      step: 'any',  // Allow any decimal number
-                    }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="universityName"
-                    label="University Name"
-                    variant="outlined"
-                    id="universityName"
-                     value={item?.universityName}
-                    onChange={(e) => {
-                      handleChange(e, index, 'universityName');
-                    }}
-                  />
-                </Grid>
               
-              </Grid>
-
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-            <Grid md={6} xs={12} lg={6} item>
-                <DatePicker
-                sx={{width:'100%'}}
+            
+                <>
                 
-               
-                fullWidth
-                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
-                  onChange={(date) => {
+                {defaultValues?.map((item, index) => (
+                  <Grid  container flexDirection="row">
+                <Grid md={10} xs={10} lg={10} padding="5px" item>
+                  <Card padding="5px">
+                  <Grid margin="5px">
 
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="Start Date"
-                />
-                
-              </Grid>
-
-              <Grid md={6} xs={12} lg={6} item>
-                <DatePicker
-                sx={{width:'100%'}}
-                fullWidth
-                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
-                  onChange={(date) => {
-
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="End Date"
-                />
-                
-              </Grid>
-              
-              
-            </Grid>
-                  
-              {item?.documents?.map((file,index1)=>(
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                <Grid item xs={12} md={6} >
-
-               
-                <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
-                    <Select
-                        label="Select a doc Type"
-                        value={file?.fileType}
-                        onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
-                    >
-                        <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                        <MenuItem value="marks-memo">Marks Memo</MenuItem>
-                        <MenuItem value="degree">Degree</MenuItem>
-                        {/* Add more categories here */}
-                    </Select>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                <Grid>
-
-                  <Grid item>
+                     
                  
-                  <input
-                   id={`file-upload-input-${index}-${index1}`}
-                    type="file"
-                    accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                   
-                    style={{ display: 'none' }}
-                   
-                />
-                <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                <Button
-                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
-                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                            Upload file
-                            <VisuallyHiddenInput type="file" />
-                          </Button>
-                </label>
-                <Typography variant="body2" color="textSecondary">
-                    {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
-                </Typography>
-                  </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
-                  { index1===0 &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
-                        
-                       
-                        
+                    <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                      <Grid md={6} xs={12} item>
+                        <TextField
+                          fullWidth
+                      
+                          name="nameOfTheDegree"
+                          label="Name Of the Degree"
+                          variant="outlined"
+                          id="name_of_the_degree"
+                          value={item?.nameOfTheDegree}
+                          onChange={(e) => {
+                            handleChange(e, index, 'nameOfTheDegree');
+                          }}
+                        />
+                      </Grid>
+                      <Grid md={6} xs={12} item>
+                        <TextField
+                          fullWidth
+                          
+                          name="Stream"
+                          label="Stream"
+                          id="stream"
+                          value={item?.stream}
+                          onChange={(e) => {
+                            handleChange(e, index, 'stream');
+                          }}
+                          variant="outlined"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                    <Grid md={6} xs={12} item>
+                              <TextField
+                                fullWidth
+                                select  // Use 'select' to render a dropdown
+                                name="gradeType"
+                                label="Grade Type"
+                                id="gradeType"
+                                value={item?.gradeType}
+                                onChange={(e) => handleChange(e, index, 'gradeType')}
+                                variant="outlined"
+                              >
+                                {/* Define the dropdown options */}
+                                <MenuItem value="cgpa">CGPA</MenuItem>
+                                <MenuItem value="percentage">Percentage</MenuItem>
+                              </TextField>
+                                      </Grid>
+                                        <Grid md={6} xs={12} item>
+                                          <TextField
+                                            fullWidth
+                                            type="number"
+                                            name="grade"
+                                            label="Grade"
+                                            id="yearOfPassing"
+                                            placeholder='80,8,..'
+                                          
+                                            value={item?.grade}
+                                            onChange={(e) => {
+                                              handleChange(e, index, 'grade');
+                                            }}
+                                            variant="outlined"
+                                            inputProps={{
+                                              step: 'any',  // Allow any decimal number
+                                            }}
+                                          />
+                                        </Grid>
+                                      </Grid>
 
-                      }
-                      >Add Files</Button>
-                   
+                                      <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                        <Grid md={6} xs={12} item>
+                                          <TextField
+                                            fullWidth
+                                        
+                                            name="universityName"
+                                            label="University Name"
+                                            variant="outlined"
+                                            id="universityName"
+                                            value={item?.universityName}
+                                            onChange={(e) => {
+                                              handleChange(e, index, 'universityName');
+                                            }}
+                                          />
+                                        </Grid>
+                                      
+                                      </Grid>
 
-                  }
-                   { index1!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index,index1)
-                      }
-                       
-                        
-                       
-                        
+                                      <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                    <Grid md={6} xs={12} lg={6} item>
+                                        <DatePicker
+                                        sx={{width:'100%'}}
+                                        
+                                      
+                                        fullWidth
+                                          value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                                          onChange={(date) => {
 
-                      }
-                      >Delete</Button>
-                    
+                                            const newArray = [...defaultValues];
 
-                  }
-                  </Grid>
-                  
-                  
-                </Grid>
+                                            
+                                    
+                                          
+                                            newArray[index] = {
+                                              ...newArray[index],
+                                              startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                                          }
+                                    
+                                          setDefaultValues(newArray)
+                                          
+                                          }}
+                                          renderInput={(params) => <TextField {...params} />}
+                                          inputFormat="yyyy-MM-dd"
+                                          variant="inline"
+                                          format="yyyy-MM-dd"
+                                          margin="normal"
+                                          id="date-picker-inline"
+                                          label="Start Date"
+                                        />
+                                        
+                                      </Grid>
+
+                                      <Grid md={6} xs={10} lg={6} item>
+                                        <DatePicker
+                                        sx={{width:'100%'}}
+                                        fullWidth
+                                          value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                                          onChange={(date) => {
+
+                                            const newArray = [...defaultValues];
+
+                                            
+                                    
+                                          
+                                            newArray[index] = {
+                                              ...newArray[index],
+                                              endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                                          }
+                                    
+                                          setDefaultValues(newArray)
+                                          
+                                          }}
+                                          renderInput={(params) => <TextField {...params} />}
+                                          inputFormat="yyyy-MM-dd"
+                                          variant="inline"
+                                          format="yyyy-MM-dd"
+                                          margin="normal"
+                                          id="date-picker-inline"
+                                          label="End Date"
+                                        />
+                                        
+                                      </Grid>
+                                      
+                                      
+                                    </Grid>
+
+                                    {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
+                                         { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
+                                      {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+
+                                        <Grid item xs={10} md={6} >
+
+                                      
+                                        <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                                            <Select
+                                                label="Select Document"
+                                                value={file?.fileType}
+                                                onChange={(e)=>{handleCategoryChange(e,index,index1)}}
+                                                name="Select Document"
+                                            >
+                                                <MenuItem value="ssccard">SSC Cardss</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                                <MenuItem value="degree">Degree</MenuItem>
+                                                {/* Add more categories here */}
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                        <Grid>
+
+                                          <Grid item>
+                                        
+                                          <input
+                                          id={`file-upload-input-${index}-${index1}`}
+                                            type="file"
+                                            accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                          
+                                            style={{ display: 'none' }}
+                                          
+                                        />
+                                      <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
+                                        <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+
+                                        <Button
+                                        onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                                        component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                    Upload file
+                                                    <VisuallyHiddenInput type="file" />
+                                                  </Button>
+                                        </label>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                        
+                                          { index1===0 &&
+                                          
+                                              <Button 
+                                              onClick={()=>{
+                                                handleAddDocument(index)
+                                              }
+                                              
+                                                
+                                              
+                                                
+
+                                              }
+                                              >Add Files</Button>
+                                          
+
+                                          }
+                                          { index1!==0 &&
+                                            
+                                              <Button 
+                                              onClick={()=>{
+                                                handleDeleteDocument(index,index1)
+                                              }
+                                              
+                                                
+                                              
+                                                
+
+                                              }
+                                              >Delete</Button>
+                                            
+
+                                          }
+                                          </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
+
+                                      </Grid>
+                                      ))}
+                                    
+                      </Grid>
+                  </Card>
+                   </Grid>
+
+                   <Grid md={2} xs={2} lg={2} padding="5px" item>
+                     {(index===0 &&  endpoint==='addEducation') &&    <Button
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleAdd();
+                   }}
+                 >
+                   Add Education
+                 </Button>}
+                 {index!==0 &&    <Button
+                 fullWidth
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleDelete(index);
+                   }}
+                 >
+                   Remove
+                 </Button>}
+                   </Grid>
+   
+               </Grid>
+                ))}
+              </>
                
-                </Grid>
-               
-                   
 
-              </Grid>
-              ))}
-             
-            
-            </Grid>
-          ))}
-        </>
+
+
           
-        {/* <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            handleSubmit();
-          }}
-        >
-          Submit
-        </Button> */}
-      </form>
-             </Stack>
-
-
-
-            </DialogContent>
 
             <DialogActions>
             <Button variant="outlined" onClick={()=>{setDefaultValues(employeeData);onhandleClose()}}>

@@ -31,11 +31,11 @@ export default function Loans({defaultPayload,componentPage}) {
     
         { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
-        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
+        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
     
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "text" },
+        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "date" },
         { id: "paidAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
         { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
@@ -53,7 +53,6 @@ export default function Loans({defaultPayload,componentPage}) {
     
         { name: "Approve",id:'approved',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-tick"},
         { name: "Reject",id:'rejected',type:'serviceCall',endpoint:"/approveSalaryAdvance",icon:"charm:circle-cross"},
-        { name: "Edit",id:'edit',type:'editform',endpoint:"/updateSalaryAdvance",icon:"solar:pen-bold" },
       ];
 
       const defaultActions=[
@@ -62,8 +61,9 @@ export default function Loans({defaultPayload,componentPage}) {
      
       // Function to get row actions based on user role
       const generateRowActions = () => {
+        console.log(componentPage,"componentpagee")
         const userRoleID = user?.roleID; // Assuming roleID is available in user object
-        const actions = (userRoleID==1)?null:(userRoleID==2 || userRoleID==3)?actualActions:defaultActions
+        const actions = (componentPage=="MyRequests")?defaultActions:actualActions
         console.log(actions,"actionsss")
         return actions;
       };

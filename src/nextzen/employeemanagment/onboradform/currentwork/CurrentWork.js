@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle,useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
+import FormGroup from '@mui/material/FormGroup';
+
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 
 import { Autocomplete,TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -51,7 +52,7 @@ import {
     JOB_WORKING_SCHEDULE_OPTIONS,
   } from 'src/_mock';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
@@ -110,7 +111,8 @@ const CurrentWork=forwardRef((props,ref)=> {
   "ctc":currentUser?.ctc || undefined,
 
 
-  "roleID":currentUser?.roleID || undefined
+  "roleID":currentUser?.roleID || undefined,
+  salaryStructure:false
   })
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
@@ -737,6 +739,21 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             }))
           }}
           />
+
+
+<FormGroup>
+  <FormControlLabel control={<Checkbox  onChange={(e)=>{
+                  setCurrentWorkData(prev=>({
+                    ...prev,
+                    salaryStructure:!prev?.salaryStructure
+                  }))
+                  console.log(currentWorkData,'currentWorkData')
+                }} />} label="Follow Salary Structure?" />
+  
+  
+</FormGroup>
+
+      
 
 
           <Autocomplete

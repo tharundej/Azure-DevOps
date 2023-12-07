@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { Today } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
@@ -51,7 +51,7 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
-export default function DeductionFilter({filterSearch,filterData,componentPage}){
+export default function DeductionFilter({filterSearch,filterData,componentPage,getTableData}){
   const theme = useTheme();
   const {user} = useContext(UserContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -172,7 +172,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage})
         const response = await axios.post(baseUrl+`/addDeductionDetails`,data).then(
           (successData)=> {
             enqueueSnackbar(successData?.data?.message,{variant:'success'})
-            console.log(successData,"Success")
+            getTableData()
             handleClose()
           },
           (error)=>{
@@ -248,6 +248,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage})
           method: 'POST',
           maxBodyLength: Infinity,
           url:baseUrl + `/getLoanEmployeeDetails`,
+          // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLoanEmployeeDetails`,
           data:data
         };
       
@@ -285,11 +286,14 @@ export default function DeductionFilter({filterSearch,filterData,componentPage})
 <Grid container flexDirection="row" spacing={1}>
    <Grid item xs={12} md={6}>
    <RHFSelect name="employeeID" label="Employee">
-              {employeesList?.data?.map((employee) => (
+              {(employeesList?.data!=null)? (employeesList?.data?.map((employee) => (
                 <MenuItem value={employee?.EmployeeID} key={employee?.EmployeeID}>
                   {employee?.employeeName}
                 </MenuItem>
-              ))}
+              ))
+              ):<>No Employees</>
+            }
+
    </RHFSelect>
    </Grid>
 <Grid item xs={12} md={6}>

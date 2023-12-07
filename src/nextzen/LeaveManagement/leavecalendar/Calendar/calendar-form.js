@@ -25,14 +25,13 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { LoadingScreen } from 'src/components/loading-screen';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
-// ----------------------------------------------------------------------
-
+import Label from 'src/components/label/label';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -54,12 +53,16 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
   const EventSchema = Yup.object().shape({
-    leaveTypeId:Yup.number(),
+    leaveTypeId:Yup.lazy((value) => {
+    return value === 0
+      ? Yup.number().notOneOf([0], 'Please Select Leave Type').required('Please Select Leave Type')
+      : Yup.number().required('Please Select Leave Type');
+  }),
     companyId:Yup.string(),
     employeeId:Yup.string(),
     fromDate: Yup.string(),
     toDate: Yup.string(),
-    comments: Yup.string(),
+    comments: Yup.string().required('Please Enter Reason'),
     applyDate:Yup.mixed(),
     status:Yup.string(),
     fullday:Yup.string(),
@@ -89,6 +92,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     toDate:(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date()),
     
   });
+
+  const [leaveType,setLeaveType] = useState();
 
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
@@ -227,6 +232,39 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
+const [lop,setLOP] = useState()
+const lossOfPay = ()=>{
+  const payload = {
+  companyId: user?.companyID,
+  employeeId: user?.employeeID,
+  leaveTypeId: leaveType,
+  fromDate: formatDateToYYYYMMDD(datesUsed?.fromDate),
+  toDate: formatDateToYYYYMMDD(datesUsed?.toDate)
+  }
+  const config = {
+    method: 'POST',
+    maxBodyLength: Infinity,
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
+    url:baseUrl+'/getLossOfPay',
+    data:  payload
+  };
+  axios.request(config).then((response) => {
+    setLOP(response?.data)
+    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
+   console.log(response,"response dataa")
+  })
+
+    .catch((error) => {
+      console.log(error,"error in loss of pay");
+     
+    });
+
+}
+
+useEffect(()=>{
+lossOfPay()
+},[leaveType,datesUsed?.toDate])
+
 
   return (
   
@@ -241,19 +279,24 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
       <Iconify icon="solar:trash-bin-trash-bold" />
     </IconButton>
   </Tooltip></Typography>
-      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
-      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
-     <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+      <Typography variant="subtitle2">From Date: {formatDate(currentEvent?.fromDate)}</Typography>
+      <Typography variant="subtitle2">To Date: {formatDate(currentEvent?.toDate)}</Typography>
+     <Typography variant="subtitle2">Status: 
+     <Label variant="soft" color={(currentEvent?.leaveStatus=="Pending" || currentEvent?.leaveStatus=="pending")?"warning":"success"}>
+     {currentEvent?.leaveStatus}
+      </Label></Typography>
       
   </Grid>
    
   </>
   : (currentEvent?.leaveStatus==="approved")?
-  <Grid sx={{marginLeft:1}}>
+  <Grid sx={{margin:1}}>
       <Typography variant="subtitle2">Applied Leave: {currentEvent?.leaveTypeName}</Typography>
-      <Typography variant="subtitle2">From Date: {currentEvent?.fromDate}</Typography>
-      <Typography variant="subtitle2">To Date: {currentEvent?.toDate}</Typography>
-      <Typography variant="subtitle2">Status: {currentEvent?.leaveStatus}</Typography>
+      <Typography variant="subtitle2">From Date: {formatDate(currentEvent?.fromDate)}</Typography>
+      <Typography variant="subtitle2">To Date: {formatDate(currentEvent?.toDate)}</Typography>
+      <Typography variant="subtitle2">Status:   <Label variant="soft" color={(currentEvent?.leaveStatus=="Pending" || currentEvent?.leaveStatus=="pending")?"warning":"success"}>
+     {currentEvent?.leaveStatus}
+      </Label></Typography>
   </Grid>
   :
   <>
@@ -267,9 +310,9 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
             <Stack direction="row" alignItems="center" spacing={1}>
           
-             <Card>
-              <CardContent sx={{ py: 1, px: 1,pt:2}}>
-              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center' }} flexDirection="row">
+             <Card >
+              <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
+              <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
 
                 <Typography
@@ -294,15 +337,16 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
     }
 
       </Grid>
+      
       <Stack spacing={3} sx={{ px: 3 }}>
      <RHFSelect name="leaveTypeId" label="Leave Type">
               {listLeave?.map((status) => (
-                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}>
+                <MenuItem value={status.leaveTypeID} key={status.leaveTypeID}  onClick={() => setLeaveType(status.leaveTypeID)}>
                   {status.leaveTypeName}
                 </MenuItem>
               ))}
             </RHFSelect> 
-     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Comments" />
+     <RHFTextField sx={{minHeight:"25px"}} fullWidth name="comments" label="Leave Reason" />
      <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
               <DatePicker
@@ -339,6 +383,9 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
           />
      </DemoContainer>
      </LocalizationProvider>
+     <Stack sx={{px: 1,display:'flex',flexDirection:'row'}}>
+        {(lop?.lop) ? <>Loss of Pay : <span style={{color:'red'}}>{lop?.lop}</span></>:null}
+      </Stack>
       <Stack  sx={{ px: 1 }}>
       {(isSameDay)? <RHFRadioGroup  sx={{ px: 1 }}
               row
@@ -408,7 +455,13 @@ const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
         </LoadingButton>
       </DialogActions>
     </FormProvider>}
-    </>}</>
+    </>}
+    
+{/* Confirmation Dialog I need to keeppppp */}
+
+
+
+    </>
   );
 
 }

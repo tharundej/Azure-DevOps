@@ -13,18 +13,22 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
-import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {
+  getLocationAPI,
+  getUnitOfMeasure,
+  getVendorAPI,
+  getVendorMaterialAPI,
+} from 'src/api/Accounts/Common';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { createPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
 
 export default function CreatePurchaseOrder({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
@@ -83,13 +87,20 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getVendorAPI(data);
-      setVendorOptions(response);
-      setSelectedVendor(
-        defaultValues.vendorId || (response.length > 0 ? response[0].vendorId : null)
-      );
+      if (response === null) {
+        handleCallSnackbar('No Vendor Found. Please Add Vendor', 'warning');
+      } else {
+        setVendorOptions(response);
+        setSelectedVendor(
+          defaultValues.vendorId || (response.length > 0 ? response[0].vendorId : null)
+        );
+      }
     } catch (error) {
-      setErrorMessage(error.message);
       console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
     }
   };
   const fetchLocation = async () => {
@@ -97,22 +108,30 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     try {
       const response = await getLocationAPI(data);
       console.log('location success', response);
-      setLocationsOptions(response);
-      setSelectedLocation(response.length > 0 ? response[0].locationID : null);
-      setSelectedShippingLocation(response.length > 0 ? response[0].locationID : null);
+      if (response === null) {
+        handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+      } else {
+        setLocationsOptions(response);
+        setSelectedLocation(response.length > 0 ? response[0].locationID : null);
+        setSelectedShippingLocation(response.length > 0 ? response[0].locationID : null);
+      }
     } catch (error) {
-      setErrorMessage(error.message);
       console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
     }
   };
   const fetchUnits = async () => {
     try {
       const response = await getUnitOfMeasure();
-      setUnitOptions(response);
-      setSelectedUnit(response.length > 0 ? response[0] : null);
+      if (response === null) {
+        handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+      } else {
+        setUnitOptions(response);
+        setSelectedUnit(response.length > 0 ? response[0] : null);
+      }
     } catch (error) {
-      setErrorMessage(error.message);
       console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
     }
   };
 
@@ -126,38 +145,27 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   const handleVendorChange = async (event, newValue) => {
     try {
       if (newValue) {
-        const vendorMaterialPayload = {
-          companyId: user?.companyID ? user?.companyID : '',
-          search: '',
-          externalFilters: {
-            materialName: '',
-            hsnId: '',
-            gstRate: 0,
-            vendorId: newValue.vendorID || 0,
-            vendorName: '',
-            materialPrice: 0,
-          },
-          sort: {
-            key: 1,
-            orderBy: 'hsnId',
-          },
-          page: 0,
-          count: 5,
+        const data = {
+          companyID: user?.companyID ? user?.companyID : '',
+          vendorID: newValue.vendorID || 0,
         };
         setSelectedVendor(newValue.vendorID || 0);
-        const vendorMaterialResponse = await getVendorMaterialListAPI(vendorMaterialPayload);
-        setVendorMaterials(vendorMaterialResponse);
-        setSelectedVendorMaterial(vendorMaterialResponse ? vendorMaterialResponse[0].id : null);
-        console.log('Vendor Material Response:', vendorMaterialResponse);
+        const response = await getVendorMaterialAPI(data);
+        console.log('Vendor Material Response:', response);
+        if (response === null) {
+          handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+        } else {
+          setVendorMaterials(response);
+          setSelectedVendorMaterial(response ? response[0].id : null);
+        }
       }
     } catch (error) {
-      setErrorMessage(error.message);
       console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
     }
   };
 
   const HandleInputChange = (e, index) => {
-    console.log({ index });
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
   };
@@ -172,7 +180,6 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
   const updateCalculatedValues = (index) => {
     const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
-    console.log({ parsedQuantity });
     const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
     const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
@@ -184,54 +191,17 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
   const calculateGrandTotal = () => {
     let grandTotal = 0;
+    let grandGstAmount = 0;
     for (let i = 0; i < watch('addPurchaseMaterial')?.length; i++) {
       const itemTotalAmount = watch(`addPurchaseMaterial[${i}].totalAmount`) || 0;
       grandTotal += itemTotalAmount;
+      const itemTotalGstAmount = watch(`addPurchaseMaterial[${i}].gstAmount`) || 0;
+      grandGstAmount += itemTotalGstAmount;
     }
     setValue('grandTotalAmount', grandTotal);
+    setValue('gstAmount', grandGstAmount);
   };
-  const onSubmit = handleSubmit(async (data) => {
-    data.addPurchaseMaterial = watch('addPurchaseMaterial')?.filter(
-      (material) => material?.materialId !== undefined && material?.materialId !== 0
-    );
-    if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
-      handleCallSnackbar('Please Add at least one Material', 'warning');
-      return;
-    }
-    data?.addPurchaseMaterial?.forEach((material, index) => {
-      data.addPurchaseMaterial[index].quantity = parseFloat(material.quantity) || 0;
-      data.addPurchaseMaterial[index].rate = parseFloat(material.rate) || 0;
-      data.addPurchaseMaterial[index].amount = parseFloat(material.amount) || 0;
-      data.addPurchaseMaterial[index].gstRate = parseFloat(material.gstRate) || 0;
-      data.addPurchaseMaterial[index].gstAmount = parseFloat(material.gstAmount) || 0;
-      data.addPurchaseMaterial[index].discount = parseFloat(material.discount) || 0;
-    });
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
-    data.expectedDeliveryDate = formatDateToYYYYMMDD(datesUsed?.expectedDeliveryDate);
-    data.vendorId = selectedVendor;
-    data.locationId = selectedLocation;
-    data.factoryShippingId = selectedShippingLocation;
-    console.log('Final Payload:', data);
-    try {
-      let response = await createPurchaseOrderAPI(data);
-      console.log('Create success', response);
-      handleCallSnackbar(response.message, 'success');
-      reset(); // Reset the form values
-      setTimeout(() => {
-        handleClose(); // Close the dialog on success
-      }, 1000);
-      getTableData();
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.code === 400) {
-        handleCallSnackbar(error.response.data.message, 'warning');
-        console.log('request failed:', error.response.data.message);
-      } else {
-        handleCallSnackbar(error.message, 'warning');
-        console.log('API request failed:', error.message);
-      }
-    }
-  });
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -278,7 +248,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         id={`addPurchaseMaterial[${index}].unitOfMeasure`}
         options={unitOptions || []}
         onChange={(event, newValue) =>
-          HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].unitOfMeasure`)
+          HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].unitOfMeasure`, index)
         }
         getOptionLabel={(option) => option}
         renderInput={(params) => (
@@ -354,8 +324,9 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       </Button>
     </Box>
   );
+  const [newIndex, setNewIndex] = useState(0);
   const handleAddContent = () => {
-    const newIndex = contentList.length;
+    setNewIndex(newIndex + 1);
     const newContent = initialContent(newIndex);
     setContentList((prevList) => [...prevList, newContent]);
     console.log(vendorMaterials, 'vendorMaterials');
@@ -369,10 +340,52 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       return updatedList;
     });
   };
-  const [contentList, setContentList] = useState([initialContent]);
+  const [contentList, setContentList] = useState([]);
   useEffect(() => {
     calculateGrandTotal();
   }, [contentList]);
+  const onSubmit = handleSubmit(async (data) => {
+    data.addPurchaseMaterial = watch('addPurchaseMaterial')?.filter(
+      (material) => material?.materialId !== undefined && material?.materialId !== 0
+    );
+    if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
+      handleCallSnackbar('Please Add at least one Material', 'warning');
+      return;
+    }
+    data?.addPurchaseMaterial?.forEach((material, index) => {
+      data.addPurchaseMaterial[index].quantity = parseFloat(material.quantity) || 0;
+      data.addPurchaseMaterial[index].rate = parseFloat(material.rate) || 0;
+      data.addPurchaseMaterial[index].amount = parseFloat(material.amount) || 0;
+      data.addPurchaseMaterial[index].gstRate = parseFloat(material.gstRate) || 0;
+      data.addPurchaseMaterial[index].gstAmount = parseFloat(material.gstAmount) || 0;
+      data.addPurchaseMaterial[index].discount = parseFloat(material.discount) || 0;
+    });
+    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
+    console.log('uyfgv');
+    data.expectedDeliveryDate = formatDateToYYYYMMDD(datesUsed?.expectedDeliveryDate);
+    data.vendorId = selectedVendor;
+    data.locationId = selectedLocation;
+    data.factoryShippingId = selectedShippingLocation;
+    console.log('Final Payload:', data);
+    try {
+      let response = await createPurchaseOrderAPI(data);
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      getTableData();
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
+    }
+  });
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -402,7 +415,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+                <TextField {...params} label="Select Vendor" variant="outlined" />
               )}
             />
             <RHFTextField name="paymentTerm" label="Payment Term" />
@@ -434,7 +447,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               }
               getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
-                <TextField {...params} label="Select Location" variant="outlined" />
+                <TextField {...params} label="Select Billing Location" variant="outlined" />
               )}
             />
             <RHFAutocomplete
@@ -459,6 +472,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               type="number"
               name="advanceAmount"
               label="advanceAmount"
+            />
+            <RHFTextField
+              name="gstAmount"
+              label="GST Amount"
+              InputProps={{
+                readOnly: true,
+              }}
             />
             <RHFTextField
               name="grandTotalAmount"

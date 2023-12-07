@@ -17,15 +17,21 @@ import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
-    locationPhone: Yup.number(),
-    locationEmailID: Yup.string(),
+    locationPhone: Yup.string().matches(
+      /^[1-9]\d{9}$/,
+      'Phone must be 10 digits and should not start with 0'
+    ),
+    locationEmailID: Yup.string().email('Invalid email format').required('Email is required'),
     locationAddressLine1: Yup.string(),
     locationAddressLine2: Yup.string(),
     locationCity: Yup.string(),
-    locationPincode: Yup.number(),
+    locationPincode: Yup.string().matches(
+      /^[1-9]\d{5}$/,
+      'Pincode must be 6 digits and should not start with 0'
+    ),
     locationState: Yup.string(),
     status: Yup.string(),
   });
@@ -71,11 +77,15 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       try {
         const response = await getStateAPI(data);
         console.log('location success', response);
-        const stateNames = response.map((stateObj) => stateObj.state);
-        setLocationsOptions(stateNames);
-        console.log('defaultValues.locationState', defaultValues.locationState);
-        const defaultLocation = defaultValues.locationState;
-        setSelectedLocation(defaultLocation || stateNames[0]);
+        if (response === null) {
+          handleCallSnackbar('No State Found. Please Add State', 'warning');
+        } else {
+          const stateNames = response.map((stateObj) => stateObj.state);
+          setLocationsOptions(stateNames);
+          console.log('defaultValues.locationState', defaultValues.locationState);
+          const defaultLocation = defaultValues.locationState;
+          setSelectedLocation(defaultLocation || stateNames[0]);
+        }
       } catch (error) {
         setErrorMessage(error.message);
         console.log('API request failed:', error.message);
@@ -148,13 +158,27 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Name" />
-            <RHFTextField name="locationPhone" label="Phone" />
+            <RHFTextField name="locationName" label="Factory / location Name" />
+            <RHFTextField
+              name="locationPhone"
+              label="Phone"
+              pattern="[0-9]*"
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+              }}
+            />
             <RHFTextField name="locationEmailID" label="EmailID" />
             <RHFTextField name="locationAddressLine1" label="AddressLine1" />
             <RHFTextField name="locationAddressLine2" label="AddressLine2" />
             <RHFTextField name="locationCity" label="City" />
-            <RHFTextField name="locationPincode" label="Pincode" />
+            <RHFTextField
+              name="locationPincode"
+              label="Pincode"
+              pattern="[0-9]*"
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+              }}
+            />
             <RHFAutocomplete
               name="locationId"
               id="location-autocomplete"
@@ -177,6 +201,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               )}
             />
           </Box>
+
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>

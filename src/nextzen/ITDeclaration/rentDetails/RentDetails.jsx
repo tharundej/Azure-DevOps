@@ -32,6 +32,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -42,21 +43,22 @@ export default function RentDetails() {
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
-    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'May', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'June', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'July', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'August', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'September', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'October', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'November', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'April', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'May', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'June', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'July', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'August', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'September', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'October', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'November', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'December', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'January', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'February', cityType: '', rentAmount: '', submittedAmount: '' },
 
     // Add more months as needed
   ]);
+  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
@@ -121,6 +123,7 @@ const [loading,setLoading] = useState(false);
     financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
   console.log(selectedYear, 'selectedYear');
@@ -181,7 +184,7 @@ const [loading,setLoading] = useState(false);
 
   const handleRoleChange = (index, newValue) => {
     const newData = [...data];
-    newData[index].city_type = newValue;
+    newData[index].cityType = newValue;
     setData(newData);
     console.log(newData);
   };
@@ -268,7 +271,7 @@ const [loading,setLoading] = useState(false);
   };
   const updatedData = data?.map((entry) => ({
     month: entry.month,
-    city_type: entry.city_type,
+    cityType: entry.cityType,
     rentAmount: entry.rentAmount !== '' ? parseInt(entry.rentAmount, 10) : null,
     submittedAmount: entry.submittedAmount !== '' ? parseInt(entry.submittedAmount, 10) : null,
   }));
@@ -308,23 +311,26 @@ const [loading,setLoading] = useState(false);
       .then((response) => {
         if (response.data.code === 200) {
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
         setOpen(true);
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving rent details. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error saving rent details. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -370,15 +376,17 @@ const [loading,setLoading] = useState(false);
         console.log('success', response);
         if (response.data.code === 200) {
           setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(response.data.message,{variant:'success'})
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
           setReload(!reload);
         } else if (response.data.code === 400) {
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
@@ -426,8 +434,8 @@ const [loading,setLoading] = useState(false);
           setLandLardName(response?.data?.data?.nameOfLandlord);
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
           setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
-          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
-          setSelectedValue(response?.data?.data?.panOfTheLandlord);
+          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
+          // setSelectedValue(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
           response?.data?.data?.panOfTheLandlord
             ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
             : '';
@@ -461,7 +469,7 @@ const [loading,setLoading] = useState(false);
                 // If the month exists in the API response, update the data
                 return {
                   ...existingMonth,
-                  city_type: matchingMonth.cityType,
+                  cityType: matchingMonth.cityType,
                   rentAmount: matchingMonth.rentAmount,
                   submittedAmount: matchingMonth.submittedAmount,
                 };
@@ -480,7 +488,7 @@ const [loading,setLoading] = useState(false);
       });
     //  console.log(result, 'resultsreults');
   };
-
+console.log(selectedValue ,"SelectedValue")
   const getFinancialYear = async () => {
     setLoading(true)
     const payload = {
@@ -550,7 +558,15 @@ const [loading,setLoading] = useState(false);
     // You can perform additional actions here when landLordDocs changes
   }, [landLordDocs]);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
 
   return (
     <div>
@@ -562,16 +578,19 @@ const [loading,setLoading] = useState(false);
         container
         xs={12}
         spacing={2}
-        style={{ marginBottom: '0.9rem'}}
+        style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}
       >
          <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          renderInput={(params) => <TextField {...params}
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
         />
       </Grid>
       
@@ -618,7 +637,7 @@ const [loading,setLoading] = useState(false);
                 <TableCell style={{ padding: '4px !important' }}>{row.month}</TableCell>
                 <TableCell style={{ width: '150px' }}>
                   <Autocomplete
-                    value={row.city_type}
+                    value={row.cityType}
                     onChange={(event, newValue) => handleRoleChange(index, newValue)}
                     options={['Metro', 'Non-Metro']}
                     renderInput={(params) => <TextField {...params} label="Select" />}
@@ -714,7 +733,7 @@ const [loading,setLoading] = useState(false);
             <RadioGroup
               aria-label="options"
               name="options"
-              value={selectedValue ? 'Yes' : 'No'}
+              value={selectedValue ? 'Yes' :(selectedValue === "" || undefined) ? undefined : 'No'}
               onChange={handleChange}
               row // align radio buttons horizontally
             >

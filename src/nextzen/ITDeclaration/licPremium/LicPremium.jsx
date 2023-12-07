@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Grid,
@@ -12,7 +13,9 @@ import {
   TableRow,
   Paper,
   Autocomplete,
-  Card,
+  Card, IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 // import { makeStyles } from '@mui/styles';
@@ -22,7 +25,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FormProvider, useForm } from 'react-hook-form';
+
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -37,6 +40,13 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
+//form alidation 
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -61,16 +71,19 @@ const headings = [
 
 
 export default function LicPremium() {
+
+ 
  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp';
+ const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
-
+const empName =(user?.employeeName)?user?.employeeName:''
+console.log(user , "userDetails")
 const [loading,setLoading] = useState(false);
  
-
   // const cmpName =localStorage.getItem('accessToken')
   const [policyData, setPolicyData] = useState([]);
   const payscheduleTypes = [{ type: 'Parents' }, { type: 'self spouse and child' }];
@@ -110,6 +123,119 @@ const [loading,setLoading] = useState(false);
     fileName: [],
     fileContent: [],
   });
+  const [fieldErrors, setFieldErrors] = useState({
+    companyId: cmpId,
+    companyName: '',
+    employeeId: empId,
+    employeeName: empName,
+    financialYear:  selectedYear?.financialYear,
+    policyNumber: '',
+    dateOfCommencementOfPolicy:'',
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForwhichProofAssured: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseases: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
+  });
+  const validateFormData = () => {
+    let isValid = true;
+    const newFieldErrors = {};
+    console.log('Before Validation:', formData.doesTheInjuredPersonHaveDisability);
+    console.log('Before Validation1:', isValid);
+
+  
+ 
+    // Validation for policyNumber
+    if (!formData.policyNumber) {
+      newFieldErrors.policyNumber = 'Policy Number is required';
+      isValid = false;
+    
+    }
+   
+    // Validation for dateOfCommencementOfPolicy
+    if (!formData.dateOfCommencementOfPolicy) {
+      newFieldErrors.dateOfCommencementOfPolicy = 'Date of Commencement of Policy is required';
+      isValid = false;
+     
+    }
+   
+    // Validation for insuredPersonName
+    if (!formData.insuredPersonName) {
+      newFieldErrors.insuredPersonName = 'Insured Person Name is required';
+      isValid = false;
+    
+    }
+    ;
+    // Validation for sumOfAssured
+    if (!formData.sumOfAssured) {
+      newFieldErrors.sumOfAssured = 'Sum of Assured is required';
+      isValid = false;
+     
+    } else if (isNaN(formData.sumOfAssured)) {
+      newFieldErrors.sumOfAssured = 'Sum of Assured must be a valid number';
+      isValid = false;
+      
+    }
+   
+    // Validation for relationship
+    if (!formData.relationship) {
+      newFieldErrors.relationship = 'Relationship is required';
+      isValid = false;
+     
+    }
+  
+    // Validation for premiumAmountForwhichProofAssured
+    if (!formData.premiumAmountForwhichProofAssured) {
+      newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached Now is required';
+      isValid = false;
+    } else if (isNaN(formData.premiumAmountForwhichProofAssured)) {
+      newFieldErrors.premiumAmountForwhichProofAssured = 'Premium Amount for which Proof Attached Now must be a valid number';
+      isValid = false;
+    }
+  
+    // Validation for premiumAmountFallInDue
+    if (!formData.premiumAmountFallInDue) {
+      newFieldErrors.premiumAmountFallInDue = 'Premium Amount Fall in Due is required';
+      isValid = false;
+    } else if (isNaN(formData.premiumAmountFallInDue)) {
+      newFieldErrors.premiumAmountFallInDue = 'Premium Amount Fall in Due must be a valid number';
+      isValid = false;
+    }
+  
+    console.log('Before Validation133:', isValid);
+    // Validation for premiumConsiderForDeduction
+    if (!formData.premiumConsiderForDeduction) {
+      newFieldErrors.premiumConsiderForDeduction = 'Premium Considered for Deduction is required';
+      isValid = false;
+    } else if (isNaN(formData.premiumConsiderForDeduction)) {
+      newFieldErrors.premiumConsiderForDeduction = 'Premium Considered for Deduction must be a valid number';
+      isValid = false;
+    }
+   // Validation for treatmentForSpecifiedDiseases
+if (formData.treatmentForSpecifiedDiseases !== "Yes" && formData.treatmentForSpecifiedDiseases !== "No") {
+  newFieldErrors.treatmentForSpecifiedDiseases = 'Please select a valid value for Treatment for Specified Diseases';
+  isValid = false;
+}
+// Validation for doesTheInjuredPersonHaveDisability
+
+console.log(formData.doesTheInjuredPersonHaveDisability ,"formData.doesTheInjuredPersonHaveDisability")
+if (formData.doesTheInjuredPersonHaveDisability !== "Yes" && formData.doesTheInjuredPersonHaveDisability !== "No") {
+  newFieldErrors.doesTheInjuredPersonHaveDisability = 'Please select a valid value for Does The Injured Person Have Disability';
+  isValid = false;
+}
+    setFieldErrors(newFieldErrors);
+  
+    return isValid;
+  };
+  const hasError = (fieldName) => !!fieldErrors[fieldName];
+
+  const getHelperText = (fieldName) => fieldErrors[fieldName] || '';
+ 
   var [attachedDocumment ,setAttachedDocument] = useState([])
 var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
@@ -121,16 +247,14 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
   var [fileName , setFileName] = useState([])
   var [fileContent, setFileContent] = useState([])
  
-  const methods = useForm();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+
   const currentYear = new Date().getFullYear();
    console.log(currentYear ,"current year")
    const startYear = 2022;
    const endYear = 2030;
- 
-  //  const financialYears = [];
-  //  for (let year = startYear; year <= endYear; year++) {
-  //    financialYears.push(`${year}-${year + 1}`);
-  //  }
  
   
    const [financialYears, setFinancialYears] = useState([]);
@@ -140,9 +264,19 @@ var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
       ...prevFormData,
       financialYear: value?.financialYear,
     }));
-   
+    localStorage.setItem('selectedYear', JSON.stringify(value));
   };
 
+
+  const handleClick = (event, row) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRow(row);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedRow(null);
+  };
   // handling the file uploader compoent
   const handleLandLordattchment = (fileData) => {
     console.log(fileData ,"fileData")
@@ -261,22 +395,26 @@ const handleRentDeletedID = ( data)=>{
 
     setFormData({ ...formData, [name]: integerValue });
     console.log(formData);
+     // Clear the error when the user starts typing
+     setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+
+    
   };
 
   const handleAutocompleteChange = (name, selectedValue) => {
-    let mappedValue;
+   
 
-    if (selectedValue === 'Yes') {
-      mappedValue = 1;
-    } else if (selectedValue === 'No') {
-      mappedValue = 0;
-    } else {
-      mappedValue = selectedValue;
-    }
+    setFormData({ ...formData, [name]: selectedValue });
+     // Clear the error when the user starts typing
+     setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
 
-    setFormData({ ...formData, [name]: mappedValue });
-
-    console.log('selected value ',name , mappedValue ,  selectedValue);
+    console.log('selected value ',name ,   selectedValue);
   };
   console.log(formData, 'formdata');
 
@@ -305,9 +443,7 @@ const handleRentDeletedID = ( data)=>{
           setLoading(false)
           const rowsData = response?.data?.data;
           setPolicyData(rowsData);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
+        
         }
       })
       .catch((error) => {
@@ -317,169 +453,245 @@ const handleRentDeletedID = ( data)=>{
     //  console.log(result, 'resultsreults');
   };
 
+
   const saveLicDetals = async () => {
-    console.log(attachedDocumment ,attachedDocummentFileName, "saceasveasave")
-   
-    setLoading(true)
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: baseUrl +'/addLicPremium',
-      headers: {
-        Authorization:
-         token,
-        'Content-Type': 'text/plain',
-      },
-      data: formData,
-    };
-
-    console.log(formData)
-    const result = await axios
-      .request(config)
-      .then((response) => {
-       
-          if (response.data.status === 200) {
-            setLoading(false)
-            setSnackbarSeverity('success');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
+    try {
+      const isValid = validateFormData();
+console.log(isValid , "isValidisValid")
+      if (isValid) {
+        const payload = {
+          licPremiumID: formData.licPremiumID,
+          companyId: formData.companyId,
+          companyName:formData.companyName,
+          employeeID: formData.employeeId,
+          employeeName: formData.employeeName,
+          financialYear: formData.financialYear,
+                    policyNumber: formData.policyNumber,
+                    dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
+                    insuredPersonName: formData.insuredPersonName,
+                    sumOfAssured:parseFloat (formData.sumOfAssured),
+                    relationship: formData.relationship,
+                    premiumAmountForWhichProofAttachedNow: parseFloat(formData.premiumAmountForwhichProofAssured),
+                    premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
+                    premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
+                    treatmentForSpecifiedDiseas: parseInt(formData.treatmentForSpecifiedDiseases),
+                    doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
+                    fileName: fileName,
+                    fileContent: fileContent,
             
-            setISReloading(!isreloading);
-            setFormData({
-              companyId: cmpId,
-              companyName: '',
-              employeeId: empId,
-              employeeName: '',
-              financialYear:  selectedYear?.financialYear,
-              policyNumber: '',
-              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-              insuredPersonName: '',
-              sumOfAssured: '',
-              relationship: '',
-              premiumAmountForwhichProofAssured: '',
-              premiumAmountFallInDue: '',
-              premiumConsiderForDeduction: '',
-              treatmentForSpecifiedDiseases: '',
-              doesTheInjuredPersonHaveDisability: '',
-              fileName: [],
-              fileContent: [],
-            })
-            getLicPremium()
-          }else    if (response.data.status === 400) {
+        
+      };
+        setLoading(true)
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: baseUrl +'/addLicPremium',
+          headers: {
+            Authorization:
+             token,
+            'Content-Type': 'text/plain',
+          },
+          data: payload,
+        };
+    
+        
+    console.log(formData ,"datainformsave")
+        console.log(formData)
+        const result = await axios
+          .request(config)
+          .then((response) => {
+           console.log(response ,"responseresponse")
+              if (response.data.status === 200) {
+                enqueueSnackbar(response.data.message,{variant:'success'})
+                setLoading(false)
+               setISReloading(!isreloading);
+                setFormData({
+                  companyId: cmpId,
+                  companyName: '',
+                  employeeId: empId,
+                  employeeName: '',
+                  financialYear:  selectedYear?.financialYear,
+                  policyNumber: '',
+                  dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+                  insuredPersonName: '',
+                  sumOfAssured: '',
+                  relationship: '',
+                  premiumAmountForwhichProofAssured: '',
+                  premiumAmountFallInDue: '',
+                  premiumConsiderForDeduction: '',
+                  treatmentForSpecifiedDiseases: '',
+                  doesTheInjuredPersonHaveDisability: '',
+                  fileName: [],
+                  fileContent: [],
+                })
+                setFieldErrors({
+                  companyId: cmpId,
+    companyName: '',
+    employeeId: empId,
+    employeeName: '',
+    financialYear:  selectedYear?.financialYear,
+    policyNumber: '',
+    dateOfCommencementOfPolicy:'',
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForwhichProofAssured: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseases: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
+                });
+                getLicPremium()
+              }else    if (response.data.code === 400) {
+                enqueueSnackbar(response.data.message,{variant:'error'})
+                setLoading(false)
+    
+              }
+            }
+          )
+          .catch((error) => {
+            enqueueSnackbar("Something Went Wrong!",{variant:'error'})
             setLoading(false)
-            setSnackbarSeverity('error');
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-          
-      
-          }
-        }
-      )
-      .catch((error) => {
-        setLoading(false)
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Lic details. Please try again.');
-        setSnackbarOpen(true);
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
-  const editcDetails = async () => {
-    setLoading(true)
-    console.log(" i am calling fine info042" , formData)
-    const payload = {
-      
-      
-                  licPremiumID: formData.licPremiumID,
-                  companyID: formData.companyId,
-                  employeeID: formData.employeeId,
-                  employeeName: formData.employeeName,
-                  financialYear: formData.financialYear,
-                  policyNumber: formData.policyNumber,
-                  dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
-                  insuredPersonName: formData.insuredPersonName,
-                  sumOfAssured:parseFloat (formData.sumOfAssured),
-                  relationship: formData.relationship,
-                  premiumAmountForwhichProofAssured: parseFloat(formData.premiumAmountForwhichProofAssured),
-                  premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
-                  premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
-                  treatmentForSpecifiedDiseaseses: parseInt(formData.treatmentForSpecifiedDiseases),
-                  doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
-                  documents :landLordDocs,
-                  oldFields:landLordDeletedId
-          
-      
-    };
-    console.log(payload ,"payloaddd")
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'updateMedicalInsuranceDetails',
-      url: baseUrl +'/updateLicPremiumDetails',
-      headers: {
-        Authorization:
-       token ,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
      
-        console.log(response , "success")
-          if(response.data.status === 200){
+            console.log(error);
+          })
+      
+      } else {
+        console.log('Form is invalid');
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
             setLoading(false)
-            console.log('success',response);
-            setISReloading(!isreloading);
-            setSnackbarSeverity('success');
-            setFormData({
-              companyId: cmpId,
-              companyName: '',
-              employeeId: empId,
-              employeeName: '',
-              financialYear:   selectedYear?.financialYear,
-              policyNumber: '',
-              dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
-              insuredPersonName: '',
-              sumOfAssured: '',
-              relationship: '',
-              premiumAmountForwhichProofAssured: '',
-              premiumAmountFallInDue: '',
-              premiumConsiderForDeduction: '',
-              treatmentForSpecifiedDiseases: '',
-              doesTheInjuredPersonHaveDisability: '',
-              fileName: [],
-              fileContent: [],
-            })
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-            setIsEdit(false)
-            getLicPremium()
-          }
-          else if(response.data.status === 400){
-            console.log('success',response);
-            // setISReloading(!isreloading);
-            setSnackbarSeverity('error');
-           
-            setSnackbarMessage(response.data.message);
-            setSnackbarOpen(true);
-            // setIsEdit(false)
-          }
-         
+     
+            console.log(error);
+    }
+  };
+
+  const editcDetails = async () => {
+    try {
+      const isValid = validateFormData();
+console.log(isValid , "isValidisValid")
+      if (isValid) {
+        setLoading(true)
+        console.log(" i am calling fine info042" , formData)
+        const payload = {
+            licPremiumID: formData.licPremiumID,
+                      companyID: formData.companyId,
+                      employeeID: formData.employeeId,
+                      employeeName: formData.employeeName,
+                      financialYear: formData.financialYear,
+                      policyNumber: formData.policyNumber,
+                      dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
+                      insuredPersonName: formData.insuredPersonName,
+                      sumOfAssured:parseFloat (formData.sumOfAssured),
+                      relationship: formData.relationship,
+                      premiumAmountForwhichProofAssured: parseFloat(formData.premiumAmountForwhichProofAssured),
+                      premiumAmountFallInDue:parseFloat (formData.premiumAmountFallInDue),
+                      premiumConsiderForDeduction: parseFloat(formData.premiumConsiderForDeduction),
+                      treatmentForSpecifiedDiseases: parseInt(formData.treatmentForSpecifiedDiseases),
+                      doesTheInjuredPersonHaveDisability: formData.doesTheInjuredPersonHaveDisability,
+                      documents :landLordDocs,
+                      oldFields:landLordDeletedId
+              
           
-        }
-      )
-      .catch((error) => {
-        setLoading(false)
-        setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response.message   );
-        setSnackbarOpen(true);
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
+        };
+        console.log(payload ,"payloaddd")
+    
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          // url: baseUrl +'updateMedicalInsuranceDetails',
+          url: baseUrl +'/updateLicPremiumDetails',
+          headers: {
+            Authorization:
+           token ,
+            'Content-Type': 'text/plain',
+          },
+          data: payload,
+        };
+        const result = await axios
+          .request(config)
+          .then((response) => {
+         
+            console.log(response , "success")
+              if(response.data.status === 200){
+                enqueueSnackbar(response.data.message,{variant:'success'})
+                setLoading(false)
+                console.log('success',response);
+                setISReloading(!isreloading);
+                // setSnackbarSeverity('success');
+                setFormData({
+                  companyId: cmpId,
+                  companyName: '',
+                  employeeId: empId,
+                  employeeName: '',
+                  financialYear:   selectedYear?.financialYear,
+                  policyNumber: '',
+                  dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+                  insuredPersonName: '',
+                  sumOfAssured: '',
+                  relationship: '',
+                  premiumAmountForwhichProofAssured: '',
+                  premiumAmountFallInDue: '',
+                  premiumConsiderForDeduction: '',
+                  treatmentForSpecifiedDiseases: '',
+                  doesTheInjuredPersonHaveDisability: '',
+                  fileName: [],
+                  fileContent: [],
+                })
+              
+                setFieldErrors({
+                  companyId: cmpId,
+    companyName: '',
+    employeeId: empId,
+    employeeName: '',
+    financialYear:  selectedYear?.financialYear,
+    policyNumber: '',
+    dateOfCommencementOfPolicy:'',
+    insuredPersonName: '',
+    sumOfAssured: '',
+    relationship: '',
+    premiumAmountForwhichProofAssured: '',
+    premiumAmountFallInDue: '',
+    premiumConsiderForDeduction: '',
+    treatmentForSpecifiedDiseases: '',
+    doesTheInjuredPersonHaveDisability: '',
+    fileName: [],
+    fileContent: [],
+                });
+                setIsEdit(false)
+                getLicPremium()
+              }
+              else if(response.data.status === 400){
+                enqueueSnackbar(response.data.message,{variant:'error'})
+                setLoading(false)
+                console.log('success',response);
+                
+              }
+             
+              
+            }
+          )
+          .catch((error) => {
+            enqueueSnackbar(response.data.message,{variant:'success'})
+            setLoading(false)
+            setOpen(true);
+            console.log(error);
+          });
+      
+      } else {
+        console.log('Form is invalid');
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+            setLoading(false)
+     
+            console.log(error);
+    }
+
+  
   };
 
 
@@ -500,16 +712,7 @@ const handleRentDeletedID = ( data)=>{
     
   }, []);
 
-  const handleFormChange = (event, rowIndex) => {
-    const { name, value } = event.target;
-    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
- 
-    setPolicyData((prevData) => {
-       const newData = [...prevData];
-       newData[rowIndex] = { ...newData[rowIndex], [name]: integerValue };
-       return newData;
-    });
- };
+
    // handle edit
    const handleEdit = (rowData) => {
     setIsEdit(true)
@@ -533,16 +736,12 @@ const handleRentDeletedID = ( data)=>{
     treatmentForSpecifiedDiseases: rowData.treatmentForSpecifiedDiseases,
     doesTheInjuredPersonHaveDisability: rowData.doesTheInjuredPersonHaveDisability,
  
-      // Add other fields as needed
     });
 
-    // Set the attached documents if available
-    // if (rowData.documents && rowData.documents.length > 0) {
-    //   setMedicalTableDataDoc([...rowData.documents]);
-    // }
   };
 
-  const handleSubmit = ()=>{
+  const handleSubmit10= ()=>{
+    console.log(isEdit ,"isEditisEdit")
     isEdit ? editcDetails() :saveLicDetals()
   }
   const handleCancle = ()=>{
@@ -618,24 +817,42 @@ const handleRentDeletedID = ( data)=>{
     setIsEdit(false)
     
   }, [selectedYear?.financialYear ,isreloading]);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
 
-  console.log(" financialYear: selectedYear?.financialYear," , selectedYear?.financialYear,)
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
+
+
   return (
     <div>
      {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
-  <> <FormProvider {...methods}>
+  <>   
+   <FormProvider 
+ 
+   >
+
+ 
         <Grid container spacing={2} >
   
         <Grid  item xs={12}>
             
             <Autocomplete
               id="financialYear"
-              options={financialYears}
-              getOptionLabel={(option) => option.financialYear}
+              options={financialYears || []}
+              getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+            
               value={selectedYear}
               onChange={handleYearChange}
-              renderInput={(params) => <TextField {...params} label="Please Select Financial Year" />}
+              renderInput={(params) => <TextField {...params}
+              label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
+              style={{marginTop:"0.9rem"}}
             />
        
                 </Grid>
@@ -653,7 +870,12 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.policyNumber}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('policyNumber')}
+                helperText={getHelperText('policyNumber')}
+               
               />
+          
+             
             </Grid>
             <Grid item xs={4} style={{ paddingTop: '9px' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -674,6 +896,11 @@ const handleRentDeletedID = ( data)=>{
                   />
                 </DemoContainer>
               </LocalizationProvider>
+              {hasError('dateOfCommencementOfPolicy') && (
+  <Typography color="error" variant="caption">
+    {getFieldError('dateOfCommencementOfPolicy')}
+  </Typography>
+)}
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -684,7 +911,10 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.insuredPersonName}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('insuredPersonName')}
+  helperText={getHelperText('insuredPersonName')}
               />
+             
             </Grid>
           </Grid>
 
@@ -702,7 +932,10 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.sumOfAssured}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('sumOfAssured')}
+  helperText={getHelperText('sumOfAssured')}
               />
+               {/* <span>{errors.sumOfAssured?.message}</span> */}
             </Grid>
             <Grid item xs={4}>
               <Autocomplete
@@ -713,8 +946,18 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.relationship}
                 onChange={(event, newValue) => handleAutocompleteChange('relationship', newValue)}
                 // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Relationship" />}
+                renderInput={(params) => (
+                  <>
+                    <TextField {...params} label="Relationship" />
+                    {fieldErrors.relationship && (
+                      <Typography color="error" variant="caption">
+                        {fieldErrors.relationship}
+                      </Typography>
+                    )}
+                  </>
+                )}
               />
+ 
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -725,6 +968,8 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.premiumAmountForwhichProofAssured}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('premiumAmountForwhichProofAssured')}
+                helperText={getHelperText('premiumAmountForwhichProofAssured')}
               />
             </Grid>
           </Grid>
@@ -740,6 +985,8 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.premiumAmountFallInDue}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('premiumAmountFallInDue')}
+                helperText={getHelperText('premiumAmountFallInDue')}
               />
             </Grid>
             <Grid item xs={4}>
@@ -751,6 +998,8 @@ const handleRentDeletedID = ( data)=>{
                 value={formData.premiumConsiderForDeduction}
                 // onChange={(e) => handleFormChange(e, rowIndex)}
                 onChange={handleChange}
+                error={hasError('premiumConsiderForDeduction')}
+                helperText={getHelperText('premiumConsiderForDeduction')}
               />
             </Grid>
             <Grid item xs={4}>
@@ -759,18 +1008,24 @@ const handleRentDeletedID = ( data)=>{
                 name="treatmentForSpecifiedDiseases"
                 id="combo-box-demo"
                 options={treatmentTypes.map((employeepayType) => employeepayType.type)}
-                value={formData?.treatmentForSpecifiedDiseaseses === 1
-                  ? 'Yes'
-                  : formData.treatmentForSpecifiedDiseases === 0
-                  ? 'No'
-                  : formData.treatmentForSpecifiedDiseases
+                value={formData?.treatmentForSpecifiedDiseases 
+                 
             }
-                onChange={(event, newValue) =>
-                  handleAutocompleteChange('treatmentForSpecifiedDiseases', newValue)
-                }
-                // sx={{ width: 300 }}
+            onChange={(event, newValue) => {
+              // Convert the value to a number before updating the state
+             
+          
+              handleAutocompleteChange('treatmentForSpecifiedDiseases', newValue);
+            }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Treatment For Specific Disease Under 80DDB" />
+                  <>
+                    <TextField {...params} label="Treatment For Specific Disease Under 80DDB" />
+                    {fieldErrors.treatmentForSpecifiedDiseases && (
+                      <Typography color="error" variant="caption">
+                        {fieldErrors.treatmentForSpecifiedDiseases}
+                      </Typography>
+                    )}
+                  </>
                 )}
               />
             </Grid>
@@ -784,21 +1039,23 @@ const handleRentDeletedID = ( data)=>{
                 name="doesTheInjuredPersonHaveDisability"
                 id="combo-box-demo"
                 options={pinjuredPersonDisability.map((employeepayType) => employeepayType.type)}
-                value={formData?.doesTheInjuredPersonHaveDisability === 1
-                  ? 'Yes'
-                  : formData.doesTheInjuredPersonHaveDisability === 0
-                  ? 'No'
-                  : formData.doesTheInjuredPersonHaveDisability
+                value={formData?.doesTheInjuredPersonHaveDisability 
             }
-                onChange={(event, newValue) =>
-                  handleAutocompleteChange('doesTheInjuredPersonHaveDisability', newValue)
-                }
-                // sx={{ width: 300 }}
+            onChange={(event, newValue) => {
+              // Convert the value to a number before updating the state
+              
+          
+              handleAutocompleteChange('doesTheInjuredPersonHaveDisability', newValue);
+            }}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Does The Injured Person Have Disability under 80U"
-                  />
+                  <>
+                    <TextField {...params} label="Does The Injured Person Have Disability under 80U" />
+                    {fieldErrors.doesTheInjuredPersonHaveDisability && (
+                      <Typography color="error" variant="caption">
+                        {fieldErrors.doesTheInjuredPersonHaveDisability}
+                      </Typography>
+                    )}
+                  </>
                 )}
               />
             </Grid>
@@ -818,18 +1075,21 @@ const handleRentDeletedID = ( data)=>{
               style={{ marginBottom: '1rem' }}
             >
               <Grid item>
-                {/* <Button className="button" onClick={()=>attchementHandler(row)}>Attchement</Button> */}
-                {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
-
+              
                 <Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
       Upload file
-      {/* <VisuallyHiddenInput type="file" /> */}
+  
     </Button>
               </Grid>
               <Grid item>
-                <Button className="button" onClick={handleSubmit}>
-                  Save
+                <Button className="button"  
+                // type="submit"
+                  onClick={handleSubmit10}
+                // onClick={handleSubmit((event)=>onSubmit(event))}
+                 >
+                  Save 
                 </Button>
+              
               </Grid>
               <Grid item>
                 <Button className="button" onClick={handleCancle}>Cancel</Button>
@@ -855,6 +1115,8 @@ const handleRentDeletedID = ( data)=>{
           </Grid>
           </> : null}
         </Grid>
+      
+      </FormProvider>
 {policyData?.length > 0 ?
         <TableContainer component={Paper}>
           <Table>
@@ -897,12 +1159,27 @@ const handleRentDeletedID = ( data)=>{
                     <TableCell style={{ textAlign: 'center' }}>
                       <Button onClick={() => handleEdit(row)}>Edit</Button>
                     </TableCell>
+              <TableCell style={{ textAlign: 'center', display: 'flex', justifyContent: 'flex-end' }}>
+  <IconButton onClick={(event) => handleClick(event, row)}>
+    <MoreVertIcon />
+  </IconButton>
+  <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl && selectedRow === row)}
+    onClose={handleClose}
+  >
+    <MenuItem onClick={() => handleEdit(row)}>Edit</MenuItem>
+    {/* Add more options if needed */}
+  </Menu>
+</TableCell>
+
+
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         </TableContainer> :null}
-      </FormProvider>
+     
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

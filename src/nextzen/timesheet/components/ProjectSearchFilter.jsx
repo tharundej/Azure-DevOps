@@ -12,7 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../src/components/hook-form'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from 'src/api/BaseURL';
@@ -32,7 +32,7 @@ const MenuProps = {
     },
   },
 };
-const ProjectSearchFilter = ({filterSearch,filterData}) =>{
+const ProjectSearchFilter = ({filterSearch,filterData,getTableData}) =>{
     const theme = useTheme();
     const {user} = useContext(UserContext)
     const {enqueueSnackbar} = useSnackbar();
@@ -184,7 +184,7 @@ const [projectId,setProjectID]= useState()
 
 const getEmployeesList =()=>{
   const data ={
-    "projectManager":user?.employeeID
+    "companyID":user?.companyID
   }
   const config={
     method:'POST',
@@ -203,18 +203,16 @@ const getEmployeesList =()=>{
 
 const getProjectsList =()=>{
   const data ={
-    "projectManager":user?.employeeID,
-    "companyID":user?.companyID,
-    "locationID":user?.locationID
+   
+    "companyID":user?.companyID
 }
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-  url:baseUrl + '/getProjectsForProjectManager',
+    url:baseUrl + '/getProjectsForProjectManager',
     data:data
    }
    axios.request(config).then((response)=>{
-    console.log(response,"responseee")
     setProjectsList(response?.data?.data)
    })
    .catch((error)=>{
@@ -270,6 +268,7 @@ const AssignEmployees =()=>{
    }
    axios.request(config).then((response)=>{
     enqueueSnackbar(response?.data?.message,{variant:'success'})
+    getTableData()
     handleClose()
    })
    .catch((error)=>{
@@ -304,6 +303,11 @@ useEffect(()=>{
   }
 
 },[user])
+
+const handleSnackBar=()=>{
+  enqueueSnackbar(`No Employees Assigned for ${user?.employeeID}`, { variant: 'warning', autoHideDuration: 5000,anchorOrigin:{vertical:'top',horizontal:'right'} })
+  setShowAssignEmployee(false)
+}
  
   return (
         <> 
@@ -580,8 +584,9 @@ useEffect(()=>{
       sx={{ marginRight:2,marginTop:1 }}
     >
       Add project
-    </Button>:null}
-    {(assignPermission)?
+    </Button>
+    :null} 
+ {(assignPermission)? 
     <Button   
     variant="contained"
     color="primary"
@@ -589,7 +594,8 @@ useEffect(()=>{
     onClick={()=>setShowAssignEmployee(true)}
     sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
     Assign Employees
-    </Button>:null}
+    </Button>
+   :null}
     <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>
@@ -606,7 +612,7 @@ useEffect(()=>{
         sx: { maxWidth: 770 , overflow:'auto'},
       }}
       >
-      <AddProject handleClose={handleClose} title="Add Project"/>
+      <AddProject handleClose={handleClose} title="Add Project" getTableData={getTableData}/>
      </Dialog>
     )
 }
@@ -614,7 +620,8 @@ useEffect(()=>{
 
 {
   showAssignEmployee && (
-    <Dialog
+    (employesListData)?
+      <Dialog
     onClose={handleClose}
     aria-labelledby="customized-dialog-title"
      open={showAssignEmployee}
@@ -622,7 +629,7 @@ useEffect(()=>{
         sx: { width: 770, overflow:'auto'},
       }}
       >
-          <ModalHeader heading="Assign Employees"/>
+        <ModalHeader heading="Assign Employees"/>
         <Grid sx={{p:2,overflow: 'hidden'}}>
           {/* <Typography variant='subtitle2'>{projectId?'Project':'Select Project'}</Typography> */}
           <FormControl fullWidth sx={{marginBottom:2}}>
@@ -657,7 +664,7 @@ useEffect(()=>{
       />
     ))
   }
-  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
+  getOptionLabel={(option) => `${option?.employeeName}`}
   getOptionSelected={(option, value) => option.employeeID === value.employeeID}
   onChange={(event, newValue) => {
     setSelectedIds(newValue.map((option) => option.employeeID));
@@ -675,7 +682,11 @@ useEffect(()=>{
 <Button sx={{float:'right',right:10}} variant="outlined" onClick={handleClose}>Cancel</Button>
       
         </Grid>
+
     </Dialog>
+    :  
+    handleSnackBar()
+    
   )
 }
 

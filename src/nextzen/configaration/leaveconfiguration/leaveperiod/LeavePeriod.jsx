@@ -26,7 +26,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LoadingButton } from '@mui/lab';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function LeavePeriod({ currentUser }) {
@@ -51,6 +51,7 @@ export default function LeavePeriod({ currentUser }) {
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
   const [valueSelected, setValueSelected] = useState();
+  const [count,setCount] = useState(0)
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string(),
   });
@@ -198,7 +199,7 @@ export default function LeavePeriod({ currentUser }) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        setCount(count+1)
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -310,6 +311,7 @@ export default function LeavePeriod({ currentUser }) {
                 renderInput={(params) => (
                   <TextField {...params} label="Leave Period Type" variant="outlined" />
                 )}
+                sx={{marginTop:'8px'}}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
@@ -365,6 +367,7 @@ export default function LeavePeriod({ currentUser }) {
         rowActions={actions}
         filterName="LeavePeriodFilterSearch"
         onClickActions={onClickActions}
+        count={count}
       />
     </>
   );

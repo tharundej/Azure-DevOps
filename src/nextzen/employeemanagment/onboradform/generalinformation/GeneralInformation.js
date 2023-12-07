@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle, useEffect} from 'react';
+import React,{ useCallback, useMemo, useState ,forwardRef,useImperativeHandle, useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -41,7 +41,7 @@ import FormProvider, {
 import axios from 'axios';
 import SnackBar from 'src/nextzen/global/SnackBar';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
  import { Country, State, City }  from 'country-state-city';
@@ -52,11 +52,11 @@ import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgni
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  
   const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
-
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
@@ -81,12 +81,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     }
   }))
   useEffect(()=>{
-    console.log("HIII")
+   
     const obj=Country.getAllCountries();
     const newArray={...options};
     newArray.countryOptions=obj;
     newArray.rcountryOptions=obj;
-    console.log(obj,'ooooooo')
+   
     setOptions(newArray)
   },[])
 
@@ -275,12 +275,49 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   }
 
+  // function blobToBase64(blob) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  
+  //     reader.onloadend = () => {
+  //       resolve(reader.result.split(',')[1]);
+  //     };
+  
+  //     reader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  
+  //     reader.readAsDataURL(blob);
+  //   });
+  // }
+ 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,'general information');
+    
+
+    fetch(data?.avatarUrl?.preview)
+  .then(response => response.blob())
+  .then(blob => {
+    // Convert Blob to Base64
+    var reader = new FileReader();
+    reader.onload = function () {
+      var base64Data = reader.result.split(',')[1];
+      data.imageData=base64Data;
+      data.imageName=data?.avatarUrl?.path;
+      console.log(data,'base64Data');
+      ApiHitGeneralInformation(data);
+    };
+    reader.readAsDataURL(blob);
+  })
+  .catch(error => console.error('Error fetching the file:', error));
+
+  console.log(data?.avatarUrl?.preview,'general information');
 
     try {
       data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
+      // data.imageData=blobToBase64(data?.avatarUrl?.preview);
+      // data.imageName=data.avatarUrl.path;
+      // console.log(blobToBase64(data?.avatarUrl?.preview),'general information');
 
       if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){
         const obj={
@@ -311,14 +348,14 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       data.offerDate = (datesUsed?.offer_date);
       data.joiningDate = (datesUsed?.joining_date);
       data.dateOfBirth = (datesUsed?.date_of_birth);
-       data.gender=data?.gender?.label|| "",
+       data.gender=data?.gender?.label|| "";
        data.maritalStatus=data?.maritalStatus?.label || ""
-       data.religion=data?.religion?.label || "",
-       data.nationality=data?.nationality?.nationality || "",
-       data.bloodGroup=data?.bloodGroup?.label || "",
-       data.pCountry=data?.country|| "",
-      data.pState=data?.state || "",
-      data.pCity=data?.city || ""
+       data.religion=data?.religion?.label || "";
+       data.nationality=data?.nationality?.nationality || "";
+       data.bloodGroup=data?.bloodGroup?.label || "";
+       data.pCountry=data?.country|| {name:"",isoCode:""};
+      data.pState=data?.state || {name:"",isoCode:""};
+      data.pCity=data?.city || {name:"",isoCode:""}
        
 
       if(isSameAsPermanent){
@@ -341,7 +378,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
      
 
       
-       ApiHitGeneralInformation(data);
+       
       // const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
       //   (successData) => {
       //     console.log('sucess', successData);
@@ -396,7 +433,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
         newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setPCoutryIsoCode(obj?.isoCode)
+        setPCoutryIsoCode(obj?.isoCode|| "")
         // console.log(stateOptions1,'stateOptionsSatet')
       }
       catch(e){
@@ -835,7 +872,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rCountry"
                 label="Permanent Country"
-                options={options?.rcountryOptions }
+                options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}
                 renderOption={(props, option) => (
@@ -849,7 +886,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 name="rState"
                 label="Permanent State"
-                options={options?.rstateOptions}
+                options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
                 renderOption={(props, option) => (
@@ -862,7 +899,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                 name="rCity"
                 label="Permanent City"
-                options={options?.rcityOptions}
+                options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}
                 renderOption={(props, option) => (

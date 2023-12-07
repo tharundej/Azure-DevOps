@@ -12,7 +12,8 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
   
   const { fileName = '', fileContent = '', fileType = '' } = fileData(file);
 
-  const format = fileFormat(fileContent || fileType);
+  const format = 'pdf'
+  // fileFormat(fileContent || fileType);
 
   const renderContent =
     format === 'image' && imageView ? (
@@ -20,8 +21,8 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
         component="img"
        // src={preview}
         sx={{
-          width: 1,
-          height: 1,
+          width: '30px',
+          height: '30px',
           flexShrink: 0,
           objectFit: 'cover',
           ...imgSx,
@@ -44,7 +45,7 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
     return (
       <Tooltip title={fileName}>
         <Stack
-          flexShrink={0}
+          // flexShrink={0}
           component="span"
           alignItems="center"
           justifyContent="center"

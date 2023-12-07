@@ -23,6 +23,7 @@ import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 
 const Alert = React.forwardRef((props, ref) => (
@@ -30,6 +31,7 @@ const Alert = React.forwardRef((props, ref) => (
 ));
 
 const DeclarationDetails = () => {
+  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
 // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 
@@ -65,7 +67,10 @@ const [loading,setLoading] = useState(false);
    const [financialYears, setFinancialYears] = useState([]);
    const handleYearChange = (_, value) => {
      setSelectedYear(value);
+     localStorage.setItem('selectedYear', JSON.stringify(value));
+
    };
+   console.log(selectedYear , "selectedYear")
    const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -186,22 +191,25 @@ const [loading,setLoading] = useState(false);
       .request(config)
       .then((response) => {
         if (response.data.code === 200) {
+          enqueueSnackbar(response.data.message,{variant:'success'})
           setLoading(false)
           setReloading(!reloading);
-          console.log(JSON.stringify(response.data));
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
-          console.log("response", response)
+          // console.log(JSON.stringify(response.data));
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
+          // console.log("response", response)
         }
         else if(response.data.code === 400){
           setLoading(false)
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
+        enqueueSnackbar(error.response.data.message,{variant:'error'})
         setLoading(false)
         console.log(error);
       });
@@ -248,36 +256,31 @@ const [loading,setLoading] = useState(false);
     
   }, []);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
+
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
+
   return (
     <div>
    {loading ? 
   <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
   <>
-  <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Grid item xs={12}>
+
+      <Grid item xs={12} style={{marginBottom:"0.9rem" ,marginTop:"0.9rem"}}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option?.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label=" Please Select Financial Year" />}
+          renderInput={(params) => <TextField {...params} 
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
         />
       </Grid>
   { selectedYear?.financialYear?  

@@ -156,7 +156,7 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
               <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>

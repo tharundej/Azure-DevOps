@@ -124,6 +124,9 @@ import VendorMaterialsHeader from '../vendorMaterials/VendorMaterialsHeader';
 import BalanceSheetHead from '../balancesheet/BalanceSheetHeader';
 import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilter';
 import ApproveFilter from '../timesheet/components/ApproveFilters';
+import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
+import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
+
 const defaultFilters = {
   name: '',
   role: [],
@@ -513,6 +516,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <ProjectSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
 
@@ -542,10 +546,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               componentPage = {componentPage}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'LoanSearchFilter' && (
-            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
+            <LoanSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {filterName === 'LeavelistFilter' && (
             <LeaveFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -577,6 +582,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             <PayScheduleFilters
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'ShiftConfigurationFilterSearch' && (
@@ -584,16 +591,20 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'LeavePeriodFilterSearch' && (
             <LeavePeriodFilters
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
+              searchData={handleFilterSearch}
             />
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
-            <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
+            getTableData={getTableData} searchData={handleFilterSearch}/>
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -611,6 +622,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
           {filterName === 'CompoffFilterSearch' && (
@@ -618,6 +630,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
           {filterName === 'holidaysFilterSearch' && (
@@ -625,11 +638,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData} 
             />
           )}
 
           {filterName === 'DeductionFilter' && (
-            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage}/>
+            <DeductionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} componentPage={componentPage} getTableData={getTableData}/>
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
@@ -746,7 +760,13 @@ const token  =  (user?.accessToken)?user?.accessToken:''
              {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
           )}
+ {filterName === 'TaxSectionFilter' && (
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
 
+{filterName === 'AddRoleFilter' && (
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -800,11 +820,11 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(id) => 
+                            onHandleEditRow={(ele) => 
                               {
                                 if(handleEditRowParent)
                               
-                              handleEditRowParent(id)
+                              handleEditRowParent(ele)
                               }
                             }
                             selected={table.selected.includes(row.id)}

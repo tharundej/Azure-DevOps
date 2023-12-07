@@ -91,8 +91,8 @@ const PreviousWork = ({employeeIDForApis}) => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      "employeeID": employeeIDForApis
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "employeeId": employeeIDForApis
   });
      
     const config = {
@@ -129,7 +129,7 @@ const PreviousWork = ({employeeIDForApis}) => {
       <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
+          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}} sx={{backgroundColor:'#3B82F6'}}>+Add Work</Button>
           </Grid>
         </Grid>
 
@@ -174,7 +174,7 @@ const PreviousWork = ({employeeIDForApis}) => {
                            
 
                         {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords onhandleClose={handleClose} callApi={callApi} employeeIDForApis={employeeIDForApis}docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
+                        <EmployeeRecords onhandleClose={handleClose} callApi={ApiHit} employeeIDForApis={employeeIDForApis}docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
 
                           </>}
                         </CardContent>
