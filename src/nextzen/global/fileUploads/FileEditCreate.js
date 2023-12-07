@@ -101,7 +101,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
     const ApiHitCreate=()=>{
         
                 let data = JSON.stringify({
-                "companyId": documents?.companyId,
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 
                 "documents": defaultValues
@@ -132,7 +132,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
 
     const ApiHitAddDocs=()=>{
       let data = JSON.stringify({
-        "companyId": documents?.companyId,
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": employeeIDForApis,
         "mainRecordId":documents?.mainRecordID,
         "documents": defaultValues
@@ -322,15 +322,15 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         {docType?.map((type, idx) => (
-                        <MenuItem key={idx} value={type.toLowerCase().replace(' ', '-')}>
+                        <MenuItem key={idx} value={type}>
                             {type}
                         </MenuItem>
                         ))}

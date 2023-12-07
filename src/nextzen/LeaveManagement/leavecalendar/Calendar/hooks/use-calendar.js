@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 

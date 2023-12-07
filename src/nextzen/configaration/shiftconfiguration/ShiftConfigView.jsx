@@ -31,6 +31,7 @@ export default function ShiftConfigView({currentUser}) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const [count,setCount] = useState(0)
   const TABLE_HEAD = [
     { id: 'shiftName', label: 'Shift Name', type: 'text', minWidth: 180 },
     { id: 'startTime', label: 'Start Time', type: 'text', minWidth: 180 },
@@ -94,7 +95,7 @@ export default function ShiftConfigView({currentUser}) {
   ];
 
   const defaultPayload = {
-    companyId: 'COMP2',
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     count: 5,
     search: '',
     page: 0,
@@ -102,6 +103,7 @@ export default function ShiftConfigView({currentUser}) {
       shiftName: '',
       startTime: '',
       endTime: '',
+      locationFilter:'',
     },
     sort: {
       key: 0,
@@ -147,13 +149,21 @@ export default function ShiftConfigView({currentUser}) {
   };
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(name, selectedValue, selectedOption);
-    setFormData({
-      ...formData,
+    setFormData(prevFormData => ({
+      ...prevFormData,
       [name]: selectedValue,
       locationID: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
-    });
+    }));
+    const filed = 'locationId';
+    const filed2 = 'locationName';
+    setValueSelected(prevValueSelected => ({
+      ...prevValueSelected,
+      [filed]: selectedValue?.locationID,
+      [filed2]: selectedValue?.locationName,
+    }));
   };
+  
 
   const getLocation = async () => {
     const payload = {
@@ -195,10 +205,10 @@ export default function ShiftConfigView({currentUser}) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP2';
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID =( formData?.Location?.locationID)?formData?.Location?.locationID:valueSelected?.locationId
+    data.locationID =valueSelected?.locationId
     data.shiftName=valueSelected?.shiftName
     data.shiftConfigId=valueSelected?.shiftConfigId
     console.log('submitted data111', data);
@@ -210,6 +220,7 @@ export default function ShiftConfigView({currentUser}) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
+        setCount(count+1)
         console.log('sucess', response);
         handleCloseEdit();
       }
@@ -337,7 +348,7 @@ export default function ShiftConfigView({currentUser}) {
                 }))}
                 value={valueSelected?.locationName}
                 onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('Location', newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
@@ -374,6 +385,7 @@ export default function ShiftConfigView({currentUser}) {
       rowActions={actions}
       onClickActions={onClickActions}
       filterName="ShiftConfigurationFilterSearch"
+      count={count}
     />
     </>
   );

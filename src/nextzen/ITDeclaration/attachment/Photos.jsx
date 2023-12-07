@@ -106,7 +106,7 @@ export default function Photos({ photos, setPhotos, batch }) {
 for (let i = 0; i < images.length; i++) {
   const raw = JSON.stringify({
    
-"companyId": "COMP2",
+"companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 
 "employeeId": "ibm2",
 

@@ -102,7 +102,7 @@ export default function Requests() {
         "orderby":""
     }
 }
-      const tabLabels = ["Salary Request" , "Loan Request" , "My Deductions"]
+      const tabLabels = ["Salary Requests" , "Loan Requests" , "My Deductions"]
       const tabContents = [
         <div><SalaryAdvace defaultPayload={SalarydefaultPayload} componentPage="MyRequests"/> </div>,
         <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,

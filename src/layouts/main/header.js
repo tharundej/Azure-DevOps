@@ -90,7 +90,7 @@ export default function Header() {
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-            <Link href={paths.auth.jwt.register} component={RouterLink} variant="subtitle2">
+            <Link href={paths.auth.jwt.companyregisteration} component={RouterLink} variant="subtitle2">
               <Button variant="contained" sx={{marginRight:'10px'}}>Sign Up</Button>
             </Link>
 

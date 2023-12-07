@@ -25,7 +25,7 @@ import axios from 'axios';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
@@ -51,7 +51,7 @@ export default function HolidaysForm({ currentUser }) {
   });
 
   const RepeatsAnuallys = [{ type: 'Yes' }, { type: 'No' }];
-  const Fullday_halfdays = [{ type: 'Fullday' }, { type: 'Halfday' }];
+  const Fullday_halfdays = [{ type: 'Full Day' }, { type: 'First Half' },{type: 'Second Half'}];
 
   const defaultValues1 = useMemo(
     () => ({
@@ -222,7 +222,7 @@ export default function HolidaysForm({ currentUser }) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
+                    sx={{ width: '100%', paddingLeft: '3px' ,marginTop:'-7px'}}
                     label="Holiday Date"
                     // value={selectedDates}
                     value={null}

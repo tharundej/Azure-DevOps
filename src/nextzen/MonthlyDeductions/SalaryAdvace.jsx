@@ -34,11 +34,11 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     
         { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
-        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "text" },
+        { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
     
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
-        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "date" },
         { id: "PaidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "approverName", label: "Approver", minWidth: "7pc", type: "text" },
         { id: "commentStatus", label: "User Remarks", minWidth: "8pc", type: "text" },

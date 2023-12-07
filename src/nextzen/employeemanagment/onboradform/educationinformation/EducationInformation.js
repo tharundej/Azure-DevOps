@@ -149,9 +149,9 @@ const   EducationInformation=forwardRef((props,ref)=> {
    const obj =   {
        nameOfTheDegree:  '',
        stream:  '',
-       university:  '',
+       universityName:  '',
        yearOfPassing: undefined,
-       document_data:'',
+       
        gradeType:'',
        grade:undefined,
        documents:[
@@ -219,7 +219,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
          ...newArray[index],
          [field]: parseInt(value,10)
      }
+    }if(field==="nameOfTheDegree"){
 
+      newObj[index][field]=e?.target?.value ;
+      newArray[index] = {
+        ...newArray[index],
+        [field]: value?.label,
+       // nameOfTheDegreeObject:value
+    }
 
       }else{
 
@@ -378,7 +385,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
                            const newArray = [...defaultValues];
                            newArray[index] = {
                              ...newArray[index],
-                             nameOfTheDegree: newvalue
+                             nameOfTheDegree: newvalue?.label,
+                             nameOfTheDegreeObject:newvalue
                          }
                          setDefaultValues(newArray)
                          console.log(newArray)
@@ -391,7 +399,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
                             label="Name Of the Degree"
                             variant="outlined"
                             id="name_of_the_degree"
-                            value={item?.nameOfTheDegree}
+                            value={item?.nameOfTheDegreeObject}
                            
                           />
                         )}
@@ -542,12 +550,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
                         <MenuItem value="marks-memo">Marks Memo</MenuItem>

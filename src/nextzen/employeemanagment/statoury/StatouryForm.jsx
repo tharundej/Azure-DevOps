@@ -235,7 +235,26 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
  
           <Grid container   spacing={2} md={12} xs={12} lg={12}  >
  
-        
+          <Grid md={6} xs={12} lg={6}item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="aadharNumber"
+                    label="Aadhar Number"
+                    variant="outlined"
+                    id="accountNumber"
+                     value={currentUser?.aadharNumber}
+                    onChange={(e) => {
+                      if(e?.target?.value?.length<=12){
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        aadharNumber: e?.target?.value
+                      }
+                      ))
+                    }
+                    }}
+                  />
+          </Grid>
  
           <Grid md={6} xs={12} lg={6}item>
                   <TextField
@@ -247,11 +266,13 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="accountNumber"
                      value={currentUser?.accountNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         accountNumber: parseInt(e.target.value, 10) || ''
                       }
                       ))
+                    }
                     }}
                   />
           </Grid>
@@ -325,11 +346,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="esicNumber"
                      value={currentUser?.esicNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=17){
                       setCurrentUser(prev=>({
                         ...prev,
                         esicNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      )) }
                     }}
                   />
           </Grid>
@@ -344,11 +366,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ifscCode"
                      value={currentUser?.ifscCode}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         ifscCode:e?.target.value
                       }
-                      ))
+                      )) }
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
@@ -364,11 +387,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="lwfNumber"
                      value={currentUser?.lwfNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=45){
                       setCurrentUser(prev=>({
                         ...prev,
                         lwfNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
@@ -384,11 +408,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="panNumber"
                      value={currentUser?.panNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         panNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
@@ -405,11 +430,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="passportNumber"
                      value={currentUser?.passportNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         passportNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
@@ -425,11 +451,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="pfNumber"
                      value={currentUser?.pfNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         pfNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      ))}
                     }}
                   />
           </Grid>
@@ -444,11 +471,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ptNumber"
                      value={currentUser?.ptNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         ptNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      ))}
                     }}
                   />
           </Grid>
@@ -463,11 +491,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="uan"
                      value={currentUser?.uan}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         uan: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      )) }
                     }}
                   />
           </Grid>

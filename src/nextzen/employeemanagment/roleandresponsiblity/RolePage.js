@@ -295,7 +295,7 @@ const actions = [
         }
       </Grid>
     ))}
-</FormGroup>
+      </FormGroup>
       <Grid 
       margin='10px'
       spacing={2}
