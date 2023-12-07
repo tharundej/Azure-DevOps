@@ -59,7 +59,7 @@ const bull = (
 );
 
 export default function HrITTab() {
-  const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
 
  
   const {user} = useContext(UserContext)
@@ -146,6 +146,8 @@ const [loading,setLoading] = useState(false);
       deleteFunction(rowdata, event);
     }
   };
+
+  console.log(editData , valueSelected , " detailscomming")
   const [openEdit, setOpenEdit] = React.useState(false);
   const handleOpenEdit = () => {
     setOpenEdit(true);
@@ -217,6 +219,7 @@ const [loading,setLoading] = useState(false);
       .then((response) => {
         console.log('successresponse1', response);
         setItDetailsFromApi(response?.data);
+        setItDetails(response?.data)
         if (response.status === 200) {
           setSnackbarSeverity('success');
           setSnackbarMessage('Designation Added successfully!');
