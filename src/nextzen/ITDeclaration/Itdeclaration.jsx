@@ -26,7 +26,7 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Property','Medical Insurance Premium','Master Deatils' ,'HR Tab'];
+  const tabLabels = ['Declaration Details', 'Rent Details', 'LIC Premium','House Property','Medical Insurance Premium','Master Details' ,'HR Tab'];
   const tabContents = [
     <div>
       <DeclarationDetails/>
