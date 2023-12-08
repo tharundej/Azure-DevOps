@@ -221,6 +221,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
    
       url: baseUrl + `${endpoint}`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
+      // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,

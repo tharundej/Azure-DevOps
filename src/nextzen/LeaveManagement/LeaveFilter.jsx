@@ -242,6 +242,7 @@ export default function LeaveFilter({filterSearch,filterData}){
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}}
+            size="small"
             />
             </Grid>
             <Grid md={4} xs={4} item>

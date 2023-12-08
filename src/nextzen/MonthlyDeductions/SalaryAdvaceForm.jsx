@@ -56,8 +56,8 @@ const [sendData, setSendData] = useState({
   const onSubmit = handleSubmit(async (data) => {
    
     try {
-      data.companyID = (user?.companyID)?user?.companyID:'',
-      data.employeeID = (user?.employeeID)?user?.employeeID:'';
+      data.companyId = (user?.companyID)?user?.companyID:'',
+      data.employeeId = (user?.employeeID)?user?.employeeID:'';
       const response = await instance.post(baseUrl+'/addSalaryAdvance', data).then(
         (successData) => {
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
