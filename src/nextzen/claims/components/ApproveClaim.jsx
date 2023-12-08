@@ -62,6 +62,7 @@ export default function ApproveClaim({ currentUser }) {
   const [count, setCount] = useState(0)
 
   const TABLE_HEAD = [
+    { id: "employeeId", label: "Employee Id", minWidth: "7.2pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
@@ -70,18 +71,22 @@ export default function ApproveClaim({ currentUser }) {
       containesAvatar: false,
       secondaryText: "email",
     },
-    { id: "claimType", label: "Claim Type", width: 180, type: "text" },
-    { id: "claimDate", label: "Claim Date", width: 220, type: "text" },
-    { id: "claimAmount", label: "Claim Amount", width: 180, type: "text" },
-    { id: "expenseStartDate", label: "Expense Start Date", width: 100, type: "text" },
-    { id: "expenseEndDate", label: "Expense End Date", width: 100, type: "text" },
-    { id: "totalDays", label: "Total Days", width: 100, type: "text" },
+    { id: "expenseClaimId", label: "Expense Claim Id", minWidth: "7pc", type: "text" },
+    { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
+    { id: "claimDate", label: "Claim Date", minWidth: "7pc", type: "text" },
+    { id: "claimAmount", label: "Claim Amount", minWidth: "7pc", type: "text" },
+    { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
+    { id: "expenseStartDate", label: "Expense Start Date", minWidth: "7pc", type: "text" },
+    { id: "expenseEndDate", label: "Expense End Date", minWidth: "7pc", type: "text" },
+    { id: "totalDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
-    { id: "approveAmount", label: "Approve Amount", width: 200, type: "text" },
-    { id: "approverName", label: "Approver Name", width: 100, type: "text" },
-    { id: "approvedDate", label: "Approved Date", width: 100, type: "text" },
-    { id: "paymentStatus", label: "Payment Status", width: 100, type: "badge" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
+    { id: "approveAmount", label: "Approved Amount",minWidth: "7pc", type: "text" },
+    { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "User Comment", minWidth: "9pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "9pc", type: "text" },
+    { id: "paymentStatus", label: "Payment Status", minWidth: "7pc", type: "badge" },
+    { id: "status", label: "Status",minWidth: "7pc", type: "badge" },
 
     // { id: '', width: 88 },
   ]
@@ -207,15 +212,24 @@ export default function ApproveClaim({ currentUser }) {
   console.log(approve, "approve1233")
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const parsedValue = name === "approvedAmount" && value.trim() !== "" ? parseFloat(value) : null;
-
-    setApprove((prevApprove) => ({
-      ...prevApprove,
-      [name]: parsedValue,
-    }));
-
+    console.log(name, value, "1998-10-07");
+  
+    // Handle approvedAmount separately
+    if (name === "approvedAmount") {
+      const parsedValue = value.trim() !== "" ? parseFloat(value) : null;
+      setApprove((prevApprove) => ({
+        ...prevApprove,
+        [name]: parsedValue,
+      }));
+    } else {
+      // For other fields like approverRemark, handle them normally
+      setApprove((prevApprove) => ({
+        ...prevApprove,
+        [name]: value,
+      }));
+    }
   };
-
+  
 
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData, eventData) => {
@@ -228,7 +242,7 @@ export default function ApproveClaim({ currentUser }) {
             ...prevState,
             status: "Approved",
             expenseClaimId: rowData?.expenseClaimId,
-            employeeId: rowData?.EmployeeId,
+            employeeId: rowData?.employeeId,
             claimAmount: rowData?.claimAmount,
             claimType: rowData?.claimType,
           }));
@@ -246,7 +260,7 @@ export default function ApproveClaim({ currentUser }) {
             ...prevState,
             status: "Rejected",
             expenseClaimId: rowData?.expenseClaimId,
-            employeeId: rowData?.EmployeeId,
+            employeeId: rowData?.employeeId,
             claimAmount: rowData?.claimAmount,
             claimType: rowData?.claimType,
           }));
@@ -277,10 +291,12 @@ export default function ApproveClaim({ currentUser }) {
           console.log('sucess', res);
           enqueueSnackbar(res?.data?.message, { variant: 'success' })
           setCount(count + 1)
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          handleClose()
         }
       );
 
@@ -288,6 +304,7 @@ export default function ApproveClaim({ currentUser }) {
     } catch (error) {
       enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       console.error(error);
+      handleClose()
     }
   });
 
@@ -367,7 +384,7 @@ export default function ApproveClaim({ currentUser }) {
         dialogPayload={externalFilter}
         onclickActions={onclickActions}
       // searchFilterheader={searchFilterheader}
-
+      count={count}
       />
     </>
   );

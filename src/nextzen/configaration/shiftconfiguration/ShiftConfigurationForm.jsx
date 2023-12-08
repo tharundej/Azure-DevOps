@@ -74,23 +74,13 @@ export default function ShiftConfigurationForm({ currentUser }) {
   ];
   // const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
 
-  const handleAutocompleteChange = (name, selectedOptions) => {
-    console.log(name, selectedOptions);
-    // extra code
-    const selectedValues = selectedOptions.map(option => option.value);
-  const locationIDs = selectedOptions.map(option => option?.locationID);
-  const locationNames = selectedOptions.map(option => option?.locationName);
-    // setFormData({
-    //   ...formData,
-    //   [name]: selectedValue,
-    //   locationID: selectedOption?.locationID,
-    //   locationName: selectedOption?.locationName,
-    // });
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+    console.log(name, selectedValue, selectedOption);
     setFormData({
       ...formData,
-      [name]: selectedValues,
-      locationID: locationIDs,
-      locationName: locationNames,
+      [name]: selectedValue,
+      locationId: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
     });
   };
 console.log(formData,'formmmmmm')
@@ -138,26 +128,33 @@ console.log(formData?.locationID,'formmmmmm')
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-   
     try {
-      data.locationID = formData?.locationID
+       data.LocationId = formData?.Location.map((name)=>name.locationID)
 
       console.log('submitted data111', data);
-      console.log('aaa',formData?.locationID);
+      console.log('aaa',formData?.Location.map((name)=>name.locationID));
       const response = await axios.post(baseUrl+'/addShiftConfig', data);
       if(response?.status===200){
         handleClose();
         setSnackbarSeverity('success');
          setSnackbarMessage('Shift Configuration Added Succuessfully!');
          setSnackbarOpen(true);
-      
+         handleClose();
       console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response?.data);
       }
     } catch (error) {
       setOpen(true);
        setSnackbarSeverity('error');
        setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
        setSnackbarOpen(true);
+       handleClose();
       console.log('error', error);
     }
   });
@@ -234,16 +231,8 @@ console.log(formData?.locationID,'formmmmmm')
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>
-              {/* <RHFAutocomplete
-                freeSolo
-                placeholder="Press Enter to Add Custom"
-                label="Shift Term"
-                name="ShiftTerm"
-                options={ShiftTerms.map((ShiftTerm) => ShiftTerm.type)}
-              /> */}
-
               <Autocomplete
-                multiple
+                 multiple
                 disablePortal
                 name="Location"
                 id="combo-box-demo"
@@ -252,8 +241,8 @@ console.log(formData?.locationID,'formmmmmm')
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
-                onChange={(event, selectedOptions) =>
-                  handleAutocompleteChange('Location', selectedOptions)
+                onChange={(event, newValue, selectedOption) =>
+                  handleAutocompleteChange('Location', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />

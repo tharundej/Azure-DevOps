@@ -42,6 +42,7 @@ const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",
@@ -51,8 +52,8 @@ const defaultPayloadValue=(defaultPayload)?defaultPayload:{
         }
     },
     "sort":{
-        "key":0,
-        "orderby":""
+        "key":1,
+        "orderby":"deduction_id"
     }
 }
 return (

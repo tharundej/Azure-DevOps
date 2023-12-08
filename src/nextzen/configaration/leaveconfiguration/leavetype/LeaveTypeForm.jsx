@@ -32,7 +32,7 @@ import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function LeaveTypeForm({ currentUser }) {
+export default function LeaveTypeForm({ currentUser ,getTableData}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -44,6 +44,7 @@ export default function LeaveTypeForm({ currentUser }) {
   const handleOpenEdit = () => {
     setOpenEdit(true);
   }
+  const [count,setCount] = useState(0)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -140,7 +141,7 @@ export default function LeaveTypeForm({ currentUser }) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
          handleClose();
-
+         getTableData
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {

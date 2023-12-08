@@ -385,8 +385,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
                            const newArray = [...defaultValues];
                            newArray[index] = {
                              ...newArray[index],
-                             nameOfTheDegree: newvalue?.label,
-                             nameOfTheDegreeObject:newvalue
+                           
+                             nameOfTheDegree:newvalue
                          }
                          setDefaultValues(newArray)
                          console.log(newArray)

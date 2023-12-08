@@ -91,19 +91,30 @@ export default function MyCompoff({ currentUser ,}) {
     // {
     //   id: "employeeName",
     //   label: " Employee Name",
-    //   width: 180,
+    //   minWidth: "7pc",
     //   type: "text",
     //   containesAvatar: false,
 
     //   secondaryText: "email",
     // },
-    { id: "compensantoryPolicies", label: "Compensantory Policies", width: 180, type: "text" },
-    { id: "startDate", label: "Start Date", width: 220, type: "text" },
-    { id: "endDate", label: "End Date", width: 180, type: "text" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
-    { id: "expireDate", label: "Expire Date", width: 180, type: "text" },
-    { id: "approverName", label: "Approver Name", width: 180, type: "text" },
+    // { id: "projectName", label: "Project Name", width: 180, type: "text" },
+    { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "8pc", type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "8pc", type: "text" },
+    { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
+    { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },
+    { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
+    { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
+    { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "User Comment ", minWidth: "7pc", type: "text" },
+    // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approver Date", minWidth: "7pc", type: "text" },
+    { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
+    { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
+    
+    ,
     // { id: '', width: 88 },
+    
   ]
 
   const managerID =localStorage.getItem('reportingManagerID');
@@ -719,6 +730,7 @@ const handleCancelDelete = () => {
       dialogPayload={externalFilter}
          filterName="claimSearchFilter"
          onclickActions={onclickActions}
+         count={count}
       />
     </>
   );

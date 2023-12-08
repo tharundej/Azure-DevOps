@@ -30,7 +30,7 @@ import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 const headerMap = new Map();
-headerMap.set('leave','Leave');
+headerMap.set('leave','Leave Management');
 headerMap.set('employeemanagementhome','Employee Management')
 headerMap.set('timesheetmanagement','Time Sheet Management')
 headerMap.set('Shift','Shift management')
