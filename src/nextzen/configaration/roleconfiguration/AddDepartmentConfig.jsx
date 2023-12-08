@@ -44,7 +44,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import UserContext from 'src/nextzen/context/user/UserConext';
 
-export default function AddDepartmentConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig }) {
+export default function AddDepartmentConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig,getTableData }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
@@ -222,7 +222,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
        .then((response) => {
          if (response.data.code === 200) {
           enqueueSnackbar(response?.data?.message,{variant:'success'})
-         
+          getTableData()
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
          }else  if (response.data.code === 400) {
@@ -381,7 +381,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider methods={methods1} onSubmit={onSubmit1} >
-          <ModalHeader  heading="Department Config"/>
+          <ModalHeader  heading="Department Configuration"/>
           <DialogContent>
             <Box
               rowGap={3}

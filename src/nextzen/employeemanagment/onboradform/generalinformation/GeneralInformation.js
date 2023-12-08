@@ -698,6 +698,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         },
                       }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          dateOfBirth:''
+                        }
+                        setErrorMessage(obj);
                         setDatesUsed((prev) => ({
                           ...prev,
                           date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
@@ -771,6 +777,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
+                        
                         setDatesUsed((prev) => ({
                           ...prev,
                           offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
@@ -794,6 +801,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         },
                       }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          joiningDate:''
+                        }
+                        setErrorMessage(obj);
                         console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,

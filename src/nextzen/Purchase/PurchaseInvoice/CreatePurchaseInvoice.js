@@ -14,9 +14,20 @@ import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@m
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 import UserContext from 'src/nextzen/context/user/UserConext';
+// import { async } from '@firebase/util';
+import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import { createPurchaseInvoiceAPI } from 'src/api/Accounts/PurchaseInvoice';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
 
 export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
-  const {user} =useContext(UserContext)
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -24,15 +35,20 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
+      companyId: user?.companyID ? user?.companyID : '',
+      poNumber: currentData?.poNumber || '',
+      invoiceNo: '',
+      invoiceDate: currentData?.invoiceDate || '',
+      status: currentData?.status || 'Pending',
+      vendorId: currentData?.vendorId || '',
+      locationId: currentData?.locationId || '',
       paymentMode: currentData?.paymentMode || '',
-      netTotalAmount: currentData?.netTotalAmount || '',
-      gstAmount: currentData?.gstAmount || '',
-      totalAmount: currentData?.totalAmount || '',
-      status: currentData?.status || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
-      totalAmount: currentData?.totalAmount || '',
+      PODate: '',
+      ExpectedDeliveryDate: '',
+      VendorName: '',
+      VendorAddress: '',
+      FactoryShippingAddress: '',
+      materialInvoice: [],
     }),
     [currentData]
   );
@@ -51,54 +67,218 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-
+  const [purchaseOrderOptions, setPurchaseOrderOptions] = useState();
+  const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [contentList, setContentList] = useState([]);
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+  const [datesUsed, setDatesUsed] = useState({
+    invoiceDate: defaultValues?.invoiceDate ? dayjs(defaultValues?.invoiceDate) : dayjs(new Date()),
+  });
+  const fetechPurchaseOrder = async () => {
+    try {
+      const data = {
+        count: 5,
+        page: 0,
+        search: '',
+        roleid: 1,
+        companyId: user?.companyID ? user?.companyID : '',
+        externalFilters: {
+          poDate: {
+            from: '',
+            to: '',
+          },
+          fPODate: '',
+          fItemName: '',
+          fUnitOfMeasure: '',
+          expectedDeliveryDate: {
+            from: '',
+            to: '',
+          },
+          fExpectedDeliveryDate: '',
+          fPaymentTerm: '',
+          fVendorName: '',
+          fCompanyName: '',
+        },
+        sort: {
+          key: 1,
+          orderBy: 'po.purchase_order_id',
+        },
+      };
+      const response = await getPurchaseOrderAPI(data);
+      if (response === null) {
+        handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
+      } else {
+        setPurchaseOrderOptions(response);
+        setSelectedPurchaseOrder(
+          defaultValues.purchaseOrderID ||
+            (response.length > 0 ? response[0].purchaseOrderID : null)
+        );
+      }
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
+  useEffect(() => {
+    fetechPurchaseOrder();
+  }, []);
+  useEffect(() => {
+    contentList.forEach((content, index) => {
+      setValue(`materialInvoice[${index}].materialId`, content.materialId ? content.materialId : 0);
+      setValue(`materialInvoice[${index}].itemName`, content.itemName ? content.itemName : '');
+      setValue(
+        `materialInvoice[${index}].unitOfMeasure`,
+        content.unitOfMeasure ? content.unitOfMeasure : ''
+      );
+      setValue(`materialInvoice[${index}].rate`, content.rate ? content.rate : 0);
+      setValue(`materialInvoice[${index}].gstRate`, content.gstRate ? content.gstRate : 0);
+      setValue(
+        `materialInvoice[${index}].requestQuantity`,
+        content.quantity ? content.quantity : 0
+      );
+      setValue(
+        `materialInvoice[${index}].paidQuantity`,
+        content.paidQuantity ? content.paidQuantity : 0
+      );
+    });
+  }, [contentList]);
+  const handlePurchaseOrderChange = async () => {
+    try {
+      const data = {
+        count: 1,
+        page: 26,
+        search: '',
+        roleid: 1,
+        companyId: user?.companyID ? user?.companyID : '',
+        externalFilters: {
+          poDate: {
+            from: '',
+            to: '',
+          },
+          fPODate: '',
+          fItemName: '',
+          fUnitOfMeasure: '',
+          expectedDeliveryDate: {
+            from: '',
+            to: '',
+          },
+          fExpectedDeliveryDate: '',
+          fPaymentTerm: '',
+          fVendorName: '',
+          fCompanyName: '',
+        },
+        sort: {
+          key: 1,
+          orderBy: 'po.purchase_order_id',
+        },
+      };
+      const response = await getPurchaseOrderAPI(data);
+      if (response === null) {
+        handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
+      } else {
+        setValue('poNumber', response[0].poNumber);
+        setValue('PODate', response[0].poDate);
+        setValue('ExpectedDeliveryDate', response[0].expectedDeliveryDate);
+        setValue('paymentMode', response[0].paymentTerm);
+        setValue('vendorId', response[0]?.vendorId ? response[0]?.vendorId : 0);
+        setValue('locationId', response[0]?.locationId ? response[0]?.locationId : 0);
+        setValue('VendorName', response[0].vendorName);
+        setValue('VendorAddress', response[0].vendorAddress);
+        setValue('FactoryShippingAddress', response[0].factoryShippingAddress);
+        const materialArray = Object.values(response[0].purchaseMaterial || {});
+        setContentList(materialArray);
+        console.log(materialArray);
+      }
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
+  const HandleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    setValue(name, value);
+    const requestQuantity = watch(`materialInvoice[${index}].requestQuantity`);
+    const paidQuantity = watch(`materialInvoice[${index}].paidQuantity`);
+    const quantity = watch(`materialInvoice[${index}].receivedMaterialWeight`);
+    if (requestQuantity - paidQuantity < quantity) {
+      handleCallSnackbar(
+        'Your Max alowed Quantity is ' + (requestQuantity - paidQuantity),
+        'warning'
+      );
+      setValue(`materialInvoice[${index}].receivedMaterialWeight`, requestQuantity - paidQuantity);
+    }
+    updateCalculatedValues(index);
+  };
+  const updateCalculatedValues = (index) => {
+    const parsedQuantity = parseFloat(watch(`materialInvoice[${index}].receivedMaterialWeight`));
+    const parsedPrice = parseFloat(watch(`materialInvoice[${index}].rate`));
+    const parsedGstRate = parseFloat(watch(`materialInvoice[${index}].gstRate`));
+    console.log({ parsedQuantity }, { parsedPrice }, { parsedGstRate });
+    const amount = parsedQuantity * parsedPrice;
+    const gstAmount = amount * (parsedGstRate / 100);
+    setValue(`materialInvoice[${index}].amount`, amount);
+    setValue(`materialInvoice[${index}].gstAmount`, gstAmount);
+    setValue(`materialInvoice[${index}].totalAmount`, amount + gstAmount);
+    calculateGrandTotal();
+  };
+  const calculateGrandTotal = () => {
+    let grandTotal = 0;
+    let grandGstAmount = 0;
+    for (let i = 0; i < watch('materialInvoice')?.length; i++) {
+      const itemTotalAmount = watch(`materialInvoice[${i}].totalAmount`) || 0;
+      grandTotal += itemTotalAmount;
+      const itemTotalGstAmount = watch(`materialInvoice[${i}].gstAmount`) || 0;
+      grandGstAmount += itemTotalGstAmount;
+    }
+    setValue('netTotalAmount', grandTotal);
+    setValue('gstAmount', grandGstAmount);
+  };
+  useEffect(() => {
+    calculateGrandTotal();
+  }, [values.materialInvoice]);
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
+    data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     try {
-      console.log(data, 'data111ugsghghh');
-
-      const response = await instance.post('addPurchaseOrder', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      let response = await createPurchaseInvoiceAPI(data);
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      getTableData();
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
-  const initialContent = (
-    <Box
-      rowGap={3}
-      columnGap={2}
-      display="grid"
-      marginTop={2}
-      gridTemplateColumns={{
-        xs: 'repeat(1, 1fr)',
-        sm: 'repeat(5, 1fr)',
-      }}
-    >
-      <RHFTextField name="Material Name" label="Material Name" />
-      <RHFTextField name="HSN Code" label="HSN Code" />
-      <RHFTextField name="Unit Of Measure" label="Unit Of Measure" />
-      <RHFTextField name="Quantity" label="Quantity" />
-      <RHFTextField name="Rate" label="Rate" />
-    </Box>
-  );
-  const [contentList, setContentList] = useState([initialContent]);
-  const handleButtonClick = () => {
-    const newContent = initialContent;
-    setContentList([...contentList, newContent]);
-  };
-
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Purchase Invoice</DialogTitle>
-
+        <ModalHeader heading={'Add New Purchase Invoice'} />
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}
@@ -107,46 +287,202 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
             marginTop={2}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              sm: 'repeat(3, 1fr)',
+              sm: 'repeat(4, 1fr)',
             }}
           >
-            <RHFTextField name="PO Number" label="PO Number" />
-            <RHFTextField name="PO Date" label="PO Date" />
-            <RHFTextField name="Expected Delivery Date" label="Expected Delivery Date" />
-            <RHFTextField name="Payment Term" label="Payment Term" />
-            <RHFTextField name="Vendor Name" label="Vendor Name" />
-            <RHFTextField name="Vendor Address" label="Vendor Address" />
-            <RHFTextField name=" Vendor PAN" label=" Vendor PAN" />
-            <RHFTextField name=" Vendor GST No" label=" Vendor GST No" />
-            <RHFTextField name="Email ID" label="Email ID" />
-            <RHFTextField name="Contact No" label="Contact No" />
-            <RHFTextField name="Vendor Location" label="Vendor Location" />
-            <RHFTextField name="Company Name" label="Company Name" />
-            <RHFTextField name="Company  Address" label="Company  Address" />
-            <RHFTextField name="Company  GST" label="Company  GST" />
-            <RHFTextField name="Company  PAN" label="Company  PAN" />
-            <RHFTextField name="Factory Shipping Address" label="Factory Shipping Address" />
+            <RHFAutocomplete
+              name="poId"
+              id="poId"
+              options={purchaseOrderOptions || []}
+              onChange={handlePurchaseOrderChange}
+              getOptionLabel={(option) => option.poNumber}
+              renderInput={(params) => (
+                <TextField {...params} label="Select PO Number" variant="outlined" />
+              )}
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="PODate"
+              label="PO Date"
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Invoice Date *"
+                  value={datesUsed?.invoiceDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      invoiceDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="ExpectedDeliveryDate"
+              label="Expected Delivery Date"
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="paymentMode"
+              label="Payment Term"
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="VendorName"
+              label="Vendor Name"
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="VendorAddress"
+              label="Vendor Address"
+            />
+            <RHFTextField
+              InputProps={{
+                readOnly: true,
+              }}
+              name="FactoryShippingAddress"
+              label="Factory Shipping Address"
+            />
+            <RHFTextField
+              name="gstAmount"
+              label="GST Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+              defaultValue="0"
+            />
+            <RHFTextField
+              name="netTotalAmount"
+              label="Grand Total Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+              defaultValue="0"
+            />
           </Box>
-          <Box
-            marginTop={2}
-            display="flex"
-            justifyContent="space-between" // Align items to the right
-            alignItems="center"
-          >
+          <Box marginTop={2} display="flex" justifyContent="space-between" alignItems="center">
             <h2>Purchase Material</h2>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleButtonClick}
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              sx={{ margin: '20px' }}
-            >
-              Add
-            </Button>
           </Box>
-          {contentList.map((content, index) => (
-            <div key={index}>{content}</div>
-          ))}
+          {contentList.map((content, index) => {
+            return (
+              <div key={index}>
+                <Box
+                  key={index}
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  marginTop={2}
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(5, 1fr)',
+                  }}
+                >
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue={content.itemName}
+                    label="Material"
+                    name={`materialInvoice[${index}].itemName`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue={content.unitOfMeasure}
+                    label="Unit of Measure"
+                    name={`materialInvoice[${index}].unitOfMeasure`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue={content.quantity}
+                    label="Requested Quantity"
+                    name={`materialInvoice[${index}].requestQuantity`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue={content.quantity}
+                    label="Already Paid Quantity"
+                    name={`materialInvoice[${index}].paidQuantity`}
+                  />
+                  <RHFTextField
+                    type="number"
+                    onChange={(e) => HandleInputChange(e, index)}
+                    defaultValue={0}
+                    label="Quantity"
+                    name={`materialInvoice[${index}].receivedMaterialWeight`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    value={content.rate || 0}
+                    defaultValue={content.rate || 0}
+                    label="Rate"
+                    name={`materialInvoice[${index}].rate`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue={content.gstRate}
+                    label="GST Rate"
+                    name={`materialInvoice[${index}].gstRate`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue="0"
+                    label="Amount"
+                    name={`materialInvoice[${index}].amount`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue="0"
+                    label="GST Amount"
+                    name={`materialInvoice[${index}].gstAmount`}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    defaultValue="0"
+                    label="Total Amount"
+                    name={`materialInvoice[${index}].totalAmount`}
+                  />
+                  <RHFTextField
+                    defaultValue={0}
+                    label="Vehicle Weight"
+                    name={`materialInvoice[${index}].vehicleWeight`}
+                  />
+                  <RHFTextField label="Comments" name={`materialInvoice[${index}].comments`} />
+                </Box>
+                <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
+              </div>
+            );
+          })}
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -35,10 +36,12 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
     }),
     [currentData]
   );
-  const statusOptions = ['Ton', 'Gram', 'Kg'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
+
   const [vendorMaterials, setVendorMaterials] = useState([]);
   const [unitOptions, setUnitOptions] = useState([]);
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [selectedUnit, setSelectedUnit] = useState(null);
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -219,6 +222,20 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
       setContentList(updatedList);
     }
   };
+  const fetchUnits = async () => {
+    try {
+      const response = await getUnitOfMeasure();
+      setUnitOptions(response);
+      setSelectedUnit(response.length > 0 ? response[0] : null);
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnits();
+  }, []);
   const [contentList, setContentList] = useState([initialContent]);
   const handleButtonClick = () => {
     const newContent = initialContent;
@@ -263,17 +280,19 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
             </LocalizationProvider>
             <RHFTextField name="Material Name" label="Material Name" />
             <RHFTextField name="HSN Code" label="HSN Code" />
-            <RHFTextField name="Unit Of Measure" label="Unit Of Measure" />
-            <RHFAutocomplete
-              name="status"
-              id="status"
-              options={statusOptions || []}
-              value={selectedStatus}
-              onChange={(event, newValue) => setSelectedStatus(newValue)}
-              renderInput={(params) => (
-                <TextField {...params} label="Unit Of Measure" variant="outlined" />
-              )}
-            />
+
+             {/* <RHFAutocomplete
+        name={`addPurchaseMaterial[${index}].unitOfMeasure`}
+        id={`addPurchaseMaterial[${index}].unitOfMeasure`}
+        options={unitOptions || []}
+        onChange={(event, newValue) =>
+          HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].unitOfMeasure`)
+        }
+        getOptionLabel={(option) => option}
+        renderInput={(params) => (
+          <TextField {...params} label="Select Unit of Measure" variant="outlined" />
+        )}
+      /> */}
       <RHFTextField type="number" name="Quantity" label="Quantity" />
       <RHFTextField type="number" name="Rate" label="Rate" />
             <RHFTextField type="number" name="SGST" label="SGST" />

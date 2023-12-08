@@ -75,6 +75,7 @@ export default function HouseProperty() {
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
 const payMode = [{ type: 'Yes ' }, { type: 'No' }];
+const loanType = [{ type: 'Construction' }, { type: 'Purchase' } , { type: 'Repair/Renewal' }];
 const [loading,setLoading] = useState(false);
  
 
@@ -572,13 +573,20 @@ console.log(isValid , "isValidisValid")
       setSelectedYear(parsedValue);
     }
   }, []);
+  const [show , setShow] = useState(false)
   const handleAutocompleteChange = (name, selectedValue) => {
     let mappedValue;
 
     if (selectedValue === 'Yes') {
       mappedValue = 1;
+      if(name == "isPropertySelfOccupiedOrLetOu" ){
+        setShow(true)
+      }
     } else if (selectedValue === 'No') {
       mappedValue = 0;
+      if(name == "isPropertySelfOccupiedOrLetOu" ){
+        setShow(false)
+      }
     } else {
       mappedValue = selectedValue;
     }
@@ -623,7 +631,7 @@ console.log(isValid , "isValidisValid")
             <Grid item xs={4}>
               {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
               <TextField
-                label="Property Reference Sl.No(Enter 1,2,3 Etc) "
+                label="Property Reference Number "
                 name="propertyReferenceSlNo"
                 value={formData.propertyReferenceSlNo}
                 onChange={handleChange}
@@ -685,7 +693,7 @@ console.log(isValid , "isValidisValid")
             <Grid item xs={4}>
               {/* <Typography >Amount Of Housing loan Taken For The Property</Typography> */}
               <TextField
-                label="Amount Of Housing loan Taken For The Property"
+                label="loan Taken For The Property"
                 name="amountOfHousingloanTakenFromTheProperty"
                 value={formData.amountOfHousingloanTakenFromTheProperty}
                 onChange={handleChange}
@@ -698,7 +706,7 @@ console.log(isValid , "isValidisValid")
             </Grid>
             <Grid item xs={4}>
               {/* <Typography >PurPose Of Loan</Typography> */}
-              <TextField
+              {/* <TextField
                 label="Purpose Of Loan"
                 name="purposeOfLoan"
                 value={formData.purposeOfLoan}
@@ -708,7 +716,29 @@ console.log(isValid , "isValidisValid")
                 error={hasError('purposeOfLoan')}
                 helperText={getHelperText('purposeOfLoan')}
                
-              />
+              /> */}
+
+<Autocomplete
+                  disablePortal
+                  name="purposeOfLoan"
+                  id="combo-box-demo"
+                  options={loanType.map((employeepayType) => employeepayType.type)}
+                  value={formData.purposeOfLoan}
+                  onChange={(event, newValue) => handleAutocompleteChange('purposeOfLoan', newValue)}
+                  // sx={{ width: 300 }}
+              
+
+                  renderInput={(params) => (
+                    <>
+                      <TextField {...params} label="Purpose Of Loan" />
+                      {fieldErrors.purposeOfLoan && (
+                        <Typography color="error" variant="caption">
+                          {fieldErrors.purposeOfLoan}
+                        </Typography>
+                      )}
+                    </>
+                 )}
+                />
             </Grid>
           </Grid>
 
@@ -739,7 +769,7 @@ console.log(isValid , "isValidisValid")
             <Grid item xs={4}>
               {/* <Typography >Intrest Payable On Housing Loan For The Year</Typography> */}
               <TextField
-                label="Intrest Payable On Housing Loan For The Year"
+                label="Interest on Housing Loan/Year"
                 name="interestPaybleOnYear"
                 value={formData.interestPaybleOnYear}
                 onChange={handleChange}
@@ -757,7 +787,7 @@ console.log(isValid , "isValidisValid")
                   name="isPropertySelfOccupiedOrLetOu"
                   id="combo-box-demo"
                   options={payMode.map((employeepayType) => employeepayType.type)}
-                  value={formData.payMode}
+                  value={formData.isPropertySelfOccupiedOrLetOu}
                   onChange={(event, newValue) => handleAutocompleteChange('isPropertySelfOccupiedOrLetOu', newValue)}
                   // sx={{ width: 300 }}
               
@@ -777,7 +807,9 @@ console.log(isValid , "isValidisValid")
           </Grid>
 
           <Grid item container xs={12} lg={12} md={12} spacing={2}>
-          
+
+            { console.log(show ,"fieldErrors.isPropertySelfOccupiedOrLetOu " ,show)}
+        {  show ? null :
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
@@ -791,7 +823,7 @@ console.log(isValid , "isValidisValid")
                 helperText={getHelperText('ifJointPropertyThenEnterInterestRate')}
                
               />
-            </Grid>
+            </Grid>}
             <Grid item xs={4}>
               {/* <Typography >Gross Rental Income</Typography> */}
               <TextField
