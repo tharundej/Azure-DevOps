@@ -55,7 +55,7 @@ export default function MyShiftDetails() {
       "company_id":(user?.companyID)?user?.companyID : '',
       "employee_id":(user?.employeeID)?user?.employeeID : '',
       "page":0,
-      "count":50,
+      "count":5,
       "Search":"",
       "externalFilters":{
       "shift_name": ""

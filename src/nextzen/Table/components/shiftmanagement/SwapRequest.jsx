@@ -58,7 +58,7 @@ export default function Swaprequest() {
     const defaultPayload ={
       "companyId":(user?.companyID)?user?.companyID:'',
       "supervisorId":(user?.employeeID)?user?.employeeID:'',
-      "count":7,
+      "count":5,
       "page":0,
       "search":"",
       "externalFilters":{
