@@ -52,11 +52,7 @@ const TABS = [
       label: 'Employee Permission',
       icon: <Iconify icon="mdi:checkbox-outline" width={18} />,
     },
-    {
-      value: 'ChangePassword',
-      label: 'Change Password',
-      icon: <Iconify icon="ic:round-password" width={18} />,
-    },
+    
   ];
  
 
@@ -165,25 +161,32 @@ const EmployeeView = () => {
           //avatarUrl='https://2d56hsdn-3001.inc1.devtunnels.ms/erp/download?file=s.jpg'
           coverUrl="aaa"
         />
+<Tabs
+  value={currentTab}
+  onChange={handleChangeTab}
+  variant="scrollable"
+  scrollButtons="auto"
+  aria-label="scrollable auto tabs example"
+  
+  sx={{
+    
+    width: 1,
+    bottom: 0,
+    zIndex: 9,
+    position: 'absolute',
+    bgcolor: 'background.paper',
+    [`& .${tabsClasses.flexContainer}`]: {
+      pr: { md: 3 },
+      justifyContent: {
+        sm: 'center',
+        md: 'flex-end',
+      },
+    },
+  }}
+>
 
-        <Tabs
-          value={currentTab}
-          onChange={handleChangeTab}
-          sx={{
-            width: 1,
-            bottom: 0,
-            zIndex: 9,
-            position: 'absolute',
-            bgcolor: 'background.paper',
-            [`& .${tabsClasses.flexContainer}`]: {
-              pr: { md: 3 },
-              justifyContent: {
-                sm: 'center',
-                md: 'flex-end',
-              },
-            },
-          }}
-        >
+
+        
           {TABS.map((tab) => (
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
@@ -224,7 +227,7 @@ const EmployeeView = () => {
       {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Documents' && <Documents handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='EmployeePermission' && <EmployeePermissions open={id}  employeeId={id}  />}
-      {currentTab==='ChangePassword' && <ChangePassword open={id}  employeeId={id}  />}
+    
 
     
       {/* // {currentTab === 'friends' && (
