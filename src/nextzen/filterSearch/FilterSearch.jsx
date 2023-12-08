@@ -264,7 +264,7 @@ export default function SearchFilter({filterSearch,filterData}){
             <TextField placeholder='Search....' 
             fullWidth
              onChange={e=>{handleSearch(e)}}
-
+             size="small"
             />
             </Grid>
 

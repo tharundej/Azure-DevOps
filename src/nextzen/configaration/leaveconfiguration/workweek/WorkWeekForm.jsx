@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState ,useEffect} from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
@@ -28,13 +28,13 @@ import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function WorkWeekForm({ currentUser}) {
+export default function WorkWeekForm({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [open, setOpen] = useState(false);
-   const handleOpen = () => setOpen(true);
-   const [openEdit, setOpenEdit] = useState(false);
-   const handleCloseEdit = () => setOpenEdit(false);
+  const handleOpen = () => setOpen(true);
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleCloseEdit = () => setOpenEdit(false);
   const handleClose = () => {
     setOpen(false);
     reset1();
@@ -47,12 +47,10 @@ export default function WorkWeekForm({ currentUser}) {
     action: Yup.string().required('Action Required'),
   });
 
-
   const defaultValues1 = useMemo(
     () => ({
       day: currentUser?.day || null,
       action: currentUser?.action || null,
-
     }),
     [currentUser]
   );
@@ -62,9 +60,8 @@ export default function WorkWeekForm({ currentUser}) {
     defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
   });
 
-
   const {
-    setValue:setValue1,
+    setValue: setValue1,
     handleSubmit: handleSubmit1,
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
@@ -78,7 +75,7 @@ export default function WorkWeekForm({ currentUser}) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+'/locationOnboardingDepartment',
+      url: baseUrl + '/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -108,19 +105,17 @@ export default function WorkWeekForm({ currentUser}) {
       getLocation();
     };
     fetchData();
-    
   }, []);
-
 
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId=localStorage.getItem('companyID')
+    data.companyId = localStorage.getItem('companyID');
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
     // handleClose()
     try {
-      const response = await axios.post(baseUrl+'/addWorkWeek', data);
+      const response = await axios.post(baseUrl + '/addWorkWeek', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
@@ -144,35 +139,36 @@ export default function WorkWeekForm({ currentUser}) {
     }
   });
   const DayTypes = [
-    {type: "Monday"},
-    {type: "Tuesday"},
-    {type: "Wednesday"},
-    {type: "Thursday"},
-    {type: "Friday"},
-    {type: "Saturday"},
-    {type: "Sunday"},
+    { type: 'Monday' },
+    { type: 'Tuesday' },
+    { type: 'Wednesday' },
+    { type: 'Thursday' },
+    { type: 'Friday' },
+    { type: 'Saturday' },
+    { type: 'Sunday' },
   ];
-const actionTypes=[
-  {type: "Full Day"},
-  {type: "Half Day"},
-  {type: "Holiday"},
-];
-const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-  console.log(name, selectedValue, selectedOption);
-  setFormData({
-    ...formData,
-    [name]: selectedValue,
-    locationID: selectedOption?.locationID,
-    locationName: selectedOption?.locationName,
-  });
-};
-const snackBarAlertHandleClose = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
-  }
-  setSnackbarOpen(false);
-  setOpen(false);
-};
+  const actionTypes = [
+    { type: 'Full Day' },
+    { type: 'First Half' },
+    { type: 'Second Half' },
+    { type: 'Holiday' },
+  ];
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+    console.log(name, selectedValue, selectedOption);
+    setFormData({
+      ...formData,
+      [name]: selectedValue,
+      locationId: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
+    });
+  };
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <>
       <Snackbar
@@ -192,9 +188,14 @@ const snackBarAlertHandleClose = (event, reason) => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Button onClick={handleOpen}  variant="contained"
+      <Button
+        onClick={handleOpen}
+        variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Work Week</Button>
+        sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
+      >
+        Add Work Week
+      </Button>
       <Dialog
         fullWidth
         maxWidth={false}
@@ -203,25 +204,34 @@ const snackBarAlertHandleClose = (event, reason) => {
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
-
-      >  
-          <FormProvider methods={methods1} onSubmit={onSubmit1}>
+      >
+        <FormProvider methods={methods1} onSubmit={onSubmit1}>
           <ModalHeader heading="Add Work Week" />
-            <DialogContent>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                marginTop={2}
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFAutocomplete options={DayTypes.map((DayType) => DayType.type)}name="day" label="Day" />
-                <RHFAutocomplete options={actionTypes.map((actionType) => actionType.type)}name="action" label="Action" />
-                <Autocomplete
+          <DialogContent>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFAutocomplete 
+                options={(DayTypes && DayTypes.length) ? DayTypes.map((DayType) => DayType.type) : []}
+                name="day"
+                label="Day"
+                multiple
+              />
+              <RHFAutocomplete
+                options={actionTypes.map((actionType) => actionType.type)}
+                name="action"
+                label="Action"
+              />
+              <Autocomplete
                 disablePortal
+                multiple
                 name="Location"
                 id="combo-box-demo"
                 options={locationType?.map((employeepayType) => ({
@@ -234,14 +244,14 @@ const snackBarAlertHandleClose = (event, reason) => {
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
-              </Box>
-            </DialogContent>
+            </Box>
+          </DialogContent>
 
-            <DialogActions>
-              <Button variant="outlined" onClick={handleClose}>
-                Cancel
-              </Button>
-              {/* <LoadingButton
+          <DialogActions>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+            {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 onClick={onSubmit1}
@@ -249,16 +259,16 @@ const snackBarAlertHandleClose = (event, reason) => {
               >
                 Save
               </LoadingButton> */}
-                <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
               variant="contained"
               onClick={onSubmit1}
-              >
-            Save
+            >
+              Save
             </Button>
-            </DialogActions>
-          </FormProvider>
+          </DialogActions>
+        </FormProvider>
       </Dialog>
     </>
   );

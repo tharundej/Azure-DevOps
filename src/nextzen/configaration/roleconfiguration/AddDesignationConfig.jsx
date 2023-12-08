@@ -397,7 +397,7 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
         <FormProvider >
          
 
-          <ModalHeader  heading="Designation Config"/>
+          <ModalHeader  heading="Designation Configuration"/>
           <DialogContent>
             <Box
               rowGap={3}

@@ -40,7 +40,7 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab,tabsSx }) {
       ))}
     </Tabs>
     </Box>
-      {tabContents.map((content, index) => (
+      { tabContents.map((content, index) => (
         <div key={index} hidden={value !== index}>
           {value === index && (
             <div style={{ padding: '0.25rem' }}  key={index} hidden={value !== index}>

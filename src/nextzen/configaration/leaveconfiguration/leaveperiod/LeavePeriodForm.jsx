@@ -24,7 +24,7 @@ import axios from 'axios';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
@@ -57,21 +57,18 @@ export default function LeavePeriodForm({ currentUser }) {
   const leavePeriodNames = [{ type: 'Financial Year' }, { type: 'Year' }];
   const handleLeavePeriodTypeChange = (event, value) => {
     setLeavePeriodType(value);
-
-    // Set start and end dates based on the selected leave period type
-    const currentYear = dayjs().year(); // Get the current year
-
+    // console.log(leavePeriodType,'leavePeriodType');
+    const currentYear = dayjs().year();
     if (value === 'Year') {
-      // For 'Year' type, set start date to January 1st of the current year and end date to December 31st of the same year
       setSelectedStartDate(dayjs(`${currentYear}-01-01`));
       setSelectedEndDate(dayjs(`${currentYear}-12-31`));
     } else if (value === 'Financial Year') {
-      // For 'Financial Year' type, set start date to April 1st of the current year and end date to March 31st of the following year
       const nextYear = currentYear + 1;
       setSelectedStartDate(dayjs(`${currentYear}-04-01`));
       setSelectedEndDate(dayjs(`${nextYear}-03-31`));
     }
   };
+  console.log(leavePeriodType,'leavePeriodType');
   const handleEndDateChange = (date) => {
     setSelectedEndDate(date);
   };
@@ -174,7 +171,7 @@ export default function LeavePeriodForm({ currentUser }) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleClose();
-
+        reset1();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -271,8 +268,11 @@ export default function LeavePeriodForm({ currentUser }) {
                 label="Leave Period Type"
                 options={leavePeriodNames.map((name) => name?.type)}
                 value={leavePeriodType}
-                onChange={handleLeavePeriodTypeChange}
-                sx={{marginBottom:'-1px'}}
+                onChange={(event, value) => {
+                  setValue1('leavePeriodType', value); // Update form value
+                  handleLeavePeriodTypeChange(event, value); // Handle state update
+                }}
+                sx={{ marginBottom: '-1px' }}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>

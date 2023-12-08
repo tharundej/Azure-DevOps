@@ -453,17 +453,18 @@ const [stateOptions,setOptions]=useState([])
   
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={12} item>
+          <Grid container alignItems="center" marginBottom='10px' >
+          <Grid md={8} xs={12} lg={8} item>
+  <TextField
+    placeholder='Search....' 
+    fullWidth
+    onChange={e => { handleSearch(e) }}
+   
+    size="small"
+  />
+</Grid>
 
-            <TextField placeholder='Search....' 
-            fullWidth
-             onChange={e=>{handleSearch(e)}}
-
-            />
-            </Grid>
-
-            <Grid md={4} xs={12} item>
+            <Grid md={4} xs={12} lg={4} item>
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            
       <Grid item>
@@ -472,7 +473,7 @@ const [stateOptions,setOptions]=useState([])
         variant="contained" 
       onClick={()=>{handlicClickOnboardform()}}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
 
 
       </Grid>
