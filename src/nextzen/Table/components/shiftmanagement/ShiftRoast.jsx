@@ -15,6 +15,8 @@ import instance from 'src/api/BaseURL';
 import { enqueueSnackbar } from 'notistack';
 import EditShiftRoaster from './EditShiftRoaster';
 import ShiftRoasterEmployeList from './ShiftRoasterEmployeList';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -29,7 +31,7 @@ const bull = (
 );
 
 export default function ShiftRoast() {
-   
+   const {user} = useContext(UserContext)
       const TABLE_HEAD = [
 
    
@@ -56,8 +58,8 @@ export default function ShiftRoast() {
       ];
     
       const defaultPayload={
-        "cid":localStorage.getItem('companyID'),
-        "locationId": 32,
+        "cid":(user?.companyID)?user?.companyID:'',
+        "locationId": (user?.locationID)?user?.locationID:'',
         "search": "",
         "page": 1,
         "count": 10,
@@ -156,7 +158,7 @@ export default function ShiftRoast() {
  }}
  className="custom-dialog"  
 >
- <EditShiftRoaster currentUser={{}} onClose={handleClose} editData={editData} />
+ <EditShiftRoaster currentUser={{}} handleClose={handleClose} editData={editData} />
       </Dialog>
     )}
  {employeListDialog && 

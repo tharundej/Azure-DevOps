@@ -12,6 +12,8 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
 import ApproveSwap from './ApproveSwap';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -26,7 +28,7 @@ const bull = (
 );
 
 export default function Swaprequest() {
-   
+     const {user}= useContext(UserContext)
       const TABLE_HEAD = [
 
       
@@ -54,8 +56,8 @@ export default function Swaprequest() {
     
      
     const defaultPayload ={
-      "companyId":localStorage.getItem('companyID'),
-      "supervisorId":"ibm5",
+      "companyId":(user?.companyID)?user?.companyID:'',
+      "supervisorId":(user?.employeeID)?user?.employeeID:'',
       "count":7,
       "page":0,
       "search":"",

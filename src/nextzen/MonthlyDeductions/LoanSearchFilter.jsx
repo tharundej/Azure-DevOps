@@ -245,11 +245,12 @@ export default function LoanSearchFilter({filterSearch,filterData,componentPage,
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}} 
+            size="small"
             />
             </Grid>
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                  
-            {componentPage=="MyRequests"? <Button 
+            {componentPage=="MyRequests"? <Button size='small'
                  sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}
                 variant='contained' 
                 color='primary'
@@ -258,7 +259,7 @@ export default function LoanSearchFilter({filterSearch,filterData,componentPage,
                  >
                   Apply Loan
                 </Button>:null}
-                {componentPage!="MyRequests"? <Button  onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+                {componentPage!="MyRequests"? <Button size="small" onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
                <Iconify icon="mi:filter"/>Filters
                </Button>:null}
       </Grid>
