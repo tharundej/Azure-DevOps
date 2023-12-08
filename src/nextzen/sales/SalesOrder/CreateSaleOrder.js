@@ -4,6 +4,7 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
+import { getCustomerListAPI } from 'src/api/Accounts/Customers';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -36,6 +37,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
       vendorId: currentData?.vendorId || '',
+      customerID: currentData?.customerID || '',
     }),
     [currentData]
   );
@@ -54,12 +56,23 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
+  const [datesUsed, setDatesUsed] = useState({
+    expectedDeliveryDate: defaultValues?.expectedDeliveryDate
+      ? dayjs(defaultValues?.expectedDeliveryDate)
+      : dayjs(new Date()),
+  });
   const [vendorMaterials, setVendorMaterials] = useState([]);
   const [unitOptions, setUnitOptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [vendorOptions, setVendorOptions] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState();
+  const [locationsOptions, setLocationsOptions] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState();
+  const [customerOptions, setCustomerOptions] = useState([]);
+  const [customer, setCustomer] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState();
+  const [selectedShippingLocation, setSelectedShippingLocation] = useState();
   const fetchVendor = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
@@ -71,6 +84,44 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     } catch (error) {
       setErrorMessage(error.message);
       console.log('API request failed:', error.message);
+    }
+  };
+  const fetchCustomer = async () => {
+    const data = {  companyId: user?.companyID ? user?.companyID : '',
+    search: '',
+
+    sort: {
+      key: 0,
+      orderBy: "",
+    },
+    page: 0,
+    count: 5, };
+    try {
+      const response = await getCustomerListAPI(data);
+      setCustomerOptions(response);
+      setSelectedCustomer(
+        response.length > 0 ? response[0].customerId : null
+      );
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
+  const fetchLocation = async () => {
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
+    try {
+      const response = await getLocationAPI(data);
+      console.log('location success', response);
+      if (response === null) {
+        handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+      } else {
+        setLocationsOptions(response);
+        setSelectedLocation(response.length > 0 ? response[0].locationID : null);
+        setSelectedShippingLocation(response.length > 0 ? response[0].locationID : null);
+      }
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
     }
   };
   const HandleInputChange = (e, index) => {
@@ -127,6 +178,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   useEffect(() => {
     fetchUnits();
     fetchVendor();
+    fetchLocation();
+    fetchCustomer();
   }, []);
 
   const [selectedVendorMaterial, setSelectedVendorMaterial] = useState(null);
@@ -162,6 +215,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       console.log('API request failed:', error.message);
     }
   };
+
   const initialContent = (index) => (
     <Box
       key={index}
@@ -310,26 +364,6 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFTextField name="SO Number" label="SO Number" />
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="SO Date"
-                  // value={datesUsed?.expectedDeliveryDate}
-                  defaultValue={dayjs(new Date())}
-                  // onChange={(newValue) => {
-                  //   setDatesUsed((prev) => ({
-                  //     ...prev,
-                  //     expectedDeliveryDate: newValue,
-                  //   }));
-                  // }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            <RHFTextField name="Company Name" label="Company Name" />
-            <RHFTextField name="Factory Name" label="Factory Name" />
             <RHFAutocomplete
               name="vendorId"
               id="vendorId"
@@ -338,26 +372,90 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+                <TextField {...params} label="Select Customer" variant="outlined" />
               )}
             />
              <RHFAutocomplete
-              name="vendorId"
-              id="vendorId"
-              options={vendorOptions || []}
-              onChange={handleVendorChange}
-              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
-              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
+              name="customerId"
+              id="customerId"
+              options={customerOptions || []}
+
+              value={customerOptions.find((option) => option.customerId === selectedCustomer) || null}
+              getOptionLabel={(option) => option.customerName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField {...params} label="Select Factory Name" variant="outlined" />
+                <TextField {...params} label="Select Customer" variant="outlined" />
               )}
             />
-            <RHFTextField name="Factory Address" label="Factory Address" />
-            <RHFTextField name="Customer Name" label="Customer Name" />
-            <RHFTextField name="Customer Address" label="Customer Address" />
-            <RHFTextField name=" Customer PAN" label=" Customer PAN" />
-            <RHFTextField name="Customer GST No" label="Customer GST No" />
+            <RHFTextField name="paymentTerm" label="Payment Term" />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Expected Delivery Date *"
+                  value={datesUsed?.expectedDeliveryDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      expectedDeliveryDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <RHFAutocomplete
+              name="locationId"
+              id="locationId"
+              options={locationsOptions || []}
+              value={
+                locationsOptions.find((option) => option.locationID === selectedLocation) || null
+              }
+              onChange={(event, newValue) =>
+                setSelectedLocation(newValue ? newValue.locationID : null)
+              }
+              getOptionLabel={(option) => option.locationName}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Billing Location" variant="outlined" />
+              )}
+            />
 
+            <RHFAutocomplete
+              name="factoryShippingId"
+              id="factoryShippingId"
+              options={locationsOptions || []}
+              value={
+                locationsOptions.find((option) => option.locationID === selectedLocation) || null
+              }
+              onChange={(event, newValue) =>
+                setSelectedShippingLocation(newValue ? newValue.locationID : null)
+              }
+              getOptionLabel={(option) => option.locationName}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Shipping Location" variant="outlined" />
+              )}
+            />
+            <RHFTextField name="companyBillingGST" label="Company Billing GST" />
+            <RHFTextField name="companyBillingPAN" label="Company Billing PAN" />
+            <RHFTextField
+              defaultValue={0}
+              type="number"
+              name="advanceAmount"
+              label="advanceAmount"
+            />
+            <RHFTextField
+              name="gstAmount"
+              label="GST Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <RHFTextField
+              name="grandTotalAmount"
+              label="Grand Total Amount"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Box>
           <Box
             marginTop={2}
