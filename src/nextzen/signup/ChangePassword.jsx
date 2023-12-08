@@ -76,6 +76,7 @@ export default function ChangePassword() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
+
       const payload = {
         companyEmail: localStorage.getItem('companyEmail'),
         oldPassword: data.oldPassword,
@@ -88,18 +89,13 @@ export default function ChangePassword() {
           // 'Content-Type': 'application/json'
         },
       };
-      const response = await axiosInstance.post(
-        baseUrl+`/changePassword`,
-        payload,
-        config
-      );
+      const response = await axiosInstance.post(baseUrl + `/changePassword`, payload, config);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleClose();
         // router.push(paths.auth.jwt.login);
-        
       } else if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);

@@ -30,7 +30,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Country, State, City }  from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 import Logo from 'src/components/logo';
@@ -66,17 +66,20 @@ import { baseImageUrl, baseUrl } from '../global/BaseUrl';
 
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');
-  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const [pcountryIsoCode, setPCoutryIsoCode] = useState('');
   const { register } = useAuthContext();
+  const [shouldCallGetCompany, setShouldCallGetCompany] = useState(true);
   const theme = useTheme();
-  const [options,setOptions]=useState({
-    countryOptions:[],
-    stateOptions:[]
-  })
+  const [options, setOptions] = useState({
+    countryOptions: [],
+    stateOptions: [],
+  });
   const [datesUsed, setDatesUsed] = useState({
     companyDateOfIncorporation: null,
   });
-
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -96,10 +99,13 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const [citySelected, setCitySelected] = useState(null);
   const [countrySelected, setCountrySelected] = useState(null);
   const [valueSelected, setValueSelected] = useState(null);
-  const [button, setButton] = useState(true)
-  const [companyId,setCompanyId] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [empIdPrefix, setEmpIdPrefix] = useState(false)
+  const [button, setButton] = useState(true);
+  const [companyId, setCompanyId] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [empIdPrefix, setEmpIdPrefix] = useState(false);
+  const [cinFilled, setCinFilled] = useState(false);
+  const [emailFilled, setEmailFilled] = useState(false);
+  const [regNoFilled, setRegNoFilled] = useState(false);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -107,6 +113,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     reader.onloadend = () => {
       setSelectedFile(file);
       setImageData([{ name: file.name, data: reader.result }]);
+      
     };
 
     if (file) {
@@ -181,15 +188,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyAddressLine1: Yup.string().required('Address Line 1 is Required'),
     companyAddressLine2: Yup.string(),
     companyCity: Yup.object().required('City is Required'),
-     companyState: Yup.object().required('State is required'),
-     companyDateOfIncorporation:Yup.string(),
-    companyCountry:Yup.object().required('Country is Required'),
-    companyPincode: Yup.number('Pincode is Required')
-      .required('Pin code is Required'),
+    companyState: Yup.object().required('State is required'),
+    companyDateOfIncorporation: Yup.string(),
+    companyCountry: Yup.object().required('Country is Required'),
+    companyPincode: Yup.number('Pincode is Required').required('Pin code is Required'),
     empIdPrefix: Yup.string().required('Employee ID type Required'),
   });
-
-
 
   const defaultValues = {
     cin: '',
@@ -205,13 +209,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     lastName: '',
     companyAddressLine1: '',
     companyAddressLine2: '',
-    companyCity: '',
-    companyState: '',
+
     companyPincode: '',
     empIdPrefix: '',
     companyCity: undefined,
     companyState: undefined,
-    companyCountry :  undefined,
+    companyCountry: undefined,
   };
 
   const methods = useForm({
@@ -231,61 +234,55 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-  useEffect(()=>{
-   
-    const obj=Country.getAllCountries();
-    const newArray={...options};
-    newArray.countryOptions=obj;
+  useEffect(() => {
+    const obj = Country.getAllCountries();
+    const newArray = { ...options };
+    newArray.countryOptions = obj;
     // newArray.rcountryOptions=obj;
-   
-    setOptions(newArray)
-  },[])
-  const onChnageAutoComplete=(obj)=>{
-    console.log(obj,'objjjjj')
-    const objCountry={
-      country:obj?.name
-    }
-    const newArray={...options};
 
-    async function stateOptions(){
+    setOptions(newArray);
+  }, []);
+  const onChnageAutoComplete = (obj) => {
+    console.log(obj, 'objjjjj');
+    const objCountry = {
+      country: obj?.name,
+    };
+    const newArray = { ...options };
+
+    async function stateOptions() {
       try {
         // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
         // const stateOptions1=await ApiHitStates(objCountry)
-        newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
-        setPCoutryIsoCode(obj?.isoCode|| "")
+        newArray.stateOptions = State.getStatesOfCountry(obj?.isoCode);
+        setPCoutryIsoCode(obj?.isoCode || '');
         // console.log(stateOptions1,'stateOptionsSatet')
-      }
-      catch(e){
-  
-      }
+      } catch (e) {}
     }
-    stateOptions()
-    
-     setOptions(newArray);
-    console.log(newArray,'newArraynewArray')
-  }
-  const onChnageAutoCompleteState=(obj)=>{
-   
-    const objState={
-      country:obj?.name
-    }
-    const newArray={...options};
+    stateOptions();
 
-    async function stateOptions(){
+    setOptions(newArray);
+    console.log(newArray, 'newArraynewArray');
+  };
+  const onChnageAutoCompleteState = (obj) => {
+    const objState = {
+      country: obj?.name,
+    };
+    const newArray = { ...options };
+
+    async function stateOptions() {
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
-         console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode),'stateOptionsSatet')
-      }
-      catch(e){
-        console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode),'stateOptionsSatet')
+        newArray.cityOptions = City.getCitiesOfState(pcountryIsoCode, obj?.isoCode);
+        console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode), 'stateOptionsSatet');
+      } catch (e) {
+        console.log(City.getCitiesOfState(pcountryIsoCode, obj?.isoCode), 'stateOptionsSatet');
       }
     }
-    stateOptions()
-    
-     setOptions(newArray);
-    console.log(newArray,'newArraynewArray')
-  }
+    stateOptions();
+
+    setOptions(newArray);
+    console.log(newArray, 'newArraynewArray');
+  };
 
   // const base64String = imageData[0]?.data;
   // console.log( imageData[0]?.data)
@@ -297,12 +294,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // if (!data.companyCountry || !data.companyState || !data.companyCity) {
-      //   setErrorMsg('Please select country, state, and city.');
-      //   console.log('errorrrrrrrrrr')
-      //   return;
-      // }
-      console.log(data);
+      if (!data.companyCountry || !data.companyState || !data.companyCity) {
+        setErrorMsg('Please select country, state, and city.');
+        console.log('errorrrrrrrrrr')
+        return;
+      }
+      console.log(data,'hhfhfhh');
       await register?.(
         data.cin,
         data.companyName,
@@ -318,9 +315,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         data.lastName,
         data.companyAddressLine1,
         data.companyAddressLine2,
-        data.companyCountry=data?.country||{name:"",isoCode:""},
-        data.companyCity=data?.state || {name:"",isoCode:""},
-        data.companyState=data?.city || {name:"",isoCode:""},
+        (data.companyCountry = data?.companyCountry || { name: '', isoCode: '' }),
+        (data.companyCity = data?.companyCity || { name: '', isoCode: '' }),
+        (data.companyState = data?.companyState || { name: '', isoCode: '' }),
         parseInt(data.companyPincode, 10),
         data.empIdPrefix,
         (data.logoName = imageData[0]?.name),
@@ -343,16 +340,21 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   });
   // Inside JwtRegisterView component
   const handleCINChange = async (newValue) => {
+    callApiIfAllFieldsFilled();
     try {
       const response = await axiosInstance.post(baseUrl + '/getCompany', {
         cin: newValue,
       });
 
       if (response?.data?.code === 200) {
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
         setCompanyId(response?.data?.data?.companyId);
-        setSelectedFile(true)
-        setEmpIdPrefix(true)
-        setImageUrl(baseImageUrl+response?.data?.data?.logoName)
+          
+        setEmpIdPrefix(true);
+        setImageData([{ name: "sais", data: baseImageUrl + response?.data?.data?.logoName}]);
+        setImageUrl(baseImageUrl + response?.data?.data?.logoName);
         const keyMappings = {
           companyId: 'companyId',
           cin: 'cin',
@@ -369,41 +371,90 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
           companyState: 'companyState',
           companyCountry: 'companyCountry',
           companyPincode: 'companyPincode',
-          companyLogo: 'https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=COMP22_GANG1_20231207153242_131847__fnss__Email%20Marketing__fnse__.png',
           empIdPrefix: 'empIdPrefix',
           firstName: 'firstName',
           lastName: 'lastName',
           middleName: 'middleName',
         };
 
-
         const dataFromResponse = response?.data?.data;
         Object.keys(keyMappings).forEach((key) => {
           if (dataFromResponse.hasOwnProperty(key)) {
+            console.log(key,'companyLogo')
+            if(key==="companyCountry"){
+              console.log(dataFromResponse[key],'tre')
 
-            if (key === 'companyDateOfIncorporation' ) {
-              const obj={
-                companyDateOfIncorporation:dataFromResponse[key]
-              }
-              setDatesUsed(obj)
+            }
+            if (key === 'companyDateOfIncorporation') {
+              const obj = {
+                companyDateOfIncorporation: dataFromResponse[key],
+              };
+              setDatesUsed(obj);
 
-              console.log(dataFromResponse[key], 'dataFromResponse[key]',dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
-             // methods.setValue(keyMappings[key], dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
-            } else {
+              console.log(
+                dataFromResponse[key],
+                'dataFromResponse[key]',
+                dataFromResponse[key] ? dayjs(dataFromResponse[key]).toDate() : null
+              );
+              // methods.setValue(keyMappings[key], dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
+            } 
+            else {
               methods.setValue(keyMappings[key], dataFromResponse[key]);
             }
           }
         });
 
         console.log('success', response);
-        setButton(false)
+        setButton(false);
       }
 
       if (response?.data?.code === 400) {
-        console.log('success', response);
+        console.log('error', response);
       }
     } catch (error) {
       console.log('error', error);
+    }
+  };
+console.log(imageUrl,'image')
+  const handleEmailBlur = () => {
+    callApiIfAllFieldsFilled();
+  };
+
+  const handleRegistrationNoBlur = () => {
+    callApiIfAllFieldsFilled();
+  };
+  const callApiIfAllFieldsFilled = async () => {
+    const cinValue = methods.getValues('cin');
+    const emailValue = methods.getValues('emailId');
+    const regNoValue = methods.getValues('companyRegistrationNo');
+    if (cinValue !== null && emailValue !== null && regNoValue !== null) {
+      try {
+        const payload = {
+          cin: cinValue,
+          email: emailValue,
+          companyRegistrationNo: regNoValue,
+        };
+
+        console.log(payload, 'Payload before API call');
+
+        const response = await axiosInstance.post(baseUrl + '/checkRegisterFields', payload);
+
+        if (response?.data?.code === 200) {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          console.log('API call successful');
+        }
+        if (response?.data?.code === 409) {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(response?.data?.message);
+          setSnackbarOpen(true);
+          console.log('API call successful');
+          // setShouldCallGetCompany(false)
+        }
+      } catch (error) {
+        console.error('API Error:', error);
+      }
     }
   };
   const onSubmit1 = handleSubmit(async (data) => {
@@ -412,40 +463,53 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         cin: data.cin,
         companyName: data.companyName,
         companyRegistrationNo: parseInt(data.companyRegistrationNo, 10),
-        companyDateOfIncorporation: formatDateToYYYYMMDD(
-          datesUsed.companyDateOfIncorporation
-        ),
+        // companyDateOfIncorporation: formatDateToYYYYMMDD(
+        //   datesUsed.companyDateOfIncorporation
+        // ),
         companyCeoName: data.companyCeoName,
         companyType: data.companyType,
         companyEmailId: data.emailId,
         companyPhoneNo: parseInt(data.phoneNo, 10),
         firstName: data.firstName,
-        middleName: data.middleName,
+        // middleName: data.middleName,
         lastName: data.lastName,
         companyAddressLine1: data.companyAddressLine1,
         companyAddressLine2: data.companyAddressLine2,
-        companyCountry: data?.country||{name:"",isoCode:""},
-        companyCity: data?.city||{name:"",isoCode:""},
-        companyState: data?.state||{name:"",isoCode:""},
+        companyCountry: data?.companyCountry || { name: '', isoCode: '' },
+        companyCity: data?.companyCity || { name: '', isoCode: '' },
+        companyState: data?.companyState || { name: '', isoCode: '' },
         companyPincode: parseInt(data.companyPincode, 10),
         empIdPrefix: data.empIdPrefix,
         logoName: imageData[0]?.name,
         companyLogo: imageData[0]?.data.split(',')[1],
-        companyId:companyId
+        companyId: companyId,
       };
-  
+
       console.log(payload);
-      
-      const response = await axiosInstance.post(baseUrl + '/updateCompany', payload);
+      if (data.companyDateOfIncorporation != 'NaN-NaN-NaN') {
+        data.companyDateOfIncorporation = formatDateToYYYYMMDD(
+          datesUsed.companyDateOfIncorporation
+        );
+      }
+      if (data.middleName != '') {
+        data.middleName = data.middleName;
+      }
+      const response = await axiosInstance.post(baseUrl + '/updateCompanyWhileRegister', payload);
       console.log(response);
+      if(response?.data?.code===200){
+      localStorage.setItem('emailWhileUpdate', response?.data?.data?.email);
       onHandleNextIncrement();
+      }
+      if(response?.data?.code===400){
+        console.log('kkkk')
+      }
     } catch (error) {
       console.error(error);
       setErrorMsg(typeof error === 'string' ? error : error.message);
       // setSnackbarOpen(true);
     }
   });
-  
+
   useEffect(() => {
     const cinValue = methods.getValues('cin');
     handleCINChange(cinValue);
@@ -486,7 +550,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       .
     </Typography>
   );
-    
+
   const companyTypes = [{ type: 'Public' }, { type: 'Private' }];
 
   const renderForm = (
@@ -534,14 +598,18 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   maxLength={8}
                   type="number"
+                  onBlur={handleRegistrationNoBlur}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                
-                    <DatePicker
-                  sx={{width:'100%'}}
+                <DatePicker
+                  sx={{ width: '100%' }}
                   fullWidth
-                  value={datesUsed?.companyDateOfIncorporation ? dayjs(datesUsed?.companyDateOfIncorporation).toDate() : null}
+                  value={
+                    datesUsed?.companyDateOfIncorporation
+                      ? dayjs(datesUsed?.companyDateOfIncorporation).toDate()
+                      : null
+                  }
                   // minDate={dayjs().subtract(300, 'year')}
                   // maxDate={dayjs()}
                   onChange={(newValue) => {
@@ -550,15 +618,14 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       companyDateOfIncorporation: newValue,
                     }));
                   }}
-                    renderInput={(params) => <TextField {...params} />}
-                    inputFormat="yyyy-MM-dd"
-                    variant="inline"
-                    format="yyyy-MM-dd"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="companyDateOfIncorporation"
-                  />
-                  
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="companyDateOfIncorporation"
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
@@ -591,6 +658,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Email ID<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
+                  onBlur={handleEmailBlur}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -658,50 +726,46 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-              <RHFAutocomplete
-                name="companyCountry"
-                label="Country"
-                options={options?.countryOptions || [] }
-                getOptionLabel={(option) => option.name}
-                onChnageAutoComplete={onChnageAutoComplete}
-                renderOption={(props, option) => (
-                  <li {...props} key={option.name}>
-                    {option.name}
-                  </li>
-                )}
-
-
-              />
+                <RHFAutocomplete
+                  name="companyCountry"
+                  label="Country"
+                  options={options?.countryOptions || []}
+                  getOptionLabel={(option) => option.name}
+                  onChnageAutoComplete={onChnageAutoComplete}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.name}>
+                      {option.name}
+                    </li>
+                  )}
+                />
               </Grid>
               <Grid item xs={12} md={4}>
-              <RHFAutocomplete
-                name="companyState"
-                label="State"
-                options={options?.stateOptions || []}
-                getOptionLabel={(option) => option.name}
-                onChnageAutoComplete={onChnageAutoCompleteState}
-                renderOption={(props, option) => (
-                  <li {...props} key={option.name}>
-                    {option.name}
-                  </li>
-                )}
-
-              />
+                <RHFAutocomplete
+                  name="companyState"
+                  label="State"
+                  options={options?.stateOptions || []}
+                  getOptionLabel={(option) => option.name}
+                  onChnageAutoComplete={onChnageAutoCompleteState}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.name}>
+                      {option.name}
+                    </li>
+                  )}
+                />
               </Grid>
               <Grid item xs={12} md={4}>
-              <RHFAutocomplete
-                name="companyCity"
-                label="City"
-                options={options?.cityOptions || []}
-                getOptionLabel={(option) => option.name}
-                // onChnageAutoComplete={onChnageAutoCompleteState}
-                renderOption={(props, option) => (
-                  <li {...props} key={option.name}>
-                    {option.name}
-                  </li>
-                )}
-
-              />
+                <RHFAutocomplete
+                  name="companyCity"
+                  label="City"
+                  options={options?.cityOptions || []}
+                  getOptionLabel={(option) => option.name}
+                  // onChnageAutoComplete={onChnageAutoCompleteState}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.name}>
+                      {option.name}
+                    </li>
+                  )}
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <RHFTextField
@@ -761,7 +825,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   />
                 </Button>
               </label>
-              {/* <img
+              {/* {selectedFile &&
+              <img
                       src={imageUrl}
                       // alt={selectedFile.name}
                       style={{
@@ -769,8 +834,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                         height: '100%',
                         objectFit: 'cover',
                       }}
-                    /> */}
-              {selectedFile && (
+                    />
+} */}
+              {1 && (
                 <div>
                   <div
                     style={{
@@ -781,9 +847,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       display: 'inline-block',
                     }}
                   >
+                    {/* imageData[0]?.data ? imageData[0]?.data :  */}
                     <img
-                      src={imageUrl}
-                      alt={selectedFile.name}
+                      src={imageData[0]?.data}
+                     // alt={selectedFile?.name || ""}
                       style={{
                         width: '100%',
                         height: '100%',
@@ -804,26 +871,28 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
               }}
             >
               {button ? (
-              <Button
-                color="inherit"
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={onSubmit}
-                style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
-              >
-                Create Account
-              </Button>
-              ):(<Button
-                color="inherit"
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={onSubmit1}
-                style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
-              >
-                Update Account
-              </Button>)}
+                <Button
+                  color="inherit"
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={onSubmit}
+                  style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+                >
+                  Create Account
+                </Button>
+              ) : (
+                <Button
+                  color="inherit"
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={onSubmit1}
+                  style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+                >
+                  Update Account
+                </Button>
+              )}
               <Stack direction="column" alignItems="center" spacing={1}>
                 <Typography variant="subtitle2" style={{ color: 'black' }}>
                   Already have an account?{' '}
@@ -845,7 +914,13 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       </Stack>
     </FormProvider>
   );
-
+  const snackBarAlertHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setOpen(false);
+  };
   return (
     <StyledContainer>
       <div style={{ backgroundColor: '' }}>
@@ -866,6 +941,23 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
           <MuiAlert onClose={handleSnackbarClose} severity="error">
             {errorMsg}
           </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000} // Adjust the duration as needed
+          onClose={snackBarAlertHandleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <Alert
+            onClose={snackBarAlertHandleClose}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
         </Snackbar>
       </div>
 
