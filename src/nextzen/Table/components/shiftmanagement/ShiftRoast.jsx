@@ -117,7 +117,7 @@ export default function ShiftRoast() {
           DeleteShiftRoaster: JSON.stringify( rowdata.project_id),
            
           };
-          const response = await instance.post('DeleteShiftRoaster',data);
+          const response = await instance.post('/DeleteShiftRoaster',data);
           // setReportingManagerData(response.data.list)
           console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
           enqueueSnackbar(response.data.Message,{variant:'success'})
