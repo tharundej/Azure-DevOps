@@ -219,7 +219,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
          ...newArray[index],
          [field]: parseInt(value,10)
      }
-    }if(field==="nameOfTheDegree"){
+    }else if(field==="nameOfTheDegree"){
 
       newObj[index][field]=e?.target?.value ;
       newArray[index] = {

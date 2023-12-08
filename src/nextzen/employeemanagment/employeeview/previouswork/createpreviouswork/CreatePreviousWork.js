@@ -8,6 +8,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -53,6 +55,7 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 import { doc } from 'firebase/firestore';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from '../../employeeeducation/createeducation/FilesDisplay';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
@@ -60,6 +63,73 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
     "Contract","Permanent"
   
   ])
+  const [addDocuments,setAddDocuments]=useState([]);
+
+  const handleAddDocumentNew=()=>{
+    const newArray = [...addDocuments];
+    const obj={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+  newArray.push(obj)
+  setAddDocuments(newArray)
+
+  }
+  const handleRemoveDocumentNew=(index1)=>{
+    const updatedItems = addDocuments.filter((item,index3) => index3 !== index1);
+
+     setAddDocuments(updatedItems);
+  }
+
+  const handleFileUploadNew = (event,index) => {
+        
+    const file = event.target.files[0];
+    // const { value, id } = e.target;
+    // const newObj = defaultValues;
+
+      let base64String=1;
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+    const base64String = event.target.result.split(',')[1];
+    console.log(base64String);
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ...newArray[index],
+      fileName: file.name,
+      fileContent:base64String
+    };
+    console.log(index,'newArraynewArraynewArray')
+    setAddDocuments(newArray);
+
+    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    };
+
+  reader.readAsDataURL(file);
+    
+
+    
+
+    //setSelectedFile(file);
+  };
+
+  const handleCategoryChangeNew = (e,index) => {
+    const { value, id } = e.target;
+    // const newObj = defaultValues;
+    
+
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    
+    
+    setAddDocuments(newArray);
+  };
   const onSaveData=()=>{
 
     const arr=defaultValues
@@ -345,9 +415,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
           {defaultValues?.map((item, index) => (
             <Grid  container flexDirection="row">
-            <Grid md={10} xs={10} lg={10} padding="5px" item>
-            <Card padding="5px">
-            <Grid >
+            <Grid md={12} xs={12} lg={12} padding="5px" item>
+          
+              <Grid >
 
 
 
@@ -472,8 +542,13 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
               </Grid>
              
-                  
-              {item?.documents?.map((file,index1)=>(
+              { endpoint!=='addExperience' &&<>
+              <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
+                      Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
+                    </Typography>
+                    <FilesDisplay dataOfFiles={item?.documents}  />
+                                              </>}
+              {endpoint==="addExperience" && item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                 <Grid item xs={12} md={6} >
@@ -565,12 +640,13 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
               </Grid>
               ))}
               </Grid>
+
+
               
 
-             </Card>
               </Grid>
 
-              <Grid md={2} xs={2} lg={2} padding="5px" item>
+              {/* <Grid md={2} xs={2} lg={2} padding="5px" item>
                      {index===0 &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
@@ -590,7 +666,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                  >
                    Remove
                  </Button>}
-               </Grid>
+               </Grid> */}
              
             
             </Grid>
