@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
-import { getCustomerListAPI } from 'src/api/Accounts/Customers';
+
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -73,6 +73,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const [customer, setCustomer] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState();
   const [selectedShippingLocation, setSelectedShippingLocation] = useState();
+  const [productOptions, setProductOptions] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState();
+
   const fetchVendor = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
@@ -86,16 +89,23 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       console.log('API request failed:', error.message);
     }
   };
+  const fetchProduct = async () => {
+    const data = { companyID: user?.companyID ? user?.companyID : '',
+    };
+    try {
+      const response = await getProductListAPI(data);
+      setProductOptions(response);
+      setSelectedProduct(
+        defaultValues.productId || (response.length > 0 ? response[0].productId : null)
+      );
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
   const fetchCustomer = async () => {
     const data = {  companyId: user?.companyID ? user?.companyID : '',
-    search: '',
-
-    sort: {
-      key: 0,
-      orderBy: "",
-    },
-    page: 0,
-    count: 5, };
+   };
     try {
       const response = await getCustomerListAPI(data);
       setCustomerOptions(response);
@@ -180,6 +190,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     fetchVendor();
     fetchLocation();
     fetchCustomer();
+    fetchProduct();
   }, []);
 
   const [selectedVendorMaterial, setSelectedVendorMaterial] = useState(null);
@@ -228,10 +239,10 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         sm: 'repeat(6, 1fr)',
       }}
     >
-      <RHFAutocomplete
+      {/* <RHFAutocomplete
         name={`addPurchaseMaterial[${index}].materialId`}
         id={`addPurchaseMaterial[${index}].materialId`}
-        options={vendorMaterials || []}
+        options={productOptions || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
             newValue.id,
@@ -245,9 +256,23 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         renderInput={(params) => (
           <TextField {...params} label="Select Product" variant="outlined" />
         )}
-      />
-
+      /> */}
        <RHFAutocomplete
+              name={`addPurchaseMaterial[${index}].product`}
+              id={`addPurchaseMaterial[${index}].product`}
+              options={productOptions || []}
+              onChange={(event, newValue) =>
+                HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].product`)
+              }
+
+              value={productOptions.find((option) => option.productId === selectedProduct) || null}
+              getOptionLabel={(option) => option.productName} // Specify the property to display in the input
+              renderInput={(params) => (
+                <TextField {...params} label="Select Product" variant="outlined" />
+              )}
+            />
+
+     <RHFAutocomplete
         name={`addPurchaseMaterial[${index}].unitOfMeasure`}
         id={`addPurchaseMaterial[${index}].unitOfMeasure`}
         options={unitOptions || []}
@@ -259,6 +284,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           <TextField {...params} label="Select Unit of Measure" variant="outlined" />
         )}
       />
+
       <RHFTextField
         name={`addPurchaseMaterial[${index}].quantity`}
         label="Quantity"
@@ -364,17 +390,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFAutocomplete
-              name="vendorId"
-              id="vendorId"
-              options={vendorOptions || []}
-              onChange={handleVendorChange}
-              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
-              getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
-              renderInput={(params) => (
-                <TextField {...params} label="Select Customer" variant="outlined" />
-              )}
-            />
+
              <RHFAutocomplete
               name="customerId"
               id="customerId"
@@ -456,6 +472,21 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 readOnly: true,
               }}
             />
+            <RHFTextField name="billToName" label="Bill To Name" />
+            <RHFTextField name="billToAddress" label="Billing Address" />
+            <RHFTextField name="billToState" label="Bill to state" />
+            <RHFTextField name="billToCity" label="Bill to City" />
+            <RHFTextField name="billToPincode" label="Billing Pincode" />
+            <RHFTextField name="billToGST" label="Bill to GST" />
+            <RHFTextField name="billToStateCode" label="Bill to State code" />
+            <RHFTextField name="shipToName" label="Ship to Name" />
+            <RHFTextField name="shipToAddress" label="Shipping Address" />
+            <RHFTextField name="shipToState" label="Ship to State" />
+            <RHFTextField name="shipToCity" label="Ship to city" />
+            <RHFTextField name="shipToPincode" label="Shipping Pincode" />
+            <RHFTextField name="shipToGST" label="Ship to GST" />
+            <RHFTextField name="shipToStateCode" label="Ship to state code" />
+
           </Box>
           <Box
             marginTop={2}
