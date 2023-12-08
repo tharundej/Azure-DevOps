@@ -19,6 +19,12 @@ import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { createPurchaseInvoiceAPI } from 'src/api/Accounts/PurchaseInvoice';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
 
 export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
@@ -29,14 +35,20 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
 
   const defaultValues = useMemo(
     () => ({
-      purchaseOrderID: currentData?.purchaseOrderID || '',
+      companyId: user?.companyID ? user?.companyID : '',
+      poNumber: currentData?.poNumber || '',
+      invoiceNo: '',
+      invoiceDate: currentData?.invoiceDate || '',
+      status: currentData?.status || 'Pending',
+      vendorId: currentData?.vendorId || '',
+      locationId: currentData?.locationId || '',
+      paymentMode: currentData?.paymentMode || '',
       PODate: '',
       ExpectedDeliveryDate: '',
-      PaymentTerm: '',
       VendorName: '',
       VendorAddress: '',
       FactoryShippingAddress: '',
-      PurchaseMaterial: [],
+      materialInvoice: [],
     }),
     [currentData]
   );
@@ -69,6 +81,9 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   const HandleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+  const [datesUsed, setDatesUsed] = useState({
+    invoiceDate: defaultValues?.invoiceDate ? dayjs(defaultValues?.invoiceDate) : dayjs(new Date()),
+  });
   const fetechPurchaseOrder = async () => {
     try {
       const data = {
@@ -119,23 +134,20 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   }, []);
   useEffect(() => {
     contentList.forEach((content, index) => {
+      setValue(`materialInvoice[${index}].materialId`, content.materialId ? content.materialId : 0);
+      setValue(`materialInvoice[${index}].itemName`, content.itemName ? content.itemName : '');
       setValue(
-        `PurchaseMaterial[${index}].materialId`,
-        content.materialId ? content.materialId : 0
-      );
-      setValue(`PurchaseMaterial[${index}].itemName`, content.itemName ? content.itemName : '');
-      setValue(
-        `PurchaseMaterial[${index}].unitOfMeasure`,
+        `materialInvoice[${index}].unitOfMeasure`,
         content.unitOfMeasure ? content.unitOfMeasure : ''
       );
-      setValue(`PurchaseMaterial[${index}].rate`, content.rate ? content.rate : 0);
-      setValue(`PurchaseMaterial[${index}].gstRate`, content.gstRate ? content.gstRate : 0);
+      setValue(`materialInvoice[${index}].rate`, content.rate ? content.rate : 0);
+      setValue(`materialInvoice[${index}].gstRate`, content.gstRate ? content.gstRate : 0);
       setValue(
-        `PurchaseMaterial[${index}].requestQuantity`,
+        `materialInvoice[${index}].requestQuantity`,
         content.quantity ? content.quantity : 0
       );
       setValue(
-        `PurchaseMaterial[${index}].paidQuantity`,
+        `materialInvoice[${index}].paidQuantity`,
         content.paidQuantity ? content.paidQuantity : 0
       );
     });
@@ -174,9 +186,12 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
       if (response === null) {
         handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
       } else {
+        setValue('poNumber', response[0].poNumber);
         setValue('PODate', response[0].poDate);
         setValue('ExpectedDeliveryDate', response[0].expectedDeliveryDate);
-        setValue('PaymentTerm', response[0].paymentTerm);
+        setValue('paymentMode', response[0].paymentTerm);
+        setValue('vendorId', response[0]?.vendorId ? response[0]?.vendorId : 0);
+        setValue('locationId', response[0]?.locationId ? response[0]?.locationId : 0);
         setValue('VendorName', response[0].vendorName);
         setValue('VendorAddress', response[0].vendorAddress);
         setValue('FactoryShippingAddress', response[0].factoryShippingAddress);
@@ -192,48 +207,49 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   const HandleInputChange = (e, index) => {
     const { name, value } = e.target;
     setValue(name, value);
-    const requestQuantity = watch(`PurchaseMaterial[${index}].requestQuantity`);
-    const paidQuantity = watch(`PurchaseMaterial[${index}].paidQuantity`);
-    const quantity = watch(`PurchaseMaterial[${index}].quantity`);
+    const requestQuantity = watch(`materialInvoice[${index}].requestQuantity`);
+    const paidQuantity = watch(`materialInvoice[${index}].paidQuantity`);
+    const quantity = watch(`materialInvoice[${index}].receivedMaterialWeight`);
     if (requestQuantity - paidQuantity < quantity) {
       handleCallSnackbar(
         'Your Max alowed Quantity is ' + (requestQuantity - paidQuantity),
         'warning'
       );
-      setValue(`PurchaseMaterial[${index}].quantity`, requestQuantity - paidQuantity);
+      setValue(`materialInvoice[${index}].receivedMaterialWeight`, requestQuantity - paidQuantity);
     }
     updateCalculatedValues(index);
   };
   const updateCalculatedValues = (index) => {
-    const parsedQuantity = parseFloat(watch(`PurchaseMaterial[${index}].quantity`));
-    const parsedPrice = parseFloat(watch(`PurchaseMaterial[${index}].rate`));
-    const parsedGstRate = parseFloat(watch(`PurchaseMaterial[${index}].gstRate`));
+    const parsedQuantity = parseFloat(watch(`materialInvoice[${index}].receivedMaterialWeight`));
+    const parsedPrice = parseFloat(watch(`materialInvoice[${index}].rate`));
+    const parsedGstRate = parseFloat(watch(`materialInvoice[${index}].gstRate`));
     console.log({ parsedQuantity }, { parsedPrice }, { parsedGstRate });
     const amount = parsedQuantity * parsedPrice;
     const gstAmount = amount * (parsedGstRate / 100);
-    setValue(`PurchaseMaterial[${index}].amount`, amount);
-    setValue(`PurchaseMaterial[${index}].gstAmount`, gstAmount);
-    setValue(`PurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
+    setValue(`materialInvoice[${index}].amount`, amount);
+    setValue(`materialInvoice[${index}].gstAmount`, gstAmount);
+    setValue(`materialInvoice[${index}].totalAmount`, amount + gstAmount);
     calculateGrandTotal();
   };
   const calculateGrandTotal = () => {
     let grandTotal = 0;
     let grandGstAmount = 0;
-    for (let i = 0; i < watch('PurchaseMaterial')?.length; i++) {
-      const itemTotalAmount = watch(`PurchaseMaterial[${i}].totalAmount`) || 0;
+    for (let i = 0; i < watch('materialInvoice')?.length; i++) {
+      const itemTotalAmount = watch(`materialInvoice[${i}].totalAmount`) || 0;
       grandTotal += itemTotalAmount;
-      const itemTotalGstAmount = watch(`PurchaseMaterial[${i}].gstAmount`) || 0;
+      const itemTotalGstAmount = watch(`materialInvoice[${i}].gstAmount`) || 0;
       grandGstAmount += itemTotalGstAmount;
     }
-    setValue('grandTotalAmount', grandTotal);
+    setValue('netTotalAmount', grandTotal);
     setValue('gstAmount', grandGstAmount);
   };
   useEffect(() => {
     calculateGrandTotal();
-  }, [values.PurchaseMaterial]);
+  }, [values.materialInvoice]);
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
+    data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     try {
       let response = await createPurchaseInvoiceAPI(data);
       console.log('Create success', response);
@@ -291,6 +307,22 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
               name="PODate"
               label="PO Date"
             />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  sx={{ width: '100%', paddingLeft: '3px' }}
+                  label="Invoice Date *"
+                  value={datesUsed?.invoiceDate}
+                  defaultValue={dayjs(new Date())}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      invoiceDate: newValue,
+                    }));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <RHFTextField
               InputProps={{
                 readOnly: true,
@@ -302,7 +334,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
               InputProps={{
                 readOnly: true,
               }}
-              name="PaymentTerm"
+              name="paymentMode"
               label="Payment Term"
             />
             <RHFTextField
@@ -335,7 +367,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
               defaultValue="0"
             />
             <RHFTextField
-              name="grandTotalAmount"
+              name="netTotalAmount"
               label="Grand Total Amount"
               InputProps={{
                 readOnly: true,
@@ -366,7 +398,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue={content.itemName}
                     label="Material"
-                    name={`PurchaseMaterial[${index}].itemName`}
+                    name={`materialInvoice[${index}].itemName`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -374,7 +406,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue={content.unitOfMeasure}
                     label="Unit of Measure"
-                    name={`PurchaseMaterial[${index}].unitOfMeasure`}
+                    name={`materialInvoice[${index}].unitOfMeasure`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -382,7 +414,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue={content.quantity}
                     label="Requested Quantity"
-                    name={`PurchaseMaterial[${index}].requestQuantity`}
+                    name={`materialInvoice[${index}].requestQuantity`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -390,14 +422,14 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue={content.quantity}
                     label="Already Paid Quantity"
-                    name={`PurchaseMaterial[${index}].paidQuantity`}
+                    name={`materialInvoice[${index}].paidQuantity`}
                   />
                   <RHFTextField
                     type="number"
                     onChange={(e) => HandleInputChange(e, index)}
                     defaultValue={0}
-                    label="Paying Quantity"
-                    name={`PurchaseMaterial[${index}].quantity`}
+                    label="Quantity"
+                    name={`materialInvoice[${index}].receivedMaterialWeight`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -406,7 +438,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     value={content.rate || 0}
                     defaultValue={content.rate || 0}
                     label="Rate"
-                    name={`PurchaseMaterial[${index}].rate`}
+                    name={`materialInvoice[${index}].rate`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -414,7 +446,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue={content.gstRate}
                     label="GST Rate"
-                    name={`PurchaseMaterial[${index}].gstRate`}
+                    name={`materialInvoice[${index}].gstRate`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -422,7 +454,7 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue="0"
                     label="Amount"
-                    name={`PurchaseMaterial[${index}].amount`}
+                    name={`materialInvoice[${index}].amount`}
                   />
                   <RHFTextField
                     InputProps={{
@@ -430,16 +462,22 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
                     }}
                     defaultValue="0"
                     label="GST Amount"
-                    name={`PurchaseMaterial[${index}].gstAmount`}
+                    name={`materialInvoice[${index}].gstAmount`}
                   />
                   <RHFTextField
                     InputProps={{
                       readOnly: true,
                     }}
                     defaultValue="0"
-                    label="totalAmount"
-                    name={`PurchaseMaterial[${index}].totalAmount`}
+                    label="Total Amount"
+                    name={`materialInvoice[${index}].totalAmount`}
                   />
+                  <RHFTextField
+                    defaultValue={0}
+                    label="Vehicle Weight"
+                    name={`materialInvoice[${index}].vehicleWeight`}
+                  />
+                  <RHFTextField label="Comments" name={`materialInvoice[${index}].comments`} />
                 </Box>
                 <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
               </div>
