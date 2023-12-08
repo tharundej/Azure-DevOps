@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -41,50 +41,30 @@ import axios from 'axios';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    end_date: dayjs(new Date()),
+    // end_date: dayjs(new Date()),
     start_date: dayjs(new Date()),
     // offer_date: dayjs(new Date()),
   });
   const router = useRouter();
+  const {user}= useContext(UserContext)
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    employee_id: Yup.string(),
-    Employe_Name: Yup.string(),
-    Project_Name: Yup.string(),
-    Activity_Name: Yup.string(),
-    Monday: Yup.string(),
-    Tuesday: Yup.string(),
-    Wednesday: Yup.string(),
-    Thursday: Yup.string(),
-    Friday: Yup.string(),
-    Saturday : Yup.string(),
-    Sunday: Yup.string(),
-    Total_hours: Yup.string(),
-    Comment: Yup.string(),
+   
+    comment: Yup.string(),
    
   });
 
   const defaultValues = useMemo(
     () => ({
    
-      employee_id: currentUser?.employee_id || '',
-      Employe_Name: currentUser?.Employe_Name || '',
-      Project_Name: currentUser?.Project_Name || '',
-      Activity_Name: currentUser?.Activity_Name || '',
-      Monday: currentUser?.Monday || '',
-      Tuesday: currentUser?.Tuesday || '',
-      Wednesday: currentUser?.Wednesday || '',
-      Thursday: currentUser?.Thursday || '',
-      Friday: currentUser?.Friday || '',
-      Saturday: currentUser?.Saturday || '',
-      Sunday: currentUser?.Sunday || '',
-      Total_hours: currentUser?.Total_hours || '',
-      Comment: currentUser?.Comment || '',
+      
+      comment: currentUser?.comment || '',
    
     }),
     [currentUser]
@@ -107,19 +87,15 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   } = methods;
 
   const values = watch();
-  useEffect(() => {
-    getEmployeSwap()
-  
 
-  }, [])
    const [newShift,setnewShift]= useState(false)
-   const [curentShift,setcurentShift]= useState(true)
+   const [curentShift,setcurentShift]= useState(false)
    const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
   const [ShiftName,setShiftName] =useState([]) 
   const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
-  const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
+  const [currentShiftGroupData,setcurrentShiftGroupData ] = useState({})
   const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
   const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
   console.log("🚀 ~ file: ShiftSwapForm.jsx:121 ~ ShiftSwapForm ~ ToShiftGroup_Name:", ToShiftGroup_Name)
@@ -127,17 +103,17 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
     getShiftGroupName()
+    getEmployeSwap()
     // getShiftName()
   }, [])
   const getEmployeSwap = async ( toGroup,fromGroup) => {
-  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+  // if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
 
    
    try{
    const data = JSON.stringify({
-      "company_id": localStorage.getItem('companyID'),
-      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
-      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
+      "company_id": (user?.companyID)?user?.companyID:'',
+        "supervisor_id" :(user?.employeeID)?user?.employeeID:'',
       "search": ""
     });
         const response = await instance.post('/GetSwapEmployee',data);
@@ -148,7 +124,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     console.error("Error", error);
     throw error;
       }
-    }
+    // }
   }
   const getEmployeSwap1 = async ( toGroup,fromGroup) => {
   if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
@@ -156,7 +132,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
    
    try{
    const data = JSON.stringify({
-      "company_id":localStorage.getItem('companyID'),
+      "company_id":(user?.companyID)?user?.companyID:'',
       "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
       "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
       "search": ""
@@ -189,9 +165,9 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
-      companyId:"CDAC1",
-      locationId:43,
-      supervisorId:"CDAC_01",
+      companyId:(user?.companyID)?user?.companyID:'',
+      locationId:(user?.locationID)?user?.locationID:'',
+      supervisorId:(user?.employeeID)?user?.employeeID:'',
       };
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
@@ -226,21 +202,30 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
     try {
     
-  const data = {
-    "employee_1":{
-      "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
-      "employee_id":   currentEmployeSwapData?.employee_shift_swap_id ? currentEmployeSwapData?.employee_shift_swap_id : '',
-    },
-    "employee_2":{
-      "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
-      "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
-      "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
-    },
-    "company_id":localStorage.getItem('companyID'),
-    "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
-    "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
+  // const data = {
+  //   "employee_1":{
+  //     "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
+  //     "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
+  //     "employee_id":   currentEmployeSwapData?.employee_shift_swap_id ? currentEmployeSwapData?.employee_shift_swap_id : '',
+  //   },
+  //   "employee_2":{
+  //     "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
+  //     "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
+  //     "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
+  //   },
+  //   "company_id":(user?.companyID)?user?.companyID:'',
+  //   "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
+  //   "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
     
+  // }
+  const data ={
+    employee_id:currentEmployeSwapData?.employee_id,
+    approver_id: (user?.employeeID)? user?.employeeID : '',
+    company_id: (user?.companyID)? user?.companyID : '',
+    current_shift_group_id:parseInt(currentEmployeSwapData?.shift_group_id),
+    new_shift_group_id:parseInt(currentShiftGroupData?.employeeShiftGroupId),
+    start_date:formatDateToYYYYMMDD (datesUsed.start_date),
+    comment:Comment,
   }
       console.log(data, 'data111ugsghghh');
 
@@ -261,11 +246,15 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
       console.error(error);
     }
   });
-  const Options = [
-    {id :"2" , name:"shift A"},
-    {id :"3" , name:"shift B"},
-    {id :"4" , name:"shift C"},
-  ]
+  // const Options = [
+  //   {id :"2" , name:"shift A"},
+  //   {id :"3" , name:"shift B"},
+  //   {id :"4" , name:"shift C"},
+  // ]
+  const [Comment,setComment]=useState('')
+  const handleComment = (event)=>{
+    setComment(event.target.value)
+    }
 
   return (
     <div style={{ paddingTop: '20px' }}>
@@ -301,7 +290,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   disablePortal
   id="combo-box-demo"
   options={employeSwapDetails || []}
-  value={currentEmployeSwapData?.employee_shift_swap_id}
+  value={currentEmployeSwapData?.employee_id}
   getOptionLabel={(option) => option.employee_name}
   onChange={(e,newvalue)=>{
    
@@ -320,12 +309,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   disablePortal
   id="combo-boxSelectshift"
   options={ShiftGroupName || []}
-  value={currentEmployeSwapData?.employeeShiftGroupId}
+  value={currentShiftGroupData?.employeeShiftGroupId}
   getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
   onChange={(e,newvalue)=>{
    
    
-    setCurrentEmployeSwapData(newvalue
+    setcurrentShiftGroupData(newvalue
     )
     setnewShift(true)
  
@@ -352,40 +341,206 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         </DemoContainer>
       </LocalizationProvider>   
 
-      <RHFTextField   name="comment" label="Comments " />   
+      <RHFTextField  name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
   { curentShift &&    <Grid>
-      <Typography>
+      <Typography >
         Current Shift Details
         </Typography> 
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+        <ListItem
+        disablePadding
+        sx={{
+          border: '0px solid #ccc', // Add your border style
+          // borderRadius: '8px',    // Add your border radius
+          // padding: '8px',          // Add your padding
+          marginBottom: '8px',     // Add your margin
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        {/* Display specific name and value */}
+        <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift GroupName`}
+        </span>
 
-        return (
-          <ListItem key={value} disablePadding >
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center", justifyContent:"center",alignContent:"center",  border: "1px solid #ccc" }}>2</span>
-          </ListItem>
-        );
-      })}
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.shift_group}
+        </span>
+        
+        {/* Add more concatenated strings for other name-value pairs as needed */}
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift Name`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.shift_name}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Start Time`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.start_time}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`End Time`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.end_time}
+        </span>
+    
+      </ListItem>
     </List>
         </Grid>}
 { newShift &&      <Grid>
       <Typography>
         New Shift Details
         </Typography> 
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+        <ListItem
+        disablePadding
+        sx={{
+          border: '0px solid #ccc', // Add your border style
+          // borderRadius: '8px',    // Add your border radius
+          // padding: '8px',          // Add your padding
+          marginBottom: '8px',     // Add your margin
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        {/* Display specific name and value */}
+        <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift GroupName`}
+        </span>
 
-        return (
-          <ListItem key={value} disablePadding>
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>1</span>
-            <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "1px solid #ccc" }}>2</span>
-          </ListItem>
-        );
-      })}
-    </List>
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.shiftGroupName}
+        </span>
+        
+        {/* Add more concatenated strings for other name-value pairs as needed */}
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift Name`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.shiftName}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Start Time`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.startTime}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
+
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`End Time`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.end_Time}
+        </span>
+    
+      </ListItem>
+    </List>  
         </Grid>}
 
     </Box>

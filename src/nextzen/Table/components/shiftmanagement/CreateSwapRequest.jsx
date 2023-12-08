@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -41,6 +41,7 @@ import axios from 'axios';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 export default function CreateSwapRequest({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -50,6 +51,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     startDate: dayjs(new Date()),
   });
   const router = useRouter();
+  const {user} = useContext(UserContext)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -128,9 +130,9 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
-      companyId:"CDAC1",
-      locationId:43,
-      supervisorId:"CDAC_01",
+      companyId:(user?.companyID)?user?.companyID : '',
+      locationId:(user?.locationID)?user?.locationID : '',
+      supervisorId:(user?.employeeID)?user?.employeeID : '',
       };
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
@@ -149,8 +151,8 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     try {
     
   const data = {
-    companyId:localStorage.getItem("companyID"),
-    employeeId:"ibm4",
+    companyId:(user?.companyID)?user?.companyID : '',
+    employeeId:(user?.employeeID)?user?.employeeID : '',
     toShiftGroupId:parseInt( ShiftNameDetails.employeeShiftGroupId),
     startDate:formatDateToYYYYMMDD( datesUsed.startDate),
     
