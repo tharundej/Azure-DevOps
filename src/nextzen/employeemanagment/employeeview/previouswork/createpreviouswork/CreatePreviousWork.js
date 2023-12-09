@@ -37,7 +37,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
-    Stack
+    Stack,IconButton
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -521,14 +521,14 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                 disablePortal
                 id="combo-box-demo"
                 options={employeeTypeOptons}
-                value={item?.employmentType}
+                value={item?.employementType}
                 getOptionLabel={(option) => option}
                 onChange={(e,value) => {
                   console.log(value)
                   const newArray = [...defaultValues];
                   newArray[index] = {
                     ...newArray[index],
-                    employmentType: value
+                    employementType: value
                 }
                 setDefaultValues(newArray);
                 }}
@@ -543,6 +543,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
               </Grid>
              
               { endpoint!=='addExperience' &&<>
+              
+
               <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
                       Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
                     </Typography>
@@ -568,13 +570,13 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                         {/* Add more categories here */}
                     </Select>
                     </FormControl>
-                </Grid>
+                    </Grid>
 
                 <Grid item xs={12} md={6}>
                 <Grid>
 
                   <Grid item>
-                  {console.log(index,'opopop')}
+                  {console.log(defaultValues,file,'opopop')}
                   <input
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
@@ -583,6 +585,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     style={{ display: 'none' }}
                    
                 />
+                <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
                 <Button
                   onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
@@ -594,50 +598,61 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
-                  </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                </Grid>
+
+                <Grid item>
                   { index1===0 &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
-                        
-                       
-                        
+                                           <IconButton
+                                           onClick={() => {
+                                             handleAddDocument(index);
+                                           }}
+                                           color="primary"
+                                         >
+                                           <Iconify icon="gala:add" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                         </IconButton>
+                                              // <Button 
+                                              // onClick={()=>{
+                                              //   handleAddDocument(index)
+                                              // }
+                                              
+                                                
+                                              
+                                                
 
-                      }
-                      >Add</Button>
-                   
+                                              // }
+                                              // >Add Files</Button>
+                                          
 
-                  }
-                   { index1!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index,index1)
-                      }
-                       
-                        
-                       
-                        
+                                          }
+                                          { index1!==0 &&
+                                            
+                                            <IconButton
+                                            onClick={()=>{
+                                              handleDeleteDocument(index,index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
 
-                      }
-                      >Delete</Button>
-                    
+                                            
+                                            
 
-                  }
-                  </Grid>
-                  
-                  
-                </Grid>
-               
-                </Grid>
-               
-                   
+                                          }
+                   </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
 
-              </Grid>
+                                        </Grid>
               ))}
               </Grid>
 
