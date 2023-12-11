@@ -248,7 +248,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         handleCallSnackbar(response.data.message,'success')
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error,'error');
       });
     }
       const { logout } = useAuthContext();

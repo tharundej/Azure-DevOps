@@ -232,7 +232,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
     
   
     return (
@@ -242,6 +242,7 @@ export default function LeaveFilter({filterSearch,filterData}){
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}}
+            size="small"
             />
             </Grid>
             <Grid md={4} xs={4} item>

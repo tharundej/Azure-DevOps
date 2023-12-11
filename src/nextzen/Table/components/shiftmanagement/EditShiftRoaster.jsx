@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -42,55 +42,37 @@ import axios from 'axios';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
-export default function EditShiftRoaster({ currentUser, editData, handleEditClose }) {
+export default function EditShiftRoaster({ currentUser, editData, handleClose }) {
+  const [ListEMploye,setListEMploye] =useState([])
+ 
+
   console.log(
     ' edit data for shift:',
     editData
   );
   console.log(
     '🚀 ~ file: EditShiftRoaster.jsx:47 ~ EditShiftRoaster ~ editData:',
-    editData?.toggle
+    editData
   );
   const [datesUsed, setDatesUsed] = useState({
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
   const router = useRouter();
-
+  const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    employee_id: Yup.string(),
-    Employe_Name: Yup.string(),
-    Project_Name: Yup.string(),
-    Activity_Name: Yup.string(),
-    Monday: Yup.string(),
-    Tuesday: Yup.string(),
-    Wednesday: Yup.string(),
-    Thursday: Yup.string(),
-    Friday: Yup.string(),
-    Saturday: Yup.string(),
-    Sunday: Yup.string(),
-    Total_hours: Yup.string(),
-    Comment: Yup.string(),
+    shiftGroupName: Yup.string(),
+ 
   });
 
   const defaultValues = useMemo(
     () => ({
-      employee_id: currentUser?.employee_id || '',
-      Employe_Name: currentUser?.Employe_Name || '',
-      Project_Name: currentUser?.Project_Name || '',
-      Activity_Name: currentUser?.Activity_Name || '',
-      Monday: currentUser?.Monday || '',
-      Tuesday: currentUser?.Tuesday || '',
-      Wednesday: currentUser?.Wednesday || '',
-      Thursday: currentUser?.Thursday || '',
-      Friday: currentUser?.Friday || '',
-      Saturday: currentUser?.Saturday || '',
-      Sunday: currentUser?.Sunday || '',
-      Total_hours: currentUser?.Total_hours || '',
-      Comment: currentUser?.Comment || '',
+      shiftGroupName: currentUser?.shiftGroupName || '',
+
     }),
     [currentUser]
   );
@@ -117,6 +99,8 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
     getEmploye();
     getShiftgroupName();
     getShiftName();
+  
+   
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
 
@@ -149,14 +133,59 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
     CurrentGradeData.designationGradeID
   );
 
+  console.log("checking ",ShiftName.find(option => option.shiftConfigurationId == editData?.shiftConfigId) )
+  const [ShiftDefault,setShiftDefault]= useState([])
+  console.log("🚀 ~ file: EditShiftRoaster.jsx:156 ~ EditShiftRoaster ~ ShiftDefault:", ShiftDefault)
+  const [shiftArr,setshiftArr]= useState(null)
+  const [foundShift,setfoundShift]=useState([])
+  const [foundDepartment,setfountDepartment]=useState([])
+  const [fountDesignation,setfountDesignation]=useState([])
+  const [fountGrade,setfountGrade]=useState([])
+  const [fountEmployee,setfountEmployee]=useState([])
+
+  const defaultValueShift = async (value) =>{
+    console.log("iama here ")
+    await   setfoundShift ( value?.find(option => option?.shiftConfigurationId == editData?.shiftConfigId));
+    console.log("🚀 ~ file: EditShiftRoaster.jsx:160 ~ EditShiftRoaster ~ foundShift:", foundShift)
+
+    if (foundShift) {
+      setshiftArr(  parseInt(foundShift.shiftConfigurationId));
+      // Now you can use shiftConfigurationId as needed
+      console.log('1233445:', ShiftName[shiftArr]);
+    }
+
+  }
+
+  const defaultDepartment = async (value) =>{
+    await setfountDepartment (value?.find(option => option?.departmentID == editData?.departmentId))
+  }
+  const defaultDesignation = async (value) =>{
+    await setfountDesignation (value?.find(option => option?.designationID == editData?.designationID))
+  }
+  const defaultGrade = async (value) =>{
+    await setfountGrade (value?.find(option => option?.designationGradeID == editData?.designationGrade))
+  }
+  const [EmployeMatching,setEmployeMatching] = useState([])
+  const defaultEmployee = async (value) =>{
+    setListEMploye(editData?.EmpList)
+    // await setfountEmployee (value?.find(option => option?.employeeID == ListEMploye[0]?.empId))
+    if(editData?.EmpList.length >0){
+
+       setEmployeMatching (value?.filter(item1 => editData?.EmpList?.some(item2=>item1.employeeID === item2.empId) ))
+      console.log("🚀 ~ file: EditShiftRoaster.jsx:171 ~ defaultEmployee ~ EmployeMatching:", EmployeMatching)
+     }
+    }
   const getDepartment = async () => {
     try {
       const data = {
-        companyID: 'COMP1',
-        locationID: 30,
+        companyID: (user?.companyID)?user?.companyID : '',
+        locationID: (user?.locationID)?user?.locationID : '',
       };
-      const response = await instance.post('/onboardingDepartment', data);
+      const response = await instance.post('/getDepartment', data);
       setDepartmentData(response.data.data);
+      if(response?.data?.data){ defaultDepartment(response?.data?.data)}
+      if(response?.data?.data){ getDesignation(response?.data?.data)}
+
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
         response.data
@@ -169,12 +198,17 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
 
   const getDesignation = async (newvalue) => {
     try {
-      const data = {
-        companyID: 'COMP1',
-        departmentID: newvalue.departmentID,
-      };
+      
+
+        const data =  { 
+          companyID:  (user?.companyID)?user?.companyID : '',
+          departmentID:  (newvalue[0]?.departmentID)? newvalue[0]?.departmentID : fountDesignation,
+        };
+     
       const response = await instance.post('/onboardingDesignation', data);
       setDesignationData(response.data.data);
+      if(response?.data?.data){defaultDesignation(response.data.data)}
+      if(response?.data?.data){ getGrade(response?.data?.data)}
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
         response.data
@@ -186,13 +220,34 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   };
 
   const getGrade = async (newvalue) => {
+    console.log("🚀 ~ file: EditShiftRoaster.jsx:231 ~ getGrade ~ newvalue:", newvalue) 
+   const GradeValue = newvalue?.find(option => option?.designationID == editData?.designationID)
     try {
       const data = {
-        designationID: newvalue.designationID,
+        designationID:  GradeValue?.designationID,
       };
       const response = await instance.post('/onboardingDesignationGrade', data);
       setgradeData(response.data.data);
-
+      if(response.data.data) {defaultGrade(response.data.data)}
+      console.log(
+        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
+        response.data
+      );
+    } catch (error) {
+      console.error('Error', error);
+      throw error;
+    }
+  };
+  const getGrade1 = async (newvalue) => {
+    console.log("🚀 ~ file: EditShiftRoaster.jsx:231 ~ getGrade ~ newvalue:", newvalue) 
+  //  const GradeValue = newvalue?.find(option => option?.designationID == editData?.designationID)
+    try {
+      const data = {
+        designationID: (newvalue?.designationID)?newvalue?.designationID:'' ,
+      };
+      const response = await instance.post('/onboardingDesignationGrade', data);
+      setgradeData(response.data.data);
+      // if(response.data.data) {defaultGrade(response.data.data)}
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
         response.data
@@ -205,10 +260,11 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getEmploye = async (newvalue) => {
     try {
       const data = {
-        companyiD: 'COMP1',
+        companyiD:(user?.companyID)?user?.companyID : '',
       };
       const response = await instance.post('/getEmployeeIDDetails', data);
       setEmployeData(response.data.data);
+      if(response?.data?.data) { defaultEmployee(response?.data?.data)}
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
         response.data
@@ -221,7 +277,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getShiftgroupName = async (newvalue) => {
     try {
       const data = {
-        companyId: 'COMP1',
+        companyId: (user?.companyID)?user?.companyID : '',
       };
       const response = await instance.post('/getShiftGroupName', data);
       setShiftGroupName(response.data.data);
@@ -237,11 +293,13 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
   const getShiftName = async (newvalue) => {
     try {
       const data = {
-        companyId: 'COMP2',
-        locationId: 32,
+        companyId: (user?.companyID)?user?.companyID : '',
+        locationId: (user?.locationID)?user?.locationID : '',
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
+       if(response?.data?.data){ defaultValueShift(response?.data?.data)}
+       
       console.log(
         '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
         response.data.data
@@ -251,46 +309,44 @@ export default function EditShiftRoaster({ currentUser, editData, handleEditClos
       throw error;
     }
   };
-  const [currentEmployeData, setCurrentEmployeData] = useState([]);
+  // const [EmployeMatching, setEmployeMatching] = useState([]);
   const handleSelectEmployeChange = (event, values) => {
-    setCurrentEmployeData(values);
+    setEmployeMatching(values);
     console.log('🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:', values);
-    //  setemployeeList ( currentEmployeData[0]?.employeeId);
+    //  setemployeeList ( EmployeMatching[0]?.employeeId);
 
     // setCommaSepaatedEmployeString(EmployeList.join(','))
   };
 
   const join = () => {
     const arr = [];
-    for (let i = 0; i < currentEmployeData.length; i++) {
-      arr.push(currentEmployeData[i].employeeID);
+    for (let i = 0; i < EmployeMatching.length; i++) {
+      arr.push(EmployeMatching[i].employeeID);
     }
     return arr;
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log('uyfgv',data);
 
     try {
       const data = {
-        shiftConfigurationId: parseInt(CurrentShiftNameData?.shiftConfigurationId),
-        ShiftTerm: 'weekly',
+        shiftGroupNameId: parseInt(editData?.shiftGroupId),
+        shiftConfigurationId: parseInt(foundShift?.shiftConfigurationId),
 
-        supervisorId: 'ibm4',
-        departmentId: JSON.stringify(CurrentDepartmentData?.departmentID),
-        designationId: JSON.stringify(CurrentDesignationData?.designationID),
-        DesignationGradeId:
-          CurrentGradeData?.designationGradeID !== '0'
-            ? JSON.stringify(CurrentGradeData.designationGradeID)
-            : '',
-        companyId: 'COMP2',
+        // supervisorId: (user?.employeeID)?user?.employeeID : '',
+        departmentId: (foundDepartment?.departmentID)?parseInt(foundDepartment?.departmentID) : 0,
+        designationId:(fountDesignation?.designationID)? parseInt(fountDesignation?.designationID): 0,
+        DesignationGradeId: (fountGrade?.designationGradeID)?parseInt(fountGrade?.designationGradeID): 0,
+        locationId:(user?.locationID)?user?.locationID : null,
+        companyId:(user?.companyID)?user?.companyID : '',
         employeeId: join(),
       };
       console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('/addShiftDetails', data).then(
+      const response = await instance.post('/editShiftDetails', data).then(
         (successData) => {
-          handleEditClose();
+          handleClose();
           enqueueSnackbar(response.data.message, { variant: 'success' });
 
           console.log('sucess', successData);
@@ -385,10 +441,11 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   disablePortal
                   id="combo-box-dem33"
                   options={ShiftName || []}
-                  value={CurrentShiftNameData?.shiftConfigurationId}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={(foundShift?.length !== 0)? foundShift : null}
                   getOptionLabel={(option) => option.shiftName}
                   onChange={(e, newvalue) => {
-                    setCurrentShiftNameData(newvalue);
+                  if(newvalue > 0) { setfoundShift(newvalue)};
                     // getDesignation(newvalue)
                   }}
                   sx={{
@@ -424,10 +481,10 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo"
                     options={departmentData || []}
-                    value={CurrentDepartmentData?.departmentID}
+                    value={foundDepartment || ''}
                     getOptionLabel={(option) => option.departmentName}
                     onChange={(e, newvalue) => {
-                      setCurrentDepartmentData(newvalue);
+                      setfountDepartment(newvalue);
                       getDesignation(newvalue);
                     }}
                     sx={{
@@ -450,11 +507,11 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo3"
                     options={designationData || []}
-                    value={CurrentDesignationData?.designationID}
+                    value={fountDesignation || ''}
                     getOptionLabel={(option) => option.designationName}
                     onChange={(e, newvalue) => {
-                      setCurrentDesignationData(newvalue);
-                      getGrade(newvalue);
+                      setfountDesignation(newvalue);
+                      getGrade1(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
@@ -467,10 +524,10 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo"
                     options={gradeData || []}
-                    value={CurrentGradeData?.designationGradeID}
+                    value={fountGrade || ''}
                     getOptionLabel={(option) => option.designationGradeName}
                     onChange={(e, newvalue) => {
-                      setCurrentGradeData(newvalue);
+                      setfountGrade(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
@@ -484,7 +541,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="hfh"
                     options={employeData || []}
-                    value={currentEmployeData}
+                    value={EmployeMatching || []}
                     getOptionLabel={(option) => option.EmployeeName}
                     onChange={handleSelectEmployeChange}
                     sx={{
@@ -508,7 +565,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   {!currentUser ? 'Create User' : 'Save Employe To Shift'}
                 </LoadingButton>
 
-                <Button sx={{ ml: '5px' }} onClick={handleEditClose}>
+                <Button sx={{ ml: '5px' }} onClick={handleClose}>
                   Cancel
                 </Button>
               </Stack>
@@ -522,5 +579,5 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
 
 EditShiftRoaster.propTypes = {
   currentUser: PropTypes.object,
-  handleEditClose: PropTypes.func,
+  handleClose: PropTypes.func,
 };

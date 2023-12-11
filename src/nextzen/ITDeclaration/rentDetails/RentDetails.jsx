@@ -79,7 +79,7 @@ const [loading,setLoading] = useState(false);
   const [isPanValueThere, setIsPanValueThere] = useState(false);
   const [isPanValueNumber, setIsPanValueNumber] = useState('');
   const [declarationSelectedValue, setSeclarationSelectedValue] = useState('');
-  var [isShowDeclaration, setIsShowDeclaration] = useState(false);
+  var [isShowDeclaration, setIsShowDeclaration] = useState(true);
   const [isShowUpload, setIsShowUpload] = useState(false);
   const [open, setOpen] = useState(true);
   var [panNumbers, setPanNumbers] = useState(['', '', '']); // Initialize with three empty strings
@@ -111,13 +111,6 @@ const [loading,setLoading] = useState(false);
   console.log(currentYear, 'current year');
   const startYear = 2022;
   const endYear = 2030;
-
-  //    const financialYears = [];
-  //    for (let year = startYear; year <= endYear; year++) {
-  //      financialYears.push(`${year}-${year + 1}`);
-  //    }
-  //  console.log(financialYears ,
-  //   "financialYears")
   const [selectedYear, setSelectedYear] = useState(null);
   const [
     financialYears, setFinancialYears] = useState([]);
@@ -348,7 +341,7 @@ const [loading,setLoading] = useState(false);
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
       panOfTheLandlord: isShowPannumber,
-      declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      declarationReceivedFromLandlord: declarationSelectedValue == 'Yes' ? true : false ,
       // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
@@ -429,11 +422,11 @@ const [loading,setLoading] = useState(false);
           if (rowsData !== null || undefined) {
             setIsPreviousData(true);
           }
-          console.log(rowsData);
+          console.log(response?.data?.data?.declarationReceivedFromLandlord ,"response?.data?.data?.declarationReceivedFromLandlord");
           setRendDetailsData(rowsData);
           setLandLardName(response?.data?.data?.nameOfLandlord);
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
-          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
+          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord? "Yes" : "No");
           setIsShowPanNumber(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
           // setSelectedValue(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
           response?.data?.data?.panOfTheLandlord
@@ -488,6 +481,8 @@ const [loading,setLoading] = useState(false);
       });
     //  console.log(result, 'resultsreults');
   };
+
+  console.log(declarationSelectedValue ,"declarationSelectedValuedeclarationSelectedValue" ,)
 console.log(selectedValue ,"SelectedValue")
   const getFinancialYear = async () => {
     setLoading(true)

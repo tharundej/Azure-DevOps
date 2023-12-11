@@ -22,7 +22,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
       const TABLE_HEAD = [
         {
     
-          id: "employeeID",
+          id: "employeeId",
     
           label: "Employee Id",
           minWidth:"8pc",
@@ -39,9 +39,9 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
     
         { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "date" },
-        { id: "PaidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
+        { id: "paidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "approverName", label: "Approver", minWidth: "7pc", type: "text" },
-        { id: "commentStatus", label: "User Remarks", minWidth: "8pc", type: "text" },
+        { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
         { id: "hrComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
         { id: "paymentStatus", label: "Payment Status", minWidth: "9pc", type: "text" },
         { id: "status", label: "Status", minWidth: "7pc",type: "badge"},
@@ -95,6 +95,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters": {
   "requestDate": {
    
@@ -117,7 +118,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     },
     "sort": {
       "key": 1,
-      "orderBy": ""
+      "orderBy": "saId"
     }
   }
   const onClickActions=(rowdata,event)=>{
@@ -144,11 +145,11 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
 
   const NewUserSchema = Yup.object().shape({
     paymentStatus:Yup.string(),
-    salaryAdvanceID:Yup.number(),
+    saId:Yup.number(),
     paidAmount:Yup.number(),
     hrComments:Yup.string(),
     status:Yup.string(),
-    employeeID:Yup.string()
+    employeeId:Yup.string()
   })
  
   const defaultValues = useMemo(
@@ -156,11 +157,11 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
     () => ({ 
       
     paymentStatus:"",
-    salaryAdvanceID:0,
+    saId:0,
     paidAmount:"",
     hrComments:"",
     status:"approved",
-    employeeID:(user?.employeeID)?user?.employeeID:'',
+    employeeId:(user?.employeeID)?user?.employeeID:'',
     }),
     []
   );
@@ -200,7 +201,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
       });
   }
   const onSubmit = handleSubmit(async (data)=>{
-    data.salaryAdvanceID=rowData?.SalaryAdvanceID
+    data.saId=rowData?.saId
 
     try{
       apihit(data)
@@ -213,7 +214,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
 
   const handleEditSalary=()=>{
    var payload = {
-      "salaryAdvanceID":rowData?.SalaryAdvanceID,
+      "saId":rowData?.saId,
       "requestAmount":parseInt(amountValue)
   }
   const config = {
@@ -239,8 +240,8 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
   const handleSalaryReject=()=>{
     var payload =
     {
-      "employeeID":(user?.employeeID)?user?.employeeID:'',
-      "salaryAdvanceID":rowData?.SalaryAdvanceID,
+      "employeeId":(user?.employeeID)?user?.employeeID:'',
+      "saId":rowData?.saId,
       "paidAmount":rowData?.paidAmount,
       "hrComments":commentsValue,
       "status":"rejected",

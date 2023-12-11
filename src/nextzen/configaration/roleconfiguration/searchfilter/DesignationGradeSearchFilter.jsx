@@ -100,6 +100,7 @@ export default function DesignationGradeSearchFilter({
   filterOptions,
   filterSearch,
   searchData,
+  getTableData
 }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
@@ -444,7 +445,7 @@ export default function DesignationGradeSearchFilter({
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
-        </Grid>
+        </Grid> 
         {/* <Grid item  md={8} xs={8} direction="row" >
       <AddDepartmentConfig />
        <AddDesignationConfig/>
@@ -461,15 +462,15 @@ export default function DesignationGradeSearchFilter({
           // justifyContent="space-around"
         >
           <Grid item xs={4}>
-            <AddDepartmentConfig />
+            <AddDepartmentConfig getTableData={getTableData}/>
           </Grid>
 
           <Grid item xs={4}>
-            <AddDesignationConfig />
+            <AddDesignationConfig getTableData={getTableData}/>
           </Grid>
 
           <Grid item xs={4}>
-            <AddDesignationGradeConfig />
+            <AddDesignationGradeConfig getTableData={getTableData}/>
           </Grid>
         </Grid>
         <Grid item md={1} xs={1}>

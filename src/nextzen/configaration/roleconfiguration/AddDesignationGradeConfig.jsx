@@ -375,7 +375,7 @@ const {enqueueSnackbar} = useSnackbar()
         startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
-        Designation Grade
+        Designation Grade  
       </Button>
       <Dialog
         fullWidth
@@ -387,7 +387,7 @@ const {enqueueSnackbar} = useSnackbar()
         }}
       >
         <FormProvider>
-          <ModalHeader heading="Designation Grade Config" />
+          <ModalHeader heading="Designation Grade Configuration" />
           <DialogContent>
             <Box
               rowGap={3}

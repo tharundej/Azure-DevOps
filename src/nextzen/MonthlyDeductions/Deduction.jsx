@@ -31,7 +31,7 @@ export default function Deduction({defaultPayload,componentPage}) {
     { id: "deductedDate", label: "Deducted Date", minWidth: "9pc", type: "date" },
     { id: "deductedAmount", label: "Deducted Amount", minWidth: "10pc", type: "text" },
     { id: "balanceAmount", label: "Balance Amount", minWidth: "9pc", type: "text" },
-    { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
+    { id: "comments", label: "HR Remarks", minWidth: "10pc", type: "text" }
 
   ];
 const roleID = localStorage?.getItem('roleID')
@@ -42,6 +42,7 @@ const defaultPayloadValue=(defaultPayload)?defaultPayload:{
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",
@@ -51,8 +52,8 @@ const defaultPayloadValue=(defaultPayload)?defaultPayload:{
         }
     },
     "sort":{
-        "key":0,
-        "orderby":""
+        "key":1,
+        "orderby":"deduction_id"
     }
 }
 return (

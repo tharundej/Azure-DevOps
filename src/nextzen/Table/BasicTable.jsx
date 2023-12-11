@@ -220,6 +220,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
       url: baseUrl + `${endpoint}`,
+      // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
+      // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -591,6 +593,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'PayScheduleFilterSearch' && (
@@ -619,7 +622,8 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
-            getTableData={getTableData} searchData={handleFilterSearch}/>
+            getTableData={getTableData} searchData={handleFilterSearch}/>,
+            <LeaveTypeForm getTableData={getTableData}/>
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -770,17 +774,18 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
              {filterName === 'HrTabFilter' && (
-            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}  getTableData={getTableData}/>
           )}
  {filterName === 'TaxSectionFilter' && (
-            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
 
 {filterName === 'AddRoleFilter' && (
-            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
           <Card>

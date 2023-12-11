@@ -661,11 +661,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="firstName" label="First Name* " />
-                <RHFTextField name="middleName" label="Middle Name " />
-                <RHFTextField name="lastName" label="Last Name* " />
-                <RHFTextField name="companyEmail" label="Company Email" />
-                <RHFTextField name="personalEmail" label="Personal Email" />
+                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="middleName" label="Middle Name" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="lastName" label="Last Name*" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="companyEmail" label="Company Email" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="personalEmail" label="Personal Email" sx={{caretColor:'#3B82F6'}}/>
                 <RHFAutocomplete
                 name="gender"
                 label="Gender"
@@ -677,13 +677,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.label}
                   </li>
                 )}
+                sx={{caretColor:'#3B82F6'}}
 
               />
 
-                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10}/>
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} />
+                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
+                    
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
                     
@@ -698,6 +700,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         },
                       }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          dateOfBirth:''
+                        }
+                        setErrorMessage(obj);
                         setDatesUsed((prev) => ({
                           ...prev,
                           date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
@@ -710,8 +718,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     />
                   
                  
-                <RHFTextField name="fatherName" label="Father Name" />
-                <RHFTextField name="motherName" label="Mother Name" />
+                <RHFTextField name="fatherName" label="Father Name" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="motherName" label="Mother Name" sx={{caretColor:'#3B82F6'}}/>
                 <RHFAutocomplete
                 name="maritalStatus"
                 label="Marital Status"
@@ -723,6 +731,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.label}
                   </li>
                 )}
+                sx={{caretColor:'#3B82F6'}}
 
               />
                 <RHFAutocomplete
@@ -736,6 +745,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.nationality}
                   </li>
                 )}
+                sx={{caretColor:'#3B82F6'}}
 
               />
                 <RHFAutocomplete
@@ -749,7 +759,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.label}
                   </li>
                 )}
-
+                sx={{caretColor:'#3B82F6'}}
               />
             <RHFAutocomplete
                 name="bloodGroup"
@@ -762,6 +772,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.label}
                   </li>
                 )}
+                sx={{caretColor:'#3B82F6'}}
 
               />
                 
@@ -771,6 +782,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
+                        
                         setDatesUsed((prev) => ({
                           ...prev,
                           offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
@@ -794,6 +806,12 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         },
                       }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          joiningDate:''
+                        }
+                        setErrorMessage(obj);
                         console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,
@@ -813,7 +831,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.name}
                   </li>
                 )}
-
+                sx={{caretColor:'#3B82F6'}}
 
               />
                 <RHFAutocomplete
@@ -827,7 +845,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.name}
                   </li>
                 )}
-
+                sx={{caretColor:'#3B82F6'}}
               />
                <RHFAutocomplete
                 name="city"
@@ -840,10 +858,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                     {option.name}
                   </li>
                 )}
-
+                sx={{caretColor:'#3B82F6'}}
               />
-                <RHFTextField name="pAddressLine1" label="Permanent Address Line1 " />
-                <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />
+                <RHFTextField name="pAddressLine1" label="Permanent Address Line1" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="pAddressLine2" label="Permanent Address Line2" sx={{caretColor:'#3B82F6'}} />
                 {/* <RHFAutocomplete
                 name="state"
                 label="Resendtial State"
@@ -859,7 +877,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               /> */}
                
                 
-                <RHFTextField name="pPincode" label="Pincode" type="number" maxLength={6}  />
+                <RHFTextField name="pPincode" label="Pincode" type="number" maxLength={6}sx={{caretColor:'#3B82F6'}}  />
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Switch checked={isSameAsPermanent} onChange={()=>{setIsSameAsPermanent(!isSameAsPermanent)}} />
                   <Typography variant="h6" style={{ color: 'Black' }}>
@@ -884,6 +902,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
               />
                 <RHFAutocomplete
+                sx={{caretColor:'#3B82F6'}}
                 name="rState"
                 label="Permanent State"
                 options={options?.rstateOptions || []}
@@ -897,6 +916,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
               />
                <RHFAutocomplete
+               sx={{caretColor:'#3B82F6'}}
                 name="rCity"
                 label="Permanent City"
                 options={options?.rcityOptions || []}
@@ -909,7 +929,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 )}
 
               />
-                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} />
+                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
                 </>
                 }
            

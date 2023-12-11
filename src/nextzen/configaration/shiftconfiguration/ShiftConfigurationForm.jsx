@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState,useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -35,9 +35,9 @@ export default function ShiftConfigurationForm({ currentUser }) {
     reset1();
   };
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [open, setOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [startTime, setStartTime] = useState(dayjs()); // State for Start Time
@@ -67,34 +67,24 @@ export default function ShiftConfigurationForm({ currentUser }) {
     reset: reset1,
   } = methods1;
   const ShiftNames = [
-    { type:'General'},
-    { type:'Morning'},
-    { type:'AfterNoon'},
-    { type:'Night'},
+    { type: 'General' },
+    { type: 'Morning' },
+    { type: 'AfterNoon' },
+    { type: 'Night' },
   ];
   // const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
 
-  const handleAutocompleteChange = (name, selectedOptions) => {
-    console.log(name, selectedOptions);
-    // extra code
-    const selectedValues = selectedOptions.map(option => option.value);
-  const locationIDs = selectedOptions.map(option => option?.locationID);
-  const locationNames = selectedOptions.map(option => option?.locationName);
-    // setFormData({
-    //   ...formData,
-    //   [name]: selectedValue,
-    //   locationID: selectedOption?.locationID,
-    //   locationName: selectedOption?.locationName,
-    // });
+  const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
+    console.log(name, selectedValue, selectedOption);
     setFormData({
       ...formData,
-      [name]: selectedValues,
-      locationID: locationIDs,
-      locationName: locationNames,
+      [name]: selectedValue,
+      locationId: selectedOption?.locationID,
+      locationName: selectedOption?.locationName,
     });
   };
-console.log(formData,'formmmmmm')
-console.log(formData?.locationID,'formmmmmm')
+  console.log(formData, 'formmmmmm');
+  console.log(formData?.locationID, 'formmmmmm');
   const getLocation = async () => {
     const payload = {
       companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -103,7 +93,7 @@ console.log(formData?.locationID,'formmmmmm')
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+'/locationOnboardingDepartment',
+      url: baseUrl + '/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -135,29 +125,39 @@ console.log(formData?.locationID,'formmmmmm')
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
+    (data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID),
+      (data.startTime = startTime.format('HH:mm:ss')); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-   
     try {
-      data.locationID = formData?.locationID
+      data.locationIdArray = formData?.Location.map((name) => name.locationID);
 
       console.log('submitted data111', data);
-      console.log('aaa',formData?.locationID);
-      const response = await axios.post(baseUrl+'/addShiftConfig', data);
-      if(response?.status===200){
+      console.log(
+        'aaa',
+        formData?.Location.map((name) => name.locationID)
+      );
+      const response = await axios.post(baseUrl + '/addShiftConfig', data);
+      if (response?.status === 200) {
         handleClose();
         setSnackbarSeverity('success');
-         setSnackbarMessage('Shift Configuration Added Succuessfully!');
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
+        setSnackbarMessage('Shift Configuration Added Succuessfully!');
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response?.data);
       }
     } catch (error) {
       setOpen(true);
-       setSnackbarSeverity('error');
-       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-       setSnackbarOpen(true);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -165,31 +165,35 @@ console.log(formData?.locationID,'formmmmmm')
     if (reason === 'clickaway') {
       return;
     }
-  setSnackbarOpen(false)
+    setSnackbarOpen(false);
     setOpen(true);
   };
   return (
     <>
-    <Snackbar
-    open={snackbarOpen}
-    autoHideDuration={4000}
-    onClose={snackBarAlertHandleClose}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-  >
-    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-      {snackbarMessage}
-    </Alert>
-  </Snackbar>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
+        sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
-         Add Shift Configuration
+        Add Shift Configuration
       </Button>
       <Dialog
         fullWidth
@@ -201,7 +205,7 @@ console.log(formData?.locationID,'formmmmmm')
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-        <ModalHeader heading=" Add Shift Configuration" />
+          <ModalHeader heading=" Add Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -218,7 +222,7 @@ console.log(formData?.locationID,'formmmmmm')
                 placeholder="Press Enter to Add Custom"
                 label="Shift Name"
                 name="ShiftName"
-                options={ShiftNames.map((name)=>name.type)}
+                options={ShiftNames.map((name) => name.type)}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
@@ -234,14 +238,6 @@ console.log(formData?.locationID,'formmmmmm')
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>
-              {/* <RHFAutocomplete
-                freeSolo
-                placeholder="Press Enter to Add Custom"
-                label="Shift Term"
-                name="ShiftTerm"
-                options={ShiftTerms.map((ShiftTerm) => ShiftTerm.type)}
-              /> */}
-
               <Autocomplete
                 multiple
                 disablePortal
@@ -252,8 +248,8 @@ console.log(formData?.locationID,'formmmmmm')
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
-                onChange={(event, selectedOptions) =>
-                  handleAutocompleteChange('Location', selectedOptions)
+                onChange={(event, newValue, selectedOption) =>
+                  handleAutocompleteChange('Location', newValue, selectedOption)
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
@@ -272,13 +268,13 @@ console.log(formData?.locationID,'formmmmmm')
             >
               Save
             </LoadingButton> */}
-             <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
               variant="contained"
               onClick={onSubmit1}
-              >
-            Save
+            >
+              Save
             </Button>
           </DialogActions>
         </FormProvider>
