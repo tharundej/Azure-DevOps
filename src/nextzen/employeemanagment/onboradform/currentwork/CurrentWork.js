@@ -147,6 +147,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const { enqueueSnackbar } = useSnackbar();
 
   const ApiHitCurrentWork=(obj)=>{
+    props.handleLoader()
     const config = {
 
       method: 'post',

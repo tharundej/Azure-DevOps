@@ -103,6 +103,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
   const onSave=()=>{
     const obj1=defaultValues;
+    props.handleLoader()
     
     const obj={
      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,

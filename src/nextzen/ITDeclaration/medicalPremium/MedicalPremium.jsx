@@ -107,7 +107,7 @@ export default function MedicalPremium() {
     insuredPersonName: '',
     relationshipType: '',
     payMode: '',
-    policyCitizenshipType: '',
+    policyCitizenshipType: 0,
     amountOfPremium: '',
     eligibleDeduction: '',
     documents: [],
@@ -200,10 +200,10 @@ export default function MedicalPremium() {
     }
   
     // Validation for policyCitizenshipType
-    if (!formData.policyCitizenshipType) {
-      newFieldErrors.policyCitizenshipType = 'Policy Citizenship Type is required';
-      isValid = false;
-    }
+    // if (!formData.policyCitizenshipType) {
+    //   newFieldErrors.policyCitizenshipType = 'Policy Citizenship Type is required';
+    //   isValid = false;
+    // }
   
     // Validation for amountOfPremium
     if (!formData.amountOfPremium) {
@@ -413,7 +413,7 @@ console.log(isValid , "isValidisValid")
             insuredPersonName: '',
             relationshipType: '',
             payMode: '',
-            policyCitizenshipType: '',
+            policyCitizenshipType: 0,
             amountOfPremium: '',
             eligibleDeduction: '',
             documents: [],
@@ -515,10 +515,10 @@ console.log(isValid , "isValidisValid")
     const result = await axios
       .request(config)
       .then((response) => {
-       console.log(response?.data?.data?.status  , response?.data?.status,"response")
+       console.log(response?.data?.status  , response?.data?.status,"response")
 
         if (response?.data?.status === 200) {
-          enqueueSnackbar(response?.message,{variant:'success'})
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
           setLoading(false)
           // setSnackbarSeverity('success');
           // setSnackbarMessage(response.data.message);
@@ -534,7 +534,7 @@ console.log(isValid , "isValidisValid")
             insuredPersonName: '',
             relationshipType: '',
             payMode: '',
-            policyCitizenshipType: '',
+            policyCitizenshipType: 0,
             amountOfPremium: '',
             eligibleDeduction: '',
             documents: [],
@@ -554,7 +554,7 @@ console.log(isValid , "isValidisValid")
       documents: [],
      })
         }else    if (response?.data?.code=== 400) {
-          enqueueSnackbar(response?.message,{variant:'error'})
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
           setLoading(false)
     
         }
@@ -742,7 +742,7 @@ console.log(isValid , "isValidisValid")
       insuredPersonName: '',
       relationshipType: '',
       payMode: '',
-      policyCitizenshipType: '',
+      policyCitizenshipType: 0,
       amountOfPremium: '',
       eligibleDeduction: '',
       documents: [],
@@ -889,7 +889,7 @@ console.log(isValid , "isValidisValid")
            
               <Grid item xs={4}>
                 <TextField
-                  label="Insured Person Name(S)"
+                  label="Insured Person Name"
                   variant="outlined"
                   fullWidth
                   name="insuredPersonName"
@@ -921,7 +921,7 @@ console.log(isValid , "isValidisValid")
                 />
               </Grid>
               <Grid item xs={4}>
-                <Autocomplete
+                {/* <Autocomplete
                   disablePortal
                   name="policyCitizenshipType"
                   id="combo-box-demo"
@@ -939,7 +939,7 @@ console.log(isValid , "isValidisValid")
                       helperText={getHelperText('policyCitizenshipType')}
                     />
                   )}
-                />
+                /> */}
 
 <FormControlLabel
   control={

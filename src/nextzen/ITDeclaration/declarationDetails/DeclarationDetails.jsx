@@ -47,7 +47,7 @@ const [loading,setLoading] = useState(false);
   const [reloading, setReloading] = useState(false);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
    // State for Snackbar
    const [snackbarOpen, setSnackbarOpen] = useState(false);
    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -95,23 +95,29 @@ const [loading,setLoading] = useState(false);
   };
 
   const handleAgeChange = (configId) => (event) => {
-    console.log('i am called ');
+    console.log('I am called');
     const inputValue = parseFloat(event.target.value);
+    console.log('I am called',event.target.value);
     const sanitizedValue = isNaN(inputValue) ? 0 : inputValue;
-
-    console.log(inputValue ,"inoutvalue" ,sanitizedValue ,"sanitizedValue")
-    const newData = data?.map((item) =>
-      item.configId === configId ? {
-        ...item,
-        declared:isNaN(inputValue) ?  null : sanitizedValue <= item.taxLimit ? sanitizedValue : item.taxLimit,
-      }
-    : item
-    );
-
-    console.log(newData  ,"newData")
-    setData(newData);
-    console.log(data, ' datadataaaaaaa');
+  
+    console.log(inputValue, 'inputvalue', sanitizedValue, 'sanitizedValue' ,configId);
+    
+    setData((prevData) => {
+      const newData = prevData?.map((item) =>
+        item.configId === configId
+          ? {
+              ...item,
+              declared:
+                isNaN(inputValue) ? null : sanitizedValue ? sanitizedValue<= item.taxLimit ? sanitizedValue : item.taxLimit ?item.taxLimit : inputValue :inputValue,
+            }
+          : item
+      );
+  
+      console.log(newData, 'newData');
+      return newData;
+    });
   };
+  
 
   const getDeclarationsList = async () => {
     const payload = {
@@ -202,14 +208,14 @@ const [loading,setLoading] = useState(false);
         }
         else if(response.data.code === 400){
           setLoading(false)
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          enqueueSnackbar(response.data.message,{variant:'error'})
           // setSnackbarSeverity('error');
           // setSnackbarMessage(response.data.message);
           // setSnackbarOpen(true);
         }
       })
       .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
         setLoading(false)
         console.log(error);
       });

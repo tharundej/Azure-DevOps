@@ -76,6 +76,9 @@ export default function MasterDetails(){
       });
   
   };
+  const handleSubmit = ()=>{
+    checked? onSubmitHnalder() : enqueueSnackbar("Please Accept The Declaration",{variant:'success'})
+  }
   return (
     <div>
   
@@ -97,7 +100,7 @@ export default function MasterDetails(){
           
           <Grid item>
  
-            <Button className="button " onClick={onSubmitHnalder}>Save</Button>
+            <Button className="button " onClick={ handleSubmit }>Save</Button>
           </Grid>
           {/* <Grid item> 
             <Button className="button">Cancel</Button>
