@@ -105,10 +105,10 @@ export default function MyCompoff({ currentUser ,}) {
     { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
     { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
-    { id: "userComment", label: "User Comment ", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "My Comments ", minWidth: "7pc", type: "text" },
     // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
-    { id: "approverComment", label: "Approver Comment", minWidth: "7pc", type: "text" },
-    { id: "approvedDate", label: "Approver Date", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comments", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
     { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
     { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     
