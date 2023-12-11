@@ -624,7 +624,7 @@ console.log(imageUrl,'image')
                   format="yyyy-MM-dd"
                   margin="normal"
                   id="date-picker-inline"
-                  label="companyDateOfIncorporation"
+                  label="Date of Incorporation"
                 />
               </Grid>
               <Grid item xs={12} md={4}>

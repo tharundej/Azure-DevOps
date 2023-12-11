@@ -293,7 +293,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
  
   const onSubmit = handleSubmit(async (data) => {
     
-
+    props.handleLoader()
     fetch(data?.avatarUrl?.preview)
   .then(response => response.blob())
   .then(blob => {
@@ -904,7 +904,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 sx={{caretColor:'#3B82F6'}}
                 name="rState"
-                label="Permanent State"
+                label="Resendtial State"
                 options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
@@ -918,7 +918,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                sx={{caretColor:'#3B82F6'}}
                 name="rCity"
-                label="Permanent City"
+                label="Resendtial City"
                 options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}

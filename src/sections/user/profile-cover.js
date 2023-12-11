@@ -62,6 +62,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('imageupload called',data)
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
@@ -119,6 +120,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       if (file) {
         setValue('avatarUrl', newFile, { shouldValidate: true });
       }
+    onSubmit()
     },
     [setValue]
   );
@@ -193,7 +195,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
 
         <ListItemText
           sx={{
-            mt: 3,
+            // mt: 3,
             ml: { md: 3 },
             textAlign: { xs: 'center', md: 'unset' },
           }}

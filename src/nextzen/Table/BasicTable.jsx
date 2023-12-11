@@ -622,8 +622,10 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
-            getTableData={getTableData} searchData={handleFilterSearch}/>,
-            <LeaveTypeForm getTableData={getTableData}/>
+            getTableData={getTableData} searchData={handleFilterSearch}/>
+            // // <LeaveTypeForm getTableData={getTableData}
+            
+            // />
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -928,7 +930,7 @@ const [index, setIndex]=useState(""); // index setting
               </Scrollbar>
             </TableContainer>
 
-            <TablePaginationCustom
+           { filterName!=='a' && <TablePaginationCustom
               count={totalRecordsCount}
               // count={countValue}
 
@@ -939,7 +941,7 @@ const [index, setIndex]=useState(""); // index setting
               onRowsPerPageChange={onChangeRowsPerPageHandeler}
               // dense={table.dense}
               onChangeDense={table.onChangeDense}
-            />
+            />}
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
               <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
