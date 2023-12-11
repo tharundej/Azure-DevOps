@@ -21,7 +21,7 @@ export const StatouryTable = () => {
 
     { id: 'accountHolderName', label: 'Account Holder Name',  type: 'text',minWidth:'180px' },
     { id: 'passportNo', label: 'Passport Number',  type: 'text',minWidth:'180px' },
-    { id: 'bankName', label: 'Bank Name',  type: 'text' },
+    { id: 'bankName', label: 'Bank Name',  type: 'text',minWidth:'150px' },
     { id: 'bankAccountNo', label: 'Account Number',  type: 'text',minWidth:'180px' },
     { id: 'bankBranch', label: 'Bank Branch',  type: 'text',minWidth:'180px' },
     { id: 'ifscCode', label: 'IFSC Code', type: 'text',minWidth:'180px' },
