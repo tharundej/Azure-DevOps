@@ -195,7 +195,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
 
         <ListItemText
           sx={{
-            mt: 3,
+            // mt: 3,
             ml: { md: 3 },
             textAlign: { xs: 'center', md: 'unset' },
           }}

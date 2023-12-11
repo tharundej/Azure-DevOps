@@ -73,7 +73,7 @@ export default function LeavePeriodForm({ currentUser }) {
     setSelectedEndDate(date);
   };
   const NewUserSchema1 = Yup.object().shape({
-    leavePeriodType: Yup.string().required('Leave Period Type is Required'),
+    leavePeriodType: Yup.string()
   });
 
   const defaultValues1 = useMemo(
