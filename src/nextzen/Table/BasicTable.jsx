@@ -474,7 +474,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       row?.status === 'active' ||
       row?.status === 'Upcoming' ||
       row?.status === 'Ongoing' ||
-      row?.status === 'On Hold'  
+      row?.status === 'On Hold'  || "OnHold" 
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {

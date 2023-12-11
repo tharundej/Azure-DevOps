@@ -174,7 +174,7 @@ export default function AddTaxSectionConfig({
           handleClose()
       
         } else if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          enqueueSnackbar(response.data.message,{variant:'error'})
        
           setHitGetDepartment(!hitGetDepartment);
        
@@ -182,7 +182,7 @@ export default function AddTaxSectionConfig({
       })
       .catch((error) => {
         //  setOpen(true);
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
       
         console.log(error);
       });
