@@ -92,7 +92,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function LeaveTypeFilters({ filterData, filterOptions, filterSearch, searchData }) {
+export default function LeaveTypeFilters({ filterData, filterOptions, filterSearch, searchData,getTableData }) {
   const theme = useTheme();
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [leavePeriodTypes,setLeavePeriodTypes]=useState([])

@@ -88,10 +88,14 @@ export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) 
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-
+      const email = localStorage.getItem('email');
+      const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
+      
+      // Check if email is null, then use emailWhileUpdate
+      const selectedEmail = email !== null ? email : emailWhileUpdate;
       const payload ={
         "password":data.password,
-        'email':localStorage.getItem('email')
+        'email':selectedEmail,
         
     }
     const response = await axios.post(baseUrl+'/createPassword', payload);

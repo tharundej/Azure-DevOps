@@ -95,6 +95,7 @@ export default function Loans({defaultPayload,componentPage}) {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters": {
   "requestDate": {
    
@@ -120,8 +121,8 @@ export default function Loans({defaultPayload,componentPage}) {
       "interestRate" : ""
     },
     "sort": {
-      "key":null ,
-      "orderBy": ""
+      "key":1 ,
+      "orderBy": "loan_id"
     }
   }
   const onClickActions=(rowdata,event)=>{

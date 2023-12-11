@@ -38,7 +38,7 @@ export default function GeneralForminfo({ currentUser }) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const NewUserSchema1 = Yup.object().shape({
-    payPcheduleType: Yup.string().required('Payschedule Type is Required'),
+    payScheduleType: Yup.string().required('Payschedule Type is Required'),
     basicPayPercentage: Yup.number().required('Basic Pay is Required'),
     hraPercentage: Yup.number().required('hraPercentage is Required'),
     daPercentage: Yup.number().required('DA is Required'),
@@ -50,13 +50,13 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const NewUserSchema2 = Yup.object().shape({
-    payPcheduleType: Yup.string().required('Payschedule Type is Required'),
+    payScheduleType: Yup.string().required('Payschedule Type is Required'),
     tdsPercentage: Yup.number().required('TDS is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      payPcheduleType: currentUser?.payPcheduleType || '',
+      payScheduleType: currentUser?.payScheduleType || '',
       basicPayPercentage: currentUser?.basicPayPercentage || null,
       hraPercentage: currentUser?.hraPercentage || null,
       daPercentage: currentUser?.daPercentage || null,
@@ -70,8 +70,8 @@ export default function GeneralForminfo({ currentUser }) {
   );
   const defaultValues2 = useMemo(
     () => ({
-      // employee_type: currentUser?.employee_type || '',
-      payPcheduleType: currentUser?.payPcheduleType || '',
+      // employementType: currentUser?.employementType || '',
+      payScheduleType: currentUser?.payScheduleType || '',
       tdsPercentage: currentUser?.tdsPercentage || null,
     }),
     [currentUser]
@@ -113,15 +113,23 @@ export default function GeneralForminfo({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employee_type = selectedOption?.type;
+    data.employementType = selectedOption?.type;
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.status === 200 || (201 && response?.data?.success)) {
+      if (response?.code === 200 || (201 && response?.data?.success)) {
         handleClose();
         setSnackbarSeverity('success');
+        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+      if (response?.code ===400) {
+        handleClose();
+        setSnackbarSeverity('error');
         setSnackbarMessage('PayRoll Added Succuessfully!');
         setSnackbarOpen(true);
 
@@ -137,15 +145,23 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.employee_type = selectedOption?.type;
+    data.employementType = selectedOption?.type;
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     console.log('submitted data2222', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.status === 200 || (201 && response?.data?.success)) {
+      if (response?.code === 200 || (201 && response?.data?.success)) {
         handleClose();
         setSnackbarSeverity('success');
+        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+      if (response?.code ===400) {
+        handleClose();
+        setSnackbarSeverity('error');
         setSnackbarMessage('PayRoll Added Succuessfully!');
         setSnackbarOpen(true);
 
@@ -240,7 +256,7 @@ export default function GeneralForminfo({ currentUser }) {
               >
                 <RHFAutocomplete
                   disablePortal
-                  name="employee_type"
+                  name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
                   getOptionLabel={getOptionLabel}
@@ -257,9 +273,9 @@ export default function GeneralForminfo({ currentUser }) {
                 />
 
                 <RHFAutocomplete
-                  name="payPcheduleType"
+                  name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
+                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
 
                 />
                 <RHFTextField name="basicPayPercentage" label="Basic Pay %" />
@@ -313,7 +329,7 @@ export default function GeneralForminfo({ currentUser }) {
               >
                 <RHFAutocomplete
                   disablePortal
-                  name="employee_type"
+                  name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
                   getOptionLabel={getOptionLabel}
@@ -330,9 +346,9 @@ export default function GeneralForminfo({ currentUser }) {
                 />
 
                 <RHFAutocomplete
-                  name="payPcheduleType"
+                  name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payPcheduleType) => payPcheduleType.type)}
+                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
                   sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
                 <RHFTextField

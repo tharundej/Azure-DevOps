@@ -52,6 +52,7 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const [listLeave,setListLeave] = useState();
   const [loader,setLoader] = useState(false);
   const [availableLeaves,setAvailableLeaves]= useState();
+  const [lop,setLOP] = useState()
   const EventSchema = Yup.object().shape({
     leaveTypeId:Yup.lazy((value) => {
     return value === 0
@@ -70,7 +71,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     secondhalf:Yup.string(),
     attachment:Yup.string(),
     statusDate:Yup.string(),
-    color:Yup.string()
+    color:Yup.string(),
+    lop:Yup.number()
   });
 
   const methods = useForm({
@@ -94,6 +96,13 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   });
 
   const [leaveType,setLeaveType] = useState();
+  useEffect(()=>{
+    lossOfPay()
+    },[leaveType,datesUsed?.toDate])
+    
+    const numericalValue = lop?.lop ? lop.lop.replace(/[^\d.]/g, '') : null;
+    
+    console.log(numericalValue,"valuee")
 
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
@@ -117,7 +126,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       secondhalf:secondhalfValue,
       attachment: attachmentString,
       statusDate:"",
-      color:(data?.leaveTypeId===1)?"#0c1f31":(data?.leaveTypeId===2)?"#d4a085":(data?.leaveTypeId===3)?"#c9de8c":"#ffbed1"
+      color:(data?.leaveTypeId===1)?"#0c1f31":(data?.leaveTypeId===2)?"#d4a085":(data?.leaveTypeId===3)?"#c9de8c":"#ffbed1",
+      lop: parseFloat(numericalValue)
     };
     try {
       const result = await createEvent(eventData,user);
@@ -136,8 +146,8 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   const onDelete = useCallback(async () => {
     try {
       const {leaveId,employeeId}= currentEvent
-      await deleteEvent(leaveId,employeeId,user);
-      enqueueSnackbar('Delete success!');
+      const result =  await deleteEvent(leaveId,employeeId,user);
+      enqueueSnackbar(result.message,{variant:'success'});
       onClose();
     } 
     catch (error) {
@@ -232,7 +242,7 @@ const AvailableLeaves = () => {
 }
 
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
-const [lop,setLOP] = useState()
+
 const lossOfPay = ()=>{
   const payload = {
   companyId: user?.companyID,
@@ -260,10 +270,6 @@ const lossOfPay = ()=>{
     });
 
 }
-
-useEffect(()=>{
-lossOfPay()
-},[leaveType,datesUsed?.toDate])
 
 
   return (

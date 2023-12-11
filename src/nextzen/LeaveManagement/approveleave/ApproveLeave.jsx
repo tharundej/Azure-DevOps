@@ -60,6 +60,7 @@ export default function Approveleave(){
             {id: "endDate",label:"End Date",minWidth:"8pc",type:"date"},
             {id: "requestedDuration",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "approvedBy",label:"Approver",minWidth:"7pc",type:"text"},
+            {id:'lossOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},
             {id: 'status',label:'Status',minWidth:"4pc",type: "badge"}
 
        ]);
@@ -139,7 +140,7 @@ console.log(count,"countt")
         onConfirm={handleApproveConfirmed}
         itemName={(approveData?.status=="1")?"Approve Leave":"Reject Leave"}
         confirmButtonText={(approveData?.status=="1")?"Approve":"Reject"}
-        message={(approveData?.status=="1")?"Are you sure you want to Approve Leave?":"Are you sure you want to Reject Leave?"}
+        message={(approveData?.status=="1")?"Are you sure want to Approve Leave?":"Are you sure want to Reject Leave?"}
       />
   
   </>

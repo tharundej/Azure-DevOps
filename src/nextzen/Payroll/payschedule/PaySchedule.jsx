@@ -143,16 +143,18 @@ export default function PaySchedule({ currentUser }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
+    // employementType:Yup.string(),
   });
 
   const NewUserSchema2 = Yup.object().shape({
+    // employementType:Yup.string(),
     payPcheduleType: Yup.string(),
     tdsPercentage: Yup.number(),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      payScheduleType: currentUser?.payScheduleType,
+      payPcheduleType: currentUser?.payPcheduleType,
       basicPayPercentage: currentUser?.basicPayPercentage,
       hraPercentage: currentUser?.hraPercentage,
       daPercentage: currentUser?.daPercentage,
@@ -161,6 +163,7 @@ export default function PaySchedule({ currentUser }) {
       ltaPercentage: currentUser?.ltaPercentage,
       esicPercentage: currentUser?.esicPercentage,
       tdsPercentage: currentUser?.tdsPercentage,
+      
     }),
     [currentUser]
   );
@@ -168,6 +171,7 @@ export default function PaySchedule({ currentUser }) {
     () => ({
       payPcheduleType: currentUser?.payPcheduleType,
       tdsPercentage: currentUser?.tdsPercentage,
+     
     }),
     [currentUser]
   );
@@ -239,7 +243,7 @@ export default function PaySchedule({ currentUser }) {
       console.log('error', error);
     }
   };
-  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' }];
+  const employeepayTypes = [{ type: "Permanent" }, { type: "Contract" }];
   const payPcheduleTypes = [
     { type: '52-Once a week' },
     { type: '26-Once in a two weeks' },
@@ -271,7 +275,8 @@ export default function PaySchedule({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(true);
   };
-  const getOptionLabel = (employeepayType) => employeepayType.type;
+  const getOptionLabel = (employeepayType) => employeepayType?.type || 'Default Label';
+
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
@@ -304,54 +309,20 @@ export default function PaySchedule({ currentUser }) {
 
         console.log('sucess', response);
       }
+      if (response?.data?.code === 400) {
+        handleClose1();
+        setSnackbarSeverity('errow');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
     } catch (error) {
       console.error(error);
     }
   });
-  // const onSubmitEdit1 = async (valueSelected, event) => {
-  //   console.log(valueSelected,'editData')
-  //   try {
-  //     event.preventDefault();
-  //     const payload={
-  //       "tdsPercentage":JSON.parse(valueSelected?.tdsPercentage,10),
-  //       "companyId":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-  //       'basicPayPercentage':JSON.parse(valueSelected?.basicPayPercentage,10),
-  //       'daPercentage':JSON.parse(valueSelected?.daPercentage,10),
-  //       'employeePfPercentage':JSON.parse(valueSelected?.employeePfPercentage,10),
-  //       'employementType':JSON.parse(valueSelected?.employementType?.type,10),
-  //       'employerPfPercentage':JSON.parse(valueSelected?.employerPfPercentage,10),
-  //       'esicPercentage':JSON.parse(valueSelected?.esicPercentage,10),
-  //       'hraPercentage':JSON.parse(valueSelected?.hraPercentage,10),
-  //       'ltaPercentage':JSON.parse(valueSelected?.ltaPercentage,10),
-  //       'payPcheduleType':JSON.parse(valueSelected?.payPcheduleType?.type,10),
-  //       'payScheduleId':JSON.parse(valueSelected?.payScheduleId,10),
-  //     }
-  //     console.log(payload,'payloada')
-  //     const response = await axios.post(baseUrl + '/editPaySchedule',payload);
-  //     console.log(response,'response')
-  //     if (response?.data?.code === 200 || 201) {
-  //       handleClose();
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage(response?.data?.message);
-  //       setSnackbarOpen(true);
 
-  //       console.log('sucess', response);
-  //     }
-  //     else if(response?.data?.code ===400 || 401) {
-  //       handleClose();
-  //       setSnackbarSeverity('error');
-  //       setSnackbarMessage(response?.data?.message);
-  //       setSnackbarOpen(true);
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setOpen(true);
-  //     setSnackbarSeverity('error');
-  //     // setSnackbarMessage(response?.data?.message);
-  //     setSnackbarOpen(true);
-  //     console.log('error', error);
-  //   }
-  // };
+
   const onSubmitEdit2 = async (valueSelected, event) => {
     console.log(valueSelected, 'editData');
     try {
@@ -400,6 +371,14 @@ export default function PaySchedule({ currentUser }) {
       if (response?.data?.code === 200 || 201) {
         handleClose();
         setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        handleClose();
+        setSnackbarSeverity('errow');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
 
@@ -495,11 +474,11 @@ export default function PaySchedule({ currentUser }) {
               >
                 <Autocomplete
                   disablePortal
-                  name="employee_type"
+                  name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
                   getOptionLabel={getOptionLabel}
-                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                  value={valueSelected?.employementType||undefined} // Use tableEDitData or an empty string
                   onChange={handleAutocompleteChange}
                   sx={{
                     width: 330,
@@ -614,11 +593,11 @@ export default function PaySchedule({ currentUser }) {
               >
                 <Autocomplete
                   disablePortal
-                  name="employee_type"
+                  name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
-                  getOptionLabel={getOptionLabel}
-                  value={selectedOption?.employementType} // Use tableEDitData or an empty string
+                   getOptionLabel={getOptionLabel}
+                  value={valueSelected?.employementType||undefined} // Use tableEDitData or an empty string
                   onChange={handleAutocompleteChange}
                   sx={{
                     width: 330,
