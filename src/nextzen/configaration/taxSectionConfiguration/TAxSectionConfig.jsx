@@ -111,8 +111,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   const defaultPayload = 
   {
-    companyId:cmpId
-    }
+    companyId:cmpId ,
+    financialYear:"2023-2024",
+    count:5,
+    page:0,
+    search:""
+}
   const handleSelectChange = (field, value ,e) => {
     console.log(field, value, 'valllllllllll');
     setValueSelected((prevData) => ({

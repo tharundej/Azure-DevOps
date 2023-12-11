@@ -22,6 +22,8 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
+import { baseImageUrl } from 'src/nextzen/global/BaseUrl';
+
 
 const TABS = [
     {
@@ -170,8 +172,8 @@ const EmployeeView = () => {
         <ProfileCover
           role={userData?.roleName}
           name={userData?.firstName}
-           avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
-          //avatarUrl='https://2d56hsdn-3001.inc1.devtunnels.ms/erp/download?file=s.jpg'
+          // avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
+          avatarUrl ={ `${baseImageUrl}${userData.imageData}`}
           coverUrl="aaa"
         />
 <Tabs

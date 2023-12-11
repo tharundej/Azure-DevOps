@@ -1173,8 +1173,8 @@ console.log(isValid , "isValidisValid")
                     <TableCell style={{ textAlign: 'center'}}>{row.employeeName  ?row.employeeName : "-"}</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.relationship  ?row.relationship : "-"}</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName ?row.insuredPersonName : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.treatmentForSpecifiedDiseaseses ?row.treatmentForSpecifiedDiseaseses === "0" ? "N0": "Yes" : "-"}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.doesTheInjuredPersonHaveDisability ?row.doesTheInjuredPersonHaveDisability=== "0" ? "N0": "Yes"  : "-"}</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.treatmentForSpecifiedDiseases }</TableCell>
+                    <TableCell style={{ textAlign: 'center'}}>{row.doesTheInjuredPersonHaveDisability }</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.sumOfAssured ?row.sumOfAssured : "-"}</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountForwhichProofAssured ?row.premiumAmountForwhichProofAssured : "-"}</TableCell>
                     <TableCell style={{ textAlign: 'center'}}>{row.premiumAmountFallInDue ?row.premiumAmountFallInDue : "-"}</TableCell>
@@ -1184,7 +1184,7 @@ console.log(isValid , "isValidisValid")
                     <TableCell style={{ textAlign: 'center' }}>
                       <Button onClick={() => handleEdit(row)}>Edit</Button>
                     </TableCell>
-              <TableCell style={{ textAlign: 'center', display: 'flex', justifyContent: 'flex-end' }}>
+              {/* <TableCell style={{ textAlign: 'center', display: 'flex', justifyContent: 'flex-end' }}>
   <IconButton onClick={(event) => handleClick(event, row)}>
     <MoreVertIcon />
   </IconButton>
@@ -1194,9 +1194,9 @@ console.log(isValid , "isValidisValid")
     onClose={handleClose}
   >
     <MenuItem onClick={() => handleEdit(row)}>Edit</MenuItem>
-    {/* Add more options if needed */}
+   
   </Menu>
-</TableCell>
+</TableCell> */}
 
 
                   </TableRow>
