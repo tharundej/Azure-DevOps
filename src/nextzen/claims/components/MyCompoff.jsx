@@ -99,7 +99,7 @@ export default function MyCompoff({ currentUser ,}) {
     //   secondaryText: "email",
     // },
     // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-    { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "8pc", type: "text" },
+    { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "8pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "8pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },

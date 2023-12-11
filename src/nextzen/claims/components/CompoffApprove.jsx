@@ -70,7 +70,7 @@ export default function CompoffApprove({ currentUser ,}) {
 
 
   const TABLE_HEAD = [
-     { id: "employeeId", label: "Employee Id", minWidth: "7pc", type: "text" },
+     { id: "employeeId", label: "Employee ID", minWidth: "7pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
@@ -81,7 +81,7 @@ export default function CompoffApprove({ currentUser ,}) {
       secondaryText: "email",
     },
       // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-      { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "7pc", type: "text" },
+      { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "7pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "7pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },

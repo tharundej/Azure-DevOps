@@ -87,7 +87,7 @@ export default function MyClaims({ currentUser, }) {
 
 
   const TABLE_HEAD = [
-    { id: "expenseClaimId", label: "Expense Claim Id", minWidth: "7pc", type: "text" },
+    { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
     { id: "claimDate", label: "Claim Date", minWidth: "8pc", type: "text" },
     { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
