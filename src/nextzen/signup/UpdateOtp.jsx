@@ -1,15 +1,3 @@
-// import React from 'react'
-
-// export default function VerifyOtp  ()  {
-//   return (
-
-//     <div>
-
-//     <h1>haaaadghhhhhhhhhhhhhhhhhhhhhhi</h1>
-//    </div>
-//   )
-
-// }
 
 import * as Yup from 'yup';
 import { useCallback } from 'react';
@@ -41,7 +29,7 @@ import { useState } from 'react';
 import { Alert as MuiAlert } from '@mui/material';
 // ----------------------------------------------------------------------
 
-export default function VerifyOtp({ onHandleNextIncrement }) {
+export default function UpdateOtp() {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
   const searchParams = useSearchParams();
@@ -83,16 +71,11 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmittingLoad(false);
     try {
-      const email = localStorage.getItem('email');
-      const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
-
-      // Check if email is null, then use emailWhileUpdate
-      const selectedEmail = email !== null ? email : emailWhileUpdate;
       const payload = {
-        email: selectedEmail,
+        email:localStorage.getItem('emailWhileUpdate'),
         otp: data.code,
-      };
-      console.log(data, 'ttttttttttt');
+      };4
+      console.log(data,'ttttttttttt')
       const response = await axios.post(baseUrl + '/verifyRegisterOtp', payload);
       console.log(response?.data.code);
       if (response?.data?.code === 200) {
@@ -102,9 +85,9 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
 
         console.log('sucess', response);
 
-        // router.push(paths.auth.jwt.createpassword);
+         router.push(paths.auth.jwt.login);
       }
-      if (response?.data?.code === 400 || 401) {
+      if (response?.data?.code === 400 ||401) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
@@ -114,7 +97,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
       //   await confirmRegister?.(data.email, data.code);
       //   router.push(paths.auth.jwt.login);t
       setIsSubmittingLoad(false);
-      onHandleNextIncrement();
+      onHandleNextIncrement()
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('An Unexcepted Error Occuried!');
@@ -127,17 +110,12 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
   const handleResendCode = useCallback(async () => {
     try {
       startCountdown();
-      const email = localStorage.getItem('email');
-      const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
-
-      // Check if email is null, then use emailWhileUpdate
-      const selectedEmail = email !== null ? email : emailWhileUpdate;
       await resendCodeRegister?.(values.email);
       const payload = {
         // email:values.email,
-        email: selectedEmail,
+        email:localStorage.getItem('emailWhileUpdate'),
       };
-      console.log(values, 'llllllll');
+      console.log(values,'llllllll')
       const response = await axios.post(baseUrl + '/resendOtp', payload);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
@@ -153,25 +131,19 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
 
         console.log('sucess', response);
       }
-      // onHandleNextIncrement()
+      onHandleNextIncrement()
     } catch (error) {
       console.error(error);
     }
   }, [resendCodeRegister, startCountdown, values.email]);
   const handleLoadingButton = () => {
+
     setTimeout(() => {
       setIsSubmittingLoad(false);
-    }, 600);
+    }, 600); 
   };
   const renderForm = (
     <Stack spacing={3} alignItems="center">
-      {/* <RHFTextField
-        name="email"
-        label="Email"
-        placeholder="example@gmail.com"
-        InputLabelProps={{ shrink: true }}
-      /> */}
-
       <RHFCode name="code" />
 
       <LoadingButton
@@ -232,7 +204,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
           <Typography variant="h3">Please check your email!</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Please enter the OTP to Verify and Create your Password.
+            Please enter the OTP to Verify.
           </Typography>
         </Grid>
       </Stack>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Stack,Box,Grid,IconButton,Typography } from '@mui/material'
 import Iconify from 'src/components/iconify';
 
-const FilesDisplay = ({dataOfFiles}) => {
+const FilesDisplay = ({dataOfFiles,handleDeleteDocument}) => {
     console.log(dataOfFiles,'dataOfFiles')
     const data=[{name:'anil'}]
     const categoryPic=()=>{
@@ -15,7 +15,7 @@ const FilesDisplay = ({dataOfFiles}) => {
   return (
     <>
   <Grid container spacing={5}>
-  {dataOfFiles?.map((category) => (
+  {dataOfFiles && dataOfFiles?.map((category,index) => (
     <Grid key={category.name} item xs={12} md={6} lg={6} container flexDirection="row" alignItems="center" justifyContent="space-between">
       <Grid  item>
         <Box sx={{ width: 40, height: 40 }}>
@@ -29,7 +29,7 @@ const FilesDisplay = ({dataOfFiles}) => {
       </Grid>
 
       <Grid item>
-        <IconButton>
+        <IconButton onClick={()=>{handleDeleteDocument(0,index)}}>
           <Iconify icon="material-symbols:delete" />
         </IconButton>
       </Grid>

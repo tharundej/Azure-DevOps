@@ -177,6 +177,20 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
             console.log(error);
           });
       }
+      
+      const debounce = (func, delay) => {
+        let debounceTimer;
+        return function () {
+          const context = this;
+          const args = arguments;
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+      };
+        const handleSearch=debounce((e)=>{
+          filterSearch(e?.target?.value)
+        },500)
+      
 
     return (    
         <>

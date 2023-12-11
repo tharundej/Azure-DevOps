@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
+import { Grid } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -67,6 +68,7 @@ const renderCellContent = (columnId, value) => {
   }
 };
 const [open, setOpen] = useState(false);
+const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
 
   return (
     <>
@@ -113,17 +115,20 @@ const [open, setOpen] = useState(false);
                   />
                 )}
 
-                {ele.type === 'text' && (
+                {ele.type === 'text' && <Grid container flexDirection="row">
+
+                {/* <Avatar alt="A" src={avatarUrl} sx={{ mr: 2 }} /> */}
+                 
                   <ListItemText
                     primary={row[ele.id] || '-'}
-                    secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
                     primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
                     }}
                   />
-                )}
+                </Grid>}
 
                 {
                  ele.type==="date" && (

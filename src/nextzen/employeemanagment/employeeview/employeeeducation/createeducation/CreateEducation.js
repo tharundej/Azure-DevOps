@@ -20,7 +20,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
-    Stack
+    Stack,IconButton
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -148,10 +148,16 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   };
   
     const onSave=()=>{
+      const arr = defaultValues
+      if(endpoint!=="addEducation"){
+        arr[0].documents = [ ...addDocuments];
+      }
+     
+      console.log(arr, 'before hitting API');
      const obj={
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
-      education:defaultValues
+      education:arr
      }
       
       let config = {
@@ -170,6 +176,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDefaultValues([])
+        setAddDocuments([])
         callApi()
         handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
@@ -191,7 +198,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     },[employeeData])
 
     const obj =   {
-        nameOfTheDegree:  '',
+        nameOfTheDegree:  "",
         stream:  '',
         universityName:  '',
        
@@ -333,7 +340,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
         newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+        //console.log(updatedItems,'updatedItems')
+        
+
     
        setDefaultValues(newArray);
       }
@@ -434,7 +443,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                   disablePortal
                   id="degree"
                   options={degreeOptions || []}
-                  value={item?.nameOfTheDegree || ''}
+                  value={item?.nameOfTheDegree || undefined}
                   getOptionLabel={(option) => option?.label}
                   onChange={(e, newValue) => {
                   
@@ -603,12 +612,12 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
                                               </Typography>
                                         
-                                         <FilesDisplay dataOfFiles={item?.documents} />
+                                         <FilesDisplay dataOfFiles={item?.documents || []}  handleDeleteDocument={handleDeleteDocument} />
 
                                          {  addDocuments &&
                                       
                                       addDocuments.map((file,index1)=>(
-                                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px',marginTop:'15px' }} container flexDirection="row" item>
 
                                         <Grid item xs={12} md={6} >
 
@@ -660,20 +669,17 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
                                         <Grid item>
                                         
-                                          
+                                        <IconButton
+                                            onClick={()=>{
+                                              handleRemoveDocumentNew(index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
                                          
                                             
-                                              <Button 
-                                              onClick={()=>{
-                                                handleRemoveDocumentNew(index1)
-                                              }
-                                              
-                                                
-                                              
-                                                
-
-                                              }
-                                              >Delete</Button>
+                                            
                                             
 
                                           
@@ -754,34 +760,40 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                         <Grid item>
                                         
                                           { index1===0 &&
-                                          
-                                              <Button 
-                                              onClick={()=>{
-                                                handleAddDocument(index)
-                                              }
+                                           <IconButton
+                                           onClick={() => {
+                                             handleAddDocument(index);
+                                           }}
+                                           color="primary"
+                                         >
+                                           <Iconify icon="gala:add" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                         </IconButton>
+                                              // <Button 
+                                              // onClick={()=>{
+                                              //   handleAddDocument(index)
+                                              // }
                                               
                                                 
                                               
                                                 
 
-                                              }
-                                              >Add Files</Button>
+                                              // }
+                                              // >Add Files</Button>
                                           
 
                                           }
                                           { index1!==0 &&
                                             
-                                              <Button 
-                                              onClick={()=>{
-                                                handleDeleteDocument(index,index1)
-                                              }
-                                              
-                                                
-                                              
-                                                
+                                            <IconButton
+                                            onClick={()=>{
+                                              handleDeleteDocument(index,index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
 
-                                              }
-                                              >Delete</Button>
+                                            
                                             
 
                                           }
