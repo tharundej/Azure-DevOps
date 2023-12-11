@@ -52,6 +52,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
+
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -62,7 +64,7 @@ const bull = (
 export default function HrITTab() {
   // const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
 
- 
+  const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
@@ -304,20 +306,22 @@ useEffect(()=>{
     const result = await axios
       .request(config)
       .then((response) => {
+        console.log(response?.data ,"response")
        
-          if (response.data.status === 200) {
-            enqueueSnackbar(error.response.data.message,{variant:'error'})
+          if (response?.data.code === 200) {
+            console.log(response?.data ,"response")
+            enqueueSnackbar(response.data.message,{variant:'success'})
             setLoading(false)
         
-          }else    if (response.data.status === 400) {
-            enqueueSnackbar(error.response.data.message,{variant:'error'})
+          }else    if (response?.data.code === 400) {
+            enqueueSnackbar(response.data.message,{variant:'error'})
             setLoading(false)
           
           }
         }
       )
       .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
      
         console.log(error);
       });

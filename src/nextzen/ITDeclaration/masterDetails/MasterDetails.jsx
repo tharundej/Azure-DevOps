@@ -52,7 +52,7 @@ export default function MasterDetails(){
       .request(config)
       .then((response) => {
        console.log(response.data ,"responseresponse"  )
-        if (response?.data?.statusCode=== "200") {
+        if (response?.data?.statusCode=== 200) {
           console.log("i am comming here")
           enqueueSnackbar(response?.data?.message,{variant:'success'})
         

@@ -34,7 +34,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
-
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
@@ -44,7 +45,7 @@ const headings = [
   'Type',
   'Policy Number',
   'Date Of Commencement Of Policy Or Date Paid',
-  'Insured Persion Name(S)',
+  'Insured Person Name(S)',
   'Relationship Of The Insured Person',
 
   'Pay Mode',
@@ -303,7 +304,7 @@ export default function MedicalPremium() {
     let calculatedEligibleDeduction = integerValue;
 
     // Check if amountOfPremium is greater than 2500
-    if (name === 'amountOfPremium' && integerValue > 25000) {
+    if (name === 'amountOfPremium' && integerValue > 25000 && !formData.policyCitizenshipType) {
       calculatedEligibleDeduction = 25000;
     }
 
@@ -338,7 +339,23 @@ export default function MedicalPremium() {
       [name]: '',
     }));
   };
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
 
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: mappedValue,
+    }));
+  
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+  };
+  
   const saveMedicalDetails = async () => {
 
     try {
@@ -872,7 +889,7 @@ console.log(isValid , "isValidisValid")
            
               <Grid item xs={4}>
                 <TextField
-                  label="Insured Persion Name(S)"
+                  label="Insured Person Name(S)"
                   variant="outlined"
                   fullWidth
                   name="insuredPersonName"
@@ -923,6 +940,17 @@ console.log(isValid , "isValidisValid")
                     />
                   )}
                 />
+
+<FormControlLabel
+  control={
+    <Switch
+      name="policyCitizenshipType"
+      checked={formData.policyCitizenshipType} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('policyCitizenshipType', event.target.checked)}
+    />
+  }
+  label="Senior Citizen"
+/>
               </Grid>
             </Grid>
 
