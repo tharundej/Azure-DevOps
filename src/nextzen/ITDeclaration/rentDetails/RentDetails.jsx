@@ -73,7 +73,7 @@ const [loading,setLoading] = useState(false);
   var [landLardName, setLandLardName] = useState('');
   var [landLardAddress, setLandLardAddress] = useState('');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(12);
   const [selectedValue, setSelectedValue] = useState('');
   var [isShowPannumber, setIsShowPanNumber] = useState();
   const [isPanValueThere, setIsPanValueThere] = useState(false);
@@ -133,14 +133,11 @@ const [loading,setLoading] = useState(false);
   };
 
   const handleChange = (event) => {
-    const selectedStringValue = event.target.value; // "Yes" or "No"
-    // setSelectedValue(selectedStringValue);
-
-    // Convert back to boolean
-    const selectedBooleanValue = selectedStringValue === 'Yes';
+    const selectedBooleanValue = event.target.value === "true"; // Convert string to boolean
     setSelectedValue(selectedBooleanValue);
+  
     console.log(selectedBooleanValue, isShowPannumber, '_>>>>>>>isshowPan1');
-
+  
     if (selectedBooleanValue) {
       setIsShowPanNumber(true);
       setIsPanValueThere(true);
@@ -150,10 +147,11 @@ const [loading,setLoading] = useState(false);
       setIsShowPanNumber(false);
       setIsShowDeclaration(true);
     }
+  
     console.log(isShowPannumber, panNumbers, 'handle pan change');
-
     console.log(event.target.value);
   };
+  
 
   console.log(' selected', selectedValue, isPanValueNumber, 'isPanvlueNUmber');
 
@@ -175,24 +173,88 @@ const [loading,setLoading] = useState(false);
     setPage(0);
   };
 
+  // const handleRoleChange = (index, newValue) => {
+  //   const newData = [...data];
+  //   newData[index].cityType = newValue;
+  //   setData(newData);
+  //   console.log(newData);
+  // };
+
   const handleRoleChange = (index, newValue) => {
     const newData = [...data];
+    newData.forEach((item) => {
+      item.cityType = newValue;
+    });
     newData[index].cityType = newValue;
-    setData(newData);
-    console.log(newData);
+   setData(newData);
+   
   };
+  
 
+  // const handleRentAmountChange = (index) => (event) => {
+  //   const newData = [...data];
+ 
+  // newData[index].rentAmount = event.target.value;
+  //   setData(newData);
+  // };
+
+  // const handleRentAmountChange = (index) => (event) => {
+  //   const newData = [...data];
+  //   newData.forEach((item) => {
+  //     // Update rentAmount for all rows
+  //     item.rentAmount = event.target.value;
+  //   });
+  //   newData[index].rentAmount = event.target.value;
+  //   setData(newData);
+  // };
+  
   const handleRentAmountChange = (index) => (event) => {
     const newData = [...data];
+    newData.forEach((item) => {
+      item.rentAmount = event.target.value;
+    });
     newData[index].rentAmount = event.target.value;
     setData(newData);
   };
-
+  
   const handleSubmittedAmountChange = (index) => (event) => {
     const newData = [...data];
+    newData.forEach((item) => {
+      item.submittedAmount = event.target.value;
+    });
     newData[index].submittedAmount = event.target.value;
     setData(newData);
+
+
+    // newData[index].submittedAmount = event.target.value;
+    // setData(newData);
   };
+
+  // const handleSubmittedAmountChange = (index) => (event) => {
+  //   const newSubmittedAmount = parseFloat(event.target.value);
+  //   const newRentAmount = parseFloat(data[index].rentAmount);
+  
+  //   // Check if the submittedAmount is less than or equal to rentAmount
+  //   if (!isNaN(newSubmittedAmount) && newSubmittedAmount <= newRentAmount) {
+  //     const newData = data.map((item, i) => ({
+  //       ...item,
+  //       submittedAmount: i === index ? newSubmittedAmount : item.submittedAmount,
+  //     }));
+  //     setData(newData);
+  //   } else {
+  //     // Clear the submittedAmount field if it's not within the valid range
+  //     const newData = data.map((item, i) => ({
+  //       ...item,
+  //       submittedAmount: i === index ? '' : item.submittedAmount,
+  //     }));
+  //     setData(newData);
+  
+  //     // Display an error or handle the case where submittedAmount is greater than rentAmount
+  //     console.error('Invalid submittedAmount');
+  //     // You can also show a user-friendly error message or take appropriate action.
+  //   }
+  // };
+  
 
   const handleLandloardNameChange = (e) => {
     setLandLardName(e.target.value);
@@ -449,7 +511,7 @@ const [loading,setLoading] = useState(false);
           console.log(rowsData?.financialYear, 'rowsData?.financialYear');
           setLandlordFieldsIndex(landlordFiledsIndex);
 
-          console.log(response, 'rentDocs in response');
+          console.log(response, 'rentDocs in response', "pandtrueorFalls",isShowPannumber , selectedValue ,response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :"no pand");
           console.log(rowsData, 'in rowData rentDocs ');
 
           setData((prevData) => {
@@ -657,7 +719,7 @@ console.log(selectedValue ,"SelectedValue")
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      {/* <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={data.length}
@@ -665,13 +727,13 @@ console.log(selectedValue ,"SelectedValue")
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      /> */}
       <Grid
         container
         spacing={2}
         // alignItems="center"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '1rem'  ,marginTop: '1rem' }}
       >
         <Grid
           item
@@ -728,12 +790,13 @@ console.log(selectedValue ,"SelectedValue")
             <RadioGroup
               aria-label="options"
               name="options"
-              value={selectedValue ? 'Yes' :(selectedValue === "" || undefined) ? undefined : 'No'}
+              value={selectedValue}
+              // value={selectedValue ? 'Yes' :(selectedValue === "" || undefined) ? undefined : 'No'}
               onChange={handleChange}
               row // align radio buttons horizontally
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid>
 
