@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState  ,useEffect} from 'react';
+import { useCallback, useMemo, useState  ,useEffect, useContext} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -40,10 +40,11 @@ import { Alert, Button, Snackbar } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
-
-
-export default function AddRoleConfig({ currentUser }) {
+export default function AddRoleConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
@@ -51,6 +52,11 @@ export default function AddRoleConfig({ currentUser }) {
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
+  const {user} = useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -86,7 +92,17 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     fileContent: '',
   });
 
-
+  const methods1 = useForm({
+    // resolver: yupResolver(NewUserSchema1),
+    // defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
+  });
+ 
+  const {
+    setValue: setValue1,
+    handleSubmit: handleSubmit1,
+    formState: { isSubmitting: isSubmitting1 },
+    reset: reset1,
+  } = methods1;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -150,7 +166,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
   };
   const getLocation = async () => {
     const payload = {
-        "companyID":"COMP1"
+        "companyID":cmpId
     }
   
     const config = {
@@ -158,11 +174,10 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+    url : baseUrl+'/locationOnboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token , 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -182,11 +197,11 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       });
     //  console.log(result, 'resultsreults');
   };
-  const AddDepartment = async () => {
+  const onSubmit1 = async () => {
     const payload = 
    
     {
-        "companyID":"COMP2",
+        "companyID":cmpId,
         "departmentName": formData?.department,
         "locationID": formData?.Location?.locationID
     }
@@ -194,33 +209,35 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
      const config = {
     method: 'post',
        maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDepartment',
+    url: baseUrl + '/addDepartment ',
+    // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDepartment',
        headers: {
          Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
+       token,  'Content-Type': 'text/plain',
        },
        data: payload,
      };
      const result = await axios
        .request(config)
        .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Department Added successfully!');
-           setSnackbarOpen(true);
+         if (response.data.code === 200) {
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+         
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
-         }
+         }else  if (response.data.code === 400) {
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+        ;
+          setHitGetDepartment(!hitGetDepartment)
+          console.log("success")
+          handleClose();
+        }
    
        })
        .catch((error) => {
-        
+        enqueueSnackbar("Something Went Wrong",{variant:'error'})
         //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Department Adding. Please try again.');
-         setSnackbarOpen(true);
+     ;
          console.log(error);
    });
    //  console.log(result, 'resultsreults');
@@ -230,8 +247,8 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
    const getDepartment = async () => {
     const payload =
     {
-        "companyID": "COMP2",
-         "locationID": 30
+        "companyID": cmpId,
+        //  "locationID": 30
     }
   
     const config = {
@@ -239,11 +256,10 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
+    url : baseUrl + '/onboardingDepartment',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token , 'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -264,56 +280,12 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignation = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": "COMP2",
-        "departmentID" : formData?.Department?.departmentID,
-        "designationName": formData?.designation,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignation',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+  
 
    const getDesignation = async () => {
     const payload =
     {
-        "companyID":"COMP2",
+        "companyID":cmpId,
         "departmentID":formData?.Department?.departmentID,
     }
   
@@ -322,11 +294,10 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
     //   url : baseUrl + "getRentDeclarationDetails",
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDesignation',
+    url :  baseUrl +'/onboardingDesignation',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
-        'Content-Type': 'text/plain',
+       token ,  'Content-Type': 'text/plain',
       },
       data: payload,
     };
@@ -347,51 +318,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
     //  console.log(result, 'resultsreults');
   };
 
-  const AddDesignationGrade = async () => {
-    const payload = 
-   
-    
-    {
-        "companyID": "COMP2",
-        "designationID" : formData?.Designation?.designationID,
-        "designationGradeName": formData?.designationGrade,
-    }
-   
-     const config = {
-    method: 'post',
-       maxBodyLength: Infinity,
-    //    url: baseUrl + 'addRentDeclarationDetails ',
-    url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
-       headers: {
-         Authorization:
-           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo',
-         'Content-Type': 'text/plain',
-       },
-       data: payload,
-     };
-     const result = await axios
-       .request(config)
-       .then((response) => {
-         if (response.status === 200) {
-           setSnackbarSeverity('success');
-           setSnackbarMessage('Designation Added successfully!');
-           setSnackbarOpen(true);
-           setHitGetDepartment(!hitGetDepartment)
-           console.log("success")
-         }
-   
-       })
-       .catch((error) => {
-        
-        //  setOpen(true);
-         setSnackbarSeverity('error');
-         setSnackbarMessage('Error Designation Adding . Please try again.');
-         setSnackbarOpen(true);
-         console.log(error);
-   });
-   //  console.log(result, 'resultsreults');
-   
-   };
+ 
   useEffect(() => {
     const fetchData = async () => {
       getLocation();
@@ -438,26 +365,23 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
        
         {/* sai  */}
        
-{/* <Button
-        onClick={handleOpen}
-        variant="contained"
+
+
+      <Button onClick={handleOpen}  variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
-      >
-        Role Config
-      </Button> */}
+        sx={{margin:'20px' ,color:'white',backgroundColor:'#3B82F6'}}>Role </Button>
       <Dialog
         fullWidth
         maxWidth={false}
-        open={true}
-        onClose={()=> {console.log("hi")}}
+        open={open}
+        onClose={handleClose}
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
-        <FormProvider >
-          <DialogTitle>Role Config</DialogTitle>
+        <FormProvider methods={methods1} onSubmit={onSubmit1} >
+          <ModalHeader  heading="Role Config"/>
           <DialogContent>
             <Box
               rowGap={3}
@@ -471,142 +395,48 @@ console.log(departmentType ,"DEPARTMENT TYPE    ")
               }}
             >
         
-        
-           
               <TextField
-                label="Department "
-                name="department"
+                label="Role Name "
+                name="role"
                 value={null}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
               />
          
-           
-            <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={locationType?.map((employeepayType) => ({
-                label: employeepayType.locationName,
-                value: employeepayType.locationName,
-                ...employeepayType,
-              }))}
-              value={formData.Location}
-              onChange={(event, newValue, selectedOption) =>
-                handleAutocompleteChange('Location', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Location" />}
-              />
          
-          
-              <Button  onClick={AddDepartment}>Add</Button>
-        
-          {/* Row 2 */}
-
-         
-      
-          
-              <Autocomplete
-                disablePortal
-                name="Department"
-                id="combo-box-demo"
-                options={departmentType?.map((department) => ({
-                    label: department.departmentName,
-                    value: department.departmentName,
-                    ...department,
-                  }))}
-                value={formData.Department}
-                onChange={(event, newValue ,selectedOption) => handleDesignationChange('Department', newValue ,selectedOption)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Department" />}
-              />
-           
-         
-              {/* <Typography >Property Reference Sl.No(Enter 1,2,3 Etc) </Typography> */}
-
-              <TextField
-                label="Designation"
-                name="designation"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-          
-
-       
-              <Button onClick={AddDesignation}>Add</Button>
-              
-          
-
-         
-            <Autocomplete
-              disablePortal
-              name="Location"
-              id="combo-box-demo"
-              options={designationType?.map((employeepayType) => ({
-                label: employeepayType.designationName,
-                value: employeepayType.designationName,
-                ...employeepayType,
-              }))}
-              value={formData.Designation}
-              onChange={(event, newValue, selectedOption) =>
-                handleDesignationGradeChange('Designation', newValue, selectedOption)
-              }
-                renderInput={(params) => <TextField {...params} label="Designation " />}
-              />
-          
-              <TextField
-                label="Designation Grade"
-                name="designationGrade"
-                value={null}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-          
-              <Button onClick={AddDesignationGrade}>Add</Button>
-         
-
-          {/*       
-        <Grid item container xs={12} spacing={2} alignItems="center" justifyContent="center" direction="row">
-        <Grid item xs={6} spacing={2} alignItems="center" justifyContent="flex-Start" direction="row" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+{/*           
+              <Button  onClick={onSubmit1}>Add</Button>
          */}
-          {/* <Grid
-            item
-            container
-            xs={10}
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-            direction="row"
-            style={{ marginBottom: '1rem', textAlign: 'center' }}
-          >
-            <Grid item xs={2}>
-              <Button className="button">Save</Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button className="button">Cancel</Button>
-            </Grid>
-          </Grid> */}
-      
+    
               
             </Box>
           </DialogContent>
  
           <DialogActions>
-            <Button variant="outlined" onClick={()=> {console.log("hi")}}>
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              onClick={()=> {console.log("hi")}}
-              loading={()=> {console.log("hi")}}
-            >
-              Save
-            </LoadingButton>
+          <div style={{ marginBottom: 12, marginTop: 4 }}>
+     {' '}
+     <Button
+       variant="contained"
+       color="primary"
+       sx={{ float: 'right', marginRight: 2 }}
+       onClick={() => {
+        onSubmit1()
+       }}
+     >
+       Submit
+     </Button>
+     <Button
+       sx={{ float: 'right', right: 15 }}
+       variant="outlined"
+       onClick={() => {
+           handleClose();
+       }}
+     >
+       Cancel
+     </Button>
+   </div>
+          
           </DialogActions>
         </FormProvider>
       </Dialog>

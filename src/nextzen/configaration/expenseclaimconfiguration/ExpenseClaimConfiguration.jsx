@@ -18,7 +18,7 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Expensive Claim Config'];
+const tabLabels = ['Expense Claim Configuration'];
   const tabContents = [
     <div>
       <ExpenseClaimConfiguration/>
@@ -30,6 +30,7 @@ export default function BasicCard() {
     <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
   );
 }

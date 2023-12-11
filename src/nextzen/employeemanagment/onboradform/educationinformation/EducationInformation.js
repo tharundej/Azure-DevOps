@@ -2,7 +2,10 @@ import React ,{useEffect, useState,useImperativeHandle,forwardRef} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import dayjs, { Dayjs } from 'dayjs';
 import {
     TextField,
     Button,
@@ -14,7 +17,7 @@ import {
     InputLabel,
     Autocomplete,
     Chip,
-    Typography,
+    Typography,Stack
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -35,14 +38,45 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 import { doc } from 'firebase/firestore';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
+
+
+
 const   EducationInformation=forwardRef((props,ref)=> {
   const [employeeData,setEmployeeData]=useState([ {
     nameOfTheDegree:  '',
       stream:  '',
       university:  '',
       yearOfPassing: undefined,
-      documentData:'',
-      grade_type:'',
+      
+      gradeType:'',
       grade:undefined,
       documents:[
         {
@@ -68,9 +102,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
 
   const onSave=()=>{
+    const obj1=defaultValues;
+    props.handleLoader()
+    
     const obj={
-     companyId: "COMP5",
-     employeeId: localStorage.get('employeeIdCreated'),
+     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+     employeeId: localStorage.getItem('employeeIdCreated'),
      education:defaultValues
     }
 
@@ -79,7 +116,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
      let config = {
        method: 'post',
        maxBodyLength: Infinity,
-       url: `${baseUrl}${endpoint}`,
+       url: `${baseUrl}/addEducation`,
        headers: { 
          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
          'Content-Type': 'application/json'
@@ -113,9 +150,9 @@ const   EducationInformation=forwardRef((props,ref)=> {
    const obj =   {
        nameOfTheDegree:  '',
        stream:  '',
-       university:  '',
+       universityName:  '',
        yearOfPassing: undefined,
-       document_data:'',
+       
        gradeType:'',
        grade:undefined,
        documents:[
@@ -183,7 +220,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
          ...newArray[index],
          [field]: parseInt(value,10)
      }
+    }else if(field==="nameOfTheDegree"){
 
+      newObj[index][field]=e?.target?.value ;
+      newArray[index] = {
+        ...newArray[index],
+        [field]: value?.label,
+       // nameOfTheDegreeObject:value
+    }
 
       }else{
 
@@ -197,7 +241,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
            
         
     
-       // console.log(newArray)
+        console.log(newArray,'newaarrray')
        
        setDefaultValues(newArray);
      };
@@ -305,15 +349,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
      };
      
   
-  
  
   return (
 
     <>
 
 
-<Card sx={{paddingTop:'20px'}}>
-      <form style={{ padding: '4px' }}>
+      <Stack sx={{paddingTop:'20px'}}>
+      <form >
         <>
           {defaultValues?.map((item, index) => (
             <Grid sx={{ padding: '40px' }}>
@@ -332,18 +375,38 @@ const   EducationInformation=forwardRef((props,ref)=> {
                {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                 <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
-                    variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
-                    onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
-                    }}
-                  />
+                 
+
+                  <Autocomplete
+                        options={degreeOptions}
+                        getOptionLabel={(option) => option.label}
+                        fullWidth
+                        onChange={(e,newvalue) => {
+                          //  handleChange(e, index, 'nameOfTheDegree');
+                           const newArray = [...defaultValues];
+                           newArray[index] = {
+                             ...newArray[index],
+                           
+                             nameOfTheDegree:newvalue
+                         }
+                         setDefaultValues(newArray)
+                         console.log(newArray)
+
+                         }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            name="nameOfTheDegree"
+                            label="Name Of the Degree"
+                            variant="outlined"
+                            id="name_of_the_degree"
+                            value={item?.nameOfTheDegreeObject}
+                           
+                          />
+                        )}
+                      />
+
+                  
                 </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
@@ -361,29 +424,31 @@ const   EducationInformation=forwardRef((props,ref)=> {
                 </Grid>
               </Grid>
               <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
+              <Grid md={6} xs={12} item>
                 <TextField
-                    fullWidth
-                    // type="number"
-                    name="gradeType"
-                    label="Grade Type "
-                    id="university"
-                   
-                     value={item?.gradeType}
-                    onChange={(e) => {
-                      handleChange(e, index, 'gradeType');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+                  fullWidth
+                  name="gradeType"
+                  label="Grade Type"
+                  id="gradeType"
+                  variant="outlined"
+                  value={item?.gradeType}
+                  onChange={(e) => {
+                    handleChange(e, index, 'gradeType');
+                  }}
+                  select // Indicates that this is a Select component
+                >
+                  <MenuItem value="cgpa">CGPA</MenuItem>
+                  <MenuItem value="percentage">Percentage</MenuItem>
+                </TextField>
+              </Grid>
                 <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
                      type="number"
                     name="grade"
-                    label="grade"
+                    label="Grade"
                     id="yearOfPassing"
-                   
+                   placeholder='80, 8.9...'
                      value={item?.grade}
                     onChange={(e) => {
                       handleChange(e, index, 'grade');
@@ -408,21 +473,76 @@ const   EducationInformation=forwardRef((props,ref)=> {
                     }}
                   />
                 </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
+               
               </Grid>
+
+              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+            <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                
+               
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
+
+              <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
+                fullWidth
+                  value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="End Date"
+                />
+                
+              </Grid>
+              
+              
+            </Grid>
                   
               {item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -431,12 +551,12 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
                         <MenuItem value="marks-memo">Marks Memo</MenuItem>
@@ -455,14 +575,17 @@ const   EducationInformation=forwardRef((props,ref)=> {
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                  
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
@@ -538,7 +661,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
           Submit
         </Button> */}
       </form>
-             </Card>
+             </Stack>
 
     </>
   );

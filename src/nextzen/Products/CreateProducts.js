@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -12,19 +12,30 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { UpdateProductAPI, createProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
-export default function CreateProducts({ currentData, handleClose }) {
+export default function CreateProducts({ currentData, handleClose, getTableData }) {
+  const {user} = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string(),
+    productName: Yup.string().required('Product Name is Required'),
+    productCategory: Yup.string().required('Product Category is Required'),
+    HsnId: Yup.string().required('HSN ID is Required'),
+    gstRate: Yup.number().required('GST Rate is Required'),
     status: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      ProductName: currentData?.ProductName || '',
-      ProductCategory: currentData?.ProductCategory || '',
-      hsnID: currentData?.hsnID || '',
-      status: currentData?.status || '',
+      productId: currentData?.productID || '',
+      companyId: currentData?.companyID || user?.companyID ? user?.companyID : '',
+      productName: currentData?.productName || '',
+      productCategory: currentData?.productCategory || '',
+      HsnId: currentData?.hsnID || '',
+      gstRate: currentData?.gstRate || '',
+      status: currentData?.status || 'Active',
     }),
     [currentData]
   );
@@ -41,36 +52,63 @@ export default function CreateProducts({ currentData, handleClose }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    errors,
   } = methods;
   const values = watch();
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
   const statusOptions = ['Active', 'In Active'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || '');
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
     data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
-
-      const response = await instance.post('addProducts', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      let response = '';
+      if (currentData?.productID) {
+        response = await UpdateProductAPI(data);
+      } else {
+        response = await createProductAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset(); // Reset the form values
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      currentData?.productID ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      console.log('error', error);
+      if (error.response && error.response.data && error.response.data.code === 400) {
+        // Handle the case where the asset already exists
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        // Handle other errors
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>ADD New Products</DialogTitle>
-
+        <ModalHeader heading={currentData?.productID ? 'Edit Products' : 'Add New Products'} />
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogContent>
           <Box
             rowGap={3}
@@ -82,10 +120,10 @@ export default function CreateProducts({ currentData, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="ProductName" label="Product Name" />
-            <RHFTextField name="ProductCategory" label="Product Category" />
-            <RHFTextField name="hsnID" label="HSN ID" />
-            
+            <RHFTextField name="productName" label="Product Name" />
+            <RHFTextField name="productCategory" label="Product Category" />
+            <RHFTextField name="HsnId" label="HSN ID" />
+            <RHFTextField name="gstRate" label="GST Rate" />
             <RHFAutocomplete
               name="status"
               id="status"
@@ -103,8 +141,8 @@ export default function CreateProducts({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.productID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>

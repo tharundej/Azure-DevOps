@@ -1,5 +1,6 @@
-import { useEffect,useState,useCallback } from 'react';
+import { useEffect,useState,useCallback, useContext } from 'react';
 
+import CryptoJS from "crypto-js";
 
 import { Helmet } from 'react-helmet-async';
 
@@ -17,6 +18,7 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 
 import axios from 'axios';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 export default function EmployeeTable() {
@@ -24,7 +26,7 @@ export default function EmployeeTable() {
   const actions = [
 
     
-    { name: "View", icon: "hh", id: 'view' }
+   
     
   ];
 
@@ -87,14 +89,17 @@ export default function EmployeeTable() {
    
   },[])
 
+  const {user}=useContext(UserContext)
+
   const defaultPayload={
- 
+    employeeID: user?.employeeID,
+    roleID:user?.roleID,
     "count": 5,
      
     "page": 0,
      
     "search": "",
-    "fcompanyID": "COMP1",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
      
     "externalFilters": {
     "fMaritalStatus":"",
@@ -132,12 +137,9 @@ export default function EmployeeTable() {
     },
      
     "sort": {
-     
-    "key": 1,
-     
-    "orderBy": "employee_id"
-     
-    }
+      "key": 0,
+      "orderBy": "last_updated_by"
+  }
     }
 
 
@@ -146,37 +148,38 @@ export default function EmployeeTable() {
       id: 'employeeId',
       label: 'Employee ID',
       type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
+      
+    minWidth:'180px',
       secondaryText: 'name',
     },
     { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
     { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'emailID', label: 'Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
+    { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'date', minWidth:'180px' },
     { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
     { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
     { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
-    { id: 'religion', label: 'religion',  type: 'text', minWidth:'180px' },
+    { id: 'religion', label: 'Religion',  type: 'text', minWidth:'180px' },
     { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
-    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
+    { id: 'offerDate', label: 'Offer Date',  type: 'date', minWidth:'180px' },
 
 
-    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine1', label: 'pAddressLine1',  type: 'text', minWidth:'180px' },
-    { id: 'pAddressLine2', label: 'pAddressLine2',  type: 'text', minWidth:'180px' },
-    { id: 'pCity', label: 'p City',  type: 'text', minWidth:'180px' },
-    { id: 'pState', label: 'p State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'p Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'EmploymentType',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'DepartmentId',  type: 'text', minWidth:'180px' },
+    { id: 'joiningDate', label: 'Joining Date',  type: 'date', minWidth:'180px' },
+    { id: 'pAddressLine1', label: 'Permanent Address Line 1',  type: 'text', minWidth:'280px' },
+    { id: 'pAddressLine2', label: 'Permanent Address Line 2',  type: 'text', minWidth:'280px' },
+    { id: 'pCity', label: 'Permanent City',  type: 'text', minWidth:'180px' },
+    { id: 'pState', label: 'Permanent State ',  type: 'text', minWidth:'180px' },
+    { id: 'pPincode', label: 'Permanent Pincode',  type: 'text', minWidth:'180px' },
+    { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
+    { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
     { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designatio Grade',  type: 'text', minWidth:'180px' },
+    { id: 'designationGrade', label: 'Designation Grade',  type: 'text', minWidth:'180px' },
     { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
 
-    { id: 'roleName', label: 'roleName',  type: 'text', minWidth:'180px' }
+    { id: 'roleName', label: 'Role Name',  type: 'text', minWidth:'180px' }
    
     
   ]);
@@ -196,9 +199,24 @@ export default function EmployeeTable() {
 
 
   const handleEditRowParent = useCallback(
-    (id) => {
-      console.log('called',paths.dashboard.employee.userview(id))
-      router.push(paths.dashboard.employee.userview(id));
+    (ele) => {
+      const secretPass = "XkhZG4fW2t2W";
+
+      const encryptData = () => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(ele?.employeeId),
+          secretPass
+        ).toString();
+
+       // setEncrptedData(data);
+       console.log('called',data)
+         router.push(paths.dashboard.employee.userview(data));
+       
+      };
+      //encryptData()
+     router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      
+      
     },
     [router]
     

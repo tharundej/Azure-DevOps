@@ -1,5 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -21,7 +25,7 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work week'];
+const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work Week'];
   const tabContents = [
     <div>
       <LeavePeriod/>
@@ -38,10 +42,32 @@ const tabLabels = ['Leave Period', 'Leave Type', 'Holidays','Work week'];
   ];
 
 export default function BasicCard() {
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
-    <ReusableTabs
-        tabLabels={tabLabels}
-        tabContents={tabContents}
-      />
+    // <ReusableTabs
+    //     tabLabels={tabLabels}
+    //     tabContents={tabContents}
+    //     tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
+    //   />
+    <Box sx={{ width: '100%', typography: 'body1'}}>
+    <TabContext value={value}>
+      <Box sx={{ borderBottom: '1', borderColor: '#3B82F6' ,marginTop: '-16px', marginBottom: '-16px'}}>
+        <TabList onChange={handleChange} aria-label="lab API tabs example" >
+          <Tab label="Leave Period" value="1" sx={{ color: '#3B82F6' }} />
+          <Tab label="Leave Type" value="2" sx={{ color: '#3B82F6' }}  />
+          <Tab label="Holidays" value="3" sx={{ color: '#3B82F6' }} />
+          <Tab label="Work Week" value="4" sx={{ color: '#3B82F6' }} />
+        </TabList>
+      </Box>
+      <TabPanel value="1" ><LeavePeriod/></TabPanel>
+      <TabPanel value="2"><LeaveType/></TabPanel>
+      <TabPanel value="3"> <Holidays/></TabPanel>
+      <TabPanel value="4"> <WorkWeek/></TabPanel>
+    </TabContext>
+  </Box>
   );
 }

@@ -25,6 +25,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { baseUrl } from '../../global/BaseUrl';
 
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
@@ -40,8 +41,11 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
+import ModalHeader from '../../global/modalheader/ModalHeader';
 
 export default function CompoffApprove({ currentUser ,}) {
+  const {enqueueSnackbar} = useSnackbar()
+  const [count,setCount] = useState(0)
   const claim_type = [
     { code: '', label: '', phone: '' },
     { code: 'AD', label: 'Travel', phone: '376' },
@@ -56,49 +60,60 @@ export default function CompoffApprove({ currentUser ,}) {
 
       // { type: 'datePicker', label: 'Expense Start Date', name: 'expensestartdate',category:"expense", value: new Date() },
       // { type: 'datePicker', label: 'Expense End Date', name: 'expenseenddate',category:"expense", value: new Date() },
-      { type: 'datePicker', label: ' Start Date', name: 'start_date',category:"claim",  },
-      { type: 'datePicker', label: ' End Date', name: 'end_date',category:"claim",  },
+      { type: 'datePicker', label: ' Start Date', name: 'startDate',category:"claim",  },
+      { type: 'datePicker', label: ' End Date', name: 'endDate',category:"claim",  },
       // { type: 'Select', label: 'Claim Type ', category:"ClaimType",name:"claim_type", options: ['Hotel', 'Medical', 'Travel'] },
-      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approve', 'Reject', 'Pending'] },
+      { type: 'Select', label: 'Status',name: 'status', category:"status", options: ['Approved', 'Rejected', 'Pending'] },
       // { type: 'multiSelect', label: 'multiSelect Options', options: ['O 1', 'Opti 2', 'ption 3'] },
     ],
   }
 
 
   const TABLE_HEAD = [
+     { id: "employeeId", label: "Employee ID", minWidth: "7pc", type: "text" },
     {
-      id: "employeename",
+      id: "employeeName",
       label: " Employee Name",
-      width: 180,
+      minWidth: "7pc",
       type: "text",
       containesAvatar: false,
 
       secondaryText: "email",
     },
-    { id: "compensantory_policies", label: "Compensantory Policies", width: 180, type: "text" },
-    { id: "start_date", label: "Start Date", width: 220, type: "text" },
-    { id: "end_date", label: "End Date", width: 180, type: "text" },
-    { id: "status", label: "Status", width: 100, type: "badge" },
-    { id: "expire_date", label: "Expire Date", width: 180, type: "text" },
-    { id: "approver_name", label: "Approver Name", width: 180, type: "text" },
+      // { id: "projectName", label: "Project Name", width: 180, type: "text" },
+      { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "7pc", type: "text" },
+    { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "7pc", type: "text" },
+    { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
+    { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },
+    { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
+    { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
+    { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "Employee Comments ", minWidth: "7pc", type: "text" },
+    // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comments", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
+    { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
+    { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     // { id: '', width: 88 },
   ]
-
-
+  const managerID =localStorage.getItem('reportingManagerID');
+  const employeeID =localStorage.getItem('employeeID');
+  const companyID =localStorage.getItem('companyID');
 
   const defaultPayload={
 
   
-    "employee_id":"",
-    "company_id":"COMP2",
+    "employeeid":"",
+    "companyId":companyID,
+    "ApprovalManagerId":employeeID,
     "page":0,
     "search":"",
     "count":5,
     "externalFilters":{
-      "start_date":"",
-      "end_date":"",
+      "startDate":"",
+      "enddate":"",
       "status":"",
-      "compensantory_policies":"",
+      "compensantoryPolicies":"",
       "utilisation":""
     },
     "sort":{
@@ -112,16 +127,16 @@ export default function CompoffApprove({ currentUser ,}) {
 
 const externalFilter = {
     
-  "start_date":"",
-  "end_date":"",
+  "startDate":"",
+  "endDate":"",
   "status":"",
-  "compensantory_policies":"",
+  "compensantoryPolicies":"",
   "utilisation":""
 }
 
   const actions = [
-    { name: "Approve", icon: "hh", path: "jjj",  type:"status"},
-    { name: "Reject", icon: "hh", path: "jjj" ,type:"status" },
+    { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+    { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
     // { name: "eerr", icon: "hh", path: "jjj" },
   ];
   const bodyContent = [
@@ -136,17 +151,23 @@ const externalFilter = {
   ];
   
 
-  // useEffect=(()=>{
-  //   onclickActions()
-  // },[approve])
+ 
 
   const [approve, setApprove]= React.useState({
 
-    compensatoryRequestId:"1",
+    compensatoryRequestId:null,
         status: "",
-        utilisation: "1"
+        utilisation: null,
+        companyId:companyID,
+        employeeId:"",
+        managerId:employeeID,
+        comment:""
 
   })
+
+
+  
+
   // console.log(approve,"approve data11111111")
   const onclickActions = (rowData,eventData) => {
     console.log(rowData,eventData, "CompoffAprrove from to basic table")
@@ -156,10 +177,21 @@ const externalFilter = {
            if (eventData?.name === 'Approve'){
             setApprove(prevState => ({
               ...prevState,
-              status: "Approve"
+              status: "Approved",
+              employeeId:rowData?.employeeId,
+              utilisation:rowData?.utilisation,
+              compensatoryRequestId: rowData?.compensantoryRequestId,
+              compensantoryPolicies: rowData?.compensantoryPolicies,
+
           }));
-          handle(approve);
-          console.log(approve,"approve api")
+          // handle(approve);
+          handleOpen()
+
+        //   handle({...approve, ...{status: "Approved",
+        //        utilisation:rowData?.utilisation,
+        //       compensatoryRequestId: rowData?.compensantory_request_id,
+        // }});
+         
 
            }
           
@@ -167,12 +199,23 @@ const externalFilter = {
        else{
         setApprove(prevState => ({
           ...prevState,
-          status: "Reject"
+          status: "Rejected",
+          employeeId:rowData?.employeeId,
+          utilisation:rowData?.utilisation,
+          compensatoryRequestId: rowData?.compensantoryRequestId,
+          compensantoryPolicies: rowData?.compensantoryPolicies,
       }));
       
-
+//       handle({...approve, ...{status: "Rejected",
+//       utilisation:rowData?.utilisation,
+//      compensatoryRequestId: rowData?.compensantoryRequestId,
+// }});
+      
+      // handle(approve);
+      handleOpen()
     }
     }
+    
   }
     
     else {
@@ -183,7 +226,7 @@ const externalFilter = {
    
    
   
-console.log(approve,"outside approve")
+// console.log(approve,"outside approve")
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -207,7 +250,7 @@ console.log(approve,"outside approve")
     () => ({
       amount: currentUser?.amount || null ,
       comment: currentUser?.comment || '',
-      type_oc_claim: currentUser?.type_oc_claim|| '',
+      // type_oc_claim: currentUser?.type_oc_claim|| '',
       // currency:currentUser?.currency|| '',
 
       // company_id:currentUser?.company_id|| '',
@@ -248,12 +291,14 @@ console.log(defaultValues,"defaultValues")
 
       console.log(data, 'data111ugsghghh');
 
-      const response = await axios.post('http://192.168.0.184:3001/erp/q', data).then(
+      const response = await axios.post(baseUrl+'/q', data).then(
         (successData) => {
-          console.log('sucess', successData);
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
+          console.log('success', successData);
         },
         (error) => {
           console.log('lllll', error);
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
         }
       );
 
@@ -263,41 +308,44 @@ console.log(defaultValues,"defaultValues")
       // router.push(paths.dashboard.user.list);
       // console.info('DATA', data);
     } catch (error) {
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
       console.error(error);
     }
   });
 
-
-  const  handle =(async (approve) => {
+  console.log(approve,"approve defaultValues111")
+  const  handle =(async (approve,event) => {
     
-    console.log(approve,"approve defaultValues111")
+   
    
 
     try {
-     
+      event.preventDefault();
       // console.log(data, 'formdata api in check');
 
-      const response = await axios.post('http://192.168.0.123:3001/erp/UpdateMycompoffdetails', approve).then(
-        (successData) => {
-          console.log('sucess', successData);
+      const response = await axios.post(baseUrl+'/UpdateMycompoffdetails', approve).then(
+        (res) => {
+          console.log('sucess', res);
+          enqueueSnackbar(res?.data?.message,{variant:'success'})
+          setCount(count+1)
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
+          enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+          handleClose()
         }
       );
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
+      
     } catch (error) {
-
-      alert("api hit not done")
+      enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+      // alert("api hit not done")
       console.error(error);
+      handleClose()
     }
   });
-
+console.log(approve?.compensantoryPolicies,"approve?.compensantoryPolicies")
   return (
     <>
       <Helmet>
@@ -313,16 +361,13 @@ console.log(defaultValues,"defaultValues")
           sx: { maxWidth: 720 },
         }}
       >
-        <FormProvider methods={methods} onSubmit={onSubmit}>
+         <ModalHeader heading={`${(approve?.status==="Approved")? "Approve":"Reject"}  Compoff`} />
+        <FormProvider methods={methods} onSubmit={(event) => handle(approve, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
-          <DialogTitle>Apply All Claims</DialogTitle>
+          {/* <DialogTitle>Update Compoff</DialogTitle> */}
 
           <DialogContent>
-            {/* <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            Account is waiting for confirmation
-          </Alert> */}
-
-
+    
             <Box
               rowGap={3}
               columnGap={2}
@@ -333,128 +378,16 @@ console.log(defaultValues,"defaultValues")
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {/* <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect> */}
+             
+             
+             <TextField  label="Compensantory Policies" value={approve?.compensantoryPolicies || ''}  InputProps={{
+    readOnly: true,
+  }} />
 
-              {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              <RHFAutocomplete
-                name="type_oc_claim"
-                label="Type Of Claim"
-                options={claim_type.map((claimtype) => claimtype.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                // renderOption={(props, option) => {
-                //   const { code, label, phone } = countries.filter(
-                //     (country) => country.label === option
-                //   )[0];
-
-                //   if (!label) {
-                //     return null;
-                //   }
-
-                //   return (
-                //     <li {...props} key={label}>
-                //       <Iconify
-                //         key={label}
-                //         icon={`circle-flags:${code.toLowerCase()}`}
-                //         width={28}
-                //         sx={{ mr: 1 }}
-                //       />
-                //       {label} ({code}) +{phone}
-                //     </li>
-                //   );
-                // }}
-              />
-              {/* <RHFAutocomplete
-                name="country"
-                label=" Currency for Reimbursement"
-                options={countries.map((country) => country.label)}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const { code, label, phone } = countries.filter(
-                    (country) => country.label === option
-                  )[0];
-
-                  if (!label) {
-                    return null;
-                  }
-
-                  return (
-                    <li {...props} key={label}>
-                      <Iconify
-                        key={label}
-                        icon={`circle-flags:${code.toLowerCase()}`}
-                        width={28}
-                        sx={{ mr: 1 }}
-                      />
-                      {label} ({code}) +{phone}
-                    </li>
-                  );
-                }}
-              /> */}
-
-
-              <RHFTextField name="amount" label="Claim Amount" />
-              <Grid sx={{ alignSelf: "flex-start" }}  >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="To"
-                    // value={item?.to}
-                    onChange={(newValue) => {
-                     // handleChangeDate(newValue, 'to');
-                    }}
-                  />
-                  {/* </DemoContainer> */}
-                </LocalizationProvider>
-              </Grid>
-              <RHFTextField name="comment" label="comments" />
-              {/* <RHFTextField name="phoneNumber" label=" Attachment" /> */}
-              <Grid sx={{ alignSelf: "flex-end" }}>
-
-                <Controller
-                  name="file"
-                  control={control}
-                  defaultValue={null}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type="file"
-                      accept=".doc, .pdf"
-                    />
-                  )}
-                />
-              </Grid>
-              <TextField
-                fullWidth
-                variant="outlined"
-                InputLabelProps={{ htmlFor: 'contained-button-file' }}
-                label="Upload Document"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <input
-                        accept=".doc,.pdf"
-                        style={{ display: 'none' }}
-                        id="contained-button-file"
-                        multiple
-                        type="file"
-                      />
-                      <label htmlFor="contained-button-file">
-                        {/* <CloudUploadIcon /> */}
-                        <CloudUploadIcon />
-                      </label>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <TextField name="comment" label="Comment" 
+               value={approve.comment}
+               onChange={(e) => setApprove((prevState) => ({ ...prevState, comment: e.target.value }))}/>
+             
 
 
 
@@ -469,7 +402,7 @@ console.log(defaultValues,"defaultValues")
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -478,7 +411,7 @@ console.log(defaultValues,"defaultValues")
 
 
       <SurendraBasicTable
-        endpoint="GetMycompoffdetails"
+        endpoint="/GetMycompoffdetails"
         defaultPayload={defaultPayload}
         headerData={TABLE_HEAD}
         rowActions={actions}
@@ -491,6 +424,7 @@ console.log(defaultValues,"defaultValues")
            filterName="claimSearchFilter"
         // filterName="claimSearchFilter"
          onclickActions={onclickActions}
+         count={count}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import React,{forwardRef,useEffect,useImperativeHandle,useState} from 'react'
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
@@ -15,9 +16,23 @@ import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
 import { baseUrl } from '../BaseUrl';
+import ModalHeader from '../../global/modalheader/ModalHeader'
 import axios from 'axios';
 
-const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,type,employeeIDForApis})=> {
   
 
   var [defaultValues,setDefaultValues]=useState([])
@@ -35,9 +50,10 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
     }
   },[documents])
     const onSaveData=()=>{
+      console.log(employeeIDForApis,'employeeIDForApis')
         if(type==="edit"){
            const obj={
-            "companyId": "COMP5",
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 "id":defaultValues[0].id,
 
@@ -74,6 +90,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
             axios.request(config)
             .then((response) => {
             console.log(JSON.stringify(response.data));
+            onhandleClose();
+            callApi()
             })
             .catch((error) => {
             console.log(error);
@@ -83,7 +101,7 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
     const ApiHitCreate=()=>{
         
                 let data = JSON.stringify({
-                "companyId": documents?.companyId,
+                "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 "employeeId": employeeIDForApis,
                 
                 "documents": defaultValues
@@ -103,6 +121,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
                 axios.request(config)
                 .then((response) => {
                 console.log(JSON.stringify(response.data));
+                callApi();
+                onhandleClose()
                 })
                 .catch((error) => {
                 console.log(error);
@@ -112,7 +132,7 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
 
     const ApiHitAddDocs=()=>{
       let data = JSON.stringify({
-        "companyId": documents?.companyId,
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": employeeIDForApis,
         "mainRecordId":documents?.mainRecordID,
         "documents": defaultValues
@@ -134,6 +154,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
         axios.request(config)
         .then((response) => {
         console.log(JSON.stringify(response.data));
+        callApi();
+        onhandleClose()
         })
         .catch((error) => {
         console.log(error);
@@ -276,6 +298,8 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
                 sx: { maxWidth: 720 },
                 }}
             >
+
+              <ModalHeader heading={type==="create"?"Add Document":"Edit Documents"} />
          <DialogContent>
           
          <Grid xs={12} md={8}>
@@ -298,15 +322,15 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
                         {docType?.map((type, idx) => (
-                        <MenuItem key={idx} value={type.toLowerCase().replace(' ', '-')}>
+                        <MenuItem key={idx} value={type}>
                             {type}
                         </MenuItem>
                         ))}
@@ -325,14 +349,17 @@ const  FileEditCreate=({open,documents,onhandleClose,docType,endpoint,type})=> {
                    id={`file-upload-input-${index}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                    
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
@@ -421,7 +448,8 @@ FileEditCreate.propTypes = {
     endpoint:PropTypes.string,
     docType:PropTypes.array,
     type:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };
 
   export default FileEditCreate;

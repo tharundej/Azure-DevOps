@@ -36,7 +36,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import './approvalsearchfilter.css'
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
@@ -81,7 +81,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ApprovalSearchFilter({filterData,filterOptions}){
+export default function ApprovalSearchFilter({filterData,filterOptions,searchData}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -272,7 +272,13 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
       handleClickClose()
         
       }
-      
+      const [search, setSearch]=useState("");
+      const handleClose = () => setShowForm(false);
+      const handleSearch = (searchTerm) => {
+        setSearch(searchTerm)
+          searchData(search)
+          console.log(searchTerm,"search ........")
+          };
   
     return (
         <>
@@ -281,7 +287,8 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
 
             <TextField placeholder='Search....' 
             fullWidth
-            // onChange={handleSeacrch} 
+            // onChange={handleSeacrch}
+            onChange={e=>{handleSearch(e.target.value)}}
 
             />
             </Grid>
@@ -475,6 +482,10 @@ export default function ApprovalSearchFilter({filterData,filterOptions}){
 ApprovalSearchFilter.propTypes={
     filterData: PropTypes.func,
 }
+ApprovalSearchFilter.propTypes={
+  searchData: PropTypes.any,
+}
+
 
 ApprovalSearchFilter.propTypes={
     filterOptions: PropTypes.arrayOf(

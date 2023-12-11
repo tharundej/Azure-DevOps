@@ -1,0 +1,8 @@
+@media print {
+  body {
+    font-size: 12pt;
+  }
+  .print-hidden {
+    display: none; /* Hide elements with the "print-hidden" class during printing */
+  }
+}

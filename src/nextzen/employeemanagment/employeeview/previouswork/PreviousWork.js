@@ -1,14 +1,17 @@
 import React,{useEffect, useState} from 'react'
-import {Card,CardContent,Typography,IconButton,Button,Grid} from '@mui/material'
+import {Card,CardContent,Typography,IconButton,Button,Grid,Stack} from '@mui/material'
 import Iconify from 'src/components/iconify';
+import { useTheme, alpha } from '@mui/material/styles';
 import axios from 'axios';
 import FilesGrid from '../files/FilesGrid';
 import CreateEducation from '../employeeeducation/createeducation/CreateEducation';
 import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
+import { bgGradient } from 'src/theme/css';
 
-
+import { formatDate } from 'src/nextzen/global/GetDateFormat';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const employeeData=[ {
 
@@ -31,7 +34,8 @@ const employeeData=[ {
 
 ]
 
-const PreviousWork = () => {
+const PreviousWork = ({employeeIDForApis}) => {
+  const theme = useTheme();
   const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
@@ -77,22 +81,7 @@ const PreviousWork = () => {
 
         }
     ]
-    const [employeeWork,setEmployeeWork] =useState([{
-      "companyName": "Newcomp22",
-      "employeeId": "NEWC19",
-      "previousCompanyName": "",
-      "designation": "",
-      "startDate": "",
-      "presentlyWorking": true,
-      "endDate": null,
-      "documents":[
-        {
-          fileType:'',
-          fileName:'',
-          fileContent:''
-      }
-    ]
-    }])
+    const [employeeWork,setEmployeeWork] =useState([])
     const [expanded, setExpanded] = useState(Array(employeeWork?.length).fill(false));
     const tabIndex=1;
 
@@ -106,8 +95,8 @@ const PreviousWork = () => {
 
    const ApiHit=()=>{
     const data = JSON.stringify({
-      "companyId": "COMP5",
-      "employeeId": "NEWC19"
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "employeeId": employeeIDForApis
   });
      
     const config = {
@@ -137,70 +126,120 @@ const PreviousWork = () => {
      ApiHit();
      
    },[])
-
+ 
+   const color='primary'
    
   return (
     <>
-      <CreatePreviousWork open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
-        <Grid container alignItems="center" justifyContent="flex-end" >
-          <Grid alignSelf='flex-end' item>
-          <Button onClick={()=>{handleAddEducation(employeeData,"addExperience")}}>+Add Work</Button>
-          </Grid>
-        </Grid>
+      <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+        
 
+        <Grid container margin='5px' >
         {(tabIndex === 1) &&
       <>
          
                 {
                   employeeWork?.map((itm,index) => (
-                   
-                      <Card sx={{margin:"10px"}}>
+                    
 
-                        <CardContent >
-                          
-               { (!expanded[index])?  <>
-               <Typography>
-                <span style={{fontWeight:700}}>Company Name : </span> {itm?.previousCompanyName}  
-                <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-             
-              </Typography>
-                <Typography><span style={{fontWeight:600}}>Designation :  </span>  {itm?.designation}</Typography>
-                <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate}
-                
-                </Typography>
-                  </>
-                 :<>
-                                <Typography>
-                            <span style={{fontWeight:700}}> Company Name : </span> {itm?.previousCompanyName}  
-
-                            <Grid>
-                            <IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleExpanded(index)}><Iconify icon="iconamoon:arrow-down-2-thin"/></IconButton>
-                           {expanded[index] &&<IconButton sx={{position: 'absolute',top: 15,right: 0}} onClick={()=>handleAddEducation([itm],"updateWorkDetails")}><Iconify icon="material-symbols:edit"/></IconButton>}
-                           </Grid>
-                            </Typography>
-                          
-                            <Typography><span style={{fontWeight:600}}>Designation :  </span>  {itm?.designation}</Typography>
-                            <Typography><span style={{fontWeight:600}}>Start Date :  </span>  {itm?.startDate}
-                            
-                            </Typography>
-                            <Typography><span style={{fontWeight:600}}>End Date :  </span>  {itm?.endDate}
-                            
-                            </Typography>
-                           
-
-                        {/* <FilesGrid dataFiltered={itm?.documents} /> */}
-                        <EmployeeRecords docsData={itm} docType={docType} endpoint="/updateEduAndWorkDoc" />
-
-                          </>}
-                        </CardContent>
-                      </Card>
+                    <Grid
+                    lg={5}
+                    md={5}
+                    xs={12}
+                    sx={{
+                      ...bgGradient({
+                        direction: '135deg',
+                        startColor: alpha(theme.palette[color].light, 0.2),
+                        endColor: alpha(theme.palette[color].main, 0.2),
+                      }),
+                      p: 3,
+                      borderRadius: 2,
+                      color: `${color}.darker`,
+                      backgroundColor: 'common.white',
+                      padding: '10px',
+                      margin: '10px',
+                      boxShadow: '3',
+                     
+                    }}
+                  >
+                    <>
+                    <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
+                            <IconButton onClick={() => {
+                              const item = itm;
+                              handleAddEducation([item], "updateWorkDetails");
+                            }}>
+                              <Iconify icon="material-symbols:edit" />
+                            </IconButton>
+                            <IconButton onClick={() => {
+                              const item = itm;
+                              handleAddEducation([item], "updateEducationDetails");
+                            }} sx={{ marginLeft: 1 }}>
+                              <Iconify icon="material-symbols:delete" />
+                            </IconButton>
+                          </Grid>
+                      <Grid container alignItems="center" justifyContent="center" flexDirection="column">
+                        <Typography variant='h5'>
+                          {itm?.previousCompanyName}
+                         
+                        </Typography>
+                  
+                        <Typography variant='h6'>@</Typography>
+                  
+                        <Typography variant='h6'> {itm?.designation}</Typography>
+                  
+                        <Typography component="span">
+                          {formatDate(itm?.startDate)} - {formatDate(itm?.endDate)}
+                          <Stack lg={12}></Stack>
+                        </Typography>
+                      </Grid>
+                    </>
+                  </Grid>
+                     
                     )
                   )
                }
         
       </>}
+     
+
+        
+      <Grid  
+lg={5}
+md={5}
+xs={12}
+      sx={{
+        ...bgGradient({
+          direction: '135deg',
+          startColor: alpha(theme.palette[color].light, 0.1),
+          endColor: alpha(theme.palette[color].main, 0.2
+            ),
+        }),
+        p: 3,
+        borderRadius: 2,
+        color: `${color}.darker`,
+        backgroundColor: 'common.white',
+        padding: "10px",
+        margin: '10px',
+        boxShadow: 3,
+       
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        cursor: 'pointer',
+      }}
+      onClick={()=>{handleAddEducation(employeeData,"addExperience")}}
+    >
+      <AddCircleIcon sx={{ fontSize: 60 }} />
+     
+    </Grid>
+    </Grid>
+      
     </>
   )
 }
+
+
 
 export default PreviousWork

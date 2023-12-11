@@ -71,11 +71,16 @@ const bull = (
 export default function BasicCard(currentUser) {
   const [show, setShow] = useState(true);
   const [payRunView, setPayRunView] = useState(1);
+  const [employmentType , setEmploymentType] = useState('')
   const handleCreatePayrun = (value) => {
     setShow(false);
     setPayRunView(value);
   };
 
+  const handleEmpType = (data) =>{
+    setEmploymentType(data)
+  }
+  console.log(employmentType, "employmentType")
   const changeOfTabHandeler = () => {
     setPayRunView(1);
   };
@@ -89,8 +94,8 @@ export default function BasicCard(currentUser) {
       <PaySchedule />
     </div>,
     <div>
-      {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} />}
-      {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)} />}
+      {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} handleEmpType = {handleEmpType}/>}
+      {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)}  employmentType={employmentType}/>}
       {payRunView === 3 && <CalculateEarningsAndDeductions />}
       {/* <CreatePayRun/> */}
     </div>,
@@ -194,6 +199,7 @@ export default function BasicCard(currentUser) {
         tabContents={tabContents}
         handleCreatePayrun={handleCreatePayrun}
         changeOfTab={changeOfTabHandeler}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
   );
 }

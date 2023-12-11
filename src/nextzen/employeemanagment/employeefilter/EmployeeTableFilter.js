@@ -37,7 +37,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from '../../global/CustomDateRangePicker';
 
@@ -246,7 +246,7 @@ export default function EmployeeTableFilter({filterSearch,filterData}){
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      console.log(data,';;;')
+      console.log(data1,'externalfiltersdata')
 
       filterData(data);
       // call parent function and pass it
@@ -263,16 +263,16 @@ export default function EmployeeTableFilter({filterSearch,filterData}){
     return (
         <>
           <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
-            <Grid md={6} xs={6} item>
+            <Grid md={6} xs={12} lg={6} item>
 
-            <TextField placeholder='Search....' 
+            <TextField placeholder='Search..' 
             fullWidth
              onChange={e=>{handleSearch(e)}}
 
             />
             </Grid>
 
-            <Grid  md={6} xs={6} item>
+            <Grid  md={6} xs={12} lg={6} item>
 
                     <Grid sx={{display:'flex',alignItems:'flex-end',justifyContent:'flex-end'}} spacing={2}>
                     <Grid md={2} xs={2} item>

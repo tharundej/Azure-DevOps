@@ -31,7 +31,9 @@ export default function NavItem({ item, open, depth, active, config, externalLin
         {icon && <StyledIcon size={config.iconSize}>{icon}</StyledIcon>}
 
         {subItem && (
+
           <StyledIcon size={config.iconSize}>
+            
             <StyledDotIcon active={active} />
           </StyledIcon>
         )}
@@ -39,10 +41,12 @@ export default function NavItem({ item, open, depth, active, config, externalLin
 
       {!(config.hiddenLabel && !subItem) && (
         <ListItemText
-          primary={title}
+          primary={<Tooltip title={title} placement="bottom-end">
+          <span>{title}</span>
+        </Tooltip>}
           secondary={
             caption ? (
-              <Tooltip title={caption} placement="top-start">
+              <Tooltip title={caption} placement="bottom-end">
                 <span>{caption}</span>
               </Tooltip>
             ) : null
@@ -50,7 +54,7 @@ export default function NavItem({ item, open, depth, active, config, externalLin
           primaryTypographyProps={{
             noWrap: true,
             typography: 'body2',
-            textTransform: 'capitalize',
+            // textTransform: 'capitalize',
             fontWeight: active ? 'fontWeightSemiBold' : 'fontWeightMedium',
           }}
           secondaryTypographyProps={{

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle} from 'react';
+import React,{ useCallback, useMemo, useState ,forwardRef,useImperativeHandle, useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
 import { fData } from 'src/utils/format-number';
@@ -40,23 +41,34 @@ import FormProvider, {
 import axios from 'axios';
 import SnackBar from 'src/nextzen/global/SnackBar';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+ import { Country, State, City }  from 'country-state-city';
+
+import  {ApiHitCities,ApiHitStates,ApiHitCountries,ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation,ApiHitleavePeriodType,ApiHitleaveNameType} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
 const   GeneralInformation=forwardRef((props,ref)=> {
 
-  const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
+  
+  const [rcountryIsoCode,setRCoutryIsoCode]=useState("")
 
+  const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
+  const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
   const [messageSnackbar,setmessageSnackbar]=useState('');
+  const [isDateOfBirthFilled,setIsDateOfBirthFilled]=useState(false);
 
 
   const currentUser=props.currentUser;
+  const [options,setOptions]=useState({
+    countryOptions:[],
+    stateOptions:[]
+  })
 
   useImperativeHandle(ref,()=>({
     childFunctionGeneral(){
@@ -68,6 +80,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       
     }
   }))
+  useEffect(()=>{
+   
+    const obj=Country.getAllCountries();
+    const newArray={...options};
+    newArray.countryOptions=obj;
+    newArray.rcountryOptions=obj;
+   
+    setOptions(newArray)
+  },[])
 
   const handleCloseSnackBar=()=>{
     setopenSnackBar(false)
@@ -76,11 +97,13 @@ const   GeneralInformation=forwardRef((props,ref)=> {
  
 
   const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
+    date_of_birth: "",
+    joining_date: "",
+    offer_date: "",
   });
   const router = useRouter();
+
+  const [errorMessage,setErrorMessage]=useState("")
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -92,30 +115,45 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     firstName: Yup.string().required("First name is required"),
     middleName: Yup.string(),
     lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().required("Email is required"),
-    contactNumber: Yup.number().required("Contact Number is required"),
+   
+    contactNumber: Yup.number()
+    .required("Contact Number is required")
+    .integer("Contact Number must be an integer")
+    .test(
+        "len",
+        "Contact Number must be exactly 10 digits",
+        (val) => val && val.toString().length === 10
+    ),
     emergencyContactNumber: Yup.number(),
-    dateOfBirth: Yup.string(),
+
     fatherName: Yup.string(),
     motherName: Yup.string(),
-    maritalStatus: Yup.string(),
-    nationality: Yup.string(),
-    religion: Yup.string(),
-    bloodGroup: Yup.string(),
-    offerDate: Yup.string(),
-    joiningDate: Yup.string(),
+    maritalStatus: Yup.object(),
+    nationality: Yup.object(),
+    religion: Yup.object(),
+    bloodGroup: Yup.object(),
+   
+   
     pAddressLine1: Yup.string(),
     pAddressLine2: Yup.string(),
-    pCity: Yup.string(),
-    pState: Yup.string(),
+    pCity: Yup.object(),
+    pState: Yup.object(),
+    country:Yup.object(),
     pPincode: Yup.number(),
     rAddressLine1: Yup.string(),
     rAddressLine2: Yup.string(),
-    rCity: Yup.string(),
-    rState: Yup.string(),
+    rCity: Yup.object(),
+    rState: Yup.object(),
     rPincode: Yup.number(),
+    rCountry:Yup.object(),
    
-    toggle: Yup.bool()
+    toggle: Yup.bool(),
+
+  
+     gender: Yup.object(),
+    personalEmail: Yup.string().required("Email is required"),
+    companyEmail: Yup.string(),
+    
     // first_name: Yup.string().required('First Name is required'),
 
     // middle_name: Yup.string().required('Middle Name is required'),
@@ -142,34 +180,42 @@ const   GeneralInformation=forwardRef((props,ref)=> {
    
     companyID: currentUser?.companyID ||'',
     companyName: currentUser?.companyName ||'',
-    
+     
     firstName: currentUser?.firstName ||'',
+   
     middleName: currentUser?.middleName ||'',
     lastName: currentUser?.lastName ||'',
-    email: currentUser?.email ||'',
+   
     contactNumber: currentUser?.contactNumber ||undefined,
     emergencyContactNumber: currentUser?.emergencyContactNumber || undefined,
-    dateOfBirth: currentUser?.dateOfBirth ||'',
+    
     fatherName: currentUser?.fatherName ||'',
     motherName: currentUser?.motherName ||'',
-    maritalStatus: currentUser?.maritalStatus ||'',
-    nationality: currentUser?.nationality ||'',
-    religion: currentUser?.religion ||'',
-    bloodGroup: currentUser?.bloodGroup ||'',
-    offerDate: currentUser?.offerDate ||'',
-    joiningDate: currentUser?.joiningDate ||'',
+    maritalStatus: currentUser?.maritalStatus ||undefined,
+    nationality: currentUser?.nationality ||undefined,
+    religion: currentUser?.religion ||undefined,
+    bloodGroup: currentUser?.bloodGroup || undefined,
+   
+   
     pAddressLine1: currentUser?.pAddressLine1 ||'',
     pAddressLine2: currentUser?.pAddressLine2 ||'',
-    pCity: currentUser?.pCity ||'',
-    pState: currentUser?.pState ||'',
+    pCity: currentUser?.pCity ||undefined,
+    pState: currentUser?.pState || undefined,
     pPincode: currentUser?.pPincode || undefined,
+    country:currentUser?.country || undefined,
     rAddressLine1: currentUser?.rAddressLine1 ||'',
     rAddressLine2: currentUser?.rAddressLine2 ||'',
-    rCity: currentUser?.rCity ||'',
-    rState: currentUser?.rState ||'',
+    rCity: currentUser?.rCity ||undefined,
+    rState: currentUser?.rState ||undefined,
     rPincode: currentUser?.rPincode || undefined,
+    rCountry :currentUser?.rCountry || undefined,
     
-    toggle: currentUser?.toggle || false,
+    toggle: currentUser?.toggle || true,
+
+   
+     gender:currentUser?.gender||  undefined,
+    companyEmail: currentUser?.companyEmail ||'',
+    personalEmail: currentUser?.personalEmail ||'',
     }),
     [currentUser]
   );
@@ -198,7 +244,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
-          url: `${baseUrl}onBoarding`,
+          url: `${baseUrl}/onBoarding`,
           headers: { 
          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
              
@@ -214,43 +260,125 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           console.log(response.data.empID,'nithinnn')
           localStorage.setItem("employeeIdCreated",response.data?.empID)
           
-          props.nextStep();
+          
           props.handleCallSnackbar(response.data.message,"success")
-          console.log(response.data.message,'response.data.message')
+         
+          props.nextStep();
         })
         .catch((error) => {
           console.log(error);
-          setopenSnackBar(true);
-          setseveritySnackbar("warning");
-          setmessageSnackbar("User Alredy Present")
+          // setopenSnackBar(true);
+          // setseveritySnackbar("warning");
+          // setmessageSnackbar("Something Wrong")
+          props.handleCallSnackbar(error.response.data.message,"error")
         });
 
   }
 
+  // function blobToBase64(blob) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  
+  //     reader.onloadend = () => {
+  //       resolve(reader.result.split(',')[1]);
+  //     };
+  
+  //     reader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  
+  //     reader.readAsDataURL(blob);
+  //   });
+  // }
+ 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,'general information');
+    
+    props.handleLoader()
+    fetch(data?.avatarUrl?.preview)
+  .then(response => response.blob())
+  .then(blob => {
+    // Convert Blob to Base64
+    var reader = new FileReader();
+    reader.onload = function () {
+      var base64Data = reader.result.split(',')[1];
+      data.imageData=base64Data;
+      data.imageName=data?.avatarUrl?.path;
+      console.log(data,'base64Data');
+      ApiHitGeneralInformation(data);
+    };
+    reader.readAsDataURL(blob);
+  })
+  .catch(error => console.error('Error fetching the file:', error));
+
+  console.log(data?.avatarUrl?.preview,'general information');
 
     try {
-      data.companyID = 'COMP1';
+      data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID
       data.companyName = 'infobell';
+      // data.imageData=blobToBase64(data?.avatarUrl?.preview);
+      // data.imageName=data.avatarUrl.path;
+      // console.log(blobToBase64(data?.avatarUrl?.preview),'general information');
+
+      if(datesUsed?.joining_date==="" && datesUsed?.date_of_birth===""){
+        const obj={
+          joiningDate:'Joining Date is Mandatory',
+          dateOfBirth:'Date Of Birth is Manadatory'
+        }
+        setErrorMessage(obj);
+        return ;
+      }
+      else if(datesUsed?.joining_date===""){
+        const obj={
+          joiningDate:'Joining Date is Mandatory',
+          
+        }
+        setErrorMessage(obj);
+        return ;
+      }
+      else if(datesUsed?.date_of_birth===""){
+        const obj={
+          joiningDate:'Date Of Birth is Mandatory',
+          
+        }
+        setErrorMessage(obj);
+        return ;
+      }
 
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offerDate = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joiningDate = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.dateOfBirth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+      data.offerDate = (datesUsed?.offer_date);
+      data.joiningDate = (datesUsed?.joining_date);
+      data.dateOfBirth = (datesUsed?.date_of_birth);
+       data.gender=data?.gender?.label|| "";
+       data.maritalStatus=data?.maritalStatus?.label || ""
+       data.religion=data?.religion?.label || "";
+       data.nationality=data?.nationality?.nationality || "";
+       data.bloodGroup=data?.bloodGroup?.label || "";
+       data.pCountry=data?.country|| {name:"",isoCode:""};
+      data.pState=data?.state || {name:"",isoCode:""};
+      data.pCity=data?.city || {name:"",isoCode:""}
+       
 
       if(isSameAsPermanent){
         data.rAddressLine1=data.pAddressLine1;
         data.rAddressLine2=data.pAddressLine2
-        data.rCity=data.pCity;
-        data.rState=data.pState;
+        data.rCountry=data?.country||{name:"",isoCode:""},
+        data.rState=data?.state || {name:"",isoCode:""},
+        data.rCity=data?.city || {name:"",isoCode:""},
         data.rPincode=data.pPincode;
+     
       }
+      else{
+        data.rCountry=data?.rCountry||{name:"",isoCode:""},
+        data.rState=data?.rState || {name:"",isoCode:""},
+        data.rCity=data?.rCity || {name:"",isoCode:""}
+      }
+
+      
 
      
 
       
-       ApiHitGeneralInformation(data);
+       
       // const response = await axios.post('http://192.168.152.94:3001/erp/onBoarding', data).then(
       //   (successData) => {
       //     console.log('sucess', successData);
@@ -291,6 +419,167 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     },
     [setValue]
   );
+
+
+  const onChnageAutoComplete=(obj)=>{
+    console.log(obj,'objjjjj')
+    const objCountry={
+      country:obj?.name
+    }
+    const newArray={...options};
+
+    async function stateOptions(){
+      try {
+        // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
+        // const stateOptions1=await ApiHitStates(objCountry)
+        newArray.stateOptions=State.getStatesOfCountry(obj?.isoCode);
+        setPCoutryIsoCode(obj?.isoCode|| "")
+        // console.log(stateOptions1,'stateOptionsSatet')
+      }
+      catch(e){
+  
+      }
+    }
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+  const onChnageAutoCompleteState=(obj)=>{
+   
+    const objState={
+      country:obj?.name
+    }
+    const newArray={...options};
+
+    async function stateOptions(){
+      try {
+        // const cityOptions1=await ApiHitCities(objState)
+        newArray.cityOptions=City.getCitiesOfState(pcountryIsoCode, obj?.isoCode)
+         //console.log(City.getCitiesOfState(countruIsoCode, obj?.isoCode),'stateOptionsSatet')
+      }
+      catch(e){
+  
+      }
+    }
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+
+
+  const onChnageAutoCompletercountry=(obj)=>{
+    console.log(obj,'objjjjj')
+    const objCountry={
+      country:obj?.name
+    }
+    const newArray={...options};
+
+    async function stateOptions(){
+      try {
+        // console.log(State.getStatesOfCountry(obj?.isoCode),'State.getStatesOfCountry(countryCode)')
+        // const stateOptions1=await ApiHitStates(objCountry)
+        newArray.rstateOptions=State.getStatesOfCountry(obj?.isoCode);
+        setCoutryRIsoCode(obj?.isoCode)
+        // console.log(stateOptions1,'stateOptionsSatet')
+      }
+      catch(e){
+  
+      }
+    }
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+  const onChnageAutoCompleterState=(obj)=>{
+    console.log(obj,'objjjjj')
+    const objState={
+      country:obj?.name
+    }
+    const newArray={...options};
+
+    async function stateOptions(){
+      try {
+        // const cityOptions1=await ApiHitCities(objState)
+        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
+        // console.log(cityOptions1,'stateOptionsSatet')
+      }
+      catch(e){
+  
+      }
+    }
+    stateOptions()
+    
+     setOptions(newArray);
+    console.log(newArray,'newArraynewArray')
+  }
+ 
+
+  const genderOptions=[
+    {label:'Male'},
+    {label:'Female'}
+  ]
+
+  const maritalStatusOptions = [
+    { value: 'single', label: 'Single' },
+    { value: 'married', label: 'Married' },
+    { value: 'divorced', label: 'Divorced' },
+    { value: 'widowed', label: 'Widowed' },
+    { value: 'separated', label: 'Separated' }
+  ];
+
+  const religionOptions = [
+    { value: 'christianity', label: 'Christianity' },
+    { value: 'islam', label: 'Islam' },
+    { value: 'hinduism', label: 'Hinduism' },
+    { value: 'buddhism', label: 'Buddhism' },
+    { value: 'sikhism', label: 'Sikhism' },
+    { value: 'judaism', label: 'Judaism' },
+    { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+    { value: 'jainism', label: 'Jainism' },
+    { value: 'shinto', label: 'Shinto' },
+    { value: 'taoism', label: 'Taoism' },
+    { value: 'zoroastrianism', label: 'Zoroastrianism' },
+    { value: 'confucianism', label: 'Confucianism' },
+    { value: 'atheist', label: 'Atheist' },
+    { value: 'agnostic', label: 'Agnostic' },
+    {value:'other',labal:"Other"}
+  ];
+  
+
+  const nationalitiesOptions = [
+    { country: "United States", nationality: "American" },
+    { country: "United Kingdom", nationality: "British" },
+    { country: "Canada", nationality: "Canadian" },
+    { country: "Australia", nationality: "Australian" },
+    { country: "Germany", nationality: "German" },
+    { country: "France", nationality: "French" },
+    { country: "China", nationality: "Chinese" },
+    { country: "India", nationality: "Indian" },
+    { country: "Brazil", nationality: "Brazilian" },
+    { country: "Russia", nationality: "Russian" },
+    { country: "South Africa", nationality: "South African" },
+    { country: "Japan", nationality: "Japanese" },
+    { country: "Mexico", nationality: "Mexican" },
+    { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+    { country: "South Korea", nationality: "South Korean" },
+    { country: "Other", nationality: "other" }
+  ];
+  
+  const bloodGroupsOptions = [
+    { label: "A+", value: "A positive" },
+    { label: "A-", value: "A negative" },
+    { label: "B+", value: "B positive" },
+    { label: "B-", value: "B negative" },
+    { label: "AB+", value: "AB positive" },
+    { label: "AB-", value: "AB negative" },
+    { label: "O+", value: "O positive" },
+    { label: "O-", value: "O negative" }
+  ];
+
+  
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -372,83 +661,275 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="firstName" label="First Name* " />
-                <RHFTextField name="middleName" label="Middle Name " />
-                <RHFTextField name="lastName" label="Last Name* " />
-                <RHFTextField name="email" label="Email Id* " />
-                <RHFTextField name="contactNumber" label="Contact Number* " />
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="middleName" label="Middle Name" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="lastName" label="Last Name*" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="companyEmail" label="Company Email" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="personalEmail" label="Personal Email" sx={{caretColor:'#3B82F6'}}/>
+                <RHFAutocomplete
+                name="gender"
+                label="Gender"
+                options={genderOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+
+              />
+
+                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+               
                     <DatePicker
+                    
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
-                      value={datesUsed?.date_of_birth}
-                      defaultValue={dayjs(new Date())}
+                    
+                      value={datesUsed?.date_of_birth ? dayjs(datesUsed?.date_of_birth).toDate() : null}
+                      slotProps={{
+                        textField: {
+                          helperText: (
+                            <Stack sx={{ color: 'red' }}>
+                          {  errorMessage?.dateOfBirth}
+                            </Stack>
+                          ),
+                        },
+                      }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          dateOfBirth:''
+                        }
+                        setErrorMessage(obj);
                         setDatesUsed((prev) => ({
                           ...prev,
-                          date_of_birth: newValue,
+                          date_of_birth: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
+                         
+
                         }));
+                        setIsDateOfBirthFilled(!isDateOfBirthFilled);
                       }}
+                      
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <RHFTextField name="fatherName" label="Father Name " />
-                <RHFTextField name="motherName" label="Mother Name " />
-                <RHFTextField name="maritalStatus" label="Martial Status " />
-                <RHFTextField name="nationality" label="Nationality " />
-                <RHFTextField name="religion" label="Religion " />
-                <RHFTextField name="bloodGroup" label="Blood Group " />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                  
+                 
+                <RHFTextField name="fatherName" label="Father Name" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="motherName" label="Mother Name" sx={{caretColor:'#3B82F6'}}/>
+                <RHFAutocomplete
+                name="maritalStatus"
+                label="Marital Status"
+                options={maritalStatusOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+
+              />
+                <RHFAutocomplete
+                name="nationality"
+                label="Nationality"
+                options={nationalitiesOptions}
+                getOptionLabel={(option) => option.nationality}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.nationality}>
+                    {option.nationality}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+
+              />
+                <RHFAutocomplete
+                name="religion"
+                label="Religion"
+                options={religionOptions}
+                getOptionLabel={(option) => option.label}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+              />
+            <RHFAutocomplete
+                name="bloodGroup"
+                label="Blood Group"
+                options={bloodGroupsOptions}
+                getOptionLabel={(option) => option.label}
+              
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+
+              />
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Offer Date"
-                      value={datesUsed?.date_of_birth}
+                      value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
+                        
                         setDatesUsed((prev) => ({
                           ...prev,
-                          offer_date: newValue,
+                          offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                 
+                
                     <DatePicker
                       sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Joining Date"
-                      value={datesUsed?.date_of_birth}
+                      label="Joining Date*"
+                      value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
                       defaultValue={dayjs(new Date())}
+                      slotProps={{
+                        textField: {
+                          helperText: (
+                            <Stack sx={{ color: 'red' }}>
+                          {  errorMessage?.joiningDate}
+                            </Stack>
+                          ),
+                        },
+                      }}
                       onChange={(newValue) => {
+                        const obj={
+                          ...errorMessage,
+                          
+                          joiningDate:''
+                        }
+                        setErrorMessage(obj);
                         console.log(newValue,'newValuenewValuenewValue')
                         setDatesUsed((prev) => ({
                           ...prev,
-                          joining_date: newValue,
+                          joining_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
                 
-                <RHFTextField name="pAddressLine1" label="Permanent Address Line1 " />
-                <RHFTextField name="pAddressLine2" label="Permanent Address Line2 " />
-                <RHFTextField name="pCity" label="City " />
-                <RHFTextField name="pState" label="State " />
-                <RHFTextField name="pPincode" label="Pincode " />
+                <RHFAutocomplete
+                name="country"
+                label="Permanent Country"
+                options={options?.countryOptions || [] }
+                getOptionLabel={(option) => option.name}
+                onChnageAutoComplete={onChnageAutoComplete}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+
+              />
+                <RHFAutocomplete
+                name="state"
+                label="Permanent State"
+                options={options?.stateOptions || []}
+                getOptionLabel={(option) => option.name}
+                onChnageAutoComplete={onChnageAutoCompleteState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+              />
+               <RHFAutocomplete
+                name="city"
+                label="Permanent City"
+                options={options?.cityOptions || []}
+                getOptionLabel={(option) => option.name}
+                // onChnageAutoComplete={onChnageAutoCompleteState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+                sx={{caretColor:'#3B82F6'}}
+              />
+                <RHFTextField name="pAddressLine1" label="Permanent Address Line1" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="pAddressLine2" label="Permanent Address Line2" sx={{caretColor:'#3B82F6'}} />
+                {/* <RHFAutocomplete
+                name="state"
+                label="Resendtial State"
+                options={options?.countryOptions}
+                getOptionLabel={(option) => option.name}
+                
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+              /> */}
+               
+                
+                <RHFTextField name="pPincode" label="Pincode" type="number" maxLength={6}sx={{caretColor:'#3B82F6'}}  />
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Switch checked={isSameAsPermanent} onChange={()=>{setIsSameAsPermanent(!isSameAsPermanent)}} />
-                  <span>Same As Permanent Address</span>
+                  <Typography variant="h6" style={{ color: 'Black' }}>
+                    Same As Permanent Address
+                  </Typography>
                 </div>
                 { !isSameAsPermanent && <>
                 <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
                 <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
-                <RHFTextField name="rCity" label="Resendial City " />
-                <RHFTextField name="rState" label="Resendial State " />
-                <RHFTextField name="rPincode" label="Resendial Pincode" />
+                <RHFAutocomplete
+                name="rCountry"
+                label="Permanent Country"
+                options={options?.rcountryOptions || []}
+                getOptionLabel={(option) => option.name}
+                onChnageAutoCompletercountry={onChnageAutoCompletercountry}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+
+              />
+                <RHFAutocomplete
+                sx={{caretColor:'#3B82F6'}}
+                name="rState"
+                label="Resendtial State"
+                options={options?.rstateOptions || []}
+                getOptionLabel={(option) => option.name}
+                onChnageAutoCompleterState={onChnageAutoCompleterState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+              />
+               <RHFAutocomplete
+               sx={{caretColor:'#3B82F6'}}
+                name="rCity"
+                label="Resendtial City"
+                options={options?.rcityOptions || []}
+                getOptionLabel={(option) => option.name}
+                // onChnageAutoComplete={onChnageAutoCompleteState}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.name}>
+                    {option.name}
+                  </li>
+                )}
+
+              />
+                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
                 </>
                 }
            

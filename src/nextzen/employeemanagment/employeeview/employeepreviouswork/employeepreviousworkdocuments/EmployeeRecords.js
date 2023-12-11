@@ -1,10 +1,11 @@
 import React, { useEffect,useState } from 'react'
 import PropTypes from 'prop-types';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { Card, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import FilesGrid from '../../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
+import Iconify from 'src/components/iconify';
 
 const styles = {
   container: {
@@ -25,13 +26,13 @@ const styles = {
 
 import FileEditCreate from 'src/nextzen/global/fileUploads/FileEditCreate';
 
-const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
+const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) => {
   const [endPointTopass,setEndpointTOPass]=useState("dcocs")
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP5",
-      "employeeId":employeeIDForApis,
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "employeeID":employeeIDForApis,
       mainRecordID:docsData?.id,
       documents:[ {
           fileType:'',
@@ -41,9 +42,10 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
     const [documents,setDocuments]=useState()
     useEffect(()=>{
       if(docsData){
-        console.log(docsData,'docsdata')
+        //console.log(docsData,'docsdata')
         //setDocumentsData(docsData);
-        setDocuments(docsData.documents)
+        console.log(docsData,'docsData.documents')
+        setDocuments(docsData)
         setEndpointTOPass(endpoint)
       }
     },[docsData])
@@ -61,7 +63,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
         console.log(endPointTopass,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP5",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           "employeeId": employeeIDForApis,
           documents:[documents[dataIndex]]
         }
@@ -100,7 +102,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
         
 
         let data = JSON.stringify({
-            "companyId": "COMP5",
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "employeeId": employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
@@ -123,7 +125,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP5",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               "employeeId": "NEWC19",
             }
             setDocumentsData(obj)
@@ -137,11 +139,15 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
     const [isHovered, setHovered] = React.useState(false);
 
     // const docType=["Aadhar Card","Pan Card","Passport"]
+    useEffect(()=>{
+    console.log(employeeIDForApis,'employeeIDForApis')
+
+    },[employeeIDForApis])
 
   return (
     <>
     {/* <DocumentsUpload open={open} documents={documents} onHandleClose={handeleClose} /> */}
-    <FileEditCreate open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint={endPointTopass} type={type}/>
+    <FileEditCreate employeeIDForApis={employeeIDForApis} open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint={endPointTopass} type={type}/>
 
     {/* <Grid container alignItems="center" justifyContent="flex-end" >
     <Button onClick={()=>{
@@ -151,13 +157,17 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis}) => {
 
     </Grid> */}
 
-<div style={styles.container}>
+<Grid  style={styles.container}>
       <Typography variant="body1">Documents</Typography>
-      <div style={styles.tooltip} onClick={()=>{
+      <Iconify icon="lets-icons:add-duotone"
+      sx={{cursor:'pointer'}}
+      width={24} onClick={()=>{
         setType('addDocs')
         setOpen(true)
-      }}>+</div>
-    </div>
+      }} />
+
+     
+    </Grid>
 
 
     {documents && <FilesGrid onEdit={handleEdit} onDelete={handleDelete} dataFiltered={documents} endpoint={endPointTopass} />}
@@ -173,6 +183,7 @@ EmployeeRecords.PropTypes={
     docsData: PropTypes.obj,
     docType:PropTypes.array,
     endpoint:PropTypes.string,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
     
 }

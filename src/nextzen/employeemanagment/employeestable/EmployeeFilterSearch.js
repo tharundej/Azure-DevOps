@@ -36,12 +36,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import formatDateToYYYYMMDD from '../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
 
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
 import { useRouter } from 'src/routes/hooks';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+
 
 
 const defaultFilters = {
@@ -82,6 +84,43 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+
+  const [userdropDownOptions,setUserDropDownOptions]=useState({})
+  const [userdropDownvalue,setUserDropDownValue]=useState({})
+  const [open,setOpen]=useState(false);
+  const [openDateRange,setOpendateRange]=useState(false);
+
+
+  useEffect(() => {
+    if(open){
+    const fetchLocations = async () => {
+     
+      try {
+        const locations = await ApiHitLocations();
+        const roles= await ApiHitRoles()
+        const manager=await ApiHitManager()
+
+        const arr={
+          locationsOptions:locations,
+         
+          rolesOptions:roles,
+          managerOptions:manager
+
+
+        }
+        setUserDropDownOptions(arr);
+
+      
+       
+        setLocations(locations);     
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+  
+    fetchLocations();
+  }
+  }, [open]);
 
   const router=useRouter();
   const theme = useTheme();
@@ -211,12 +250,12 @@ const [stateOptions,setOptions]=useState([])
   const [datesData,setDatesData]=useState([])
 
   const [dates,setDates]=useState({
-    joiningDateFrom:undefined,
-    joiningDateTo:undefined,
-    offerDateFrom:undefined,
-    offerDateTo:undefined,
-    fofferDateFrom:undefined,
-    fofferDateTo:undefined
+    joiningDateFrom:"",
+    joiningDateTo:"",
+    offerDateFrom:"",
+    offerDateTo:"",
+    fofferDateFrom:"",
+    fofferDateTo:""
   })
 
   function formDateDataStructure(){
@@ -228,8 +267,8 @@ const [stateOptions,setOptions]=useState([])
        datesFiledArray.forEach((item,index)=>{  
          if(dates[item?.from]!==undefined){
                 arr1[item.field]={
-                from:formatDateToYYYYMMDD(dates[item?.from]),
-              to:formatDateToYYYYMMDD(dates[item?.to])
+                from:(dates[item?.from]),
+                  to:(dates[item?.to] || "")
               }
        
            }
@@ -239,7 +278,7 @@ const [stateOptions,setOptions]=useState([])
 
             arr1[item.field]={
               from:"",
-            to:""
+                to:""
             }
            }
          
@@ -301,8 +340,7 @@ const [stateOptions,setOptions]=useState([])
   }
   
 
-    const [open,setOpen]=useState(false);
-    const [openDateRange,setOpendateRange]=useState(false);
+
     const handleClickOpen=()=>{
       setOpen(true);
     }
@@ -382,9 +420,23 @@ const [stateOptions,setOptions]=useState([])
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-      //console.log(data,';;;')
+      console.log(data,userdropDownvalue,'for filterss')
+      data.fPDesignation=userdropDownvalue?.desginationValue?.designationID.toString() || "";
+
+      data.fPdepartmentName=userdropDownvalue?.departmentValue?.departmentID.toString() || "";
+      
+
+      data.fPDesignationGrade=userdropDownvalue?.desginationGradeValue?.desginationGradeID.toString() || "";
+      data.fWorkingLocation=userdropDownvalue?.locationValue?.locationID.toString() || "";
+
+      console.log(data,userdropDownvalue,'for filterss')
+
+      
+      
+      
       filterData(data);
       // call parent function and pass it
+      handleClickClose()
       
       
     }
@@ -401,17 +453,18 @@ const [stateOptions,setOptions]=useState([])
   
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+          <Grid container alignItems="center" marginBottom='10px' >
+          <Grid md={8} xs={12} lg={8} item>
+  <TextField
+    placeholder='Search....' 
+    fullWidth
+    onChange={e => { handleSearch(e) }}
+   
+    size="small"
+  />
+</Grid>
 
-            <TextField placeholder='Search....' 
-            fullWidth
-             onChange={e=>{handleSearch(e)}}
-
-            />
-            </Grid>
-
-            <Grid md={4} xs={4} item>
+            <Grid md={4} xs={12} lg={4} item>
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            
       <Grid item>
@@ -420,7 +473,7 @@ const [stateOptions,setOptions]=useState([])
         variant="contained" 
       onClick={()=>{handlicClickOnboardform()}}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
 
 
       </Grid>
@@ -439,13 +492,17 @@ const [stateOptions,setOptions]=useState([])
          </Grid>
      
       <Dialog
+      fullWidth
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
 
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        <DialogTitle sx={{textAlign:"start",paddingBottom:0,paddingTop:2}}>Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -455,49 +512,56 @@ const [stateOptions,setOptions]=useState([])
 
           <Grid>
 
+         
+
                <Grid>
+
+
             <Typography>Joining Date</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fjoiningDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fjoiningDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fjoiningDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fjoiningDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
+            <Grid container direction="row" spacing={2}>
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={6}>
+        
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+              
+              value={dates?.fjoiningDateFrom ? dayjs(dates?.fjoiningDateFrom).toDate() : null}
+              
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                 
+                  fjoiningDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+         
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={6}>
+        
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+             
+              value={dates?.fjoiningDateTo ? dayjs(dates?.fjoiningDateTo).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                 
+                  fjoiningDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+          
+      </Grid>
+          </Grid>
+            </Grid>
 
 
            <Grid marginTop={2}>
@@ -505,44 +569,47 @@ const [stateOptions,setOptions]=useState([])
             <Typography>DOB</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fDOBDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fDOBDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fDOBDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fDOBDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
+            <Grid container direction="row" spacing={2}>
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={6}>
+        
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+              
+              value={dates?.fDOBDateFrom ? dayjs(dates?.fDOBDateFrom).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                
+                  fDOBDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+         
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={6}>
+       
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+            
+              value={dates?.fDOBDateTo ? dayjs(dates?.fDOBDateTo).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                 
+                  fDOBDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+        
+      </Grid>
+    </Grid>
 
              
              </Grid>
@@ -551,44 +618,47 @@ const [stateOptions,setOptions]=useState([])
             <Typography>Offer Date</Typography>
      
 
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="From Date"
-                      value={dates?.fofferDateFrom}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fofferDateFrom: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="To Date"
-                      value={dates?.fofferDateTo}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        setDates((prev) => ({
-                          ...prev,
-                          fofferDateTo: newValue,
-                        }));
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                </Grid>
-                </Grid>
+            <Grid container direction="row">
+      {/* From Date */}
+      <Grid item xs={12} md={12} lg={6}>
+       
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="From Date"
+             
+              value={dates?.fofferDateFrom ? dayjs(dates?.fofferDateFrom).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                  
+                  fofferDateFrom: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+        
+      </Grid>
+
+      {/* To Date */}
+      <Grid item xs={12} md={12} lg={6}>
+        
+            <DatePicker
+              sx={{ width: '100%', paddingLeft: '3px' }}
+              label="To Date"
+            
+              value={dates?.fofferDateTo ? dayjs(dates?.fofferDateTo).toDate() : null}
+              defaultValue={dayjs(new Date())}
+              onChange={(date) => {
+                setDates((prev) => ({
+                  ...prev,
+                 
+                  fofferDateTo: date ? dayjs(date).format('YYYY-MM-DD') : null
+                }));
+              }}
+            />
+         
+      </Grid>
+    </Grid>
 
              
              </Grid>
@@ -603,7 +673,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={6}>
+                  <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -628,8 +698,8 @@ const [stateOptions,setOptions]=useState([])
                 </Select>
               </FormControl>
                    </Grid>
-
-                   <Grid marginTop="10px" xs={12} md={6}>
+                    
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select
@@ -655,7 +725,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Marital Status</InputLabel>
                 <Select
@@ -682,7 +752,7 @@ const [stateOptions,setOptions]=useState([])
                    </Grid>
 
                    {/* Blood Group */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Blood Group</InputLabel>
                 <Select
@@ -708,7 +778,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
                    {/* State */}
-                   <Grid marginTop="10px" xs={12} md={6}>
+                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -735,123 +805,268 @@ const [stateOptions,setOptions]=useState([])
                    </Grid>
 
 
-                   {/* departmentName */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Department Name</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-departmentName"
-                  id="demo-multiple-departmentName"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPdepartmentName')}
-                  input={<OutlinedInput label="Department Name" />}
-                  MenuProps={MenuProps}
-                >
-                  {departmentNameOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-
-                   {/* fPDesignation */}
-
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Designation</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPDesignation"
-                  id="demo-multiple-fPDesignation"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPDesignation')}
-                  input={<OutlinedInput label="Designation" />}
-                  MenuProps={MenuProps}
-                >
-                  {designationOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
-                   {/* fPDesignationGrade */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Designation Grade</InputLabel>
-                <Select
                   
-                  fullWidth
-                  labelId="demo-multiple-name-fPDesignationGrade"
-                  id="demo-multiple-fPDesignationGrade"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPDesignationGrade')}
-                  input={<OutlinedInput label="Designation Grade" />}
-                  MenuProps={MenuProps}
-                >
-                  {designationGradeOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
 
-                   {/* fWorkingLocation */}
-                   <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Working Location</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fWorkingLocation"
-                  id="demo-multiple-fWorkingLocation"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fWorkingLocation')}
-                  input={<OutlinedInput label="Working Location" />}
-                  MenuProps={MenuProps}
-                >
-                  {WorkingLocationOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
+                     <Grid  >
+              
+                  <Grid item xs={12} md={12} lg={6} marginTop="10px">
+              
+                <Autocomplete
+                  disablePortal
+                  id="locationsOptions"
+                  options={userdropDownOptions?.locationsOptions || []}
+                  value={userdropDownvalue?.locationValue}
+                  getOptionLabel={(option) => option?.locationName}
+                  onChange={async(e, newvalue) => {
+                  
+                    var newArr = { ...userdropDownvalue };
+                    newArr.locationValue=newvalue;
+                    newArr.departmentValue=undefined;
+                    newArr.desginationValue=undefined
+                    newArr.desginationGradeValue=undefined
+                    
+                   
+                   
+                    try{
+                      const deptObj={
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+                        locationID:newvalue?.locationID
+                      }
+                      const department=await ApiHitDepartment(deptObj);
+                      var optionsArr={...userdropDownOptions};
+                      optionsArr.departmentOptions=department;
+                      optionsArr.desginationGradeOptions=[];
+                      optionsArr.desginationOptions=[];
+                      console.log(optionsArr,'optionsArroptionsArr')
+                      setUserDropDownOptions(optionsArr)
+
+                    }
+                    catch(error){
+                      
+                    }
+
+                   
+                    
+                    setUserDropDownValue(newArr)
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Location"
+                  style={{  width: '100%' }} />}
+                />
+                      </Grid>
+                     </Grid>
+                    
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+                {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
+                  <Autocomplete
+                    disablePortal
+                    id="departmentName"
+                    options={userdropDownOptions?.departmentOptions || []}
+
+                    value={userdropDownvalue?.departmentValue}
+
+                    getOptionLabel={(option) => option.departmentName}
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.departmentValue=newvalue;
+                      newArr.desginationValue=undefined;
+                      newArr.desginationGradeValue=undefined
+                      
+                      console.log(newArr)
+                     
+                      try{
+                        const desgObj={
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+                          departmentID:newvalue?.departmentID
+                        }
+                        const desgination=await ApiHitDesgniation(desgObj);
+                        var optionsArr={...userdropDownOptions};
+                        optionsArr.desginationOptions=desgination;
+                        optionsArr.desginationGradeOptions=[];
+                        
+                       
+                        setUserDropDownOptions(optionsArr)
+
+                      }
+                      catch(error){
+                        
+                      }
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Department"
+                    style={{  width: '100%' }} />}
+                  />
+                </Grid>
+                     
+
+                     <Grid container >
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+                 
+                  <Autocomplete
+                    disablePortal
+                    id="Desgination"
+                    options={userdropDownOptions?.desginationOptions  || []}
+                    value={userdropDownvalue?.desginationValue}
+                    getOptionLabel={(option) => option.designationName}
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.desginationValue=newvalue;
+                    
+                      newArr.desginationGradeValue=undefined
+                      
+                      console.log(newArr)
+                     
+                      try{
+                        const desgGradeObj={
+                          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+                          desginationID:newvalue?.desginationID
+                        }
+                        const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
+                        var optionsArr={...userdropDownOptions};
+                        optionsArr.desginationGradeOptions=desdesginationGradegination;
+                        
+                        
+                       
+                        setUserDropDownOptions(optionsArr)
+
+                      }
+                      catch(error){
+                        
+                      }
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Desgination"
+                    style={{  width: '100%' }} />}
+                  />
+                </Grid>
+                      </Grid>
+
+                      <Grid container >
+                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+                
+                  <Autocomplete
+                    disablePortal
+                    id="DesginationGrade"
+                    options={userdropDownOptions?.desginationGradeOptions  || []}
+                    value={userdropDownvalue?.desginationGradeValue}
+                    getOptionLabel={(option) => option.designationGradeName}
+
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.desginationGradeValue=newvalue;
+                    
+                    
+                      
+                    
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="DesginationGrade"
+                    style={{ width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container >
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
+                
+                  <Autocomplete
+                    disablePortal
+                    id="Role"
+                    options={userdropDownOptions?.rolesOptions  || []}
+                    value={userdropDownvalue?.roleValue}
+                    getOptionLabel={(option) => option?.roleName}
+
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.roleValue=newvalue;
+                    
+                    
+                      
+                    
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Role"
+                    style={{ width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
+
+
+              <Grid container >
+                <Grid item xs={12} md={12} lg={6} marginTop="10px">
+                
+                  <Autocomplete
+                    disablePortal
+                    id="manager"
+                    options={userdropDownOptions?.managerOptions  || []}
+                    value={userdropDownvalue?.managerValue}
+                    getOptionLabel={(option) => option?.managerName}
+
+                    onChange={async(e, newvalue) => {
+                    
+                      var newArr = { ...userdropDownvalue };
+                      newArr.managerValue=newvalue;
+                    
+                    
+                      
+                    
+
+                     
+                      
+                      setUserDropDownValue(newArr)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Manager"
+                    style={{  width: '100%' }} />}
+                  />
+                </Grid>
+              </Grid>
                 </Grid>
                </Grid>
+
+               
 
 
            </Grid>
          </DialogContent>
-         <Button onClick={()=>{handleApply()}}>Apply</Button>
+         <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
+         <Button onClick={()=>{
+          setDates({
+            joiningDateFrom:"",
+            joiningDateTo:"",
+            offerDateFrom:"",
+            offerDateTo:"",
+            fofferDateFrom:"",
+            fofferDateTo:""
+          });
+
+
+          
+         }}>Reset</Button>
+         <Button 
+         sx={{backgroundColor:'#3B82F6',marginLeft:'5px'}}
+         onClick={()=>{handleApply()}}>Apply</Button>
+         
+         </Grid>
    
     </Dialog>
     </>

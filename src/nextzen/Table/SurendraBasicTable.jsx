@@ -1,4 +1,4 @@
-
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import isEqual from 'lodash/isEqual';
@@ -124,6 +124,9 @@ import axios from 'axios';
 import UserTableRow from './components/UserTableRow';
 
 import Style from "../styles/Style.module.css";
+import { baseUrl } from '../global/BaseUrl';
+
+import Box from '@mui/material/Box';
 
  
 
@@ -132,6 +135,7 @@ import Style from "../styles/Style.module.css";
 import SearchFilter from '../filterSearch/FilterSearch';
 import TimeSearchFilter from '../TimeSheetManagement/TimeFilter';
 import ClaimSearchFilter from '../claims/ClaimSearchFilter';
+import TimeSheetSearchFilter from '../timesheet/components/TimeSheetSearchFilter';
 
 const defaultFilters = {
 
@@ -151,7 +155,7 @@ const defaultFilters = {
 
  
 
-const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload}) => {
+const SurendraBasicTable = ({ endpoint,onclickActions, defaultPayload ,headerData, rowActions,bodyData,filterName,button,buttonFunction, filterContent,dialogPayload,count}) => {
 
   // const popover = usePopover();
 
@@ -221,7 +225,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
     getTableData(initialDefaultPayload);
     
-  }, [initialDefaultPayload])
+  }, [initialDefaultPayload,count])
 
  
 
@@ -247,7 +251,9 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // http://192.168.1.26:3001/erp/getAllClaims,
-      url: `http://192.168.1.199:3001/erp/${endpoint}`,
+      // url: `http://192.168.1.199:3001/erp/${endpoint}`,
+      url: baseUrl+`${endpoint}`,
+
       headers: {
 
         // 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE'
@@ -362,7 +368,7 @@ const [filterHeaders, setFilterHeaders]=useState([])
 
  
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 30 : 72;
 
  
 
@@ -401,6 +407,25 @@ const [filterHeaders, setFilterHeaders]=useState([])
     console.log(event)
 
   }
+  const getRowActionsBasedOnStatus = (row) => {
+    if (
+      row?.status === 'pending' ||
+      row?.status === '' ||
+      row?.status === 'Pending' ||
+      row?.status === 'Active' ||
+      row?.status === 'InActive' ||
+      row?.status === 'active' ||
+      row?.status === 'Upcoming' ||
+      row?.status === 'Ongoing'  ||
+      row?.status === 'On Hold'  
+    ) {
+      return rowActions;
+    } else if (!row?.status || row?.status === undefined) {
+      return rowActions;
+    } else {
+      return null;
+    }
+  };
 
  
 
@@ -639,13 +664,20 @@ const [filterHeaders, setFilterHeaders]=useState([])
   }
 
   // sort 
+ 
   
 const [sortColumn, setSortColumn]=useState("")
+
+
+// useEffect(()=>{
+//   getTableData(payload)
+// },[sortColumn])
 
 
   const handleSort = (field,order) => {
   // console.log(order,"orderrrrrrrrrrrrr")
   // console.log(field,"for sorting .....")
+  
 
   const payload = initialDefaultPayload;
 
@@ -668,7 +700,42 @@ const [sortColumn, setSortColumn]=useState("")
   getTableData(payload)
 };
 
-  
+
+
+
+// file view and download
+const handleButtonClick = (file) => {
+  // Replace 'YOUR_SERVER_BASE_URL' and 'YOUR_FILE_PATH' with the actual server base URL and file path
+  const serverBaseUrl = 'http://192.168.1.199:3001/erp';
+  const filePath = file;
+
+  // Encode the file path component
+  const encodedFilePath = encodeURIComponent(filePath);
+
+  // Construct the full file URL
+  const fileUrl = `${serverBaseUrl}/servefile?filepath=${encodedFilePath}`;
+
+  // Open the file URL in a new browser tab or window
+  window.open(fileUrl, '_blank');
+};
+
+// table expanded
+const [expandedRowId, setExpandedRowId] = useState(null);
+
+const handleExpandClick = (rowId, update , rowIndex) => {
+  console.log(expandedRowId,"klkl",rowId)
+  setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
+};
+
+
+const [index, setIndex]=useState(""); // index setting
+{console.log(index,"indexindex",expandedRowId)}
+
+// table expansion Icon code
+const IconOpen =()=>{
+  setOpen(!open)
+}
+
   return (
 
     <>
@@ -678,6 +745,7 @@ const [sortColumn, setSortColumn]=useState("")
      
 
       <Container className={Style.MuiContainerRoot} maxWidth={settings.themeStretch ? false : 'lg'}>
+         
       {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFilterOptions} searchData={handleFilterSearch}  
      addButton={button}  buttonFunction={buttonFunction} 
      dialogConfig={filterContent} dialogPayload={dialogPayload}
@@ -734,7 +802,7 @@ const [sortColumn, setSortColumn]=useState("")
 
             <Scrollbar>
 
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }} >
+              <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
@@ -793,9 +861,10 @@ const [sortColumn, setSortColumn]=useState("")
 
                      
 
-                      .map((row) => (
+                      .map((row, index) => (
 
                         <>
+                          <React.Fragment key={row.id}>
 
                         <UserTableRow
 
@@ -812,11 +881,49 @@ const [sortColumn, setSortColumn]=useState("")
                           onEditRow={(event) => { handleEditRow(row, event) }}
 
                           headerContent={TABLE_HEAD}
+                          onHandleEditRow={(row, clickedElementId) => {
+                            if (clickedElementId === 'reciept') {
+                              handleButtonClick(row.reciept);
+                              console.log(row, "iddd");
+                            }
+                            else if (clickedElementId === 'claimType') {
+                              setIndex(index);
+                              handleExpandClick(row.expenseClaimId, null, index)
+                              // console.log(row, "iddd");
+                            }
+                          }}
 
-                          rowActions={rowActions || []}
+                          rowActions={getRowActionsBasedOnStatus(row)|| []}
 
+                          // expandable
+          // onExpandClick={() => handleExpandClick(index)}
+          // isExpanded={expandedRowId === index}
+           
                         />
-
+{console.log(expandedRowId,row.id,row,"table expanded")}
+                        
+         {/* Expanded Row */}
+         {expandedRowId === index && (
+                    <TableRow>
+                      
+                      <TableCell colSpan={TABLE_HEAD.length + 1}>
+                        <Box margin={1}>
+                          <Typography variant="h6" gutterBottom component="div">
+                            Expanded Content for :
+                          </Typography>
+                          {/* Add your expanded row content here */}
+                          {/* For example, display additional information about the user */}
+                          <Typography>
+                            Employee ID: 
+                          </Typography>
+                          <Typography>
+                            Department:
+                          </Typography>
+                          {/* Add more fields as needed */}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )}
 {/* {tableData.map((headCell) => (
       <TableCell key={headCell.id}>
         {row[headCell.id] || '-'}
@@ -828,229 +935,67 @@ const [sortColumn, setSortColumn]=useState("")
                        
 
  
-
+</React.Fragment>
  
 
                         </>
 
                       ))}
-                      
-
-       
-
- 
-
- 
-
                     <TableNoData notFound={notFound} />
-
                   </TableBody>
-
-             
-
               </Table>
 
             </Scrollbar>
-
           </TableContainer>
-
- 
-
           <TablePaginationCustom
-
             count={totalRecordsCount}
-
             // count={countValue}
-
-           
-
             page={initialDefaultPayload?.page}
-
             rowsPerPage={initialDefaultPayload?.count}
-
             // rowsPerPage={25}
-
             onPageChange={onPageChangeHandeler}
-
             onRowsPerPageChange={onChangeRowsPerPageHandeler}
-
-          dense={table.dense}
-
+          // dense={table.dense}
           onChangeDense={table.onChangeDense}
-
           />
-
-          {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
-
-            <Grid item xs={1.5} >
-
-              <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>
-
-                   
-
-            </Grid >
-
-            <Grid xs={10.5} item container flex justifyContent="flex-end" style={{ marginLeft: 'auto' }} >
-
-            <Pagination
-
-            count={Math.ceil(tableData.length / pageSize)}
-
-            // count={10}
-
-            page={page}
-
-            onChange={handleChange}
-
-            shape="rounded"
-
-            />
-
- 
-
-            </Grid>
-
-           
-
-            </Grid> */}
-
         </Card>
-
       </Container>
-
- 
-
-     
-
     </>
 
   );
 
 };
 
- 
-
-// function applyFilter({ inputData, comparator, filters }) {
-
-//   console.log(inputData, "inputData checkingggggggggggg")
-
-//   const { name, status, role } = filters;
-
- 
-
-//   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
- 
-
-//   stabilizedThis?.sort((a, b) => {
-
-//     const order = comparator(a[0], b[0]);
-
-//     if (order !== 0) return order;
-
-//     return a[1] - b[1];
-
-//   });
-
- 
-
-//   inputData = stabilizedThis?.map((el) => el[0]);
-
- 
-
-//   if (name) {
-
-//     inputData = inputData?.filter(
-
-//       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-
-//     );
-
-//   }
-
- 
-
-//   if (status !== 'all') {
-
-//     inputData = inputData?.filter((user) => user?.status === status);
-
-//   }
-
- 
-
-//   if (role.length) {
-
-//     inputData = inputData?.filter((user) => role?.includes(user.role));
-
-//   }
-
- 
-
-//   return inputData;
-
-// }
-
- 
-
 SurendraBasicTable.propTypes = {
-
   endpoint: PropTypes.string,
-
 };
-
- 
-
 SurendraBasicTable.propTypes = {
-
   defaultPayload: PropTypes.object,
-
 };
-
 SurendraBasicTable.propTypes = {
-
   headerData: PropTypes.any,
-
 };
-
- 
-
 SurendraBasicTable.propTypes = {
-
   bodyData: PropTypes.any,
-
 };
-
 SurendraBasicTable.propTypes = {
-
    rowActions: PropTypes.func
-
 };
 SurendraBasicTable.propTypes = {
-
   buttonFunction: PropTypes.func
-
 };
 SurendraBasicTable.propTypes = {
-
   filterContent: PropTypes.any
-
 };
-
 SurendraBasicTable.propTypes = {
-
   filterName: PropTypes.any
-
 };
 SurendraBasicTable.propTypes = {
-
   button: PropTypes.any
-
 };
-
 SurendraBasicTable.propTypes = {
   dialogPayload: PropTypes.any
 };
-
 SurendraBasicTable.propTypes = {
   onclickActions: PropTypes.any
 };

@@ -1,12 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import TextField from '@mui/material/TextField';
-
-import Chip from '@mui/material/Chip';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,75 +13,59 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import axios from 'axios';
 // utils
+import { fData } from 'src/utils/format-number';
 // routes
+import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // assets
+import { countries } from 'src/assets/data';
 // components
+import Label from 'src/components/label';
+
+import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
   RHFUploadAvatar,
   RHFAutocomplete,
-  RHFSelect,
 } from 'src/components/hook-form';
+import axios from 'axios';
 
-
-import { Autocomplete } from '@mui/lab';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
-import { Button } from '@mui/material';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
-export default function ShiftSwapForm({ currentUser }) {
+export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
-    // FromShiftGroup_Name1: dayjs(new Date()),
-    // ToShiftGroup_Name: dayjs(new Date()),
+    // end_date: dayjs(new Date()),
     start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
+    // offer_date: dayjs(new Date()),
   });
   const router = useRouter();
+  const {user}= useContext(UserContext)
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    Select_Employe: Yup.string(),
-    FromShiftGroup_Name: Yup.string(),
-    ToShiftGroup_Name: Yup.string(),
-    FromShiftGroup_Name1: Yup.string().required('First Name is Required'),
-    Select_Employe1: Yup.string(),
-    ToShiftGroup_Name1: Yup.string(),
-    start_date: Yup.string(),
-    end_date: Yup.string(),
-
-
+   
+    comment: Yup.string(),
+   
   });
 
-  const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
-  const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
-  const [currentEmployeSwapData1,setCurrentEmployeSwapData1 ] = useState({})
-  const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
-  const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
-  const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
-  const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   const defaultValues = useMemo(
     () => ({
-
-      Select_Employe: currentUser?.Select_Employe || '',
-      FromShiftGroup_Name: currentUser?.FromShiftGroup_Name || '',
-      ToShiftGroup_Name: currentUser?.ToShiftGroup_Name || '',
-      FromShiftGroup_Name1: currentUser?.FromShiftGroup_Name1 || '',
-      Select_Employe1: currentUser?.Select_Employe1 || '',
-      ToShiftGroup_Name1: currentUser?.ToShiftGroup_Name1 || '',
-      start_date: currentUser?.start_date || '',
-      end_date: currentUser?.end_date || '',
-
-
-
+   
+      
+      comment: currentUser?.comment || '',
+   
     }),
     [currentUser]
   );
@@ -107,100 +88,174 @@ export default function ShiftSwapForm({ currentUser }) {
 
   const values = watch();
 
+   const [newShift,setnewShift]= useState(false)
+   const [curentShift,setcurentShift]= useState(false)
+   const [shiftName,setShiftNames]=useState([])
+  const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
+  const [ShiftGroupName,setShiftGroupName] =useState([])
+  const [ShiftName,setShiftName] =useState([]) 
+  const [currentEmployeSwapData,setCurrentEmployeSwapData ] = useState({})
+  const [currentShiftGroupData,setcurrentShiftGroupData ] = useState({})
+  const [FromShiftGroup_Name1,setFromShiftGroup_Name1]= useState('')
+  const [ToShiftGroup_Name,setToShiftGroup_Name]= useState('')
+  console.log("🚀 ~ file: ShiftSwapForm.jsx:121 ~ ShiftSwapForm ~ ToShiftGroup_Name:", ToShiftGroup_Name)
+  const [FromShiftGroup_Name,setFromShiftGroup_Name]= useState('')
+  const [ToShiftGroup_Name1,setToShiftGroup_Name1]= useState('')
   useEffect(() => {
+    getShiftGroupName()
     getEmployeSwap()
+    // getShiftName()
   }, [])
-const Options = [
-  {id :"2" , name:"shift A"},
-  {id :"3" , name:"shift B"},
-  {id :"4" , name:"shift C"},
-]
+  const getEmployeSwap = async ( toGroup,fromGroup) => {
+  // if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
 
-
-  // Get Employe List 
-  const getEmployeSwap = async () => {
-
-    // const data = JSON.stringify({
-    //   "company_id": "COMP2",
-    //   "from_shift_group": 2,
-    //   "to_shift_group": 4,
-    //   "search": ""
-    // });
-    // // const endpoint = 'GetSwpEmployee';
-    // const config = {
-    //   method: 'post',
-    //   maxBodyLength: Infinity,
-    //   url: `${instance}${'/GetSwapEmployee'}`,
-    //   // url:' http://192.168.1.79:8080/appTest/GetSwapEmployee',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   data, // Assuming you have a variable named 'data' defined earlier
-    // };
-
-    // axios.request(config)
-    //   .then((response) => {
-    //     console.log(JSON.stringify(response.data));
-    //     setEmployeSwapDetails(response.data.Data)
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    try{
+   
+   try{
    const data = JSON.stringify({
-      "company_id": "COMP2",
-      "from_shift_group": 2,
-      "to_shift_group": 3,
+      "company_id": (user?.companyID)?user?.companyID:'',
+        "supervisor_id" :(user?.employeeID)?user?.employeeID:'',
       "search": ""
     });
         const response = await instance.post('/GetSwapEmployee',data);
         setEmployeSwapDetails(response.data.Data)
+        
         console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
       }catch(error){
     console.error("Error", error);
     throw error;
       }
+    // }
+  }
+  const getEmployeSwap1 = async ( toGroup,fromGroup) => {
+  if(fromGroup?.employeeShiftGroupId !== undefined && toGroup?.employeeShiftGroupId !== undefined){
+
+   
+   try{
+   const data = JSON.stringify({
+      "company_id":(user?.companyID)?user?.companyID:'',
+      "from_shift_group":parseInt (fromGroup?.employeeShiftGroupId),
+      "to_shift_group":parseInt (toGroup?.employeeShiftGroupId),
+      "search": ""
+    });
+        const response = await instance.post('/GetSwapEmployee',data);
+        setEmployeSwapDetails(response.data.Data)
+        
+        console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+      }catch(error){
+    console.error("Error", error);
+    throw error;
+      }
+    }
+  }
+  // const getShiftgroupName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:localStorage.getItem('companyID'),
+       
+  //     };
+  //     const response = await instance.post('/getShiftGroupName',data);
+  //     setShiftGroupName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+  const getShiftGroupName= async ()=>{
+    try{
+    const  data= {
+      companyId:(user?.companyID)?user?.companyID:'',
+      locationId:(user?.locationID)?user?.locationID:'',
+      supervisorId:(user?.employeeID)?user?.employeeID:'',
+      };
+      const response = await instance.post('/getShiftGroupName',data);
+      setShiftGroupName(response.data.data)
+      console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+    }catch(error){
+  console.error("Error", error);
+  throw error;
+    }
   }
 
+
+
+  // const getShiftName= async (newvalue)=>{
+  //   try{
+  //   const  data= {
+      
+  //     companyId:"COMP2",
+  //     locationId:32
+       
+  //     };
+  //     const response = await instance.post('/getShiftConfig',data);
+  //     setShiftName(response.data.data)
+  //     console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
+  //   }catch(error){
+  // console.error("Error", error);
+  // throw error;
+  //   }
+  // }
+
   const onSubmit = handleSubmit(async (data) => {
-    console.log("🚀 ~ file: ShiftSwapForm.jsx:166 ~ onSubmit ~ data:")
-    // try {
-    //   const data = {
-    //     employee_1: {
-    //       employee_shift_swap_id: FromShiftGroup_Name1,
-    //       new_shift_group_id: ToShiftGroup_Name,
-    //       employee_id: currentEmployeSwapData.employee_shift_swap_id,
-    //     },
-    //     employee_2: {
-    //       employee_shift_swap_id: FromShiftGroup_Name,
-    //       new_shift_group_id: ToShiftGroup_Name1,
-    //       employee_id: currentEmployeSwapData1.employee_shift_swap_id,
-    //     },
-    //     company_id: "COMP2",
-    //     start_date: datesUsed.start_date,
-    //     end_date: datesUsed.end_date,
-    //   };
-  
-    //   const response = await instance.post('SwapShift', data1);
-  
-    //   console.log('success', response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    console.log('uyfgv');
+
+    try {
+    
+  // const data = {
+  //   "employee_1":{
+  //     "employee_shift_swap_id":parseInt (FromShiftGroup_Name1?.employeeShiftGroupId),
+  //     "new_shift_group_id":parseInt(ToShiftGroup_Name.employeeShiftGroupId),
+  //     "employee_id":   currentEmployeSwapData?.employee_shift_swap_id ? currentEmployeSwapData?.employee_shift_swap_id : '',
+  //   },
+  //   "employee_2":{
+  //     "employee_shift_swap_id":parseInt(FromShiftGroup_Name.employeeShiftGroupId),
+  //     "new_shift_group_id":parseInt(ToShiftGroup_Name1.employeeShiftGroupId),
+  //     "employee_id":  currentEmployeSwapData1?.employee_shift_swap_id ?  currentEmployeSwapData1?.employee_shift_swap_id :'',
+  //   },
+  //   "company_id":(user?.companyID)?user?.companyID:'',
+  //   "start_date": formatDateToYYYYMMDD (datesUsed.start_date),
+  //   "end_date":formatDateToYYYYMMDD (datesUsed.end_date),
+    
+  // }
+  const data ={
+    employee_id:currentEmployeSwapData?.employee_id,
+    approver_id: (user?.employeeID)? user?.employeeID : '',
+    company_id: (user?.companyID)? user?.companyID : '',
+    current_shift_group_id:parseInt(currentEmployeSwapData?.shift_group_id),
+    new_shift_group_id:parseInt(currentShiftGroupData?.employeeShiftGroupId),
+    start_date:formatDateToYYYYMMDD (datesUsed.start_date),
+    comment:Comment,
+  }
+      console.log(data, 'data111ugsghghh');
+
+      const response = await instance.post('/SwapShift', data).then(
+        (successData) => {
+          handleClose()
+          enqueueSnackbar(response.data.message,{variant:'success'})
+
+          console.log('sucess', successData);
+        },
+        (error) => {
+          enqueueSnackbar(error.message,{variant:'Error'})
+
+          console.log('lllll', error);
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   });
-  
+  // const Options = [
+  //   {id :"2" , name:"shift A"},
+  //   {id :"3" , name:"shift B"},
+  //   {id :"4" , name:"shift C"},
+  // ]
+  const [Comment,setComment]=useState('')
+  const handleComment = (event)=>{
+    setComment(event.target.value)
+    }
 
-  
-
-
-
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-  ];
   return (
     <div style={{ paddingTop: '20px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -209,7 +264,7 @@ const Options = [
 <Grid xs={12} md={12}>
   <Grid sx={{ padding: '8px' }}>
     <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here ...
+      Employee Shift Swap Here
     </Typography>
   </Grid>
   <Card sx={{ p: 3 }}>
@@ -223,108 +278,51 @@ const Options = [
       }}
     >
 
-      {/* <RHFSelect name="FromShiftGroup_Name1" label="From Shift Group Name ">
-
-        <option value="2" >2</option>
-
-        <option value="3" >3</option>
-
-        <option value="4" >4</option>
-
-      </RHFSelect> */}
-      <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
    
-   
-    setFromShiftGroup_Name1(newvalue.id
-      
-    );
-    
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-  // onChange={}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift Group Name " />}
-/>
 
 
-                      <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options || []} 
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name(newvalue.id
-      
-    );
-    
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
 
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-  // onChange={}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/>
+
+
+
 
       <Autocomplete
   disablePortal
   id="combo-box-demo"
   options={employeSwapDetails || []}
-  value={currentEmployeSwapData?.employee_shift_swap_id}
+  value={currentEmployeSwapData?.employee_id}
   getOptionLabel={(option) => option.employee_name}
   onChange={(e,newvalue)=>{
    
    
     setCurrentEmployeSwapData(newvalue
     )
-    // const obj={
-    //   // companyID:'COMP1',
-    //   project_id:newvalue?.project_id
-    // }
-
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+    setcurentShift(true)
  
   }}
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
   renderInput={(params) => <TextField {...params} label="Select Employe" />}
+/>
+      <Autocomplete
+  disablePortal
+  id="combo-boxSelectshift"
+  options={ShiftGroupName || []}
+  value={currentShiftGroupData?.employeeShiftGroupId}
+  getOptionLabel={(option) => `${option.shiftGroupName} (${option.startTime} - ${option.end_Time})`}
+  onChange={(e,newvalue)=>{
+   
+   
+    setcurrentShiftGroupData(newvalue
+    )
+    setnewShift(true)
+ 
+  }}
+  sx={{
+    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+  }}
+  renderInput={(params) => <TextField {...params} label="To Shift Name" />}
 />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
@@ -341,168 +339,219 @@ const Options = [
             }}
           />
         </DemoContainer>
-      </LocalizationProvider>       
-      
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            sx={{ width: '100%', paddingLeft: '3px' }}
-            label="End Date"
-            value={datesUsed?.end_date}
-            defaultValue={dayjs(new Date())}
-            onChange={(newValue) => {
-              setDatesUsed((prev) => ({
-                ...prev,
-                end_date: newValue,
-              }));
-            }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
+      </LocalizationProvider>   
 
-      <br />
-      <Stack>
-        <Typography>
-          Select second Employe To Swap...
-        </Typography>
-      </Stack>
-      <br />
-      {/* <RHFSelect name="FromShiftGroup_Name" label="To Shift GroupName">
+      <RHFTextField  name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
+  { curentShift &&    <Grid>
+      <Typography >
+        Current Shift Details
+        </Typography> 
+        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+        <ListItem
+        disablePadding
+        sx={{
+          border: '0px solid #ccc', // Add your border style
+          // borderRadius: '8px',    // Add your border radius
+          // padding: '8px',          // Add your padding
+          marginBottom: '8px',     // Add your margin
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        {/* Display specific name and value */}
+        <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift GroupName`}
+        </span>
 
-        <option value="full_day" >Full Day</option>
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.shift_group}
+        </span>
+        
+        {/* Add more concatenated strings for other name-value pairs as needed */}
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-        <option value="first_half" >First Half</option>
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift Name`}
+        </span>
 
-        <option value="second_half" >Second Half</option>
-
-      </RHFSelect> */}
-
-  <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setFromShiftGroup_Name(newvalue.id
-      
-    );
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.shift_name}
+        </span>
     
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-  // onChange={}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="From Shift GroupName" />}
-/>
-  <Autocomplete
-  // multiple
-  disablePortal
-  id="combo-box-demo"
-  options={Options}
-  // value={currentReportingData}
-  getOptionLabel={(option) => option.name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setToShiftGroup_Name1(newvalue.id
-      
-    );
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Start Time`}
+        </span>
+
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.start_time}
+        </span>
     
-   
-    // const obj={
-    //   company_id:'COMP1',
-    //   reporting_manager_id:newvalue?.employee_id
-    // }
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-  // onChange={}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="To Shift GroupName" />}
-/>
-         <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={employeSwapDetails || []}
-  value={currentEmployeSwapData1?.employee_shift_swap_id}
-  getOptionLabel={(option) => option.employee_name}
-  onChange={(e,newvalue)=>{
-   
-   
-    setCurrentEmployeSwapData1(newvalue
-    )
-    // const obj={
-    //   // companyID:'COMP1',
-    //   project_id:newvalue?.project_id
-    // }
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`End Time`}
+        </span>
 
-    // ApiHitDepartment(obj)
-    // const timeStampCity = JSON.stringify(new Date().getTime());
-    // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
-    // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
- 
-  }}
-  sx={{
-    width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-  }}
-  renderInput={(params) => <TextField {...params} label="Select Employe" />}
-/>
-      {/* <RHFSelect name="Select_Employe1" label="Select Employe">
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentEmployeSwapData?.end_time}
+        </span>
+    
+      </ListItem>
+    </List>
+        </Grid>}
+{ newShift &&      <Grid>
+      <Typography>
+        New Shift Details
+        </Typography> 
+        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+        <ListItem
+        disablePadding
+        sx={{
+          border: '0px solid #ccc', // Add your border style
+          // borderRadius: '8px',    // Add your border radius
+          // padding: '8px',          // Add your padding
+          marginBottom: '8px',     // Add your margin
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        {/* Display specific name and value */}
+        <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift GroupName`}
+        </span>
 
-        <option value="full_day" >Full Day</option>
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.shiftGroupName}
+        </span>
+        
+        {/* Add more concatenated strings for other name-value pairs as needed */}
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-        <option value="first_half" >First Half</option>
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Shift Name`}
+        </span>
 
-        <option value="second_half" >Second Half</option>
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.shiftName}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-      </RHFSelect> */}
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`Start Time`}
+        </span>
 
-      {/* <RHFSelect name="ToShiftGroup_Name1" label="To Shift GroupName">
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.startTime}
+        </span>
+    
+      </ListItem>
+      <ListItem
+          sx={{
+            border: '0px solid #ccc', // Add your border style
+            // borderRadius: '8px',    // Add your border radius
+            // padding: '8px',          // Add your padding
+            marginBottom: '8px',     // Add your margin
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        disablePadding
 
-        <option value="full_day" >Full Day</option>
+      >
+              <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+          {`End Time`}
+        </span>
 
-        <option value="first_half" >First Half</option>
-
-        <option value="second_half" >Second Half</option>
-
-      </RHFSelect> */}
-
-
-
-
-
-
+        {/* Display Shift Name */}
+        <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+          {currentShiftGroupData?.end_Time}
+        </span>
+    
+      </ListItem>
+    </List>  
+        </Grid>}
 
     </Box>
-
-    <Stack alignItems="flex-end" sx={{ mt: 3, display: "flex", flexDirection: 'row', justifyContent: "flex-end" }}>
-      <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-        {!currentUser ? 'Create User' : 'Swap Shift'}
-      </LoadingButton>
-      <Button sx={{ backgroundColor: "#d12317", ml: "5px" }}>Cancel</Button>
-    </Stack>
+    <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                  {!currentUser ? 'Create User' : 'Swap Shift'}
+                </LoadingButton>
+                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
+              </Stack>
   </Card>
+
 </Grid>
 </Grid>
       </FormProvider>
@@ -512,4 +561,5 @@ const Options = [
 
 ShiftSwapForm.propTypes = {
   currentUser: PropTypes.object,
+  handleClose: PropTypes.func,
 };

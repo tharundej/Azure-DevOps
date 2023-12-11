@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-
+import { useEffect, useState, useCallback, useContext } from 'react';
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 
 import axios from 'axios';
@@ -7,12 +7,76 @@ import axios from 'axios';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+// import { async } from '@firebase/util';
+import SnackBarComponent from '../global/SnackBarComponent';
+import CreateAssets from './CreateAssets';
+import { DeleteAssetsAPI } from 'src/api/Accounts/Assets';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const AssetsTable = () => {
+  const { user } = useContext(UserContext);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
+  const [editShowForm, setEditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      setEditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = { asset_id: rowdata.assetId || 0, assetsName: rowdata.assetsName || '' };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    setEditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteAssetsAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
   const [filterOptions, setFilterOptions] = useState({
     dates: [
       {
@@ -34,8 +98,8 @@ const AssetsTable = () => {
   });
   const [bodyContent, setBodyContent] = useState([]);
   const defaultPayload = {
-    company_id: 'comp1',
-    page: 1,
+    company_id: user?.companyID ? user?.companyID : '',
+    page: 0,
     count: 5,
     search: '',
     externalFilters: {
@@ -49,7 +113,8 @@ const AssetsTable = () => {
       },
       asset_name: '',
       asset_type: '',
-      supplier_name: 'Supplier XYZ',
+      supplier_name: '',
+      location_name: '',
     },
     sort: {
       key: 1,
@@ -68,32 +133,63 @@ const AssetsTable = () => {
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
 
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'AssetsName', label: 'Assets Name', type: 'text', minWidth: '180px' },
-    { id: 'AssetsType', label: 'Assets Type', type: 'text', minWidth: '180px' },
-    { id: 'PoNumber', label: 'Po Number', type: 'text', minWidth: '180px' },
-    { id: 'PoDate', label: 'Po Date', type: 'text', minWidth: '180px' },
-    { id: 'PoValue', label: 'Po Value', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'StartDate', label: 'Start Date', type: 'text', minWidth: '180px' },
-    { id: 'SupplierName ', label: 'Supplier Name', type: 'text', minWidth: '180px' },
-    { id: 'SupplierEmail ', label: 'Supplier Email', type: 'text', minWidth: '180px' },
-    { id: 'SupplierContactNo', label: 'Supplier Contact No', type: 'text', minWidth: '180px' },
-    { id: 'ExpiryDate', label: 'Expiry Date', type: 'text', minWidth: '180px' },
-    { id: 'LapseOfWarrantyDate', label: 'Lapse Of Warranty Date', type: 'text', minWidth: '180px' },
-    { id: 'OperationalDays', label: 'Operational Days', type: 'text', minWidth: '180px' },
-    { id: 'Amount', label: 'Amount', type: 'text', minWidth: '180px' },
-    { id: 'GstAmount', label: 'Gst Amount', type: 'text', minWidth: '180px' },
-    { id: 'TotalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
-    { id: 'AssetsCondition', label: 'Assets Condition', type: 'text', minWidth: '180px' },
+    { id: 'assetsName', label: 'Assets Name', type: 'text', minWidth: '180px' },
+    { id: 'assetsType', label: 'Assets Type', type: 'text', minWidth: '180px' },
+    { id: 'moduleName', label: 'Model Name', type: 'text', minWidth: '180px' },
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
+    { id: 'poValue', label: 'PO Value', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'Invoice_date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'startDate', label: 'Start Date', type: 'text', minWidth: '180px' },
+    { id: 'warrantyDate', label: 'Warranty Date', type: 'text', minWidth: '180px' },
+    { id: 'supplierName', label: 'Supplier Name', type: 'text', minWidth: '180px' },
+    { id: 'supplierEmail', label: 'Supplier Email', type: 'text', minWidth: '180px' },
+    { id: 'supplierContact', label: 'Supplier Contact No', type: 'text', minWidth: '180px' },
+    { id: 'expiryDate', label: 'Expiry Date', type: 'text', minWidth: '180px' },
+    { id: 'lapseOfWarrantyDate', label: 'Lapse Of Warranty Date', type: 'text', minWidth: '180px' },
+    { id: 'operationalDays', label: 'Operational Days', type: 'text', minWidth: '180px' },
+    { id: 'price', label: 'Price', type: 'text', minWidth: '180px' },
+    { id: 'amount', label: 'Amount', type: 'text', minWidth: '180px' },
+    { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
+    { id: 'gstAmount', label: 'GST Amount', type: 'text', minWidth: '180px' },
+    { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
+    { id: 'assetCondition', label: 'Assets Condition', type: 'text', minWidth: '180px' },
+    { id: 'updatedDate', label: 'Updated Date', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+        severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Assets"
+        message={`Are you sure you want to delete ${deleteData?.assetsName}?`}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateAssets currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Accounting: Vendor</title>
       </Helmet>
@@ -104,6 +200,8 @@ const AssetsTable = () => {
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="AssetsHead"
+        onClickActions={onClickActions}
+        handleEditRowParent={() => {}}
       />
     </>
   );

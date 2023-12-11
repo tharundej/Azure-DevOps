@@ -10,6 +10,12 @@ import TimeApprovals from 'src/nextzen/TimeSheetManagement/TimeApprovals';
 import TimeProject from 'src/nextzen/TimeSheetManagement/TimeProject';
 import Shift from 'src/nextzen/Table/components/shiftmanagement/Shift';
 import Expenses from 'src/nextzen/expenses/Expenses';
+import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
+import PurchaseInvoice from 'src/nextzen/Purchase/PurchaseInvoice/PurchaseInvoice';
+import PurchasePayment from 'src/nextzen/Purchase/PurchasePayment/PurchasePayment';
+import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
+import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
+import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -100,6 +106,7 @@ const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
+const TimeSheetManagement = lazy(() => import('src/nextzen/timesheet/TimeSheet'));
 
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
@@ -114,25 +121,39 @@ const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
 
-const Configaration = lazy(()=> import('../../nextzen/configaration/Configaration'));
+const Configaration = lazy(() => import('../../nextzen/configaration/Configaration'));
 
-const LeaveConfiguration=lazy(()=>import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration'));
+const LeaveConfiguration = lazy(() =>
+  import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration')
+);
 
-const CompoffConfiguration = lazy(()=> import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView'));
+const CompoffConfiguration = lazy(() =>
+  import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView')
+);
 
-const AppraisalConfiguration = lazy(()=> import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration'));
+const AppraisalConfiguration = lazy(() =>
+  import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration')
+);
 
-const ExpensClaimConfiguration = lazy(()=> import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration'));
+const ExpensClaimConfiguration = lazy(() =>
+  import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration')
+);
 
-const ShiftConfiguration = lazy(()=> import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
+const ShiftConfiguration = lazy(() =>
+  import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration')
+);
 
-const RoleConfiguration = lazy(()=>import('../../nextzen/configaration/roleconfiguration/RoleConfiguration'));
-
+const RoleConfiguration = lazy(() =>
+  import('../../nextzen/configaration/roleconfiguration/RoleConfigTab')
+);
+const TaxSectionConfiguration = lazy(() =>
+  import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
+);
+const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
 const VendorIndex = lazy(() => import('src/nextzen/vendor/Vendor'));
-const Materials = lazy(() => import('src/nextzen/Materials/Materials'));
 const Assets = lazy(() => import('src/nextzen/assets/Assets'));
 const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
@@ -180,7 +201,7 @@ export const dashboardRoutes = [
       //     { path: ':id/edit', element: <Edits /> },
       //     { path: 'userneweditform', element: <UserNewEditForm1 /> },
       //     { path: 'onboardform', element: <OnBoardForm />},
-          
+
       //     { path: 'employeeview', element: <EmployeeView />},
       //     //  { path: ':id/edit', element: <Edits /> },
       //     // { path: 'reusetable', element: <ReuseTable /> },
@@ -204,17 +225,17 @@ export const dashboardRoutes = [
         ],
       },
 
+      // {
+      //   path: 'leave',
+      //   children: [
+      //     { element: <Leave />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //   ],
+      // },
       {
-        path: 'leave',
+        path: 'TimeSheetManagement',
         children: [
-          { element: <Leave />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
-      {
-        path: 'timesheet',
-        children: [
-          { element: <TimeSheet />, index: true },
+          { element: <TimeSheetManagement />, index: true },
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
@@ -240,38 +261,29 @@ export const dashboardRoutes = [
         ],
       },
 
-      {
-        path: 'claims',
-        children: [
-          { element: <Claims />, index: true },
-          { path: 'compoffapprove', element: <CompoffApprove /> },
-          { path: 'mycompoff', element: <MyCompoff /> },
-        ],
-      },
-
-      {
-        path: 'payroll',
-        children: [
-          { element: <Payroll />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-          { path: 'payschedule', element: <PaySchedule /> },
-          { path: ':id/payscheduleform', element: <PayScheduleform /> },
-        ],
-      },
-      {
-        path: 'itdeclaration',
-        children: [
-          { element: <Itdeclaration />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
-      {
-        path: 'monthlydeductions',
-        children: [
-          { element: <MonthlyDeductions />, index: true },
-          // { path: 'profile', element: <UserProfilePage /> },
-        ],
-      },
+      // {
+      //   path: 'payroll',
+      //   children: [
+      //     { element: <Payroll />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //     { path: 'payschedule', element: <PaySchedule /> },
+      //     { path: ':id/payscheduleform', element: <PayScheduleform /> },
+      //   ],
+      // },
+      // {
+      //   path: 'itdeclaration',
+      //   children: [
+      //     { element: <Itdeclaration />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //   ],
+      // },
+      // {
+      //   path: 'monthlydeductions',
+      //   children: [
+      //     { element: <MonthlyDeductions />, index: true },
+      //     // { path: 'profile', element: <UserProfilePage /> },
+      //   ],
+      // },
 
       {
         path: 'appraisal',
@@ -280,20 +292,20 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
-      {
-        path:'configarations',
-        children:[
-          {
-            element: <Configaration/>,index:true
-          },
-          {path:'leaveconfiguration',element:<LeaveConfiguration/>},
-          {path:'compoffconfiguration',element:<CompoffConfiguration/>},
-          {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
-          {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
-          {path:'shiftconfiguration',element:<ShiftConfiguration/>},
-          {path:'roleconfiguration',element:<RoleConfiguration/>},
-        ],
-      },
+      // {
+      //   path:'configurations',
+      //   children:[
+      //     {
+      //       element: <Configaration/>,index:true
+      //     },
+      //     {path:'leaveconfiguration',element:<LeaveConfiguration/>},
+      //     {path:'compoffconfiguration',element:<CompoffConfiguration/>},
+      //     {path:'appraisalconfiguration',element:<AppraisalConfiguration/>},
+      //     {path:'expenseclaimconfiguration',element:<ExpensClaimConfiguration/>},
+      //     {path:'shiftconfiguration',element:<ShiftConfiguration/>},
+      //     {path:'roleconfiguration',element:<RoleConfiguration/>},
+      //   ],
+      // },
       {
         path: 'product',
         children: [
@@ -368,7 +380,7 @@ export const dashboardRoutes = [
           },
         ],
       },
-	  {
+      {
         path: 'expenses',
         children: [
           {
@@ -380,19 +392,9 @@ export const dashboardRoutes = [
       {
         path: 'vendor',
         children: [
-          {
-            element: <VendorIndex />,
-            index: true,
-          },
-        ],
-      },
-      {
-        path: 'materials',
-        children: [
-          {
-            element: <Materials />,
-            index: true,
-          },
+          { element: <VendorIndex />, index: true },
+          { path: 'vendor', element: <VendorIndex /> },
+          { path: 'vendormaterials', element: <VendorMaterials /> },
         ],
       },
       {
@@ -407,19 +409,9 @@ export const dashboardRoutes = [
       {
         path: 'products',
         children: [
-          {
-            element: <Products />,
-            index: true,
-          },
-        ],
-      },
-      {
-        path: 'customers',
-        children: [
-          {
-            element: <Customers />,
-            index: true,
-          },
+          { element: <Products />, index: true, },
+          { path: 'products', element: <Products /> },
+          { path: 'customers', element: <Customers /> },
         ],
       },
       {
@@ -427,8 +419,17 @@ export const dashboardRoutes = [
         children: [
           { element: <PurchaseOrder />, index: true },
           { path: 'order', element: <PurchaseOrder /> },
-          { path: 'invoice', element: <PurchaseOrder /> },
-          { path: 'payment', element: <PurchaseOrder /> },
+          { path: 'invoice', element: <PurchaseInvoice /> },
+          { path: 'payment', element: <PurchasePayment /> },
+        ],
+      },
+      {
+        path: 'sale',
+        children: [
+          { element: <SalePayment />, index: true },
+          { path: 'order', element: <SalesOrder /> },
+          { path: 'invoice', element: <SaleInvoice /> },
+          { path: 'payment', element: <SalePayment /> },
         ],
       },
       {
@@ -457,12 +458,158 @@ export const dashboardRoutes = [
       { element: <EmployeeManagementHome />, index: true },
       { path: ':id/edit', element: <Edits /> },
       { path: 'userneweditform', element: <UserNewEditForm1 /> },
-      { path: 'onboardform', element: <OnBoardForm />},
-      
-      { path: ':id/employeeview', element: <EmployeeView />},
+      { path: 'onboardform', element: <OnBoardForm /> },
+      {path: 'changepassword',element: <ChangePassword/>},
+      { path: ':id/employeeview', element: <EmployeeView /> },
       //  { path: ':id/edit', element: <Edits /> },
       // { path: 'reusetable', element: <ReuseTable /> },
       //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
     ],
-  }
+  },
+  {
+    path: 'leave',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [{ element: <Leave />, index: true }],
+  },
+  {
+    path: 'monthlydeductions',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [{ element: <MonthlyDeductions />, index: true }],
+  },
+  {
+    path: 'timesheetmanagement',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <TimeSheetManagement />, index: true },
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path: 'claims',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Claims />, index: true },
+      { path: 'compoffapprove', element: <CompoffApprove /> },
+      { path: 'mycompoff', element: <MyCompoff /> },
+    ],
+  },
+  {
+    path: 'payroll',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Payroll />, index: true },
+
+      // { path: 'profile', element: <UserProfilePage /> },
+
+      { path: 'payschedule', element: <PaySchedule /> },
+
+      { path: ':id/payscheduleform', element: <PayScheduleform /> },
+    ],
+  },
+
+  {
+    path: 'itdeclaration',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclaration />, index: true },
+
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path:'changepassword',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children:[
+      {element: <ChangePassword/>, index: true},
+    ],
+  },
+  {
+    path: 'configurations',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      {
+        element: <Configaration />,
+        index: true,
+      },
+
+      { path: 'leaveconfiguration', element: <LeaveConfiguration /> },
+
+      { path: 'compoffconfiguration', element: <CompoffConfiguration /> },
+
+      { path: 'appraisalconfiguration', element: <AppraisalConfiguration /> },
+
+      { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
+
+      { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
+
+      { path: 'roleconfiguration', element: <RoleConfiguration /> },
+
+   { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
+  
+  ],
+},
 ];

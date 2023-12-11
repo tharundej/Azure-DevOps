@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
-import { useCallback, useMemo, useState,useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -25,6 +25,7 @@ import axios from 'axios';
 import { MobileTimePicker } from '@mui/x-date-pickers';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ShiftConfigurationForm({ currentUser }) {
   // const [open, setOpen] = useState(false);
@@ -34,22 +35,22 @@ export default function ShiftConfigurationForm({ currentUser }) {
     reset1();
   };
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [open, setOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
-  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30')); // State for Start Time
-  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
+  const [startTime, setStartTime] = useState(dayjs()); // State for Start Time
+  const [endTime, setEndTime] = useState(dayjs());
   const NewUserSchema1 = Yup.object().shape({
     ShiftName: Yup.string().required('Shift Name is Required'),
-    ShiftTerm: Yup.string().required('Shift Term is Required'),
+    // ShiftTerm: Yup.string().required('Shift Term is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
       ShiftName: currentUser?.ShiftName || null,
-      ShiftTerm: currentUser?.ShiftTerm || null,
+      // ShiftTerm: currentUser?.ShiftTerm || null,
     }),
     [currentUser]
   );
@@ -66,32 +67,33 @@ export default function ShiftConfigurationForm({ currentUser }) {
     reset: reset1,
   } = methods1;
   const ShiftNames = [
-    { type:'General'},
-    { type:'Morning'},
-    { type:'AfterNoon'},
-    { type:'Night'},
+    { type: 'General' },
+    { type: 'Morning' },
+    { type: 'AfterNoon' },
+    { type: 'Night' },
   ];
-  const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
+  // const ShiftTerms = [{ type:'Weekly'},{ type:'Monthly'}];
 
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(name, selectedValue, selectedOption);
     setFormData({
       ...formData,
       [name]: selectedValue,
-      locationID: selectedOption?.locationID,
+      locationId: selectedOption?.locationID,
       locationName: selectedOption?.locationName,
     });
   };
-
+  console.log(formData, 'formmmmmm');
+  console.log(formData?.locationID, 'formmmmmm');
   const getLocation = async () => {
     const payload = {
-      companyID: 'COMP1',
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/locationOnboardingDepartment',
+      url: baseUrl + '/locationOnboardingDepartment',
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo ',
@@ -123,27 +125,39 @@ export default function ShiftConfigurationForm({ currentUser }) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP2';
-    data.startTime = startTime.format('HH:mm:ss'); // Append Start Time
+    (data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID),
+      (data.startTime = startTime.format('HH:mm:ss')); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
-    data.locationID = formData?.Location?.locationID;
-    console.log('submitted data111', data);
-
     try {
-      const response = await axios.post(baseUrl+'/addShiftConfig', data);
-      if(response?.status===200){
+      data.locationIdArray = formData?.Location.map((name) => name.locationID);
+
+      console.log('submitted data111', data);
+      console.log(
+        'aaa',
+        formData?.Location.map((name) => name.locationID)
+      );
+      const response = await axios.post(baseUrl + '/addShiftConfig', data);
+      if (response?.status === 200) {
         handleClose();
         setSnackbarSeverity('success');
-         setSnackbarMessage('Shift Configuration Added Succuessfully!');
-         setSnackbarOpen(true);
-      
-      console.log('sucess', response);
+        setSnackbarMessage('Shift Configuration Added Succuessfully!');
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleClose();
+        console.log('sucess', response?.data);
       }
     } catch (error) {
       setOpen(true);
-       setSnackbarSeverity('error');
-       setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-       setSnackbarOpen(true);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+      setSnackbarOpen(true);
+      handleClose();
       console.log('error', error);
     }
   });
@@ -151,31 +165,35 @@ export default function ShiftConfigurationForm({ currentUser }) {
     if (reason === 'clickaway') {
       return;
     }
-  setSnackbarOpen(false)
+    setSnackbarOpen(false);
     setOpen(true);
   };
   return (
     <>
-    <Snackbar
-    open={snackbarOpen}
-    autoHideDuration={7000}
-    onClose={snackBarAlertHandleClose}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-  >
-    <Alert onClose={snackBarAlertHandleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-      {snackbarMessage}
-    </Alert>
-  </Snackbar>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={snackBarAlertHandleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Alert
+          onClose={snackBarAlertHandleClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button
         onClick={handleOpen}
         variant="contained"
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px' }}
+        sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
-        Add ExpensiveConfig
+        Add Shift Configuration
       </Button>
       <Dialog
         fullWidth
@@ -187,7 +205,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <DialogTitle>Add ExpensiveConfig</DialogTitle>
+          <ModalHeader heading=" Add Shift Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -204,31 +222,24 @@ export default function ShiftConfigurationForm({ currentUser }) {
                 placeholder="Press Enter to Add Custom"
                 label="Shift Name"
                 name="ShiftName"
-                options={ShiftNames.map((name)=>name.type)}
+                options={ShiftNames.map((name) => name.type)}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="Start Time"
-                  defaultValue={dayjs('2022-04-17T15:60')}
+                  defaultValue={dayjs()}
                   onChange={(newValue) => setStartTime(newValue)}
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="End Time"
-                  defaultValue={dayjs('2022-04-17T15:30')}
+                  defaultValue={dayjs()}
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>
-              <RHFAutocomplete
-                freeSolo
-                placeholder="Press Enter to Add Custom"
-                label="Shift Term"
-                name="ShiftTerm"
-                options={ShiftTerms.map((ShiftTerm) => ShiftTerm.type)}
-              />
-
               <Autocomplete
+                multiple
                 disablePortal
                 name="Location"
                 id="combo-box-demo"
@@ -249,14 +260,22 @@ export default function ShiftConfigurationForm({ currentUser }) {
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <LoadingButton
+            {/* <LoadingButton
               type="submit"
               variant="contained"
               onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
-            </LoadingButton>
+            </LoadingButton> */}
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
+              variant="contained"
+              onClick={onSubmit1}
+            >
+              Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>

@@ -47,11 +47,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import HolidaysForm from './HolidaysForm';
-
+import {
+  holidayTypeName,
+  locationNameApi,
+} from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -89,15 +92,31 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function HolidaysFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function HolidaysFilters({ filterData, filterOptions, filterSearch, searchData }) {
   const theme = useTheme();
-  const holidayNames = [
-    'Diwali',
-    'Gandhi Jayanthi'
-  ];
-  const locationName = [
-    'infobell'
-  ]
+  // const holidayNames = [
+  //   'Diwali',
+  //   'Gandhi Jayanthi'
+  // ];
+  const [holidayTypesNames, setHolidayTypesNames] = useState([]);
+  const [locationName, setLocationName] = useState([]);
+  useEffect(() => {
+    async function call() {
+      const arr = await holidayTypeName();
+      console.log(arr, 'sairam');
+      setHolidayTypesNames(arr);
+    }
+    call();
+    async function call2() {
+      const arr = await locationNameApi();
+      console.log(arr, 'sairam');
+      setLocationName(arr);
+    }
+    call2();
+  }, []);
+  // const locationName = [
+  //   'infobell'
+  // ]
 
   // const designationGradeName = [
   //   'senior',
@@ -134,7 +153,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       options: [],
     },
     {
-      field: 'holiday_name',
+      field: 'holidayName',
       options: [],
     },
   ]);
@@ -174,27 +193,25 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
-          arr1[item.field] = commaSeparatedString;
-        }
+      const arr1 = [];
 
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+      dropdown?.holidayName?.forEach((item, index) => {
+        arr1.push(item?.holidayName);
       });
+
       // setDatesData(arr1);
       resolve(arr1);
     });
   }
-
+  function formWithDropdown2() {
+    return new Promise((resolve1) => {
+      const arr2 = [];
+      dropdown?.locationName?.forEach((item, index) => {
+        arr2.push(item?.locationName);
+      });
+      resolve1(arr2);
+    });
+  }
   const [open, setOpen] = useState(false);
   const [openDateRange, setOpendateRange] = useState(false);
   const handleClickOpen = () => {
@@ -203,7 +220,44 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
   const handleClickClose = () => {
     setOpen(false);
   };
+  const [options, setOptions] = useState({});
+  useEffect(() => {
+    if (open) {
+      async function call() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const holidayNames = await holidayTypeName(Obj);
+          var optionsArr = { ...options };
 
+          optionsArr.holidayNames = holidayNames;
+          // optionsArr.holidayNames=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+      async function call2() {
+        try {
+          const Obj = {
+            companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          };
+          const locationName = await locationNameApi(Obj);
+          var optionsArr = { ...options };
+
+          optionsArr.locationName = locationName;
+          // optionsArr.locationName=desgination;
+          console.log(optionsArr, 'optionsArr');
+
+          setOptions(optionsArr);
+        } catch (error) {}
+      }
+
+      call();
+      call2();
+    }
+  }, [open]);
   const handleChangeDropDown = (event, field) => {
     const {
       target: { value },
@@ -219,12 +273,12 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'location') {
+    } else if (field === 'locationName') {
       setdropdownLocation(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'holiday_name') {
+    } else if (field === 'holidayName') {
       setdropdownDepartmentname(value);
       const obj = dropdown;
       obj[field] = value;
@@ -240,20 +294,31 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
   const handleApply = async () => {
     setDatesData([]);
     const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
+    const comma = data.join(',');
+    const obj = {
+      holidayName: comma,
+    };
+   // filterData(obj);
+    console.log(obj, 'sairam');
 
+    const data1 = await formWithDropdown2();
+    const comma1 = data1.join(',');
+    const obj1 = {
+      locationName: comma1,
+      holidayName: comma,
+    };
+    filterData(obj1);
+    console.log(obj1, 'sairam2222');
     //   filterData(data);
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+    searchData(searchTerm);
+    console.log(searchTerm, 'search ........');
+  };
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
@@ -261,27 +326,26 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
-        <TextField
+        <Grid item md={8} xs={12}>
+          <TextField
             placeholder="Search...."
-             fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          
         </Grid>
-        <Grid item  md={2} xs={2}>
-            <HolidaysForm/>
-       </Grid>
-        <Grid item  md={2} xs={2}>
-        <Grid>
+        <Grid item md={4} xs={12}>
+          <HolidaysForm />
+          <Grid item>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
             </Stack>
           </Grid>
         </Grid>
+        {/* <Grid item md={2} xs={3}>
+        
+        </Grid> */}
       </Grid>
 
       <BootstrapDialog
@@ -297,68 +361,70 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"300px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
+        <DialogContent
+          sx={{ minWidth: '300px' }}
+          //   style={{
+          //     paddingTop: '20px',
+          //     paddingRight: '17px',
+          //     paddingBottom: '44px',
+          //     paddingLeft: '44px',
+          //   }}
         >
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="holiday_name">Holiday Name</InputLabel>
-                  <Select
+          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
+
+          <Grid
+            container
+            spacing={1}
+            sx={{ flexDirection: 'row', display: 'flex', marginTop: '1rem' }}
+            item
+          >
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="holidayName">Holiday Name</InputLabel>
+                <Select
                   fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownHolidayname}
-                    onChange={(e) => handleChangeDropDown(e, 'holiday_name')}
-                    input={<OutlinedInput label="Holiday Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {holidayNames.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="location">Location</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'location')}
-                      input={<OutlinedInput label="Location" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {locationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
-                {/* <FormControl fullWidth >
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownHolidayname}
+                  onChange={(e) => handleChangeDropDown(e, 'holidayName')}
+                  input={<OutlinedInput label="Holiday Name" />}
+                  MenuProps={MenuProps}
+                  // sx={{minWidth:'300px'}}
+                >
+                  {holidayTypesNames.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.holidayName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="locationName">Location</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownLocation}
+                  onChange={(e) => handleChangeDropDown(e, 'locationName')}
+                  input={<OutlinedInput label="Location" />}
+                  MenuProps={MenuProps}
+                  //   sx={{minWidth:'300px'}}
+                >
+                  {locationName.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.locationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {/* <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
@@ -378,24 +444,24 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
                     ))}
                   </Select>
               </FormControl> */}
-                   </Grid>
             </Grid>
-
-           
-            
-             
-          
+          </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+          <Button
+            onClick={() => {
+              handleApply();
+            }}
+            // variant="outlined"
+            style={{
+              width: '80px',
+              marginBottom: '1rem',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            Apply
+          </Button>
         </div>
       </BootstrapDialog>
     </>

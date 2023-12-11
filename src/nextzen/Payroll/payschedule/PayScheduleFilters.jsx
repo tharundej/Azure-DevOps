@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import {
   Card,
   TextField,
@@ -47,10 +47,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import PayScheduleform from './PayScheduleform';
+import { payScheduleType } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -88,7 +89,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions }) {
+export default function PayScheduleFilters({ filterData, filterOptions,searchData  }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -102,13 +103,24 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     'Virginia Andrews',
     'Kelly Snyder',
   ];
-  const employeeTypes=[
+  
+  const employmentTypes=[
     'Permanent',
-    'Contract'
+    'contract'
   ];
-  const payScheduleTypes=[
-    'typ1',
-  ];
+  // const payscheduleTypes=[
+  //   '52-Once a week',
+  //   '26-Once in a two weeks',
+  // ];  
+  const [payscheduleTypes, setPayscheduleTypes] = useState([])
+  useEffect(() => {
+    async function call() {
+      const arr = await payScheduleType();
+      console.log(arr, 'sairam');
+      setPayscheduleTypes(arr);
+    }
+    call();
+  }, []);
   const [dropdown, setDropdown] = useState({});
 
   const [dateError, setDataError] = useState('');
@@ -118,8 +130,8 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
-  const [dropdownpayScheduleType, setdropdownpayScheduleType] = useState([]);
-  const [dropdownemployeeType, setdropdownemployeeType] = useState([]);
+  const [dropdownpayscheduleType, setdropdownpayscheduleType] = useState([]);
+  const [dropdownemploymentType, setdropdownemploymentType] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -135,11 +147,11 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       options: [],
     },
     {
-      field: 'payScheduleType',
+      field: 'payscheduleType',
       options: [],
     },
     {
-      field: 'employeeType',
+      field: 'employmentType',
       options: [],
     },
   ]);
@@ -180,22 +192,14 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   function formWithDropdown() {
     return new Promise((resolve) => {
       const arr1 = {};
-      dropdownFiledArray.forEach((item, index) => {
-        if (dropdown[item.field]?.length > 0) {
-          const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
-          arr1[item.field] = commaSeparatedString;
-        }
+      console.log(dropdown?.payScheduleType,'ppoooo')
+      // arr1.payScheduleType=dropdown?.payScheduleType?.join(',') || "";
+      // arr1.employmentType=dropdown?.employmentType?.join(',') || "";
+      
 
-        //  const obj={
-        //    filed_name:item?.field,
-        //    from:dates[item?.from],
-        //    to:dates[item?.to]
-        //  }
-
-        //  arr1.push(obj);
+      dropdown?.payScheduleType?.forEach((item, index) => {
+        arr1.push(item?.payScheduleType);
       });
-      // setDatesData(arr1);
       resolve(arr1);
     });
   }
@@ -210,6 +214,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
   };
 
   const handleChangeDropDown = (event, field) => {
+    console.log('1',event?.target?.value)
     const {
       target: { value },
     } = event;
@@ -224,13 +229,14 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'payScheduleType') {
-      setdropdownpayScheduleType(value);
-      const obj = dropdown;
+    } else if (field === 'payScheduletype') {
+      console.log(value,'ppppp')
+      setdropdownpayscheduleType(value);
+      const obj = {...dropdown};
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'employeeType') {
-      setdropdownemployeeType(value);
+    } else if (field === 'employmentType') {
+      setdropdownemploymentType(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -246,17 +252,41 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
     searchData(searchTerm)
     console.log(searchTerm,"search ........")
     };
-  const handleApply = async () => {
-    setDatesData([]);
-
-    const data1 = await formWithDropdown();
-    filterData(data1);
-    console.log(data1, ';;;');
-
-    //   filterData(data);
-    handleClickClose();
-  };
-
+    const handleApply = async () => {
+ 
+      const data = await formWithDropdown();
+  
+    const comma = data.join(',');
+      const obj = {
+        payScheduleType: comma,
+      };
+     
+      filterData(obj);
+      
+      console.log(obj, 'ram');
+      handleClickClose();
+    };
+    const [options, setOptions] = useState({});
+    useEffect(() => {
+      if (open) {
+        async function call() {
+          try {
+            const Obj = {
+              companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+            };
+            const payScheduleTypees = await payScheduleType(Obj);
+            var optionsArr = { ...options };
+  
+            optionsArr.payScheduleType = payScheduleTypees;
+            // optionsArr.payScheduleTypeType=desgination;
+            console.log(optionsArr, 'optionsArr');
+  
+            setOptions(optionsArr);
+          } catch (error) {}
+        }
+        call();
+      }
+    }, [open]);
   return (
     <>
       <Grid
@@ -296,11 +326,13 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+       <DialogTitle sx={{ paddingBottom: 0, paddingTop: 2 }}>
           Filters
-          <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
-            <Iconify icon="iconamoon:close-thin" />
-          </Button>
+          {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+          <CancelOutlinedIcon
+            sx={{ cursor: 'pointer', float: 'right' }}
+            onClick={() => setOpen(false)}
+          />
         </DialogTitle>
 
         <DialogContent  sx={{minWidth:"300px"}}>
@@ -308,19 +340,19 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="employeeType">Employee Type</InputLabel>
+                  <InputLabel id="employmentType">Employee Type</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownemployeeType}
-                    onChange={(e) => handleChangeDropDown(e, 'employeeType')}
+                    value={dropdownemploymentType}
+                    onChange={(e) => handleChangeDropDown(e, 'employmentType')}
                     input={<OutlinedInput label="Employee Type" />}
                     MenuProps={MenuProps}
                     // sx={{minWidth:'300px'}}
                   >
-                    {employeeTypes.map((name) => (
+                    {employmentTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -330,25 +362,25 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
               </Grid>
               <Grid item xs={6} >
                   <FormControl fullWidth>
-                    <InputLabel id="payScheduleType">Pay Schedule Type</InputLabel>
+                    <InputLabel id="payScheduletype">Pay Schedule Type</InputLabel>
                     <Select
                     fullWidth
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownpayScheduleType}
-                      onChange={(e) => handleChangeDropDown(e, 'payScheduleType')}
+                      value={dropdownpayscheduleType}
+                      onChange={(e) => handleChangeDropDown(e, 'payScheduletype')}
                       input={<OutlinedInput label="Pay Schedule Type" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {payScheduleTypes.map((name) => (
+                      {payscheduleTypes.map((name,index) => (
                         <MenuItem
-                          key={name}
-                          value={name}
+                          key={index}
+                          value={name?.payScheduletype}
                           style={getStyles(name, personName, theme)}
                         >
-                          {name}
+                          {name?.payScheduletype}
                         </MenuItem>
                       ))}
                     </Select>
@@ -383,15 +415,28 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+        
+        <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+              handleApply();
+            }}
+          >
+            Apply
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => 
+              handleClickClose()
+            }
+          >
+            Close
+          </Button>
         </div>
       </BootstrapDialog>
     </>
@@ -403,6 +448,7 @@ export default function PayScheduleFilters({ filterData, filterOptions }) {
 // }
 PayScheduleFilters.propTypes = {
   filterData: PropTypes.func,
+  searchData: PropTypes.any,
 };
 
 PayScheduleFilters.propTypes = {

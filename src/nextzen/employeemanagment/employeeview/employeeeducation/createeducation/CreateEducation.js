@@ -2,6 +2,9 @@ import React ,{useEffect, useState} from 'react'
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -17,6 +20,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
+    Stack,IconButton
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -32,19 +36,128 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from './FilesDisplay';
 
-const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis}) => {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
+const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCallSnackbar}) => {
+
+  const [defaultValues, setDefaultValues] = useState([]);
   
-  console.log(employeeData);
+
+  // new documents 
+
+  const [addDocuments,setAddDocuments]=useState([]);
+
+  const handleAddDocumentNew=()=>{
+    const newArray = [...addDocuments];
+    const obj={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+  newArray.push(obj)
+  setAddDocuments(newArray)
+
+  }
+  const handleRemoveDocumentNew=(index1)=>{
+    const updatedItems = addDocuments.filter((item,index3) => index3 !== index1);
+
+     setAddDocuments(updatedItems);
+  }
+
+  const handleFileUploadNew = (event,index) => {
+        
+    const file = event.target.files[0];
+    // const { value, id } = e.target;
+    // const newObj = defaultValues;
+
+      let base64String=1;
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+    const base64String = event.target.result.split(',')[1];
+    console.log(base64String);
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ...newArray[index],
+      fileName: file.name,
+      fileContent:base64String
+    };
+    console.log(index,'newArraynewArraynewArray')
+    setAddDocuments(newArray);
+
+    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    };
+
+  reader.readAsDataURL(file);
+    
+
+    
+
+    //setSelectedFile(file);
+  };
+
+  const handleCategoryChangeNew = (e,index) => {
+    const { value, id } = e.target;
+    // const newObj = defaultValues;
+    
+
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    
+    
+    setAddDocuments(newArray);
+  };
+  
     const onSave=()=>{
+      const arr = defaultValues
+      if(endpoint!=="addEducation"){
+        arr[0].documents = [ ...addDocuments];
+      }
+     
+      console.log(arr, 'before hitting API');
      const obj={
-      companyId: "COMP5",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
-      education:defaultValues
+      education:arr
      }
       
       let config = {
@@ -61,18 +174,23 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response?.data));
+        setDefaultValues([])
+        setAddDocuments([])
+        callApi()
+        handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
       })
       .catch((error) => {
         console.log(error);
+        handleCallSnackbar(error?.response?.data?.message,"error")
       });
     }
-    const [defaultValues, setDefaultValues] = useState([]);
 
 
     useEffect(()=>{
       if(employeeData){
+        console.log(employeeData,'employeeData')
       setDefaultValues(employeeData)
 
 
@@ -80,11 +198,11 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     },[employeeData])
 
     const obj =   {
-        nameOfTheDegree:  '',
+        nameOfTheDegree:  "",
         stream:  '',
-        university:  '',
-        yearOfPassing: undefined,
-        document_data:'',
+        universityName:  '',
+       
+       
         gradeType:'',
         grade:undefined,
         documents:[
@@ -141,6 +259,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
            
       const handleChange = (e, index, field) => {
+      
         const { value, id } = e.target;
         const newObj = defaultValues;
         const newArray = [...defaultValues];
@@ -221,7 +340,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
         newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+        //console.log(updatedItems,'updatedItems')
+        
+
     
        setDefaultValues(newArray);
       }
@@ -279,7 +400,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   return (
     <>
     <Helmet>
-    <title> Dashboard: Add Education</title>
+    <title> Dashboard: Education</title>
   </Helmet>
 
   <Dialog
@@ -290,249 +411,453 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     PaperProps={{
       sx: { maxWidth: 720 },
     }}
-  >
-
-            <DialogContent>
-
-            <Card sx={{paddingTop:'20px'}}>
-      <form style={{ padding: '4px' }}>
-        <>
-          {defaultValues?.map((item, index) => (
-            <Grid sx={{ padding: '40px' }}>
-
-                {index!==0 &&(
-                <Grid sx={{display:'flex',alignItems:'center',justifyContent:'flex-end',paddingBottom:'2px'}}  item>
-                 <Iconify
-                        // key={label}
-                        icon='material-symbols:delete'
-                        width={28}
-                        sx={{ mr: 1,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'flex-end' }}
-                        onClick={()=>handleDelete(index)}
-                      />
-                    </Grid>
-                )}
-               {/* <Button onClick={()=>handleDelete(index)}>delete</Button> */}
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="nameOfTheDegree"
-                    label="Name Of the Degree"
-                    variant="outlined"
-                    id="name_of_the_degree"
-                     value={item?.nameOfTheDegree}
-                    onChange={(e) => {
-                      handleChange(e, index, 'nameOfTheDegree');
-                    }}
-                  />
-                </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    
-                    name="Stream"
-                    label="Stream"
-                    id="stream"
-                     value={item?.stream}
-                    onChange={(e) => {
-                      handleChange(e, index, 'stream');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-              </Grid>
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                <TextField
-                    fullWidth
-                    // type="number"
-                    name="gradeType"
-                    label="Grade Type "
-                    id="university"
-                   
-                     value={item?.gradeType}
-                    onChange={(e) => {
-                      handleChange(e, index, 'gradeType');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                     type="number"
-                    name="grade"
-                    label="grade"
-                    id="yearOfPassing"
-                   
-                     value={item?.grade}
-                    onChange={(e) => {
-                      handleChange(e, index, 'grade');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="universityName"
-                    label="University Name"
-                    variant="outlined"
-                    id="universityName"
-                     value={item?.universityName}
-                    onChange={(e) => {
-                      handleChange(e, index, 'universityName');
-                    }}
-                  />
-                </Grid>
-                <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="yearOfPassing"
-                    label="Year Of Passing"
-                    id="stream"
-                     value={item?.yearOfPassing}
-                    onChange={(e) => {
-                      handleChange(e, index, 'yearOfPassing');
-                    }}
-                    variant="outlined"
-                  />
-                </Grid>
-              </Grid>
-                  
-              {item?.documents?.map((file,index1)=>(
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                <Grid item xs={12} md={6} >
-
-               
-                <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
-                    <Select
-                        label="Select a doc Type"
-                        value={file?.fileType}
-                        onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                        name="Select a doc Type"
-                    >
-                        <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
-                        <MenuItem value="marks-memo">Marks Memo</MenuItem>
-                        <MenuItem value="degree">Degree</MenuItem>
-                        {/* Add more categories here */}
-                    </Select>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                <Grid>
-
-                  <Grid item>
-                 
-                  <input
-                   id={`file-upload-input-${index}-${index1}`}
-                    type="file"
-                    accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
-                    style={{ display: 'none' }}
-                   
-                />
-                <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
-                </label>
-                <Typography variant="body2" color="textSecondary">
-                    {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
-                </Typography>
-                  </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
-                  { index1===0 &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
-                        
-                       
-                        
-
-                      }
-                      >Add</Button>
-                   
-
-                  }
-                   { index1!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index,index1)
-                      }
-                       
-                        
-                       
-                        
-
-                      }
-                      >Delete</Button>
-                    
-
-                  }
-                  </Grid>
-                  
-                  
-                </Grid>
-               
-                </Grid>
-               
-                   
-
-              </Grid>
-              ))}
-             
+  >  <ModalHeader heading={(endpoint==='addEducation'?"Add ":"Edit ")+"Education"}/>
+              
             
-            </Grid>
-          ))}
-        </>
-            {defaultValues[0]?.documents?.length && 
-          <Grid container alignItems="center" justifyContent="end">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            handleAdd();
-          }}
-        >
-          Add Education
-        </Button>
-        </Grid>}
-        {/* <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            handleSubmit();
-          }}
-        >
-          Submit
-        </Button> */}
-      </form>
-             </Card>
+                <>
+                
+                {defaultValues?.map((item, index) => (
+                 
+                <Grid md={12} xs={12} lg={12} padding="5px" >
+                
+                  <Grid margin="5px">
+
+                     
+                 
+                    <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                      <Grid md={6} xs={12} item>
+                        {/* <TextField
+                          fullWidth
+                      
+                          name="nameOfTheDegree"
+                          label="Name Of the Degree"
+                          variant="outlined"
+                          id="name_of_the_degree"
+                          value={item?.nameOfTheDegree}
+                          onChange={(e) => {
+                            handleChange(e, index, 'nameOfTheDegree');
+                          }}
+                        /> */}
+
+                <Autocomplete
+                  disablePortal
+                  id="degree"
+                  options={degreeOptions || []}
+                  value={item?.nameOfTheDegree || undefined}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={(e, newValue) => {
+                  
+                    const newArray = [...defaultValues];
+                    newArray[index] = {
+                      ...newArray[index],
+                      nameOfTheDegree: newValue
+                    };
+                    setDefaultValues(newArray);
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Name Of The Degree"
+                  style={{  width: '100%' }} />
+                
+                }
+                />
+                       
+                      </Grid>
+                      <Grid md={6} xs={12} item>
+                        <TextField
+                          fullWidth
+                          
+                          name="Stream"
+                          label="Stream"
+                          id="stream"
+                          value={item?.stream}
+                          onChange={(e) => {
+                            handleChange(e, index, 'stream');
+                          }}
+                          variant="outlined"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                    <Grid md={6} xs={12} item>
+                              <TextField
+                                fullWidth
+                                select  // Use 'select' to render a dropdown
+                                name="gradeType"
+                                label="Grade Type"
+                                id="gradeType"
+                                value={item?.gradeType}
+                                onChange={(e) => handleChange(e, index, 'gradeType')}
+                                variant="outlined"
+                              >
+                                {/* Define the dropdown options */}
+                                <MenuItem value="cgpa">CGPA</MenuItem>
+                                <MenuItem value="percentage">Percentage</MenuItem>
+                              </TextField>
+                                      </Grid>
+                                        <Grid md={6} xs={12} item>
+                                          <TextField
+                                            fullWidth
+                                            type="number"
+                                            name="grade"
+                                            label={item?.gradeType==="cgpa"?'Points':(item?.gradeType==="percentage"?'Percentage %':'Points')}
+                                            id="yearOfPassing"
+                                            placeholder='80,8,..'
+                                          
+                                            value={item?.grade}
+                                            onChange={(e) => {
+                                              handleChange(e, index, 'grade');
+                                            }}
+                                            variant="outlined"
+                                            inputProps={{
+                                              step: 'any',  // Allow any decimal number
+                                            }}
+                                          />
+                                        </Grid>
+                                      </Grid>
+
+                                      <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                        <Grid md={6} xs={12} item>
+                                          <TextField
+                                            fullWidth
+                                        
+                                            name="universityName"
+                                            label="University Name"
+                                            variant="outlined"
+                                            id="universityName"
+                                            value={item?.universityName}
+                                            onChange={(e) => {
+                                              handleChange(e, index, 'universityName');
+                                            }}
+                                          />
+                                        </Grid>
+                                      
+                                      </Grid>
+
+                                      <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                                    <Grid md={6} xs={12} lg={6} item>
+                                        <DatePicker
+                                        sx={{width:'100%'}}
+                                        
+                                      
+                                        fullWidth
+                                          value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                                          onChange={(date) => {
+
+                                            const newArray = [...defaultValues];
+
+                                            
+                                    
+                                          
+                                            newArray[index] = {
+                                              ...newArray[index],
+                                              startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                                          }
+                                    
+                                          setDefaultValues(newArray)
+                                          
+                                          }}
+                                          renderInput={(params) => <TextField {...params} />}
+                                          inputFormat="yyyy-MM-dd"
+                                          variant="inline"
+                                          format="yyyy-MM-dd"
+                                          margin="normal"
+                                          id="date-picker-inline"
+                                          label="Start Date"
+                                        />
+                                        
+                                      </Grid>
+
+                                      <Grid md={6} xs={12} lg={6} item>
+                                        <DatePicker
+                                        sx={{width:'100%'}}
+                                        fullWidth
+                                          value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
+                                          onChange={(date) => {
+
+                                            const newArray = [...defaultValues];
+
+                                            
+                                    
+                                          
+                                            newArray[index] = {
+                                              ...newArray[index],
+                                              endDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                                          }
+                                    
+                                          setDefaultValues(newArray)
+                                          
+                                          }}
+                                          renderInput={(params) => <TextField {...params} />}
+                                          inputFormat="yyyy-MM-dd"
+                                          variant="inline"
+                                          format="yyyy-MM-dd"
+                                          margin="normal"
+                                          id="date-picker-inline"
+                                          label="End Date"
+                                        />
+                                        
+                                      </Grid>
+                                      
+                                      
+                                    </Grid>
+
+                                    {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
+                                         { endpoint!=='addEducation' &&<>
+                                         
+                                         <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
+                                                Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
+                                              </Typography>
+                                        
+                                         <FilesDisplay dataOfFiles={item?.documents || []}  handleDeleteDocument={handleDeleteDocument} />
+
+                                         {  addDocuments &&
+                                      
+                                      addDocuments.map((file,index1)=>(
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px',marginTop:'15px' }} container flexDirection="row" item>
+
+                                        <Grid item xs={12} md={6} >
+
+                                      
+                                        <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                                            <Select
+                                                label="Select Document"
+                                                value={file?.fileType}
+                                                onChange={(e)=>{handleCategoryChangeNew(e,index)}}
+                                                name="Select Document"
+                                            >
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                                <MenuItem value="degree">Degree</MenuItem>
+                                                {/* Add more categories here */}
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                        <Grid>
+
+                                          <Grid item>
+                                        
+                                          <input
+                                          id={`file-upload-input-${index}-${index1}`}
+                                            type="file"
+                                            accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                          
+                                            style={{ display: 'none' }}
+                                          
+                                        />
+                                      <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
+                                        <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+
+                                        <Button
+                                        onChange={(e)=>{handleFileUploadNew(e,index)}}
+                                        component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                    Upload file
+                                                    <VisuallyHiddenInput type="file" />
+                                                  </Button>
+                                        </label>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                        
+                                        <IconButton
+                                            onClick={()=>{
+                                              handleRemoveDocumentNew(index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
+                                         
+                                            
+                                            
+                                            
+
+                                          
+                                          </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
+
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
+
+                                         
+                                         </> }
+                                      {  endpoint==='addEducation' &&
+                                      
+                                      item?.documents?.map((file,index1)=>(
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+
+                                        <Grid item xs={12} md={6} >
+
+                                      
+                                        <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                                            <Select
+                                                label="Select Document"
+                                                value={file?.fileType}
+                                                onChange={(e)=>{handleCategoryChange(e,index,index1)}}
+                                                name="Select Document"
+                                            >
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                                <MenuItem value="degree">Degree</MenuItem>
+                                                {/* Add more categories here */}
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                        <Grid>
+
+                                          <Grid item>
+                                        
+                                          <input
+                                          id={`file-upload-input-${index}-${index1}`}
+                                            type="file"
+                                            accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                          
+                                            style={{ display: 'none' }}
+                                          
+                                        />
+                                      <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
+                                        <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+
+                                        <Button
+                                        onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                                        component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                    Upload file
+                                                    <VisuallyHiddenInput type="file" />
+                                                  </Button>
+                                        </label>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                        
+                                          { index1===0 &&
+                                           <IconButton
+                                           onClick={() => {
+                                             handleAddDocument(index);
+                                           }}
+                                           color="primary"
+                                         >
+                                           <Iconify icon="gala:add" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                         </IconButton>
+                                              // <Button 
+                                              // onClick={()=>{
+                                              //   handleAddDocument(index)
+                                              // }
+                                              
+                                                
+                                              
+                                                
+
+                                              // }
+                                              // >Add Files</Button>
+                                          
+
+                                          }
+                                          { index1!==0 &&
+                                            
+                                            <IconButton
+                                            onClick={()=>{
+                                              handleDeleteDocument(index,index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
+
+                                            
+                                            
+
+                                          }
+                                          </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
+
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
+                                    
+                      </Grid>
+                 
+                </Grid>
+
+              
+   
+             
+                ))}
+              </>
+                   {/* <Grid md={2} xs={2} lg={2} padding="5px" item>
+                     {(index===0 &&  endpoint==='addEducation') &&    <Button
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleAdd();
+                   }}
+                 >
+                   Add Education
+                 </Button>}
+                 {index!==0 &&    <Button
+                 fullWidth
+                   variant="contained"
+                   sx={{backgroundColor:"#3B82F6"}}
+                   onClick={() => {
+                     handleDelete(index);
+                   }}
+                 >
+                   Remove
+                 </Button>}
+                   </Grid> */}
+               
 
 
 
-            </DialogContent>
+          
 
             <DialogActions>
             <Button variant="outlined" onClick={()=>{setDefaultValues(employeeData);onhandleClose()}}>
               Cancel
             </Button>
 
-            <LoadingButton type="submit" variant="contained" onClick={onSave}>
+            <LoadingButton type="submit" variant="contained" onClick={onSave}  sx={{backgroundColor:"#3B82F6"}}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -546,5 +871,6 @@ CreateEducation.propTypes = {
     open: PropTypes.string,
     onhandleClose:PropTypes.func,
     employeeData:PropTypes.array,
-    employeeIDForApis:PropTypes.string
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

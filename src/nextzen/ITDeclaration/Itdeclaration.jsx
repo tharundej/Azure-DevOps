@@ -13,6 +13,8 @@ import LicPremium from './licPremium/LicPremium';
 import HouseProperty from './houseProperty/HouseProperty';
 import MedicalPremium from './medicalPremium/MedicalPremium';
 import Photos from './attachment/Photos';
+import HrITTab from './hrITDeclaration/HrITTab';
+import HrSectionTab from './hrITDeclaration/HrSectionTab';
 
 const bull = (
   <Box
@@ -24,7 +26,7 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Declaration details', 'Rent details', 'LIC Premium','House Property','Medical Insurance Premium','Master Deatils'];
+  const tabLabels = ['Declaration Details', 'Rent Details', 'LIC Premium','House Property','Medical Insurance Premium','Master Details' ,'HR Tab'];
   const tabContents = [
     <div>
       <DeclarationDetails/>
@@ -44,6 +46,10 @@ export default function BasicCard() {
     <div>
       <MasterDetails/>
     </div>,
+     <div>
+     {/* <HrITTab/> */}
+     <HrSectionTab />
+   </div>,
     
   ]
   return (

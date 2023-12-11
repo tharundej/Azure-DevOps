@@ -47,7 +47,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import ComoffConfigurationForm from './CompoffConfiguration';
@@ -91,7 +91,7 @@ function getStyles(name, personName, theme) {
 
 export default function ComoffConfigFilters({ filterData, filterOptions ,filterSearch,searchData}) {
   const theme = useTheme();
-  const compensatorys = [
+  const compensantoryPoliciess = [
     'Leave',
     'Incashment'
   ];
@@ -114,7 +114,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownLocation, setdropdownLocation] = useState([]);
-  const [dropdownCompensatory, setdropdownCompensatory] = useState([]);
+  const [dropdowncompensantoryPolicies, setdropdowncompensantoryPolicies] = useState([]);
 
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
@@ -134,7 +134,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
       options: [],
     },
     {
-      field: 'compensatory',
+      field: 'compensantoryPolicies',
       options: [],
     },
   ]);
@@ -178,7 +178,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
       dropdownFiledArray.forEach((item, index) => {
         if (dropdown[item.field]?.length > 0) {
           const arrayOfStrings = dropdown[item.field];
-          const commaSeparatedString = arrayOfStrings.join(', ');
+          const commaSeparatedString = arrayOfStrings.join(',');
           arr1[item.field] = commaSeparatedString;
         }
 
@@ -224,8 +224,8 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
-    } else if (field === 'compensatory') {
-      setdropdownCompensatory(value);
+    } else if (field === 'compensantoryPolicies') {
+      setdropdowncompensantoryPolicies(value);
       const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
@@ -261,7 +261,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item  md={6} xs={4}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -269,10 +269,10 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item  md={4} xs={4}>
             <ComoffConfigurationForm/>
        </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item  md={2} xs={4}>
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -308,22 +308,31 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
             {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
            
-            <Grid container spacing={1}  sx={{flexDirection:'row',display:'flex',justifyContent: 'center', alignItems: 'center',marginTop:'1rem'}} item>
+            <Grid  container
+            spacing={1}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
+            item>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="compensatory">Compensatory</InputLabel>
+                  <InputLabel id="compensantoryPolicies">Compensantory Policies</InputLabel>
                   <Select
                   fullWidth
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownCompensatory}
-                    onChange={(e) => handleChangeDropDown(e, 'compensatory')}
-                    input={<OutlinedInput label="Compensatory" />}
+                    value={dropdowncompensantoryPolicies}
+                    onChange={(e) => handleChangeDropDown(e, 'compensantoryPolicies')}
+                    input={<OutlinedInput label="Compensantory Policies" />}
                     MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
+                    //  sx={{minWidth:'200px'}}
                   >
-                    {compensatorys.map((name) => (
+                    {compensantoryPoliciess.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
@@ -357,8 +366,8 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                     </Select>
                   </FormControl>
                 </Grid> */}
-                <Grid  item xs={12} md={6}>
-                {/* <FormControl fullWidth >
+                {/* <Grid  item xs={12} md={6}>
+                <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
@@ -377,8 +386,8 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                       </MenuItem>
                     ))}
                   </Select>
-              </FormControl> */}
-                   </Grid>
+              </FormControl>
+                   </Grid> */}
             </Grid>
 
            

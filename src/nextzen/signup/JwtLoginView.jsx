@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Snackbar, Alert as MuiAlert, Card, CardContent } from '@mui/material';
+import { Snackbar, Alert as MuiAlert, Card, CardContent ,Button} from '@mui/material';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -25,7 +25,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { createTheme } from '@mui/system';
+import { color, createTheme } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import { useNavData } from 'src/layouts/dashboard/config-navigation';
 
@@ -49,18 +49,18 @@ export default function JwtLoginView() {
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    companyEmail: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: '',
+    companyEmail: '',
     password: '',
   };
 
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
-     defaultValues,
+    defaultValues,
   });
 
   const {
@@ -76,10 +76,9 @@ export default function JwtLoginView() {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    
     try {
-      await login?.(data.email, data.password);
-      router.push(returnTo || PATH_AFTER_LOGIN);
+      await login?.(data.companyEmail, data.password);
+      // router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       // reset();
@@ -98,16 +97,17 @@ export default function JwtLoginView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2">New user?</Typography>
 
-        <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
+        <Link component={RouterLink} href={paths.auth.jwt.companyregisteration} variant="subtitle2">
           Create an account
         </Link>
       </Stack>
-      <Card sx={{backgroundColor:'#cce9f0'}}>
+      {/* <Card sx={{ backgroundColor: '#cce9f0' }}>
         <CardContent>
-      <Typography variant="body2">Email: rameshagowdav@gmail.com</Typography>
-      <Typography variant="body2">Password: 1234</Typography>
-      </CardContent>
-      </Card>
+        <Typography variant="body2">Admin Login Use Below Credentials</Typography>
+          <Typography variant="body2">Email: anilg@infobellit.com</Typography>
+          <Typography variant="body2">Password: Anil@123</Typography>
+        </CardContent>
+      </Card> */}
     </Stack>
   );
 
@@ -115,7 +115,7 @@ export default function JwtLoginView() {
     <Stack spacing={2.5}>
       {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-      <RHFTextField name="email" label="Email address" />
+      <RHFTextField name="companyEmail" label="Email ID" />
 
       <RHFTextField
         name="password"
@@ -132,37 +132,50 @@ export default function JwtLoginView() {
         }}
       />
 
-      <Link component={RouterLink} href={paths.auth.jwt.forgotpassword} variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
+      <Link
+        component={RouterLink}
+        href={paths.auth.jwt.forgotpassword}
+        variant="body2"
+        color="inherit"
+        underline="always"
+        sx={{ alignSelf: 'flex-end' }}
+      >
         Forgot password?
       </Link>
 
-      <LoadingButton
-        // fullWidth
-        color="inherit"
+      {/* <LoadingButton
+         fullWidth
+        // color="inherit"
         size="large"
         type="submit"
         variant="contained"
+        // sx={{color:'#3B82F6'}}
         loading={isSubmitting}
       >
-        Login
-      </LoadingButton>
+        LOGIN
+      </LoadingButton> */}
+      <Button
+       fullWidth
+       // color="inherit"
+       size="large"
+       type="submit"
+       variant="contained"
+       // sx={{color:'#3B82F6'}}
+       loading={isSubmitting}>
+         LOGIN
+      </Button>
     </Stack>
   );
-
+  
   return (
-    
     <FormProvider methods={methods} onSubmit={onSubmit}>
-       
       {renderHead}
 
       {/* <Alert severity="info" sx={{ mb: 3 }}>
         Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
       </Alert> */}
-      
-     
-      {renderForm}
 
+      {renderForm}
     </FormProvider>
-    
   );
 }

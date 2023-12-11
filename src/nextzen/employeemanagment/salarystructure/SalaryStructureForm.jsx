@@ -28,22 +28,24 @@ import axios from 'axios';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade,ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-export default function SalaryStructureForm({ currentUserData}) {
-  const handleClose=()=>setOpen(false)
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+
+export default function SalaryStructureForm({ openModal,currentUserData,handleClose}) {
+  // const handleClose=()=>setOpen(false)
   const [currentUser,setcurrentUser]=useState("")
   const [options,setOptions]=useState({})
   const [optionsValue,setOptionsValue]=useState({})
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(openModal);
   useEffect(()=>{
     const fetchDepartment=async()=>{
-      if(open){
+      if(openModal){
         try{
         
           const obj={
             departmentOptions:await ApiHitDepartmentWithoutLocation(),
           }
           setOptions(obj)
-          console.log(obj,'objjjjjj')
+          
         }
         catch(error){
   
@@ -55,7 +57,7 @@ export default function SalaryStructureForm({ currentUserData}) {
 
     fetchDepartment();
     
-  },[open])
+  },[openModal])
  
    const handleOpen = () => setOpen(true);
 
@@ -95,7 +97,7 @@ export default function SalaryStructureForm({ currentUserData}) {
   //   const values = watch();
 
   const ApiHit=(data)=>{
-    console.log(data,'ApiHitdata')
+   
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -109,6 +111,7 @@ export default function SalaryStructureForm({ currentUserData}) {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      handleClose()
     })
     .catch((error) => {
       console.log(error);
@@ -122,32 +125,32 @@ export default function SalaryStructureForm({ currentUserData}) {
     obj.departmentID=optionsValue?.departmentValue?.departmentID || "";
     obj.designationID=optionsValue?.desginationValue?.designationID || "";
     obj.designationGradeID=optionsValue?.desginationGradeValue?.designationGradeID || "";
-    obj.companyID= "COMP1";
+    obj.companyID= JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     ApiHit(obj)
 
   };
 
 
 
-
+  console.log(openModal,'openModal')
  
   return (
     <>
-      <Button onClick={handleOpen}  variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{margin:'20px'}}>Add SalaryStructure</Button>
+     
       <Dialog
         fullWidth
         maxWidth={false}
-        open={ open}
+        open={ openModal }
         onClose={handleClose}
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
 
       >  
+
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
-            <DialogTitle>Add SalaryStructure</DialogTitle>
+            <ModalHeader heading="Add Salary Structure" />
+            {/* <DialogTitle>Add SalaryStructure</DialogTitle> */}
             <DialogContent>
               <Box
                 rowGap={3}
@@ -165,7 +168,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                     fullWidth
                     type="number"
                     name="marketRate"
-                    label="market Rate"
+                    label="Market Rate"
                     variant="outlined"
                     id="motherName"
                     value={currentUser?.marketRate}
@@ -236,8 +239,8 @@ export default function SalaryStructureForm({ currentUserData}) {
 
                   <Grid container >
               
-              <Grid item xs={12} md={6}>
-              
+              <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
+              {console.log(options,'options')}
                 <Autocomplete
                   disablePortal
                   id="departmentOptions"
@@ -256,7 +259,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(deptObj);
@@ -282,13 +285,13 @@ export default function SalaryStructureForm({ currentUserData}) {
                  
                   
                   renderInput={(params) => <TextField {...params} label="Department"
-                  style={{ paddingLeft: '16px', width: '100%' }} />}
+                  style={{ width: '100%' }} />}
                 />
               </Grid>
                   </Grid>
 
                       <Grid container >
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
                     
                       <Autocomplete
                         disablePortal
@@ -307,7 +310,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                         
                           try{
                             const desgGradeObj={
-                              companyID:'COMP1',
+                              companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                               designationID:newvalue?.designationID
                             }
                             const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
@@ -328,13 +331,13 @@ export default function SalaryStructureForm({ currentUserData}) {
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination"
-                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                        style={{  width: '100%' }} />}
                       />
                     </Grid>
                       </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
                     
                       <Autocomplete
                         disablePortal
@@ -357,7 +360,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                        style={{ width: '100%' }} />}
                       />
                     </Grid>
                   </Grid>
@@ -370,7 +373,7 @@ export default function SalaryStructureForm({ currentUserData}) {
                 Cancel
               </Button>
               <Button
-               
+               sx={{backgroundColor:'#3B82F6'}}
                 variant="contained"
                 onClick={onSubmit1}
                
@@ -379,7 +382,7 @@ export default function SalaryStructureForm({ currentUserData}) {
               </Button>
             </DialogActions>
           </FormProvider>
-        )}
+       
       </Dialog>
     </>
   );
@@ -387,7 +390,7 @@ export default function SalaryStructureForm({ currentUserData}) {
 
 SalaryStructureForm.propTypes = {
   currentUser: PropTypes.object,
-  openModal:PropTypes.bool,
+  openmodal:PropTypes.bool,
   type:PropTypes.string,
   handleClose:PropTypes.func
 };

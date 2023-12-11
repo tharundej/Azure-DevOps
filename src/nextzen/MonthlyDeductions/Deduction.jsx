@@ -1,13 +1,15 @@
 import * as React from 'react';
-import {Card,CardActions,CardContent,Button,Typography,Dialog,DialogContent} from '@mui/material';
 import { _userList } from 'src/_mock';
 import { useState, useCallback } from 'react';
 import instance from 'src/api/BaseURL';
 import { BasicTable } from '../Table/BasicTable';
 import {useSnackbar} from '../../components/snackbar';
 import axios from 'axios';
-export default function Deduction() {
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+export default function Deduction({defaultPayload,componentPage}) {
    const {enqueueSnackbar} = useSnackbar()
+   const {user} = useContext(UserContext)
   const TABLE_HEAD = [
     {
 
@@ -19,25 +21,28 @@ export default function Deduction() {
 
     },
 
-    { id: "employeeName", label: "Employee Name", minWidth: "10pc", type: "text" },
+    { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
 
-    { id:"deductionType", label: "Deduction Type", minWidth: "8pc", type: "text" },
+    { id:"deductionType", label: "Deduction Type", minWidth: "9pc", type: "text" },
 
-    { id: "takenAmount", label: "Taken Amount", minWidth: "7pc", type: "text" },
+    { id: "takenAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
 
-    { id: "noOfInstallments", label: "Installment No", minWidth: "7pc", type: "text" },
-    { id: "deductedDate", label: "Deducted Date", minWidth: "8pc", type: "text" },
-    { id: "deductedAmount", label: "Deducted Amount", minWidth: "7pc", type: "text" },
-    { id: "balanceAmount", label: "Balance Amount", minWidth: "7pc", type: "text" },
-    { id: "comments", label: "Comments", minWidth: "10pc", type: "text" }
+    { id: "noOfInstallments", label: "Installment", minWidth: "6pc", type: "text" },
+    { id: "deductedDate", label: "Deducted Date", minWidth: "9pc", type: "date" },
+    { id: "deductedAmount", label: "Deducted Amount", minWidth: "10pc", type: "text" },
+    { id: "balanceAmount", label: "Balance Amount", minWidth: "9pc", type: "text" },
+    { id: "comments", label: "HR Remarks", minWidth: "10pc", type: "text" }
 
   ];
-
-const defaultPayload={
-    "count":4,
+const roleID = localStorage?.getItem('roleID')
+const defaultPayloadValue=(defaultPayload)?defaultPayload:{
+    "count":5,
     "page":0,
     "search":"",
-    "companyID":localStorage?.getItem('companyID'),
+    "companyID":(user?.companyID)?user?.companyID:'',
+    "employeeID":(user?.employeeID)?user?.employeeID:'',
+    "roleID":(user?.roleID)?user?.roleID:'',
+    "records":"All Records",
     "externalFilters":{
         "deductionType":"",
         "noOfInstallments":"",
@@ -47,8 +52,8 @@ const defaultPayload={
         }
     },
     "sort":{
-        "key":0,
-        "orderby":""
+        "key":1,
+        "orderby":"deduction_id"
     }
 }
 return (
@@ -56,10 +61,11 @@ return (
 
 <BasicTable
 headerData={TABLE_HEAD}
-defaultPayload={defaultPayload}
+defaultPayload={defaultPayloadValue}
 endpoint='/getLoanDeductionDetailsHR'
 bodyData='data'
 filterName="DeductionFilter"
+componentPage={componentPage}
 />  
 </>
 );

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Iconify from 'src/components/iconify';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
@@ -23,13 +24,23 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import PhotoCamera from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-
+import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
 import { Stack } from '@mui/system';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 // const EducationInformation=forwardRef((props,ref)=>{
 const PreviousWorkDetails=forwardRef((props,ref)=>{
 
@@ -55,8 +66,8 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
   const [defaultValues, setDefaultValues] = useState([
     {
       previousCompanyName: '',
-      startDate: dayjs(new Date()),
-      endDate: dayjs(new Date()),
+      startDate: "",
+      endDate:"",
       employementType: '',
       primarySkills: [],
       
@@ -157,8 +168,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
      
 
   const ApiHitExperience=()=>{
+    props.handleLoader()
     const obj={
-      companyId: "COMP5",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId:localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -175,7 +187,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
           'Content-Type': 'application/json'
         },
         data : {
-      companyId: "COMP5",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: localStorage.getItem('employeeIdCreated'),
       experience:defaultValues
      }
@@ -184,7 +196,9 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        onhandleClose()
+        props.nextStep();
+       props.handleCallSnackbar(response.data.message,"success")
+       console.log(response.data.message,'response.data.message')
       })
       .catch((error) => {
         console.log(error);
@@ -212,7 +226,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
   const handleSubmit = () => {
     const obj1={
-      companyId: "COMP5",
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   
       employeeId: localStorage.getItem("employeeId"),
   
@@ -400,10 +414,42 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
 
             <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-             
-
-              <Grid md={6} xs={12} item>
+            <Grid md={6} xs={12} lg={6} item>
                 <DatePicker
+                sx={{width:'100%'}}
+                
+               
+                fullWidth
+                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
+                  onChange={(date) => {
+
+                    const newArray = [...defaultValues];
+
+                    
+            
+                   
+                     newArray[index] = {
+                       ...newArray[index],
+                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                   }
+            
+                   setDefaultValues(newArray)
+                   
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputFormat="yyyy-MM-dd"
+                  variant="inline"
+                  format="yyyy-MM-dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date"
+                />
+                
+              </Grid>
+
+              <Grid md={6} xs={12} lg={6} item>
+                <DatePicker
+                sx={{width:'100%'}}
                 fullWidth
                   value={item?.endDate ? dayjs(item?.endDate).toDate() : null}
                   onChange={(date) => {
@@ -431,35 +477,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
                 />
                 
               </Grid>
-              <Grid md={6} xs={12} item>
-                <DatePicker
-                fullWidth
-                  value={item?.startDate ? dayjs(item?.startDate).toDate() : null}
-                  onChange={(date) => {
-
-                    const newArray = [...defaultValues];
-
-                    
-            
-                   
-                     newArray[index] = {
-                       ...newArray[index],
-                       startDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                   }
-            
-                   setDefaultValues(newArray)
-                   
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                  inputFormat="yyyy-MM-dd"
-                  variant="inline"
-                  format="yyyy-MM-dd"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="End Date"
-                />
-                
-              </Grid>
+              
               
             </Grid>
            
@@ -471,12 +489,12 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
 
              
               <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+              <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                   <Select
-                      label="Select a doc Type"
+                      label="Select Document"
                       value={file?.fileType}
                       onChange={(e)=>{handleCategoryChange(e,index,index1)}}
-                      name="Select a doc Type"
+                      name="Select Document"
                   >
                       <MenuItem value="salary-slips">Salary Slips</MenuItem>
                       <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
@@ -490,19 +508,22 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
               <Grid>
 
                 <Grid item>
-                {console.log(index,'opopop')}
+                
                 <input
                  id={`file-upload-input-${index}-${index1}`}
                   type="file"
                   accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                  onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
+                  
                   style={{ display: 'none' }}
                  
               />
               <label htmlFor= {`file-upload-input-${index}-${index1}`}>
-                  <Button variant="outlined" component="h6">
-                  Choose File
-                  </Button>
+              <Button
+                 onChange={(e)=>{handleFileUpload(e,index,index1)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
               </label>
               <Typography variant="body2" color="textSecondary">
                   {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}

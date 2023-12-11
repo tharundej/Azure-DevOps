@@ -12,6 +12,7 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
 import ShiftSwapForm from './ShiftSwapForm';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -26,37 +27,25 @@ const bull = (
 );
 
 export default function ShiftSwap() {
-   
+      const {user}= React.useContext(UserContext)
       const TABLE_HEAD = [
 
-        {
     
-          id: "",
     
-          label: " SL NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
-    
-        { id: "employee_name", label: "Employe Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
 
-        { id: "from_shift_name", label: "From Shift Name", width: 180, type: "text" },
+        { id: "from_shift_name", label: "Old Shift Name", width: 180, type: "text" },
+        { id: "From_shift_group", label: "Old Shift Group Name", width: 180, type: "text" },
     
         // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+        { id: "to_shift_name", label: "New Shift Name", width: 220, type: "text" },
+        { id: "to_shift_group", label: "New Shift Group Name", width: 220, type: "text" },
         { id: "start_date", label: "Swap Date", width: 220, type: "text" },
-        { id: "to_shift_name", label: "To Shift Name", width: 220, type: "text" },
     
         // { id: "to_shift_name", label: "To Shift Name", width: 180, type: "text" },
     
         // { id: "ToShiftGroup_Name", label: " ToShift Group Name", width: 100, type: "text" },
-        { id: "status", label: "Status ", width: 100, type: "text" },
+        { id: "status", label: "Status ", width: 100, type: "badge" },
         // { id: "End_Date", label: "End Date", width: 100, type: "text" },
         // { id: "Sift_term", label: "Sift_term", width: 100, type: "text" },
     
@@ -65,14 +54,18 @@ export default function ShiftSwap() {
       ];
     
      const defaultPayload = {
-      "company_id":"COMP2",
+      "company_id":(user?.companyID)?user?.companyID : '',
+      "approver_id":(user?.employeeID)?user?.employeeID:'',
       "page":0,
-      "search":"",
-      "count": 5,
+      "Search":"",
+      "count": 10,
       "externalFilters":{
       "status": "",
-      "swap_date": ""
-  } , 
+      "start_date": {
+           "from": "",
+          "to": ""
+      }
+  } ,
       "sort": {
       "orderby": "employee_name",
       "key": 0
@@ -124,11 +117,11 @@ export default function ShiftSwap() {
     <BasicTable
 
 headerData={TABLE_HEAD}
-endpoint="/MyShiftSwap"
+endpoint="/selfswap"
 bodyData='data'
 defaultPayload={defaultPayload}
 filterName="SwapSearchFilter"
-rowActions={actions}
+// rowActions={actions}
 
 />  
     </>

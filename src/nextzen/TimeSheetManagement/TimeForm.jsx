@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 // @mui
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -30,6 +31,11 @@ import { countries } from 'src/assets/data';
 // components
 import { Autocomplete, TextField } from '@mui/material';
 import Label from 'src/components/label';
+import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -41,7 +47,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 export default function TimeForm({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -126,7 +132,7 @@ const [currentProjectData ,setCurrentProjectData] = useState({})
 const [currentActivitytData ,setCurrentActivitytData] = useState({})
 console.log("🚀 ~ file: TimeForm.jsx:119 ~ TimeForm ~ projectDetails:", projectDetails)
 
-const PrName = projectDetails.map((item) => item.projectName);
+const PrName = projectDetails.map((item) => item.projectcdName);
 console.log("🚀 ~ file: TimeForm.jsx:123 ~ TimeForm ~ PrName:", PrName)
 
 const getProjectName = async ()=>{
@@ -138,13 +144,13 @@ const getProjectName = async ()=>{
     };
 
 
-    const response = await instance.post('listmanagersproject', data);
+    const response = await instance.post('/listmanagersproject', data);
 
     // Handle the response (e.g., check for success, update state, etc.)
     console.log('Response:', response.data.projectDetails);
 
     // Return or handle the response data as needed
-    setProjectDetails(response.data.Eployee_list)
+    setProjectDetails(response.data.data)
     return response.data;
   } catch (error) {
     // Handle any errors (e.g., network error, request failure, etc.)
@@ -168,7 +174,7 @@ const getActivityName = async ()=>{
     console.log('Response:', );
 
     // Return or handle the response data as needed
-    SetActivityData(response.data["Activity Names"])
+    SetActivityData(response.data.data)
     return response.data;
   } catch (error) {
     // Handle any errors (e.g., network error, request failure, etc.)
@@ -183,9 +189,9 @@ const getActivityName = async ()=>{
     console.log('uyfgv');
 
     try {
-      data.company_id = 'COMP2';
-      data.activity_id =String( currentActivitytData.activity_id);;
-      data.projectId =String( currentProjectData.projectId);
+      data.company_id = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      data.activity_id =String( currentActivitytData.activityId);;
+      data.project_id =String( currentProjectData.projectId);
       data.date_of_activity = formatDateToYYYYMMDD(dayjs(new Date()));
       data.start_time = '2023-10-17 11:50:02.023';
       data.end_time = '2023-10-17 11:50:02.023';
@@ -194,7 +200,7 @@ const getActivityName = async ()=>{
       // data.end_date = formatDateToYYYYMMDD(datesUsed?.end_date);
       // data.start_date = formatDateToYYYYMMDD(datesUsed?.start_date);
       // data.selectedActivity = selectedActivity;
-      // data.companyID = "COMP1";
+      // data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
       // data.employeeID = "info4";
 
       console.log(data, 'data111ugsghghh');
@@ -216,6 +222,7 @@ const getActivityName = async ()=>{
 
   return (
     <div style={{ paddingTop: '20px' }}>
+      <Dialog>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
  <Grid xs={12} md={12}>
@@ -233,8 +240,8 @@ const getActivityName = async ()=>{
                 columnGap={1}
                 display="grid"
                 gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(7, 1fr)',
+                  // xs: 'repeat(1, 1fr)',
+                  // sm: 'repeat(7, 1fr)',
                 }}
               >
                 <RHFTextField name="employee_id" label="Employe id  " />
@@ -243,14 +250,14 @@ const getActivityName = async ()=>{
             id="combo-box-demo"
             options={projectDetails}
             value={currentProjectData}
-            getOptionLabel={(option) => option.projectName}
+            getOptionLabel={(option) => option.projectcdName}
             onChange={(e,newvalue)=>{
              
              
               setCurrentProjectData(newvalue
               )
               // const obj={
-              //   // companyID:'COMP1',
+              //   // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   projectId:newvalue?.projectId
               // }
  
@@ -270,14 +277,14 @@ const getActivityName = async ()=>{
             id="combo-box-demo"
             options={activityData}
             value={currentActivitytData}
-            getOptionLabel={(option) => option.activity_name}
+            getOptionLabel={(option) => option.activityName}
             onChange={(e,newvalue)=>{
              
              
               setCurrentActivitytData(newvalue
               )
               // const obj={
-              //   // companyID:'COMP1',
+              //   // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
               //   projectId:newvalue?.projectId
               // }
  
@@ -317,6 +324,7 @@ const getActivityName = async ()=>{
           </Grid>
         </Grid>
       </FormProvider>
+      </Dialog>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
+import { CircularProgress } from '@mui/material';
 
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
@@ -17,7 +17,8 @@ import DocumentsUpload from './documentsupoad/DocumentsUpload';
 import CurrentWork from './currentwork/CurrentWork'
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
-
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
 
@@ -28,6 +29,8 @@ export default function OnBoardForm() {
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
   const [severity,setSeverity]=useState("")
+  const router=useRouter()
+  const [loading, setLoading] = useState(false);
 
   const childref=useRef(null);
 
@@ -50,7 +53,7 @@ export default function OnBoardForm() {
   const handleNext = () => {
 
     let returnResponse;
-    console.log('manoj0')
+    
     if(activeStep+1===1){
       console.log('11')
       childref.current.childFunctionGeneral();
@@ -73,17 +76,21 @@ export default function OnBoardForm() {
 
     }
 
-    else if(activeStep+1===5){
-     
-      childref.current.childFunctionExperience()
-
-    }
+   
 
 
     
  
     
   };
+
+  const handleLoader=()=>{
+    setLoading(true)
+  }
+
+  const handleSubmit=()=>{
+    childref.current.childFunctionWork()
+  }
   const handleNextIncrement=()=>{
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
@@ -91,10 +98,11 @@ export default function OnBoardForm() {
           steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
+    setLoading(false)
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    router.push(paths.dashboard.employee.root)
   };
 
   const handleStep = (step) => () => {
@@ -116,6 +124,7 @@ export default function OnBoardForm() {
  
  
 const handleCallSnackbar=(message,severity)=>{
+  console.log("handleCallSnackbar")
   setOpenSnackbar(true);
   setSnacbarMessage(message);
   setSeverity(severity);
@@ -126,12 +135,15 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%' }} >
-      <SnackBarComponent open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+        <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
+            <StepButton color="inherit"
+             onClick={handleStep(index)}
+            
+            >
+            {label}
             </StepButton>
           </Step>
         ))}
@@ -150,38 +162,73 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-              <GeneralInformation style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <EducationInformation  handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
+              <PreviousWorkDetails handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <DocumentsUpload handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
-              <CurrentWork style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+              <CurrentWork handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
-                color="inherit"
-                disabled={activeStep === 0}
+                // color="inherit"
+                //disabled={activeStep === 0}
                 onClick={handleBack}
-                sx={{ mr: 1 }}
+                sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+                '&:hover': {
+                  backgroundColor: '#1565C0', // Change this to the desired hover color
+                },
+              }}
               >
-                Back
+                Cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Save and Continue
-              </Button>
-              {activeStep+1!==1 &&
-              <Button onClick={handleNextIncrement} sx={{ mr: 1 }}>
+              {activeStep+1!==5 &&
+             <Button
+             onClick={handleNext}
+             sx={{
+               backgroundColor: '#3B82F6',
+               mr: 1,
+               color: 'white',
+               '&:hover': {
+                 backgroundColor: '#1565C0', // Change this to the desired hover color
+               },
+             }}
+           >
+             {loading && (
+               <CircularProgress
+                 size={24}
+                 sx={{
+                   color: 'white',
+                   position: 'absolute',
+                   top: '50%',
+                   left: '50%',
+                   marginTop: '-12px',
+                   marginLeft: '-12px',
+                   
+                 }}
+               />
+             )}
+             {!loading && <Typography>Save and Continue</Typography>}
+           </Button>}
+              {activeStep+1===5 &&
+              <Button onClick={handleSubmit} sx={{backgroundColor:'#3B82F6', mr: 1, color:'white' }}>
+                Submit
+              </Button>}
+              {(activeStep+1!==1 && activeStep+1!==5)&&(
+              <Button onClick={handleNextIncrement} sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white','&:hover': {
+                backgroundColor: '#1565C0', // Change this to the desired hover color
+              }, }}>
                 Skip
-              </Button>
+              </Button>)
               }
               
              

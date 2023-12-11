@@ -50,7 +50,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import SalaryStructureForm from './SalaryStructureForm';
@@ -91,7 +91,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function SalaryStructureFilters({ filterData, filterOptions ,filterSearch,searchData,cellData,openModal,type}) {
+export default function SalaryStructureFilters({ filterData, filterOptions ,filterSearch,searchData,cellData,openModal,type,onHandleOpen,handleClose}) {
   const theme = useTheme();
   const departmentName = [
     'HR',
@@ -264,16 +264,22 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 
   const handleApply = async () => {
     setDatesData([]);
-    const data = await formWithDropdown();
-    filterData(data);
-    console.log(data, ';;;');
+    const obj={
+      departmentID:(optionsValue?.departmentValue?.departmentID).toString() || "",
+      designationGradeID:(optionsValue?.desginationGradeValue?.designationGradeID)?.toString()|| "",
+      designationID:(optionsValue?.desginationValue?.designationID)?.toString()|| ""
+    }
+    // const data = await formWithDropdown();
+    // console.log(toString(optionsValue?.departmentValue?.departmentID),'filterss')
+    filterData(obj);
+    // console.log(optionsValue, 'optionsValue');
 
     //   filterData(data);
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
      
-    searchData(searchTerm)
+    searchData(searchTerm?.target?.value)
     console.log(searchTerm,"search ........")
     };
   return (
@@ -282,22 +288,30 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
+        // justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '1rem' }}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item   md={8} xs={12} >
         <TextField
             placeholder="Search...."
              fullWidth
              onChange={handleSearch}
+             size="small"
           />
           
         </Grid>
-        <Grid item>
-       {/* <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type}/> */}
-       </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid md={4} xs={12}  item>
+          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+            <Grid  item>
+            <Button 
+        onClick={onHandleOpen} 
+         variant="contained"
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add SalaryStructure</Button>
+
+            </Grid>
+            <Grid item  >
         <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
@@ -307,6 +321,11 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
             </Stack>
           </Grid>
         </Grid>
+          </Grid>
+      
+       {/* <SalaryStructureForm currentUserData={cellData} openModal={openModal}  type={type}/> */}
+       </Grid>
+       
       </Grid>
 
       <Dialog
@@ -315,7 +334,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
         open={open}
         // className="custom-dialog-width"
       >
-        <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
+        <DialogTitle sx={{ textAlign: 'start', paddingBottom: 0, paddingTop: 2 }}>
           Filters
           <Button onClick={() => setOpen(false)} sx={{ float: 'right' }}>
             <Iconify icon="iconamoon:close-thin" />
@@ -340,7 +359,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 
                   <Grid container >
               
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
               
                 <Autocomplete
                   disablePortal
@@ -352,15 +371,15 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                   
                     var newArr = { ...optionsValue };
                       newArr.departmentValue=newvalue
-                    newArr.designationValue=undefined;
-                    newArr.designationGradeValue=undefined;
+                    newArr.desginationValue=undefined;
+                    newArr.desginationGradeValue=undefined;
 
                     
                     console.log(newArr,'newArr')
                    
                     try{
                       const deptObj={
-                        companyID:'COMP1',
+                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                         departmentID:newvalue?.departmentID
                       }
                       const desgination=await ApiHitDesgniation(deptObj);
@@ -386,13 +405,13 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                  
                   
                   renderInput={(params) => <TextField {...params} label="Department"
-                  style={{ paddingLeft: '16px', width: '100%' }} />}
+                  style={{  width: '100%' }} />}
                 />
               </Grid>
                   </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
                     
                       <Autocomplete
                         disablePortal
@@ -411,7 +430,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                         
                           try{
                             const desgGradeObj={
-                              companyID:'COMP1',
+                              companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                               designationID:newvalue?.designationID
                             }
                             const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj);
@@ -432,13 +451,13 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination"
-                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                        style={{  width: '100%' }} />}
                       />
                     </Grid>
                       </Grid>
 
                   <Grid container >
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} lg={12} marginBottom='10px'>
                     
                       <Autocomplete
                         disablePortal
@@ -461,7 +480,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                           setOptionsValue(newArr)
                         }}
                         renderInput={(params) => <TextField {...params} label="Desgination Grade"
-                        style={{ paddingLeft: '16px', width: '100%' }} />}
+                        style={{ width: '100%' }} />}
                       />
                     </Grid>
                   </Grid>
@@ -470,17 +489,22 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
+          <Button
+          onClick={()=>{
+            setOptionsValue({})
+          }}
+          >Reset</Button>
         <Button
           onClick={() => {
             handleApply();
           }}
           // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
+          style={{ width: '80px', backgroundColor:'#3B82F6',color:'white'}}
         >
           Apply
         </Button>
-        </div>
+        </Grid>
       </Dialog>
     </>
   );
@@ -492,7 +516,9 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
 SalaryStructureFilters.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
-  type:PropTypes.string
+  type:PropTypes.string,
+  onHandleOpen:PropTypes.func,
+  handleClose:PropTypes.func
 };
 
 SalaryStructureFilters.propTypes = {

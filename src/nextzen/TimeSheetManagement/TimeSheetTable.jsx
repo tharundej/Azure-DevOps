@@ -27,21 +27,7 @@ export default function TimeSheetTable() {
      
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+
         { id: "projectId", label: "Project Id", width: 180, type: "text" },
     
         { id: "projectName", label: "Project Name", width: 220, type: "text" },
@@ -51,7 +37,7 @@ export default function TimeSheetTable() {
         { id: "activityName", label: "activity Name", width: 100, type: "text" },
         { id: "workingTime", label: "Working Time", width: 100, type: "text" },
         { id: "totalWorkingTime", label: "Total Working Time", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
         // { id: '', width: 88 },
     
@@ -92,11 +78,11 @@ export default function TimeSheetTable() {
     }
       const actions = [
     
-        { name: "approve", icon: "hh", path: "jjj" },
+        // { name: "approve", icon: "hh", path: "jjj" },
     
-        { name: "view", icon: "hh", path: "jjj" },
+        // { name: "view", icon: "hh", path: "jjj" },
     
-        { name: "eerr", icon: "hh", path: "jjj" },
+        // { name: "eerr", icon: "hh", path: "jjj" },
     
       ];
     
@@ -135,7 +121,7 @@ export default function TimeSheetTable() {
  defaultPayload={defaultPayload}
  headerData={TABLE_HEAD}
  endpoint='/Mytimesheets'
- bodyData='response'
+ bodyData='data'
  filterName="TimeSearchFilter"
  />
     </>

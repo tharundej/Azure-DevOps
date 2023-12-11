@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateCustomers from './CreateCustomers';
 
-const CustomersHead = ({ filterSearch, filterData }) => {
+const CustomersHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -40,12 +40,12 @@ const CustomersHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateCustomers currentData={{}} handleClose={handleClose} />
+          <CreateCustomers currentData={{}} handleClose={handleClose} getTableData={getTableData} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Customers Details</Typography>
+          {/* <Typography variant="h4">Customers Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField

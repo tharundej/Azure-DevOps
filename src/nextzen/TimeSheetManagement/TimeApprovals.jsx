@@ -30,21 +30,7 @@ export default function TimeApprovals() {
 
       const TABLE_HEAD = [
 
-        {
-    
-          id: "",
-    
-          label: " SL_NO",
-    
-          type: "text",
-    
-          containesAvatar: false,
-    
-     
-    
-          secondaryText: "text",
-    
-        },
+       
     
         { id: "employeeId", label: "Employe Id", width: 180, type: "text" },
         { id: "employeeName", label: "Employe Name", width: 180, type: "text" },
@@ -53,7 +39,7 @@ export default function TimeApprovals() {
         { id: "activityName", label: "Activity Name", width: 220, type: "text" },
         { id: "duration", label: "Duration", width: 100, type: "text" },
         { id: "hoursWorked", label: "Hours Worked", width: 100, type: "text" },
-        { id: "status", label: "Status", width: 100, type: "text" },
+        { id: "status", label: "Status", width: 100, type: "badge" },
     
         // { id: '', width: 88 },
     
@@ -135,7 +121,7 @@ filterName='ApprovalSearchFilter'
 // bodydata={bodyContent}
 defaultPayload={defaultPayload}
 endpoint='/timeSheetApprovals'
-bodyData="timeSheets"
+bodyData="data"
 onClickActions={onClickActions}
 rowActions={actions}
 

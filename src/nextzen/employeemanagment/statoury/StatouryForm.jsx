@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
-
+ 
 import { Helmet } from "react-helmet-async";
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+ 
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
@@ -15,38 +15,40 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+ 
 import { Button,Box,Autocomplete,TextField ,Grid} from '@mui/material';
-
+ 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-
+ 
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+ 
 import axios from 'axios';
-
+ 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-
-
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+ 
+ 
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
   {label:"Contract",id:'2'},
-
+ 
 ]
-
-const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint }) => {
+ 
+const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,endpoint ,employeeIDForApis,callApi}) => {
  
   const [type,setType]=useState({label:"Permanent",id:'1'})
-  
+ 
    const [currentUser,setCurrentUser]=useState()
-
+ 
    useEffect(()=>{
     if(currentUserData){
+      delete currentUserData.employeeName;
       setCurrentUser(currentUserData)
     }
-
+ 
    },[currentUserData])
-
+ 
  
   // useEffect(()=>{
   //   if(currentUserEOC){
@@ -54,11 +56,11 @@ const StatouryForm = ({open,onHandleClose,currentUserData,employeeIDToCreate,end
   //     setCurrentUser(currentUserEOC);
   //   }
   // },[currentUserEOC])
-
-  
-
-
-  
+ 
+ 
+ 
+ 
+ 
 const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
     // const currentUser=
     //   {
@@ -96,20 +98,20 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
     //       "workingLocation": null,
     //       "reportingManagerName": null
     //   }
-
-
+ 
+ 
     const NewUserSchema = Yup.object().shape({
  
       aadharNumber: Yup.string(),
       panNumber:Yup.string(),
       passportNumber:Yup.string(),
-    
+   
       accountholderName: Yup.string(),
       bankAccountNumber: Yup.number(),
       bankName: Yup.string(),
       bankBranch: Yup.string(),
       ifscCode: Yup.string(),
-    
+   
       uan:Yup.number(),
       pfNumber: Yup.number(),
       esicNumber: Yup.number(),
@@ -117,40 +119,40 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       lwfNumber: Yup.string(),
       pfType:Yup.string()
     });
-    
+   
     const defaultValues = useMemo(
       () => ({
-        
+       
         aadharNumber: currentUser?.aadharNumber || "",
         panNumber: currentUser?.panNumber || "",
         passportNumber: currentUser?.passportNumber || "",
-    
-    
+   
+   
         accountholderName:currentUser?.accountholderName || '',
         bankName: currentUser?.bankName || '',
         bankBranch:currentUser?.bankBranch || '',
         bankAccountNumber:currentUser?.bankAccountNumber || undefined,
         ifscCode: currentUser?.ifscCode || "",
-    
+   
         pfNumber: currentUser?.pfNumber || undefined,
         esicNumber: currentUser?.esicNumber || undefined,
         ptNumber: currentUser?.ptNumber || undefined,
         lwfNumber: currentUser?.lwfNumber || "",
         uan: currentUser?.uan || undefined,
-    
+   
         pfType:currentUser?.pfType || '',
       }),
       [currentUser]
     );
-
+ 
     console.log(defaultValues,'defaultValuesdefaultValues')
-    
-    
+   
+   
       const methods = useForm({
         resolver: yupResolver(NewUserSchema),
         defaultValues,
       });
-    
+   
       const {
         reset,
         watch,
@@ -159,49 +161,51 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
         handleSubmit,
         formState: { isSubmitting },
       } = methods;
-    
+   
       const values = watch();
-    
+   
       const onSubmit = handleSubmit(async (data) => {
         console.log(currentUser,'uyfgv');
-    
-        currentUser.employeeID=employeeIDToCreate
-        currentUser.companyID='COMP5'
-      
+   
+        currentUser.employeeID=employeeIDForApis
+        currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
+     
          
-          
-          
+         
+         
            
-          
+         
           const config = {
             method: 'post',
             maxBodyLength: Infinity,
             url: `${baseUrl}${endpoint}`,
             // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
-            headers: { 
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+            headers: {
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
               'Content-Type': 'application/json'
             },
             data : currentUser
           };
-          
+         
            
-          
+         
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            callApi();
+            onHandleClose();
           })
           .catch((error) => {
             console.log(error);
           });
       });
-
+ 
       const pfTypeOptions = ['pflimit', 'pfnolimit'];
   return (
     <>
-
+ 
         <Helmet>
-        <title> Dashboard: myclaims</title>
+        <title> Dashboard: Add Statoury</title>
       </Helmet>
       <Dialog
         fullWidth
@@ -214,43 +218,45 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       >
            <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* methods={methods} onSubmit={onSubmit} */}
-        <DialogTitle>Add Statoury</DialogTitle>
-
+        {/* <DialogTitle>Add Statoury</DialogTitle> */}
+        <ModalHeader heading={endpoint==="/updateStatutoryDetails" ?"Edit Statoury Details": "Create Statoury details"} />
+ 
         <DialogContent>
           <Box
             rowGap={3}
             columnGap={2}
             display="grid"
             marginTop={2}
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
+            // gridTemplateColumns={{
+            //   xs: 'repeat(1, 1fr)',
+            //   sm: 'repeat(2, 1fr)',
+            // }}
           >
-
+ 
           <Grid container   spacing={2} md={12} xs={12} lg={12}  >
-
-          <Grid md={6} xs={12}  fullWidth  item>
+ 
+          <Grid md={6} xs={12} lg={6}item>
                   <TextField
                     fullWidth
-                
-                    name="employeeName"
-                    label="Employeea Name"
+                    type="number"
+                    name="aadharNumber"
+                    label="Aadhar Number"
                     variant="outlined"
-                    id="employeeName"
-                     value={currentUser?.employeeName}
+                    id="accountNumber"
+                     value={currentUser?.aadharNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
-                        employeeName:e?.target.value
+                        aadharNumber: e?.target?.value
                       }
                       ))
+                    }
                     }}
-                    style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
-          <Grid md={6} xs={12} item>
+ 
+          <Grid md={6} xs={12} lg={6}item>
                   <TextField
                     fullWidth
                     type="number"
@@ -260,24 +266,26 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="accountNumber"
                      value={currentUser?.accountNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         accountNumber: parseInt(e.target.value, 10) || ''
                       }
                       ))
+                    }
                     }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="accountHolderName"
                     label="Account Holder Name"
                     variant="outlined"
-                    id="employeeName"
-                     value={currentUser?.employeeName}
+                    id="accountHolderName"
+                     value={currentUser?.accountHolderName}
                     onChange={(e) => {
                       setCurrentUser(prev=>({
                         ...prev,
@@ -291,12 +299,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="bankBranch"
                     label="Bank Branch"
                     variant="outlined"
                     id="employeeName"
-                     value={currentUser?.employeeName}
+                     value={currentUser?.bankBranch}
                     onChange={(e) => {
                       setCurrentUser(prev=>({
                         ...prev,
@@ -307,11 +315,11 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="bankName"
                     label="Bank Name"
                     variant="outlined"
@@ -327,7 +335,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -338,96 +346,101 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="esicNumber"
                      value={currentUser?.esicNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=17){
                       setCurrentUser(prev=>({
                         ...prev,
                         esicNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      )) }
                     }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="ifscCode"
                     label="IFSC Code"
                     variant="outlined"
                     id="ifscCode"
                      value={currentUser?.ifscCode}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         ifscCode:e?.target.value
                       }
-                      ))
+                      )) }
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="lwfNumber"
-                    label="lwf Number"
+                    label="LWF Number"
                     variant="outlined"
                     id="lwfNumber"
                      value={currentUser?.lwfNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=45){
                       setCurrentUser(prev=>({
                         ...prev,
                         lwfNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6}  fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="panNumber"
                     label="Pan Number"
                     variant="outlined"
                     id="panNumber"
                      value={currentUser?.panNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         panNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
-
+ 
+ 
           <Grid md={6} xs={12} lg={6} fullWidth  item>
                   <TextField
                     fullWidth
-                
+               
                     name="passportNumber"
                     label="Passport Number"
                     variant="outlined"
                     id="passportNumber"
                      value={currentUser?.passportNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         passportNumber:e?.target.value
                       }
-                      ))
+                      ))}
                     }}
                     style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6} item>
                   <TextField
                     fullWidth
@@ -438,15 +451,16 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="pfNumber"
                      value={currentUser?.pfNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         pfNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      ))}
                     }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12}  lg={6} item>
                   <TextField
                     fullWidth
@@ -457,34 +471,36 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ptNumber"
                      value={currentUser?.ptNumber}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=15){
                       setCurrentUser(prev=>({
                         ...prev,
                         ptNumber: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      ))}
                     }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6} item>
                   <TextField
                     fullWidth
                     type="number"
                     name="uan"
-                    label="uan"
+                    label="UAN"
                     variant="outlined"
                     id="uan"
                      value={currentUser?.uan}
                     onChange={(e) => {
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         uan: parseInt(e.target.value, 10) || ''
                       }
-                      ))
+                      )) }
                     }}
                   />
           </Grid>
-
+ 
           <Grid md={6} xs={12} lg={6} item>
           <Autocomplete
               value={currentUser?.pfType}
@@ -499,24 +515,24 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
               renderInput={(params) => <TextField {...params} label="PF Type" />}
       />
           </Grid>
-
+ 
           </Grid>
-
-          
+ 
+         
           </Box>
         </DialogContent>
-
-        
+ 
+       
       </FormProvider>
-        
-        
-
+       
+       
+ 
         <DialogActions>
             <Button variant="outlined" onClick={onHandleClose}>
               Cancel
             </Button>
-
-            <LoadingButton type="submit" variant="contained" onClick={onSubmit}>
+ 
+            <LoadingButton  variant="contained" sx={{backgroundColor:'#3B82F6'}} onClick={onSubmit}>
               Save
             </LoadingButton>
           </DialogActions>
@@ -524,13 +540,15 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
     </>
   )
 }
-
+ 
 export default StatouryForm
-
+ 
 StatouryForm.propTypes = {
     open: PropTypes.string,
     onHandleClose:PropTypes.func,
     currentUser:PropTypes.object,
     employeeIDToCreate:PropTypes.string,
-    endpoint:PropTypes.string
+    endpoint:PropTypes.string,
+    employeeIDForApis:PropTypes.string,
+    callApi:PropTypes.func
   };

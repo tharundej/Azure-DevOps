@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle,useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
+import FormGroup from '@mui/material/FormGroup';
+
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +17,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+
 import { Autocomplete,TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // utils
@@ -39,6 +41,8 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 
+import AssignPages from '../../employeeview/pagepermission/assignpage/AssignPages';
+
 import {
     _roles,
     JOB_SKILL_OPTIONS,
@@ -48,15 +52,48 @@ import {
     JOB_WORKING_SCHEDULE_OPTIONS,
   } from 'src/_mock';
 
-import formatDateToYYYYMMDD from '../../../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
+  const router = useRouter();
+  const [groupValue,setGroupValue]=useState("");
+  const [groupOptions,setGroupOptions]=useState([]);
+   
+  const ApiHitOptions=(obj)=>{
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl+'/getGroups',
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setGroupOptions(response.data.data||[])
+    })
+    .catch((error) => {
+      console.log(error);
+      setGroupOptions([])
+    });
+  }
+  useEffect(()=>{
+    const obj={
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    
+    }
+    ApiHitOptions(obj)
+  },[])
 
   const currentUser=props.currentUser;
 
   const [currentWorkData,setCurrentWorkData]=useState({
-    "companyID": "COMP1",
+    "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     reportingManagerID:currentUser?.reportingManagerID|| undefined,
 
   "employeeID":localStorage.getItem("employeeId"),
@@ -74,7 +111,8 @@ const CurrentWork=forwardRef((props,ref)=> {
   "ctc":currentUser?.ctc || undefined,
 
 
-  "roleID":currentUser?.roleID || undefined
+  "roleID":currentUser?.roleID || undefined,
+  salaryStructure:false
   })
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
@@ -91,7 +129,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
 
   useImperativeHandle(ref,()=>({
-    childFunctionGeneral(){
+    childFunctionWork(){
      onSubmit();
       
     }
@@ -104,11 +142,12 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     joining_date: dayjs(new Date()),
     offer_date: dayjs(new Date()),
   });
-  const router = useRouter();
+  
 
   const { enqueueSnackbar } = useSnackbar();
 
   const ApiHitCurrentWork=(obj)=>{
+    props.handleLoader()
     const config = {
 
       method: 'post',
@@ -134,6 +173,13 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     .then((response) => {
     
       console.log(JSON.stringify(response.data));
+      if(response.data.code===400){
+        props.handleCallSnackbar(response.data.message,'warning')
+      }
+      else{
+        router.push(paths.dashboard.employee.root);
+      }
+      
     
     })
     
@@ -146,7 +192,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitLocations=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     
@@ -302,7 +348,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitRoles=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+   
     
     });
     const config = {
@@ -345,7 +391,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const ApiHitManager=()=>{
     const data1 = JSON.stringify({
 
-      "companyID": "COMP1"
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     
     });
     const config = {
@@ -388,6 +434,12 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
        ApiHitLocations()
        ApiHitRoles()
        ApiHitManager()
+       const obj={
+        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+       
+      }
+
+      ApiHitDepartment(obj)
        
     },[])
   const NewUserSchema = Yup.object().shape({
@@ -423,35 +475,25 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,'general information');
 
-    try {
-      data.company_id = 'comp1';
-      data.company_name = 'DXC';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+                const obj=
+                {
 
-      
+                  ctc:parseInt(currentWorkData?.ctc,10),
+                  companyID:currentWorkData?.companyID,
+                  employeeID:localStorage.getItem('employeeIdCreated'),
+                  employmentType:currentWorkData?.employmentType,
+                  departmentID:currentWorkData?.departmentID?.departmentID,
+                  designationGradeID:currentWorkData?.designationGradeID?.designationGradeID,
+                  designationID:currentWorkData?.designationID?.designationID,
+                  locationID:currentWorkData?.locationID?.locationID,
+                  reportingManagerID:currentWorkData?.reportingManagerID?.managerID,
+                  roleID:currentWorkData?.roleID?.roleID
 
-      const response = await axios.post(`${baseUrl}/onBoarding`, data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+                }
+                ApiHitCurrentWork(obj);
+          console.log(currentWorkData,obj,'currentWorkData')
 
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
   });
 
   const handleDrop = useCallback(
@@ -475,7 +517,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
          
 
           <Grid xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
+            <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -524,19 +566,14 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 ...prev,
                 locationID:newvalue
               }))
-              const obj={
-                companyID:'COMP1',
-                locationID:newvalue?.locationID
-              }
-
-              ApiHitDepartment(obj)
+             
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
               // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Location" />}
           />
@@ -554,7 +591,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 departmentID:newvalue
               }))
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 departmentID:newvalue?.departmentID
               }
 
@@ -568,7 +605,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Department" />}
           />
@@ -587,7 +624,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
               }))
 
               const obj={
-                companyID:'COMP1',
+                companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 designationID:newvalue?.designationID
                 
               }
@@ -602,7 +639,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Desgniation" />}
           />
@@ -630,7 +667,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Desgination Grade" />}
           />
@@ -657,7 +694,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Select Role" />}
           />
@@ -684,9 +721,9 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             
             }}
             sx={{
-              width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
-            renderInput={(params) => <TextField {...params} label="Assign Manager" />}
+            renderInput={(params) => <TextField {...params} label="Reporting Manager" />}
           />
 
 
@@ -703,11 +740,49 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
             }))
           }}
           />
+
+
+<FormGroup>
+  <FormControlLabel control={<Checkbox  onChange={(e)=>{
+                  setCurrentWorkData(prev=>({
+                    ...prev,
+                    salaryStructure:!prev?.salaryStructure
+                  }))
+                  console.log(currentWorkData,'currentWorkData')
+                }} />} label="Follow Salary Structure?" />
+  
+  
+</FormGroup>
+
+      
+
+
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={groupOptions || []}
+            value={groupValue}
+            getOptionLabel={(option) => option}
+            onChange={(e,newvalue)=>{
+              
+             
+             setGroupValue(newvalue)
+              
+              // const timeStampCity = JSON.stringify(new Date().getTime());
+              // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
+              // ApiHitCity(CilentTokenCity,timeStampCity,newvalue?.id,"")
+            
+            }}
+            sx={{
+              width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+            }}
+            renderInput={(params) => <TextField {...params} label="Group Name" />}
+          />
                
                
               </Box>
             
-              <Button
+              {/* <Button
               alignItems="flex-end" sx={{ mt: 3 }}
               onClick={()=>{
                 console.log(currentWorkData?.reportingManagerID,'currentWorkData')
@@ -730,14 +805,16 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                  ApiHitCurrentWork(obj)
               }}>
                 Submit
-              </Button>
+              </Button> */}
            
 
              
-            </Card>
+            </Stack>
           </Grid>
         </Grid>
       </FormProvider>
+
+      {groupValue && <AssignPages open={groupValue} employeeId={localStorage.getItem('employeeIdCreated')}/>}
     </div>
   );
 })

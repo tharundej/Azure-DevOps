@@ -68,6 +68,9 @@ export const paths = {
       forgotpassword: `${ROOTS.AUTH}/jwt/forgotpassword`,
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
+      companyregisteration:`${ROOTS.AUTH}/jwt/companyregisteration`,
+      updateotp:`${ROOTS.AUTH}/jwt/updateotp`,
+      // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -124,12 +127,12 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
       },
     },
-    employee:{
+    employee: {
       root: `/employeemanagementhome`,
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
        onboardform: `/employeemanagementhome/onboardform`,
        userview: (id) => `/employeemanagementhome/${id}/employeeview`,
-      
+       changepassword:`/changepassword`,
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/reusetabletwo/${MOCK_ID}/edit`,
@@ -150,48 +153,45 @@ export const paths = {
     },
 
     itdeclaration: {
-      root: `${ROOTS.DASHBOARD}/itdeclaration`,
+      root: `/itdeclaration`,
     },
     leave: {
-      root: `${ROOTS.DASHBOARD}/leave`,
+      root: `/leave`,
     },
 
     timesheet: {
-      root: `${ROOTS.DASHBOARD}/timesheet`,
+      root: `/timesheetmanagement`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
     },
 
     claims: {
-      root: `${ROOTS.DASHBOARD}/claims`,
-      compoffapprove: `${ROOTS.DASHBOARD}/claims/compoffapprove`,
-      mycompoff: `${ROOTS.DASHBOARD}/claims/ mycompoff`,
+      root: `/claims`,
+      compoffapprove: `/claims/compoffapprove`,
+      mycompoff: `/claims/ mycompoff`,
     },
 
     payroll: {
-      root: `${ROOTS.DASHBOARD}/payroll`,
-      // edit: (id) => `${ROOTS.DASHBOARD}/payroll/${id}/payscheduleform`,
-      // demo: {
-      //   edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
-      // },
+      root: `/payroll`,
     },
     monthlydeductions: {
-      root: `${ROOTS.DASHBOARD}/monthlydeductions`,
+      root: `/monthlydeductions`,
     },
 
     appraisal: {
       root: `${ROOTS.DASHBOARD}/appraisal`,
     },
     
-      configarations:{
-        root:`${ROOTS.DASHBOARD}/configarations`,
-        leaveconfiguration: `${ROOTS.DASHBOARD}/configarations/leaveconfiguration`,
-        compoffconfiguration: `${ROOTS.DASHBOARD}/configarations/compoffconfiguration`,
-        appraisalconfiguration: `${ROOTS.DASHBOARD}/configarations/appraisalconfiguration`,
-      expenseclaimconfiguration: `${ROOTS.DASHBOARD}/configarations/expenseclaimconfiguration`,
-      shiftconfiguration: `${ROOTS.DASHBOARD}/configarations/shiftconfiguration`,
-      roleconfiguration: `${ROOTS.DASHBOARD}/configarations/roleconfiguration`,
+      configurations:{
+        root:`/configurations`,
+        leaveconfiguration: `/configurations/leaveconfiguration`,
+        compoffconfiguration: `/configurations/compoffconfiguration`,
+        appraisalconfiguration: `/configurations/appraisalconfiguration`,
+      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      shiftconfiguration: `/configurations/shiftconfiguration`,
+      roleconfiguration: `/configurations/roleconfiguration`,
+      taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
       },
     
 
@@ -272,26 +272,27 @@ export const paths = {
     },
     vendor: {
       vendor: `${ROOTS.DASHBOARD}/vendor`,
-    },
-    materials: {
-      materials: `${ROOTS.DASHBOARD}/materials`,
+      vendormaterials: `${ROOTS.DASHBOARD}/vendor/vendormaterials`,
     },
     assets: {
       assets: `${ROOTS.DASHBOARD}/assets`,
     },
     products: {
       products: `${ROOTS.DASHBOARD}/products`,
-    },
-    customers: {
-      customers: `${ROOTS.DASHBOARD}/customers`,
+      customers: `${ROOTS.DASHBOARD}/products/customers`,
     },
     purchase: {
       purchaseOrder: `${ROOTS.DASHBOARD}/purchase/order`,
-      purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/nvoice`,
+      purchaseInvoice: `${ROOTS.DASHBOARD}/purchase/invoice`,
       purchasePayment: `${ROOTS.DASHBOARD}/purchase/payment`,
     },
-    balancesheet:{
-      balancesheet:`${ROOTS.DASHBOARD}/balancesheet`,
+    sale: {
+      saleOrder: `${ROOTS.DASHBOARD}/sale/order`,
+      saleInvoice: `${ROOTS.DASHBOARD}/sale/invoice`,
+      salePayment: `${ROOTS.DASHBOARD}/sale/payment`,
+    },
+    balancesheet: {
+      balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
   },
 };

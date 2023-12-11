@@ -15,11 +15,16 @@ import dayjs from 'dayjs';
 import { Today } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import formatDateToYYYYMMDD from '../global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from '../global/BaseUrl';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
-
+import {useSnackbar} from '../../../src/components/snackbar' 
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useContext } from 'react';
+import UserContext from '../context/user/UserConext';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import ModalHeader from '../global/modalheader/ModalHeader';
 const defaultFilters = {
   name: '',
   type: [],
@@ -46,9 +51,11 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
-export default function DeductionFilter({filterSearch,filterData}){
+export default function DeductionFilter({filterSearch,filterData,componentPage,getTableData}){
   const theme = useTheme();
-  
+  const {user} = useContext(UserContext);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar();
   const [dropdown,setDropdown]=useState({
   })
 
@@ -117,7 +124,6 @@ export default function DeductionFilter({filterSearch,filterData}){
   }
   
     const [open,setOpen]=useState(false);
-    const [openDateRange,setOpendateRange]=useState(false);
     const handleClickOpen=()=>{
       setOpen(true);
     }
@@ -161,13 +167,17 @@ export default function DeductionFilter({filterSearch,filterData}){
 
     const onSubmit = handleSubmit(async (data)=>{
       try{
-        data.companyID=localStorage?.getItem('companyID');
+        data.companyID=(user?.companyID)?user?.companyID:''
 
-        const response = await axios.post(baseUrl+`addDeductionDetails`,data).then(
+        const response = await axios.post(baseUrl+`/addDeductionDetails`,data).then(
           (successData)=> {
-            console.log(successData,"Success")
+            enqueueSnackbar(successData?.data?.message,{variant:'success'})
+            getTableData()
+            handleClose()
           },
           (error)=>{
+            enqueueSnackbar(error?.data?.Message,{variant:'Error'})
+            handleClose()
             console.log(error,"error")
           }
         )
@@ -200,9 +210,18 @@ export default function DeductionFilter({filterSearch,filterData}){
     handleClickClose()
       
     }
-      const handleSearch=(e)=>{
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+      const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      }
+      },500)
   
       const handleCancel = async()=>{
         setdropdowndeductiontype([]);
@@ -222,12 +241,15 @@ export default function DeductionFilter({filterSearch,filterData}){
         getEmployeesList()
       } 
       const getEmployeesList = () => {
-       
+       const data ={
+        companyID:(user?.companyID)?user?.companyID:'',
+       }
         const config = {
           method: 'POST',
           maxBodyLength: Infinity,
-          // url: `http://192.168.1.56:3001/erp/getLoanEmployeeDetails`,
-          url:baseUrl + `getLoanEmployeeDetails`,
+          url:baseUrl + `/getLoanEmployeeDetails`,
+          // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLoanEmployeeDetails`,
+          data:data
         };
       
         axios.request(config).then((response) => {
@@ -253,86 +275,82 @@ export default function DeductionFilter({filterSearch,filterData}){
  open={showForm}
  onClose={handleClose}
  PaperProps={{
-   sx: { maxWidth: 770 , overflow:'hidden'},
+   sx: { maxWidth: 500 , overflow:'auto'},
  }}
  className="custom-dialog"  
 >
+  <ModalHeader heading="Add Deduction"/>
 <FormProvider methods={methods} onSubmit={onSubmit}>
-    <Typography variant="subtitle1" sx={{marginTop:2,marginLeft:2}}>
-        Add Deduction
-    </Typography>
 <DialogContent>
-<Grid>
-<RHFSelect name="employeeID" label="Employee">
-              {employeesList?.data?.map((employee) => (
+  <Grid container>
+<Grid container flexDirection="row" spacing={1}>
+   <Grid item xs={12} md={6}>
+   <RHFSelect name="employeeID" label="Employee">
+              {(employeesList?.data!=null)? (employeesList?.data?.map((employee) => (
                 <MenuItem value={employee?.EmployeeID} key={employee?.EmployeeID}>
                   {employee?.employeeName}
                 </MenuItem>
-              ))}
-</RHFSelect>
-</Grid>
-{/* <RHFAutocomplete
-              name="employeeID"
-              label="Employee"
-              options={employeesList?.data?.map((employee) => employee.employeeName)}
-              value={employeesList?.data?.map((employee) => employee.employeeID)}
-            /> */}
-<Grid sx={{marginTop:2}}>
+              ))
+              ):<>No Employees</>
+            }
+
+   </RHFSelect>
+   </Grid>
+<Grid item xs={12} md={6}>
 <RHFSelect name="deductionType" label="Deduction Type">
        <MenuItem value="Salary">Salary</MenuItem> 
        <MenuItem value="Cash">Cash</MenuItem>    
 </RHFSelect>
 </Grid>
-<Grid sx={{marginTop:2}}>
+</Grid>
+<Grid conatiner xs={12} md={12} sx={{marginTop:2}}>
 <RHFTextField name="comments" label="Comments" />
 </Grid>
+</Grid>
 <Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
-<Button sx={{float:"right",right:10,marginTop:2}} onClick={handleDeductionCancel}>Cancel</Button>
+<Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={handleDeductionCancel}>Cancel</Button>
 </DialogContent>
 </FormProvider>
       </Dialog>
     )}
 
     {/* FIlter and Searchhh */}
-          <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+    <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
+    <Grid item xs={12} md={8}>
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}} 
+            size="small"
             />
             </Grid>
-            <Grid md={4} xs={4} item>
-                
-                <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
-                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Deduction</Button>
-               </Grid>
-               <Grid>
-               <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-               <Iconify icon="mi:filter"/>
-               </Button>
+            <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
+               
+            {componentPage!="MyRequests"?<Button size="small" variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>Add Deduction</Button>:null}
+            
+            {componentPage!="MyRequests"?<Button size="small" onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+               <Iconify icon="mi:filter" /> Filters
+               </Button>:null}
       </Grid>
                 </Grid>
- 
-      </Grid>
-         </Grid>
      {/* FILTER DIALOG */}
       <Dialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        PaperProps={{
+          sx:{maxWidth:500,overflow:'auto'}
+        }}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setOpen(false)} />
         </DialogTitle>
-        <DialogContent sx={{mt:0,paddingBottom:0}}>
+        <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
           
-          <Grid>
+          <Grid container>
             <Typography>Deducted Date </Typography>
-                <Grid>
             <Grid container flexDirection="row">
-              <Grid item >
+              <Grid item xs={12} md={6}>
              <LocalizationProvider dateAdapter={AdapterDayjs} sx={{minWidth:"20pc"}}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -350,7 +368,7 @@ export default function DeductionFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                <Grid item>
+                <Grid item xs={12} md={6}>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -368,11 +386,10 @@ export default function DeductionFilter({filterSearch,filterData}){
                   </DemoContainer>
                 </LocalizationProvider>
                 </Grid>
-                </Grid>
-                </Grid>
+            </Grid>
             
-                <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
+               
+                  <Grid container flexDirection="row" marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">Deduction Type</InputLabel>
                 <Select
@@ -391,13 +408,12 @@ export default function DeductionFilter({filterSearch,filterData}){
                 </Select>
               </FormControl>
                    </Grid>
-                </Grid>
               
                </Grid>
            
          </DialogContent>
          <div style={{marginBottom:16,marginTop:3}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+         <Button sx={{float:'right',right:15}} variant="outlined" onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
     </Dialog>
     </>

@@ -23,15 +23,81 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import { Country, State, City }  from 'country-state-city';
+
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
+const genderOptions=[
+  {label:'Male'},
+  {label:'Female'}
+]
 
+const maritalStatusOptions = [
+  { value: 'single', label: 'Single' },
+  { value: 'married', label: 'Married' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'separated', label: 'Separated' }
+];
+
+const religionOptions = [
+  { value: 'christianity', label: 'Christianity' },
+  { value: 'islam', label: 'Islam' },
+  { value: 'hinduism', label: 'Hinduism' },
+  { value: 'buddhism', label: 'Buddhism' },
+  { value: 'sikhism', label: 'Sikhism' },
+  { value: 'judaism', label: 'Judaism' },
+  { value: 'bahai_faith', label: 'Bahá\'í Faith' },
+  { value: 'jainism', label: 'Jainism' },
+  { value: 'shinto', label: 'Shinto' },
+  { value: 'taoism', label: 'Taoism' },
+  { value: 'zoroastrianism', label: 'Zoroastrianism' },
+  { value: 'confucianism', label: 'Confucianism' },
+  { value: 'atheist', label: 'Atheist' },
+  { value: 'agnostic', label: 'Agnostic' },
+  {value:'other',labal:"Other"}
+];
+
+
+const nationalitiesOptions = [
+  { country: "United States", nationality: "American" },
+  { country: "United Kingdom", nationality: "British" },
+  { country: "Canada", nationality: "Canadian" },
+  { country: "Australia", nationality: "Australian" },
+  { country: "Germany", nationality: "German" },
+  { country: "France", nationality: "French" },
+  { country: "China", nationality: "Chinese" },
+  { country: "India", nationality: "Indian" },
+  { country: "Brazil", nationality: "Brazilian" },
+  { country: "Russia", nationality: "Russian" },
+  { country: "South Africa", nationality: "South African" },
+  { country: "Japan", nationality: "Japanese" },
+  { country: "Mexico", nationality: "Mexican" },
+  { country: "Saudi Arabia", nationality: "Saudi Arabian" },
+  { country: "South Korea", nationality: "South Korean" },
+  { country: "Other", nationality: "other" }
+];
+
+const bloodGroupsOptions = [
+  { label: "A+", value: "A positive" },
+  { label: "A-", value: "A negative" },
+  { label: "B+", value: "B positive" },
+  { label: "B-", value: "B negative" },
+  { label: "AB+", value: "AB positive" },
+  { label: "AB-", value: "AB negative" },
+  { label: "O+", value: "O positive" },
+  { label: "O-", value: "O negative" }
+];
 
 
 // ----------------------------------------------------------------------
 
-export default function EmployeeAbout({  delivery, shippingAddress, payment,employeeIDForApis }) {
+export default function 
+
+EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+
+ 
   const userlocation={
     "locationID": 30,
     "locationName": "location1"
@@ -66,20 +132,20 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
       if(currentEmployee){
       const fetchLocations = async () => {
         const deptObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           locationID:currentEmployee?.locationID
         }
         const desgObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           departmentID:currentEmployee?.departmentID
         }
         const desgGradeObj={
-          companyID:'COMP1',
+          companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
           designationID:currentEmployee?.designationID
         }
         try {
           const locations = await ApiHitLocations();
-          const department=await ApiHitDepartment(deptObj);
+          const department=await ApiHitDepartmentWithoutLocation();
           const desgination=await ApiHitDesgniation(desgObj)
           const desginationGrade=await ApiHitDesgniationGrade(desgGradeObj)
           const roles= await ApiHitRoles()
@@ -91,7 +157,22 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
             desginationOptions:desgination,
             desginationGradeOptions:desginationGrade,
             rolesOptions:roles,
-            managerOptions:manager
+            managerOptions:manager,
+            bloodGroupsOptions:bloodGroupsOptions,
+            religionOptions:religionOptions,
+            nationalityOptions:nationalitiesOptions,
+            genderOptions:genderOptions || [],
+            maritalStatusOptions:maritalStatusOptions || [],
+            pCountryOptions:Country.getAllCountries() || [],
+            pStateOptions:State.getStatesOfCountry(currentEmployee?.pCountry?.isoCode)|| [],
+            pCityOptions:City.getCitiesOfState(currentEmployee?.pCountry?.isoCode, currentEmployee?.pState?.isoCode)|| [],
+
+            rCountryOptions:Country.getAllCountries() || [],
+            rStateOptions:State.getStatesOfCountry(currentEmployee?.rCountry?.isoCode)|| [],
+            rCityOptions:City.getCitiesOfState(currentEmployee?.rCountry?.isoCode, currentEmployee?.rState?.isoCode)|| [],
+           
+            
+            
 
 
           }
@@ -104,19 +185,32 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           const rolesValue=funcDropDownValue(roles,'roleID',currentEmployee?.roleID)
           const managerValue=funcDropDownValue(manager,'managerID',currentEmployee?.reportingManagerID)
 
+
           const arrValue={
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,
             desginationGradeValue:desginationGradeValue,
             rolesValue:rolesValue,
-            managerValue:managerValue
+            managerValue:managerValue,
+            bloodGroupValue: { label: currentEmployee?.bloodGroup },
+            religionValue:{label:currentEmployee?.religion},
+            genderValue:{label:currentEmployee?.gender},
+            nationalityValue:{nationality:currentEmployee?.nationality},
+            maritalStatusValue:{label:currentEmployee?.maritalStatus},
+            pCountryValue:currentEmployee?.pCountry || undefined,
+            rCountryValue:currentEmployee?.rCountry || undefined,
+            pStateValue:currentEmployee?.pState || undefined,
+            rStateValue:currentEmployee?.rState || undefined,
+            pCityValue:currentEmployee?.pCity || undefined,
+            rCityValue:currentEmployee?.rCity || undefined,
+
 
           }
 
 
           setDropDownValue(arrValue);
-          console.log("arrValue", 'locationsdepartmentarr');
+          console.log(arr, 'locationsdepartmentarr');
          
           setLocations(locations);
           
@@ -131,7 +225,8 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": employeeIDForApis
+        "employeeID": employeeIDForApis,
+        // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
        
       const config = {
@@ -147,12 +242,13 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
        
       axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data),'nithinn');
         setCurrentEmployee(response.data.data)
         currentEmployeeData=response.data.data
+        handleCallSnackbar(response.data.message,'success')
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error,'error');
       });
     }
       const { logout } = useAuthContext();
@@ -195,12 +291,14 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
     
   
 }
- 
+ const handleCallSnackbarP=(msg,sev)=>{
+  handleCallSnackbar(msg,sev);
+ }
  
 
   const renderAbout = (
     <>
-    <EmployeeAboutEdit  dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
+    <EmployeeAboutEdit handleCallSnackbar={handleCallSnackbarP} ApiHit={ApiHit} dropDownOptions={dropDownOptions} dropDownvalue={dropDownvalue} open={open} handleEditClose={handleEditClose} currentUserData={currentEmployee} userlocation={userlocation} employeeIDForApis={employeeIDForApis} />
     <Grid sx={{padding:'10px'}} container alignItems="center"  justifyContent="space-between">
         <Grid item>
         <Typography variant='h5' component="body">General Information</Typography>
@@ -208,7 +306,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Grid>
         <Grid item>
         <Iconify 
-        sx={{cursor: "pointer",color:'orange'}}
+        sx={{cursor: "pointer",color:'black'}}
           onClick={()=>{
             
             handleEdit()
@@ -218,7 +316,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Grid>
     </Grid>
      
-      <Grid container spacing={20}>
+      <Grid container spacing={{ xs: 10, sm: 10, lg: 20 ,md:5}}>
 
         <Grid item>
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
@@ -242,7 +340,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          last Name
+          Last Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.lastName}
@@ -250,10 +348,18 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Personal emailID
+          Personal Email
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.emailID}
+          {currentEmployee?.personalEmail}
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+          Company Email
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {currentEmployee?.companyEmail}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -314,7 +420,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          religion
+          Religion
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.religion}
@@ -371,7 +477,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Department Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.departmentName}
+          {dropDownvalue?.departmentValue?.departmentName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -379,15 +485,15 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Designation
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.Designation}
+          {dropDownvalue?.desginationValue?.designationName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Grade Name
+          Desgination Grade Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.gradeName}
+          {dropDownvalue?.desginationGradeValue?.designationGradeName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -395,7 +501,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Working Location
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.workingLocation}
+           {dropDownvalue?.locationValue?.locationName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -403,7 +509,15 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
           Reporting Manager Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {currentEmployee?.reportingManagerName}
+          {dropDownvalue?.managerValue?.managerName}
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+          Role
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {dropDownvalue?.rolesValue?.roleName}
           </Box>
         </Stack>
        
@@ -434,13 +548,13 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
         //   </IconButton>
         // }
       />
-       <Grid container spacing={20}>
+       <Grid container spacing={{ xs: 5, sm: 5, lg: 20 ,md:5}}>
 
                     <Grid item>
                     <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line1
+                    Permanent Address line1
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
                     {currentEmployee?.pAddressLine1}
@@ -450,34 +564,46 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
                     </Stack>
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent Address Line2
+                    Permanent Address line2
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
                     {currentEmployee?.pAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Permanent City
+                    Permanent Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pCity}
+                    {currentEmployee?.pCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.pState}
+                    {currentEmployee?.pState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Permanent City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.pCity?.name}
+                    </Box>
+                    </Stack>
+                   
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Permanent Pincode
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.Permanent}
+                    {currentEmployee?.pPincode}
                     </Box>
                     </Stack>
                    
@@ -505,22 +631,34 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
                     {currentEmployee?.rAddressLine2}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-                    Residential City
+                    Residential Country
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rCity}
+                    {currentEmployee?.rCountry?.name}
                     </Box>
                     </Stack>
+
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential State
                     </Box>
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-                    {currentEmployee?.rState}
+                    {currentEmployee?.rState?.name}
                     </Box>
                     </Stack>
+
+                    <Stack direction="row" alignItems="center">
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+                    Residential City
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+                    {currentEmployee?.rCity?.name}
+                    </Box>
+                    </Stack>
+                    
                     <Stack direction="row" alignItems="center">
                     <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
                     Residential Pincode
@@ -590,7 +728,7 @@ export default function EmployeeAbout({  delivery, shippingAddress, payment,empl
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {renderRole}
+      {/* {renderRole} */}
     </Card>
   );
 }
@@ -600,5 +738,6 @@ EmployeeAbout.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
-  employeeIDForApis:PropTypes.string
+  employeeIDForApis:PropTypes.string,
+  handleCallSnackbar:PropTypes.func
 };

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateProducts from './CreateProducts';
 
-const ProductsHead = ({ filterSearch, filterData }) => {
+const ProductsHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,12 +38,16 @@ const ProductsHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateProducts currentData={{}} handleClose={handleClose} />
+          <CreateProducts
+            currentData={{}}
+            handleClose={handleClose}
+            getTableData={getTableData}
+          />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Products Details</Typography>
+          {/* <Typography variant="h4">Products Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField

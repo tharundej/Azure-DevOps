@@ -1,102 +1,153 @@
-import { useEffect, useState, useCallback } from 'react';
-
+import { useContext, useEffect, useState } from 'react';
+import { Dialog } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-
-import axios from 'axios';
 
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import { getProductListAPI, DeleteProductAPI } from 'src/api/Accounts/Product';
+import SnackBarComponent from '../global/SnackBarComponent';
+import CreateProducts from './CreateProducts';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import UserContext from '../context/user/UserConext';
 
 const ProductsTable = () => {
+  const { user } = useContext(UserContext);
   const actions = [
-    { name: 'Edit', icon: 'hh', id: 'edit' },
-    { name: 'Delete', icon: 'hh', id: 'delete' },
+    { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
+    {
+      name: 'Delete',
+      icon: 'fluent:delete-28-regular',
+      id: 'delete',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
+  const [editShowForm, seteditShowForm] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      seteditShowForm(true);
+      setEditModalData(rowdata);
+    } else if (event?.name === 'Delete') {
+      const deleteData = {
+        productID: rowdata?.productID || 0,
+        productName: rowdata.productName,
+      };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async () => {
+    if (deleteData) {
+      await handleDeleteApiCall(deleteData);
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    }
+  };
+  const handleClose = () => {
+    seteditShowForm(false);
+  };
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      console.log(deleteData, 'deleteData');
+      const response = await DeleteProductAPI(deleteData);
+      console.log('Delete success', response);
+      handleCallSnackbar(response.message, 'success');
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
-  const ApiHit = () => {
-    const data1 = body_for_employee;
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: 'http://192.168.0.222:3001/erp/ProductsDetails',
-      // headers: {
-      //   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTcwMjY5MTN9.D7F_-2424rGwBKfG9ZPkMJJI2vkwDBWfpcQYQfTMJUo'
-      // },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setBodyContent(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const ApiHit = async () => {
+    try {
+      const response = await getProductListAPI(defaultPayload);
+      console.log('location success', response);
+      setBodyContent(response);
+    } catch (error) {
+      console.log('API request failed:', error.message);
+    }
   };
 
   useEffect(() => {
     ApiHit();
-    
   }, []);
   const defaultPayload = {
     count: 5,
     page: 0,
     search: '',
-    fcompanyID: 'COMP1',
-    externalFilters: {
-      fMaritalStatus: '',
-      fBloodGroup: '',
-      fPState: '',
-      fPEmployementType: '',
-      fPdepartmentName: '',
-      fPDesignation: '',
-      fPDesignationGrade: '',
-      fWorkingLocation: '',
-      fjoiningDate: {
-        from: '',
-        to: '',
-      },
-      fDOB: {
-        from: '',
-        to: '',
-      },
-      fofferDate: {
-        from: '',
-        to: '',
-      },
-    },
-    sort: {
-      key: 1,
-      orderBy: 'ProductsName',
-    },
+    companyID: user?.companyID ? user?.companyID : '',
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'ProductCategory', label: 'Product Category', type: 'text', minWidth: '180px' },
-    { id: 'ProductName', label: 'Product Name', type: 'text', minWidth: '180px' },
-    { id: 'HSNID', label: 'HSN ID', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'productCategory', label: 'Product Category', type: 'text', minWidth: '180px' },
+    { id: 'productName', label: 'Product Name', type: 'text', minWidth: '180px' },
+    { id: 'hsnID', label: 'HSN ID', type: 'text', minWidth: '180px' },
+    { id: 'gstRate', label: 'GST Rate', type: 'text', minWidth: '180px' },
+    { id: 'status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
+      <SnackBarComponent
+        open={openSnackbar}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+        severity={severity}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Product"
+        message={`Are you sure you want to delete ${deleteData?.productName}?`}
+      />
+      {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 770, overflow: 'hidden' },
+          }}
+          className="custom-dialog"
+        >
+          <CreateProducts currentData={editModalData} handleClose={handleClose} />
+        </Dialog>
+      )}
       <Helmet>
         <title> Dashboard: Products</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/ProductsDetails"
+        endpoint="/getProductDetails"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
+        onClickActions={onClickActions}
         filterName="ProductsHead"
+        handleEditRowParent={() => {}}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Autocomplete,
+  Card,
 } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
@@ -29,6 +30,13 @@ import MuiAlert from '@mui/material/Alert';
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import FileUploader from 'src/nextzen/global/fileUploads/FileUploader';
 import ReusableForm from 'src/nextzen/global/reUseableForm/ReusableForm';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import {useSnackbar} from '../../../components/snackbar'
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -37,20 +45,42 @@ const headings = [
   'Type',
   'Policy Number',
   'Date Of Commencement Of Policy Or Date Paid',
-  'Insured Persion Name(S)',
+  'Insured Person Name(S)',
   'Relationship Of The Insured Person',
 
   'Pay Mode',
-    "Policy Citizenship Type"
-  ,'Amount Of Premium Or Expense',
-'Eligible Decduction For The Policy Expense',
-'Action',
+  'Policy Citizenship Type',
+  'Amount Of Premium Or Expense',
+  'Eligible Decduction For The Policy Expense',
+  'Action',
 ];
 
+const cardHeadings = [
+  'Total Decduction U/S 80D',
+  'Overal Deduction',
+
+];
+
+const cardData = [
+  { name: 'Self Spouse & Child', value: '1' },
+  { name: 'Parent(s)', value: '2' },
+  { name: 'Total Deduction', value: '3' },
+];
 
 export default function MedicalPremium() {
-  const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/'
-  // State for Snackbar
+  // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+  const {enqueueSnackbar} = useSnackbar()
+  const {user} = useContext(UserContext)
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
+  
+  const [loading,setLoading] = useState(false);
+   
+ // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -65,12 +95,54 @@ export default function MedicalPremium() {
   ];
   const [isreloading, setISReloading] = useState(false);
   const policyCItizenshipType = [{ type: 'Normal' }, { type: 'Senior Citizen' }];
-  const payMode = [{ type: 'Cahs ' }, { type: 'Other Than Cash' }];
+  const payMode = [{ type: 'Cash ' }, { type: 'Other Than Cash' }];
   const [medicalTableData, setMedicalTableData] = useState([]);
   const [medicalTableDataDoc, setMedicalTableDataDoc] = useState([]);
   const [formData, setFormData] = useState({
-    companyID: '',
-    employeeID: '',
+    companyID: cmpId,
+    employeeID: empId,
+    type: '',
+    policyNumber: '',
+    dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+    insuredPersonName: '',
+    relationshipType: '',
+    payMode: '',
+    policyCitizenshipType: 0,
+    amountOfPremium: '',
+    eligibleDeduction: '',
+    documents: [],
+  });
+  const [dates, setDates] = useState({
+    start_date: dayjs(new Date()),
+    end_date: dayjs(new Date()),
+  });
+  var [attachedDocumment, setAttachedDocument] = useState([]);
+  var [attachedDocummentFileName, setAttachedDocumentFileName] = useState([]);
+  const [openAttachmentDilog, setOpenAttchementDilog] = useState(false);
+  var [landLordDocs, setLandLordDocs] = useState([]);
+  var [rentDocs, setRentDocs] = useState([]);
+  const [landLordDeletedId, setLandLordDeletedID] = useState([]);
+  const [rentDeletedId, setRentDeletedID] = useState([]);
+  const [isEdit , setIsEdit] =useState(false)
+  const methods = useForm();
+  const currentYear = new Date().getFullYear();
+   console.log(currentYear ,"current year")
+   const startYear = 2022;
+   const endYear = 2030;
+ 
+  //  const financialYears = [];
+  //  for (let year = startYear; year <= endYear; year++) {
+  //    financialYears.push(`${year}-${year + 1}`);
+  //  }
+   const [financialYears, setFinancialYears] = useState([]);
+   const [selectedYear, setSelectedYear] = useState(null);
+   const handleYearChange = (_, value) => {
+    setSelectedYear(value);
+    localStorage.setItem('selectedYear', JSON.stringify(value));
+  };
+  const [fieldErrors, setFieldErrors] = useState({
+    companyID: cmpId,
+    employeeID: empId,
     type: '',
     policyNumber: '',
     dateOfCommencementOfPolicy: '',
@@ -80,87 +152,176 @@ export default function MedicalPremium() {
     policyCitizenshipType: '',
     amountOfPremium: '',
     eligibleDeduction: '',
-    documents :[]
+    documents: [],
   });
-  const [dates, setDates] = useState({
-    start_date: dayjs(new Date()),
-    end_date: dayjs(new Date()),
-  });
-  var [attachedDocumment ,setAttachedDocument] = useState([])
-  var [attachedDocummentFileName ,setAttachedDocumentFileName] = useState([])
-    const [openAttachmentDilog , setOpenAttchementDilog] = useState(false)
 
-  const methods = useForm();
+  const hasError = (fieldName) => !!fieldErrors[fieldName];
 
-  const attchementHandler = () =>{
-    setOpenAttchementDilog(true)
-  }
-  const closeAttchementDilod = () =>{
-    setOpenAttchementDilog(false)
-  }
-  const handleUploadattchment = (files, fileNames) => {
-    console.log(files, fileNames, "getting from uploader ");
+  const getHelperText = (fieldName) => fieldErrors[fieldName] || '';
+ 
+  const validateFormData = () => {
+    let isValid = true;
+    const newFieldErrors = {};
   
+    // Validation for type
+    if (!formData.type) {
+      newFieldErrors.type = 'Type is required';
+      isValid = false;
+    }
+  
+    // Validation for policyNumber
+    if (!formData.policyNumber) {
+      newFieldErrors.policyNumber = 'Policy Number is required';
+      isValid = false;
+    }
+  
+    // Validation for dateOfCommencementOfPolicy
+    if (!formData.dateOfCommencementOfPolicy) {
+      newFieldErrors.dateOfCommencementOfPolicy = 'Date of Commencement of Policy is required';
+      isValid = false;
+    }
+  
+    // Validation for insuredPersonName
+    if (!formData.insuredPersonName) {
+      newFieldErrors.insuredPersonName = 'Insured Person Name is required';
+      isValid = false;
+    }
+  
+    // Validation for relationshipType
+    if (!formData.relationshipType) {
+      newFieldErrors.relationshipType = 'Relationship Type is required';
+      isValid = false;
+    }
+  
+    // Validation for payMode
+    if (!formData.payMode) {
+      newFieldErrors.payMode = 'Pay Mode is required';
+      isValid = false;
+    }
+  
+    // Validation for policyCitizenshipType
+    // if (!formData.policyCitizenshipType) {
+    //   newFieldErrors.policyCitizenshipType = 'Policy Citizenship Type is required';
+    //   isValid = false;
+    // }
+  
+    // Validation for amountOfPremium
+    if (!formData.amountOfPremium) {
+      newFieldErrors.amountOfPremium = 'Amount of Premium is required';
+      isValid = false;
+    } else if (isNaN(formData.amountOfPremium)) {
+      newFieldErrors.amountOfPremium = 'Amount of Premium must be a valid number';
+      isValid = false;
+    }
+  
+    // Validation for eligibleDeduction
+    if (!formData.eligibleDeduction) {
+      newFieldErrors.eligibleDeduction = 'Eligible Deduction is required';
+      isValid = false;
+    } else if (isNaN(formData.eligibleDeduction)) {
+      newFieldErrors.eligibleDeduction = 'Eligible Deduction must be a valid number';
+      isValid = false;
+    }
+  
+    // Add more validations for other fields as needed
+  
+    setFieldErrors(newFieldErrors);
+  
+    return isValid;
+  };
+  
+  const attchementHandler = () => {
+    setOpenAttchementDilog(true);
+  };
+  const closeAttchementDilod = () => {
+    setOpenAttchementDilog(false);
+  };
+  const handleUploadattchment = (files, fileNames) => {
+    console.log(files, fileNames, 'getting from uploader ');
+
     // Create a new array to store the objects
     const newArray = [];
-  
+
     // Ensure both arrays have the same length
     if (files.length === fileNames.length) {
       for (var i = 0; i < files.length; i++) {
         var obj = {
           fileContent: files[i],
-          fileName: fileNames[i]
+          fileName: fileNames[i],
         };
         newArray.push(obj);
       }
-  
+
       // Update medicalTableDataDoc by merging with the existing array of objects
-      setMedicalTableDataDoc((prevFormData) => ([
-        ...prevFormData,
-          ...newArray
-      ]));
-  
-      console.log(medicalTableDataDoc, "updated");
+      setMedicalTableDataDoc((prevFormData) => [...prevFormData, ...newArray]);
+
+      console.log(medicalTableDataDoc, 'updated');
     } else {
-      console.error("Arrays must have the same length");
+      console.error('Arrays must have the same length');
     }
   };
-  
 
- console.log(medicalTableDataDoc ,"updated22")
- const handleUploadattchmentFileName =(data)=>{
-   attachedDocummentFileName = data
-   setAttachedDocumentFileName(attachedDocummentFileName)
-   setFormData((prevFormData) => ({
-    ...prevFormData,
-    fileName: attachedDocummentFileName,
-  }));
-   console.log(attachedDocummentFileName ,data)
-   setOpenAttchementDilog(false)
- }
+  console.log(medicalTableDataDoc, 'updated22');
+  const handleUploadattchmentFileName = (data) => {
+    attachedDocummentFileName = data;
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      fileName: attachedDocummentFileName,
+    }));
+    console.log(attachedDocummentFileName, data);
+    setOpenAttchementDilog(false);
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
     let calculatedEligibleDeduction = integerValue;
 
     // Check if amountOfPremium is greater than 2500
-    if (name === 'amountOfPremium' && integerValue > 25000) {
+    // if (name === 'amountOfPremium' && integerValue > 25000) {
+    //   calculatedEligibleDeduction = 25000;
+    // }
+
+    
+
+    setFormData({
+      ...formData,
+      [name]: integerValue,
+      // eligibleDeduction: calculatedEligibleDeduction,
+    });
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+
+    // setFormData({ ...formData, [name]: integerValue });
+
+    console.log(formData);
+  };
+  const handleChangeForAmoutDeduction = (event) => {
+    const { name, value } = event.target;
+    const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
+    let calculatedEligibleDeduction = integerValue;
+
+    // Check if amountOfPremium is greater than 2500
+    if (name === 'amountOfPremium' && integerValue > 25000 && !formData.policyCitizenshipType) {
       calculatedEligibleDeduction = 25000;
-      
     }
-  
+
     setFormData({
       ...formData,
       [name]: integerValue,
       eligibleDeduction: calculatedEligibleDeduction,
     });
-   
-    // setFormData({ ...formData, [name]: integerValue });
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
 
+    // setFormData({ ...formData, [name]: integerValue });
 
     console.log(formData);
   };
-
   const handleAutocompleteChange = (name, selectedValue) => {
     let mappedValue;
 
@@ -173,15 +334,43 @@ export default function MedicalPremium() {
     }
 
     setFormData({ ...formData, [name]: mappedValue });
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
 
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: mappedValue,
+    }));
+  
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+  };
+  
   const saveMedicalDetails = async () => {
+
+    try {
+      const isValid = validateFormData();
+console.log(isValid , "isValidisValid")
+      if (isValid) {
+       
+    setLoading(true)
     const payload = {
-      companyID: 'COMP1',
-      employeeID: 'INFO21',
+      financialYear: selectedYear?.financialYear,
+      companyID: cmpId,
+      employeeID: empId,
       type: formData?.type,
       policyNumber: formData?.policyNumber,
-      dateOfCommencementOfPolicy: '2023-10-15',
+      dateOfCommencementOfPolicy: formData?.dateOfCommencementOfPolicy,
       insuredPersonName: formData?.insuredPersonName,
       relationshipType: formData?.relationshipType,
       payMode: formData?.payMode,
@@ -189,16 +378,18 @@ export default function MedicalPremium() {
       amountOfPremium: formData?.amountOfPremium,
       eligibleDeduction: formData?.eligibleDeduction,
       fileName: attachedDocummentFileName,
-      fileContent: attachedDocumment
+      fileContent: attachedDocumment,
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url:  baseUrl + 'addMedicalInsuranceDetails',
+      url: baseUrl + '/addMedicalInsuranceDetails',
+      // url : 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/addMedicalInsuranceDetails',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+        token,
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -206,54 +397,117 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+       console.log(response.data ,"responseresponse"  )
+        if (response?.data?.statusCode=== "200") {
+          console.log("i am comming here")
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          setLoading(false)
+       
           setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance details saved successfully!');
-          setSnackbarOpen(true);
-          console.log('success');
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: 0,
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+          setFieldErrors({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: '',
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: '',
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     
+        }else    if (response?.data?.code === 400) {
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          setLoading(false)
+          // setSnackbarSeverity('error');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
+        
+    
         }
       })
       .catch((error) => {
+        console.log("catch calling")
+         enqueueSnackbar("Something Went Wrong",{variant:'error'})
+        setLoading(false)
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving Medical Insurance details. Please try again.');
-        setSnackbarOpen(true);
+        
         console.log(error);
       });
+      
+      } else {
+        console.log('Form is invalid');
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+            setLoading(false)
+     
+            console.log(error);
+    }
+
+
+
     //  console.log(result, 'resultsreults');
   };
 
   const editMedicalDetails = async () => {
+
+    try {
+      const isValid = validateFormData();
+console.log(isValid , "isValidisValid")
+      if (isValid) {
+        
+    setLoading(true)
+    console.log(" i am calling fine info042" , formData)
     const payload = {
-      companyID: 'COMP1',
-      employeeID: 'INFO21',
-      data: [
-        {
-          ID: 3,
-          employeeName: 'John Doe',
-          premiumID: 3,
+     
+    
+          companyID: formData.companyID,
+          employeeID:formData.employeeID,
+          financialYear: selectedYear?.financialYear,
+          employeeName: formData.employeeName,
+          premiumID: formData?.premiumID,
           type: formData?.type,
           policyNumber: formData?.policyNumber,
-          dateOfCommencementOfPolicy: '2023-10-15',
+          dateOfCommencementOfPolicy: formData.dateOfCommencementOfPolicy,
           insuredPersonName: formData?.insuredPersonName,
           relationshipType: formData?.relationshipType,
           payMode: formData?.payMode,
           policyCitizenshipType: formData?.policyCitizenshipType,
           amountOfPremium: formData?.amountOfPremium,
           eligibleDeduction: formData?.eligibleDeduction,
-          documents:medicalTableDataDoc
-        },
-      ],
+          documents: rentDocs ? rentDocs : [],
+          oldFields:rentDeletedId
+      
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +'updateMedicalInsuranceDetails',
+      // url: baseUrl +'updateMedicalInsuranceDetails',
+      url: baseUrl+'/updateMedicalInsuranceDetails',
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/updateMedicalInsuranceDetails",
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+       token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -261,34 +515,89 @@ export default function MedicalPremium() {
     const result = await axios
       .request(config)
       .then((response) => {
-        if (response.status === 200) {
+       console.log(response?.data?.status  , response?.data?.status,"response")
+
+        if (response?.data?.status === 200) {
+          enqueueSnackbar(response?.data?.message,{variant:'success'})
+          setLoading(false)
+          // setSnackbarSeverity('success');
+          // setSnackbarMessage(response.data.message);
+          // setSnackbarOpen(true);
+          
           setISReloading(!isreloading);
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Medical Insurance  Updated successfully!');
-          setSnackbarOpen(true);
-          console.log('success');
+          setFormData({
+            companyID: cmpId,
+            employeeID: empId,
+            type: '',
+            policyNumber: '',
+            dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+            insuredPersonName: '',
+            relationshipType: '',
+            payMode: '',
+            policyCitizenshipType: 0,
+            amountOfPremium: '',
+            eligibleDeduction: '',
+            documents: [],
+          })
+     setFieldErrors({
+      companyID: cmpId,
+      employeeID: empId,
+      type: '',
+      policyNumber: '',
+      dateOfCommencementOfPolicy: '',
+      insuredPersonName: '',
+      relationshipType: '',
+      payMode: '',
+      policyCitizenshipType: '',
+      amountOfPremium: '',
+      eligibleDeduction: '',
+      documents: [],
+     })
+        }else    if (response?.data?.code=== 400) {
+          enqueueSnackbar(response?.data?.message,{variant:'error'})
+          setLoading(false)
+    
         }
+      
       })
       .catch((error) => {
+        enqueueSnackbar("Something Went Wrong",{variant:'error'})
+        setLoading(false) 
         setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage('Error Medical Insurance  Updating. Please try again.');
+        // setSnackbarOpen(true);
         console.log(error);
       });
+      } else {
+        console.log('Form is invalid');
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+            setLoading(false)
+     
+            console.log(error);
+    }
+
+
+
     //  console.log(result, 'resultsreults');
   };
 
   const getMedicalPremumDetails = async () => {
-    const payload = { employeeId: 'INFO21' };
+    setLoading(true)
+    const payload = { employeeId: empId ,financialYear: selectedYear?.financialYear,};
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl+'getMedicalInsuranceDetails',
+      // url: baseUrl+'getMedicalInsuranceDetails',
+      url:baseUrl +'/getMedicalInsuranceDetails',
+// url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMedicalInsuranceDetails",
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',
+       token,
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA",
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -297,6 +606,7 @@ export default function MedicalPremium() {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
+          setLoading(false)
           const rowsData = response?.data?.data;
           setMedicalTableData(rowsData);
           console.log(JSON.stringify(response?.data), 'resultMedical');
@@ -305,21 +615,22 @@ export default function MedicalPremium() {
         }
       })
       .catch((error) => {
+        setLoading(false)
         console.log(error);
       });
-      console.log(result, 'resultsreults');
+    console.log(result, 'resultsreults');
   };
   console.log(medicalTableData, 'resultsreults');
   const getMedicalPremumDetailsDocs = async () => {
-    const payload = { employeeId: 'INFO21' };
+    const payload = { employeeId: empId };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl +'getMedicalInsuranceDocuments',
+      url: baseUrl + '/getMedicalInsuranceDocuments',
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE ',
+         token,
         'Content-Type': 'text/plain',
       },
       data: payload,
@@ -330,7 +641,7 @@ export default function MedicalPremium() {
         if (response.status === 200) {
           const rowsData = response?.data?.data;
           setMedicalTableDataDoc(rowsData);
-          
+
           console.log(JSON.stringify(response?.data), 'setMedicalTableDataDoc');
 
           console.log(response);
@@ -342,21 +653,25 @@ export default function MedicalPremium() {
     //  console.log(result, 'resultsreults');
   };
 
-  // handle edit 
+  // handle edit
   const handleEdit = (rowData) => {
-    console.log(rowData)
+    setIsEdit(true)
+    console.log(rowData ,"rowData");
+    setRentDocs(rowData.documents)
     setFormData({
-      companyID: 'COMP1',
-      employeeID: 'INFO21',
+      companyID: rowData.companyID,
+      employeeID: rowData.employeeID,
       type: rowData.type,
+      employeeName : rowData.employeeName,
       policyNumber: rowData.policyNumber,
-      dateOfCommencementOfPolicy: '2023-10-15', // You may need to update this value
+      dateOfCommencementOfPolicy: rowData.dateOfCommencementOfPolicy, 
       insuredPersonName: rowData.insuredPersonName,
       relationshipType: rowData.relationshipType,
       payMode: rowData.payMode,
       policyCitizenshipType: rowData.policyCitizenshipType,
       amountOfPremium: rowData.amountOfPremium,
       eligibleDeduction: rowData.eligibleDeduction,
+      premiumID: rowData.medicalInsurancePremiumID
       // Add other fields as needed
     });
 
@@ -377,287 +692,403 @@ export default function MedicalPremium() {
   useEffect(() => {
     const fetchData = async () => {
       await getMedicalPremumDetails();
-      getMedicalPremumDetailsDocs()
+      getMedicalPremumDetailsDocs();
+    };
+    fetchData();
+    setIsEdit(false)
+  }, [isreloading , selectedYear?.financialYear,]);
+
+  // handling documents
+ 
+  const handleRentattchment = (fileData) => {
+    console.log(fileData, 'getting from uploader ');
+    attachedDocummentFileName = fileData?.map((doc) => doc.fileName);
+    setAttachedDocumentFileName(attachedDocummentFileName);
+    attachedDocumment = fileData?.map((doc) => doc.fileContent);
+    setAttachedDocument(attachedDocumment);
+    // Create a new array to store the objects
+    const newArray = [];
+    const transformedData = fileData.map((item) => ({
+      id: item.id ? item.id : 0,
+      fileName: item.fileName,
+      fileContent: item.fileContent,
+    }));
+    rentDocs = transformedData;
+    setRentDocs(rentDocs);
+
+    console.log(rentDocs, 'landlordDocs');
+    setOpenAttchementDilog(false);
+  };
+  console.log(rentDocs, 'landlordDocs');
+ 
+  const handleRentDeletedID = (data) => {
+    console.log(data, 'delete');
+    setRentDeletedID((prevIDs) => [...prevIDs, data]);
+    console.log(rentDeletedId, 'deletedelete');
+  };
+
+  const handleSubmit = ()=>{
+    isEdit ? editMedicalDetails() :saveMedicalDetails()
+  }
+  const handleCancle = ()=>{
+    setIsEdit(false)
+     setFormData({
+      companyID: cmpId,
+      financialYear: selectedYear?.financialYear,
+      employeeID: empId,
+      type: '',
+      policyNumber: '',
+      dateOfCommencementOfPolicy: dayjs().format('YYYY-MM-DD'),
+      insuredPersonName: '',
+      relationshipType: '',
+      payMode: '',
+      policyCitizenshipType: 0,
+      amountOfPremium: '',
+      eligibleDeduction: '',
+      documents: [],
+    });
+
+  }
+
+  const getFinancialYear = async () => {
+    setLoading(true)
+    const payload = {
+      companyID: cmpId,
+     
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      url: baseUrl + '/GetFinancialYear',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setLoading(false)
+          const rowsData = response?.data?.data;
+          console.log(rowsData, 'finacial year');
+          setFinancialYears(rowsData);
+        }
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await getFinancialYear();
     };
     fetchData();
     
-  }, [isreloading]);
-  console.log(medicalTableDataDoc, "doc", medicalTableDataDoc)
+  }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem('selectedYear');
+
+  
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue);
+      setSelectedYear(parsedValue);
+    }
+  }, []);
   return (
     <div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={snackBarAlertHandleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert
-          onClose={snackBarAlertHandleClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+   {    loading ? 
+  <Card sx={{height:"60vh"}}><LoadingScreen/></Card> :
+  <>
+      
       <FormProvider {...methods}>
-        <Grid container spacing={2} >
-
-
+        <Grid container spacing={2}>
           {/* grid 1 */}
-          <Grid item container spacing={2} xs={8} style={{ marginTop: '1rem' }}>
-          {/* search and filter  */}
-          {/* <Grid
-            container
-            spacing={2}
-            alignItems="center"
-            justifyContent="flex-end"
-            direction="row"
-            style={{ marginBottom: '1rem' }}
-          >
-            <Grid item>
-              <TextField
-                sx={{ width: '20vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button className="button">Filter</Button>
-            </Grid>
-            <Grid item>
-              <Button className="button">Report</Button>
-            </Grid>
-          </Grid> */}
-          {/* Row 1 */}
-          <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4}>
-              <Autocomplete
-                disablePortal
-                name="type"
-                id="combo-box-demo"
-                options={type.map((employeepayType) => employeepayType.type)}
-                value={formData.type}
-                onChange={(event, newValue) => handleAutocompleteChange('type', newValue)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Type" />}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Policy Number"
-                name="policyNumber"
-                value={formData.policyNumber}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={4} style={{ paddingTop: '9px' }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    sx={{ width: '100%', paddingLeft: '3px' }}
-                    label="Date Of Commencement Of Policy Or Date Paid"
-                    value={dates?.start_date}
-                    defaultValue={dayjs(new Date())}
-                    onChange={(newValue) => {
-                      setDates((prev) => ({
-                        ...prev,
-                        start_date: newValue,
-                      }));
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
-
-          {/* Row 2 */}
-
-          <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4}>
-              <TextField
-                label="Insured Persion Name(S)"
-                variant="outlined"
-                fullWidth
-                name="insuredPersonName"
-                value={formData.insuredPersonName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Autocomplete
-                disablePortal
-                name="relationship"
-                id="combo-box-relationshipType"
-                options={relationshipType.map((employeepayType) => employeepayType.type)}
-                value={formData.relationship}
-                onChange={(event, newValue) =>
-                  handleAutocompleteChange('relationshipType', newValue)
-                }
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Relationship Type" />}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Autocomplete
-                disablePortal
-                name="policyCitizenshipType"
-                id="combo-box-demo"
-                options={policyCItizenshipType.map((employeepayType) => employeepayType.type)}
-                value={formData.policyCitizenshipType}
-                onChange={(event, newValue) =>
-                  handleAutocompleteChange('policyCitizenshipType', newValue)
-                }
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Policy Citizenship Type" />}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item container xs={12} spacing={2}>
-            <Grid item xs={4}>
-              <Autocomplete
-                disablePortal
-                name="Pay Mode"
-                id="combo-box-demo"
-                options={payMode.map((employeepayType) => employeepayType.type)}
-                value={formData.payMode}
-                onChange={(event, newValue) => handleAutocompleteChange('payMode', newValue)}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Pay Mode" />}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Amount Of Premium"
-                variant="outlined"
-                fullWidth
-                name="amountOfPremium"
-                value={formData.amountOfPremium}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Eligible Deduction"
-                variant="outlined"
-                fullWidth
-                // disabled
-                name="eligibleDeduction"
-                value={formData.eligibleDeduction}
-                onChange={handleChange}
-              />
-            </Grid>
-          </Grid>
-          {/* My buttons  */}
-          <Grid item container xs={12} spacing={2}>
-            <Grid
-              item
-              container
-              xs={6}
-              spacing={2}
-              alignItems="center"
-              justifyContent="flex-Start"
-              direction="row"
-              style={{ marginBottom: '1rem' }}
-            >
-              <Grid item>
-                <Button className="button" onClick={attchementHandler}>Attchement</Button>
+          <Grid item xs={12}>
+        <Autocomplete
+          id="financialYear"
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
+          value={selectedYear}
+          onChange={handleYearChange}
+          style={{marginTop:"0.9rem"}}
+          renderInput={(params) => <TextField {...params}
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
+        />
+      </Grid>
+    { selectedYear?.financialYear && !loading? <>
+          <Grid item container spacing={2}  xs={12} lg={8} md={8} >
+      
+            {/* Row 1 */}
+            <Grid item container xs={12} spacing={2}>
+          
+              <Grid item xs={4}>
+                <Autocomplete
+                  disablePortal
+                  name="type"
+                  id="combo-box-demo"
+                  options={type.map((employeepayType) => employeepayType.type)}
+                  value={formData.type}
+                  onChange={(event, newValue) => handleAutocompleteChange('type', newValue)}
+                  // sx={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Type"
+                      error={hasError('type')}
+                      helperText={getHelperText('type')}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item>
-                <Button className="button" onClick={editMedicalDetails}>
-                  Save
-                </Button>
+              <Grid item xs={4}>
+                <TextField
+                  label="Policy Number"
+                  name="policyNumber"
+                  value={formData.policyNumber}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  error={hasError('policyNumber')}
+                  helperText={getHelperText('policyNumber')}
+                />
               </Grid>
-              <Grid item>
-                <Button className="button">Cancel</Button>
+              <Grid item xs={4} style={{ paddingTop: '9px' }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label=" Commencement Of Policy/Paid Date"
+                      value={dayjs(formData.dateOfCommencementOfPolicy, { format: 'YYYY-MM-DD' })}  // Use the appropriate form data field
+                      defaultValue={dayjs(new Date())}
+    onChange={(newValue) => {
+      console.log(newValue)
+      const formattedDate = dayjs(newValue).format('YYYY-MM-DD')
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        dateOfCommencementOfPolicy: formattedDate,
+      }));
+    }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                
               </Grid>
             </Grid>
+
+            {/* Row 2 */}
+
+            <Grid item container xs={12} spacing={2}>
+           
+              <Grid item xs={4}>
+                <TextField
+                  label="Insured Person Name"
+                  variant="outlined"
+                  fullWidth
+                  name="insuredPersonName"
+                  value={formData.insuredPersonName}
+                  onChange={handleChange}
+                  error={hasError('insuredPersonName')}
+                  helperText={getHelperText('insuredPersonName')}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Autocomplete
+                  disablePortal
+                  name="relationship"
+                  id="combo-box-relationshipType"
+                  options={relationshipType.map((employeepayType) => employeepayType.type)}
+                  value={formData.relationshipType}
+                  onChange={(event, newValue) =>
+                    handleAutocompleteChange('relationshipType', newValue)
+                  }
+                  // sx={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Relationship Type"
+                      error={hasError('relationshipType')}
+                      helperText={getHelperText('relationshipType')}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                {/* <Autocomplete
+                  disablePortal
+                  name="policyCitizenshipType"
+                  id="combo-box-demo"
+                  options={policyCItizenshipType.map((employeepayType) => employeepayType.type)}
+                  value={formData.policyCitizenshipType}
+                  onChange={(event, newValue) =>
+                    handleAutocompleteChange('policyCitizenshipType', newValue)
+                  }
+                  // sx={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Policy Citizenship Type"
+                      error={hasError('policyCitizenshipType')}
+                      helperText={getHelperText('policyCitizenshipType')}
+                    />
+                  )}
+                /> */}
+
+<FormControlLabel
+  control={
+    <Switch
+      name="policyCitizenshipType"
+      checked={formData.policyCitizenshipType} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('policyCitizenshipType', event.target.checked)}
+    />
+  }
+  label="Senior Citizen"
+/>
+              </Grid>
+            </Grid>
+
+            <Grid item container xs={12} spacing={2}>
+           
+              <Grid item xs={4}>
+                <Autocomplete
+                  disablePortal
+                  name="Pay Mode"
+                  id="combo-box-demo"
+                  options={payMode.map((employeepayType) => employeepayType.type)}
+                  value={formData.payMode}
+                  onChange={(event, newValue) => handleAutocompleteChange('payMode', newValue)}
+                  // sx={{ width: 300 }}
+                 
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Pay Mode"
+                      error={hasError('payMode')}
+                      helperText={getHelperText('payMode')}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  label="Amount Of Premium"
+                  variant="outlined"
+                  fullWidth
+                  name="amountOfPremium"
+                  value={formData.amountOfPremium}
+                  onChange={handleChangeForAmoutDeduction}
+                  error={hasError('amountOfPremium')}
+                  helperText={getHelperText('amountOfPremium')}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  label="Eligible Deduction"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  name="eligibleDeduction"
+                  value={formData.eligibleDeduction}
+                  style={{ background: '#e9e6e'}}
+                  // onChange={handleChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} spacing={2}>
+           
+            </Grid>
+            {/* My buttons  */}
+            <Grid item container xs={12} spacing={2}>
+              <Grid
+                item
+                container
+                xs={6}
+                spacing={2}
+                alignItems="center"
+                justifyContent="flex-Start"
+                direction="row"
+                style={{ marginBottom: '1rem' }}
+              >
+                <Grid item>
+                  {/* <Button className="button" onClick={attchementHandler}>
+                    Attachment
+                  </Button> */}
+
+                  {/* <Button className="button" onClick={attchementHandler}>Attachment</Button> */}
+
+<Button className="button" component="label" variant="contained" onClick={attchementHandler} startIcon={<CloudUploadIcon />}>
+Upload file
+{/* <VisuallyHiddenInput type="file" /> */}
+</Button>
+                </Grid>
+                <Grid item>
+                  <Button className="button" onClick={handleSubmit}>
+                    Save
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button className="button" onClick={handleCancle}>Cancel</Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* card */}
           </Grid>
-          {/* card */}
-        </Grid>
           {/* grid 1 end  */}
 
-          {/* grid 2 */}
-<Grid item xs={4}>
-<Grid
-          item
-          container
-          xs={12}
-          spacing={2}
-          alignItems="center"
-          justifyContent="center"
-          direction="column"
-          style={{ marginBottom: '1rem', marginTop: '1rem' }}
-        >
-          <Grid xs={6}>
-            <Grid
-              item
-              container
-              xs={12}
-              style={{
-                padding: '10px',
-                backgroundColor: '#2196f3',
-                color: 'white',
-                border: 'none',
-              }}
-            >
-              <Grid item xs={6}>
-                Total Decduction U/S 80D
-              </Grid>
-              <Grid item xs={6}>
-                Overal Deduction
-              </Grid>
-            </Grid>
-            <Divider style={{ backgroundColor: 'black' }} />
-            <Grid item container xs={12} style={{ backgroundColor: '#f0eded', padding: '10px' }}>
-              <Grid item xs={6}>
-                Self Spouse & Child
-              </Grid>
-              <Grid item xs={6}>
-                0
-              </Grid>
-            </Grid>
-            <Divider style={{ backgroundColor: 'black' }} />
-            <Grid item container xs={12} style={{ padding: '10px' }}>
-              <Grid item xs={6}>
-                Parent(s)
-              </Grid>
-              <Grid item xs={6}>
-                0
-              </Grid>
-            </Grid>
-            <Divider style={{ backgroundColor: 'black' }} />
-            <Grid item container xs={12} style={{ backgroundColor: '#f0eded', padding: '10px' }}>
-              <Grid item xs={6}>
-                Total Deduction
-              </Grid>
-              <Grid item xs={6}>
-                0
-              </Grid>
-            </Grid>
-            <Divider style={{ backgroundColor: 'black' }} />
+          {/* grid 2 for the table to keep left side  */}
+          <Grid item xs={12} lg={4} md={4} 
+          style={{ marginBottom: '1rem', marginTop: '1.5rem' }}>
+         
+        <TableContainer component={Paper} style={{ overflowX: 'hidden' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {cardHeadings.map((heading, index) => (
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
+                      whiteSpace: 'nowrap', // Prevent text wrapping
+                      // overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+             
+                 
+                  {cardData.map((row, index) => (
+                    <TableRow key={index}>
+                       <TableCell style={{ textAlign: 'center' }}>{row.name}</TableCell>
+                       <TableCell style={{ textAlign: 'center' }}>{row.value}</TableCell>
+                     
+                    </TableRow>
+                  ))}
+                </TableBody>
+                  
+             
+          
+          </Table>
+        </TableContainer> 
+            
           </Grid>
-        </Grid>
-</Grid>
+
+          </>: null}
           {/* grid 2 end  */}
-
-        </Grid >
-      
-
+        </Grid>
+{medicalTableData?.length > 0?
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -666,8 +1097,8 @@ export default function MedicalPremium() {
                   <TableCell
                     key={index}
                     style={{
-                      backgroundColor: '#2196f3',
-                      color: 'white',
+                      backgroundColor: '#F4F6F8',
+                      color: '#637381',
                       whiteSpace: 'nowrap', // Prevent text wrapping
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -683,25 +1114,29 @@ export default function MedicalPremium() {
                 medicalTableData?.map((row, rowIndex) => (
                   <TableRow key={rowIndex}>
                     {/* <TableCell>{rowIndex + 1}</TableCell> */}
-                    <TableCell style={{ textAlign: 'center'}}>{row.type}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.policyNumber}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.dateOfCommencementOfPolicy}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.insuredPersonName}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.relationshipType}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.payMode}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.policyCitizenshipType}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.amountOfPremium}</TableCell>
-                    <TableCell style={{ textAlign: 'center'}}>{row.eligibleDeduction}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.type}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.policyNumber}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.dateOfCommencementOfPolicy}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.insuredPersonName}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.relationshipType}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.payMode}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>
+                      {row.policyCitizenshipType}
+                    </TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.amountOfPremium}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.eligibleDeduction}</TableCell>
 
                     <TableCell style={{ textAlign: 'center' }}>
-                <Button onClick={() => handleEdit(row)}>Edit</Button>
-              </TableCell>
+                      <Button onClick={() => handleEdit(row)}>Edit</Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
-        <Grid
+        </TableContainer> : null}
+        {/* <Grid
           item
           container
           xs={12}
@@ -759,26 +1194,20 @@ export default function MedicalPremium() {
             </Grid>
             <Divider style={{ backgroundColor: 'black' }} />
           </Grid>
-        </Grid>
+        </Grid> */}
       </FormProvider>
-      {   openAttachmentDilog?   <FileUploader showAttachmentDilog = { openAttachmentDilog} closeAttchementDilod = {closeAttchementDilod} handleUploadattchmentFileName ={handleUploadattchmentFileName} handleUploadattchment ={handleUploadattchment}/> : null}
-
+      {openAttachmentDilog ? (
+        <FileUploader
+          showAttachmentDilog={openAttachmentDilog}
+          closeAttchementDilod={closeAttchementDilod}
+          handleUploadattchmentFileName={handleUploadattchmentFileName}
+          handleUploadattchment={handleRentattchment}
+          previousData={rentDocs}
+          handleDeletedID={handleRentDeletedID}
+        />
+      ) : null}
+      </>}
     </div>
   );
 
-  // const formFields = [
-  //   { id: 'firstName', label: 'First Name', type: 'text' },
-  //   { id: 'lastName', label: 'Last Name', type: 'text' },
-  //   { id: 'city', label: 'City', type: 'autocomplete', options: [{ label: 'New York' }, { label: 'London' }] },
-  //   { id: 'birthDate', label: 'Birth Date', type: 'date' },
-  //   // Add more form fields as needed
-  // ];
-
-  // return (
-  //   <div>
-  //     <h1>Reusable Form Example</h1>
-  //     <ReusableForm apiEndpoint="your-api-endpoint" fields={formFields} />
-  //   </div>
-  // );
-};
-
+}

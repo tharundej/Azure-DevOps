@@ -11,6 +11,8 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 
 import PropTypes from 'prop-types';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import axios from 'axios';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -18,35 +20,44 @@ const bull = (
   </Box>
 );
 
-export default function CreatePayRun({ moveToPageFunction }) {
+export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
+
+  const {user} = React.useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
+const [cardData ,setCardData] = React.useState()
   const TABLE_HEAD = [
-    { id: 'employeeType', label: 'Employee Type', type: 'text' },
+    { id: 'employementType', label: 'Employee Type', type: 'text' },
 
     { id: 'employeeName', label: 'Employee Name', type: 'text' },
 
-    { id: 'employeeid', label: 'Employee id', type: 'text' },
+    { id: 'employeeID', label: 'Employee id', type: 'text' },
 
-    { id: 'salaryMonth', label: 'Salary', type: 'text' },
+    // { id: 'salaryMonth', label: 'Salary', type: 'text' },
 
-    { id: 'CTCOfYear', label: 'CTC Of Year', type: 'text' },
+    { id: 'ctcOfYear', label: 'CTC Of Year', type: 'text' },
 
-    { id: 'CTCOfMonth', label: 'CTC Of Month', type: 'text' },
-    { id: 'basicofMonth', label: 'Basic Of Month', type: 'text' },
+    { id: 'ctcOfMonth', label: 'CTC Of Month', type: 'text' },
+    { id: 'basicMonthSalary', label: 'Basic Of Month', type: 'text' },
     { id: 'hra', label: 'HRA', type: 'text' },
     { id: 'lta', label: 'LTA', type: 'text' },
+    { id: 'esic', label: 'ESIC  Amount', type: 'text' },
+    { id: 'tds', label: 'TDS', type: 'text' },
     { id: 'specialAllowance', label: 'Spacial Alowance', type: 'text' },
 
     { id: 'conveyanceAllowance', label: 'Conveyance Alowance', type: 'text' },
     { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text' },
-    { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
+    // { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
 
-    { id: 'employeePf', label: 'Employee PF', type: 'text' },
+    { id: 'employeePF', label: 'Employee PF', type: 'text' },
 
-    { id: 'employerPf', label: 'Employer PF', type: 'text' },
-    { id: 'esic', label: 'ESIC  Amount', type: 'text' },
-    { id: 'tds', label: 'TDS', type: 'text' },
-    { id: 'grosspay', label: 'Gross Pay', type: 'text' },
+    { id: 'employerPF', label: 'Employer PF', type: 'text' },
+  
+    { id: 'totalGrossPay', label: 'Gross Pay', type: 'text' },
   ];
+
 
   const actions = [
     { name: 'Approve', icon: 'hh', path: 'jjj' },
@@ -55,95 +66,19 @@ export default function CreatePayRun({ moveToPageFunction }) {
 
     { name: 'Edit', icon: 'hh', path: 'jjj' },
   ];
-  const defaultPayload = {
-    Page: 1,
+  const defaultPayload = 
+  {
+      page:0,
+      count:5,
+      companyID:cmpId,
+      employementType:employmentType,
+      sort:{
+          key:1,
+          orderBy:""
+      }        
+  }
 
-    Count: 5,
-  };
-
-  const bodyContent = [
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-    {
-      employeeType: 'Permanent',
-      employeeName: 'benak',
-      employeeid: '123',
-      salaryMonth: 'August',
-      CTCOfYear: '4,80,000',
-      CTCOfMonth: '40,000',
-      basicofMonth: '16,000',
-
-      basicPay: '32000',
-
-      hra: '20000',
-
-      da: '1400',
-      lta: '1600',
-      specialAllowance: '2000',
-
-      employeePf: '2000',
-      conveyanceAllowance: '7400',
-      professionalTax: '250',
-      esic: '1000',
-      grosspay: '40000',
-      employerPf: '2000',
-
-      tds: '1800',
-      medicalAllowance: '2000',
-    },
-  ];
+ 
   const [personName, setPersonName] = React.useState();
 
   const handleChange = (event) => {
@@ -154,10 +89,80 @@ export default function CreatePayRun({ moveToPageFunction }) {
     // console.log
     moveToPageFunction(event);
   };
+
+ const getPayRunDetails = async () => {
+    // setLoading(true)
+    const payload = {
+     companyID : cmpId,
+    };
+  
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: baseUrl +'getSingleLicPremium',
+      // url: baseUrl + '/getPayRunCount',
+      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
+      headers: {
+        Authorization: token,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          // setLoading(false)
+          const rowsData = response?.data;
+          setCardData(rowsData)
+          console.log(JSON.stringify(response?.data), 'result');
+        }
+      })
+      .catch((error) => {
+        // setLoading(false)
+        console.log(error);
+      });
+    //  console.log(result, 'resultsreults');
+  };
+   console.log(cardData, 'resultsreults');
+   React.useEffect(()=>{
+    getPayRunDetails()
+   },[])
+   const data = [
+    {
+        "TDS": 175625.00432533395,
+        "employeeGrossPay": 0,
+        "fromDate": "2023-12-01T00:00:00+05:30",
+        "payrollcost": 0,
+        "showMessage": "User",
+        "toDate": "2023-12-31T23:59:59.999999999+05:30"
+    },
+    {
+        "employeepf": 0,
+        "employerpf": 0,
+        "fromDate": "2023-12-01T00:00:00+05:30",
+        "showMessage": "User",
+        "tds": 0,
+        "toDate": "2023-12-31T23:59:59.999999999+05:30"
+    }
+];
+const formatDate = (dateString) => {
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+  return formattedDate;
+};
+   
   return (
     <Box>
-     <Grid container spacing={3}>
-     <Grid xs={12} md={6} lg={4}>
+    
+{  cardData?.map((item ,idex) =>{
+<>
+<p></p>
+</>
+
+  }) }
+    <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
+     <Grid xs={12} md={6} lg={6}>
   <Stack
     direction="column"
     // alignItems="center"
@@ -183,13 +188,13 @@ export default function CreatePayRun({ moveToPageFunction }) {
          opacity:"0.64"
       }}
     >
-      Period : 01/08/2023 to 31/08/2023
+      Period :       ( {cardData && formatDate(cardData[0]?.fromDate)} to  {cardData && formatDate(cardData[0].toDate)})
     </Typography>
 
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
       <div>
         <ListItemText 
-          primary="11,22093802"
+          primary={cardData && cardData[0]?.payrollcost}
           secondary="Payroll Cost"
           primaryTypographyProps={{
             typography: 'subtitle2',
@@ -208,10 +213,10 @@ export default function CreatePayRun({ moveToPageFunction }) {
       <div>
         <ListItemText
           sx={{ ml: 3 }}
-          primary="2,500"
+          primary={cardData && cardData[0]?.employeeGrossPay}
           secondary="Employee's Gross Pay"
           primaryTypographyProps={{
-            typography: 'subtitle2',
+            typography: 'subtitle3',
             component: 'span',
             sx: { textAlign: 'center' },
           }}
@@ -273,21 +278,21 @@ export default function CreatePayRun({ moveToPageFunction }) {
     variant="subtitle2"
     
   >
-    Taxes
+    TDS
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
   
   >
-    Prs-Tax Deductions
+   Employer PF
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
     
   >
-    Post-Tax Deductions
+ Employee PF
   </Typography>
 
   </div>
@@ -297,21 +302,21 @@ export default function CreatePayRun({ moveToPageFunction }) {
     variant="subtitle2"
     
   >
-    11,34,023.09
+  {  cardData && cardData[1]?.tds}
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
    
   >
-   14,023.49
+ {  cardData && cardData[1]?.employerpf}
   </Typography>
   <Typography
     variant="subtitle2"
     color="inherit"
     
   >
-   34,023.00
+  {  cardData && cardData[1]?.employeepf}
   </Typography>
 
   </div>
@@ -333,91 +338,16 @@ export default function CreatePayRun({ moveToPageFunction }) {
 </Grid>
       </Grid>
       {/* from ai  */}
-      <Grid container spacing={2}>
-        {/* Main Grid 1 */}
-        <Grid item xs={6} alignItems="center">
-          <Grid container spacing={2} alignItems="center">
-            {/* Sub Grid 1.1 */}
-
-            <Grid item>
-              {/* Your content for Sub Grid 1.1 */}
-              <FormControl sx={{ m: 1, minWidth: 220 }} size="large">
-                <InputLabel id="demo-select-small-label"> Employee name</InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={personName}
-                  label="Employee Name"
-                  onChange={handleChange}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="sai">Sai</MenuItem>
-                  <MenuItem value="dharma">Dharma</MenuItem>
-                  <MenuItem value="thej">Theja</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Sub Grid 1.2 */}
-            <Grid item>
-              {/* Your content for Sub Grid 1.2 */}
-              <TextField
-                sx={{ width: '10vw' }}
-                // value={filters.name}
-                // onChange={handleFilterName}
-                placeholder="Search..."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                  border: 'none',
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {/* Main Grid 2 */}
-        <Grid item xs={6} container justifyContent="flex-end" alignItems="center">
-          <Grid container spacing={0} alignItems="center">
-            {/* Button 1 */}
-            <Grid item>
-              <Button
-                style={{ backgroundColor: '#007AFF', color: 'white' }}
-                onClick={() => {
-                  moveToPage(3);
-                }}
-              >
-                Calculate Earnings And Deductions
-              </Button>
-            </Grid>
-
-            {/* Icon 1 */}
-            <Grid item>
-              <IconButton color="primary">
-                <Icon icon="vscode-icons:file-type-excel" width="40" height="40" />
-              </IconButton>
-            </Grid>
-            {/* Icon 2 */}
-            <Grid item>
-              <IconButton color="primary">
-                <Icon icon="vscode-icons:file-type-pdf2" width="40" height="40" />
-                {/* <img width="60" height="60" src="https://img.icons8.com/retro/32/pdf.png" alt="pdf"/> */}
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      {console.log(bodyContent, 'body content', actions)}
+     
+    
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listLeave"
+        endpoint="/getPayRunDetailsContract"
         defaultPayload={defaultPayload}
         rowActions={actions}
+        filterName="HrTabFilter"
       />
+
     </Box>
   );
 }

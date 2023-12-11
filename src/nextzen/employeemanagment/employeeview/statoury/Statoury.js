@@ -30,8 +30,8 @@ import StatouryForm  from '../../statoury/StatouryForm';
 
 // ----------------------------------------------------------------------
 
-export default function Statoury({  delivery, shippingAddress, payment }) {
-  const employeeIDToCreate="info7"
+export default function Statoury({  delivery, shippingAddress, payment,employeeIDForApis }) {
+  const employeeIDToCreate=employeeIDForApis
   const [endpoint,setEndpoint]=useState("")
   const [statouryCreateOpen,setStatouryCreateOpen]=useState(false);
   const [employeeStatouryData,setEmployeeStatouryData]=useState({})
@@ -39,8 +39,8 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
     const [open,setOpen]=useState(false);
     const handleEdit=()=>{
       setEndpoint("/updateStatutoryDetails");
-      //setDataForCreateOrEdit(employeeStatouryData)
-      //console.log('0p',dataToCreateOrEdit)
+      setDataForCreateOrEdit(employeeStatouryData)
+      console.log('0p',dataToCreateOrEdit)
       setStatouryCreateOpen(true);
     }
     const handleEditClose=()=>{
@@ -55,7 +55,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   const getEmployeeStattuory=()=>{
   
         let data1 = JSON.stringify({
-        "employeeID": "info7"
+        "employeeID": employeeIDForApis
         });
 
         let config = {
@@ -63,7 +63,8 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         maxBodyLength: Infinity,
         url: `${baseUrl}/getStatutoryDetailsEmployee`,
         headers: { 
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+           
           'Content-Type': 'application/json'
         },
         data : data1
@@ -81,7 +82,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
 
   }
   //   const employeeStatouryData={
-  //     "companyID": "COMP1",
+  //     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   //     "employeeID": "info1",
   //     "employeeName": "nikitha v",
   //     "uan": 123456789,
@@ -301,13 +302,6 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   
   
   
- 
-  
-
-  
-
-  
-  
   const renderAbout = (
     <>
     
@@ -329,7 +323,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         </Grid>
     </Grid>
      
-      <Grid container spacing={20}>
+      <Grid container spacing={{ xs: 5, sm: 5, lg: 20 ,md:5}}>
 
         <Grid item>
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
@@ -361,10 +355,10 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Accountholder Name
+          Account Holder Name
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', maxWidth: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {employeeStatouryData?.accountholderName}
+          {employeeStatouryData?.accountHolderName}
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center">
@@ -440,7 +434,7 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          lwf Number
+          LWF Number
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {employeeStatouryData?.lwfNumber}
@@ -464,40 +458,38 @@ export default function Statoury({  delivery, shippingAddress, payment }) {
   );
 
  
-
- 
-
   const dataa= {
-    "companyID": "COMP5",
-    "employeeID": "info7",
-    "employeeName": "yukthi H",
-    "uan": 1,
-    "pfType": "TypeA",
-    "pfNumber": 1,
-    "esicNumber": 1,
-    "ptNumber": 1,
-    "lwfNumber": "1",
-    "panNumber": "1",
-    "aadharNumber": "1",
-    "passportNumber": "1",
-    "accountNumber": 0,
-    "accountHolderName": "1",
-    "bankName": "1",
-    "ifscCode": "11",
-    "bankBranch": "1"
+    "companyID": "",
+    "employeeID": "",
+    "employeeName": "",
+    "uan": undefined,
+    "pfType": "",
+    "pfNumber": undefined,
+    "esicNumber": undefined,
+    "ptNumber": undefined,
+    "lwfNumber": "",
+    "panNumber": "",
+    "aadharNumber": "",
+    "passportNumber": "",
+    "accountNumber": undefined,
+    "accountHolderName": "",
+    "bankName": "",
+    "ifscCode": "",
+    "bankBranch": ""
 }
 
 
   return (
     <>
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
-    <StatouryForm open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={dataa} endpoint={endpoint}/>
+    <StatouryForm callApi={getEmployeeStattuory}open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={employeeStatouryData} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
 
-    {employeeStatouryData.employeeID==="" && 
+    {employeeStatouryData?.accountHolderName===""   && 
     
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button 
+          sx={{backgroundColor:'#3B82F6'}}
            onClick={handleAddStatuory}
           >+Add Statoury</Button>
           </Grid>
@@ -528,4 +520,5 @@ Statoury.propTypes = {
   delivery: PropTypes.object,
   payment: PropTypes.object,
   shippingAddress: PropTypes.object,
+  employeeIDForApis:PropTypes.string
 };

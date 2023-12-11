@@ -11,6 +11,9 @@ import { Container } from '@mui/system';
 import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
+import EditShiftRoaster from './EditShiftRoaster';
+import { enqueueSnackbar } from 'notistack';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -25,6 +28,7 @@ const bull = (
 );
 
 export default function AssignShiftComponent() {
+  const {user} = React.useContext(UserContext)
    
       const TABLE_HEAD = [
 
@@ -58,57 +62,76 @@ export default function AssignShiftComponent() {
         // { id: '', width: 88 },
     
       ];
-    
+      const [showEdit, setShowEdit] = useState  (false);
+      const handleClose = () => setShowEdit(false);
+      const [editData,setEditData]=useState({})
+
+      
       const onClickActions=(rowdata,event)=>{
-        console.log("row dataaaaaa")
-        var payload ={
-          "project_id": rowdata?.project_id,
-        
-       }
-      console.log(payload,"requestedddbodyyy")
-      const config = {
-        method: 'POST',
-        maxBodyLength:Infinity,
-        url: baseUrl + `/DeleteShiftRoaster`,
-        // url: `https://27gq5020-3001.inc1.devtunnels.ms/erp/approveLeave`,
-        data: payload
-     
+        if(event?.name==="Edit"){
+          handleEditAPICALL(rowdata,event)
+        }
+
+        else if(event?.name==="Delete"){
+          handleDeleteAPICALL(rowdata,event)
+        }
       }
-      axios.request(config).then((response) => {
-        enqueueSnackbar(response.data.message,{variant:'success'})
-      })
-        .catch((error) => {
-          enqueueSnackbar(error.message,{variant:'Error'})
-          console.log(error);
-        });
-     
+      const handleDeleteAPICALL = async (rowdata,event)=>{
+        console.log("iam here ")
+        try{
+          console.log(rowdata,"rowData:::::")
+        const  data= {
+          DeleteShiftRoaster: JSON.stringify( rowdata.project_id),
+           
+          };
+          const response = await instance.post('DeleteShiftRoaster',data);
+          // setReportingManagerData(response.data.list)
+          console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
+          enqueueSnackbar(response.data.Message,{variant:'success'})
+        }catch(error){
+      console.error("Error", error);
+      enqueueSnackbar(error.Message,{variant:'Error'})
+
+      throw error;
+        }
       }
-    
+      const handleEditAPICALL = async (rowdata,event)=>{
+        setShowEdit(true);
+        setEditData(rowdata)
+      }
     
       const actions = [
     
-        { name: "Edit", icon: "hh", id: "0", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
-        { name: "Delete", icon: "hh", id: "0", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
+        { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/approveLeave'},    
+        { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/deleteproject'},
+    
       ];
     
       const defaultPayload ={
-        "cid": "COMP2",
+        "cid": (user?.companyID)?user?.companyID : '',
+        "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
-        "count": 1,
+        "count": 10,
         "externalFilters": {
-            "shift_term": "",
-            "start_date": "",
-            "end_date": "",
-            "shift_name": ""
+            "shiftName": "",
+            "shiftTerm": "",
+            "startDate": {
+                "from": "",
+                "to": ""
+            },
+            "endDate": {
+                "from": "",
+                "to": ""
+            }
         },
         "sort": {
-            "key": 1,
+            "key": 0,
             "orderBy": ""
         }
     }
       const [showForm, setShowForm] = useState  (false);
-      const handleClose = () => setShowForm(false);
+      // const handleClose = () => setShowForm(false);
       const handleTimeForm =()=>{
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
@@ -116,20 +139,20 @@ export default function AssignShiftComponent() {
     
   return (
     <>
-      {/* {showForm && (
+      {showEdit && (
  <Dialog
  fullWidth
  maxWidth={false}
- open={showForm}
+ open={open}
  onClose={handleClose}
  PaperProps={{
    sx: { maxWidth: 770 , overflow:'hidden'},
  }}
  className="custom-dialog"  
 >
- <AssignShift currentUser={{}} />
+ <EditShiftRoaster currentUser={{}} editData={editData}  onClose={handleClose} />
       </Dialog>
-    )} */}
+    )}
 
     <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
   {/* <div>Content Here</div> */}

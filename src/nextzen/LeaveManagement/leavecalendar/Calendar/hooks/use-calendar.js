@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
-import formatDateToYYYYMMDD from 'src/nextzen/global/GetDateFormat';
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 
@@ -85,7 +85,6 @@ export default function useCalendar() {
 
   const onSelectRange = useCallback(
     (arg) => {
-      console.log(arg,"arggg")
       if (calendarEl) {
         const calendarApi = calendarEl.getApi();
         calendarApi.unselect();
@@ -107,14 +106,15 @@ export default function useCalendar() {
   const onClickEvent = useCallback(
     (arg) => {
       const { event } = arg;
-      console.log(event,"evnetsttss","idd",event.id)
+      if (event.extendedProps.type === 'holiday') {
+        return;
+      }
       onOpenForm();
       setSelectEventId(event.id);
     },
     [onOpenForm]
   );
 
-  console.log(selectEventId,"selectedeventttid")
 
   const onResizeEvent = useCallback((arg, updateEvent) => {
     const { event } = arg;

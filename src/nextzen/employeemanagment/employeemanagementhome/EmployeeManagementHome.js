@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 
 import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 
@@ -6,11 +6,63 @@ import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
+import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
+
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { forEach } from 'lodash';
 
 
 function EmployeeManagementHome  () {
-    const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure'];
-  const tabContents = [
+  const {user}=useContext(UserContext)
+  console.log(user,'from contest')
+  const [tabLabels,setTabLabels]=useState([])
+  const [tabContents,setTabContents]=useState([])
+   // const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
+    const dataObj=[
+      {
+        id:'employeeTable',
+        label:'Employees',
+        content: <EmployeeTable/>
+      },
+      {
+        id:'statutory',
+        label:'Statutory',
+        content: <StatouryTable/>
+      },
+      {
+        id:'salaryStructure',
+        label:'Salary Structure',
+        content: <SalaryStructure/>
+      },
+
+    ]
+
+    useEffect(()=>{
+      var arr = [];
+      var arr1=[]
+
+      dataObj?.forEach((item) => {
+        const permission = user?.rolePermissions.employeeManagement;
+        //console.log( typeof permission?.mainHeading,  permission?.mainHeading)
+      if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading && permission[item.id]) {
+        console.log(`User Permission for ${item?.key}:`, permission);
+        console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+
+        arr.push(item.label);
+        arr1.push(item.content)
+      }
+      });
+      arr.push("Permissions")
+      arr1.push(<RoleAndResponsiblity/>)
+      console.log(arr,'arrrr')
+      
+      setTabLabels(arr);
+      setTabContents(arr1)
+      
+    },[user])
+
+    
+  const tabContents1 = [
     <div>
 
      <EmployeeTable/>
@@ -20,6 +72,9 @@ function EmployeeManagementHome  () {
     </div>,
     <div>
       <SalaryStructure/>
+    </div>,
+    <div>
+      <RoleAndResponsiblity/>
     </div>
   ];
   const [TABLE_HEAD,setTableHead] =React.useState( [
@@ -62,6 +117,7 @@ function EmployeeManagementHome  () {
     <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
       </>
   )

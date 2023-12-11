@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -12,22 +12,25 @@ import instance from 'src/api/BaseURL';
 
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createCustomerAPI } from 'src/api/Accounts/Customers';
+import { createCustomerAPI, updateCustomerAPI } from 'src/api/Accounts/Customers';
 import SnackBarComponent from '../global/SnackBarComponent';
+import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../context/user/UserConext';
 
-export default function CreateCustomers({ currentData, handleClose }) {
+export default function CreateCustomers({ currentData, handleClose, getTableData }) {
+  const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     customer_name: Yup.string().required('Customer Name is Required'),
     customer_company_name: Yup.string().required('Customer Company Name is Required'),
     customer_email_id: Yup.string().required('Customer Email Id is Required'),
     customer_phone_no: Yup.number().required('Customer Phone is Required'),
     customer_address_line1: Yup.string().required('Customer Address line 1 is Required'),
-    customer_address_line2: Yup.string().required('Customer Address line 2 is Required'),
-    city: Yup.string().required('City is Required'),
-    state: Yup.string().required('State is Required'),
-    state_code: Yup.number().required('State Code is Required'),
-    country: Yup.string().required('Country is Required'),
-    pincode: Yup.number().required('Pincode is Required'),
+    customer_address_line2: Yup.string(),
+    city: Yup.string(),
+    state: Yup.string(),
+    state_code: Yup.number(),
+    country: Yup.string(),
+    pincode: Yup.number(),
     customer_gst_no: Yup.string().required('Customer GST No is Required'),
     customer_pan_no: Yup.string().required('Customer PAN No is Required'),
     customer_tan_no: Yup.string().required('Customer TAN No is Required'),
@@ -36,22 +39,23 @@ export default function CreateCustomers({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      customer_name: currentData?.customer_name || '',
-      customer_company_name: currentData?.customer_company_name || '',
-      customer_email_id: currentData?.customer_email_id || '',
-      customer_phone_no: currentData?.customer_phone_no || '',
-      customer_address_line1: currentData?.customer_address_line1 || '',
-      customer_address_line2: currentData?.customer_address_line2 || '',
+      customer_id: currentData?.customerId || '',
+      customer_name: currentData?.customerName || '',
+      customer_company_name: currentData?.customerCompanyName || '',
+      customer_email_id: currentData?.customerEmailId || '',
+      customer_phone_no: currentData?.customerPhoneNo || '',
+      customer_address_line1: currentData?.customerAddressesLine1 || '',
+      customer_address_line2: currentData?.customerAddressesLine2 || '',
       city: currentData?.city || '',
       state: currentData?.state || '',
-      state_code: currentData?.state_code || '',
+      state_code: currentData?.stateCode || '',
       country: currentData?.country || '',
-      pincode: currentData?.pincode || '',
-      customer_gst_no: currentData?.customer_gst_no || '',
-      customer_pan_no: currentData?.customer_pan_no || '',
-      customer_tan_no: currentData?.customer_tan_no || '',
+      pincode: currentData?.pinCode || '',
+      customer_gst_no: currentData?.customerGstNo || '',
+      customer_pan_no: currentData?.customerPanNo || '',
+      customer_tan_no: currentData?.customerTanNo || '',
       status: currentData?.status || '',
-      company_id: currentData?.company_id || 'COMP1',
+      company_id: currentData?.companyId || user?.companyID ? user?.companyID : '',
     }),
     [currentData]
   );
@@ -82,11 +86,19 @@ export default function CreateCustomers({ currentData, handleClose }) {
     data.status = selectedStatus;
     try {
       console.log('Create Cutomer Data', data);
-      const response = await createCustomerAPI(data);
+      let response = '';
+      if (currentData?.customerName) {
+        response = await updateCustomerAPI(data);
+      } else {
+        response = await createCustomerAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.Message, 'success');
-      // handleClose();
       reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      currentData?.customerName ? '' : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.Message, 'warning');
@@ -108,7 +120,7 @@ export default function CreateCustomers({ currentData, handleClose }) {
   return (
     <div className="modal-container">
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Add New Customers</DialogTitle>
+        <ModalHeader heading={currentData?.customerName ? 'Edit Customers' : 'Add New Customers'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -157,8 +169,8 @@ export default function CreateCustomers({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save
+          <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {currentData?.customerName ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>

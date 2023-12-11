@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ReusableTabs from '../../tabs/ReusableTabs';
 import CompoffConfigurationTable from './CompoffConfigurationTable';
 
-const tabLabels = ['Comoff Config'];
+const tabLabels = ['Compensantory Configuration'];
   const tabContents = [
     <div>
       <CompoffConfigurationTable/>
@@ -15,6 +15,7 @@ export default function BasicCard() {
     <ReusableTabs
         tabLabels={tabLabels}
         tabContents={tabContents}
+        tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}
       />
   );
 }

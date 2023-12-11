@@ -8,12 +8,12 @@ import DocumentsUpload from './uploaddocuments/UploadDocuments';
 
 import FileEditCreate from '../../../global/fileUploads/FileEditCreate'
 import { doc } from 'firebase/firestore';
-const Documets = () => {
+const Documets = ({employeeIDForApis}) => {
   const [index,setIndex]=useState();
     const [type,setType]=useState("create")
     const [documentsData,setDocumentsData]=useState({
-      "companyId": "COMP5",
-      "employeeId": "NEWC19",
+      "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "employeeId": employeeIDForApis,
       documents:[ {
           fileType:'',
           fileName:'',
@@ -33,8 +33,8 @@ const Documets = () => {
         console.log(documents,'documentsonEdit')
 
         const obj={
-          "companyId": "COMP5",
-          "employeeId": "NEWC19",
+          "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+          "employeeId": employeeIDForApis,
           documents:[documents?.documents[dataIndex]]
         }
         console.log(obj,'edit obj')
@@ -47,8 +47,8 @@ const Documets = () => {
         
 
         let data = JSON.stringify({
-            "companyId": "COMP5",
-            "employeeId": "NEWC19"
+            "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+            "employeeId":employeeIDForApis
           });
            console.log(baseUrl,'baseUrl')
           let config = {
@@ -70,8 +70,9 @@ const Documets = () => {
             const obj=documentsData;
             obj={
               ...obj[0],
-              "companyId": "COMP5",
-              "employeeId": "NEWC19",
+              "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+              "employeeId": employeeIDForApis
+              ,
             }
             setDocumentsData(obj)
 
@@ -85,19 +86,22 @@ const Documets = () => {
         ApiHitGetDocuments()
     },[])
 
-    const docType=["Aadhar Card","Pan Card","Passport"]
+    const docType=["Aadhaar Card","Pan Card","Passport"]
 
   return (
     <>
     {/* <DocumentsUpload open={open} documents={documents} onHandleClose={handeleClose} /> */}
-    <FileEditCreate open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint="/updateDocs" type={type}/>
+    <FileEditCreate callApi={ApiHitGetDocuments} employeeIDForApis={employeeIDForApis} open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint="/updateDocs" type={type}/>
 
     <Grid container alignItems="center" justifyContent="flex-end" >
     <Button onClick={()=>{
       setType('create')
      setOpen(true)
+     
         
-    }}>Upload Documents</Button>
+    }}
+    sx={{backgroundColor:'#3B82F6'}}
+    >Upload Documents</Button>
 
     </Grid>
 

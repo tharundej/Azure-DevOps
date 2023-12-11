@@ -1,10 +1,13 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
+
   Select,
   MenuItem,
-  InputLabel } from '@mui/material'
+  InputLabel,Stack } from '@mui/material'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
 
@@ -13,6 +16,18 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     fileName:'',
     fileContent:''
 }])
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 
 
@@ -65,7 +80,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": "COMP5",
+        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
@@ -79,6 +94,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
   }))
 
   var onSubmit=(data)=>{
+    props.handleLoader()
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -176,8 +192,8 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
     //   }
   return (
     <>
-         <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
+         <Grid style={{ paddingTop: '20px' }} xs={12} md={8}>
+            <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -196,15 +212,16 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
 
                
                 <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select a doc Type</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
-                        label="Select a doc Type"
+                        label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index)}}
-                        name="Select a doc Type"
+                        name="Select Document"
                     >
-                        <MenuItem value="salary-slips">Salary Slips</MenuItem>
-                        <MenuItem value="seperation-letter">Seperation Letter</MenuItem>
+                        <MenuItem value="aadhar">Aadhaar123</MenuItem>
+                        <MenuItem value="pan-card">Pan Card</MenuItem>
+                        <MenuItem value="pass-port">Passport</MenuItem>
                         
                         {/* Add more categories here */}
                     </Select>
@@ -220,14 +237,17 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                    id={`file-upload-input-${index}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                    onChange={(e)=>{console.log(index);handleFileUpload(e,index)}}
+                   
                     style={{ display: 'none' }}
                    
                 />
                 <label htmlFor= {`file-upload-input-${index}`}>
-                    <Button variant="outlined" component="h6">
-                    Choose File
-                    </Button>
+                <Button
+                 onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
+                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                          </Button>
                 </label>
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
@@ -246,7 +266,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                         
 
                       }
-                      >Add</Button>
+                      >Add Files</Button>
                    
 
                   }
@@ -285,7 +305,7 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
                 
                 </Box>
 
-              </Card>
+              </Stack>
             </Grid>
 
     </>

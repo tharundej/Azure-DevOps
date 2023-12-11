@@ -24,15 +24,17 @@ import { SentIcon } from 'src/assets/icons';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField, RHFCode } from 'src/components/hook-form';
 import axios from 'axios';
-import { CardContent } from '@mui/material';
+import { CardContent, Snackbar } from '@mui/material';
+import { Alert as MuiAlert ,Button} from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 
-export default function AmplifyNewPasswordView({emailId}) {
+export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) {
   const { newPassword, forgotPassword } = useAuthContext();
-
+  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -42,7 +44,13 @@ export default function AmplifyNewPasswordView({emailId}) {
   const password = useBoolean();
 
   const { countdown, counting, startCountdown } = useCountdownSeconds(60);
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const VerifySchema = Yup.object().shape({
     // code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -80,24 +88,45 @@ export default function AmplifyNewPasswordView({emailId}) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-
+      const email = localStorage.getItem('email');
+      const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
+      
+      // Check if email is null, then use emailWhileUpdate
+      const selectedEmail = email !== null ? email : emailWhileUpdate;
       const payload ={
         "password":data.password,
-        "jwtTokenString":localStorage.getItem('jwt_access_token')
+        'email':selectedEmail,
         
     }
     const response = await axios.post(baseUrl+'/createPassword', payload);
     console.log(response?.data,'new password',response?.data?.Message);
     console.log(payload,'createpassword')
-    if(response?.data.code===201){
-        console.log('sucess')
+    if(response?.data.code===201||200){
+      setSnackbarSeverity('success');
+      setSnackbarMessage('OTP Sent Succuessfully!');
+      setSnackbarOpen(true);
+   
+   console.log('sucess', response);
         router.push(paths.auth.jwt.login);
+      }
+      if(response?.data?.code===400  ){
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+         setSnackbarOpen(true);
+      
+      console.log('sucess', response);
+
       }
       // await newPassword?.(data.email, data.code, data.password);
 
       // router.push(paths.auth.jwt.login);
+      onHandleNextIncrement()
     } catch (error) {
-      console.error(error);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage(response?.data?.message);
+      // setSnackbarOpen(true);
+      
+     console.log('error', error);
     }
   });
 
@@ -155,14 +184,21 @@ export default function AmplifyNewPasswordView({emailId}) {
         }}
       />
 
-      <LoadingButton
+      {/* <LoadingButton
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
       >
         Create Password
-      </LoadingButton>
+      </LoadingButton> */}
+      <Button
+       size="large"
+       type="submit"
+       variant="contained"
+       loading={isSubmitting}>
+        Create Password
+      </Button>
       <Link
         component={RouterLink}
         href={paths.auth.jwt.login}
@@ -201,6 +237,19 @@ export default function AmplifyNewPasswordView({emailId}) {
       {renderHead}
 
       {renderForm}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000} // Adjust the duration as needed
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error">
+          {errorMsg}
+        </MuiAlert>
+        </Snackbar>
     </FormProvider>
     </CardContent>
   );
