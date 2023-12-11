@@ -160,7 +160,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               name="vendorID"
               id="vendorID"
               options={vendorOptions || []}
-              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
+              value={vendorOptions?.find((option) => option.vendorID === selectedVendor) || null}
               onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
@@ -176,7 +176,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               name="gstRate"
               id="gstRate"
               options={taxsOptions || []}
-              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              value={taxsOptions?.find((option) => option.value === selectedTaxs) || null}
               onChange={(event, newValue) => setSelectedTaxs(newValue ? newValue.value : null)}
               renderInput={(params) => (
                 <TextField {...params} label="Select Tax" variant="outlined" />
