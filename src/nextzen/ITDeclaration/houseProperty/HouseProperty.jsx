@@ -74,7 +74,7 @@ export default function HouseProperty() {
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
-const payMode = [{ type: 'Yes ' }, { type: 'No' }];
+const payMode = [{ type: 'Yes' }, { type: 'No' }];
 const loanType = [{ type: 'Construction' }, { type: 'Purchase' } , { type: 'Repair/Renewal' }];
 const [loading,setLoading] = useState(false);
  
@@ -593,6 +593,26 @@ console.log(isValid , "isValidisValid")
 
     setFormData({ ...formData, [name]: mappedValue });
   };
+
+  console.log(formData.isPropertySelfOccupiedOrLetOu ,"formData.isPropertySelfOccupiedOrLetOu")
+  const handleCancle = ()=>{
+   
+     setFormData({
+      propertyReferenceSlNo: null,
+      name_of_the_owners: '',
+      addressOfProperty: '',
+      panOfTheLanders: '',
+      amountOfHousingloanTakenFromTheProperty: '',
+      purposeOfLoan: '',
+      dateOfSanction: dayjs().format('YYYY-MM-DD'),
+      interestPaybleOnYear: '',
+      isPropertySelfOccupiedOrLetOu: '',
+      ifJointPropertyThenEnterInterestRate: '',
+      grossRentalAmount: '',
+      municipalTaxesPaid: '',
+    });
+
+  }
   return (
     <div>
   {    loading ? 
@@ -787,7 +807,7 @@ console.log(isValid , "isValidisValid")
                   name="isPropertySelfOccupiedOrLetOu"
                   id="combo-box-demo"
                   options={payMode.map((employeepayType) => employeepayType.type)}
-                  value={formData.isPropertySelfOccupiedOrLetOu}
+                  value={formData.isPropertySelfOccupiedOrLetOu === 1 ? 'Yes' :formData.isPropertySelfOccupiedOrLetOu === 0? 'No': formData.isPropertySelfOccupiedOrLetOu}
                   onChange={(event, newValue) => handleAutocompleteChange('isPropertySelfOccupiedOrLetOu', newValue)}
                   // sx={{ width: 300 }}
               
@@ -808,8 +828,8 @@ console.log(isValid , "isValidisValid")
 
           <Grid item container xs={12} lg={12} md={12} spacing={2}>
 
-            { console.log(show ,"fieldErrors.isPropertySelfOccupiedOrLetOu " ,show)}
-        {  show ? null :
+         
+      
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
@@ -821,9 +841,9 @@ console.log(isValid , "isValidisValid")
                 fullWidth
                 error={hasError('ifJointPropertyThenEnterInterestRate')}
                 helperText={getHelperText('ifJointPropertyThenEnterInterestRate')}
-               
+                disabled={formData.isPropertySelfOccupiedOrLetOu === 1}
               />
-            </Grid>}
+            </Grid>
             <Grid item xs={4}>
               {/* <Typography >Gross Rental Income</Typography> */}
               <TextField
@@ -945,7 +965,7 @@ console.log(isValid , "isValidisValid")
               </Button>
             </Grid>
             <Grid item>
-              <Button className="button">Cancel</Button>
+              <Button className="button" onClick={handleCancle}>Cancel</Button>
             </Grid>
           </Grid>
           {/* Add more rows as needed */}
