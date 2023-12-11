@@ -1,6 +1,8 @@
 import React,{useState,useCallback} from 'react'
 import { useParams } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import CryptoJS from "crypto-js";
+
 import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
 import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
@@ -68,10 +70,21 @@ const EmployeeView = () => {
 
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
-  const [severity,setSeverity]=useState("")      
+  const [severity,setSeverity]=useState("") 
+  const[employeeID,setEmployeeID]=useState("")     
 
   const params = useParams();
   const { id } = params;
+  // useEffect(()=>{
+  //   const secretPass = "XkhZG4fW2t2W";
+  //   const decryptData = () => {
+  //     const bytes = CryptoJS.AES.decrypt(id, secretPass);
+  //     const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  //     setEmployeeID(data);
+  //     console.log(data,'employeeIDemployeeID')
+  //   };
+  //   decryptData()
+  // },[])
   const ApiHit=()=>{
          
       let data = JSON.stringify({
@@ -170,7 +183,7 @@ const EmployeeView = () => {
   
   sx={{
     
-    width: 1,
+    width: '100%',
     bottom: 0,
     zIndex: 9,
     position: 'absolute',
@@ -221,7 +234,7 @@ const EmployeeView = () => {
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
         Return to sign in
       </Link> */}
-      {currentTab === 'About' && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
+      {(currentTab === 'About' ) && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
 
       {currentTab === 'Education' && <EmployeeEducation handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}

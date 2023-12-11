@@ -5,7 +5,7 @@ import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
+import { CircularProgress } from '@mui/material';
 
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
@@ -30,6 +30,7 @@ export default function OnBoardForm() {
   const [snacbarMessage,setSnacbarMessage]=useState("");
   const [severity,setSeverity]=useState("")
   const router=useRouter()
+  const [loading, setLoading] = useState(false);
 
   const childref=useRef(null);
 
@@ -183,7 +184,20 @@ const handleCallSnackbar=(message,severity)=>{
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep+1!==5 &&
               <Button onClick={handleNext}  sx={{backgroundColor:'#3B82F6', mr: 1, color:'white'}}>
-                Save and Continue
+                {loading && (
+        <CircularProgress
+          size={24}
+          sx={{
+            color:"white",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            marginTop: '-12px', // Half of the CircularProgress size
+            marginLeft: '-12px', // Half of the CircularProgress size
+          }}
+        />
+      )}
+              {!loading &&(<Typography> Save and Continue</Typography>)}
               </Button>}
               {activeStep+1===5 &&
               <Button onClick={handleSubmit} sx={{backgroundColor:'#3B82F6', mr: 1, color:'white' }}>

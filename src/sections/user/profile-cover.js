@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
-import { useState,useRef } from 'react';
+import { useState,useRef ,useCallback,useMemo} from 'react';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
 // @mui
+import { Typography ,Card} from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -8,6 +12,12 @@ import ListItemText from '@mui/material/ListItemText';
 import { useTheme, alpha } from '@mui/material/styles';
 // theme
 import { bgGradient } from 'src/theme/css';
+import FormProvider, {
+  RHFSwitch,
+  RHFTextField,
+  RHFUploadAvatar,
+  RHFAutocomplete,
+} from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +28,50 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const [newAvatarUrl, setNewAvatarUrl] = useState('');
   const fileInputRef = useRef(null);
   let fileInput;
+
+  const NewUserSchema = Yup.object().shape({
+   
+    avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
+    // not required
+    
+  });
+
+  const defaultValues = useMemo(
+    () => ({
+      
+      avatarUrl: avatarUrl,
+    
+    }),
+    [avatarUrl]
+  );
+
+  const methods = useForm({
+    resolver: yupResolver(NewUserSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    watch,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const values = watch();
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
+    } catch (error) {
+      console.error(error);
+    }
+  });
   const handleMouseEnter = () => {
     setHovered(true);
     // Add your logic to upload a new profile picture here
@@ -28,13 +82,13 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
     setHovered(false);
     // You can add additional logic here if needed.
   };
-   const handleFileChange = (event) => {
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
 
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatarUrl(reader.result);
+        setNewAvatarUrl(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -53,6 +107,21 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       fileInput.click();
     }
   };
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('avatarUrl', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
 
 
   return (
@@ -76,7 +145,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
           position: { md: 'absolute' },
         }}
       >
-    <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
+    {/* <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
       <Avatar
         src={avatarUrl1}
         alt={name}
@@ -94,7 +163,33 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
         onChange={handleFileChange}
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0 }}
       />
-    </label>
+    </label> */}
+   <FormProvider methods={methods} onSubmit={onSubmit}>
+   <Box >
+              <RHFUploadAvatar
+              
+                name="avatarUrl"
+                maxSize={3145728}
+                onDrop={handleDrop}
+                // helperText={
+                //   <Typography
+                //     variant="caption"
+                //     sx={{
+                //       mt: 3,
+                //       mx: 'auto',
+                //       display: 'block',
+                //       textAlign: 'center',
+                //       color: 'text.disabled',
+                //     }}
+                //   >
+                //     Allowed *.jpeg, *.jpg, *.png, *.gif
+                //     <br /> max size of {fData(3145728)}
+                //   </Typography>
+                // }
+              />
+            </Box>
+          
+            </FormProvider>
 
         <ListItemText
           sx={{
