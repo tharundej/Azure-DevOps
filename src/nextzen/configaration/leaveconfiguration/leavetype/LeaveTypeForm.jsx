@@ -141,7 +141,7 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
          handleClose();
-         getTableData
+         getTableData()
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {

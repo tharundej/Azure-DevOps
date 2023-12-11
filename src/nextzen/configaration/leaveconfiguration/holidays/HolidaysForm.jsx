@@ -29,7 +29,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function HolidaysForm({ currentUser }) {
+export default function HolidaysForm({ currentUser, getTableData }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -116,7 +116,7 @@ export default function HolidaysForm({ currentUser }) {
   }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = 'COMP7';
+    data.companyId = localStorage.getItem('companyID');
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
     data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
@@ -129,6 +129,7 @@ export default function HolidaysForm({ currentUser }) {
       if(response?.data?.code===200  ){
         handleClose()
         setSnackbarSeverity('success');
+        getTableData()
          setSnackbarMessage(response?.data?.message);
          setSnackbarOpen(true);
          handleClose();

@@ -622,8 +622,8 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'LeaveTypeFilterSearch' && (
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
-            getTableData={getTableData} searchData={handleFilterSearch}/>,
-            <LeaveTypeForm getTableData={getTableData}/>
+            getTableData={getTableData} searchData={handleFilterSearch}/>
+            // <LeaveTypeForm getTableData={getTableData}/>
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />

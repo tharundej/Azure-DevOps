@@ -31,7 +31,7 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
-export default function LeavePeriodForm({ currentUser }) {
+export default function LeavePeriodForm({ currentUser , getTableData}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -60,12 +60,12 @@ export default function LeavePeriodForm({ currentUser }) {
     // console.log(leavePeriodType,'leavePeriodType');
     const currentYear = dayjs().year();
     if (value === 'Year') {
-      setSelectedStartDate(dayjs(`${currentYear}-01-01`));
-      setSelectedEndDate(dayjs(`${currentYear}-12-31`));
+      // setSelectedStartDate(dayjs(`${currentYear}-01-01`));
+      // setSelectedEndDate(dayjs(`${currentYear}-12-31`));
     } else if (value === 'Financial Year') {
       const nextYear = currentYear + 1;
-      setSelectedStartDate(dayjs(`${currentYear}-04-01`));
-      setSelectedEndDate(dayjs(`${nextYear}-03-31`));
+      // setSelectedStartDate(dayjs(`${currentYear}-04-01`));
+      // setSelectedEndDate(dayjs(`${nextYear}-03-31`));
     }
   };
   console.log(leavePeriodType,'leavePeriodType');
@@ -167,6 +167,7 @@ export default function LeavePeriodForm({ currentUser }) {
       const response = await axios.post(baseUrl + '/addLeavePeriod', data);
       if (response?.data?.code === 200) {
         handleClose();
+        getTableData()
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
