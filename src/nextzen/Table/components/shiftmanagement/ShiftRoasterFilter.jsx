@@ -525,6 +525,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 // }
 ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
+    
 }
 ShiftRoasterFilter.propTypes={
   searchData: PropTypes.any,

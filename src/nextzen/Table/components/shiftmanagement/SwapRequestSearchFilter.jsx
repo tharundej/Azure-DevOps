@@ -230,7 +230,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      const handleSearch=debounce((e)=>{
+      const handleSearch = ((e)=>{
         filterSearch(e?.target?.value)
       },1000)
     

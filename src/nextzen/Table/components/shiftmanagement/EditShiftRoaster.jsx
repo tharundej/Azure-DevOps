@@ -364,7 +364,7 @@ const [count , setCount]=useState(0)
         DesignationGradeId: (fountGrade?.designationGradeID)?parseInt(fountGrade?.designationGradeID): 0,
         locationId:(user?.locationID)?user?.locationID : null,
         companyId:(user?.companyID)?user?.companyID : '',
-        employeeId: join(),
+        employeeId:(editData?.toggle == 1)? join() : [] ,
       };
       console.log(data, 'data111ugsghghh');
 
