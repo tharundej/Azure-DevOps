@@ -103,7 +103,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
    
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
-
+const [count , setCount]=useState(0)
   const [employeSwapDetails, setEmployeSwapDetails] = useState([]);
   const [currentEmployeSwapData, setCurrentEmployeSwapData] = useState({});
   const [currentEmployeSwapData1, setCurrentEmployeSwapData1] = useState({});
@@ -202,7 +202,29 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
 
         const data =  { 
           companyID:  (user?.companyID)?user?.companyID : '',
-          departmentID:  (newvalue[0]?.departmentID)? newvalue[0]?.departmentID : fountDesignation,
+          departmentID:  (newvalue[0]?.departmentID )? newvalue[0]?.departmentID : fountDesignation  ,
+        };
+     
+      const response = await instance.post('/onboardingDesignation', data);
+      setDesignationData(response.data.data);
+      if(response?.data?.data){defaultDesignation(response.data.data)}
+      if(response?.data?.data){ getGrade(response?.data?.data)}
+      console.log(
+        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
+        response.data
+      );
+    } catch (error) {
+      console.error('Error', error);
+      throw error;
+    }
+  };
+  const getDesignation1 = async (newvalue) => {
+    try {
+      
+
+        const data =  { 
+          companyID:  (user?.companyID)?user?.companyID : '',
+          departmentID:  (  newvalue != null  )? newvalue?.departmentID : 0  ,
         };
      
       const response = await instance.post('/onboardingDesignation', data);
@@ -243,10 +265,12 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
   //  const GradeValue = newvalue?.find(option => option?.designationID == editData?.designationID)
     try {
       const data = {
-        designationID: (newvalue?.designationID)?newvalue?.designationID:'' ,
+        designationID: (newvalue?.designationID)?newvalue?.designationID:0 ,
       };
       const response = await instance.post('/onboardingDesignationGrade', data);
       setgradeData(response.data.data);
+      if(response.data.data) {defaultGrade(response.data.data)}
+      
       // if(response.data.data) {defaultGrade(response.data.data)}
       console.log(
         '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
@@ -346,6 +370,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
 
       const response = await instance.post('/editShiftDetails', data).then(
         (successData) => {
+          setCount(count+1)
           handleClose();
           enqueueSnackbar(response.data.message, { variant: 'success' });
 
@@ -445,7 +470,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   value={(foundShift?.length !== 0)? foundShift : null}
                   getOptionLabel={(option) => option.shiftName}
                   onChange={(e, newvalue) => {
-                  if(newvalue > 0) { setfoundShift(newvalue)};
+                  setfoundShift(newvalue)
                     // getDesignation(newvalue)
                   }}
                   sx={{
@@ -481,11 +506,11 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo"
                     options={departmentData || []}
-                    value={foundDepartment || ''}
+                    value={foundDepartment || [] }
                     getOptionLabel={(option) => option.departmentName}
                     onChange={(e, newvalue) => {
                       setfountDepartment(newvalue);
-                      getDesignation(newvalue);
+                     getDesignation1(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
@@ -507,11 +532,11 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo3"
                     options={designationData || []}
-                    value={fountDesignation || ''}
+                    value={fountDesignation || []}
                     getOptionLabel={(option) => option.designationName}
                     onChange={(e, newvalue) => {
                       setfountDesignation(newvalue);
-                      getGrade1(newvalue);
+                     getGrade1(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
@@ -524,7 +549,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     disablePortal
                     id="combo-box-demo"
                     options={gradeData || []}
-                    value={fountGrade || ''}
+                    value={fountGrade || []}
                     getOptionLabel={(option) => option.designationGradeName}
                     onChange={(e, newvalue) => {
                       setfountGrade(newvalue);

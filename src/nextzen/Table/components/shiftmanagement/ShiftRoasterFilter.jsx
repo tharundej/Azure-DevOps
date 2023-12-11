@@ -279,7 +279,21 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
           console.log(value);
        // console.log( typeof value === 'string' ? value.split(',') : value,)
       };
-  
+      const handleCancel = async()=>{
+        setDropdownStatus([]);
+        // setDropdownLeaveType([]);
+      //   setDates({
+      // applyDatefrom:"",
+      // applyDateto:"",
+      // fromDatefrom:"",
+      // fromDateto:"",
+      // toDatefrom:"",
+      // toDateto:"",
+      // shift_name: "",        
+      // shift_term: "",  
+      //   })
+        setOpen(false);
+      }
       const handleApply = async()=>{
         setDatesData([]);
        
