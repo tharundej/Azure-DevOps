@@ -64,7 +64,7 @@ const MenuProps = {
 
 const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData}) => {
 
-
+  const { enqueueSnackbar } = useSnackbar();
    // dialog
     // const values = watch();
     const [projectDetails ,setProjectDetails] = useState([])
@@ -138,10 +138,12 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
         (response) => {
           console.log('sucesswwww', response);
           setProjectDetails(response?.data?.data)
+          enqueueSnackbar(res?.data?.message, { variant: 'success' })
         
         },
         (error) => {
           console.log('lllll', error);
+          enqueueSnackbar(error?.res?.data?.message, { variant: 'warning' })
        
         }
       );
@@ -342,19 +344,21 @@ console.log(timesheetData,"timesheetData")
       // timesheetData?.projectId = projectIdUpdate;
      console.log(timesheetData,"editDataeditData")
       
-      const response = await axios.post(baseUrl+'/addmytimesheet12', timesheetData).then(
+      const response = await axios.post(baseUrl+'/addmytimesheet', timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
+          handleClose()
         }
       );
 
       
     } catch (error) {
-
-      alert("api hit not done")
+      handleClose()
+      // alert("api hit not done")
       console.error(error);
     }
   }
