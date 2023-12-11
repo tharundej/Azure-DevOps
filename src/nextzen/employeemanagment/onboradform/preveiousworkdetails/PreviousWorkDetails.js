@@ -168,6 +168,7 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
      
 
   const ApiHitExperience=()=>{
+    props.handleLoader()
     const obj={
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId:localStorage.getItem('employeeIdCreated'),

@@ -101,13 +101,13 @@ export default function JwtLoginView() {
           Create an account
         </Link>
       </Stack>
-      <Card sx={{ backgroundColor: '#cce9f0' }}>
+      {/* <Card sx={{ backgroundColor: '#cce9f0' }}>
         <CardContent>
         <Typography variant="body2">Admin Login Use Below Credentials</Typography>
           <Typography variant="body2">Email: anilg@infobellit.com</Typography>
           <Typography variant="body2">Password: Anil@123</Typography>
         </CardContent>
-      </Card>
+      </Card> */}
     </Stack>
   );
 

@@ -280,39 +280,44 @@ dropdowns:[
           ></TextField>
         </Grid>
       </Grid> */}
-      <FormGroup>
-        {checkedState &&
-          Object.entries(checkedState).map(([group, values], index) => (
-            <Box key={index}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id={`main-heading-${group}`}
-                    checked={values.mainHeading}
-                    onChange={() => handleMainHeadingChange(group)}
-                    style={{ color: '#00FF00', transform: 'scale(1.2)' }}
+       <FormGroup>
+  {checkedState &&
+    Object.entries(checkedState).map(([group, values], index) => (
+      <Grid container direction="column" key={index}>
+       <FormControlLabel
+        control={
+          <Checkbox
+            id={`main-heading-${group}`}
+            checked={values.mainHeading}
+            onChange={() => handleMainHeadingChange(group)}
+            style={{ color: '#3b5bf6', transform: 'scale(1.2)' }}
+          />
+        }
+        label={<span style={{ fontWeight: 'bold' }}>{formatLabel(group)}</span>}
+      />
+        {values.mainHeading &&
+          <Grid container marginLeft='20px'>
+            {Object.keys(values).map((key) =>
+              key !== 'mainHeading' ? (
+                <Grid item key={key} style={{ marginRight: '20px' }}>
+                  {/* Add some gap using marginRight */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        id={`checkbox-${group}-${key}`}
+                        checked={values[key]}
+                        onChange={() => handleCheckboxChange(group, key)}
+                      />
+                    }
+                    label={`${formatLabel(key)}`}
                   />
-                }
-                label={`${formatLabel(group)}`}
-              />
-              {values.mainHeading &&
-                Object.keys(values).map((key) =>
-                  key !== 'mainHeading' ? (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          id={`checkbox-${group}-${key}`}
-                          checked={values[key]}
-                          onChange={() => handleCheckboxChange(group, key)}
-                        />
-                      }
-                      label={`${formatLabel(key)}`}
-                    />
-                  ) : null
-                )}
-            </Box>
-          ))}
+                </Grid>
+              ) : null
+            )}
+          </Grid>
+        }
+      </Grid>
+    ))}
       </FormGroup>
       <Grid 
       margin='10px'

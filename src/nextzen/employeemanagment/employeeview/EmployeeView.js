@@ -1,6 +1,8 @@
 import React,{useState,useCallback} from 'react'
 import { useParams } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import CryptoJS from "crypto-js";
+
 import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
 import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
@@ -20,6 +22,8 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
+import { baseImageUrl } from 'src/nextzen/global/BaseUrl';
+
 
 const TABS = [
     {
@@ -68,10 +72,21 @@ const EmployeeView = () => {
 
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
-  const [severity,setSeverity]=useState("")      
+  const [severity,setSeverity]=useState("") 
+  const[employeeID,setEmployeeID]=useState("")     
 
   const params = useParams();
   const { id } = params;
+  // useEffect(()=>{
+  //   const secretPass = "XkhZG4fW2t2W";
+  //   const decryptData = () => {
+  //     const bytes = CryptoJS.AES.decrypt(id, secretPass);
+  //     const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  //     setEmployeeID(data);
+  //     console.log(data,'employeeIDemployeeID')
+  //   };
+  //   decryptData()
+  // },[])
   const ApiHit=()=>{
          
       let data = JSON.stringify({
@@ -157,8 +172,8 @@ const EmployeeView = () => {
         <ProfileCover
           role={userData?.roleName}
           name={userData?.firstName}
-           avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
-          //avatarUrl='https://2d56hsdn-3001.inc1.devtunnels.ms/erp/download?file=s.jpg'
+          // avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
+          avatarUrl ={ `${baseImageUrl}${userData.imageData}`}
           coverUrl="aaa"
         />
 <Tabs
@@ -170,7 +185,7 @@ const EmployeeView = () => {
   
   sx={{
     
-    width: 1,
+    width: '100%',
     bottom: 0,
     zIndex: 9,
     position: 'absolute',
@@ -221,7 +236,7 @@ const EmployeeView = () => {
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
         Return to sign in
       </Link> */}
-      {currentTab === 'About' && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
+      {(currentTab === 'About' ) && <EmployeeAbout handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id} />}
 
       {currentTab === 'Education' && <EmployeeEducation handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}
       {currentTab==='Experience' && <PreviousWork handleCallSnackbar={handleCallSnackbar}  employeeIDForApis={id}  />}

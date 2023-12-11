@@ -340,7 +340,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
         newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+        //console.log(updatedItems,'updatedItems')
+        
+
     
        setDefaultValues(newArray);
       }

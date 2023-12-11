@@ -94,6 +94,7 @@ const VisuallyHiddenInput = styled('input')({
   }))
 
   var onSubmit=(data)=>{
+    props.handleLoader()
     let config = {
       method: 'post',
       maxBodyLength: Infinity,

@@ -166,7 +166,7 @@ const PreviousWork = ({employeeIDForApis}) => {
                     <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
-                              handleAddEducation([item], "updateEducationDetails");
+                              handleAddEducation([item], "updateWorkDetails");
                             }}>
                               <Iconify icon="material-symbols:edit" />
                             </IconButton>
