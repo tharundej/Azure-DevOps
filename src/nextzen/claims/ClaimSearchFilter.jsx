@@ -217,22 +217,23 @@ console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
           <Grid container alignItems="center" paddingBottom="10px">
-            <Grid md={8} xs={8} item>
+            <Grid sm={8} xs={12} item>
 
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
             onChange={(e) => handleSearch(e.target.value)}
+            size="small"
 
             />
             </Grid>
-            <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
+            <Grid sm={2} xs={4} sx={{alignSelf:"center",textAlign:"center"}}>
               {addButton && <Button variant='contained' color='primary' sx={{borderRadius:"4px"}} onClick={buttonFunction}>{addButton}</Button>}
               
 
             </Grid>
 
-            <Grid md={2} xs={2} item>
+            <Grid sm={2} xs={4} item>
 
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
           {badgeContent ===  true?(

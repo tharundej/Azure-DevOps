@@ -62,7 +62,7 @@ export default function ApproveClaim({ currentUser }) {
   const [count, setCount] = useState(0)
 
   const TABLE_HEAD = [
-    { id: "employeeId", label: "Employee Id", minWidth: "7.2pc", type: "text" },
+    { id: "employeeId", label: "Employee ID", minWidth: "7.2pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
@@ -71,7 +71,7 @@ export default function ApproveClaim({ currentUser }) {
       containesAvatar: false,
       secondaryText: "email",
     },
-    { id: "expenseClaimId", label: "Expense Claim Id", minWidth: "7pc", type: "text" },
+    { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
     { id: "claimDate", label: "Claim Date", minWidth: "7pc", type: "text" },
     { id: "claimAmount", label: "Claim Amount", minWidth: "7pc", type: "text" },
