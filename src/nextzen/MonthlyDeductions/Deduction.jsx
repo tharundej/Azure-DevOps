@@ -13,7 +13,7 @@ export default function Deduction({defaultPayload,componentPage}) {
   const TABLE_HEAD = [
     {
 
-      id: "employeeID",
+      id: "employeeId",
 
       label: "Employee Id",
       minWidth:"8pc",
