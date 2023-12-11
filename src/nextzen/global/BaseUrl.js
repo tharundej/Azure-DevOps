@@ -8,8 +8,8 @@
 
 // //  export const baseUrl=`https://898vmqzh-3001.inc1.devtunnels.ms/erp`
 
- export const baseUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp`
+export const baseUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp`
 
 
- export const baseImageUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`
+export const baseImageUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`
 
