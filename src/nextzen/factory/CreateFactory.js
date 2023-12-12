@@ -70,35 +70,35 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   } = methods;
   const values = watch();
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('IN');
-  const [selectedState, setSelectedState] = useState(defaultValues.locationState || 'KA');
-  const [selectedCity, setSelectedCity] = useState(defaultValues.locationCity || '');
+  const [selectedCountry, setSelectedCountry] = useState({ isoCode: 'IN', name: 'India' });
+  const [selectedState, setSelectedState] = useState({});
+  const [selectedCity, setSelectedCity] = useState({});
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   useEffect(() => {
-    const mockCountries = Country.getCountryByCode(selectedCountry);
+    const mockCountries = Country.getAllCountries();
+    console.log({ mockCountries });
     setCountries(mockCountries);
   }, []);
   useEffect(() => {
     const fetchStates = async () => {
       if (selectedCountry) {
-        const states = State.getStatesOfCountry(selectedCountry);
-        const stateNames = states.map((state) => state.name);
-        setStates(stateNames);
-        setSelectedState(defaultValues.locationState || stateNames[0]);
+        const statesList = State.getStatesOfCountry(selectedCountry.isoCode);
+        console.log({ statesList });
+        setStates(statesList);
+        setSelectedState(statesList[0]);
       } else {
         setStates([]);
       }
       setSelectedState(null);
     };
     fetchStates();
-  }, [selectedCountry, defaultValues.locationState]);
+  }, [selectedCountry]);
   useEffect(() => {
     const fetchCities = async () => {
       if (selectedState) {
-        const cities = City.getCitiesOfState(selectedCountry, selectedState);
-        const cityNames = cities.map((city) => city.name);
+        const cities = City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode);
         setCities(cities);
       } else {
         setCities([]);
@@ -106,7 +106,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       setSelectedCity(null);
     };
     fetchCities();
-  }, [selectedCountry, selectedState]);
+  }, [selectedState]);
 
   const statusOptions = ['Active', 'In Active'];
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -116,19 +116,27 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    data.locationState = selectedLocation;
-    data.locationCountry = {
-      isoCode: selectedCountry,
-      name: 'India',
-    };
-    data.locationState = {
-      isoCode: selectedState,
-      name: selectedState,
-    };
-    data.locationCity = {
-      name: selectedCity,
-    };
+    data.locationCountry = selectedCountry
+      ? {
+          isoCode: selectedCountry.isoCode,
+          name: selectedCountry.name,
+        }
+      : null;
+    data.locationState = selectedState
+      ? {
+          isoCode: selectedState.isoCode,
+          name: selectedState.name,
+        }
+      : null;
+    data.locationCity = selectedCity
+      ? {
+          isoCode: selectedCity.isoCode,
+          name: selectedCity.name,
+        }
+      : null;
     try {
+      data.locationPhone = parseInt(data.locationPhone);
+      data.locationPincode = parseInt(data.locationPincode);
       console.log('Create Factory Data', data);
       let response = '';
       if (currentData?.locationName) {
@@ -145,10 +153,10 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       currentData?.locationName ? '' : getTableData();
     } catch (error) {
       if (error.response) {
-        handleCallSnackbar(error.response.data.Message, 'warning');
-        console.log('request failed:', error.response.data.Message);
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
       } else {
-        handleCallSnackbar(error.Message, 'warning');
+        handleCallSnackbar(error.message, 'warning');
         console.log('API request failed:', error.message);
       }
     }
@@ -195,26 +203,35 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFTextField name="locationEmailID" label="EmailID" />
             <RHFTextField name="locationAddressLine1" label="AddressLine1" />
             <RHFTextField name="locationAddressLine2" label="AddressLine2" />
-            {/* <RHFTextField name="locationCountry" label="Country" /> */}
             <RHFAutocomplete
-              options={countries}
-              value={selectedCountry}
+              name="locationCountry"
+              options={countries || []}
+              value={countries?.find((option) => option.name === selectedCountry.name) || null}
               onChange={(event, newValue) => setSelectedCountry(newValue)}
-              renderInput={(params) => <TextField {...params} label="Country" />}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Country" variant="outlined" />
+              )}
             />
-            {/* <RHFTextField name="locationState" label="State" /> */}
             <RHFAutocomplete
-              options={states}
-              value={selectedState}
+              name="locationState"
+              options={states || []}
+              value={states ? states[0] : null}
               onChange={(event, newValue) => setSelectedState(newValue)}
-              renderInput={(params) => <TextField {...params} label="State" />}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select State" variant="outlined" />
+              )}
             />
-            {/* <RHFTextField name="locationCity" label="City" /> */}
             <RHFAutocomplete
-              options={cities}
-              value={selectedCity}
+              name="locationCity"
+              options={cities || []}
+              value={cities ? cities[0] : null}
               onChange={(event, newValue) => setSelectedCity(newValue)}
-              renderInput={(params) => <TextField {...params} label="City" />}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select City" variant="outlined" />
+              )}
             />
             <RHFTextField
               name="locationPincode"
