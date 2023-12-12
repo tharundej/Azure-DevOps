@@ -69,6 +69,7 @@ export const paths = {
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
       companyregisteration:`${ROOTS.AUTH}/jwt/companyregisteration`,
+      updateotp:`${ROOTS.AUTH}/jwt/updateotp`,
       // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {
@@ -187,7 +188,7 @@ export const paths = {
         leaveconfiguration: `/configurations/leaveconfiguration`,
         compoffconfiguration: `/configurations/compoffconfiguration`,
         appraisalconfiguration: `/configurations/appraisalconfiguration`,
-      // expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
+      expenseclaimconfiguration: `/configurations/expenseclaimconfiguration`,
       shiftconfiguration: `/configurations/shiftconfiguration`,
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,

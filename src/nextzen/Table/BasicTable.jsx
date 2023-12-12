@@ -126,6 +126,8 @@ import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilt
 import ApproveFilter from '../timesheet/components/ApproveFilters';
 import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
 
 const defaultFilters = {
   name: '',
@@ -218,6 +220,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
       url: baseUrl + `${endpoint}`,
+      // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
+      // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
       // url: `https://xql1qfwp-3002.inc1.devtunnels.ms/erp${endpoint}`,
@@ -469,7 +473,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       row?.status === 'InActive' ||
       row?.status === 'active' ||
       row?.status === 'Upcoming' ||
-      row?.status === 'Ongoing'
+      row?.status === 'Ongoing' ||
+      row?.status === 'On Hold'  || "OnHold" 
     ) {
       return rowActions;
     } else if (!row?.status || row?.status === undefined) {
@@ -482,6 +487,18 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       return null;
     }
   };
+
+  // table expanded
+const [expandedRowId, setExpandedRowId] = useState(null);
+
+const handleExpandClick = (rowId, update , rowIndex) => {
+  console.log(expandedRowId,"klkl",rowId)
+  setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
+};
+
+
+const [index, setIndex]=useState(""); // index setting
+{console.log(index,"indexindex",expandedRowId)}
 
   return (
     <>
@@ -576,6 +593,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'PayScheduleFilterSearch' && (
@@ -605,6 +623,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           {filterName === 'LeaveTypeFilterSearch' && (
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
             getTableData={getTableData} searchData={handleFilterSearch}/>
+            // // <LeaveTypeForm getTableData={getTableData}
+            
+            // />
           )}
           {filterName === 'SwapSearchFilter' && (
             <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
@@ -755,17 +776,18 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
+              getTableData={getTableData}
             />
           )}
              {filterName === 'HrTabFilter' && (
-            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}  getTableData={getTableData}/>
           )}
  {filterName === 'TaxSectionFilter' && (
-            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <TaxSectionFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
 
 {filterName === 'AddRoleFilter' && (
-            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} />
+            <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
           <Card>
@@ -815,18 +837,33 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                     {console.log(tableData)}
                     {tableData &&
                       tableData.length > 0 &&
-                      tableData.map((row) => (
+                      tableData.map((row, index) => (
                         <>
                           <UserTableRow
                             key={row.id}
                             row={row}
-                            onHandleEditRow={(ele) => 
-                              {
-                                if(handleEditRowParent)
+                            // onHandleEditRow={(id) => 
+                            //   {
+                            //     if(handleEditRowParent)
                               
-                              handleEditRowParent(ele)
+                            //   handleEditRowParent(id)
+                            //   }
+                            // }
+                            onHandleEditRow={(row, clickedElementId) => {
+                              
+                              if (handleEditRowParent) {
+                                handleEditRowParent(row)
                               }
-                            }
+                              else if (clickedElementId === 'reciept'){
+                                handleButtonClick(row.reciept);
+                                console.log(row, "iddd");
+                              }
+                              else if (clickedElementId === 'projectId') {
+                                setIndex(index);
+                                handleExpandClick(row.projectId, null, index)
+                                // console.log(row, "iddd");
+                              }
+                            }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
                             onDeleteRow={() => handleDeleteRow(row.id)}
@@ -837,6 +874,53 @@ const token  =  (user?.accessToken)?user?.accessToken:''
                             rowActions={getRowActionsBasedOnStatus(row)}
                             SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
+
+{expandedRowId === index && (
+                    <TableRow>
+                      
+                      <TableCell colSpan={TABLE_HEAD.length + 1}>
+                      {/* <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}> */}
+                      {Object.entries(row).map(([day, details]) => (
+            (day === "monday" || day === "tuesday" || day === "wednesday" || day === "thursday" || day === "friday" || day === "saturday" || day === "sunday"  ) && ( // Exclude status from the loop
+            <Box key={day} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}>
+            <div>
+              
+              <Typography variant="h6" gutterBottom component="div">
+                {day}
+              </Typography>
+              <Grid container flexDirection={row}  columnGap={8}>
+              <Grid item >
+              <Box display="flex" flexDirection="row" alignItems="center">
+                  <Typography sx={{ color: "#1B1B1B", marginRight: '10px' }}>
+                         Hours:
+                 </Typography>
+                 <Typography >
+                     {details?.hours}
+                 </Typography>
+              </Box>
+
+              
+              </Grid>
+              <Grid item >
+              <Typography>
+                Task: {details?.task}
+              </Typography>
+              </Grid>
+              <Grid item >
+              <Typography>
+                Comments: {details?.comments}
+              </Typography>
+              </Grid>
+              </Grid>
+            </div>
+            {/* Add more fields as needed */}
+          </Box>
+            )
+          ))}
+           {/* </Box> */}
+                      </TableCell>
+                    </TableRow>
+                  )}
                         </>
                       ))}
                     {console.log(rowActions, 'rowActionss')}
@@ -846,7 +930,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               </Scrollbar>
             </TableContainer>
 
-            <TablePaginationCustom
+           { filterName!=='a' && <TablePaginationCustom
               count={totalRecordsCount}
               // count={countValue}
 
@@ -857,7 +941,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
               onRowsPerPageChange={onChangeRowsPerPageHandeler}
               // dense={table.dense}
               onChangeDense={table.onChangeDense}
-            />
+            />}
             {/* <Grid container spacing={1} height="60px" sx={{alignItems:"center",alignSelf:"center"}}>
             <Grid item xs={1.5} >
               <Typography className={Style.textlightcolor} sx={{textAlign:"center", fontSize:"14px"}}>{tableData.length } Records</Typography>

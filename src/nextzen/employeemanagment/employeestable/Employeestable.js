@@ -1,5 +1,6 @@
 import { useEffect,useState,useCallback, useContext } from 'react';
 
+import CryptoJS from "crypto-js";
 
 import { Helmet } from 'react-helmet-async';
 
@@ -147,8 +148,8 @@ export default function EmployeeTable() {
       id: 'employeeId',
       label: 'Employee ID',
       type: 'text',
-      containesAvatar: true,
-      minWidth:'180px',
+      
+    minWidth:'180px',
       secondaryText: 'name',
     },
     { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
@@ -156,17 +157,17 @@ export default function EmployeeTable() {
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
     { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
     { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'text', minWidth:'180px' },
+    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'date', minWidth:'180px' },
     { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
     { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
     { id: 'nationality', label: 'Nationality',  type: 'text', minWidth:'180px' },
     { id: 'religion', label: 'Religion',  type: 'text', minWidth:'180px' },
     { id: 'bloodGroup', label: 'Blood Group',  type: 'text', minWidth:'180px' },
-    { id: 'offerDate', label: 'Offer Date',  type: 'text', minWidth:'180px' },
+    { id: 'offerDate', label: 'Offer Date',  type: 'date', minWidth:'180px' },
 
 
-    { id: 'joiningDate', label: 'Joining Date',  type: 'text', minWidth:'180px' },
+    { id: 'joiningDate', label: 'Joining Date',  type: 'date', minWidth:'180px' },
     { id: 'pAddressLine1', label: 'Permanent Address Line 1',  type: 'text', minWidth:'280px' },
     { id: 'pAddressLine2', label: 'Permanent Address Line 2',  type: 'text', minWidth:'280px' },
     { id: 'pCity', label: 'Permanent City',  type: 'text', minWidth:'180px' },
@@ -199,8 +200,23 @@ export default function EmployeeTable() {
 
   const handleEditRowParent = useCallback(
     (ele) => {
-       console.log('called',ele)
-      router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      const secretPass = "XkhZG4fW2t2W";
+
+      const encryptData = () => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(ele?.employeeId),
+          secretPass
+        ).toString();
+
+       // setEncrptedData(data);
+       console.log('called',data)
+         router.push(paths.dashboard.employee.userview(data));
+       
+      };
+      //encryptData()
+     router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      
+      
     },
     [router]
     

@@ -221,7 +221,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
   
       const handleCancel = async()=>{
         setdropdowndeductiontype([]);
@@ -320,13 +320,14 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}} 
+            size="small"
             />
             </Grid>
             <Grid item xs={12} md={4} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
                
-            {componentPage!="MyRequests"?<Button variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>Add Deduction</Button>:null}
+            {componentPage!="MyRequests"?<Button size="small" variant='contained' color='primary' className="button" onClick={handleTimeForm} sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>Add Deduction</Button>:null}
             
-            {componentPage!="MyRequests"?<Button onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+            {componentPage!="MyRequests"?<Button size="small" onClick={handleClickOpen}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
                <Iconify icon="mi:filter" /> Filters
                </Button>:null}
       </Grid>

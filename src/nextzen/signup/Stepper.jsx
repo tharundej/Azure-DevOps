@@ -23,7 +23,7 @@ import  JwtRegisterView  from './JwtRegisterView';
 import VerifyOtp from './VerifyOtp';
 import AmplifyNewPasswordView from './CreatePassword';
 
-const steps = ['Account Registration', 'Email Verification', 'Create Password'];
+const steps = ['Registration', 'Email Verification', 'Create Password'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);

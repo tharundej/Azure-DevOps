@@ -13,6 +13,7 @@ import { BasicTable } from '../../BasicTable';
 import AssignShift from './AssignShift';
 import EditShiftRoaster from './EditShiftRoaster';
 import { enqueueSnackbar } from 'notistack';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -27,6 +28,7 @@ const bull = (
 );
 
 export default function AssignShiftComponent() {
+  const {user} = React.useContext(UserContext)
    
       const TABLE_HEAD = [
 
@@ -106,8 +108,8 @@ export default function AssignShiftComponent() {
       ];
     
       const defaultPayload ={
-        "cid": localStorage.getItem("companyID"),
-        "locationId": 30,
+        "cid": (user?.companyID)?user?.companyID : '',
+        "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
         "count": 10,

@@ -235,7 +235,7 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
    
        })
        .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong",{variant:'error'})
         //  setOpen(true);
      ;
          console.log(error);

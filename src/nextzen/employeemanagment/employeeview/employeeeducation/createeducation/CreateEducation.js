@@ -3,6 +3,8 @@ import React ,{useEffect, useState} from 'react'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -18,7 +20,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
-    Stack
+    Stack,IconButton
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -54,16 +56,108 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+const degreeOptions = [
+  { label: "Bachelor of Arts", value: "BA" },
+  { label: "Bachelor of Science", value: "BS" },
+  { label: "Bachelor of Commerce", value: "BCom" },
+  { label: "Bachelor of Technology", value: "B.Tech" },
+  { label: "Master of Arts", value: "MA" },
+  { label: "Master of Science", value: "MS" },
+  { label: "Master of Business Administration", value: "MBA" },
+  { label: "Master of Technology", value: "M.Tech" },
+  { label: "Doctor of Philosophy", value: "PhD" },
+  { label: "Associate Degree", value: "AssocDeg" },
+  { label: "Diploma", value: "Dip" },
+  { label: "Certificate", value: "Cert" },
+  {label:'Other',value:'Other'}
+];
+
 const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCallSnackbar}) => {
 
   const [defaultValues, setDefaultValues] = useState([]);
   
+
+  // new documents 
+
+  const [addDocuments,setAddDocuments]=useState([]);
+
+  const handleAddDocumentNew=()=>{
+    const newArray = [...addDocuments];
+    const obj={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+  newArray.push(obj)
+  setAddDocuments(newArray)
+
+  }
+  const handleRemoveDocumentNew=(index1)=>{
+    const updatedItems = addDocuments.filter((item,index3) => index3 !== index1);
+
+     setAddDocuments(updatedItems);
+  }
+
+  const handleFileUploadNew = (event,index) => {
+        
+    const file = event.target.files[0];
+    // const { value, id } = e.target;
+    // const newObj = defaultValues;
+
+      let base64String=1;
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+    const base64String = event.target.result.split(',')[1];
+    console.log(base64String);
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ...newArray[index],
+      fileName: file.name,
+      fileContent:base64String
+    };
+    console.log(index,'newArraynewArraynewArray')
+    setAddDocuments(newArray);
+
+    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    };
+
+  reader.readAsDataURL(file);
+    
+
+    
+
+    //setSelectedFile(file);
+  };
+
+  const handleCategoryChangeNew = (e,index) => {
+    const { value, id } = e.target;
+    // const newObj = defaultValues;
+    
+
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    
+    
+    setAddDocuments(newArray);
+  };
   
     const onSave=()=>{
+      const arr = defaultValues
+      if(endpoint!=="addEducation"){
+        arr[0].documents = [ ...addDocuments];
+      }
+     
+      console.log(arr, 'before hitting API');
      const obj={
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
-      education:defaultValues
+      education:arr
      }
       
       let config = {
@@ -82,6 +176,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDefaultValues([])
+        setAddDocuments([])
         callApi()
         handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
@@ -103,9 +198,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
     },[employeeData])
 
     const obj =   {
-        nameOfTheDegree:  '',
+        nameOfTheDegree:  "",
         stream:  '',
-        university:  '',
+        universityName:  '',
        
        
         gradeType:'',
@@ -164,6 +259,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
 
            
       const handleChange = (e, index, field) => {
+      
         const { value, id } = e.target;
         const newObj = defaultValues;
         const newArray = [...defaultValues];
@@ -244,7 +340,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
         newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+        //console.log(updatedItems,'updatedItems')
+        
+
     
        setDefaultValues(newArray);
       }
@@ -319,16 +417,16 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                 <>
                 
                 {defaultValues?.map((item, index) => (
-                  <Grid  container flexDirection="row">
-                <Grid md={10} xs={10} lg={10} padding="5px" item>
-                  <Card padding="5px">
+                 
+                <Grid md={12} xs={12} lg={12} padding="5px" >
+                
                   <Grid margin="5px">
 
                      
                  
                     <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                       <Grid md={6} xs={12} item>
-                        <TextField
+                        {/* <TextField
                           fullWidth
                       
                           name="nameOfTheDegree"
@@ -339,7 +437,34 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                           onChange={(e) => {
                             handleChange(e, index, 'nameOfTheDegree');
                           }}
-                        />
+                        /> */}
+
+                <Autocomplete
+                  disablePortal
+                  id="degree"
+                  options={degreeOptions || []}
+                  value={item?.nameOfTheDegree || undefined}
+                  getOptionLabel={(option) => option?.label}
+                  onChange={(e, newValue) => {
+                  
+                    const newArray = [...defaultValues];
+                    newArray[index] = {
+                      ...newArray[index],
+                      nameOfTheDegree: newValue
+                    };
+                    setDefaultValues(newArray);
+                  }
+                  
+                }
+
+                 
+                  
+                  renderInput={(params) => <TextField {...params} label="Name Of The Degree"
+                  style={{  width: '100%' }} />
+                
+                }
+                />
+                       
                       </Grid>
                       <Grid md={6} xs={12} item>
                         <TextField
@@ -378,7 +503,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                             fullWidth
                                             type="number"
                                             name="grade"
-                                            label="Grade"
+                                            label={item?.gradeType==="cgpa"?'Points':(item?.gradeType==="percentage"?'Percentage %':'Points')}
                                             id="yearOfPassing"
                                             placeholder='80,8,..'
                                           
@@ -446,7 +571,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                         
                                       </Grid>
 
-                                      <Grid md={6} xs={10} lg={6} item>
+                                      <Grid md={6} xs={12} lg={6} item>
                                         <DatePicker
                                         sx={{width:'100%'}}
                                         fullWidth
@@ -481,11 +606,110 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                     </Grid>
 
                                     {/* <EmployeeRecords callApi={ApiHit} docsData={itm?.documents} docType={docType} endpoint="/updateEduAndWorkDoc"  employeeIDForApis={employeeIDForApis} /> */}
-                                         { endpoint!=='addEducation' && <FilesDisplay dataOfFiles={item?.documents} /> }
-                                      {  endpoint==='addEducation' && item?.documents?.map((file,index1)=>(
+                                         { endpoint!=='addEducation' &&<>
+                                         
+                                         <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
+                                                Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
+                                              </Typography>
+                                        
+                                         <FilesDisplay dataOfFiles={item?.documents || []}  handleDeleteDocument={handleDeleteDocument} />
+
+                                         {  addDocuments &&
+                                      
+                                      addDocuments.map((file,index1)=>(
+                                        <Grid spacing={2} sx={{ paddingBottom: '10px',marginTop:'15px' }} container flexDirection="row" item>
+
+                                        <Grid item xs={12} md={6} >
+
+                                      
+                                        <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                                            <Select
+                                                label="Select Document"
+                                                value={file?.fileType}
+                                                onChange={(e)=>{handleCategoryChangeNew(e,index)}}
+                                                name="Select Document"
+                                            >
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
+                                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                                <MenuItem value="degree">Degree</MenuItem>
+                                                {/* Add more categories here */}
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                        <Grid>
+
+                                          <Grid item>
+                                        
+                                          <input
+                                          id={`file-upload-input-${index}-${index1}`}
+                                            type="file"
+                                            accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                          
+                                            style={{ display: 'none' }}
+                                          
+                                        />
+                                      <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
+                                        <label htmlFor= {`file-upload-input-${index}-${index1}`}>
+
+                                        <Button
+                                        onChange={(e)=>{handleFileUploadNew(e,index)}}
+                                        component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                    Upload file
+                                                    <VisuallyHiddenInput type="file" />
+                                                  </Button>
+                                        </label>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                        
+                                        <IconButton
+                                            onClick={()=>{
+                                              handleRemoveDocumentNew(index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
+                                         
+                                            
+                                            
+                                            
+
+                                          
+                                          </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
+
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
+
+                                         
+                                         </> }
+                                      {  endpoint==='addEducation' &&
+                                      
+                                      item?.documents?.map((file,index1)=>(
                                         <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
-                                        <Grid item xs={10} md={6} >
+                                        <Grid item xs={12} md={6} >
 
                                       
                                         <FormControl fullWidth>
@@ -496,7 +720,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                                                 name="Select Document"
                                             >
-                                                <MenuItem value="ssccard">SSC Cardss</MenuItem>
+                                                <MenuItem value="Provisional">Provisional</MenuItem>
                                                 <MenuItem value="marksmemo">Marks Memo</MenuItem>
                                                 <MenuItem value="degree">Degree</MenuItem>
                                                 {/* Add more categories here */}
@@ -536,34 +760,40 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                         <Grid item>
                                         
                                           { index1===0 &&
-                                          
-                                              <Button 
-                                              onClick={()=>{
-                                                handleAddDocument(index)
-                                              }
+                                           <IconButton
+                                           onClick={() => {
+                                             handleAddDocument(index);
+                                           }}
+                                           color="primary"
+                                         >
+                                           <Iconify icon="gala:add" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                         </IconButton>
+                                              // <Button 
+                                              // onClick={()=>{
+                                              //   handleAddDocument(index)
+                                              // }
                                               
                                                 
                                               
                                                 
 
-                                              }
-                                              >Add Files</Button>
+                                              // }
+                                              // >Add Files</Button>
                                           
 
                                           }
                                           { index1!==0 &&
                                             
-                                              <Button 
-                                              onClick={()=>{
-                                                handleDeleteDocument(index,index1)
-                                              }
-                                              
-                                                
-                                              
-                                                
+                                            <IconButton
+                                            onClick={()=>{
+                                              handleDeleteDocument(index,index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
 
-                                              }
-                                              >Delete</Button>
+                                            
                                             
 
                                           }
@@ -580,14 +810,22 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                       
                                           
 
-                                      </Grid>
-                                      ))}
+                                        </Grid>
+                                      ))
+                                      
+                                      
+                                      }
                                     
                       </Grid>
-                  </Card>
-                   </Grid>
+                 
+                </Grid>
 
-                   <Grid md={2} xs={2} lg={2} padding="5px" item>
+              
+   
+             
+                ))}
+              </>
+                   {/* <Grid md={2} xs={2} lg={2} padding="5px" item>
                      {(index===0 &&  endpoint==='addEducation') &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
@@ -607,11 +845,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                  >
                    Remove
                  </Button>}
-                   </Grid>
-   
-               </Grid>
-                ))}
-              </>
+                   </Grid> */}
                
 
 

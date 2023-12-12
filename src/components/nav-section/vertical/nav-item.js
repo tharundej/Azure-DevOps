@@ -54,7 +54,7 @@ export default function NavItem({ item, open, depth, active, config, externalLin
           primaryTypographyProps={{
             noWrap: true,
             typography: 'body2',
-            textTransform: 'capitalize',
+            // textTransform: 'capitalize',
             fontWeight: active ? 'fontWeightSemiBold' : 'fontWeightMedium',
           }}
           secondaryTypographyProps={{

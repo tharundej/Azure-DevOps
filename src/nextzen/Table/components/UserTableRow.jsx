@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
+import { Grid } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -25,6 +26,9 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components'; 
 import SvgColor from 'src/components/svg-color/svg-color';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +41,8 @@ export default function UserTableRow({
   headerContent,
   rowActions,
   onHandleEditRow,
-  SecondoryTable
+  SecondoryTable,
+  
 
 }) {
   const confirm = useBoolean();
@@ -62,6 +67,8 @@ const renderCellContent = (columnId, value) => {
     return value
   }
 };
+const [open, setOpen] = useState(false);
+const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
 
   return (
     <>
@@ -74,7 +81,7 @@ const renderCellContent = (columnId, value) => {
           headerContent.map((ele) => (
             <>
               <TableCell
-              onClick={()=>onHandleEditRow(row)}
+              onClick={()=>onHandleEditRow(row,ele?.id)}
               
                 sx={{
                   display: ele.containesAvatar ? 'flex' : '',
@@ -108,17 +115,21 @@ const renderCellContent = (columnId, value) => {
                   />
                 )}
 
-                {ele.type === 'text' && (
+                {ele.type === 'text' && <Grid container flexDirection="row">
+
+                {/* <Avatar alt="A" src={avatarUrl} sx={{ mr: 2 }} /> */}
+                <Tooltip title={row[ele?.id]?.length > 50 ? row[ele?.id] : ''} arrow>
                   <ListItemText
-                    primary={row[ele.id] || '-'}
-                    secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                    primary={row[ele.id]?.length>50 ?row[ele?.id].slice(0, 48) + '...': row[ele?.id]|| '-'}
+                     secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
                     primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
                       component: 'span',
                       color: 'text.disabled',
                     }}
                   />
-                )}
+                  </Tooltip>
+                </Grid>}
 
                 {
                  ele.type==="date" && (
@@ -126,6 +137,33 @@ const renderCellContent = (columnId, value) => {
                   )
                 }
               
+                {ele.type === 'expand' && (
+  <>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <IconButton
+        aria-label="expand row"
+        size="small"
+        onClick={() => setOpen(!open)}
+        style={{ fontSize: '90px',  }} 
+        
+      >
+        {open ? <KeyboardArrowUpIcon style={{ fontSize: '18px' }} /> : <KeyboardArrowRightIcon style={{ fontSize: '18px' }}  />}
+      </IconButton>
+      <ListItemText
+        primary={row[ele.id]}
+        secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+        primaryTypographyProps={{ typography: 'body2', }}
+        secondaryTypographyProps={{
+          component: 'span',
+          color: 'text.disabled',
+        }}
+        onClick={() => setOpen(!open)}
+      />
+    
+    </div>
+  </>
+)}
+
                  {ele.type === 'bool' && (
                  
                  <ListItemText

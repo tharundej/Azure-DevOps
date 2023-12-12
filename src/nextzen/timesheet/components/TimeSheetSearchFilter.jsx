@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState ,React} from 'react';
 import { styled } from '@mui/system';
 import { format } from 'date-fns';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { useSnackbar } from 'src/components/snackbar';
 import Badge from '@mui/material/Badge';
 import {Card,TextField,CardContent,  InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
@@ -64,7 +64,7 @@ const MenuProps = {
 
 const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData}) => {
 
-
+  const { enqueueSnackbar } = useSnackbar();
    // dialog
     // const values = watch();
     const [projectDetails ,setProjectDetails] = useState([])
@@ -128,18 +128,22 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     try {
     
       const data = {
-        manager_id: managerID,
-        // employee
+        
+          employeeId:employeeID,
+          companyId:companyID,
+         
         // Other data properties as needed
       };
       const response = await axios.post(baseUrl+'/listmanagersproject', data).then(
         (response) => {
           console.log('sucesswwww', response);
           setProjectDetails(response?.data?.data)
+          // enqueueSnackbar(response?.data?.message , { variant: 'success' })
         
         },
         (error) => {
           console.log('lllll', error);
+          // enqueueSnackbar(error?.response?.data?.message || "something wrong", { variant: 'warning' })
        
         }
       );
@@ -260,14 +264,16 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       const companyID =localStorage.getItem('companyID');
 
   // add dialog form data
+  const [projectIdUpdate, setProjectIdUpdate]=useState("")
+  console.log(projectIdUpdate,"projectIdUpdate")
   const [timesheetData, setTimesheetData] = useState({
-    timesheetId: null,
+    // timesheetId: null,
     
     companyId: companyID,
     employeeId: employeeID,
     employeeName: '',
-    projectId: '1',
-    activityId: '2',
+    projectId: projectIdUpdate,
+    activityName: '',
     startTime: '2023-12-04',
     endTime: '2023-12-10',
     monday: {
@@ -329,28 +335,30 @@ console.log(timesheetData,"timesheetData")
 
   const onSubmitEdit2 = async(timesheetData, event) => {
 
-   
+    //  timesheetData?.projectId = projectIdUpdate;
     
     console.log(timesheetData,"editDataeditData222")
     try {
       event.preventDefault();
       // timesheetData.claim_type=timesheetData?.claim_type?.label
-
+      // timesheetData?.projectId = projectIdUpdate;
      console.log(timesheetData,"editDataeditData")
       
-      const response = await axios.post("https://mallard-blessed-lobster.ngrok-free.app/erp/addmytimesheet", timesheetData).then(
+      const response = await axios.post(baseUrl+'/addmytimesheet', timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
         },
         (error) => {
           console.log('lllll', error);
+          handleClose()
         }
       );
 
       
     } catch (error) {
-
-      alert("api hit not done")
+      handleClose()
+      // alert("api hit not done")
       console.error(error);
     }
   }
@@ -453,6 +461,7 @@ console.log(timesheetData,"timesheetData")
     setOpen(false);
   };
 
+ 
 
   return (
     <>
@@ -526,24 +535,30 @@ PaperProps={{
                 <Grid item xs={12} sm={6} fullWidth>
                 < Autocomplete
                 
-            // disablePortal
+            
             id="cobo-box-demo"
             options={projectDetails || []}
-            value={currentProjectData.projectId}
-            getOptionLabel={(option) => option.projectcdName}
+            value={currentProjectData?.projectId }
+            getOptionLabel={(option) => option?.projectcdName }
             onChange={(e,newvalue)=>{
              
              
-              setCurrentProjectData(newvalue
-              )
+              // setCurrentProjectData(newvalue)
+              setProjectIdUpdate(newvalue?.projectId)
+              setTimesheetData(prevState => ({
+                ...prevState,
+                projectId: JSON.stringify(newvalue?.projectId)
+                ,
+              }));
               
+              console.log(newvalue?.projectId,"newvaluenewvalue")
            
             }}
           
             renderInput={(params) => <TextField {...params} label="Project Name" />}
           /></Grid>
           <Grid item  xs={12} sm={6} fullWidth>
-                <Autocomplete
+                {/* <Autocomplete
             disablePortal
             id="combo-box-dmo"
             options={activityData || []}
@@ -560,7 +575,25 @@ PaperProps={{
             }}
          
             renderInput={(params) => <TextField {...params} label="Activity Name" />}
-          />
+          /> */}
+          <TextField 
+              
+              label="Activity Name" 
+              fullWidth
+              // inputProps={{
+              //   pattern: '[0-9]', 
+              //   maxLength: 2, 
+              // }}
+              // value={timesheetData.monday.hours}
+              onChange={(event)=>{
+                console.log("eventevent",event?.target?.value)
+                setTimesheetData(prevState => ({
+                  ...prevState,
+                  activityName: event?.target?.value
+                  ,
+                }));
+              }}
+              />
           </Grid>
 
           
@@ -572,7 +605,13 @@ PaperProps={{
     value={timeSheetWeek?.workWeek} // Set the default selected value as per your requirement
     onChange={(e, newValue) => {
       if (newValue) {
-        console.log(newValue.workWeek);
+        // console.log(newValue?.workWeek);
+        setTimesheetData(prevState => ({
+          ...prevState,
+          startTime: newValue?.startWeekDate,
+          endTime: newValue?.endWeekDate
+          ,
+        }));
         // Handle the selected value
       }
     }}

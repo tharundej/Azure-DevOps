@@ -143,7 +143,7 @@ export function useNavData() {
       name:'IT Declaration'
     },
     {
-      title: t('Monthly Additional Deductions'),
+      title: t('Monthly Additions and Deductions'),
       path: paths.dashboard.monthlydeductions.root,
       icon: ICONS.g_monthlyAdditionalDeductions,
       key:'monthlyAdditionalDeductions'
@@ -154,7 +154,7 @@ export function useNavData() {
       icon: ICONS.g_appraisal,
     },
     {
-      title:t('configurations'),
+      title:t('Configurations'),
       path:paths.dashboard.configurations.root,
       icon:ICONS.g_configurations,
       key:'configurations',
@@ -162,7 +162,7 @@ export function useNavData() {
         { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
         { title: t('Compensantory Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
          { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-        //  { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
+         { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
          { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
          { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
          { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
@@ -257,12 +257,12 @@ export function useNavData() {
         subheader: 'Accounting',
         items: [
           {
-            title: t('factory'),
+            title: t('Factory'),
             path: paths.dashboard.factory.factory,
             icon: ICONS.g_factory,
           },
           {
-            title: t('vendor'),
+            title: t('Vendor'),
             path: paths.dashboard.vendor.vendor,
             icon: ICONS.g_vendor,
             children: [
@@ -271,17 +271,17 @@ export function useNavData() {
             ],
           },
           {
-            title: t('purchase'),
+            title: t('Purchase'),
             path: paths.dashboard.purchase.purchaseOrder,
             icon: ICONS.g_purchases,
             children: [
-              { title: t('purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
+              { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
               { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
               { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
             ],
           },
           {
-            title: t('products'),
+            title: t('Products'),
             path: paths.dashboard.products.products,
             icon: ICONS.g_products,
             children: [
@@ -290,7 +290,7 @@ export function useNavData() {
             ],
           },
           {
-            title: t('sales'),
+            title: t('Sales'),
             path: paths.dashboard.sale.salePayment,
             icon: ICONS.g_purchases,
             children: [
@@ -305,12 +305,12 @@ export function useNavData() {
             icon: ICONS.g_expenses,
           },
           {
-            title: t('assets'),
+            title: t('Assets'),
             path: paths.dashboard.assets.assets,
             icon: ICONS.g_assets,
           },
           {
-            title: t('balancesheet'),
+            title: t('Balancesheet'),
             path: paths.dashboard.balancesheet.balancesheet,
             icon: ICONS.g_balanceSheet,
           },

@@ -243,7 +243,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
     };
       const handleSearch=debounce((e)=>{
         filterSearch(e?.target?.value)
-      },1000)
+      },500)
 
     const ApproversList = () => {
       const payload = {
@@ -293,6 +293,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
       onChange={(e) => {
         handleSearch(e);
       }}
+      size="small"
     />
   </Grid>
 
@@ -300,6 +301,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
     {componentPage=="MyRequests"?
     <Button
       variant="contained"
+      size="small"
       color="primary"
       className="button"
       onClick={handleTimeForm}
@@ -308,7 +310,7 @@ export default function SalarySearchFilter({filterSearch,filterData,componentPag
       Apply Salary Advance
     </Button>:null}
 
-    {componentPage!="MyRequests"?<Button onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+    {componentPage!="MyRequests"?<Button size="small" onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>:null}
   </Grid>

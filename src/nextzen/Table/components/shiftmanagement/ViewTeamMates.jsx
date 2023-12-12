@@ -3,10 +3,12 @@ import { LoadingButton } from '@mui/lab';
 import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import { mt } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const ViewTeamMates = ({onClose,RowDate}) => {
+    const {user}= useContext(UserContext)
     console.log("🚀 ~ file: ViewTeamMates.jsx:9 ~ ViewTeamMates ~ RowDate:", RowDate)
    useEffect(() => {
     getTeammates()
@@ -16,8 +18,8 @@ const [EmployeData, setEmployeData] = useState([])
  const getTeammates= async ()=>{
     try{
   const   data={
-            company_id:localStorage.getItem('companyID'),
-            employee_id:localStorage.getItem('employeeID'),
+            company_id:(user?.companyID)?user?.companyID:'',
+            employee_id:(user?.employeeID)?user?.employeeID:'',
             shift_configuration_id:parseInt( RowDate?.shift_configuration_id),
         }
       const response = await instance.post('/getSameGroupEmp',data);

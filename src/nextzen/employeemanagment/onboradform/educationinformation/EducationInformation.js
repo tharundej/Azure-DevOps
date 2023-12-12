@@ -103,6 +103,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
 
   const onSave=()=>{
     const obj1=defaultValues;
+    props.handleLoader()
     
     const obj={
      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -219,7 +220,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
          ...newArray[index],
          [field]: parseInt(value,10)
      }
-    }if(field==="nameOfTheDegree"){
+    }else if(field==="nameOfTheDegree"){
 
       newObj[index][field]=e?.target?.value ;
       newArray[index] = {
@@ -385,8 +386,8 @@ const   EducationInformation=forwardRef((props,ref)=> {
                            const newArray = [...defaultValues];
                            newArray[index] = {
                              ...newArray[index],
-                             nameOfTheDegree: newvalue?.label,
-                             nameOfTheDegreeObject:newvalue
+                           
+                             nameOfTheDegree:newvalue
                          }
                          setDefaultValues(newArray)
                          console.log(newArray)

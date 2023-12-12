@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'DevOps'}
     stages{
          stage("Env Variables") {
             steps {
@@ -21,18 +21,22 @@ pipeline {
             steps {
                 script {
                     sh '''
-                         docker stop node_n
-                         docker rm node_n
-                         docker system prune -a
+                         docker stop node_test
+                         docker rm node_test
+                         echo y | docker system prune -a
+                          echo y | docker image prune -a
+
                     '''
                 }
             }
         }
+        
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
-                    sh '''docker-compose up --bulid &&
-                          docker ps
+                    sh '''
+                         docker-compose up -d &&
+                         docker ps
                     '''      
                 }
             }
