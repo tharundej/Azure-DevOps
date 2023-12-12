@@ -366,7 +366,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ifscCode"
                      value={currentUser?.ifscCode}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=11){
                       setCurrentUser(prev=>({
                         ...prev,
                         ifscCode:e?.target.value

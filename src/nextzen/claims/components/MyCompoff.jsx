@@ -47,6 +47,7 @@ import Iconify from 'src/components/iconify';
 import { SurendraBasicTable } from "src/nextzen/Table/SurendraBasicTable";
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import { Typography } from '@mui/material';
 
 export default function MyCompoff({ currentUser ,}) {
   const compoff_type = [
@@ -98,17 +99,17 @@ export default function MyCompoff({ currentUser ,}) {
     //   secondaryText: "email",
     // },
     // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-    { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "8pc", type: "text" },
+    { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "8pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "8pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },
     { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
     { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
-    { id: "userComment", label: "User Comment ", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "My Comments ", minWidth: "7pc", type: "text" },
     // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
-    { id: "approverComment", label: "Approver Comment", minWidth: "7pc", type: "text" },
-    { id: "approvedDate", label: "Approver Date", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comments", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
     { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
     { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     
@@ -165,14 +166,47 @@ export default function MyCompoff({ currentUser ,}) {
   const [selectedDates, setSelectedDates] = useState({
     startDate: null,
     endDate:null,
+    error:"",
+    errorend:""
   });
 
-  const handleDateChange = (date, dateType) => {
-    const parsedDate = dayjs(date).format('YYYY-MM-DD');
-    setSelectedDates((prevDates) => ({
-      ...prevDates,
-      [dateType]: parsedDate,
-    }));
+  const handleDateChange = (newValue, dateFieldName) => {
+    const selectedDateValue = dayjs(newValue).format("YYYY-MM-DD");
+    const currentDate = dayjs().format("YYYY-MM-DD");
+
+    if (dateFieldName === "startDate") {
+      const lastMonthDate = dayjs().subtract(1, "month").format("YYYY-MM-DD");
+      if (dayjs(selectedDateValue).isAfter(lastMonthDate) && dayjs(selectedDateValue).isBefore(currentDate)) {
+        setSelectedDates((prev) => ({
+          ...prev,
+          [dateFieldName]: selectedDateValue,
+          error: "",
+        }));
+      } else {
+        setSelectedDates((prev) => ({
+          ...prev,
+          error: "Plaese Select Valid  Start Date.",
+        }));
+      }
+    }
+
+    if (dateFieldName === "endDate") {
+      if (selectedDates.startDate &&
+        (dayjs(selectedDateValue).isBefore(currentDate) && dayjs(selectedDateValue).isAfter(selectedDates.startDate)) ||
+        dayjs(selectedDateValue).isSame(selectedDates.startDate)
+      ) {
+        setSelectedDates((prev) => ({
+          ...prev,
+          [dateFieldName]: selectedDateValue,
+          error: "",
+        }));
+      } else {
+        setSelectedDates((prev) => ({
+          ...prev,
+          errorend: "Plaese Select Valid  End Date.",
+        }));
+      }
+    }
   };
 
   console.log(selectedDates,"selectedDates")
@@ -417,6 +451,9 @@ console.log(editData,"ppppppppppppppppppppp")
       const response = await axios.post(baseUrl+'/AddMycompoffdetails', data).then(
         (res) => {
           console.log('sucesspppp', res);
+          if (res?.data?.code === "400" || 400){
+            enqueueSnackbar(res?.data?.message, { variant: 'warning' })
+          }
           handleClose()
           enqueueSnackbar(res?.data?.message,{variant:'success'})
           setCount(count+1)
@@ -555,7 +592,11 @@ const handleCancelDelete = () => {
                     label="Compoff Start Date"
                     value={selectedDates?.startDate}
                       onChange={(newValue) => handleDateChange(newValue, 'startDate')}
-                  />
+                  /> {selectedDates?.error && (
+                    <Typography color="error" variant="caption">
+                      {selectedDates.error}
+                    </Typography>
+                  )}
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>
@@ -568,6 +609,11 @@ const handleCancelDelete = () => {
                     value={selectedDates.endDate}
                      onChange={(newValue) => handleDateChange(newValue, 'endDate')}
                   />
+                   {selectedDates?.errorend && (
+                  <Typography color="error" variant="caption">
+                    {selectedDates.errorend}
+                  </Typography>
+                )}
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
               </Grid>

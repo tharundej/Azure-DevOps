@@ -23,16 +23,20 @@ pipeline {
                     sh '''
                          docker stop node_test
                          docker rm node_test
-                         docker system prune -a
+                         echo y | docker system prune -a
+                          echo y | docker image prune -a
+
                     '''
                 }
             }
         }
+        
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
-                    sh '''docker-compose up -d &&
-                          docker ps
+                    sh '''
+                         docker-compose up -d &&
+                         docker ps
                     '''      
                 }
             }

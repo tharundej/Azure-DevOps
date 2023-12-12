@@ -148,10 +148,16 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
   };
   
     const onSave=()=>{
+      const arr = defaultValues
+      if(endpoint!=="addEducation"){
+        arr[0].documents = [ ...addDocuments];
+      }
+     
+      console.log(arr, 'before hitting API');
      const obj={
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
-      education:defaultValues
+      education:arr
      }
       
       let config = {
@@ -170,6 +176,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
       .then((response) => {
         // console.log(JSON.stringify(response?.data));
         setDefaultValues([])
+        setAddDocuments([])
         callApi()
         handleCallSnackbar(response?.data?.message,"success")
         onhandleClose()
@@ -333,7 +340,9 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
        
         newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+        //console.log(updatedItems,'updatedItems')
+        
+
     
        setDefaultValues(newArray);
       }
@@ -411,7 +420,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                  
                 <Grid md={12} xs={12} lg={12} padding="5px" >
                 
-                  <Grid margin="5px">
+                  <Grid item xs={12} md={6}>
 
                      
                  
@@ -603,7 +612,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                                                 Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
                                               </Typography>
                                         
-                                         <FilesDisplay dataOfFiles={item?.documents}  />
+                                         <FilesDisplay dataOfFiles={item?.documents || []}  handleDeleteDocument={handleDeleteDocument} />
 
                                          {  addDocuments &&
                                       

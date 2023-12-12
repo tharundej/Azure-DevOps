@@ -118,9 +118,9 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                 {ele.type === 'text' && <Grid container flexDirection="row">
 
                 {/* <Avatar alt="A" src={avatarUrl} sx={{ mr: 2 }} /> */}
-                 
+                <Tooltip title={row[ele?.id]?.length > 50 ? row[ele?.id] : ''} arrow>
                   <ListItemText
-                    primary={row[ele.id] || '-'}
+                    primary={row[ele.id]?.length>50 ?row[ele?.id].slice(0, 48) + '...': row[ele?.id]|| '-'}
                      secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
                     primaryTypographyProps={{ typography: 'body2' }}
                     secondaryTypographyProps={{
@@ -128,6 +128,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                       color: 'text.disabled',
                     }}
                   />
+                  </Tooltip>
                 </Grid>}
 
                 {
