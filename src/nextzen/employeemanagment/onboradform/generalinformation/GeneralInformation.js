@@ -57,6 +57,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
   const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const[rcountruIsoCode,setCoutryRIsoCode]=useState("")
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
@@ -267,6 +268,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         })
         .catch((error) => {
           console.log(error);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
           // setopenSnackBar(true);
           // setseveritySnackbar("warning");
           // setmessageSnackbar("Something Wrong")
@@ -493,8 +498,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
      setOptions(newArray);
     console.log(newArray,'newArraynewArray')
   }
-  const onChnageAutoCompleterState=(obj)=>{
-    console.log(obj,'objjjjj')
+  const onChnageAutoCompleterState=async(obj)=>{
+    console.log(obj,'stateOptionsSatet1')
     const objState={
       country:obj?.name
     }
@@ -503,17 +508,19 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
-        // console.log(cityOptions1,'stateOptionsSatet')
+       
+        newArray.rcityOptions=await City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
+        console.log(rcountruIsoCode,'stateOptionsSatet2')
+         
       }
       catch(e){
   
       }
     }
-    stateOptions()
+   await stateOptions()
     
      setOptions(newArray);
-    console.log(newArray,'newArraynewArray')
+    console.log(newArray,'stateOptionsSatet3')
   }
  
 
@@ -681,8 +688,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
               />
 
-                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={11} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={11} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
                     
