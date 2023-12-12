@@ -87,8 +87,10 @@ export default function MyClaims({ currentUser, }) {
 
 
   const TABLE_HEAD = [
+    { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
     { id: "claimDate", label: "Claim Date", minWidth: "8pc", type: "text" },
+    { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
     { id: "claimAmount", label: "Claim Amount", minWidth: "9pc", type: "text" },
     { id: "expenseStartDate", label: "Expense Start Date", minWidth: "10pc", type: "text" },
     { id: "expenseEndDate", label: "Expense End Date", minWidth: "10pc", type: "text" },
@@ -97,6 +99,8 @@ export default function MyClaims({ currentUser, }) {
     { id: "approverName", label: "Approver Name", minWidth: "10pc", type: "text" },
     { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
     { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+    { id: "userComment", label: "User Comment", minWidth: "9pc", type: "text" },
+    { id: "approverComment", label: "Approver Comment", minWidth: "9pc", type: "text" },
     { id: "PaymentStatus", label: "Payment Status", minWidth: "9pc", type: "badge" },
     { id: "status", label: "Status", minWidth: "6pc", type: "badge" },
     // { id: '', width: 88 },
@@ -247,7 +251,7 @@ export default function MyClaims({ currentUser, }) {
       } else {
         setSelectedDate((prev) => ({
           ...prev,
-          error: "Invalid date. Please select a date within the last month for expenseStartDate.",
+          error: "Plaese Select Valid Expense Start Date.",
         }));
       }
     }
@@ -265,7 +269,7 @@ export default function MyClaims({ currentUser, }) {
       } else {
         setSelectedDate((prev) => ({
           ...prev,
-          error: "Invalid date. Please select a date not in the future and after or equal to expenseStartDate for expenseEndDate.",
+          errorend: "Plaese Select Valid Expense End Date.",
         }));
       }
     }
@@ -304,8 +308,9 @@ export default function MyClaims({ currentUser, }) {
   // formdata and not json
   const formData = new FormData();
   const values = watch();
+  // console.log(data,"dataaaaaa")
   const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
+    console.log(data,'uyfgv');
     //  data?.expense_date= selectedDate;
     data.expenseStartDate = selectedDate?.expenseStartDate;
     data.expenseEndDate = selectedDate?.expenseEndDate;
@@ -320,10 +325,14 @@ export default function MyClaims({ currentUser, }) {
       console.log(formDataForRequest, "formDataForRequest99")
       const response = await axios.post(baseUrl + "/applyClaim", formDataForRequest).then(
         (res) => {
-          console.log('responsesss', res);
+          if (res?.data?.code === "400" || 400){
+            enqueueSnackbar(res?.data?.message, { variant: 'warning' })
+          }
+          console.log('responsesss', res?.code);
           handleClose()
           enqueueSnackbar(res?.data?.message, { variant: 'success' })
           setCount(count + 1)
+        
         },
         (error) => {
           console.log('lllll', error);
@@ -616,6 +625,11 @@ export default function MyClaims({ currentUser, }) {
                     onChange={(date) => handleDateChange(date, 'expenseEndDate')}
                   />
                   {/* </DemoContainer> */}
+                  {selectedDate?.errorend && (
+                  <Typography color="error" variant="caption">
+                    {selectedDate.errorend}
+                  </Typography>
+                )}
                 </LocalizationProvider>
               </Grid>
               <RHFTextField name="comment" label="comments" />

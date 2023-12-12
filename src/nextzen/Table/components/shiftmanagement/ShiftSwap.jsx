@@ -12,6 +12,7 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
 import ShiftSwapForm from './ShiftSwapForm';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -26,7 +27,7 @@ const bull = (
 );
 
 export default function ShiftSwap() {
-   
+      const {user}= React.useContext(UserContext)
       const TABLE_HEAD = [
 
     
@@ -53,11 +54,11 @@ export default function ShiftSwap() {
       ];
     
      const defaultPayload = {
-      "company_id":localStorage.getItem('companyID'),
-      "approver_id":"INFO22",
+      "company_id":(user?.companyID)?user?.companyID : '',
+      "approver_id":(user?.employeeID)?user?.employeeID:'',
       "page":0,
       "Search":"",
-      "count": 10,
+      "count": 5,
       "externalFilters":{
       "status": "",
       "start_date": {

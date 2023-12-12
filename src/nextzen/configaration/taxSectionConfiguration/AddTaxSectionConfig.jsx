@@ -48,6 +48,7 @@ export default function AddTaxSectionConfig({
   currentUser,
   handleCloseAddRoleDilog,
   openAddRoleConfig,
+  getTableData
 }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
@@ -168,12 +169,12 @@ export default function AddTaxSectionConfig({
       .then((response) => {
         if (response.data.code === 200) {
           enqueueSnackbar(response.data.message,{variant:'success'})
-         
+          getTableData()
           setHitGetDepartment(!hitGetDepartment);
           handleClose()
       
         } else if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          enqueueSnackbar(response.data.message,{variant:'error'})
        
           setHitGetDepartment(!hitGetDepartment);
        
@@ -181,7 +182,7 @@ export default function AddTaxSectionConfig({
       })
       .catch((error) => {
         //  setOpen(true);
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
       
         console.log(error);
       });

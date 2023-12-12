@@ -10,20 +10,20 @@ import SalaryStructureEdit from './SalaryStructureEdit';
 export default function SalaryStructure() {
   const basicTableRef = useRef(null);
     const TABLE_HEAD = [
-      { id: 'departmentName', label: 'Department Name', type: 'text',minWidth:'150px' },
-      { id: 'designationName', label: 'Designation Name', type: 'text',minWidth:'150px' },
-      { id: 'designationGradeName', label: 'Designation Grade Name', type: 'text',minWidth:'150px' },
+      { id: 'departmentName', label: 'Department Name', type: 'text',minWidth:'180px' },
+      { id: 'designationName', label: 'Designation Name', type: 'text',minWidth:'180px' },
+      { id: 'designationGradeName', label: 'Designation Grade Name', type: 'text',minWidth:'230px' },
 
-      { id: 'marketRate', label: 'Market Rate', type: 'text',minWidth:'150px' },
-      { id: 'minimum', label: 'Minimum', type: 'text',minWidth:'150px' },
-      { id: 'midpoint', label: 'Midpoint', type: 'text',minWidth:'150px' },
-      { id: 'maximum', label: 'Maximum', type: 'text' ,minWidth:'150px'},
+      { id: 'marketRate', label: 'Market Salary', type: 'text',minWidth:'180px' },
+      { id: 'minimum', label: 'Minimum Salary', type: 'text',minWidth:'150px' },
+      { id: 'midpoint', label: 'Midpoint Salary', type: 'text',minWidth:'150px' },
+      { id: 'maximum', label: 'Maximum Salary', type: 'text' ,minWidth:'150px'},
       { id: 'spread', label: 'Spread', type: 'text',minWidth:'150px' },
       { id: 'range', label: 'Range', type: 'text' ,minWidth:'150px'},
 
     ];
     const actions = [
-      { name: 'View', icon: 'hh', path: 'jjj' },
+     
       { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
     ];
 
@@ -172,7 +172,7 @@ export default function SalaryStructure() {
     });
   }
   const onClickActions=(rowData,event)=>{
-    console.log(rowData,event,'aaaaabbb');
+   
     if(event.name==="Edit"){
       // setCellData(rowData);
       // setType("edit");

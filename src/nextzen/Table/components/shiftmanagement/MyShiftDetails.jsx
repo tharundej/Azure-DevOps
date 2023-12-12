@@ -12,6 +12,7 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AssignShift from './AssignShift';
 import ViewTeamMates from './ViewTeamMates';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 // import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
@@ -26,7 +27,7 @@ const bull = (
 );
 
 export default function MyShiftDetails() {
-   
+    const {user} = React.useContext(UserContext)
       const TABLE_HEAD = [
 
         
@@ -51,10 +52,10 @@ export default function MyShiftDetails() {
     
      
     const defaultPayload ={
-      "company_id":localStorage.getItem("companyID"),
-      "employee_id":localStorage.getItem("employeeID"),
+      "company_id":(user?.companyID)?user?.companyID : '',
+      "employee_id":(user?.employeeID)?user?.employeeID : '',
       "page":0,
-      "count":50,
+      "count":5,
       "Search":"",
       "externalFilters":{
       "shift_name": ""

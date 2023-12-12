@@ -230,9 +230,9 @@ export default function SwapSearchFilter({filterSearch,filterData}){
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      const handleSearch=debounce((e)=>{
-        filterSearch(e?.target?.value)
-      },1000)
+    const handleSearch=debounce((e)=>{
+      filterSearch(e?.target?.value)
+    },500)
     
   
 
@@ -283,7 +283,8 @@ export default function SwapSearchFilter({filterSearch,filterData}){
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e.target.value)}}
+            onChange={e=>{handleSearch(e)}}
+            size="small"
 
             />
             </Grid>

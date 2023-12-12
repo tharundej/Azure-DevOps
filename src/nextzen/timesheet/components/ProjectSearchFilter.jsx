@@ -571,6 +571,7 @@ const handleSnackBar=()=>{
       onChange={(e) => {
         handleSearch(e);
       }}
+      size="small"
     />
   </Grid>
   <Grid item xs={12} md={6} container justifyContent={isMobile ? "flex-start" : "flex-end"}>
@@ -578,6 +579,7 @@ const handleSnackBar=()=>{
    {projectPermission?
     <Button
       variant="contained"
+      size="small"
       color="primary"
       className="button"
       onClick={()=>setShowProject(true)}
@@ -589,14 +591,15 @@ const handleSnackBar=()=>{
  {(assignPermission)? 
     <Button   
     variant="contained"
+    size="small"
     color="primary"
     className="button"
     onClick={()=>setShowAssignEmployee(true)}
-    sx={{ marginLeft: isMobile ? 1 : 0,marginTop:isMobile ? 1 : 0.5 }}>
+    sx={{ marginLeft: isMobile ? 1 : 0,marginTop: 1 }}>
     Assign Employees
     </Button>
    :null}
-    <Button onClick={()=>setShowFilter(true)}  sx={{ width:'80px',marginLeft:2,marginTop:1}}>
+    <Button onClick={()=>setShowFilter(true)} size="small" sx={{ width:'80px',marginLeft:2,marginTop:1}}>
       <Iconify icon="mi:filter" /> Filters
     </Button>
   </Grid>

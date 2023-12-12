@@ -82,7 +82,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,searchData}){
+export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -104,12 +104,18 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 
 
     const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+    const handleSearch=debounce((e)=>{
+      filterSearch(e?.target?.value)
+    },500)
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
     const [personName, setPersonName] = React.useState([]);
@@ -279,7 +285,21 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
           console.log(value);
        // console.log( typeof value === 'string' ? value.split(',') : value,)
       };
-  
+      const handleCancel = async()=>{
+        setDropdownStatus([]);
+        // setDropdownLeaveType([]);
+      //   setDates({
+      // applyDatefrom:"",
+      // applyDateto:"",
+      // fromDatefrom:"",
+      // fromDateto:"",
+      // toDatefrom:"",
+      // toDateto:"",
+      // shift_name: "",        
+      // shift_term: "",  
+      //   })
+        setOpen(false);
+      }
       const handleApply = async()=>{
         setDatesData([]);
        
@@ -314,8 +334,8 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e.target.value)}}
- 
+            onChange={e=>{handleSearch(e)}}
+            size="small"
             />
             </Grid>
  
@@ -337,15 +357,15 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
       </Grid>
          </Grid>
      
-      <BootstrapDialog
-        onClose={handleClickClose}
+      <Dialog
+       onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        className= "custom-dialog-width"
 
       >
         
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -500,7 +520,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
          <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
          <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     
@@ -511,9 +531,10 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 // }
 ShiftRoasterFilter.propTypes={
     filterData: PropTypes.func,
+    
 }
 ShiftRoasterFilter.propTypes={
-  searchData: PropTypes.any,
+  filterSearch: PropTypes.any,
 }
 
 ShiftRoasterFilter.propTypes={

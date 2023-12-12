@@ -47,12 +47,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import HolidaysForm from './HolidaysForm';
-import { holidayTypeName, locationNameApi } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
-
+import {
+  holidayTypeName,
+  locationNameApi,
+} from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -90,15 +92,15 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function HolidaysFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function HolidaysFilters({ filterData, filterOptions, filterSearch, searchData }) {
   const theme = useTheme();
   // const holidayNames = [
   //   'Diwali',
   //   'Gandhi Jayanthi'
   // ];
-  const [holidayTypesNames,setHolidayTypesNames] = useState([])
-  const [locationName, setLocationName] = useState([])
-  useEffect(()=>{
+  const [holidayTypesNames, setHolidayTypesNames] = useState([]);
+  const [locationName, setLocationName] = useState([]);
+  useEffect(() => {
     async function call() {
       const arr = await holidayTypeName();
       console.log(arr, 'sairam');
@@ -111,7 +113,7 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
       setLocationName(arr);
     }
     call2();
-  },[])
+  }, []);
   // const locationName = [
   //   'infobell'
   // ]
@@ -192,22 +194,20 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
   function formWithDropdown() {
     return new Promise((resolve) => {
       const arr1 = [];
-     
+
       dropdown?.holidayName?.forEach((item, index) => {
         arr1.push(item?.holidayName);
       });
-    
+
       // setDatesData(arr1);
       resolve(arr1);
     });
   }
   function formWithDropdown2() {
     return new Promise((resolve1) => {
-  const arr2= [];
+      const arr2 = [];
       dropdown?.locationName?.forEach((item, index) => {
-       
         arr2.push(item?.locationName);
-       
       });
       resolve1(arr2);
     });
@@ -298,27 +298,27 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
     const obj = {
       holidayName: comma,
     };
-    filterData(obj);
+   // filterData(obj);
     console.log(obj, 'sairam');
-    
-    const data1 =await formWithDropdown2();
+
+    const data1 = await formWithDropdown2();
     const comma1 = data1.join(',');
     const obj1 = {
-      locationName:comma1,
-    }
+      locationName: comma1,
+      holidayName: comma,
+    };
     filterData(obj1);
     console.log(obj1, 'sairam2222');
     //   filterData(data);
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
-     
-    searchData(searchTerm)
-    console.log(searchTerm,"search ........")
-    };
+    searchData(searchTerm);
+    console.log(searchTerm, 'search ........');
+  };
   return (
     <>
-       <Grid
+      <Grid
         container
         spacing={2}
         alignItems="center"
@@ -326,27 +326,26 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
         direction="row"
         style={{ marginBottom: '0.1rem' }}
       >
-        <Grid item  md={8} xs={8}>
-        <TextField
+        <Grid item md={8} xs={12}>
+          <TextField
             placeholder="Search...."
-             fullWidth
-             onChange={(e) => handleSearch(e.target.value)}
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          
         </Grid>
-        <Grid item  md={2} xs={2}>
-            <HolidaysForm/>
-       </Grid>
-        <Grid item  md={2} xs={2}>
-        <Grid>
+        <Grid item md={4} xs={12}>
+          <HolidaysForm />
+          <Grid item>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
             </Stack>
           </Grid>
         </Grid>
+        {/* <Grid item md={2} xs={3}>
+        
+        </Grid> */}
       </Grid>
 
       <BootstrapDialog
@@ -362,68 +361,70 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
           </Button>
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"300px"}}
-        //   style={{
-        //     paddingTop: '20px',
-        //     paddingRight: '17px',
-        //     paddingBottom: '44px',
-        //     paddingLeft: '44px',
-        //   }}
+        <DialogContent
+          sx={{ minWidth: '300px' }}
+          //   style={{
+          //     paddingTop: '20px',
+          //     paddingRight: '17px',
+          //     paddingBottom: '44px',
+          //     paddingLeft: '44px',
+          //   }}
         >
           {/* <Grid  spacing={2}  sx={{flexDirection:'row',display:'flex'}}> */}
-            {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
-           
-            <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="holidayName">Holiday Name</InputLabel>
-                  <Select
+          {/* <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography> */}
+
+          <Grid
+            container
+            spacing={1}
+            sx={{ flexDirection: 'row', display: 'flex', marginTop: '1rem' }}
+            item
+          >
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="holidayName">Holiday Name</InputLabel>
+                <Select
                   fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownHolidayname}
-                    onChange={(e) => handleChangeDropDown(e, 'holidayName')}
-                    input={<OutlinedInput label="Holiday Name" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {holidayTypesNames.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name?.holidayName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                  <FormControl fullWidth>
-                    <InputLabel id="locationName">Location</InputLabel>
-                    <Select
-                    fullWidth
-                      labelId="demo-multiple-name-shift_name_1"
-                      id="demo-multiple-shift_name_1"
-                      multiple
-                      value={dropdownLocation}
-                      onChange={(e) => handleChangeDropDown(e, 'locationName')}
-                      input={<OutlinedInput label="Location" />}
-                      MenuProps={MenuProps}
-                    //   sx={{minWidth:'300px'}}
-                    >
-                      {locationName.map((name) => (
-                        <MenuItem
-                          key={name}
-                          value={name}
-                          style={getStyles(name, personName, theme)}
-                        >
-                          {name?.locationName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid  item xs={12} md={6}>
-                {/* <FormControl fullWidth >
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownHolidayname}
+                  onChange={(e) => handleChangeDropDown(e, 'holidayName')}
+                  input={<OutlinedInput label="Holiday Name" />}
+                  MenuProps={MenuProps}
+                  // sx={{minWidth:'300px'}}
+                >
+                  {holidayTypesNames.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.holidayName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="locationName">Location</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-multiple-name-shift_name_1"
+                  id="demo-multiple-shift_name_1"
+                  multiple
+                  value={dropdownLocation}
+                  onChange={(e) => handleChangeDropDown(e, 'locationName')}
+                  input={<OutlinedInput label="Location" />}
+                  MenuProps={MenuProps}
+                  //   sx={{minWidth:'300px'}}
+                >
+                  {locationName.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name?.locationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {/* <FormControl fullWidth >
                 <InputLabel id="designation_grade_name">Designation Grade Name</InputLabel>
                   <Select
                   fullWidth
@@ -443,24 +444,24 @@ export default function HolidaysFilters({ filterData, filterOptions ,filterSearc
                     ))}
                   </Select>
               </FormControl> */}
-                   </Grid>
             </Grid>
-
-           
-            
-             
-          
+          </Grid>
         </DialogContent>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          onClick={() => {
-            handleApply();
-          }}
-          // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
-        >
-          Apply
-        </Button>
+          <Button
+            onClick={() => {
+              handleApply();
+            }}
+            // variant="outlined"
+            style={{
+              width: '80px',
+              marginBottom: '1rem',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            Apply
+          </Button>
         </div>
       </BootstrapDialog>
     </>

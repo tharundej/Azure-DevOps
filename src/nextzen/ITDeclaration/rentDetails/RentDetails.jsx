@@ -43,18 +43,18 @@ export default function RentDetails() {
 
   // const empId = JSON.stringify(getLoc)
   const [data, setData] = useState([
-    { month: 'March', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'April', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'May', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'June', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'July', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'August', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'September', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'October', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'November', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'December', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'January', city_type: '', rentAmount: '', submittedAmount: '' },
-    { month: 'February', city_type: '', rentAmount: '', submittedAmount: '' },
+    { month: 'March', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'April', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'May', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'June', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'July', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'August', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'September', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'October', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'November', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'December', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'January', cityType: '', rentAmount: '', submittedAmount: '' },
+    { month: 'February', cityType: '', rentAmount: '', submittedAmount: '' },
 
     // Add more months as needed
   ]);
@@ -73,13 +73,13 @@ const [loading,setLoading] = useState(false);
   var [landLardName, setLandLardName] = useState('');
   var [landLardAddress, setLandLardAddress] = useState('');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(12);
   const [selectedValue, setSelectedValue] = useState('');
   var [isShowPannumber, setIsShowPanNumber] = useState();
   const [isPanValueThere, setIsPanValueThere] = useState(false);
   const [isPanValueNumber, setIsPanValueNumber] = useState('');
   const [declarationSelectedValue, setSeclarationSelectedValue] = useState('');
-  var [isShowDeclaration, setIsShowDeclaration] = useState(false);
+  var [isShowDeclaration, setIsShowDeclaration] = useState(true);
   const [isShowUpload, setIsShowUpload] = useState(false);
   const [open, setOpen] = useState(true);
   var [panNumbers, setPanNumbers] = useState(['', '', '']); // Initialize with three empty strings
@@ -111,13 +111,6 @@ const [loading,setLoading] = useState(false);
   console.log(currentYear, 'current year');
   const startYear = 2022;
   const endYear = 2030;
-
-  //    const financialYears = [];
-  //    for (let year = startYear; year <= endYear; year++) {
-  //      financialYears.push(`${year}-${year + 1}`);
-  //    }
-  //  console.log(financialYears ,
-  //   "financialYears")
   const [selectedYear, setSelectedYear] = useState(null);
   const [
     financialYears, setFinancialYears] = useState([]);
@@ -140,14 +133,11 @@ const [loading,setLoading] = useState(false);
   };
 
   const handleChange = (event) => {
-    const selectedStringValue = event.target.value; // "Yes" or "No"
-    // setSelectedValue(selectedStringValue);
-
-    // Convert back to boolean
-    const selectedBooleanValue = selectedStringValue === 'Yes';
+    const selectedBooleanValue = event.target.value === "true"; // Convert string to boolean
     setSelectedValue(selectedBooleanValue);
+  
     console.log(selectedBooleanValue, isShowPannumber, '_>>>>>>>isshowPan1');
-
+  
     if (selectedBooleanValue) {
       setIsShowPanNumber(true);
       setIsPanValueThere(true);
@@ -157,10 +147,11 @@ const [loading,setLoading] = useState(false);
       setIsShowPanNumber(false);
       setIsShowDeclaration(true);
     }
+  
     console.log(isShowPannumber, panNumbers, 'handle pan change');
-
     console.log(event.target.value);
   };
+  
 
   console.log(' selected', selectedValue, isPanValueNumber, 'isPanvlueNUmber');
 
@@ -182,24 +173,88 @@ const [loading,setLoading] = useState(false);
     setPage(0);
   };
 
+  // const handleRoleChange = (index, newValue) => {
+  //   const newData = [...data];
+  //   newData[index].cityType = newValue;
+  //   setData(newData);
+  //   console.log(newData);
+  // };
+
   const handleRoleChange = (index, newValue) => {
     const newData = [...data];
-    newData[index].city_type = newValue;
-    setData(newData);
-    console.log(newData);
+    newData.forEach((item) => {
+      item.cityType = newValue;
+    });
+    newData[index].cityType = newValue;
+   setData(newData);
+   
   };
+  
 
+  // const handleRentAmountChange = (index) => (event) => {
+  //   const newData = [...data];
+ 
+  // newData[index].rentAmount = event.target.value;
+  //   setData(newData);
+  // };
+
+  // const handleRentAmountChange = (index) => (event) => {
+  //   const newData = [...data];
+  //   newData.forEach((item) => {
+  //     // Update rentAmount for all rows
+  //     item.rentAmount = event.target.value;
+  //   });
+  //   newData[index].rentAmount = event.target.value;
+  //   setData(newData);
+  // };
+  
   const handleRentAmountChange = (index) => (event) => {
     const newData = [...data];
+    newData.forEach((item) => {
+      item.rentAmount = event.target.value;
+    });
     newData[index].rentAmount = event.target.value;
     setData(newData);
   };
-
+  
   const handleSubmittedAmountChange = (index) => (event) => {
     const newData = [...data];
+    newData.forEach((item) => {
+      item.submittedAmount = event.target.value;
+    });
     newData[index].submittedAmount = event.target.value;
     setData(newData);
+
+
+    // newData[index].submittedAmount = event.target.value;
+    // setData(newData);
   };
+
+  // const handleSubmittedAmountChange = (index) => (event) => {
+  //   const newSubmittedAmount = parseFloat(event.target.value);
+  //   const newRentAmount = parseFloat(data[index].rentAmount);
+  
+  //   // Check if the submittedAmount is less than or equal to rentAmount
+  //   if (!isNaN(newSubmittedAmount) && newSubmittedAmount <= newRentAmount) {
+  //     const newData = data.map((item, i) => ({
+  //       ...item,
+  //       submittedAmount: i === index ? newSubmittedAmount : item.submittedAmount,
+  //     }));
+  //     setData(newData);
+  //   } else {
+  //     // Clear the submittedAmount field if it's not within the valid range
+  //     const newData = data.map((item, i) => ({
+  //       ...item,
+  //       submittedAmount: i === index ? '' : item.submittedAmount,
+  //     }));
+  //     setData(newData);
+  
+  //     // Display an error or handle the case where submittedAmount is greater than rentAmount
+  //     console.error('Invalid submittedAmount');
+  //     // You can also show a user-friendly error message or take appropriate action.
+  //   }
+  // };
+  
 
   const handleLandloardNameChange = (e) => {
     setLandLardName(e.target.value);
@@ -271,7 +326,7 @@ const [loading,setLoading] = useState(false);
   };
   const updatedData = data?.map((entry) => ({
     month: entry.month,
-    city_type: entry.city_type,
+    cityType: entry.cityType,
     rentAmount: entry.rentAmount !== '' ? parseInt(entry.rentAmount, 10) : null,
     submittedAmount: entry.submittedAmount !== '' ? parseInt(entry.submittedAmount, 10) : null,
   }));
@@ -348,7 +403,7 @@ const [loading,setLoading] = useState(false);
       addressOfLandlord: rentDetailsData?.addressOfLandlord,
       data: updatedData,
       panOfTheLandlord: isShowPannumber,
-      declarationReceivedFromLandlord: rentDetailsData?.declarationReceivedFromLandlord,
+      declarationReceivedFromLandlord: declarationSelectedValue == 'Yes' ? true : false ,
       // declarationReceivedFromLandlord: true,
       panNumber: panNumbers,
       //  "declarationReceivedFromlandlord": rentDetailsData?.companyId,
@@ -429,13 +484,13 @@ const [loading,setLoading] = useState(false);
           if (rowsData !== null || undefined) {
             setIsPreviousData(true);
           }
-          console.log(rowsData);
+          console.log(response?.data?.data?.declarationReceivedFromLandlord ,"response?.data?.data?.declarationReceivedFromLandlord");
           setRendDetailsData(rowsData);
           setLandLardName(response?.data?.data?.nameOfLandlord);
           setLandLardAddress(response?.data?.data?.addressOfLandlord);
-          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord);
-          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord);
-          setSelectedValue(response?.data?.data?.panOfTheLandlord);
+          setIsShowDeclaration(response?.data?.data?.declarationReceivedFromLandlord? "Yes" : "No");
+          setIsShowPanNumber(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
+          // setSelectedValue(response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :'');
           response?.data?.data?.panOfTheLandlord
             ? setSelectedValue(response?.data?.data?.panOfTheLandlord)
             : '';
@@ -456,7 +511,7 @@ const [loading,setLoading] = useState(false);
           console.log(rowsData?.financialYear, 'rowsData?.financialYear');
           setLandlordFieldsIndex(landlordFiledsIndex);
 
-          console.log(response, 'rentDocs in response');
+          console.log(response, 'rentDocs in response', "pandtrueorFalls",isShowPannumber , selectedValue ,response?.data?.data?.panOfTheLandlord ?response?.data?.data?.panOfTheLandlord :"no pand");
           console.log(rowsData, 'in rowData rentDocs ');
 
           setData((prevData) => {
@@ -469,7 +524,7 @@ const [loading,setLoading] = useState(false);
                 // If the month exists in the API response, update the data
                 return {
                   ...existingMonth,
-                  city_type: matchingMonth.cityType,
+                  cityType: matchingMonth.cityType,
                   rentAmount: matchingMonth.rentAmount,
                   submittedAmount: matchingMonth.submittedAmount,
                 };
@@ -489,6 +544,8 @@ const [loading,setLoading] = useState(false);
     //  console.log(result, 'resultsreults');
   };
 
+  console.log(declarationSelectedValue ,"declarationSelectedValuedeclarationSelectedValue" ,)
+console.log(selectedValue ,"SelectedValue")
   const getFinancialYear = async () => {
     setLoading(true)
     const payload = {
@@ -583,11 +640,14 @@ const [loading,setLoading] = useState(false);
          <Grid item xs={4}>
         <Autocomplete
           id="financialYear"
-          options={financialYears}
-          getOptionLabel={(option) => option.financialYear}
+          options={financialYears || []}
+          getOptionLabel={(option) => option?.financialYear ?? "There Is No Financial Year Alloted! Please Connect To HR"}
+        
           value={selectedYear}
           onChange={handleYearChange}
-          renderInput={(params) => <TextField {...params} label="Financial Year" />}
+          renderInput={(params) => <TextField {...params}
+          label={financialYears && financialYears.length > 0 ? "Please Select Financial Year" : "No Financial Years Available"}/>}
+          
         />
       </Grid>
       
@@ -634,7 +694,7 @@ const [loading,setLoading] = useState(false);
                 <TableCell style={{ padding: '4px !important' }}>{row.month}</TableCell>
                 <TableCell style={{ width: '150px' }}>
                   <Autocomplete
-                    value={row.city_type}
+                    value={row.cityType}
                     onChange={(event, newValue) => handleRoleChange(index, newValue)}
                     options={['Metro', 'Non-Metro']}
                     renderInput={(params) => <TextField {...params} label="Select" />}
@@ -659,7 +719,7 @@ const [loading,setLoading] = useState(false);
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      {/* <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={data.length}
@@ -667,13 +727,13 @@ const [loading,setLoading] = useState(false);
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      /> */}
       <Grid
         container
         spacing={2}
         // alignItems="center"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '1rem'  ,marginTop: '1rem' }}
       >
         <Grid
           item
@@ -730,12 +790,13 @@ const [loading,setLoading] = useState(false);
             <RadioGroup
               aria-label="options"
               name="options"
-              value={selectedValue ? 'Yes' : 'No'}
+              value={selectedValue}
+              // value={selectedValue ? 'Yes' :(selectedValue === "" || undefined) ? undefined : 'No'}
               onChange={handleChange}
               row // align radio buttons horizontally
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid>
 

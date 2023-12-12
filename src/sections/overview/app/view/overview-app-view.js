@@ -26,6 +26,7 @@ import AppTopInstalledCountries from '../app-top-installed-countries';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import PunchINOutCard from 'src/nextzen/dashboard/PunchInOut/PunchINOutCard';
+import BirthdayReminders from 'src/nextzen/usersdashboard/birthdayreminders/BirthdayReminders,';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,10 @@ export default function OverviewAppView() {
         <Grid xs={12} md={4}>
           {/* <AppFeatured list={_appFeatured} /> */}
           <PunchINOutCard />
+        </Grid>
+        <Grid xs={12} md={6} lg={4}>
+          <BirthdayReminders title="Bithday Reminders" list={
+            [{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'},{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'}]} />
         </Grid>
 
         <Grid xs={12} md={4}>
@@ -178,6 +183,10 @@ export default function OverviewAppView() {
         <Grid xs={12} md={6} lg={4}>
           <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
         </Grid>
+        <Grid xs={12} md={6} lg={4}>
+          <BirthdayReminders title="Bithday Reminders" list={[{employeeID:'1',name:"anil"},{employeeID:'2',name:"sham"}]} />
+        </Grid>
+
 
         <Grid xs={12} md={6} lg={4}>
           <AppTopAuthors title="Top Authors" list={_appAuthors} />

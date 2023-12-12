@@ -8,6 +8,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -35,7 +37,7 @@ import {
     Autocomplete,
     Chip,
     Typography,
-    Stack
+    Stack,IconButton
   } from '@mui/material';
 
 import { Helmet } from "react-helmet-async";
@@ -48,14 +50,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
 
 
-import { useForm, Controller,useFormContext } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { doc } from 'firebase/firestore';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import FilesDisplay from '../../employeeeducation/createeducation/FilesDisplay';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
 
@@ -63,6 +63,73 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
     "Contract","Permanent"
   
   ])
+  const [addDocuments,setAddDocuments]=useState([]);
+
+  const handleAddDocumentNew=()=>{
+    const newArray = [...addDocuments];
+    const obj={
+      fileType:'',
+      fileName:'',
+      fileContent:''
+  }
+  newArray.push(obj)
+  setAddDocuments(newArray)
+
+  }
+  const handleRemoveDocumentNew=(index1)=>{
+    const updatedItems = addDocuments.filter((item,index3) => index3 !== index1);
+
+     setAddDocuments(updatedItems);
+  }
+
+  const handleFileUploadNew = (event,index) => {
+        
+    const file = event.target.files[0];
+    // const { value, id } = e.target;
+    // const newObj = defaultValues;
+
+      let base64String=1;
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+    const base64String = event.target.result.split(',')[1];
+    console.log(base64String);
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ...newArray[index],
+      fileName: file.name,
+      fileContent:base64String
+    };
+    console.log(index,'newArraynewArraynewArray')
+    setAddDocuments(newArray);
+
+    // Now you can do something with the base64String, for example, send it to a server or store it in state.
+    };
+
+  reader.readAsDataURL(file);
+    
+
+    
+
+    //setSelectedFile(file);
+  };
+
+  const handleCategoryChangeNew = (e,index) => {
+    const { value, id } = e.target;
+    // const newObj = defaultValues;
+    
+
+    const newArray = [...addDocuments];
+
+    newArray[index] = {
+      ... newArray[index],
+      fileType: value
+    };
+    
+    
+    setAddDocuments(newArray);
+  };
   const onSaveData=()=>{
 
     const arr=defaultValues
@@ -348,9 +415,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
           {defaultValues?.map((item, index) => (
             <Grid  container flexDirection="row">
-            <Grid md={10} xs={10} lg={10} padding="5px" item>
-            <Card padding="5px">
-            <Grid >
+            <Grid md={12} xs={12} lg={12} padding="5px" item>
+          
+              <Grid >
 
 
 
@@ -454,14 +521,14 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                 disablePortal
                 id="combo-box-demo"
                 options={employeeTypeOptons}
-                value={item?.employmentType}
+                value={item?.employementType}
                 getOptionLabel={(option) => option}
                 onChange={(e,value) => {
                   console.log(value)
                   const newArray = [...defaultValues];
                   newArray[index] = {
                     ...newArray[index],
-                    employmentType: value
+                    employementType: value
                 }
                 setDefaultValues(newArray);
                 }}
@@ -475,8 +542,15 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
               </Grid>
              
-                  
-              {item?.documents?.map((file,index1)=>(
+              { endpoint!=='addExperience' &&<>
+              
+
+              <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
+                      Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
+                    </Typography>
+                    <FilesDisplay dataOfFiles={item?.documents}  />
+                                              </>}
+              {endpoint==="addExperience" && item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                 <Grid item xs={12} md={6} >
@@ -496,13 +570,13 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                         {/* Add more categories here */}
                     </Select>
                     </FormControl>
-                </Grid>
+                    </Grid>
 
                 <Grid item xs={12} md={6}>
                 <Grid>
 
                   <Grid item>
-                  {console.log(index,'opopop')}
+                  {console.log(defaultValues,file,'opopop')}
                   <input
                    id={`file-upload-input-${index}-${index1}`}
                     type="file"
@@ -511,6 +585,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     style={{ display: 'none' }}
                    
                 />
+                <Grid container alignItems="center" justifyContent="space-between">
+                                        <Grid item>
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
                 <Button
                   onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
@@ -522,58 +598,70 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                 <Typography variant="body2" color="textSecondary">
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
-                  </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                </Grid>
+
+                <Grid item>
                   { index1===0 &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
-                        
-                       
-                        
+                                           <IconButton
+                                           onClick={() => {
+                                             handleAddDocument(index);
+                                           }}
+                                           color="primary"
+                                         >
+                                           <Iconify icon="gala:add" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                         </IconButton>
+                                              // <Button 
+                                              // onClick={()=>{
+                                              //   handleAddDocument(index)
+                                              // }
+                                              
+                                                
+                                              
+                                                
 
-                      }
-                      >Add</Button>
-                   
+                                              // }
+                                              // >Add Files</Button>
+                                          
 
-                  }
-                   { index1!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index,index1)
-                      }
-                       
-                        
-                       
-                        
+                                          }
+                                          { index1!==0 &&
+                                            
+                                            <IconButton
+                                            onClick={()=>{
+                                              handleDeleteDocument(index,index1)
+                                            }}
+                                            color="primary"
+                                          >
+                                            <Iconify icon="zondicons:minus-outline" sx={{ fontSize: '48px', color: '#3B82F6' }} /> {/* Set the font size to 24px */}
+                                          </IconButton>
 
-                      }
-                      >Delete</Button>
-                    
+                                            
+                                            
 
-                  }
-                  </Grid>
-                  
-                  
-                </Grid>
-               
-                </Grid>
-               
-                   
+                                          }
+                   </Grid>
+                                          </Grid>
+                                          
+                                          </Grid>
+                                        
+                                          
+                                          
+                                        </Grid>
+                                      
+                                        </Grid>
+                                      
+                                          
 
-              </Grid>
+                                        </Grid>
               ))}
               </Grid>
+
+
               
 
-             </Card>
               </Grid>
 
-              <Grid md={2} xs={2} lg={2} padding="5px" item>
+              {/* <Grid md={2} xs={2} lg={2} padding="5px" item>
                      {index===0 &&    <Button
                    variant="contained"
                    sx={{backgroundColor:"#3B82F6"}}
@@ -593,7 +681,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                  >
                    Remove
                  </Button>}
-               </Grid>
+               </Grid> */}
              
             
             </Grid>

@@ -23,7 +23,7 @@ import  JwtRegisterView  from './JwtRegisterView';
 import VerifyOtp from './VerifyOtp';
 import AmplifyNewPasswordView from './CreatePassword';
 
-const steps = ['Account Registration', 'Email Verification', 'Create Password'];
+const steps = ['Registration', 'Email Verification', 'Create Password'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -131,7 +131,10 @@ const handleCallSnackbar=(message,severity)=>{
   }
 
   return (
-    <Box sx={{ width: '100%',marginTop:'15px' }} >
+    <Box sx={{ marginTop:'15px' }} >
+      <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'10px'}}>
+        <Typography variant="h4" >Company Registration</Typography>
+        </Box>
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
