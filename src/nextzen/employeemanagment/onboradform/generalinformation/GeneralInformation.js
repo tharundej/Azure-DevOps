@@ -268,6 +268,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         })
         .catch((error) => {
           console.log(error);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
           // setopenSnackBar(true);
           // setseveritySnackbar("warning");
           // setmessageSnackbar("Something Wrong")
