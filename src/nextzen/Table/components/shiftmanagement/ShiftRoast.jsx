@@ -12,13 +12,12 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AddEmployeShift from './AddeployeShift';
 import instance from 'src/api/BaseURL';
-import { enqueueSnackbar } from 'notistack';
+
 import EditShiftRoaster from './EditShiftRoaster';
 import ShiftRoasterEmployeList from './ShiftRoasterEmployeList';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
-
-// import ReusableTabs from '../tabs/ReusableTabs';
+import { useSnackbar } from 'src/components/snackbar';// import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
 
 const bull = (
@@ -31,6 +30,7 @@ const bull = (
 );
 
 export default function ShiftRoast() {
+  const { enqueueSnackbar } = useSnackbar();
    const {user} = useContext(UserContext)
       const TABLE_HEAD = [
 
@@ -65,7 +65,7 @@ export default function ShiftRoast() {
         "count": 5,
         "externalFilters": {
             "shiftName": "",
-            "shiftTerm": "",
+          
             "startDate": {
                 "from": "",
                 "to": ""
@@ -114,13 +114,13 @@ export default function ShiftRoast() {
         try{
           console.log(rowdata,"rowData:::::")
         const  data= {
-          DeleteShiftRoaster: JSON.stringify( rowdata.project_id),
+          employee_shift_group_id:parseInt( rowdata?.shiftGroupId),
            
           };
-          const response = await instance.post('/DeleteShiftRoaster',data);
+          const response = await instance.post('/deleteShiftGroupById',data);
           // setReportingManagerData(response.data.list)
           console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
-          enqueueSnackbar(response.data.Message,{variant:'success'})
+          enqueueSnackbar(response.message,{variant:'success'})
         }catch(error){
       console.error("Error", error);
       enqueueSnackbar(error.Message,{variant:'Error'})

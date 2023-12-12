@@ -228,9 +228,9 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
       };
     };
-      // const handleSearch=debounce((e)=>{
-      //   filterSearch(e?.target?.value)
-      // },1000)
+    const handleSearch=debounce((e)=>{
+      filterSearch(e?.target?.value)
+    },500)
     
   
     return (
@@ -240,6 +240,7 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
             <TextField placeholder='Search....' 
             fullWidth
             onChange={e=>{handleSearch(e)}}
+            size="small"
             />
             </Grid>
             <Grid md={4} xs={4} item>
@@ -449,6 +450,6 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
     
 }
 MyShiftSearchFilter.propTypes={
-    filterSearch:PropTypes.any,
+  filterSearch: PropTypes.any,
     filterData: PropTypes.any,
 }

@@ -82,7 +82,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,searchData}){
+export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch}){
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -104,12 +104,18 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
 
 
     const [search, setSearch]=useState("");
-
-    const handleSearch = (searchTerm) => {
-      setSearch(searchTerm)
-        searchData(search)
-        console.log(searchTerm,"search ........")
-        };
+    const debounce = (func, delay) => {
+      let debounceTimer;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    };
+    const handleSearch=debounce((e)=>{
+      filterSearch(e?.target?.value)
+    },500)
     const [dateError,setDataError]=useState("")
     const [filters,setFilters]=useState(defaultFilters)
     const [personName, setPersonName] = React.useState([]);
@@ -328,8 +334,8 @@ export default function ShiftRoasterFilter({filterData,filterOptions,searchData}
  
             <TextField placeholder='Search....'
             fullWidth
-            onChange={e=>{handleSearch(e.target.value)}}
- 
+            onChange={e=>{handleSearch(e)}}
+            size="small"
             />
             </Grid>
  
@@ -528,7 +534,7 @@ ShiftRoasterFilter.propTypes={
     
 }
 ShiftRoasterFilter.propTypes={
-  searchData: PropTypes.any,
+  filterSearch: PropTypes.any,
 }
 
 ShiftRoasterFilter.propTypes={
