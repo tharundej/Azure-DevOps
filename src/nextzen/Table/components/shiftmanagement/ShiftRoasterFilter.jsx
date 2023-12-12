@@ -357,15 +357,15 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
       </Grid>
          </Grid>
      
-      <BootstrapDialog
-        onClose={handleClickClose}
+      <Dialog
+       onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        className= "custom-dialog-width"
 
       >
         
         <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
+        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
         </DialogTitle>
 
@@ -520,7 +520,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
          <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
          <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
    
-    </BootstrapDialog>
+    </Dialog>
     </>
     )
     
