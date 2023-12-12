@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'DevOps'}
+    agent {label 'Stage'}
     stages{
          stage("Env Variables") {
             steps {
