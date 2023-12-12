@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, Link, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
@@ -64,13 +64,19 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     const fetchVendor = async () => {
       const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
-        const response = await getVendorAPI(data);
-        setVendorOptions(response);
-        console.log('currentData.vendorID', currentData.vendorId);
-        console.log('currentData.vend', defaultValues.vendorID);
-        setSelectedVendor(
-          defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
-        );
+        let response = await getVendorAPI(data);
+        response = null;
+        console.log({ response });
+        if (response === null) {
+          handleCallSnackbar('No Vendor Found. Please Add Vendor', 'warning');
+        } else {
+          setVendorOptions(response);
+          console.log('currentData.vendorID', currentData.vendorId);
+          console.log('currentData.vend', defaultValues.vendorID);
+          setSelectedVendor(
+            defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
+          );
+        }
       } catch (error) {
         setErrorMessage(error.message);
         console.log('API request failed:', error.message);
@@ -164,7 +170,19 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField {...params} label="Select Vendor Name" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Select Vendor Name"
+                  variant="outlined"
+                  helperText={
+                    <span>
+                      Add Vendor or{' '}
+                      <Link to="/vendor-page" onClick="">
+                        go to Vendor Page
+                      </Link>
+                    </span>
+                  }
+                />
               )}
             />
 

@@ -32,13 +32,15 @@ import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses'
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateExpenses({ currentData, handleClose, setCount, count }) {
+export default function CreateExpenses({ currentData, handleClose, handleCountChange }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     invoiceNO: Yup.string().required(),
     totalAmount: Yup.number().required(),
     paidAmount: Yup.number().required(),
     totalLiter: Yup.number(),
+    quantity: Yup.number(),
+    rate: Yup.number(),
   });
 
   const defaultValues = useMemo(
@@ -57,6 +59,9 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
       invoiceDate: currentData?.invoiceDate || '',
       totalAmount: currentData?.totalAmount || '',
       paidAmount: currentData?.paidAmount || '',
+      quantity: currentData?.quantity || '',
+      rate: currentData?.rate || '',
+      status: currentData?.status || '',
     }),
     [currentData]
   );
@@ -79,14 +84,16 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
     expenseDate: defaultValues?.expenseDate ? dayjs(defaultValues?.expenseDate) : dayjs(new Date()),
     invoiceDate: defaultValues?.invoiceDate ? dayjs(defaultValues?.invoiceDate) : dayjs(new Date()),
   });
-  const [type, setType] = useState(true);
-  const [selectedValue, setSelectedValue] = useState('Fuel');
+  const [type, setType] = useState(defaultValues?.expenseType == 'Others' ? false : true);
+  const [selectedValue, setSelectedValue] = useState(defaultValues.expenseType || 'Fuel');
   const [factoryOptions, setFactoryOptions] = useState([]);
   const [selectedFactory, setSelectedFactory] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const statusOptions = ['Paid', 'Unpaid'];
+  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
     event.target.value == 'Others' ? setType(false) : setType(true);
@@ -112,6 +119,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
     data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     data.locationID = selectedFactory;
     data.expenseType = selectedValue;
+    data.status = selectedStatus;
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
@@ -120,7 +128,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
       } else {
         response = await createExpensesAPI(data);
       }
-      setCount(count + 1);
+      if (handleCountChange) handleCountChange();
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
@@ -149,10 +157,16 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
   const HandleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+  const HandleInputChange = (e) => {
+    setValue(e?.target?.name, e?.target?.value);
+    const parsedQuantity = parseFloat(watch(`quantity`));
+    const parsedPrice = parseFloat(watch(`rate`));
+    setValue(`totalAmount`, parsedQuantity * parsedPrice);
+  };
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading="Add New Expense" />
+        <ModalHeader heading={currentData.expenseID ? 'Update Expense' : 'Add New Expense'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -245,7 +259,35 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
                 <RHFTextField name="fuelType" label="Fuel Type" />
               </>
             )}
-            {type == false && <RHFTextField name="itemName" label="Item Name" />}
+            {type == false && (
+              <>
+                <RHFTextField name="itemName" label="Item Name" />
+                <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChange(e)}
+                  name="quantity"
+                  label="Quantity"
+                  defaultValue={0}
+                />
+                <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChange(e)}
+                  name="rate"
+                  label="Rate"
+                  defaultValue={0}
+                />
+                <RHFAutocomplete
+                  name="status"
+                  id="status"
+                  options={statusOptions || []}
+                  value={selectedStatus}
+                  onChange={(event, newValue) => setSelectedStatus(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select status Type" variant="outlined" />
+                  )}
+                />
+              </>
+            )}
             <RHFTextField type="number" name="totalAmount" label="Total Amount" />
             <RHFTextField type="number" name="paidAmount" label="Paid Amount" />
           </Box>
@@ -256,7 +298,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
           </Button>
 
           <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
-            Save
+            {currentData.expenseID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -267,4 +309,5 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
 CreateExpenses.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
+  handleCountChange: PropTypes.func,
 };
