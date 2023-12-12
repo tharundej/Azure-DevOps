@@ -70,7 +70,7 @@ export default function CompoffApprove({ currentUser ,}) {
 
 
   const TABLE_HEAD = [
-     { id: "employeeId", label: "Employee Id", minWidth: "7pc", type: "text" },
+     { id: "employeeId", label: "Employee ID", minWidth: "7pc", type: "text" },
     {
       id: "employeeName",
       label: " Employee Name",
@@ -81,17 +81,17 @@ export default function CompoffApprove({ currentUser ,}) {
       secondaryText: "email",
     },
       // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-      { id: "compensantoryRequestId", label: "Compensantory Id", minWidth: "7pc", type: "text" },
+      { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "7pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "7pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "text" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "text" },
     { id: "requestDate", label: "Requested Date", minWidth: "7pc", type: "text" },
     { id: "numberOfDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "expireDate", label: "Expire Date", minWidth: "7pc", type: "text" },
-    { id: "userComment", label: "User Comment ", minWidth: "7pc", type: "text" },
+    { id: "userComment", label: "Employee Comments ", minWidth: "7pc", type: "text" },
     // { id: "amount", label: "Approved Amount", minWidth: "7pc", type: "text" },
-    { id: "approverComment", label: "Approver Comment", minWidth: "7pc", type: "text" },
-    { id: "approvedDate", label: "Approver Date", minWidth: "7pc", type: "text" },
+    { id: "approverComment", label: "Approver Comments", minWidth: "7pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
     { id: "approverName", label: "Approver Name", minWidth: "7pc", type: "text" },
     { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     // { id: '', width: 88 },

@@ -287,9 +287,11 @@ import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify/iconify';
 import { Card, CardContent, Grid } from '@mui/material';
+import { useSnackbar } from 'src/components/snackbar';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+
   return (
     <div
       role="tabpanel"
@@ -331,6 +333,7 @@ export default function FileUploader({
   },[previousData])
   // var [previousData , setPreviousData]  = useState([])
   const userId = 5;
+  const {enqueueSnackbar} = useSnackbar()
   var [images, setImages] = React.useState([]);
   const [viewImage, setViewImage] = React.useState(false);
   const [reload, setReload] = React.useState(false);
@@ -473,8 +476,9 @@ React.useEffect(() => {
   console.log(fileData ,"fileData")
   const UploadImages = async (e) => {
     if (fileData?.length === 0) {
-      alert('No Document Is Selected To Upload.');
-      throw new Error('No Document Is Selected To Upload.');
+    
+      enqueueSnackbar("Please Upload Files",{variant:'Error'})
+     
     }
 console.log(fileData ,"fileDatat in upload")
     // handleUploadattchment1(images ,fileNames);
@@ -566,7 +570,9 @@ const handleFileNameClick = async (index) => {
                               style={{ marginLeft: '5px', color: '#000', marginBottom: '10px' }}
                               onClick={() => handleFileNameClick(index)}
                             >
-                              {file.fileName}
+                            {/* <Typography     onClick={() => handleFileNameClick(index)}> */}
+                            {file.fileName}
+                              {/* </Typography>  */}
                               <Iconify
                                 id="icon-delete-image"
                                 onClick={() => deleteImage(index)}

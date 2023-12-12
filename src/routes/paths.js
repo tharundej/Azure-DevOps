@@ -69,6 +69,7 @@ export const paths = {
       setpassword: `${ROOTS.AUTH}/jwt/setpassword`,
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
       companyregisteration:`${ROOTS.AUTH}/jwt/companyregisteration`,
+      updateotp:`${ROOTS.AUTH}/jwt/updateotp`,
       // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
     },
     firebase: {

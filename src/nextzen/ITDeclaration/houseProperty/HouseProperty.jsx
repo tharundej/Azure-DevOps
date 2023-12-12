@@ -74,7 +74,7 @@ export default function HouseProperty() {
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
-const payMode = [{ type: 'Yes ' }, { type: 'No' }];
+const payMode = [{ type: 'Yes' }, { type: 'No' }];
 const loanType = [{ type: 'Construction' }, { type: 'Purchase' } , { type: 'Repair/Renewal' }];
 const [loading,setLoading] = useState(false);
  
@@ -202,11 +202,15 @@ const [loading,setLoading] = useState(false);
       isValid = false;
      
     }
+
+   if(formData.isPropertySelfOccupiedOrLetOu === "No"){
+     
     if (!formData.ifJointPropertyThenEnterInterestRate) {
       newFieldErrors.ifJointPropertyThenEnterInterestRate = 'This Field is required';
       isValid = false;
      
     }
+   }
     if (!formData.isPropertySelfOccupiedOrLetOu) {
       newFieldErrors.isPropertySelfOccupiedOrLetOu = 'This Field is required';
       isValid = false;
@@ -342,7 +346,7 @@ console.log(isValid , "isValidisValid")
           employeeId: empId,
           financialYear: selectedYear?.financialYear,
           nameOfTheOwners: formData.name_of_the_owners,
-          propertyReferenceSlNo: parseFloat(formData.propertyReferenceSlNo),
+          propertyReferenceSlNo: formData.propertyReferenceSlNo,
           addressOfProperty: formData.addressOfProperty,
           panOfTheLanders: formData.panOfTheLanders,
           amountOfHousingloanTakenFromTheProperty: parseFloat(
@@ -386,7 +390,7 @@ console.log(isValid , "isValidisValid")
     
               setREload(!reload);
               setFormData({
-                propertyReferenceSlNo: null,
+                propertyReferenceSlNo: '',
                 name_of_the_owners: '',
                 addressOfProperty: '',
                 panOfTheLanders: '',
@@ -400,7 +404,7 @@ console.log(isValid , "isValidisValid")
                 municipalTaxesPaid: '',
               });
               setFieldErrors({
-                propertyReferenceSlNo: null,
+                propertyReferenceSlNo: '',
                 name_of_the_owners: '',
                 addressOfProperty: '',
                 panOfTheLanders: '',
@@ -512,7 +516,7 @@ console.log(isValid , "isValidisValid")
       purposeOfLoan: rowData.purposeOfLoan,
       dateOfSanction: rowData.dateOfSanctionOfLoan,
       interestPaybleOnYear: rowData.interestPaybleOnYear,
-      isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOu,
+      isPropertySelfOccupiedOrLetOu: rowData.isPropertySelfOccupiedOrLetOut,
       ifJointPropertyThenEnterInterestRate: rowData.ifJointPropertyThenEnterInterestRate,
       grossRentalAmount: rowData.grossRentalAmount,
       municipalTaxesPaid: rowData.muncipalTaxPaid,
@@ -591,8 +595,34 @@ console.log(isValid , "isValidisValid")
       mappedValue = selectedValue;
     }
 
-    setFormData({ ...formData, [name]: mappedValue });
+    setFormData({ ...formData, [name]: selectedValue });
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
+
+  console.log(formData.isPropertySelfOccupiedOrLetOu ,"formData.isPropertySelfOccupiedOrLetOu")
+  const handleCancle = ()=>{
+   
+     setFormData({
+      propertyReferenceSlNo: '',
+      name_of_the_owners: '',
+      addressOfProperty: '',
+      panOfTheLanders: '',
+      amountOfHousingloanTakenFromTheProperty: '',
+      purposeOfLoan: '',
+      dateOfSanction: dayjs().format('YYYY-MM-DD'),
+      interestPaybleOnYear: '',
+      isPropertySelfOccupiedOrLetOu: '',
+      ifJointPropertyThenEnterInterestRate: '',
+      grossRentalAmount: '',
+      municipalTaxesPaid: '',
+    });
+
+  }
+
+  console.log(formData.isPropertySelfOccupiedOrLetOu ,"formData.isPropertySelfOccupiedOrLetOu")
   return (
     <div>
   {    loading ? 
@@ -645,7 +675,7 @@ console.log(isValid , "isValidisValid")
             <Grid item xs={4}>
               {/* <Typography >Name[S] Of The Owner[S] Of The Property</Typography> */}
               <TextField
-                label="Name[S] Of The Owner[S] Of The Property"
+                label=" Property Owner Name"
                 name="name_of_the_owners"
                 value={formData.name_of_the_owners}
                 onChange={handleChange}
@@ -693,7 +723,7 @@ console.log(isValid , "isValidisValid")
             <Grid item xs={4}>
               {/* <Typography >Amount Of Housing loan Taken For The Property</Typography> */}
               <TextField
-                label="loan Taken For The Property"
+                label="Loan Taken For The Property"
                 name="amountOfHousingloanTakenFromTheProperty"
                 value={formData.amountOfHousingloanTakenFromTheProperty}
                 onChange={handleChange}
@@ -787,7 +817,7 @@ console.log(isValid , "isValidisValid")
                   name="isPropertySelfOccupiedOrLetOu"
                   id="combo-box-demo"
                   options={payMode.map((employeepayType) => employeepayType.type)}
-                  value={formData.isPropertySelfOccupiedOrLetOu}
+                  value={ formData.isPropertySelfOccupiedOrLetOu}
                   onChange={(event, newValue) => handleAutocompleteChange('isPropertySelfOccupiedOrLetOu', newValue)}
                   // sx={{ width: 300 }}
               
@@ -808,8 +838,8 @@ console.log(isValid , "isValidisValid")
 
           <Grid item container xs={12} lg={12} md={12} spacing={2}>
 
-            { console.log(show ,"fieldErrors.isPropertySelfOccupiedOrLetOu " ,show)}
-        {  show ? null :
+         
+      
             <Grid item xs={4}>
               {/* <Typography >IF Joint Property, Then Enter The Share Of Intrest[%] </Typography> */}
               <TextField
@@ -821,9 +851,9 @@ console.log(isValid , "isValidisValid")
                 fullWidth
                 error={hasError('ifJointPropertyThenEnterInterestRate')}
                 helperText={getHelperText('ifJointPropertyThenEnterInterestRate')}
-               
+                disabled={formData.isPropertySelfOccupiedOrLetOu ==="Yes"}
               />
-            </Grid>}
+            </Grid>
             <Grid item xs={4}>
               {/* <Typography >Gross Rental Income</Typography> */}
               <TextField
@@ -945,7 +975,7 @@ console.log(isValid , "isValidisValid")
               </Button>
             </Grid>
             <Grid item>
-              <Button className="button">Cancel</Button>
+              <Button className="button" onClick={handleCancle}>Cancel</Button>
             </Grid>
           </Grid>
           {/* Add more rows as needed */}
@@ -1022,7 +1052,7 @@ console.log(isValid , "isValidisValid")
                       {row.interestPaybleOnYear ? row.interestPaybleOnYear : '-'}
                     </TableCell>
                     <TableCell style={{ textAlign: 'center' }}>
-                      {row.isPropertySelfOccupiedOrLetOu ? row.isPropertySelfOccupiedOrLetOu : '-'}
+                      {row.isPropertySelfOccupiedOrLetOut ? row.isPropertySelfOccupiedOrLetOut : '-'}
                     </TableCell>
                     <TableCell style={{ textAlign: 'center' }}>
                       {row.ifJointPropertyThenEnterInterestRate

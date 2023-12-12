@@ -1,5 +1,6 @@
 import { useEffect,useState,useCallback, useContext } from 'react';
 
+import CryptoJS from "crypto-js";
 
 import { Helmet } from 'react-helmet-async';
 
@@ -199,8 +200,23 @@ export default function EmployeeTable() {
 
   const handleEditRowParent = useCallback(
     (ele) => {
-       console.log('called',ele)
-      router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      const secretPass = "XkhZG4fW2t2W";
+
+      const encryptData = () => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(ele?.employeeId),
+          secretPass
+        ).toString();
+
+       // setEncrptedData(data);
+       console.log('called',data)
+         router.push(paths.dashboard.employee.userview(data));
+       
+      };
+      //encryptData()
+     router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      
+      
     },
     [router]
     
