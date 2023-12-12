@@ -15,6 +15,7 @@ import { getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
+import { City, Country, State } from 'country-state-city';
 
 export default function CreateFactory({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
@@ -48,6 +49,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       locationCity: currentData?.locationCity || '',
       locationPincode: currentData?.locationPincode || '',
       locationState: currentData?.locationState || '',
+      locationCountry: currentData?.locationCountry || '',
       status: currentData?.status || '',
     }),
     [currentData]
@@ -67,33 +69,44 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-
-  const [locationsOptions, setLocationsOptions] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('IN');
+  const [selectedState, setSelectedState] = useState(defaultValues.locationState || 'KA');
+  const [selectedCity, setSelectedCity] = useState(defaultValues.locationCity || '');
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const data = { companyID: user?.companyID ? user?.companyID : '' };
-      try {
-        const response = await getStateAPI(data);
-        console.log('location success', response);
-        if (response === null) {
-          handleCallSnackbar('No State Found. Please Add State', 'warning');
-        } else {
-          const stateNames = response.map((stateObj) => stateObj.state);
-          setLocationsOptions(stateNames);
-          console.log('defaultValues.locationState', defaultValues.locationState);
-          const defaultLocation = defaultValues.locationState;
-          setSelectedLocation(defaultLocation || stateNames[0]);
-        }
-      } catch (error) {
-        setErrorMessage(error.message);
-        console.log('API request failed:', error.message);
+    const mockCountries = Country.getCountryByCode(selectedCountry);
+    setCountries(mockCountries);
+  }, []);
+  useEffect(() => {
+    const fetchStates = async () => {
+      if (selectedCountry) {
+        const states = State.getStatesOfCountry(selectedCountry);
+        const stateNames = states.map((state) => state.name);
+        setStates(stateNames);
+        setSelectedState(defaultValues.locationState || stateNames[0]);
+      } else {
+        setStates([]);
       }
+      setSelectedState(null);
     };
-
-    fetchData();
-  }, [defaultValues.locationState]);
+    fetchStates();
+  }, [selectedCountry, defaultValues.locationState]);
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (selectedState) {
+        const cities = City.getCitiesOfState(selectedCountry, selectedState);
+        const cityNames = cities.map((city) => city.name);
+        setCities(cities);
+      } else {
+        setCities([]);
+      }
+      setSelectedCity(null);
+    };
+    fetchCities();
+  }, [selectedCountry, selectedState]);
 
   const statusOptions = ['Active', 'In Active'];
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -104,6 +117,17 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     data.locationState = selectedLocation;
+    data.locationCountry = {
+      isoCode: selectedCountry,
+      name: 'India',
+    };
+    data.locationState = {
+      isoCode: selectedState,
+      name: selectedState,
+    };
+    data.locationCity = {
+      name: selectedCity,
+    };
     try {
       console.log('Create Factory Data', data);
       let response = '';
@@ -171,7 +195,27 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFTextField name="locationEmailID" label="EmailID" />
             <RHFTextField name="locationAddressLine1" label="AddressLine1" />
             <RHFTextField name="locationAddressLine2" label="AddressLine2" />
-            <RHFTextField name="locationCity" label="City" />
+            {/* <RHFTextField name="locationCountry" label="Country" /> */}
+            <RHFAutocomplete
+              options={countries}
+              value={selectedCountry}
+              onChange={(event, newValue) => setSelectedCountry(newValue)}
+              renderInput={(params) => <TextField {...params} label="Country" />}
+            />
+            {/* <RHFTextField name="locationState" label="State" /> */}
+            <RHFAutocomplete
+              options={states}
+              value={selectedState}
+              onChange={(event, newValue) => setSelectedState(newValue)}
+              renderInput={(params) => <TextField {...params} label="State" />}
+            />
+            {/* <RHFTextField name="locationCity" label="City" /> */}
+            <RHFAutocomplete
+              options={cities}
+              value={selectedCity}
+              onChange={(event, newValue) => setSelectedCity(newValue)}
+              renderInput={(params) => <TextField {...params} label="City" />}
+            />
             <RHFTextField
               name="locationPincode"
               label="Pincode"
@@ -179,17 +223,6 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               onInput={(e) => {
                 e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
               }}
-            />
-            <RHFAutocomplete
-              name="locationId"
-              id="location-autocomplete"
-              options={locationsOptions || []}
-              value={selectedLocation}
-              onChange={(event, newValue) => setSelectedLocation(newValue)}
-              getOptionLabel={(option) => option} // Adjust property based on your API response
-              renderInput={(params) => (
-                <TextField {...params} label="Select Location State" variant="outlined" />
-              )}
             />
             <RHFAutocomplete
               name="status"
@@ -202,7 +235,6 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               )}
             />
           </Box>
-
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>
