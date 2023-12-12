@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import Iconify from 'src/components/iconify';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useSnackbar } from 'src/components/snackbar';
 
 import React, { useState, useCallback, useEffect, useMemo,forwardRef,useImperativeHandle } from 'react';
 import {
@@ -43,6 +44,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 // const EducationInformation=forwardRef((props,ref)=>{
 const PreviousWorkDetails=forwardRef((props,ref)=>{
+  const { enqueueSnackbar } = useSnackbar();
 
   const obj =   {
     nameOfTheDegree:  '',
@@ -197,11 +199,14 @@ const PreviousWorkDetails=forwardRef((props,ref)=>{
       .then((response) => {
         console.log(JSON.stringify(response.data));
         props.nextStep();
-       props.handleCallSnackbar(response.data.message,"success")
+      //  props.handleCallSnackbar(response.data.message,"success")
+      enqueueSnackbar(response?.data?.message, { variant: 'success' })
        console.log(response.data.message,'response.data.message')
       })
       .catch((error) => {
         console.log(error);
+        props.handleLoaderClose()
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       });
   }
 

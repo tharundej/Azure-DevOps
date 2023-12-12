@@ -1,6 +1,7 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'src/components/snackbar';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
 
   Select,
@@ -10,6 +11,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
+
+  const { enqueueSnackbar } = useSnackbar();
 
   var [defaultValues,setDefaultValues]=useState([ {
     fileType:'',
@@ -109,10 +112,15 @@ const VisuallyHiddenInput = styled('input')({
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' })
       props.nextStep()
+
+
     })
     .catch((error) => {
       console.log(error);
+      props.handleLoaderClose()
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
     });
   }
     var [attachments,setAttachments]=useState([]);

@@ -123,9 +123,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     .test(
         "len",
         "Contact Number must be exactly 10 digits",
-        (val) => val && val.toString().length === 10
+        (val) => val && val.toString().length === 11
     ),
-    emergencyContactNumber: Yup.number(),
+    emergencyContactNumber: Yup.number().required('Emergency Contact Number'),
 
     fatherName: Yup.string(),
     motherName: Yup.string(),
@@ -153,7 +153,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   
      gender: Yup.object(),
     personalEmail: Yup.string().required("Email is required"),
-    companyEmail: Yup.string(),
+    companyEmail: Yup.string().required('Email is required'),
     
     // first_name: Yup.string().required('First Name is required'),
 
@@ -276,6 +276,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           // setseveritySnackbar("warning");
           // setmessageSnackbar("Something Wrong")
           props.handleCallSnackbar(error.response.data.message,"error")
+          props.handleLoaderClose()
         });
 
   }
