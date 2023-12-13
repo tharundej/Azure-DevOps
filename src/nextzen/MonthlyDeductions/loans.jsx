@@ -32,14 +32,14 @@ export default function Loans({defaultPayload,componentPage}) {
         { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
-    
+        { id: "requestType", label: "Request Type", minWidth: "9pc", type: "text" },
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
-    
-        { id: "paidDate", label: "Loan Approval Date", minWidth: "11pc", type: "date" },
-        { id: "paidAmount", label: "Approved Loan Amount", minWidth: "12pc", type: "text" },
+        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+         { id: "paidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
         { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
         { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
+        { id: "approvedDate", label: "Paid Date", minWidth: "8pc", type: "date" },
         { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
         { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
         { id: "paymentStatus", label: "Payment Status", minWidth: '9pc', type: "text" },

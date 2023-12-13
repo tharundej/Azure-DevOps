@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Card,Stack} from '@mui/material';
+import {Box,Card,Stack,MenuItem} from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useRouter } from 'src/routes/hooks';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, {RHFTextField} from 'src/components/hook-form';
+import FormProvider, {RHFTextField,RHFSelect} from 'src/components/hook-form';
 import instance  from 'src/api/BaseURL';
 import { Button } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
@@ -21,12 +21,16 @@ export default function ApplyLoan({ handleClose,getTableData }) {
   const { enqueueSnackbar } = useSnackbar();
   const NewUserSchema = Yup.object().shape({
     requestAmount: Yup.number(),
+    noOfInstallments:Yup.number(),
     comment: Yup.string(),
+    requestType:Yup.string()
   });
   const defaultValues = useMemo(
     () => ({
         requestAmount:'',
+        noOfInstallments:'',
         comment:'',
+        requestType:'',
     }),
     []
   );
@@ -44,9 +48,7 @@ export default function ApplyLoan({ handleClose,getTableData }) {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-const [sendData, setSendData] = useState({
-  projectId : '',  
-})
+
   const onSubmit = handleSubmit(async (data) => {
     try {
     
@@ -74,7 +76,7 @@ const [sendData, setSendData] = useState({
   return (
   
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading="Loan Request"/>
+        <ModalHeader heading="Financial Request"/>
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
            
@@ -88,8 +90,13 @@ const [sendData, setSendData] = useState({
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+                <RHFSelect name="requestType" label="Request Type">
+                   <MenuItem value="salaryAdvanceRequest">Salary Advance Request</MenuItem>
+                   <MenuItem value="loanRequest">Loan Request</MenuItem>
+                </RHFSelect>
                 <RHFTextField name="requestAmount" type={number} label="Enter Amount" />
-                <RHFTextField name="comment" label="Comment" />
+                <RHFTextField name="noOfInstallments" type={number} label="No of Installments"/>
+                <RHFTextField name="comment" label="User Remarks" />
               </Box>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
               <Button sx={{marginRight:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
