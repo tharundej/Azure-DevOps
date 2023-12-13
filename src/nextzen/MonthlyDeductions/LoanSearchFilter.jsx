@@ -257,7 +257,7 @@ export default function LoanSearchFilter({filterSearch,filterData,componentPage,
                  className="button" 
                  onClick={handleTimeForm}
                  >
-                  Apply Loan
+                  Apply Request
                 </Button>:null}
                 {componentPage!="MyRequests"? <Button size="small" onClick={handleClickOpen} sx={{ width:'80px',marginLeft:2,marginTop:1}}>
                <Iconify icon="mi:filter"/>Filters

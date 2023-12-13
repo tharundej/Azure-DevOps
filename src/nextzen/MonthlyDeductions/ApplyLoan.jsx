@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Card,Stack} from '@mui/material';
+import {Box,Card,Stack,MenuItem, Checkbox, FormControlLabel} from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useRouter } from 'src/routes/hooks';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, {RHFTextField} from 'src/components/hook-form';
+import FormProvider, {RHFTextField,RHFSelect} from 'src/components/hook-form';
 import instance  from 'src/api/BaseURL';
 import { Button } from '@mui/material';
 import { baseUrl } from '../global/BaseUrl';
@@ -20,13 +20,16 @@ export default function ApplyLoan({ handleClose,getTableData }) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const NewUserSchema = Yup.object().shape({
-    requestAmount: Yup.number(),
-    comment: Yup.string(),
+    requestAmount: Yup.number().required('Please Enter Amount'),
+    noOfInstallments:Yup.number(),
+    comment: Yup.string().required('Please Enter Remarks'),
+    requestType:Yup.string().required('Please Select Request Type')
   });
   const defaultValues = useMemo(
     () => ({
-        requestAmount:'',
         comment:'',
+        requestType:'',
+        noOfInstallments:1
     }),
     []
   );
@@ -44,9 +47,7 @@ export default function ApplyLoan({ handleClose,getTableData }) {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-const [sendData, setSendData] = useState({
-  projectId : '',  
-})
+
   const onSubmit = handleSubmit(async (data) => {
     try {
     
@@ -54,13 +55,16 @@ const [sendData, setSendData] = useState({
       data.employeeID = (user?.employeeID)?user?.employeeID:''
       const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
-          enqueueSnackbar(successData?.data?.message,{variant:'success'})
+          console.log(successData)
+          enqueueSnackbar(successData?.data?.Message,{variant:'success'})
           getTableData()
           handleClose()
         },
+
         (error) => {
-          enqueueSnackbar(error.response.data.Message,{variant:'error'})
           console.log(error)
+          enqueueSnackbar(error.data.Message,{variant:'error'})
+         
           handleClose()
         }
       );
@@ -70,6 +74,11 @@ const [sendData, setSendData] = useState({
       console.error(error);
     }
   });
+  const [isInstallmentRequired, setIsInstallmentRequired] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    setIsInstallmentRequired(event.target.checked);
+  };
  
   return (
   
@@ -79,18 +88,42 @@ const [sendData, setSendData] = useState({
           <Grid xs={12} md={12}>
            
             <Card sx={{ p: 2 }}>
-              <Box
-                rowGap={1}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="requestAmount" type={number} label="Enter Amount" />
-                <RHFTextField name="comment" label="Comment" />
-              </Box>
+            <Grid container flexDirection="row" spacing={1}>
+   <Grid item xs={12} md={6}>
+                <RHFSelect name="requestType" label="Request Type">
+                   <MenuItem value="salaryAdvanceRequest">Salary Advance Request</MenuItem>
+                   <MenuItem value="loanRequest">Loan Request</MenuItem>
+                </RHFSelect>
+    </Grid>
+                <Grid item xs={12} md={6}>
+                 <RHFTextField name="requestAmount" type={number} label="Enter Amount" />
+                 </Grid>
+          </Grid>
+          <Grid container flexDirection="row" spacing={1} sx={{marginTop:1}}>
+          <Grid item xs={12} md={6}>
+        <RHFTextField name="comment" label="User Remarks" />
+      </Grid>
+          <Grid item xs={12} md={6} sx={{display:'flex'}}>
+        <FormControlLabel
+          label="Installment Required"
+          control={
+            <Checkbox
+              onChange={handleCheckboxChange}
+              checked={isInstallmentRequired}
+            />
+          }
+        />
+       {isInstallmentRequired && (
+          <RHFTextField
+            name="noOfInstallments"
+            type="number"
+            label="No of Installments"
+          />
+        )}
+        </Grid> 
+          
+    
+    </Grid>
               <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
               <Button sx={{marginRight:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
                 <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>Apply</LoadingButton>

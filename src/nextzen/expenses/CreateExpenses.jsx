@@ -90,8 +90,6 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const statusOptions = ['Paid', 'Unpaid'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
     event.target.value == 'Others' ? setType(false) : setType(true);
@@ -117,7 +115,8 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
     data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     data.locationID = selectedFactory;
     data.expenseType = selectedValue;
-    data.status = selectedStatus;
+    data.quantity = parseInt(data.quantity);
+    data.rate = parseInt(data.rate);
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
@@ -273,16 +272,6 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                   name="rate"
                   label="Rate"
                   defaultValue={0}
-                />
-                <RHFAutocomplete
-                  name="status"
-                  id="status"
-                  options={statusOptions || []}
-                  value={selectedStatus}
-                  onChange={(event, newValue) => setSelectedStatus(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select status Type" variant="outlined" />
-                  )}
                 />
               </>
             )}
