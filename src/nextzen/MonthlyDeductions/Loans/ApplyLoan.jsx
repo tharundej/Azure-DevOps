@@ -12,9 +12,9 @@ import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {RHFTextField,RHFSelect} from 'src/components/hook-form';
 import instance  from 'src/api/BaseURL';
 import { Button } from '@mui/material';
-import { baseUrl } from '../global/BaseUrl';
-import UserContext from '../context/user/UserConext';
-import ModalHeader from '../global/modalheader/ModalHeader';
+import { baseUrl } from '../../global/BaseUrl';
+import UserContext from '../../context/user/UserConext';
+import ModalHeader from '../../global/modalheader/ModalHeader';
 export default function ApplyLoan({ handleClose,getTableData }) {
   const {user} = useContext(UserContext)
   const router = useRouter();
@@ -53,10 +53,10 @@ export default function ApplyLoan({ handleClose,getTableData }) {
     
       data.companyID = (user?.companyID)?user?.companyID:'',
       data.employeeID = (user?.employeeID)?user?.employeeID:''
-      const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
+      const response = await instance.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/addLoanDetails', data).then(
         (successData) => {
           console.log(successData)
-          enqueueSnackbar(successData?.data?.Message,{variant:'success'})
+          enqueueSnackbar(successData?.data?.message,{variant:'success'})
           getTableData()
           handleClose()
         },

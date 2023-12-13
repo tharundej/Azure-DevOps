@@ -1,19 +1,19 @@
 import * as React from 'react';
 import {Button,Dialog,DialogContent,TextField,Grid,Stack,Typography, MenuItem} from '@mui/material';
 import { useState,useCallback,useMemo,forwardRef} from 'react';
-import { BasicTable } from '../Table/BasicTable';
-import { baseUrl } from '../global/BaseUrl';
+import { BasicTable } from '../../Table/BasicTable';
+import { baseUrl } from '../../global/BaseUrl';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ApplyLoan from './ApplyLoan';
 import FormProvider from 'src/components/hook-form/form-provider';
-import {useSnackbar} from '../../components/snackbar';
+import {useSnackbar} from '../../../components/snackbar';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
-import UserContext from '../context/user/UserConext';
-import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../../context/user/UserConext';
+import ModalHeader from '../../global/modalheader/ModalHeader';
 export default function Loans({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext);
   const [count,setCount] = useState(0)
@@ -34,7 +34,7 @@ export default function Loans({defaultPayload,componentPage}) {
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
         { id: "requestType", label: "Request Type", minWidth: "9pc", type: "text" },
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
-        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+        { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "text" },
          { id: "paidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
         // { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
@@ -178,9 +178,8 @@ export default function Loans({defaultPayload,componentPage}) {
     () => ({ 
       
       employeeID:(user?.employeeID)?user?.employeeID:'',
-      loanID:0,
       paidAmount:"",
-      noOfInstallments:"",
+      noOfInstallments:rowData?.noOfInstallments,
       interestRate:"",
       status:"approved",
       approverComments:"",
@@ -205,10 +204,12 @@ export default function Loans({defaultPayload,componentPage}) {
 
   const values = watch();
   const apihit=(obj)=>{
+    console.log(obj,"payloaddd")
     const config = {
       method: 'POST',
       maxBodyLength:Infinity,
-      url: baseUrl + `/approveLoanDetails`,
+      // url: baseUrl + `/approveLoanDetails`,
+      url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/approveLoanDetails`,
       data: obj
     
     }
@@ -225,6 +226,7 @@ export default function Loans({defaultPayload,componentPage}) {
   const onSubmit = handleSubmit(async (data)=>{
     data.loanID=rowData?.loanID
     try{
+      console.log(data,"dataa")
       apihit(data)
     }
     catch (error){
@@ -335,15 +337,18 @@ export default function Loans({defaultPayload,componentPage}) {
 <DialogContent>
 <Grid container>
   <Grid container flexDirection="row" spacing={1}>
-  <Grid item xs={12} md={6}>
-<RHFTextField name="noOfInstallments" label="No of Installments"/>
-</Grid>
+  
 <Grid item xs={12} md={6}>
 <RHFTextField name="paidAmount" label="Paid Amount"/>
 </Grid>
+<Grid item xs={12} md={6}>
+  <RHFTextField name="approverComments" label="Remarks"/>
+{/* <RHFTextField name="noOfInstallments" label="No of Installments"/> */}
+</Grid>
+
   </Grid>
 
-<Grid container flexDirection="row" spacing={1}>
+{/* <Grid container flexDirection="row" spacing={1}>
 <Grid item sx={{marginTop:2}} xs={12} md={6}>
 <RHFTextField name="interestRate" label="Interest Rate" />
 </Grid>
@@ -351,7 +356,7 @@ export default function Loans({defaultPayload,componentPage}) {
 
 <RHFTextField name="approverComments" label="Comments"/>
 </Grid>
-</Grid>
+</Grid> */}
 {(user?.roleID>3)?<Grid container flexDirection="row" sx={{marginTop:2}} xs={12} md={12}>
 
 <RHFSelect name="paymentStatus" label="Payment Status">
@@ -361,7 +366,7 @@ export default function Loans({defaultPayload,componentPage}) {
 </Grid>:null}
 </Grid>
 
-<Button variant="contained" color="primary" sx={{float:"right",marginTop:2,color:"white"}} type="submit">Approve Loan</Button>
+<Button variant="contained" color="primary" sx={{float:"right",marginTop:2,color:"white"}} type="submit">Approve Request</Button>
 <Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={()=>setApproveForm(false)}>Cancel</Button>
 
 </DialogContent>

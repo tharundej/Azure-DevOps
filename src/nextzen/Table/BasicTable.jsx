@@ -79,8 +79,8 @@ import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
 import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
-import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
-import DeductionFilter from '../MonthlyDeductions/DeductionFilter';
+import LoanSearchFilter from '../MonthlyDeductions/Loans/LoanSearchFilter';
+import DeductionFilter from '../MonthlyDeductions/Deductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
@@ -220,7 +220,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
-      url: baseUrl + `${endpoint}`,
+      // url: baseUrl + `${endpoint}`,
+      url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
