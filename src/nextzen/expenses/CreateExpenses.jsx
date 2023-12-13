@@ -39,8 +39,6 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
     totalAmount: Yup.number().required(),
     paidAmount: Yup.number().required(),
     totalLiter: Yup.number(),
-    quantity: Yup.number(),
-    rate: Yup.number(),
   });
 
   const defaultValues = useMemo(
