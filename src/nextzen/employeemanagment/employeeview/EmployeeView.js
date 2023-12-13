@@ -172,8 +172,8 @@ const EmployeeView = () => {
         <ProfileCover
           role={userData?.roleName}
           name={userData?.firstName}
-          // avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
-          avatarUrl ={ `${baseImageUrl}${userData.imageData}`}
+          avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
+          // avatarUrl ={ `${baseImageUrl}${userData.imageData}`}
           coverUrl="aaa"
         />
 <Tabs
@@ -193,8 +193,10 @@ const EmployeeView = () => {
     [`& .${tabsClasses.flexContainer}`]: {
       pr: { md: 3 },
       justifyContent: {
-        sm: 'center',
+        sm: 'flex-end',
         md: 'flex-end',
+        lg: 'flex-end',
+    
       },
     },
   }}

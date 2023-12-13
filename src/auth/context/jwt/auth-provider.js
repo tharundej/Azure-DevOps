@@ -13,6 +13,7 @@ import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
 import { Alert, Snackbar } from '@mui/material';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ScrollTopButton from './scroll-top';
 
 // import { da } from 'date-fns/locale';
 
@@ -388,6 +389,7 @@ export function AuthProvider({ children }) {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+        <ScrollTopButton/>
       <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>{' '}
     </>
   );

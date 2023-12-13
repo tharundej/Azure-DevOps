@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useSnackbar } from 'src/components/snackbar';
 
 import dayjs, { Dayjs } from 'dayjs';
 import {
@@ -70,6 +71,7 @@ const degreeOptions = [
 
 
 const   EducationInformation=forwardRef((props,ref)=> {
+  const { enqueueSnackbar } = useSnackbar();
   const [employeeData,setEmployeeData]=useState([ {
     nameOfTheDegree:  '',
       stream:  '',
@@ -129,11 +131,14 @@ const   EducationInformation=forwardRef((props,ref)=> {
        console.log(JSON.stringify(response.data));
        //props.onhandleClose()
        props.nextStep();
-       props.handleCallSnackbar(response.data.message,"success")
+      //  props.handleCallSnackbar(response.data.message,"success")
        console.log(response.data.message,'response.data.message')
+       enqueueSnackbar(response?.data?.message, { variant: 'success' })
      })
      .catch((error) => {
        console.log(error);
+       enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+       props.handleLoaderClose()
      });
    }
    const [defaultValues, setDefaultValues] = useState([]);
@@ -558,7 +563,7 @@ const   EducationInformation=forwardRef((props,ref)=> {
                         onChange={(e)=>{handleCategoryChange(e,index,index1)}}
                         name="Select Document"
                     >
-                        <MenuItem value="ssc-cards">SSC Cardss</MenuItem>
+                        <MenuItem value="ssc-cards">SSC Cards</MenuItem>
                         <MenuItem value="marks-memo">Marks Memo</MenuItem>
                         <MenuItem value="degree">Degree</MenuItem>
                         {/* Add more categories here */}

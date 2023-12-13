@@ -82,6 +82,9 @@ export default function Vehicle() {
       console.log('API request failed:', error.message);
     }
   };
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
     count: 5,
@@ -149,7 +152,11 @@ export default function Vehicle() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>

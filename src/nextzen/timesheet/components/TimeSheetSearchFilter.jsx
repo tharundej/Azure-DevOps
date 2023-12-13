@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState ,React} from 'react';
 import { styled } from '@mui/system';
 import { format } from 'date-fns';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { useSnackbar } from 'src/components/snackbar';
 import Badge from '@mui/material/Badge';
 import {Card,TextField,CardContent,  InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
@@ -138,12 +138,12 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
         (response) => {
           console.log('sucesswwww', response);
           setProjectDetails(response?.data?.data)
-          enqueueSnackbar(res?.data?.message, { variant: 'success' })
+          // enqueueSnackbar(response?.data?.message , { variant: 'success' })
         
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(error?.res?.data?.message, { variant: 'warning' })
+          // enqueueSnackbar(error?.response?.data?.message || "something wrong", { variant: 'warning' })
        
         }
       );
