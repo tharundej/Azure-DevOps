@@ -7,16 +7,17 @@ import SalaryAdvace from './SalaryAdvace';
 import Requests from './Requests';
 import UserContext from '../context/user/UserConext';
 import { useContext,useState,useEffect } from 'react';
+import Additions from './Additions';
 export default function Month() {
   const {user} = useContext(UserContext)
   const [tabLabels, setTabLabels] = useState([]);
   const [tabContents, setTabContents] = useState([]);
   const dataObj = [
-    {
-      id: 'salaryAdvance',
-      label: 'Salary Requests',
-      content: <SalaryAdvace key="salaryAdvance" />,
-    },
+    // {
+    //   id: 'salaryAdvance',
+    //   label: 'Salary Requests',
+    //   content: <SalaryAdvace key="salaryAdvance" />,
+    // },
     {
       id: 'loans',
       label: 'Loans',
@@ -50,6 +51,8 @@ export default function Month() {
       }
      
     });
+    arrLabels.push('Additions')
+    arrContents.push(<Additions/>)
     setTabLabels(arrLabels);
     setTabContents(arrContents);
   }, [user]);
