@@ -23,6 +23,7 @@ import FormProvider, {
 
 export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const [avatarUrl1, setAvatarUrl] = useState(avatarUrl);
+  console.log(avatarUrl,'avatarUr1')
   const theme = useTheme();
   const [hovered, setHovered] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState('');
@@ -39,10 +40,10 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const defaultValues = useMemo(
     () => ({
       
-      avatarUrl: avatarUrl,
+      avatarUrl1: avatarUrl,
     
     }),
-    [avatarUrl]
+    [avatarUrl,avatarUrl1]
   );
 
   const methods = useForm({
@@ -118,7 +119,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       });
 
       if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
+        setValue('avatarUrl1', newFile, { shouldValidate: true });
       }
     onSubmit()
     },
@@ -170,7 +171,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
    <Box >
               <RHFUploadAvatar
               
-                name="avatarUrl"
+                name="avatarUrl1"
                 maxSize={3145728}
                 onDrop={handleDrop}
                 // helperText={

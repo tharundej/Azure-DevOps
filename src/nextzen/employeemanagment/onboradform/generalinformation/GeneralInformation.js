@@ -897,7 +897,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
                 <RHFAutocomplete
                 name="rCountry"
-                label="Permanent Country"
+                label="Resendtial Country"
                 options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}

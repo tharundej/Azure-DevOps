@@ -71,7 +71,7 @@ export default function Fuel() {
     try {
       const response = await DeleteExpensesAPI(deleteData);
       console.log('Delete Api Call', response);
-      setCount(count + 1);
+      handleCountChange();
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
