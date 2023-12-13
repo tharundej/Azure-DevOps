@@ -126,6 +126,7 @@ import LeaveHistoryFilter from '../LeaveManagement/LeaveHistory/LeaveHistoryFilt
 import ApproveFilter from '../timesheet/components/ApproveFilters';
 import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectionFilter';
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
+import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilterSearch';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 
@@ -518,6 +519,12 @@ const [index, setIndex]=useState(""); // index setting
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSheetSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+            />
+          )}
+          {filterName === 'AdditionsFilterSearch' && (
+            <AdditionsFilterSearch
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
             />
