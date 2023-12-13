@@ -75,12 +75,15 @@ export default function Vehicle() {
     try {
       const response = await DeleteExpensesAPI(deleteData);
       console.log('Delete Api Call', response);
-      setCount(count + 1);
+      handleCountChange();
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
+  };
+  const handleCountChange = () => {
+    setCount(count + 1);
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
@@ -149,7 +152,11 @@ export default function Vehicle() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>

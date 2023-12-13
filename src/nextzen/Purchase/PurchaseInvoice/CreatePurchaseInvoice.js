@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 import UserContext from 'src/nextzen/context/user/UserConext';
 // import { async } from '@firebase/util';
-import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
+import { ListPurchaseOrderDetailsAPI, getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { createPurchaseInvoiceAPI } from 'src/api/Accounts/PurchaseInvoice';
@@ -25,6 +25,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
+import { getListofPoNumberAPI } from 'src/api/Accounts/Common';
 
 export default function CreatePurchaseInvoice({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
@@ -87,34 +88,9 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
   const fetechPurchaseOrder = async () => {
     try {
       const data = {
-        count: 5,
-        page: 0,
-        search: '',
-        roleid: 1,
         companyId: user?.companyID ? user?.companyID : '',
-        externalFilters: {
-          poDate: {
-            from: '',
-            to: '',
-          },
-          fPODate: '',
-          fItemName: '',
-          fUnitOfMeasure: '',
-          expectedDeliveryDate: {
-            from: '',
-            to: '',
-          },
-          fExpectedDeliveryDate: '',
-          fPaymentTerm: '',
-          fVendorName: '',
-          fCompanyName: '',
-        },
-        sort: {
-          key: 1,
-          orderBy: 'po.purchase_order_id',
-        },
       };
-      const response = await getPurchaseOrderAPI(data);
+      const response = await getListofPoNumberAPI(data);
       if (response === null) {
         handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
       } else {
@@ -152,37 +128,14 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
       );
     });
   }, [contentList]);
-  const handlePurchaseOrderChange = async () => {
+  const handlePurchaseOrderChange = async (event, newValue) => {
+    console.log('newValue', newValue);
     try {
       const data = {
-        count: 1,
-        page: 26,
-        search: '',
-        roleid: 1,
         companyId: user?.companyID ? user?.companyID : '',
-        externalFilters: {
-          poDate: {
-            from: '',
-            to: '',
-          },
-          fPODate: '',
-          fItemName: '',
-          fUnitOfMeasure: '',
-          expectedDeliveryDate: {
-            from: '',
-            to: '',
-          },
-          fExpectedDeliveryDate: '',
-          fPaymentTerm: '',
-          fVendorName: '',
-          fCompanyName: '',
-        },
-        sort: {
-          key: 1,
-          orderBy: 'po.purchase_order_id',
-        },
+        poNumber: newValue?.poNumber ? newValue?.poNumber : '',
       };
-      const response = await getPurchaseOrderAPI(data);
+      const response = await ListPurchaseOrderDetailsAPI(data);
       if (response === null) {
         handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
       } else {

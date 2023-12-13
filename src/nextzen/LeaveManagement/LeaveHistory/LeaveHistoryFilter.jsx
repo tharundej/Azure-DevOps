@@ -6,11 +6,11 @@ import Iconify from 'src/components/iconify/iconify';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import axios from 'axios';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { getLeaveTypeAPI } from 'src/api/HRMS/LeaveManagement';
 export default function LeaveHistoryFilter({filterSearch,filterData}){
     
   const {user} = useContext(UserContext)
@@ -60,7 +60,6 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
       }
     ]
   )
-
   const handleChangeDropDown = (event,field) => {
     const {
       target: { value },
@@ -79,7 +78,6 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
       setDropdown(obj);
     }
   };
-
     const [dates,setDates]=useState({
       applyDatefrom:"",
       applyDateto:"",
@@ -157,25 +155,17 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
     }
     
    
-      const getLeaveType = () => {
-        const payload = {
-            companyId:(user?.companyID)?user?.companyID:''
+      const getLeaveType = async() => {
+        try{
+        const LeaveTypepayload = {
+            companyId:user?.companyID
         }
-       
-        const config = {
-          method: 'POST',
-          maxBodyLength: Infinity,
-          url: baseUrl + `/getLeaveType`,
-          data:  payload
-        };
-      
-        axios.request(config).then((response) => {
-          SetLeaveType(response?.data?.list)
-        })
-      
-          .catch((error) => {
+         const leaveTypeResponse = await getLeaveTypeAPI(LeaveTypepayload)
+         SetLeaveType(leaveTypeResponse?.data?.list)
+        }
+       catch(error){
             console.log(error);
-          });
+      };
       }
       
       const debounce = (func, delay) => {
@@ -191,7 +181,6 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
           filterSearch(e?.target?.value)
         },500)
       
-
     return (    
         <>
           <Grid container alignItems="center" paddingBottom="10px">
@@ -220,9 +209,6 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
        >
          
          <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
-         {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}>
-          <Iconify icon="iconamoon:close-thin"/>
-          </Button> */}
           <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={handleClickClose} />
          </DialogTitle>
          <DialogContent sx={{mt:0,paddingBottom:0}}>
@@ -310,7 +296,6 @@ export default function LeaveHistoryFilter({filterSearch,filterData}){
             </Grid>
         </Grid>
       <Grid container flexDirection="row" sx={{marginTop:2}}>
-
              <Typography>End Date</Typography>
               
      <Grid container flexDirection="row">

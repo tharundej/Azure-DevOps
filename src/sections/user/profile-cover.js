@@ -23,6 +23,7 @@ import FormProvider, {
 
 export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const [avatarUrl1, setAvatarUrl] = useState(avatarUrl);
+  console.log(avatarUrl,'avatarUr1')
   const theme = useTheme();
   const [hovered, setHovered] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState('');
@@ -39,10 +40,10 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const defaultValues = useMemo(
     () => ({
       
-      avatarUrl: avatarUrl,
+      avatarUrl1: avatarUrl,
     
     }),
-    [avatarUrl]
+    [avatarUrl,avatarUrl1]
   );
 
   const methods = useForm({
@@ -118,7 +119,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       });
 
       if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
+        setValue('avatarUrl1', newFile, { shouldValidate: true });
       }
     onSubmit()
     },
@@ -130,11 +131,11 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
     <Box
       sx={{
         ...bgGradient({
-          color: alpha(theme.palette.primary.darker, 0.8),
+          color: alpha(theme.palette.primary.light, 0.0),
           imgUrl: coverUrl,
         }),
         height: 1,
-        color: 'common.white',
+        // color: 'common.white',
       }}
     >
       <Stack
@@ -147,9 +148,9 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
           position: { md: 'absolute' },
         }}
       >
-    {/* <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
+    <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
       <Avatar
-        src={avatarUrl1}
+        src={avatarUrl}
         alt={name}
         sx={{
           mx: 'auto',
@@ -165,33 +166,19 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
         onChange={handleFileChange}
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0 }}
       />
-    </label> */}
-   <FormProvider methods={methods} onSubmit={onSubmit}>
+    </label>
+   {/* <FormProvider methods={methods} onSubmit={onSubmit}>
    <Box >
               <RHFUploadAvatar
               
-                name="avatarUrl"
+                name="avatarUrl1"
                 maxSize={3145728}
                 onDrop={handleDrop}
-                // helperText={
-                //   <Typography
-                //     variant="caption"
-                //     sx={{
-                //       mt: 3,
-                //       mx: 'auto',
-                //       display: 'block',
-                //       textAlign: 'center',
-                //       color: 'text.disabled',
-                //     }}
-                //   >
-                //     Allowed *.jpeg, *.jpg, *.png, *.gif
-                //     <br /> max size of {fData(3145728)}
-                //   </Typography>
-                // }
+                
               />
             </Box>
           
-            </FormProvider>
+            </FormProvider> */}
 
         <ListItemText
           sx={{
@@ -203,10 +190,11 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
           secondary={role}
           primaryTypographyProps={{
             typography: 'h4',
+            color:'white'
           }}
           secondaryTypographyProps={{
             mt: 0.5,
-            color: 'inherit',
+            color:'white',
             component: 'span',
             typography: 'body2',
             sx: { opacity: 0.48 },

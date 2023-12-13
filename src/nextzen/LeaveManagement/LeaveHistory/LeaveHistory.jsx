@@ -1,21 +1,9 @@
-import { baseUrl } from "src/nextzen/global/BaseUrl";
-import formatDateToYYYYMMDD from "src/nextzen/global/GetDateFormat";
-import { useState,useEffect, useContext } from "react";
-import {Card,OutlinedInput,FormControl,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Grid,IconButton,DialogContent} from '@mui/material';
-import { LoadingScreen } from "src/components/loading-screen";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Iconify from "src/components/iconify";
-import dayjs from 'dayjs';
-import axios from 'axios';
-import Label from "src/components/label/label";
+
+import { useState, useContext } from "react";
 import UserContext from "src/nextzen/context/user/UserConext";
 import { BasicTable } from "src/nextzen/Table/BasicTable";
 export default function History(){
   const {user} = useContext(UserContext)
-
         const defaultPayload = {
           "employeeId":(user?.employeeID)?user?.employeeID:'',
           "search": "",
@@ -52,7 +40,6 @@ export default function History(){
             {id:'loseOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},
             {id:'approvedBy',label:"Approver",minWidth:'9pc',type:'text'},
             {id: 'status',label:'Status',minWidth:"5pc",type: "badge"}
-
        ]);
 return (    
     <>

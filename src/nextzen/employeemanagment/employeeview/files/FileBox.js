@@ -24,7 +24,7 @@ const FileBox = ({file,onDelete,onEdit,sx,index}) => {
 
                     <Iconify 
                   sx={{cursor: "pointer",color:'black',width:'30px',height:"20px"}}
-                  onClick={()=>{onDelete(index)}}
+                  onClick={()=>{onDelete(file)}}
                   icon="material-symbols:delete-outline" />
                  
                 </Grid>

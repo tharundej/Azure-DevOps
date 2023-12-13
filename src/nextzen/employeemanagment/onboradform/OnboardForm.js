@@ -133,6 +133,10 @@ const handleCallSnackbar=(message,severity)=>{
     setOpenSnackbar(false);
   }
 
+  const handleLoaderClose=()=>{
+    setLoading(false)
+  }
+
   return (
     <Box sx={{ width: '100%' }} >
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
@@ -162,19 +166,19 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-            <GeneralInformation handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation  handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <EducationInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
+              <PreviousWorkDetails handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <DocumentsUpload handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
-              <CurrentWork handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+              <CurrentWork handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>

@@ -26,4 +26,27 @@ function formatDate(inputDate) {
 }
 }
 
-export {formatDateToYYYYMMDD,formatDate}
+
+function formatDateBirthday(inputDate) {
+  console.log(inputDate,'inputDateinputDate')
+
+  if (!inputDate ||  inputDate===null || inputDate===undefined) {
+    return '-'; // Return an empty string if inputDate is null, undefined, or empty
+  }
+  else{
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const parts = inputDate?.split('-'); // Split the date string
+  const year = parts[0];
+  const month = months[parseInt(parts[1]) - 1]; // Convert month number to month name
+  const day = parts[2];
+
+  return `${month} ${day}`;
+}
+}
+
+
+export {formatDateToYYYYMMDD,formatDate,formatDateBirthday}

@@ -125,7 +125,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         "Contact Number must be exactly 10 digits",
         (val) => val && val.toString().length === 10
     ),
-    emergencyContactNumber: Yup.number(),
+    emergencyContactNumber: Yup.number().required('Emergency Contact Number'),
 
     fatherName: Yup.string(),
     motherName: Yup.string(),
@@ -153,7 +153,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   
      gender: Yup.object(),
     personalEmail: Yup.string().required("Email is required"),
-    companyEmail: Yup.string(),
+    companyEmail: Yup.string().required('Email is required'),
     
     // first_name: Yup.string().required('First Name is required'),
 
@@ -276,6 +276,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           // setseveritySnackbar("warning");
           // setmessageSnackbar("Something Wrong")
           props.handleCallSnackbar(error.response.data.message,"error")
+          props.handleLoaderClose()
         });
 
   }
@@ -688,8 +689,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
               />
 
-                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={11} sx={{caretColor:'#3B82F6'}}/>
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={11} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
                     
@@ -871,7 +872,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="pAddressLine2" label="Permanent Address Line2" sx={{caretColor:'#3B82F6'}} />
                 {/* <RHFAutocomplete
                 name="state"
-                label="Resendtial State"
+                label="Resindential State"
                 options={options?.countryOptions}
                 getOptionLabel={(option) => option.name}
                 
@@ -892,11 +893,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   </Typography>
                 </div>
                 { !isSameAsPermanent && <>
-                <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
-                <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
+                <RHFTextField name="rAddressLine1" label="Resindential Address Line1" />
+                <RHFTextField name="rAddressLine2" label="Resindential Address Line2" />
                 <RHFAutocomplete
                 name="rCountry"
-                label="Permanent Country"
+                label="Resindential Country"
                 options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}
@@ -911,7 +912,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 sx={{caretColor:'#3B82F6'}}
                 name="rState"
-                label="Resendtial State"
+                label="Resindential State"
                 options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
@@ -925,7 +926,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                sx={{caretColor:'#3B82F6'}}
                 name="rCity"
-                label="Resendtial City"
+                label="Resindential City"
                 options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}
@@ -936,7 +937,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 )}
 
               />
-                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="rPincode" label="Resindential Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
                 </>
                 }
            
