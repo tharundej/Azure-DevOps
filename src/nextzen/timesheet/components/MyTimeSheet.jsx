@@ -29,6 +29,7 @@ import Stack from '@mui/material/Stack';
 import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
 import ModalHeader from '../../global/modalheader/ModalHeader';
+import AddTimeSheet from './AddTimeSheet';
 const MyTimeSheet = ({currentUser,filterSearch}) => {
     const TABLE_HEAD = [
 
@@ -453,137 +454,10 @@ open={open}
 onClose={handleClose}
 PaperProps={{
   sx: { maxWidth: 720 },
-}}
-
-         >
-          <ModalHeader heading="Edit Timeline "/>
-      <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
-      <DialogContent>
-      <Box
-                rowGap={1}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  // xs: 'repeat(1, 1fr)',
-                  // sm: 'repeat(7, 1fr)',
-                }}
-              >
-
-<Grid sx={{padding:'8px'}}>
-              {/* <Typography sx={{marginLeft:'8px'}}>
-                ADD  TIMELINE 
-              </Typography> */}
-              <Typography sx={{marginLeft:'8px'}}>
-                Time Sheet
-              </Typography>
-            </Grid>
-            
-               <Grid container spacing={1} >
-                <Grid item xs={12} sm={6} fullWidth>
-                {/* < Autocomplete
-                
-            // disablePortal
-            id="cobo-box-demo"
-            options={projectDetails || []}
-            value={currentProjectData.projectId}
-            getOptionLabel={(option) => option.projectcdName}
-            onChange={(e,newvalue)=>{   
-              setCurrentProjectData(newvalue)
-            }}
-            renderInput={(params) => <TextField {...params} label="Project Name" />}
-          /> */}
-
-<TextField 
-              
-              label="Project" 
-              disabled
-              fullWidth
-              // inputProps={{
-              //   pattern: '[0-9]', 
-              //   maxLength: 2, 
-              // }}
-              value={timesheetData?.projectName}
-             
-           
-              />
-          </Grid>
-          <Grid item  xs={12} sm={6} fullWidth>
-                {/* <Autocomplete
-            disablePortal
-            id="combo-box-dmo"
-            options={activityData || []}
-            value={currentActivitytData.activityId}
-            getOptionLabel={(option) => option.activityName}
-            onChange={(e,newvalue)=>{
-              setCurrentActivitytData(newvalue)  
-            }}         
-            renderInput={(params) => <TextField {...params} label="Activity Name" />}
-          /> */}
-            <TextField 
-              
-              label="Activity Name" 
-              fullWidth
-             disabled
-             value={timesheetData?.activityName}
-             
-              />
-          </Grid>
-          </Grid>
-         
-                
-          {days.map((day) => (
-    <React.Fragment key={day}>
-      <Typography>{day}</Typography>
-      <Grid container spacing={1}>
-        <Grid item sm={4}>
-          <TextField
-            label={`${day} Hours`}
-            fullWidth
-            inputProps={{
-              pattern: '[0-9]',
-              maxLength: 2,
-            }}
-            value={timesheetData?.[day.toLowerCase()]?.hours}
-            onChange={handleDayInputChange(day.toLowerCase(), 'hours')}
-          />
-        </Grid>
-        <Grid item sm={4}>
-          <TextField
-            label={`${day} Task`}
-            fullWidth
-            value={timesheetData?.[day.toLowerCase()]?.task}
-            onChange={handleDayInputChange(day.toLowerCase(), 'task')}
-          />
-        </Grid>
-        <Grid item sm={4}>
-          <TextField
-            label={`${day} Comments`}
-            fullWidth
-            value={timesheetData?.[day.toLowerCase()]?.comments}
-            onChange={handleDayInputChange(day.toLowerCase(), 'comments')}
-          />
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  ))}     
-
- 
-             
-              </Box>
-    
-            
-             <DialogActions>
-              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color='primary' loading={isSubmitting}>
-                  {!currentUser ? 'Update Timesheet' : 'Add  Timeline'}
-                </LoadingButton>
-                <Button  onClick={handleCloseEdit}>Cancel</Button>
-              </Stack>
-             </DialogActions>
-           
-      
-        </DialogContent>
-      </FormProvider>
+}}     >
+          {/* <ModalHeader heading="Edit Timeline "/> */}
+          <AddTimeSheet EditData={timesheetData} handleClose={handleCloseEdit} />
+     
       </Dialog>
    
  <BasicTable

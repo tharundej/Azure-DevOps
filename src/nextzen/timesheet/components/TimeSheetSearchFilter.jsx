@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState ,React} from 'react';
 import { styled } from '@mui/system';
 import { format } from 'date-fns';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { useSnackbar } from 'src/components/snackbar';
 import Badge from '@mui/material/Badge';
 import {Card,TextField,CardContent,  InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
    DialogActions,Typography} from '@mui/material';
@@ -48,6 +48,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from '../../global/modalheader/ModalHeader';
+import AddTimeSheet from './AddTimeSheet';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -138,12 +139,12 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
         (response) => {
           console.log('sucesswwww', response);
           setProjectDetails(response?.data?.data)
-          enqueueSnackbar(res?.data?.message, { variant: 'success' })
+          // enqueueSnackbar(response?.data?.message, { variant: 'success' })
         
         },
         (error) => {
           console.log('lllll', error);
-          enqueueSnackbar(error?.res?.data?.message, { variant: 'warning' })
+          // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
        
         }
       );
@@ -153,6 +154,7 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
     } catch (error) {
       // Handle any errors (e.g., network error, request failure, etc.)
       console.error('Error:', error);
+      // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
       throw error; // Re-throw the error or handle it according to your needs
     }
   }
@@ -302,6 +304,11 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
       comments: '',
     },
     saturday: {
+      hours: '',
+      task: '',
+      comments: '',
+    },
+    sunday: {
       hours: '',
       task: '',
       comments: '',
@@ -509,304 +516,10 @@ PaperProps={{
 }}
 
          >
-           <ModalHeader heading="Add Timesheet"/>
-      <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
-      <DialogContent>
-      <Box
-                rowGap={1}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  // xs: 'repeat(1, 1fr)',
-                  // sm: 'repeat(7, 1fr)',
-                }}
-              >
+        
+          < AddTimeSheet EditData={{}} handleClose={handleClose}/>
 
-{/* <Grid sx={{padding:'8px'}}>
-              <Typography sx={{marginLeft:'8px'}}>
-                ADD YOUR TIMELINE TO PROJECT IS HERE .....
-              </Typography>
-              <Typography sx={{marginLeft:'8px'}}>
-                Time Sheet
-              </Typography>
-            </Grid> */}
-            
-               <Grid container spacing={1} marginTop={1}>
-                <Grid item xs={12} sm={6} fullWidth>
-                < Autocomplete
-                
-            
-            id="cobo-box-demo"
-            options={projectDetails || []}
-            value={currentProjectData?.projectId }
-            getOptionLabel={(option) => option?.projectcdName }
-            onChange={(e,newvalue)=>{
-             
-             
-              // setCurrentProjectData(newvalue)
-              setProjectIdUpdate(newvalue?.projectId)
-              setTimesheetData(prevState => ({
-                ...prevState,
-                projectId: JSON.stringify(newvalue?.projectId)
-                ,
-              }));
-              
-              console.log(newvalue?.projectId,"newvaluenewvalue")
-           
-            }}
-          
-            renderInput={(params) => <TextField {...params} label="Project Name" />}
-          /></Grid>
-          <Grid item  xs={12} sm={6} fullWidth>
-                {/* <Autocomplete
-            disablePortal
-            id="combo-box-dmo"
-            options={activityData || []}
-            value={currentActivitytData.activityId}
-            getOptionLabel={(option) => option.activityName}
-            onChange={(e,newvalue)=>{
-             
-             
-              setCurrentActivitytData(newvalue
-              )
-             
-           
-           
-            }}
-         
-            renderInput={(params) => <TextField {...params} label="Activity Name" />}
-          /> */}
-          <TextField 
-              
-              label="Activity Name" 
-              fullWidth
-              // inputProps={{
-              //   pattern: '[0-9]', 
-              //   maxLength: 2, 
-              // }}
-              // value={timesheetData.monday.hours}
-              onChange={(event)=>{
-                console.log("eventevent",event?.target?.value)
-                setTimesheetData(prevState => ({
-                  ...prevState,
-                  activityName: event?.target?.value
-                  ,
-                }));
-              }}
-              />
-          </Grid>
-
-          
-         <Grid item xs={12} sm={6} fullWidth>
-  <Autocomplete
-    id="cobo-box-demo"
-    options={timeSheetWeek || []}
-    getOptionLabel={(option) => option?.workweek}
-    value={timeSheetWeek?.workWeek} // Set the default selected value as per your requirement
-    onChange={(e, newValue) => {
-      if (newValue) {
-        // console.log(newValue?.workWeek);
-        setTimesheetData(prevState => ({
-          ...prevState,
-          startTime: newValue?.startWeekDate,
-          endTime: newValue?.endWeekDate
-          ,
-        }));
-        // Handle the selected value
-      }
-    }}
-    renderInput={(params) => <TextField {...params} label="Select TimeSheet Week" />}
-  />
-</Grid>
-
-
-          </Grid>
-          <Typography>Monday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField 
-              
-                label="Monday Hours" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData.monday.hours}
-                onChange={handleDayInputChange('monday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField 
-                 label="Monday Task" 
-                 fullWidth
-                value={timesheetData.monday.task}
-                onChange={handleDayInputChange('monday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField 
-                 label="Monday Comments"
-                 fullWidth
-                value={timesheetData.monday.comments}
-                onChange={handleDayInputChange('monday', 'comments')}
-                 />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Tuesday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField 
-                 label="Tuesday Hours"
-                 fullWidth
-                 
-                 inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData.tuesday.hours}
-                onChange={handleDayInputChange('tuesday', 'hours')}
-                 />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Tuesday Task" 
-                fullWidth
-                value={timesheetData.tuesday.task}
-                onChange={handleDayInputChange('tuesday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Tuesday Comments" 
-                fullWidth
-                value={timesheetData.tuesday.comments}
-                onChange={handleDayInputChange('tuesday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Wednesday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField  label="Wednesday Hours" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData.wednesday.hours}
-                onChange={handleDayInputChange('wednesday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField name="wednesdayTask" label="Wednesday Task" 
-                fullWidth
-                value={timesheetData.wednesday.task}
-                onChange={handleDayInputChange('wednesday', 'task')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField label="Wednesday Comments"
-                 fullWidth
-                 value={timesheetData.wednesday.comments}
-                 onChange={handleDayInputChange('wednesday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Thursday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField name="thursdayHours" label="Thursday Hours" 
-                 fullWidth
-                 inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                 value={timesheetData.thursday.hours}
-                 onChange={handleDayInputChange('thursday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Thursday Task" 
-                  fullWidth
-                  value={timesheetData.thursday.task}
-                  onChange={handleDayInputChange('thursday', 'task')}
-                
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField label="Thursday Comments" 
-                fullWidth
-                value={timesheetData.thursday.comments}
-                onChange={handleDayInputChange('thursday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                <Typography>Friday</Typography>
-          <Grid container spacing={1}>
-            
-               <Grid item sm={4}>
-                <TextField name="Friday" label="Friday" 
-                fullWidth
-                inputProps={{
-                  pattern: '[0-9]', 
-                  maxLength: 2, 
-                }}
-                value={timesheetData.friday.hours}
-                onChange={handleDayInputChange('friday', 'hours')}
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField name="fridayTask" label="Friday Task" 
-                fullWidth
-                value={timesheetData.friday.task}
-                onChange={handleDayInputChange('friday', 'task')}
-                
-                />
-                </Grid>
-                <Grid item sm={4}>
-                <TextField  label="Friday Comments"
-                fullWidth
-                value={timesheetData.friday.comments}
-                onChange={handleDayInputChange('friday', 'comments')}
-                />
-                </Grid>
-               
-                
-
-                </Grid>
-                
-             
-              </Box>
-    
-            
-             <DialogActions>
-              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-              <Button  variant='outlined' onClick={handleClose}sx={{mr:1}} >Cancel</Button>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting} color="primary">
-                  {!currentUser ? 'Add Timeline' : 'Add  Timeline'}
-                </LoadingButton>
-                
-              </Stack>
-             </DialogActions>
-           
-      
-        </DialogContent>
-      </FormProvider>
+     
       </Dialog>
 
       <Dialog
