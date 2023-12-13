@@ -153,6 +153,8 @@ const TimeSheetByManager = () => {
                         
 
                         setTdate( dayjs(date).format('YYYY-MM-DD') )
+
+                        ApiHit()
                        
 
                         
