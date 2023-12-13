@@ -7,7 +7,11 @@ import SalaryAdvace from './SalaryAdvace';
 import Requests from './Requests';
 import UserContext from '../context/user/UserConext';
 import { useContext,useState,useEffect } from 'react';
+<<<<<<< HEAD
 import Additions from './Additions/Additions';
+=======
+import Additions from '././Additions/Additions';
+>>>>>>> 9d098eab4c239c7e73a1cb809096f8b9d725d184
 export default function Month() {
   const {user} = useContext(UserContext)
   const [tabLabels, setTabLabels] = useState([]);
