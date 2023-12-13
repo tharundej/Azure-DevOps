@@ -1,48 +1,38 @@
 import {Card,CardContent,Typography,IconButton,Grid} from '@mui/material';
-import {useState,useEffect,useCallback, useContext} from 'react';
-import axios from 'axios';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {useState,useEffect,useContext} from 'react';
 import { LoadingScreen } from 'src/components/loading-screen';
 import Iconify from 'src/components/iconify';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { getPendingApprovedAPI } from 'src/api/HRMS/LeaveManagement';
 export default function PendingLeaves(){
    const {user} = useContext(UserContext)
     const [listData,setListData] = useState();
     const [loading,setLoading] = useState(false);
     const [pending,setPending] = useState(Array(listData?.response?.length).fill(false));
+    useEffect(()=>{
+      PendingApproved()
+    },[])
     const handlePending=(index)=>{
         const newExpanded = [...pending];
         newExpanded[index] = !newExpanded[index];
         setPending(newExpanded);
       }
-      const PendingApproved =  useCallback((e) => {
+      const PendingApproved = async () => {
         setLoading(true);
-        const payload = {
-          employee_id:(user?.employeeID)?user?.employeeID:'',
-          flag:e
+        try{
+        const PendingApprovedpayload = {
+          employee_id:user?.employeeID,
+          flag:true
         }
-        const config = {
-        method: 'POST',
-        maxBodyLength: Infinity,
-        url: baseUrl + `/pendingapproved`,
-        // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp/pendingapproved`,
-        data:  payload
-        }
-      axios.request(config).then((response) => {
-        setListData(response?.data)
-        setLoading(false);
-      })
-        .catch((error) => {
+        const pendingApprovedResponse = await getPendingApprovedAPI(PendingApprovedpayload)
+        setListData(pendingApprovedResponse?.data)
+        setLoading(false)
+      }
+      catch(error){
           console.log(error);
           setLoading(false);
-        });
-      }, [setListData]);
-
-      useEffect(()=>{
-        PendingApproved(true)
-      },[])
-
-
+        };
+      }
     return (
   <>
   {loading ? 
@@ -104,4 +94,3 @@ export default function PendingLeaves(){
 </>
     
 )}
-
