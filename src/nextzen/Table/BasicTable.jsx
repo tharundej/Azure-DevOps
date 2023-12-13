@@ -872,7 +872,7 @@ const [loanIndex,setLoanIndex]=useState("");
                                 // console.log(row, "iddd");
                               }
                               else if (clickedElementId==="employeeID"){
-                                setIndex(index)
+                                setLoanIndex(index)
                                 handleLoanExpand(row.employeeID,index)
                               }
                             }}
@@ -933,7 +933,7 @@ const [loanIndex,setLoanIndex]=useState("");
                       </TableCell>
                     </TableRow>
                   )}
-   {expandedLoanRow === loanIndex && (
+   {expandedLoanRow == loanIndex && (
                     <TableRow>
                       <TableCell colSpan={TABLE_HEAD.length + 1}>
                      

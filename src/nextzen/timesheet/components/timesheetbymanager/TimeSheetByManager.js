@@ -28,6 +28,7 @@ import {
     Card
   } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 const TimeSheetByManager = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -49,6 +50,8 @@ const TimeSheetByManager = () => {
     const handleRoleChange=()=>{
 
     }
+
+    const [loader,setLoader] = useState(false)
     const handleRentAmountChange = (e, index,filed) => {
         // Create a copy of the array
         const newArray = [...data];
@@ -58,7 +61,7 @@ const TimeSheetByManager = () => {
           ...newArray[index],
           [filed]: parseInt(e?.target?.value) || undefined, // Ensure a default value if parsing fails
         };
-      
+         
         // Set the state with the updated array
         setData(newArray);
       
@@ -69,7 +72,7 @@ const TimeSheetByManager = () => {
     }
 
     const ApiHit=()=>{
-      
+      setLoader(true)
         const data={
            // "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
            companyID:'COMP1',
@@ -93,11 +96,12 @@ const TimeSheetByManager = () => {
           .then((response) => {
             console.log(JSON.stringify(response.data));
             setData(response?.data?.data)
+            setLoader(false)
             
           })
           .catch((error) => {
             console.log(error);
-         
+            setLoader(false)
           });
     }
 
@@ -174,7 +178,7 @@ const TimeSheetByManager = () => {
                     />
                   </Grid>
     
-    <TableContainer component={Paper}>
+    {loader?<Card sx={{height:"60vh"}}><LoadingScreen/></Card>:<TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -250,7 +254,7 @@ const TimeSheetByManager = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer>}
 
       <Grid sx={{display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'flex-end',margin:'10px'}}>
       <Button
