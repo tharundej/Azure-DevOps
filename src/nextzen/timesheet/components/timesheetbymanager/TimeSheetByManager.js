@@ -3,6 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
 import { CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
+import { useSnackbar } from 'src/components/snackbar';
 import {
     Table,
     TableBody,
@@ -29,6 +30,7 @@ import {
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const TimeSheetByManager = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
     const [tdate,setTdate]=useState(new Date())
 
@@ -134,10 +136,12 @@ const TimeSheetByManager = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setLoading(false)
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         ApiHit()
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
         setLoading(false)
       });
     }
@@ -146,7 +150,7 @@ const TimeSheetByManager = () => {
     <>
                 <Grid md={6} xs={6} lg={6} marginBottom="10px" item>
                     <DatePicker
-                      sx={{ width: '100%' }}
+                      sx={{ width: '20%' }}
                       fullWidth
                       value={tdate ? dayjs(tdate).toDate() : null}
                       onChange={(date) => {
@@ -166,11 +170,12 @@ const TimeSheetByManager = () => {
                       margin="normal"
                       id="date-picker-inline"
                       label="Date"
+                      maxDate={new Date()}
                     />
                   </Grid>
     
     <TableContainer component={Paper}>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell style={{ width: '25%' }}>Employee Name</TableCell>
@@ -183,15 +188,15 @@ const TimeSheetByManager = () => {
               <TableRow
 
                 style={{
-                  height: '20px',
+                   height: '2px',
                   borderBottom: '1px solid black',
                   backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
                 }}
                 key={row?.name}
               >
-                <TableCell style={{ padding: '4px !important' }}>{row?.employeeName}</TableCell>
+                <TableCell style={{ height: '30px !important;' }} size="small" >{row?.employeeName}</TableCell>
                 
-                <TableCell>
+                <TableCell style={{ height: '30px !important;' }}>
                 <TextField
                 type="number"
                 value={row?.hoursWorked}
@@ -209,7 +214,7 @@ const TimeSheetByManager = () => {
               />
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ height: '30px !important;' }}>
 
                 <Autocomplete
             
