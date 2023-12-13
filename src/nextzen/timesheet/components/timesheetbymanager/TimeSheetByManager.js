@@ -1,7 +1,9 @@
 import React ,{useState,useEffect}from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
+import { CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
+import { useSnackbar } from 'src/components/snackbar';
 import {
     Table,
     TableBody,
@@ -28,9 +30,11 @@ import {
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const TimeSheetByManager = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
     const [tdate,setTdate]=useState(new Date())
 
-    const [data,setData] =useState([{name:'anil','hoursWorked':''},{name:'suri','hoursWorked':''}])
+    const [data,setData] =useState([])
     const [hours, setHours] = useState('');
 
     const handleHoursChange = (event) => {
@@ -45,14 +49,14 @@ const TimeSheetByManager = () => {
     const handleRoleChange=()=>{
 
     }
-    const handleRentAmountChange = (e, index) => {
+    const handleRentAmountChange = (e, index,filed) => {
         // Create a copy of the array
         const newArray = [...data];
       
         // Update the specific element in the copied array
         newArray[index] = {
           ...newArray[index],
-          hoursWorked: parseInt(e?.target?.value) || undefined, // Ensure a default value if parsing fails
+          [filed]: parseInt(e?.target?.value) || undefined, // Ensure a default value if parsing fails
         };
       
         // Set the state with the updated array
@@ -65,6 +69,7 @@ const TimeSheetByManager = () => {
     }
 
     const ApiHit=()=>{
+      
         const data={
            // "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
            companyID:'COMP1',
@@ -88,9 +93,11 @@ const TimeSheetByManager = () => {
           .then((response) => {
             console.log(JSON.stringify(response.data));
             setData(response?.data?.data)
+            
           })
           .catch((error) => {
             console.log(error);
+         
           });
     }
 
@@ -101,6 +108,7 @@ const TimeSheetByManager = () => {
     const paymentOptions=["Pending","Completed"]
 
     const ApiHitSave=()=>{
+      setLoading(true)
       const obj={
            //"companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
            companyID:'COMP1',
@@ -127,10 +135,14 @@ const TimeSheetByManager = () => {
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        setLoading(false)
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         ApiHit()
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
+        setLoading(false)
       });
     }
    
@@ -138,13 +150,15 @@ const TimeSheetByManager = () => {
     <>
                 <Grid md={6} xs={6} lg={6} marginBottom="10px" item>
                     <DatePicker
-                      sx={{ width: '100%' }}
+                      sx={{ width: '20%' }}
                       fullWidth
                       value={tdate ? dayjs(tdate).toDate() : null}
                       onChange={(date) => {
                         
 
                         setTdate( dayjs(date).format('YYYY-MM-DD') )
+
+                        ApiHit()
                        
 
                         
@@ -156,11 +170,12 @@ const TimeSheetByManager = () => {
                       margin="normal"
                       id="date-picker-inline"
                       label="Date"
+                      maxDate={new Date()}
                     />
                   </Grid>
     
     <TableContainer component={Paper}>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell style={{ width: '25%' }}>Employee Name</TableCell>
@@ -173,34 +188,51 @@ const TimeSheetByManager = () => {
               <TableRow
 
                 style={{
-                  height: '20px',
+                   height: '2px',
                   borderBottom: '1px solid black',
                   backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
                 }}
                 key={row?.name}
               >
-                <TableCell style={{ padding: '4px !important' }}>{row?.employeeName}</TableCell>
+                <TableCell style={{ height: '30px !important;' }} size="small" >{row?.employeeName}</TableCell>
                 
-                <TableCell>
-                  <TextField
-                    type="number"
-                    value={row?.hoursWorked}
-                    onChange={(e)=>{handleRentAmountChange(e,index)}}
-                  />
+                <TableCell style={{ height: '30px !important;' }}>
+                <TextField
+                type="number"
+                value={row?.hoursWorked}
+                onChange={(e) => {
+                  // Check if paymentStatus is "Completed" before allowing changes
+                  if (row?.paymentStatus !== 'Completed') {
+                    handleRentAmountChange(e, index, "hoursWorked");
+                  } else {
+                    // Optionally, you can provide feedback or prevent the change
+                    console.log("Cannot edit hoursWorked when paymentStatus is not Completed");
+                    // Or prevent the change
+                    // e.preventDefault();
+                  }
+                }}
+              />
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ height: '30px !important;' }}>
 
                 <Autocomplete
-            disablePortal
+            
             id="combo-box-demo"
             options={paymentOptions}
-            value={row?.employmentType}
+            value={row?.paymentStatus || ""}
             getOptionLabel={(option) => option}
             onChange={(e,newvalue)=>{
-              
-             
-              handleRentAmountChange(e,index)
+              const newArray = [...data];
+              newArray[index] = {
+                ...newArray[index],
+                paymentStatus: newvalue, // Ensure a default value if parsing fails
+              };
+            
+              // Set the state with the updated array
+              setData(newArray);
+            
+              //handleRentAmountChange(newvalue,index,"paymentStatus")
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
               // const CilentTokenCity=cilentIdFormation(timeStampCity,{})
@@ -221,7 +253,32 @@ const TimeSheetByManager = () => {
       </TableContainer>
 
       <Grid sx={{display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'flex-end',margin:'10px'}}>
-      <Button variant="contained" onClick={ApiHitSave}>Save</Button>
+      <Button
+  variant="contained"
+  onClick={ApiHitSave}
+  sx={{
+    position: 'relative',
+    minHeight: '40px', // Set a minimum height for the button
+  }}
+>
+  {loading && (
+    <Typography>
+    <CircularProgress
+      size={34}
+      sx={{
+        color: 'white',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: '-17px', // Adjusted margin to center vertically
+        marginLeft: '-17px', // Adjusted margin to center horizontally
+      }}
+    />
+    </Typography>
+  )}
+
+  {!loading && <Typography>Save</Typography>}
+</Button>
       </Grid>
   
   </>
