@@ -97,7 +97,7 @@ const FactoryTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: '',
+      orderBy: 'location_id',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([

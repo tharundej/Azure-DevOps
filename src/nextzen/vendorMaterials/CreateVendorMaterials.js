@@ -172,7 +172,6 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
                 <TextField {...params} label="Select Vendor Name" variant="outlined" />
               )}
             />
-
             <RHFTextField name="materialName" label="Material Name" />
             <RHFTextField name="hsnId" label="HSN ID" />
             <RHFTextField name="materialType" label="Material Type" />

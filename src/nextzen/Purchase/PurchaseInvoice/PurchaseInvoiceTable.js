@@ -19,42 +19,36 @@ const PurchaseInvoiceTable = () => {
       type: 'serviceCall',
       endpoint: '',
     },
-    // {
-    //   name: 'View',
-    //   icon: 'carbon:view',
-    //   id: 'view',
-    //   type: 'serviceCall',
-    //   endpoint: '',
-    // },
   ];
   const [filterOptions, setFilterOptions] = useState({});
 
   const defaultPayload = {
-    search: '',
     page: 0,
-    perPage: 10,
+    count: 10,
+    search: '',
     companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
       invoiceDate: {
-        fromDate: '',
-        toDate: '',
+        from: '',
+        to: '',
       },
       dueDate: {
-        fromDate: '',
-        toDate: '',
+        from: '',
+        to: '',
       },
       poDate: {
-        fromDate: '',
-        toDate: '',
+        from: '',
+        to: '',
       },
       paymentMode: '',
       status: '',
     },
     sort: {
-      orderBy: 'invoiceDate',
-      order: 1,
+      orderBy: '',
+      key: 1,
     },
   };
+
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
     { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
