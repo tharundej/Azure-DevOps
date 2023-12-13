@@ -132,7 +132,9 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
 
    const ApiHitDelete=(data)=>{
    
-    
+    const obj={
+      id:data.id
+    }
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -141,12 +143,13 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
       },
-      data : data
+      data : obj
     };
     
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      ApiHit()
     })
     .catch((error) => {
       console.log(error);

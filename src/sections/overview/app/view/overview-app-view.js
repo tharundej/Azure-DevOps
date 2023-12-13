@@ -94,7 +94,7 @@ axios.request(config)
           <BirthdayReminders title="Bithday Reminders" list={birthdayList} />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Active Users"
             percent={2.6}
@@ -103,9 +103,9 @@ axios.request(config)
               series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={4}>
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Installed"
             percent={0.2}
@@ -245,7 +245,7 @@ axios.request(config)
               }}
             />
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );
