@@ -100,7 +100,7 @@ const CurrentWork=forwardRef((props,ref)=> {
 
   "employeeID":localStorage.getItem("employeeId"),
 
-  "employmentType":currentUser?.employmentType|| "Contract",
+  "employmentType":currentUser?.employmentType|| "",
 
   "locationID":currentUser?.locationID || undefined,
 

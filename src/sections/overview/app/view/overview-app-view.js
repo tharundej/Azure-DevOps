@@ -27,11 +27,44 @@ import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import PunchINOutCard from 'src/nextzen/dashboard/PunchInOut/PunchINOutCard';
 import BirthdayReminders from 'src/nextzen/usersdashboard/birthdayreminders/BirthdayReminders,';
+import { useEffect,useState } from 'react';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
   const { user } = useContext(UserContext);
+  const [birthdayList,setBirthdayList]=useState([]);
+
+  const ApiHitBirthday=()=>{
+    
+let data = JSON.stringify({
+  "companyID": "COMP22"
+});
+ 
+let config = {
+  method: 'post',
+  url: `${baseUrl}/getDateofBirth`,
+  headers: { 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+ 
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+  setBirthdayList(response?.data.data)
+})
+.catch((error) => {
+  console.log(error);
+});
+  }
+
+  useEffect(()=>{
+    ApiHitBirthday()
+  },[])
 
   const theme = useTheme();
 
@@ -58,8 +91,7 @@ export default function OverviewAppView() {
           <PunchINOutCard />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
-          <BirthdayReminders title="Bithday Reminders" list={
-            [{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'},{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'}]} />
+          <BirthdayReminders title="Bithday Reminders" list={birthdayList} />
         </Grid>
 
         <Grid xs={12} md={4}>
