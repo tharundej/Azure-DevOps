@@ -490,16 +490,21 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   // table expanded
 const [expandedRowId, setExpandedRowId] = useState(null);
-
+const [expandedLoanRow, setExpandedLoanRow] = useState(null);
 const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
 
+const handleLoanExpand=(rowID,rowIndex)=>{
+  console.log(rowID,"rowww",rowIndex)
+  setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
+}
 
 const [index, setIndex]=useState(""); // index setting
+const [loanIndex,setLoanIndex]=useState("");
 {console.log(index,"indexindex",expandedRowId)}
-
+{console.log(loanIndex,"Loan Index",expandedLoanRow)}
   return (
     <>
       {loading ? (
@@ -863,6 +868,10 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
+                              else if (clickedElementId==="employeeID"){
+                                setIndex(index)
+                                handleLoanExpand(row.employeeID,index)
+                              }
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
@@ -918,6 +927,15 @@ const [index, setIndex]=useState(""); // index setting
             )
           ))}
            {/* </Box> */}
+                      </TableCell>
+                    </TableRow>
+                  )}
+   {expandedLoanRow === loanIndex && (
+                    <TableRow>
+                      <TableCell colSpan={TABLE_HEAD.length + 1}>
+                     
+                          <Typography>Loan {row?.loanID}</Typography>
+                    
                       </TableCell>
                     </TableRow>
                   )}
