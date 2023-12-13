@@ -107,7 +107,7 @@ const TimeSheetByManager = () => {
 
     useEffect(()=>{
         ApiHit();
-    },[])
+    },[tdate])
 
     const paymentOptions=["Pending","Completed"]
 
@@ -145,7 +145,7 @@ const TimeSheetByManager = () => {
       })
       .catch((error) => {
         console.log(error);
-        enqueueSnackbar(response?.data?.message, { variant: 'error' });
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
         setLoading(false)
       });
     }
@@ -162,7 +162,7 @@ const TimeSheetByManager = () => {
 
                         setTdate( dayjs(date).format('YYYY-MM-DD') )
 
-                        ApiHit()
+                        
                        
 
                         
@@ -198,10 +198,11 @@ const TimeSheetByManager = () => {
                 }}
                 key={row?.name}
               >
-                <TableCell style={{ height: '30px !important;' }} size="small" >{row?.employeeName}</TableCell>
+                <TableCell style={{ height: '30px !important;' }} size="small" ><Typography size="small">{row?.employeeName}</Typography></TableCell>
                 
                 <TableCell style={{ height: '30px !important;' }}>
                 <TextField
+                size="small"
                 type="number"
                 value={row?.hoursWorked}
                 onChange={(e) => {
@@ -221,6 +222,7 @@ const TimeSheetByManager = () => {
                 <TableCell style={{ height: '30px !important;' }}>
 
                 <Autocomplete
+                  size="small"
             
             id="combo-box-demo"
             options={paymentOptions}
