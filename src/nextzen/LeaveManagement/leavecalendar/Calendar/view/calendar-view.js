@@ -6,7 +6,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback, useContext } from 'react';
-import axios from 'axios';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import {Card,OutlinedInput,FormControl,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
@@ -32,13 +31,12 @@ import CalendarFiltersResult from '../calendar-filters-result';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-
+import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
 const defaultFilters = {
   colors: [],
   from_date: null,
   to_date: null,
 };
-
 export default function CalendarView() {
  //----------------Calendar -------------------
   
@@ -83,24 +81,18 @@ useEffect(()=>{
     //
     onClickEventInFilters,
   } = useCalendar();
-  const holidayslist = (e) => {
-    const payload = {
-      // companyId: "C1"
+  const holidayslist = async (e) => {
+    try{
+      const holidaysListPayload = {
       companyId:(user?.companyID)?user?.companyID:'',
       locationId:(user?.locationID)?JSON.stringify(parseInt(user?.locationID)):''
     };
-    const config = {
-    method: 'POST',
-    maxBodyLength: Infinity,
-    url:baseUrl + `/holidayList`,
-    data:  payload
+      const holidayslistResponse = await getHolidaysListAPI(holidaysListPayload)
+      setListOfHolidays(holidayslistResponse?.data?.data)
     }
-  axios.request(config).then((response) => {
-    setListOfHolidays(response?.data?.data)
-  })
-    .catch((error) => {
+    catch(error){
       console.log(error);
-    });
+    };
   };
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
   useEffect(() => {
@@ -153,29 +145,23 @@ useEffect(()=>{
     />
   );
   const timezone = "Asia/Kolkata";
-
 const eventsExistOnDate = (date, overallEvents) => {
   // Filter events to find if any event matches the provided date
   const eventsOnDate = overallEvents?.filter(event => {
     const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
     return eventStartDate === date;
   }) || []; // Set a default empty array if overallEvents is undefined
-
   return eventsOnDate.length > 0; // Return true if events exist, false otherwise
 };
-
 const selectAllowCallback = (selectInfo) => {
   const today = new Date().toISOString().split('T')[0]; // Get current date
   const selectedDate = selectInfo.startStr.split('T')[0]; // Get selected date
-
   // Check if the selected date is before today and events exist on that date
   if (selectedDate < today && !eventsExistOnDate(selectedDate)) {
     return false; // Disallow selection for past dates without events
   }
-
   return true; // Allow date selection for other cases
 };
-
   return (
  <>
      <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -267,7 +253,6 @@ const selectAllowCallback = (selectInfo) => {
       </>
   );
 }
-
   // ----------------------------------------------------------------------
   function applyFilter({ inputData, filters, dateError }) {
     const { colors, from_date, to_date } = filters;

@@ -30,11 +30,13 @@ pipeline {
                 }
             }
         }
+        
      stage('List Running Containers After Docker Compose') {
             steps {
                 script {
-                    sh '''docker-compose up -d &&
-                          docker ps
+                    sh '''
+                         docker-compose up -d &&
+                         docker ps
                     '''      
                 }
             }

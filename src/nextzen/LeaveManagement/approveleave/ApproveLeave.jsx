@@ -1,16 +1,13 @@
 import { BasicTable} from 'src/nextzen/Table/BasicTable';
 import axios from 'axios';
 import { _userList } from 'src/_mock';
-
 import { useTheme } from '@mui/material/styles';
-
 import { useContext, useState } from 'react';
-
 import {useSnackbar} from '../../../components/snackbar'
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import Iconify from 'src/components/iconify/iconify';
  import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { ApproveLeaveAPI } from 'src/api/HRMS/LeaveManagement';
 export default function Approveleave(){
   const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
@@ -43,7 +40,6 @@ export default function Approveleave(){
           "orderby": "al.apply_date"
       }
   }
-
       const [TABLE_HEAD,setTableHead] =useState( [
         {
               id: "employeeId",
@@ -62,12 +58,10 @@ export default function Approveleave(){
             {id: "approvedBy",label:"Approver",minWidth:"7pc",type:"text"},
             {id:'lossOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},
             {id: 'status',label:'Status',minWidth:"4pc",type: "badge"}
-
        ]);
     
       const actualActions = [
         { name: "Approve", id: "1", type: "serviceCall", endpoint: '/approveLeave' ,icon:"charm:circle-tick"},
-
         { name: "Reject", id:"2", type: "serviceCall", endpoint: '/approveLeave',icon:"charm:circle-cross" },
     
       ];
@@ -80,7 +74,6 @@ export default function Approveleave(){
       const [confirmApproveOpen, setConfirmApproveOpen] = useState(false);
       const [approveData, setApproveData] = useState(null);
       const [count,setCount] = useState(0)
-
 const onClickActions=(rowdata,event)=>{
   if(event?.name==="Approve" || event?.name==="Reject"){
     const approveData = {
@@ -97,25 +90,20 @@ const onClickActions=(rowdata,event)=>{
   }
 }
   const handleApproveConfirmed = async () => {
-        if (approveData) {
-          const config={
-            method:'POST',
-            maxBodyLength:Infinity,
-            url:baseUrl + '/approveLeave',
-            data:approveData
-           }
-           axios.request(config).then((response) => {
-            enqueueSnackbar(response.data.message,{variant:'success'})
-            setCount(count+1)
-          })
-            .catch((error) => {
-              enqueueSnackbar(error.response.data.message,{variant:'error'})
-              console.log(error);
-            });
-          setApproveData(null);
-          setConfirmApproveOpen(false);
-        }
-      };
+    if (approveData) {
+       try{
+      const response = await ApproveLeaveAPI(approveData)
+      setCount(count+1)
+      enqueueSnackbar(response.data.message,{variant:'success'})
+    }
+    catch(error){
+      console.log(error)
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
+    }
+    setApproveData(null);
+    setConfirmApproveOpen(false)
+    }
+  }
   const handleCancelApprove = () => {
         setApproveData(null);
         setConfirmApproveOpen(false);
@@ -133,7 +121,6 @@ console.log(count,"countt")
   onClickActions={onClickActions}
   count={count}
 />
-
 <ConfirmationDialog
         open={confirmApproveOpen}
         onClose={handleCancelApprove}

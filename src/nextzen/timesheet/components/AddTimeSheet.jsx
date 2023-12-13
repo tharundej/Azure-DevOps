@@ -579,9 +579,9 @@ const handleCloseEdit = () => setOpenEdit(false);
     <React.Fragment key={day}>
       <Typography>{day}</Typography>
       <Grid container spacing={1}>
-        <Grid item sm={4}>
+        <Grid item sm={6}>
           <TextField
-            label={`${day} Hours`}
+            label="Hours"
             fullWidth
             inputProps={{
               pattern: '[0-9]',
@@ -591,19 +591,21 @@ const handleCloseEdit = () => setOpenEdit(false);
             onChange={handleDayInputChange(day.toLowerCase(), 'hours')}
           />
         </Grid>
-        <Grid item sm={4}>
+        {/* <Grid item sm={4}>
           <TextField
             label={`${day} Task`}
             fullWidth
             value={timesheetData?.[day.toLowerCase()]?.task}
             onChange={handleDayInputChange(day.toLowerCase(), 'task')}
           />
-        </Grid>
-        <Grid item sm={4}>
+        </Grid> */}
+        <Grid item sm={6}>
           <TextField
-            label={`${day} Comments`}
+            label= "Remarks"
             fullWidth
-            placeholder="Placeholder"
+            placeholder="Enter like These..
+            1. Task one
+            2.task two"
             multiline
             value={timesheetData?.[day.toLowerCase()]?.comments}
             onChange={handleDayInputChange(day.toLowerCase(), 'comments')}

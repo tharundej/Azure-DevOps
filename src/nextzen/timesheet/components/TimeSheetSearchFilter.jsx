@@ -139,12 +139,12 @@ const [currentActivitytData ,setCurrentActivitytData] = useState({})
         (response) => {
           console.log('sucesswwww', response);
           setProjectDetails(response?.data?.data)
-          // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+          // enqueueSnackbar(response?.data?.message , { variant: 'success' })
         
         },
         (error) => {
           console.log('lllll', error);
-          // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+          // enqueueSnackbar(error?.response?.data?.message || "something wrong", { variant: 'warning' })
        
         }
       );

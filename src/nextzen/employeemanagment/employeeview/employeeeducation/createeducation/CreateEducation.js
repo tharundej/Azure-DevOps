@@ -420,7 +420,7 @@ const CreateEducation = ({employeeData,open,onhandleClose,endpoint,employeeIDFor
                  
                 <Grid md={12} xs={12} lg={12} padding="5px" >
                 
-                  <Grid margin="5px">
+                  <Grid item xs={12} md={6}>
 
                      
                  
