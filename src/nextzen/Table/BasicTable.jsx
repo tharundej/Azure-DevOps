@@ -465,29 +465,32 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   };
 
   const getRowActionsBasedOnStatus = (row) => {
+    let rowValues = null;
+  
     if (
-      row?.status === 'pending' ||
-      row?.status === '' ||
-      row?.status === 'Pending' ||
-      row?.status === 'Active' ||
-      row?.status === 'InActive' ||
-      row?.status === 'active' ||
-      row?.status === 'Upcoming' ||
-      row?.status === 'Ongoing' ||
-      row?.status === 'On Hold'  || "OnHold" 
+      [
+        'pending',
+        'Pending',
+        'Active',
+        'InActive',
+        'active',
+        'Upcoming',
+        'Ongoing',
+        'On Hold',
+        'OnHold',''
+      ].includes(row?.status)
     ) {
-      return rowActions;
-    } else if (!row?.status || row?.status === undefined) {
-      return rowActions;
-    } 
-    else if (row?.status === 'Completed') {
-      return [rowActions.find(action => action.name === 'View')];
+      rowValues = rowActions;
+    } else if (!row?.status || row?.status === 'undefined') {
+      rowValues = rowActions;
+    } else if (row?.status === 'Completed') {
+      rowValues = [rowActions.find((action) => action.name === 'View')];
+    } else if (row?.status === 'Approved' || row?.status.toLowerCase() === 'approved') {
+      rowValues = null;
     }
-    else {
-      return null;
-    }
+  
+    return rowValues;
   };
-
   // table expanded
 const [expandedRowId, setExpandedRowId] = useState(null);
 const [expandedLoanRow, setExpandedLoanRow] = useState(null);
@@ -497,14 +500,33 @@ const handleExpandClick = (rowId, update , rowIndex) => {
 };
 
 const handleLoanExpand=(rowID,rowIndex)=>{
-  console.log(rowID,"rowww",rowIndex)
+  // const loanPayload ={
+  //   employeeID:rowID
+  // }
+  // const config={
+  //   method: 'POST',
+  //   maxBodyLength: Infinity,
+  //   // url: baseUrl + `approveLeave`,
+  //   url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
+  //   data: loanPayload,
+  // }
+  // axios
+  //     .request(config)
+  //     .then((response) => {
+  //       console.log(response, 'responsedata', response.data);
+  //       enqueueSnackbar(response.data.message, { variant: 'success' });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       enqueueSnackbar(error.message, { variant: 'Error' });
+   
+  //     });
   setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
 }
 
 const [index, setIndex]=useState(""); // index setting
-const [loanIndex,setLoanIndex]=useState("");
+
 {console.log(index,"indexindex",expandedRowId)}
-{console.log(loanIndex,"Loan Index",expandedLoanRow)}
   return (
     <>
       {loading ? (
@@ -850,6 +872,7 @@ const [loanIndex,setLoanIndex]=useState("");
                          
                             key={row.id}
                             row={row}
+                            rowActions={getRowActionsBasedOnStatus(row)}
                             // onHandleEditRow={(id) => 
                             //   {
                             //     if(handleEditRowParent)
@@ -872,7 +895,7 @@ const [loanIndex,setLoanIndex]=useState("");
                                 // console.log(row, "iddd");
                               }
                               else if (clickedElementId==="employeeID"){
-                                setLoanIndex(index)
+                              
                                 handleLoanExpand(row.employeeID,index)
                               }
                             }}
@@ -883,8 +906,7 @@ const [loanIndex,setLoanIndex]=useState("");
                               handleEditRow(row, event);
                             }}
                             headerContent={TABLE_HEAD}
-                            rowActions={getRowActionsBasedOnStatus(row)}
-                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
+                             SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
 
 {expandedRowId === index && (
@@ -933,12 +955,14 @@ const [loanIndex,setLoanIndex]=useState("");
                       </TableCell>
                     </TableRow>
                   )}
-   {expandedLoanRow == loanIndex && (
+   {expandedLoanRow == index && (
+    
                     <TableRow>
                       <TableCell colSpan={TABLE_HEAD.length + 1}>
                      
-                          <Typography>Loan {row?.loanID}</Typography>
-                    
+                          <Typography>Installments Remaining: {row?.noOfInstallments}</Typography>
+                          <Typography>Installments Paid:{row?.noOfInstallments}</Typography>
+
                       </TableCell>
                     </TableRow>
                   )}
