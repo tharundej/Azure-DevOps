@@ -42,6 +42,7 @@ export default function OtherExpenses() {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
         expensesID: rowdata?.expenseID || 0,
@@ -77,6 +78,9 @@ export default function OtherExpenses() {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
+  };
+  const handleCountChange = () => {
+    setCount(count + 1);
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
@@ -141,7 +145,11 @@ export default function OtherExpenses() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>

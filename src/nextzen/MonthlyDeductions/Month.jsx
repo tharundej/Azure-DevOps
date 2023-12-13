@@ -1,6 +1,5 @@
 import { height } from '@mui/system';
 import * as React from 'react';
-
 import ReusableTabs from '../tabs/ReusableTabs';
 import Deduction from './Deduction';
 import Loans from './loans';
@@ -8,7 +7,6 @@ import SalaryAdvace from './SalaryAdvace';
 import Requests from './Requests';
 import UserContext from '../context/user/UserConext';
 import { useContext,useState,useEffect } from 'react';
-
 export default function Month() {
   const {user} = useContext(UserContext)
   const [tabLabels, setTabLabels] = useState([]);
@@ -21,7 +19,7 @@ export default function Month() {
     },
     {
       id: 'loans',
-      label: 'Loan Requests',
+      label: 'Loans',
       content: <Loans key="loans" />,
     },
     {
@@ -39,7 +37,6 @@ export default function Month() {
   useEffect(() => {
     const arrLabels = [];
     const arrContents = [];
-
     dataObj?.forEach((item) => {
       const permission = user?.rolePermissions.monthlyAdditionalDeductions;
       if (
@@ -56,7 +53,6 @@ export default function Month() {
     setTabLabels(arrLabels);
     setTabContents(arrContents);
   }, [user]);
-
   return (
     <>
     <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom:"3px solid #3b82f6 !important" }}/>
