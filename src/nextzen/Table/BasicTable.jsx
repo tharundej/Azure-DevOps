@@ -792,7 +792,7 @@ const [index, setIndex]=useState(""); // index setting
           {/* accounts  */}
           <Card>
             <TableContainer
-              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important' }}
+              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important'}}
             >
               <TableSelectedAction
                 dense={table.dense}
@@ -814,7 +814,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }}>
+                <Table size={table.dense ? 'medium' : 'small'}  >
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
@@ -832,14 +832,17 @@ const [index, setIndex]=useState(""); // index setting
                       rowActions={rowActions || []}
                     />
                   )}
+                 
 
-                  <TableBody>
+                  <TableBody  >
                     {console.log(tableData)}
+                    {/* <Scrollbar> */}
                     {tableData &&
                       tableData.length > 0 &&
                       tableData.map((row, index) => (
                         <>
                           <UserTableRow
+                         
                             key={row.id}
                             row={row}
                             // onHandleEditRow={(id) => 
@@ -925,7 +928,9 @@ const [index, setIndex]=useState(""); // index setting
                       ))}
                     {console.log(rowActions, 'rowActionss')}
                     <TableNoData notFound={notFound} />
+                    {/* </Scrollbar>  */}
                   </TableBody>
+                  
                 </Table>
               </Scrollbar>
             </TableContainer>

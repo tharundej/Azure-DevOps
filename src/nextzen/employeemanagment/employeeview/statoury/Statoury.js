@@ -484,7 +484,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
     {/* < StatouryForm  open={statouryCreateOpen} onHandleClose={handleStatouryCreateClose} currentUser={{}}/> */}
     <StatouryForm callApi={getEmployeeStattuory}open={statouryCreateOpen} employeeIDToCreate={employeeIDToCreate} onHandleClose={handleStatouryCreateClose} currentUserData={employeeStatouryData} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
 
-    {employeeStatouryData?.accountHolderName===""   && 
+    {employeeStatouryData?.statutoryID===0  && 
     
         <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
