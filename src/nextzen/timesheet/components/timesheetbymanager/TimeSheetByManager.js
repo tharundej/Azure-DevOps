@@ -66,10 +66,13 @@ const TimeSheetByManager = () => {
 
     const ApiHit=()=>{
         const data={
-            "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-            "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
-            "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
-            "date": tdate
+           // "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+           companyID:'COMP1',
+           locationID:30,
+           reportingManagerID:'INFO75',
+            // "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+            // "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+            "date": dayjs(tdate).format('YYYY-MM-DD')
         }
         let config = {
             method: 'post',
@@ -96,6 +99,40 @@ const TimeSheetByManager = () => {
     },[])
 
     const paymentOptions=["Pending","Completed"]
+
+    const ApiHitSave=()=>{
+      const obj={
+           //"companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+           companyID:'COMP1',
+           locationID:30,
+           reportingManagerID:'INFO75',
+           // "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+            // "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+            "date": dayjs(tdate).format('YYYY-MM-DD'),
+            addDailyTimesheet:data
+
+            
+      }
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${baseUrl}/addDailyTimesheetForEmployee`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data : obj
+      };
+       
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        ApiHit()
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
    
   return (
     <>
@@ -107,7 +144,7 @@ const TimeSheetByManager = () => {
                       onChange={(date) => {
                         
 
-                        setTdate(dayjs(date).format('YYYY-MM-DD'))
+                        setTdate( dayjs(date).format('YYYY-MM-DD') )
                        
 
                         
@@ -182,6 +219,10 @@ const TimeSheetByManager = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Grid sx={{display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'flex-end',margin:'10px'}}>
+      <Button variant="contained" onClick={ApiHitSave}>Save</Button>
+      </Grid>
   
   </>
   )
