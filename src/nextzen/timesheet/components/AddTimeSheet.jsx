@@ -29,8 +29,8 @@ import Stack from '@mui/material/Stack';
 import { Autocomplete, TextField,DialogContent,DialogActions } from '@mui/material';
 import  Grid from '@mui/material/Grid';
 import ModalHeader from '../../global/modalheader/ModalHeader';
-const AddTimeSheet = ({currentUser,EditData,handleClose}) => {
-   
+const AddTimeSheet = ({currentUser,EditData,handleClose,countFunction}) => {
+   const [count, setCount]=useState(0);
       const managerID =localStorage.getItem('reportingManagerID');
       const employeeID =localStorage.getItem('employeeID');
       const companyID =localStorage.getItem('companyID');
@@ -203,9 +203,20 @@ console.log({...timesheetData},"timesheetData1222")
       const response = await axios.post(baseUrl+"/addmytimesheet", timesheetData).then(
         (successData) => {
           console.log('sucess', successData);
+          handleClose()
+          if(countFunction()){
+            countFunction()
+            // getTableData()
+          }
+        
         },
         (error) => {
           console.log('lllll', error);
+          handleClose()
+          if(countFunction()){
+            countFunction()
+            // getTableData()
+          }
         }
       );
 
@@ -214,6 +225,10 @@ console.log({...timesheetData},"timesheetData1222")
 
     //   alert("api hit not done")
       console.error(error);
+      if(countFunction()){
+        countFunction()
+        // getTableData()
+      }
     }
   }
 console.log(timesheetData,"vvvvvvvvvvv")

@@ -63,8 +63,11 @@ const MenuProps = {
 
 
 
-const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData}) => {
-
+const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData,getTableData}) => {
+const[count,setCount]=useState(0)
+  const refreshTable =()=>{
+    setCount(count+1)
+  }
   const { enqueueSnackbar } = useSnackbar();
    // dialog
     // const values = watch();
@@ -517,7 +520,7 @@ PaperProps={{
 
          >
         
-          < AddTimeSheet EditData={{}} handleClose={handleClose}/>
+          < AddTimeSheet EditData={{}} handleClose={handleClose} countFunction={getTableData}/>
 
      
       </Dialog>

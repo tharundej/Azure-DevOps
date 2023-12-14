@@ -278,7 +278,7 @@ export default function MyClaims({ currentUser, }) {
 
   const defaultValues = useMemo(
     () => ({
-      claimAmount: currentUser?.claimAmount || "",
+      claimAmount: currentUser?.claimAmount || null,
       comment: currentUser?.comment || '',
       // type_oc_claim: currentUser?.type_oc_claim|| '',
       currency: currentUser?.currency || 'INR',

@@ -521,6 +521,8 @@ const [index, setIndex]=useState(""); // index setting
             <TimeSheetSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              // refreshTable={refreshTable}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AdditionsFilterSearch' && (
