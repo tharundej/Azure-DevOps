@@ -25,7 +25,7 @@ import { useEffect } from 'react';
 import { baseImageUrl,baseUrl } from 'src/nextzen/global/BaseUrl';
 import { ASSETS_API } from 'src/config-global';
 
-import bg from '../../../components/image/backgroundprofile.jpg'
+import bg from '../../../components/image/bg2.jpg'
 
 const TABS = [
     {
@@ -182,11 +182,11 @@ const EmployeeView = () => {
         role={userData?.roleName}
         name={userData?.firstName}
         //  avatarUrl="http://192.168.1.199:3001/erp/download?file=COMP22_GANG31_20231212100718_489121__fnss__apple__fnse__.jpg"
-        avatarUrl ={avatarUrl}
+        avatarUrl ={`_GANG1_20231211093305_473297__fnss__gojo___fnse__.jpg`}
         coverUrl={bg}
       />}
        
-<Tabs
+  <Tabs
   value={currentTab}
   onChange={handleChangeTab}
   variant="scrollable"

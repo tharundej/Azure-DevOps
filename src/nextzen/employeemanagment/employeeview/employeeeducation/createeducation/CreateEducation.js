@@ -32,7 +32,7 @@ import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from 'src/components/iconify';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { useSnackbar } from 'src/components/snackbar';
 import { useForm, Controller, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -81,6 +81,8 @@ const CreateEducation = ({
   callApi,
   handleCallSnackbar,
 }) => {
+
+  const { enqueueSnackbar } = useSnackbar();
   const [defaultValues, setDefaultValues] = useState([]);
 
   // new documents
@@ -147,6 +149,15 @@ const CreateEducation = ({
   };
 
   const onSave = () => {
+    const invalidFields = defaultValues.filter(
+      (item) => !item.nameOfTheDegree || !item.stream
+    );
+  
+    if (invalidFields.length > 0) {
+      // Show an error message for required fields
+      enqueueSnackbar('Please fill in all required fields.', { variant: 'error' });
+      return;
+    }
     const arr = defaultValues;
     if (endpoint !== 'addEducation') {
       arr[0].documents = [...addDocuments];
@@ -406,7 +417,7 @@ const CreateEducation = ({
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Name Of The Degree"
+                          label="Name Of The Degree*"
                           style={{ width: '100%' }}
                         />
                       )}
@@ -416,7 +427,7 @@ const CreateEducation = ({
                     <TextField
                       fullWidth
                       name="Stream"
-                      label="Stream"
+                      label="Stream*"
                       id="stream"
                       value={item?.stream}
                       onChange={(e) => {

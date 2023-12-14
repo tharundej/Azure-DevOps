@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Autocomplete, Grid, TextField } from '@mui/material';
+import { Autocomplete, Grid, TextField,Typography } from '@mui/material';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import Dialog from '@mui/material/Dialog';
 import MenuItem from '@mui/material/MenuItem';
@@ -233,6 +233,7 @@ const actions = [
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
       />
+    
     <Dialog
          fullWidth
         maxWidth={false}
@@ -244,6 +245,7 @@ const actions = [
       >
         <ModalHeader heading="Create View" />
      <DialogContent>
+   
       <Grid container marginTop="10px" spacing={2}>
         <Grid item xs={12} md={12} lg={12} marginBottom="5px">
          
