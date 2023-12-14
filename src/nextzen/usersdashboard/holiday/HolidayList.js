@@ -46,7 +46,7 @@ HolidayList.propTypes = {
 function AuthorItem({ author, index }) {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Avatar alt={author?.holidayName} src={author?.avatarUrl} />
+      {/* <Avatar alt={author?.holidayName} src={author?.avatarUrl} /> */}
 
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle2">{author?.holidayName}</Typography>
@@ -65,7 +65,7 @@ function AuthorItem({ author, index }) {
       </Box>
 
       <Iconify
-        icon="la:birthday-cake"
+        icon="game-icons:party-flags"
         sx={{
           p: 1,
           width: 40,

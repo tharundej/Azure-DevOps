@@ -68,6 +68,7 @@ axios.request(config)
     
     let data = JSON.stringify({
       "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "locationID":JSON.parse(localStorage.getItem('userDetails'))?.locationID,
     });
      
     let config = {
