@@ -26,7 +26,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   console.log(avatarUrl,'avatarUr1')
   const theme = useTheme();
   const [hovered, setHovered] = useState(false);
-  const [newAvatarUrl, setNewAvatarUrl] = useState('');
+  const [newAvatarUrl, setNewAvatarUrl] = useState(avatarUrl);
   const fileInputRef = useRef(null);
   let fileInput;
 
@@ -150,7 +150,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       >
     <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
       <Avatar
-        src={avatarUrl}
+        src={newAvatarUrl}
         alt={name}
         sx={{
           mx: 'auto',
