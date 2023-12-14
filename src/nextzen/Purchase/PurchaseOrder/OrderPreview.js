@@ -57,7 +57,7 @@ const OrderPreview = ({ currentData, handleClose }) => {
         <Grid container spacing={3} style={{ marginBottom: 20 }}>
           <Grid item xs={6}>
             <Typography variant="body1">Order ID: {currentData.purchaseOrderID}</Typography>
-            <Typography variant="body1">PO No: {currentData.poNumber}</Typography>
+            <Typography variant="body1">PO Number: {currentData.poNumber}</Typography>
             <Typography variant="body1">Order Date: {currentData.poDate}</Typography>
             <Typography variant="body1">
               Delivery Date: {currentData.expectedDeliveryDate}

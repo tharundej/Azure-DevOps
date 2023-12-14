@@ -39,12 +39,12 @@ const PurchasePaymentTable = () => {
     fcompanyID: user?.companyID ? user?.companyID : '',
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
     { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
     { id: ' Amount', label: ' Amount', type: 'text', minWidth: '180px' },
     { id: 'Paid Date', label: 'Paid Date', type: 'text', minWidth: '180px' },
-    { id: 'No of Installments', label: 'No of Installments', type: 'text', minWidth: '180px' },
+    { id: 'No of Installments', label: 'Number of Installments', type: 'text', minWidth: '180px' },
     { id: 'Balance Amount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
     { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
     { id: 'Payment Method', label: 'Payment Method', type: 'text', minWidth: '180px' },

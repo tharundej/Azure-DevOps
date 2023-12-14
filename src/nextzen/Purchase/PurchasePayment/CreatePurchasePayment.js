@@ -83,7 +83,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
             <RHFTextField name="PO Number" label="PO Number" />
             <RHFTextField name="Amount" label="Amount" />
             <RHFTextField name="Paid Date" label="Paid Date" />
-            <RHFTextField name="No of Instalments" label="No of Instalments" />
+            <RHFTextField name="No of Instalments" label="Number of Instalments" />
             <RHFTextField name="Balance Amount" label="Balance Amount" />
             <RHFTextField name="Due Date" label="Due Date" />
             <RHFTextField name="Payment Method" label="Payment Method" />

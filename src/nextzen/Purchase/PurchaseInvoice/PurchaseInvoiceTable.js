@@ -50,9 +50,9 @@ const PurchaseInvoiceTable = () => {
   };
 
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'paymentMode', label: 'paymentMode', type: 'text', minWidth: '180px' },
     { id: 'netTotalAmount', label: 'netTotalAmount', type: 'text', minWidth: '180px' },
