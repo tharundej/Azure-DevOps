@@ -108,11 +108,11 @@ export default function OtherExpenses() {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
     { id: 'expenseDate', label: 'Expense Date', type: 'text', minWidth: '180px' },
     { id: 'itemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNO', label: 'Invoice NO', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNO', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
     { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },

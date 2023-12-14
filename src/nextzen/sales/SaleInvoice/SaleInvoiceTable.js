@@ -31,10 +31,10 @@ const SaleInvoiceTable = () => {
     fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
     { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'Quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
     { id: 'Unit of measure', label: 'Unit of Measure', type: 'text', minWidth: '180px' },

@@ -102,15 +102,15 @@ const CustomersTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'id', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
     { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
     { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
-    { id: 'customerPhoneNo', label: ' Phone No', type: 'text', minWidth: '180px' },
+    { id: 'customerPhoneNo', label: ' Phone Number', type: 'text', minWidth: '180px' },
     { id: 'customerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
-    { id: 'customerGstNo', label: 'GST No', type: 'text', minWidth: '180px' },
-    { id: 'customerPanNo', label: 'PAN No', type: 'text', minWidth: '180px' },
-    { id: 'customerTanNo', label: 'Customer TAN No', type: 'text', minWidth: '180px' },
+    { id: 'customerGstNo', label: 'GST Number', type: 'text', minWidth: '180px' },
+    { id: 'customerPanNo', label: 'PAN Number', type: 'text', minWidth: '180px' },
+    { id: 'customerTanNo', label: 'Customer TAN Number', type: 'text', minWidth: '180px' },
     { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (

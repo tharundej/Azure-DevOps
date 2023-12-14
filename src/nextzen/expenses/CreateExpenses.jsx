@@ -276,7 +276,7 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                 />
                 <RHFTextField
                   name="vehicleRegNO"
-                  label="Vehicle No"
+                  label="Vehicle Number"
                   inputProps={{
                     maxLength: 10,
                     pattern: '^[a-zA-Z0-9]*$',
