@@ -439,7 +439,8 @@ const handleCloseEdit = () => setOpenEdit(false);
                   // xs: 'repeat(1, 1fr)',
                   // sm: 'repeat(7, 1fr)',
                 }}
-              >{EditData?.employeeId ?(<>
+              >
+                {EditData?.employeeId ?(<>
      
 <Grid container spacing={1} marginTop={1} >
                 <Grid item xs={12} sm={6} fullWidth>
@@ -494,9 +495,7 @@ const handleCloseEdit = () => setOpenEdit(false);
           </Grid></>):(<>
             <Grid container spacing={1} marginTop={1}>
                          <Grid item xs={12} sm={6} fullWidth>
-                < Autocomplete
-               
-           
+                < Autocomplete 
             id="cobo-box-demo"
             options={projectDetails || []}
             value={currentProjectData?.projectId }
