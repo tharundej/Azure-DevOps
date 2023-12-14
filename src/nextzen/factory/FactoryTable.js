@@ -44,6 +44,7 @@ const FactoryTable = () => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
@@ -158,5 +159,3 @@ const FactoryTable = () => {
   );
 };
 export default FactoryTable;
-
-
