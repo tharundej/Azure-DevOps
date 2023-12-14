@@ -46,9 +46,11 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       locationEmailID: currentData?.locationEmailid || '',
       locationAddressLine1: currentData?.addressLine1 || '',
       locationAddressLine2: currentData?.addressLine2 || '',
-      locationCity: currentData?.locationCity || '',
       locationPincode: currentData?.locationPincode || '',
+      locationCity: currentData?.locationCity || '',
       locationState: currentData?.locationState || '',
+      locationState: currentData?.locationState || '',
+      locationStateCode: currentData?.locationStateCode || '',
       locationCountry: currentData?.locationCountry || '',
       status: currentData?.status || '',
     }),
@@ -78,20 +80,20 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   const [cities, setCities] = useState([]);
   useEffect(() => {
     const mockCountries = Country.getAllCountries();
-    console.log({ mockCountries });
     setCountries(mockCountries);
   }, []);
   useEffect(() => {
+    console.log({ selectedCountry });
     const fetchStates = async () => {
       if (selectedCountry) {
         const statesList = State.getStatesOfCountry(selectedCountry.isoCode);
-        console.log({ statesList });
         setStates(statesList);
-        setSelectedState(statesList[0]);
+        const selectedState =
+          statesList.find((state) => state.name === currentData?.locationState) || statesList[0];
+        setSelectedState(selectedState);
       } else {
         setStates([]);
       }
-      setSelectedState(null);
     };
     fetchStates();
   }, [selectedCountry]);
@@ -100,10 +102,12 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       if (selectedState) {
         const cities = City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode);
         setCities(cities);
+        const selectedCity =
+          cities.find((city) => city.name === currentData?.locationCity) || cities[0];
+        setSelectedCity(selectedCity);
       } else {
         setCities([]);
       }
-      setSelectedCity(null);
     };
     fetchCities();
   }, [selectedState]);
@@ -200,13 +204,15 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
                 e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
               }}
             />
-            <RHFTextField name="locationEmailID" label="EmailID" />
-            <RHFTextField name="locationAddressLine1" label="AddressLine1" />
-            <RHFTextField name="locationAddressLine2" label="AddressLine2" />
+            <RHFTextField name="locationEmailID" label="Email ID" />
+            <RHFTextField name="locationAddressLine1" label="Address Line 1" />
+            <RHFTextField name="locationAddressLine2" label="Address Line 2" />
             <RHFAutocomplete
               name="locationCountry"
               options={countries || []}
-              value={countries?.find((option) => option.name === selectedCountry.name) || null}
+              value={
+                countries?.find((option) => option.name === currentData?.locationCountry) || selectedCountry
+              }
               onChange={(event, newValue) => setSelectedCountry(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (
@@ -216,7 +222,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFAutocomplete
               name="locationState"
               options={states || []}
-              value={states ? states[0] : null}
+              value={states?.find((option) => option.name === currentData?.locationState) || selectedState}
               onChange={(event, newValue) => setSelectedState(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (
@@ -226,7 +232,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFAutocomplete
               name="locationCity"
               options={cities || []}
-              value={cities ? cities[0] : null}
+              value={cities?.find((option) => option.name === currentData?.locationCity) || selectedCity}
               onChange={(event, newValue) => setSelectedCity(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (

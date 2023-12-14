@@ -136,19 +136,20 @@ export default function CreatePurchaseInvoice({ currentData, handleClose, getTab
         poNumber: newValue?.poNumber ? newValue?.poNumber : '',
       };
       const response = await ListPurchaseOrderDetailsAPI(data);
+      console.log({ response });
       if (response === null) {
         handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
       } else {
-        setValue('poNumber', response[0].poNumber);
-        setValue('PODate', response[0].poDate);
-        setValue('ExpectedDeliveryDate', response[0].expectedDeliveryDate);
-        setValue('paymentMode', response[0].paymentTerm);
-        setValue('vendorId', response[0]?.vendorId ? response[0]?.vendorId : 0);
-        setValue('locationId', response[0]?.locationId ? response[0]?.locationId : 0);
-        setValue('VendorName', response[0].vendorName);
-        setValue('VendorAddress', response[0].vendorAddress);
-        setValue('FactoryShippingAddress', response[0].factoryShippingAddress);
-        const materialArray = Object.values(response[0].purchaseMaterial || {});
+        setValue('poNumber', response?.poNumber);
+        setValue('PODate', response?.poDate);
+        setValue('ExpectedDeliveryDate', response?.expectedDeliveryDate);
+        setValue('paymentMode', response?.paymentTerm);
+        setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+        setValue('locationId', response?.locationId ? response?.locationId : 0);
+        setValue('VendorName', response?.vendorName);
+        setValue('VendorAddress', response?.vendorAddress);
+        setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+        const materialArray = Object.values(response?.purchaseMaterial || {});
         setContentList(materialArray);
         console.log(materialArray);
       }
