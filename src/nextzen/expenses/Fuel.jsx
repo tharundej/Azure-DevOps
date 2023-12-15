@@ -104,7 +104,7 @@ export default function Fuel() {
     },
     sort: {
       orderBy: 'expenseDate',
-      order: 1,
+      order: -1,
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
