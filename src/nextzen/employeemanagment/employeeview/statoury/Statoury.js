@@ -63,7 +63,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         maxBodyLength: Infinity,
         url: `${baseUrl}/getStatutoryDetailsEmployee`,
         headers: { 
-         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+         'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
            
           'Content-Type': 'application/json'
         },
