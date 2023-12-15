@@ -1,44 +1,28 @@
 import PropTypes, { element } from 'prop-types';
-import React,{ useEffect, useState,useCallback, useContext } from 'react';
-import axios from 'axios';
+import React,{ useState, useContext } from 'react';
 import { maxWidth, styled } from '@mui/system';
-import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
-   DialogActions,Typography} from '@mui/material';
+import {TextField,Grid,Button,MenuItem,Stack,DialogContent,Dialog,DialogTitle,Typography} from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Today } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
-import { baseUrl } from '../global/BaseUrl';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import UserContext from '../context/user/UserConext';
+import { getLeaveTypeAPI } from 'src/api/HRMS/LeaveManagement';
 const defaultFilters = {
   name: '',
   type: [],
   startDate: null,
   endDate: null,
 };
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-      overflow:"hidden"
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-  }));
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -52,35 +36,22 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function LeaveFilter({filterSearch,filterData}){
   const theme = useTheme();
   const {user} = useContext(UserContext)
-  console.log(user,"userdetailss")
   const [leaveType,SetLeaveType]= useState();
-  const getLeaveType = () => {
-    const payload = {
-        companyId:(user?.companyID)?user?.companyID:""
+  
+  const getLeaveType = async() => {
+    try{
+    const LeaveTypepayload = {
+        companyId:user?.companyID
     }
-   
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: baseUrl + `/getLeaveType`,
-      data:  payload
-    };
-  
-    axios.request(config).then((response) => {
-      SetLeaveType(response?.data?.list)
-    })
-  
-      .catch((error) => {
+     const leaveTypeResponse = await getLeaveTypeAPI(LeaveTypepayload)
+     SetLeaveType(leaveTypeResponse?.data?.list)
+    }
+   catch(error){
         console.log(error);
-      });
+  };
   }
  
-  const [dropdown,setDropdown]=useState({
-// 
-  })
-  const [dateError,setDataError]=useState("")
-  const [filters,setFilters]=useState(defaultFilters)
-  const [personName, setPersonName] = React.useState([]);
+  const [dropdown,setDropdown]=useState({})
   const [dropdownLeaveType,setDropdownLeaveType]=useState([])
   const [dropdownstatus,setDropdownStatus]=useState([])
   const [datesFiledArray,setDatesFiledArray]=useState(
@@ -128,7 +99,6 @@ export default function LeaveFilter({filterSearch,filterData}){
   function formDateDataStructure(){
     return new Promise((resolve) => {
      
-
       const arr1={};
        datesFiledArray.forEach((item,index)=>{  
          
@@ -200,11 +170,9 @@ export default function LeaveFilter({filterSearch,filterData}){
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
-
       filterData(data);
       setOpen(false);
     }
-
     const handleCancel = async()=>{
       setDropdownStatus([]);
       setDropdownLeaveType([]);
@@ -220,7 +188,6 @@ export default function LeaveFilter({filterSearch,filterData}){
       })
       setOpen(false);
     }
-
     const debounce = (func, delay) => {
       let debounceTimer;
       return function () {
@@ -264,7 +231,6 @@ export default function LeaveFilter({filterSearch,filterData}){
       >
         
         <DialogTitle sx={{paddingBottom:0,paddingTop:2}}>Filters
-        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
         <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={handleCancel} />
         </DialogTitle>
         <DialogContent sx={{mt:0,paddingBottom:0,marginTop:2}}>
@@ -353,7 +319,6 @@ export default function LeaveFilter({filterSearch,filterData}){
             </Grid>
         </Grid>
       <Grid container flexDirection="row" sx={{marginTop:2}}>
-
       <Typography>End Date</Typography>
      
      <Grid container flexDirection="row">
@@ -438,7 +403,6 @@ export default function LeaveFilter({filterSearch,filterData}){
                 </MenuItem>
   )
   })}
-
                 </Select>
               </FormControl>
                    </Grid>

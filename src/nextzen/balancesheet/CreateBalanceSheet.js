@@ -91,10 +91,10 @@ export default function CreateBalanceSheet({ currentUser, handleClose }) {
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="invoiceno" label="Invoice No" />
+            <RHFTextField name="invoiceno" label="Invoice Number" />
             <RHFTextField name="invoicedate" label="Invoice Date" />
             <RHFTextField name="particulars" label="particulars" />
-            <RHFTextField name="transactionno" label="Transaction No" />
+            <RHFTextField name="transactionno" label="Transaction Number" />
             <RHFTextField name="credit" label="Credit" />
             <RHFTextField name="debit" label="Debit" />
             <RHFTextField name="balanceamount" label="Balance Amount" />

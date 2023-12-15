@@ -20,7 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import { getStateAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
@@ -30,7 +30,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const NewUserSchema = Yup.object().shape({
     vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
     vendorName: Yup.string().required('vendor Name is Required'),
-    vendorPhoneNo: Yup.number().required('vendor Phone No is Required'),
+    vendorPhoneNo: Yup.number().required('vendor Phone Number is Required'),
     vendorEmailID: Yup.string().required('vendor Email ID is Required'),
     address1: Yup.string().required('Address 1 is Required'),
     address2: Yup.string(),
@@ -193,13 +193,13 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
               sm: 'repeat(4, 1fr)',
             }}
           >
-            <RHFTextField name="vendorCompanyName" label="Vendor Company Names" />
+            <RHFTextField name="vendorCompanyName" label="Vendor Company Name" />
             <RHFTextField name="vendorName" label="Vendor Name" />
-            <RHFTextField name="vendorPhoneNo" label="Vendor Phone No" />
-            <RHFTextField name="vendorEmailID" label="Vendor Email Id" />
-            <RHFTextField name="address1" label="Address 1" />
-            <RHFTextField name="address2" label="Address 2" />
-            <RHFTextField name="city" label="City" />
+            <RHFTextField name="vendorPhoneNo" label="Vendor Phone Number" />
+            <RHFTextField name="vendorEmailID" label="Vendor Email ID" />
+            <RHFTextField name="address1" label="Address Line 1" />
+            <RHFTextField name="address2" label="Address Line 2" />
+            <RHFTextField name="country" label="Country" />
             <RHFAutocomplete
               name="state"
               id="location-autocomplete"
@@ -208,19 +208,19 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
               onChange={(event, newValue) => setSelectedLocation(newValue)}
               getOptionLabel={(option) => option} // Adjust property based on your API response
               renderInput={(params) => (
-                <TextField {...params} label="Select Location State" variant="outlined" />
+                <TextField {...params} label="Select State" variant="outlined" />
               )}
             />
-            <RHFTextField name="country" label="Country" />
+            <RHFTextField name="city" label="City" />
             <RHFTextField name="pincode" label="Pincode" />
-            <RHFTextField name="vendorPANNo" label="Vendor PAN No" />
-            <RHFTextField name="vendorGSTNo" label="Vendor GST No" />
-            <RHFTextField name="vendorTANNo" label="Vendor TAN No" />
+            <RHFTextField name="vendorPANNo" label="Vendor PAN Number" />
+            <RHFTextField name="vendorGSTNo" label="Vendor GST Number" />
+            <RHFTextField name="vendorTANNo" label="Vendor TAN Number" />
             <RHFTextField name="vendorBankName" label="Vendor Bank Name" />
             <RHFTextField name="vendorAccountHolderName" label="Vendor Account Holder Name" />
-            <RHFTextField name="vendorBankAccountNo" label="Vendor Bank Account No" />
+            <RHFTextField name="vendorBankAccountNo" label="Vendor Bank Account Number" />
             <RHFTextField name="vendorBankIFSCCode" label="Vendor Bank IFSC Code" />
-            <RHFTextField name="bankBranchName" label="Bank Branch Name" />
+            <RHFTextField name="bankBranchName" label="Bank Branch" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -260,7 +260,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
               value={selectedStatus}
               onChange={(event, newValue) => setSelectedStatus(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Select Status Type" variant="outlined" />
+                <TextField {...params} label="Select Status" variant="outlined" />
               )}
             />
           </Box>

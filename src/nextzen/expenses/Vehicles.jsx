@@ -75,12 +75,15 @@ export default function Vehicle() {
     try {
       const response = await DeleteExpensesAPI(deleteData);
       console.log('Delete Api Call', response);
-      setCount(count + 1);
+      handleCountChange();
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
+  };
+  const handleCountChange = () => {
+    setCount(count + 1);
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
@@ -109,14 +112,14 @@ export default function Vehicle() {
   };
 
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
     { id: 'expenseDate', label: 'Expense Date', type: 'text', minWidth: '180px' },
-    { id: 'vehicleRegNO', label: 'Vehicle NO', type: 'text', minWidth: '180px' },
+    { id: 'vehicleRegNO', label: 'Vehicle Number', type: 'text', minWidth: '180px' },
     { id: 'vehicleType', label: 'Vehicle Type', type: 'text', minWidth: '180px' },
     { id: 'totalLiter', label: 'Total Liter', type: 'text', minWidth: '180px' },
     { id: 'fuelType', label: 'Fuel Type', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNO', label: 'Invoice NO', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNO', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
     { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },
@@ -149,7 +152,11 @@ export default function Vehicle() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={editModalData} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>

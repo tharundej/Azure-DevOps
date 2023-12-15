@@ -5,8 +5,14 @@ import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
-export default function RHFTextField({ name, helperText, type,maxLength, ...other }) {
+export default function RHFTextField({ name, helperText, type,maxLength,error, ...other }) {
   const { control } = useFormContext();
+
+  const scroolTop=()=>{
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    return true;
+  }
 
   return (
     <Controller
@@ -31,7 +37,7 @@ export default function RHFTextField({ name, helperText, type,maxLength, ...othe
             }
           }}
           error={!!error}
-          helperText={error ? error?.message : helperText}
+          helperText={error ? scroolTop()?error?.message :helperText  : helperText}
           {...other}
         />
         

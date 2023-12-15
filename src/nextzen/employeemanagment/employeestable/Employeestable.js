@@ -157,6 +157,7 @@ export default function EmployeeTable() {
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
     { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
     { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'contactNumber', label: 'Contact Number',  type: 'text', minWidth:'180px' },
     { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'date', minWidth:'180px' },
     { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },

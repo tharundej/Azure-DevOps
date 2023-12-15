@@ -490,16 +490,21 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   // table expanded
 const [expandedRowId, setExpandedRowId] = useState(null);
-
+const [expandedLoanRow, setExpandedLoanRow] = useState(null);
 const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
 
+const handleLoanExpand=(rowID,rowIndex)=>{
+  console.log(rowID,"rowww",rowIndex)
+  setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
+}
 
 const [index, setIndex]=useState(""); // index setting
+const [loanIndex,setLoanIndex]=useState("");
 {console.log(index,"indexindex",expandedRowId)}
-
+{console.log(loanIndex,"Loan Index",expandedLoanRow)}
   return (
     <>
       {loading ? (
@@ -792,7 +797,7 @@ const [index, setIndex]=useState(""); // index setting
           {/* accounts  */}
           <Card>
             <TableContainer
-              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important' }}
+              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important'}}
             >
               <TableSelectedAction
                 dense={table.dense}
@@ -814,7 +819,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }}>
+                <Table size={table.dense ? 'medium' : 'small'}  >
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
@@ -832,14 +837,17 @@ const [index, setIndex]=useState(""); // index setting
                       rowActions={rowActions || []}
                     />
                   )}
+                 
 
-                  <TableBody>
+                  <TableBody  >
                     {console.log(tableData)}
+                    {/* <Scrollbar> */}
                     {tableData &&
                       tableData.length > 0 &&
                       tableData.map((row, index) => (
                         <>
                           <UserTableRow
+                         
                             key={row.id}
                             row={row}
                             // onHandleEditRow={(id) => 
@@ -862,6 +870,10 @@ const [index, setIndex]=useState(""); // index setting
                                 setIndex(index);
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
+                              }
+                              else if (clickedElementId==="employeeID"){
+                                setLoanIndex(index)
+                                handleLoanExpand(row.employeeID,index)
                               }
                             }}
                             selected={table.selected.includes(row.id)}
@@ -921,11 +933,22 @@ const [index, setIndex]=useState(""); // index setting
                       </TableCell>
                     </TableRow>
                   )}
+   {expandedLoanRow == loanIndex && (
+                    <TableRow>
+                      <TableCell colSpan={TABLE_HEAD.length + 1}>
+                     
+                          <Typography>Loan {row?.loanID}</Typography>
+                    
+                      </TableCell>
+                    </TableRow>
+                  )}
                         </>
                       ))}
                     {console.log(rowActions, 'rowActionss')}
                     <TableNoData notFound={notFound} />
+                    {/* </Scrollbar>  */}
                   </TableBody>
+                  
                 </Table>
               </Scrollbar>
             </TableContainer>
