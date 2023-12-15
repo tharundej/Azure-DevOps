@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
- 
+import { useSnackbar } from 'src/components/snackbar';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
@@ -163,7 +163,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       } = methods;
    
       const values = watch();
-   
+      const { enqueueSnackbar } = useSnackbar();
       const onSubmit = handleSubmit(async (data) => {
         console.log(currentUser,'uyfgv');
    
@@ -181,7 +181,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             url: `${baseUrl}${endpoint}`,
             // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
             headers: {
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+              'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json'
             },
             data : currentUser
@@ -192,11 +192,13 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            enqueueSnackbar(response?.data?.message, { variant: 'success' });
             callApi();
             onHandleClose();
           })
           .catch((error) => {
             console.log(error);
+            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
           });
       });
  

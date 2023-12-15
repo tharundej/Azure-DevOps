@@ -11,7 +11,7 @@ import axios from 'axios';
 import { bgGradient } from 'src/theme/css';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import { useSnackbar } from 'src/components/snackbar';
 
 
 const employeeData=[ {
@@ -35,6 +35,7 @@ const employeeData=[ {
 ]
 
 const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const dottedLineStyle = {
     borderBottom: '1px dotted #000', // Adjust the color as needed
@@ -149,10 +150,12 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
       ApiHit()
     })
     .catch((error) => {
       console.log(error);
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
     });
     
    }

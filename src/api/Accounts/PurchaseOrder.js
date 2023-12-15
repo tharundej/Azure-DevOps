@@ -43,8 +43,8 @@ export const DeletePurchaseOrderAPI = async (requestBody) => {
 export const ListPurchaseOrderDetailsAPI = async (requestBody) => {
   try {
     const response = await instance.post(`listPoDetails`, requestBody, apiHeaders);
-    console.log('API response:', response.data); // Log the response data
-    return response.data;
+    console.log('API response:', response.data.data); // Log the response data
+    return response.data.data;
   } catch (error) {
     console.error('API request failed:', error);
     throw error; // Re-throw the error to propagate it

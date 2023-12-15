@@ -297,7 +297,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="invoiceNumber" label="Invoice No *" />
+            <RHFTextField name="invoiceNumber" label="Invoice Number *" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
