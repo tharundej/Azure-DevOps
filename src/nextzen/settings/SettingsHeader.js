@@ -6,7 +6,7 @@ import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import CreateFactory from './CreateSettings';
+import CreateSettings from './CreateSettings';
 
 const SettingsHead = ({ filterSearch, filterData }) => {
   const router = useRouter();
@@ -38,7 +38,7 @@ const SettingsHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentData={{}} handleClose={handleClose} />
+          <CreateSettings currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">

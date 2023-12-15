@@ -16,6 +16,10 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 import { City, Country, State } from 'country-state-city';
+import {
+  createAccountInformationAPI,
+  updateAccountInformationAPI,
+} from 'src/api/Accounts/Settings';
 
 export default function CreateSettings({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
@@ -144,9 +148,9 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
       console.log('Create Factory Data', data);
       let response = '';
       if (currentData?.locationName) {
-        response = await updateFactoryAPI(data);
+        response = await updateAccountInformationAPI(data);
       } else {
-        response = await createFactoryAPI(data);
+        response = await createAccountInformationAPI(data);
       }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
@@ -211,7 +215,8 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
               name="locationCountry"
               options={countries || []}
               value={
-                countries?.find((option) => option.name === currentData?.locationCountry) || selectedCountry
+                countries?.find((option) => option.name === currentData?.locationCountry) ||
+                selectedCountry
               }
               onChange={(event, newValue) => setSelectedCountry(newValue)}
               getOptionLabel={(option) => option.name}
@@ -222,7 +227,10 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
             <RHFAutocomplete
               name="locationState"
               options={states || []}
-              value={states?.find((option) => option.name === currentData?.locationState) || selectedState}
+              value={
+                states?.find((option) => option.name === currentData?.locationState) ||
+                selectedState
+              }
               onChange={(event, newValue) => setSelectedState(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (
@@ -232,7 +240,9 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
             <RHFAutocomplete
               name="locationCity"
               options={cities || []}
-              value={cities?.find((option) => option.name === currentData?.locationCity) || selectedCity}
+              value={
+                cities?.find((option) => option.name === currentData?.locationCity) || selectedCity
+              }
               onChange={(event, newValue) => setSelectedCity(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (

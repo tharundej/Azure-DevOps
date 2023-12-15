@@ -128,6 +128,7 @@ import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectio
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import SettingsHead from '../settings/SettingsHeader';
 
 const defaultFilters = {
   name: '',
@@ -673,7 +674,10 @@ const [loanIndex,setLoanIndex]=useState("");
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
-            <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
+          )}
+          {filterName === 'SettingsHead' && (
+            <SettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead

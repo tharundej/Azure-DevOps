@@ -17,7 +17,12 @@ import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 import { City, Country, State } from 'country-state-city';
 
-export default function CreateFactory({ currentData, handleClose, getTableData }) {
+export default function CreateFactory({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
@@ -154,7 +159,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.locationName ? '' : getTableData();
+      currentData?.locationName ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -177,7 +182,9 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading={currentData?.locationName ? 'Edit Factory / Branch' : 'Add New Factory / Branch'} />
+        <ModalHeader
+          heading={currentData?.locationName ? 'Edit Factory / Branch' : 'Add New Factory / Branch'}
+        />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -211,7 +218,8 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               name="locationCountry"
               options={countries || []}
               value={
-                countries?.find((option) => option.name === currentData?.locationCountry) || selectedCountry
+                countries?.find((option) => option.name === currentData?.locationCountry) ||
+                selectedCountry
               }
               onChange={(event, newValue) => setSelectedCountry(newValue)}
               getOptionLabel={(option) => option.name}
@@ -222,7 +230,10 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFAutocomplete
               name="locationState"
               options={states || []}
-              value={states?.find((option) => option.name === currentData?.locationState) || selectedState}
+              value={
+                states?.find((option) => option.name === currentData?.locationState) ||
+                selectedState
+              }
               onChange={(event, newValue) => setSelectedState(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (
@@ -232,7 +243,9 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
             <RHFAutocomplete
               name="locationCity"
               options={cities || []}
-              value={cities?.find((option) => option.name === currentData?.locationCity) || selectedCity}
+              value={
+                cities?.find((option) => option.name === currentData?.locationCity) || selectedCity
+              }
               onChange={(event, newValue) => setSelectedCity(newValue)}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (

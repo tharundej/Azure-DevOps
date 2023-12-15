@@ -11,6 +11,7 @@ import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
 import UserContext from '../context/user/UserConext';
+import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
 
 const SettingsTable = () => {
   const { user } = useContext(UserContext);
@@ -72,7 +73,7 @@ const SettingsTable = () => {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await DeleteFactoryAPI(deleteData);
+      const response = await DeleteAccountInformationAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
@@ -103,15 +104,13 @@ const SettingsTable = () => {
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Name', type: 'text', minWidth: '190px' },
-    { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
-    { id: 'locationPhone', label: 'Phone Number', type: 'text', minWidth: '180px' },
-    { id: 'address', label: 'Address', type: 'text', minWidth: '180px' },
-    { id: 'locationPincode', label: 'Pincode', type: 'text', minWidth: '180px' },
-    { id: 'locationCountry', label: 'Country', type: 'text', minWidth: '180px' },
-    { id: 'locationState', label: 'State', type: 'text', minWidth: '180px' },
-    { id: 'locationCity', label: 'City', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
+    { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
+    { id: 'accountHolderName', label: 'Account Holder Name', type: 'text', minWidth: '180px' },
+    { id: 'ifscCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
+    { id: 'bankBranch', label: 'Bank Branch', type: 'text', minWidth: '180px' },
+    { id: 'businessEmailId', label: 'Business Email ID', type: 'text', minWidth: '180px' },
+    { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -147,11 +146,11 @@ const SettingsTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getallLocation"
+        endpoint="/GetAccountInformation"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="FactoryHead"
+        filterName="SettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
       />
