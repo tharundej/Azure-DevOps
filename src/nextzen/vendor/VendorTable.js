@@ -18,6 +18,10 @@ const VendorTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -71,6 +75,7 @@ const VendorTable = () => {
       const response = await DeleteVendorAPI(deleteData);
       console.log('Delete success', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange()
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -155,7 +160,7 @@ const VendorTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateVendor currentData={editModalData} handleClose={handleClose} />
+          <CreateVendor currentData={editModalData} handleClose={handleClose} handleCountChange={handleCountChange} />
         </Dialog>
       )}
       <Helmet>
@@ -170,6 +175,7 @@ const VendorTable = () => {
         filterName="VendorHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

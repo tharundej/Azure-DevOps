@@ -128,6 +128,7 @@ import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectio
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import SettingsHead from '../settings/SettingsHeader';
 
 const defaultFilters = {
   name: '',
@@ -228,7 +229,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+        JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
       },
       data: initialDefaultPayload,
     };
@@ -673,7 +674,10 @@ const [loanIndex,setLoanIndex]=useState("");
           )}
           {/* accounts  */}
           {filterName === 'FactoryHead' && (
-            <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <FactoryHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
+          )}
+          {filterName === 'SettingsHead' && (
+            <SettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead
