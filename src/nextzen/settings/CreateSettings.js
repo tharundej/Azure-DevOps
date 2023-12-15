@@ -16,13 +16,12 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 import { City, Country, State } from 'country-state-city';
+import {
+  createAccountInformationAPI,
+  updateAccountInformationAPI,
+} from 'src/api/Accounts/Settings';
 
-export default function CreateFactory({
-  currentData,
-  handleClose,
-  getTableData,
-  handleCountChange
-}) {
+export default function CreateSettings({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
@@ -149,9 +148,9 @@ export default function CreateFactory({
       console.log('Create Factory Data', data);
       let response = '';
       if (currentData?.locationName) {
-        response = await updateFactoryAPI(data);
+        response = await updateAccountInformationAPI(data);
       } else {
-        response = await createFactoryAPI(data);
+        response = await createAccountInformationAPI(data);
       }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
@@ -159,7 +158,7 @@ export default function CreateFactory({
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.locationName ? handleCountChange() : getTableData();
+      currentData?.locationName ? '' : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -182,9 +181,7 @@ export default function CreateFactory({
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader
-          heading={currentData?.locationName ? 'Edit Factory / Branch' : 'Add New Factory / Branch'}
-        />
+        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -202,7 +199,7 @@ export default function CreateFactory({
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Factory / Branch Name" />
+            <RHFTextField name="locationName" label="Factory / location Name" />
             <RHFTextField
               name="locationPhone"
               label="Phone"
@@ -286,7 +283,7 @@ export default function CreateFactory({
   );
 }
 
-CreateFactory.propTypes = {
+CreateSettings.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };

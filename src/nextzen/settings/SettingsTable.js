@@ -1,21 +1,24 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import { _userList } from '../../_mock';
-import { BasicTable } from '../Table/BasicTable';
-import UserContext from '../context/user/UserConext';
-import CreateExpenses from './CreateExpenses';
-import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { Dialog } from '@mui/material';
-import SnackBarComponent from '../global/SnackBarComponent';
-import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 
-export default function OtherExpenses() {
+import { Helmet } from 'react-helmet-async';
+
+import { _userList } from '../../_mock';
+
+import { BasicTable } from '../Table/BasicTable';
+import CreateSettings from './CreateSettings';
+import { Dialog } from '@mui/material';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import SnackBarComponent from '../global/SnackBarComponent';
+import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
+import UserContext from '../context/user/UserConext';
+import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
+
+const SettingsTable = () => {
   const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const [count, setCount] = useState(0);
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -45,7 +48,7 @@ export default function OtherExpenses() {
       console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
-        expensesID: rowdata?.expenseID || 0,
+        locationID: rowdata?.locationID || 0,
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
       };
@@ -70,17 +73,13 @@ export default function OtherExpenses() {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await DeleteExpensesAPI(deleteData);
+      const response = await DeleteAccountInformationAPI(deleteData);
       console.log('Delete Api Call', response);
-      handleCountChange()
       handleCallSnackbar(response.message, 'success');
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
-  };
-  const handleCountChange = () => {
-    setCount(count + 1);
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
@@ -89,35 +88,29 @@ export default function OtherExpenses() {
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
     externalFilters: {
-      expenseDate: {
-        fromDate: '',
-        toDate: '',
-      },
-      invoiceDate: {
-        fromDate: '',
-        toDate: '',
-      },
-      expenseType: 'Others',
       locationName: '',
-      invoiceNO: '',
-      paymentStatus: '',
+      locationPhone: '',
+      locationEmailid: '',
+      locationCity: '',
+      locationPincode: '',
+      locationState: '',
+      locationStateCode: '',
+      locationCountry: '',
     },
     sort: {
-      orderBy: 'expenseDate',
-      order: -1,
+      key: 1,
+      orderBy: 'location_id',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
-    { id: 'expenseDate', label: 'Expense Date', type: 'text', minWidth: '180px' },
-    { id: 'itemName', label: 'Item Name', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNO', label: 'Invoice Number', type: 'text', minWidth: '180px' },
-    { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
-    { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },
-    { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
-    { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
+    { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
+    { id: 'accountHolderName', label: 'Account Holder Name', type: 'text', minWidth: '180px' },
+    { id: 'ifscCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
+    { id: 'bankBranch', label: 'Bank Branch', type: 'text', minWidth: '180px' },
+    { id: 'businessEmailId', label: 'Business Email ID', type: 'text', minWidth: '180px' },
+    { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -131,7 +124,7 @@ export default function OtherExpenses() {
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
-        itemName="Delete Other Expenses"
+        itemName="Delete Settings"
         message={`Are you sure you want to delete ${deleteData?.title}?`}
       />
       {editShowForm && (
@@ -145,27 +138,23 @@ export default function OtherExpenses() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses
-            currentData={editModalData}
-            handleClose={handleClose}
-            handleCountChange={handleCountChange}
-          />
+          <CreateSettings currentData={editModalData} handleClose={handleClose} />
         </Dialog>
       )}
       <Helmet>
-        <title> Dashboard: Other Expenses</title>
+        <title> Dashboard: Settings</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listExpenses"
+        endpoint="/GetAccountInformation"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="OtherExpensesHead"
+        filterName="SettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
-        count={count}
       />
     </>
   );
-}
+};
+export default SettingsTable;

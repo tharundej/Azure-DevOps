@@ -6,9 +6,9 @@ import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import CreateFactory from './CreateFactory';
+import CreateSettings from './CreateSettings';
 
-const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
+const SettingsHead = ({ filterSearch, filterData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +38,7 @@ const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentData={{}} handleClose={handleClose} getTableData={getTableData} />
+          <CreateSettings currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
@@ -89,9 +89,9 @@ const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
   );
 };
 
-FactoryHead.propTypes = {
+SettingsHead.propTypes = {
   filterSearch: PropTypes.func, // A function to handle search filtering.
   filterData: PropTypes.any, // The data to be filtered (modify 'any' with the actual data type if known).
 };
 
-export default FactoryHead;
+export default SettingsHead;
