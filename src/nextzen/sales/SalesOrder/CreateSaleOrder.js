@@ -4,6 +4,9 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
+import { createSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
+
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -32,12 +35,29 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      ProductName: currentData?.ProductName || '',
-      ProductCategory: currentData?.ProductCategory || '',
-      hsnID: currentData?.hsnID || '',
-      status: currentData?.status || '',
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+      locationID: currentData?.locationID || 0,
+      billToName: currentData?.billToName || '',
+      billToAddres:currentData?.billToAddres || '',
+      billToState:currentData?.billToState || '',
+      billToCity:currentData?.billToCity || '',
+      billToPincode:currentData?.billToPincode || 0,
+      billToGST:currentData?.billToGST || '',
+      billToStateCode:currentData?.billToStateCode || 0,
+      shipToName:currentData?.shipToName || '',
+      shipToAddress:currentData?.shipToAddress || '',
+      shipToState:currentData?.shipToState || '',
+      shipToCity:currentData?.shipToCity || '',
+      shipToPincode:currentData?.shipToPincode || 0,
+      shipToGST:currentData?.shipToGST || '',
+      shipToStateCode:currentData?.shipToStateCode || 0,
+      paymentTerm: currentData?.paymentTerm || '',
+      grossTotalAmount: currentData?.grossTotalAmount || 0,
+      gstAmount: currentData?.gstAmount || 0,
+      advanceAmount: currentData?.advanceAmount || '',
       vendorId: currentData?.vendorId || '',
       customerID: currentData?.customerID || '',
+      // company_phone_no: currentData?.company_phone_no || '6284824092',
     }),
     [currentData]
   );
@@ -75,6 +95,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const [selectedShippingLocation, setSelectedShippingLocation] = useState();
   const [productOptions, setProductOptions] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
 
   const fetchVendor = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
@@ -160,20 +183,58 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
     try {
-      console.log(data, 'data111ugsghghh');
+      // console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchaseOrder', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      // const response = await instance.post('AddSalesOrder', data).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
+      data.locationPhone = parseInt(data.locationPhone);
+      data.locationPincode = parseInt(data.locationPincode);
+      data.billToPincode = parseInt(data.billToPincode);
+      data.billToStateCode = parseInt(data.billToStateCode);
+      data.shipToPincode = parseInt(data.shipToPincode);
+      data.shipToStateCode = parseInt(data.shipToStateCode);
+      data.grossTotalAmount = parseInt(data.grossTotalAmount);
+      data.gstAmount = parseInt(data.gstAmount);
+      data.advanceAmount = parseInt(data.advanceAmount);
+      console.log('Create Factory Data', data);
+      let response = await createSalesOrderAPI(data);
+      // if (currentData?.locationName) {
+      //   response = await updateFactoryAPI(data);
+      // } else {
+      //   response = await createFactoryAPI(data);
+      // }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      // currentData?.locationName ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      if (error.response) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const fetchUnits = async () => {
     try {
       const response = await getUnitOfMeasure();
@@ -378,6 +439,12 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       <ModalHeader heading={"Add New Sale Order"}/>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* <DialogTitle>ADD New Purchase Order</DialogTitle> */}
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
 
         <DialogContent>
           <Box
@@ -402,7 +469,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 <TextField {...params} label="Select Customer" variant="outlined" />
               )}
             />
-            <RHFTextField name="paymentTerm" label="Payment Term" />
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -450,8 +517,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 <TextField {...params} label="Select Shipping Location" variant="outlined" />
               )}
             />
-            <RHFTextField name="companyBillingGST" label="Company Billing GST" />
-            <RHFTextField name="companyBillingPAN" label="Company Billing PAN" />
+
             <RHFTextField
               defaultValue={0}
               type="number"
@@ -486,7 +552,22 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             <RHFTextField name="shipToPincode" label="Shipping Pincode" />
             <RHFTextField name="shipToGST" label="Ship to GST" />
             <RHFTextField name="shipToStateCode" label="Ship to state code" />
-
+            {/* <RHFTextField name="companyPhoneNo" label="Ship to state code" />
+            <RHFTextField name="companyAccountId" label="Company AccountId" />
+            <RHFTextField name="companyEmailId" label="Company EmailId" />
+            <RHFTextField name="companyGST" label="Company GST" />
+            <RHFTextField name="companyPAN" label="Company PAN" />
+            <RHFTextField name="msmeUAMNo" label="MSME UAMNo" />
+            <RHFTextField name="companyAccountName" label="Company Account Name" />
+            <RHFTextField name="companyAccountNo" label="Company Account No" />
+            <RHFTextField name="companyBankName" label="Company Bank Name" />
+            <RHFTextField name="companyBankIFSC" label="Company Bank IFSC" />
+            <RHFTextField name="companyBankBranch" label="Company Bank Branch" />
+            <RHFTextField name="companyStateCode" label="Company State Code" /> */}
+            <RHFTextField name="paymentTerm" label="Payment Term" />
+            <RHFTextField name="grossTotalAmount" label="Gross Total Amount" />
+            <RHFTextField name="gstAmount" label="GST Amount"/>
+            <RHFTextField name="advanceAmount" label="Advance Amount" />
           </Box>
           <Box
             marginTop={2}
@@ -526,6 +607,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             Save
           </LoadingButton>
+          {/* <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+            {currentData?.ProductName ? 'Update' : 'Save'}
+          </LoadingButton> */}
         </DialogActions>
       </FormProvider>
     </div>
