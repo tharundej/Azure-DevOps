@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateSettings from './CreateSettings';
 
-const SettingsHead = ({ filterSearch, filterData }) => {
+const SettingsHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +38,7 @@ const SettingsHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateSettings currentData={{}} handleClose={handleClose} />
+          <CreateSettings currentData={{}} handleClose={handleClose} getTableData={getTableData} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
