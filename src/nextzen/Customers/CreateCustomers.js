@@ -17,7 +17,12 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateCustomers({ currentData, handleClose, getTableData }) {
+export default function CreateCustomers({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     customer_name: Yup.string().required('Customer Name is Required'),
@@ -98,7 +103,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.customerName ? '' : getTableData();
+      currentData?.customerName ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.Message, 'warning');
