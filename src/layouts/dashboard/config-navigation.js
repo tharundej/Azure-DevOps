@@ -75,6 +75,7 @@ export function useNavData() {
   const {user}=useContext(UserContext);
   console.log(user,'UserContext')
   const [sidebarList,setSidebarList]=useState([])
+  const [sidebarListAccount,setSidebarListAccount]=useState([])
   const items= [
     {
       title: t('Dashboard'),
@@ -208,6 +209,69 @@ export function useNavData() {
     // },
   ]
 
+  const accountItems=[
+    {
+      title: t('Factory'),
+      path: paths.dashboard.factory.factory,
+      icon: ICONS.g_factory,
+    },
+    {
+      title: t('Vendor'),
+      path: paths.dashboard.vendor.vendor,
+      icon: ICONS.g_vendor,
+      children: [
+        { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
+        { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
+      ],
+    },
+    {
+      title: t('Purchase'),
+      path: paths.dashboard.purchase.purchaseOrder,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
+        { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
+        { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
+      ],
+    },
+    {
+      title: t('Products'),
+      path: paths.dashboard.products.products,
+      icon: ICONS.g_products,
+      children: [
+        { title: t('Product Details'), path: paths.dashboard.products.products },
+        { title: t('Customer'), path: paths.dashboard.products.customers },
+      ],
+    },
+    {
+      title: t('Sales'),
+      path: paths.dashboard.sale.salePayment,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
+        { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
+        { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
+      ],
+    },
+    {
+      title: t('Expenses'),
+      path: paths.dashboard.expenses.expenses,
+      icon: ICONS.g_expenses,
+    },
+    {
+      title: t('Assets'),
+      path: paths.dashboard.assets.assets,
+      icon: ICONS.g_assets,
+    },
+    {
+      title: t('Balancesheet'),
+      path: paths.dashboard.balancesheet.balancesheet,
+      icon: ICONS.g_balanceSheet,
+    },
+  ]
+
+  
+
   useEffect(() => {
     const updateSidebarList = () => {
       if (user) {
@@ -235,6 +299,24 @@ export function useNavData() {
         
 
         setSidebarList(arr);
+        if(user?.companyID==="COMP46"){
+        var arr=[ {
+          title: t('Factory'),
+          path: paths.dashboard.factory.factory,
+          icon: ICONS.g_factory,
+        },{
+          title: t('Expenses'),
+          path: paths.dashboard.expenses.expenses,
+          icon: ICONS.g_expenses,
+        }
+       ];
+      
+      
+        setSidebarListAccount(arr);
+      }
+        else{
+          setSidebarListAccount(accountItems);
+        }
       }
     };
 
@@ -255,69 +337,10 @@ export function useNavData() {
     
       {
         subheader: 'Accounting',
-        items: [
-          {
-            title: t('Factory'),
-            path: paths.dashboard.factory.factory,
-            icon: ICONS.g_factory,
-          },
-          {
-            title: t('Vendor'),
-            path: paths.dashboard.vendor.vendor,
-            icon: ICONS.g_vendor,
-            children: [
-              { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
-              { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
-            ],
-          },
-          {
-            title: t('Purchase'),
-            path: paths.dashboard.purchase.purchaseOrder,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
-              { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
-              { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
-            ],
-          },
-          {
-            title: t('Products'),
-            path: paths.dashboard.products.products,
-            icon: ICONS.g_products,
-            children: [
-              { title: t('Product Details'), path: paths.dashboard.products.products },
-              { title: t('Customer'), path: paths.dashboard.products.customers },
-            ],
-          },
-          {
-            title: t('Sales'),
-            path: paths.dashboard.sale.salePayment,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
-              { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
-              { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
-            ],
-          },
-          {
-            title: t('Expenses'),
-            path: paths.dashboard.expenses.expenses,
-            icon: ICONS.g_expenses,
-          },
-          {
-            title: t('Assets'),
-            path: paths.dashboard.assets.assets,
-            icon: ICONS.g_assets,
-          },
-          {
-            title: t('Balancesheet'),
-            path: paths.dashboard.balancesheet.balancesheet,
-            icon: ICONS.g_balanceSheet,
-          },
-        ],
+        items: sidebarListAccount,
       },
     ],
-    [t,sidebarList]
+    [t,sidebarList,sidebarListAccount]
   );
 
 

@@ -57,7 +57,7 @@ let config = {
 axios.request(config)
 .then((response) => {
   console.log(JSON.stringify(response.data));
-  setBirthdayList(response?.data.data)
+  setBirthdayList(response?.data.data || [])
 })
 .catch((error) => {
   console.log(error);
