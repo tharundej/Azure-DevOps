@@ -46,10 +46,10 @@ BirthdayReminders.propTypes = {
 function AuthorItem({ author, index }) {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Avatar alt={author?.employeename} src={author?.avatarUrl} />
+      <Avatar alt={author?.employeeName} src={author?.avatarUrl} />
 
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{author?.employeename}</Typography>
+        <Typography variant="subtitle2">{author?.employeeName}</Typography>
 
         <Typography
           variant="caption"
@@ -60,7 +60,7 @@ function AuthorItem({ author, index }) {
             color: 'text.secondary',
           }}
         >
-         {formatDateBirthday(author?.dateofbirth)}
+         {formatDateBirthday(author?.dateOfBirth)}
         </Typography>
       </Box>
 

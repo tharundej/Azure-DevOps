@@ -30,17 +30,19 @@ import BirthdayReminders from 'src/nextzen/usersdashboard/birthdayreminders/Birt
 import { useEffect,useState } from 'react';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
+import HolidayList from 'src/nextzen/usersdashboard/holiday/HolidayList';
 
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
   const { user } = useContext(UserContext);
   const [birthdayList,setBirthdayList]=useState([]);
+  const [holidayList,setHolidayList]=useState([])
 
   const ApiHitBirthday=()=>{
     
 let data = JSON.stringify({
-  "companyID": "COMP22"
+  "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
 });
  
 let config = {
@@ -55,15 +57,42 @@ let config = {
 axios.request(config)
 .then((response) => {
   console.log(JSON.stringify(response.data));
-  setBirthdayList(response?.data.data)
+  setBirthdayList(response?.data.data || [])
 })
 .catch((error) => {
   console.log(error);
 });
   }
 
+  const ApiHitHolidays=()=>{
+    
+    let data = JSON.stringify({
+      "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "locationID":JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+    });
+     
+    let config = {
+      method: 'post',
+      url: `${baseUrl}/getHolidayList`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setHolidayList(response?.data?.data || [])
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+      }
+
   useEffect(()=>{
     ApiHitBirthday()
+    ApiHitHolidays();
   },[])
 
   const theme = useTheme();
@@ -94,7 +123,11 @@ axios.request(config)
           <BirthdayReminders title="Bithday Reminders" list={birthdayList} />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={6} lg={4}>
+          <HolidayList title="UP Coming Holiday" list={holidayList} />
+        </Grid>
+
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Active Users"
             percent={2.6}
@@ -103,9 +136,9 @@ axios.request(config)
               series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={4}>
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Installed"
             percent={0.2}
@@ -245,7 +278,7 @@ axios.request(config)
               }}
             />
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

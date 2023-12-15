@@ -164,6 +164,15 @@ const PreviousWorkDetails = forwardRef((props, ref) => {
   };
 
   const ApiHitExperience = () => {
+    const invalidFields = defaultValues.filter(
+      (item) => !item.previousCompanyName || !item.designation
+    );
+  
+    if (invalidFields.length > 0) {
+      // Show an error message for required fields
+      enqueueSnackbar('Please fill in all required fields.', { variant: 'error' });
+      return;
+    }
     props.handleLoader();
     const obj = {
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -361,7 +370,7 @@ const PreviousWorkDetails = forwardRef((props, ref) => {
                   <TextField
                     fullWidth
                     name="previousCompanyName"
-                    label="Company Name"
+                    label="Company Name*"
                     variant="outlined"
                     id={`previousCompanyName${index}`}
                     value={item?.previousCompanyName}
@@ -374,7 +383,7 @@ const PreviousWorkDetails = forwardRef((props, ref) => {
                   <TextField
                     fullWidth
                     name="designation"
-                    label="Designation"
+                    label="Designation*"
                     id="designation"
                     value={item?.designation}
                     onChange={(e) => {

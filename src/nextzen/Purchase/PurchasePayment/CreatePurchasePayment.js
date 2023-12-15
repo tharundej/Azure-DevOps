@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 
@@ -13,12 +15,30 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
-
+import { Autocomplete } from '@mui/material';
 export default function CreatePurchasePayment({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
+
+
   });
+
+  const [data,setData]=useState({
+   
+    "poNumber": currentData?.poNumber,
+    "poDate": currentData?.poDate,
+    "invoiceNumber":currentData?.invoiceNumber,
+    "invoiceDate": currentData?.invoiceDate,
+    "numOfInstallments": currentData?.numOfInstallments,
+    "totalAmount": currentData?.totalAmount,
+    "paidAmount": currentData?.paidAmount,
+    "paidDate": currentData?.paidDate,
+    "balanceAmount": currentData?.balanceAmount,
+    "paymentMethod": currentData?.paymentMethod,
+    "paymentStatus": currentData?.paymentStatus,
+    "dueDate": currentData?.dueDate
+})
 
   const defaultValues = useMemo(
     () => ({
@@ -64,9 +84,36 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
     }
   });
 
+  const handleChangeString=(e,field)=>{
+    console.log(e?.target?.value,'saa')
+    const newObj={...data};
+    newObj[field]=e?.target?.value;
+
+    setData(newObj);
+  }
+  const handleChangeInt=(e,field)=>{
+    const newObj={...data};
+    newObj[field]=parseInt(e?.target?.value);
+
+    setData(newObj);
+  }
+
+  const handleChangeFloat=(e,field)=>{
+    const newObj={...data};
+    newObj[field]=parseFloat(e?.target?.value);
+
+    setData(newObj);
+  }
+  const handleChangeDate=(e,field)=>{
+    const newObj={...data};
+    newObj[field]=parseFloat(e?.target?.value);
+
+    setData(newObj);
+  }
+
   return (
     <div style={{ paddingTop: '20px' }}>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
+    
         <DialogTitle>Add New Purchase Payment</DialogTitle>
 
         <DialogContent>
@@ -80,14 +127,49 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFTextField name="PO Number" label="PO Number" />
-            <RHFTextField name="Amount" label="Amount" />
-            <RHFTextField name="Paid Date" label="Paid Date" />
-            <RHFTextField name="No of Instalments" label="Number of Instalments" />
-            <RHFTextField name="Balance Amount" label="Balance Amount" />
-            <RHFTextField name="Due Date" label="Due Date" />
-            <RHFTextField name="Payment Method" label="Payment Method" />
-            <RHFTextField name="Payment Status" label="Payment Status" />
+            
+            <TextField name="PO Number" label="PO Number" value={data?.poNumber || ""} onChange={(e)=>{handleChangeString(e,"poNumber")}}  />
+            <TextField name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
+            <DatePicker
+                  sx={{width:'100%'}}
+                  fullWidth
+                    value={data?.paidDate ? dayjs(data?.paidDate).toDate() : null}
+                    onChange={(date) => {
+                      setData(prev => ({
+                        ...prev,
+                        paidDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Paid Date"
+                  />
+            <TextField name="No of Instalments" label="Number of Instalments" value={data?.noOfInstallements || ""} onChange={(e)=>{handleChangeInt(e,"noOfInstallements")}} />
+            <TextField name="Balance Amount" label="Balance Amount" value={data?.balanceAmount || ""}  onChange={(e)=>{handleChangeFloat(e,"balanceAmount")}}/>
+            <DatePicker
+                  sx={{width:'100%'}}
+                  fullWidth
+                    value={data?.dueDate ? dayjs(data?.dueDate).toDate() : null}
+                    onChange={(date) => {
+                      setData(prev => ({
+                        ...prev,
+                        dueDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Due Date"
+                  />
+            <TextField name="Payment Method" label="Payment Method" />
+            <TextField name="Payment Status" label="Payment Status" />
             
           </Box>
           
@@ -101,7 +183,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
             Save
           </LoadingButton>
         </DialogActions>
-      </FormProvider>
+     
     </div>
   );
 }
