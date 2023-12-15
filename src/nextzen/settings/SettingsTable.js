@@ -5,14 +5,14 @@ import { Helmet } from 'react-helmet-async';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-import CreateFactory from './CreateFactory';
+import CreateSettings from './CreateSettings';
 import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
 import UserContext from '../context/user/UserConext';
 
-const FactoryTable = () => {
+const SettingsTable = () => {
   const { user } = useContext(UserContext);
   console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -103,7 +103,7 @@ const FactoryTable = () => {
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Factory / Branch Name', type: 'text', minWidth: '190px' },
+    { id: 'locationName', label: 'Name', type: 'text', minWidth: '190px' },
     { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
     { id: 'locationPhone', label: 'Phone Number', type: 'text', minWidth: '180px' },
     { id: 'address', label: 'Address', type: 'text', minWidth: '180px' },
@@ -125,7 +125,7 @@ const FactoryTable = () => {
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
-        itemName="Delete Factory"
+        itemName="Delete Settings"
         message={`Are you sure you want to delete ${deleteData?.title}?`}
       />
       {editShowForm && (
@@ -139,11 +139,11 @@ const FactoryTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentData={editModalData} handleClose={handleClose} />
+          <CreateSettings currentData={editModalData} handleClose={handleClose} />
         </Dialog>
       )}
       <Helmet>
-        <title> Dashboard: Factory</title>
+        <title> Dashboard: Settings</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
@@ -158,4 +158,4 @@ const FactoryTable = () => {
     </>
   );
 };
-export default FactoryTable;
+export default SettingsTable;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo ,useState} from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 // routes
 import { paths } from 'src/routes/paths';
 // locales
@@ -72,15 +72,15 @@ const ICONS = {
 
 export function useNavData() {
   const { t } = useLocales();
-  const {user}=useContext(UserContext);
-  console.log(user,'UserContext')
-  const [sidebarList,setSidebarList]=useState([])
-  const items= [
+  const { user } = useContext(UserContext);
+  console.log(user, 'UserContext');
+  const [sidebarList, setSidebarList] = useState([]);
+  const items = [
     {
       title: t('Dashboard'),
       path: paths.dashboard.root,
       icon: ICONS.g_dashboard,
-      key:'Dashboard'
+      key: 'Dashboard',
     },
     // {
     //   title: t('signup'),
@@ -97,25 +97,25 @@ export function useNavData() {
       title: t('Employee Management'),
       path: paths.dashboard.employee.root,
       icon: ICONS.g_employeeManagement,
-      key:'employeeManagement'
+      key: 'employeeManagement',
     },
     {
       title: t('Leave Management'),
       path: paths.dashboard.leave.root,
       icon: ICONS.g_leaveManagement,
-      key:'leaveManagement'
+      key: 'leaveManagement',
     },
     {
       title: t('Time Sheet Management'),
       path: paths.dashboard.timesheet.root,
       icon: ICONS.g_timesheetManagement,
-      key:'timeSheetManagement'
+      key: 'timeSheetManagement',
     },
     {
       title: t('Shift Management'),
       path: paths.dashboard.Shift.root,
       icon: ICONS.g_shiftManagement,
-      key:'shiftManagement'
+      key: 'shiftManagement',
     },
     {
       title: t('Claims'),
@@ -127,26 +127,26 @@ export function useNavData() {
       //   path: paths.dashboard.claims.compoffapprove },
 
       // ],
-      key:'claims'
+      key: 'claims',
     },
     {
       title: t('Payroll'),
       path: paths.dashboard.payroll.root,
       icon: ICONS.g_payroll,
-      key:'payroll'
+      key: 'payroll',
     },
     {
       title: t('IT Declaration'),
       path: paths.dashboard.itdeclaration.root,
       icon: ICONS.g_itDeclarations,
-      key:'itDeclaration',
-      name:'IT Declaration'
+      key: 'itDeclaration',
+      name: 'IT Declaration',
     },
     {
       title: t('Monthly Additions and Deductions'),
       path: paths.dashboard.monthlydeductions.root,
       icon: ICONS.g_monthlyAdditionalDeductions,
-      key:'monthlyAdditionalDeductions'
+      key: 'monthlyAdditionalDeductions',
     },
     {
       title: t('Appraisal Management'),
@@ -154,18 +154,36 @@ export function useNavData() {
       icon: ICONS.g_appraisal,
     },
     {
-      title:t('Configurations'),
-      path:paths.dashboard.configurations.root,
-      icon:ICONS.g_configurations,
-      key:'configurations',
+      title: t('Configurations'),
+      path: paths.dashboard.configurations.root,
+      icon: ICONS.g_configurations,
+      key: 'configurations',
       children: [
-        { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
-        { title: t('Compensantory Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
-         { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-         { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
-         { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
-         { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
-         { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
+        {
+          title: t('Leave Configuration'),
+          path: paths.dashboard.configurations.leaveconfiguration,
+        },
+        {
+          title: t('Compensantory Configuration'),
+          path: paths.dashboard.configurations.compoffconfiguration,
+        },
+        {
+          title: t('Appraisal Configuration'),
+          path: paths.dashboard.configurations.appraisalconfiguration,
+        },
+        {
+          title: t('Expense Claim Configuration'),
+          path: paths.dashboard.configurations.expenseclaimconfiguration,
+        },
+        {
+          title: t('Shift Configuration'),
+          path: paths.dashboard.configurations.shiftconfiguration,
+        },
+        { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
+        {
+          title: t('Tax Section Configuration'),
+          path: paths.dashboard.configurations.taxsectionconfiguration,
+        },
       ],
     },
     // {
@@ -206,33 +224,29 @@ export function useNavData() {
     //   path: paths.dashboard.general.file,
     //   icon: ICONS.file,
     // },
-  ]
+  ];
 
   useEffect(() => {
     const updateSidebarList = () => {
       if (user) {
         var arr = [];
-        arr.push( {
+        arr.push({
           title: t('Dashboard'),
           path: paths.dashboard.root,
           icon: ICONS.g_dashboard,
-          key:'Dashboard'
-        })
+          key: 'Dashboard',
+        });
 
         items.forEach((item) => {
           const permission = user?.rolePermissions[item?.key];
-          console.log( typeof permission?.mainHeading,  permission?.mainHeading)
-        if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
-          console.log(`User Permission for ${item?.key}:`, permission);
-          console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+          console.log(typeof permission?.mainHeading, permission?.mainHeading);
+          if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
+            console.log(`User Permission for ${item?.key}:`, permission);
+            console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
 
-          arr.push(item);
-        }
-
-      
+            arr.push(item);
+          }
         });
-
-        
 
         setSidebarList(arr);
       }
@@ -242,17 +256,14 @@ export function useNavData() {
 
     // You might want to add additional dependencies if needed.
   }, [user]);
-  
 
   const data = useMemo(
     () => [
-     
       {
         subheader: t('HRMS'),
-        items:sidebarList
+        items: sidebarList,
       },
 
-    
       {
         subheader: 'Accounting',
         items: [
@@ -314,18 +325,18 @@ export function useNavData() {
             path: paths.dashboard.balancesheet.balancesheet,
             icon: ICONS.g_balanceSheet,
           },
+          {
+            title: t('Settings'),
+            path: paths.dashboard.settings.settings,
+            icon: ICONS.g_configurations,
+          },
         ],
       },
     ],
-    [t,sidebarList]
+    [t, sidebarList]
   );
-
-
-
-
-
 
   const data1 = useMemo(() => data, [data]);
 
-  return data1 ;
+  return data1;
 }
