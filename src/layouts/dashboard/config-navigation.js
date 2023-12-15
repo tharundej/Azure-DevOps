@@ -72,10 +72,11 @@ const ICONS = {
 
 export function useNavData() {
   const { t } = useLocales();
-  const { user } = useContext(UserContext);
-  console.log(user, 'UserContext');
-  const [sidebarList, setSidebarList] = useState([]);
-  const items = [
+  const {user}=useContext(UserContext);
+  console.log(user,'UserContext')
+  const [sidebarList,setSidebarList]=useState([])
+  const [sidebarListAccount,setSidebarListAccount]=useState([])
+  const items= [
     {
       title: t('Dashboard'),
       path: paths.dashboard.root,
@@ -226,29 +227,114 @@ export function useNavData() {
     // },
   ];
 
+  const accountItems=[
+    {
+      title: t('Factory'),
+      path: paths.dashboard.factory.factory,
+      icon: ICONS.g_factory,
+    },
+    {
+      title: t('Vendor'),
+      path: paths.dashboard.vendor.vendor,
+      icon: ICONS.g_vendor,
+      children: [
+        { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
+        { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
+      ],
+    },
+    {
+      title: t('Purchase'),
+      path: paths.dashboard.purchase.purchaseOrder,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
+        { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
+        { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
+      ],
+    },
+    {
+      title: t('Products'),
+      path: paths.dashboard.products.products,
+      icon: ICONS.g_products,
+      children: [
+        { title: t('Product Details'), path: paths.dashboard.products.products },
+        { title: t('Customer'), path: paths.dashboard.products.customers },
+      ],
+    },
+    {
+      title: t('Sales'),
+      path: paths.dashboard.sale.salePayment,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
+        { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
+        { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
+      ],
+    },
+    {
+      title: t('Expenses'),
+      path: paths.dashboard.expenses.expenses,
+      icon: ICONS.g_expenses,
+    },
+    {
+      title: t('Assets'),
+      path: paths.dashboard.assets.assets,
+      icon: ICONS.g_assets,
+    },
+    {
+      title: t('Balancesheet'),
+      path: paths.dashboard.balancesheet.balancesheet,
+      icon: ICONS.g_balanceSheet,
+    },
+  ]
+
+  
+
   useEffect(() => {
     const updateSidebarList = () => {
       if (user) {
         var arr = [];
-        arr.push({
+        arr.push( {
           title: t('Dashboard'),
           path: paths.dashboard.root,
           icon: ICONS.g_dashboard,
-          key: 'Dashboard',
-        });
+          key:'Dashboard'
+        })
 
         items.forEach((item) => {
           const permission = user?.rolePermissions[item?.key];
-          console.log(typeof permission?.mainHeading, permission?.mainHeading);
-          if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
-            console.log(`User Permission for ${item?.key}:`, permission);
-            console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
+          console.log( typeof permission?.mainHeading,  permission?.mainHeading)
+        if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
+          console.log(`User Permission for ${item?.key}:`, permission);
+          console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
 
-            arr.push(item);
-          }
+          arr.push(item);
+        }
+
+      
         });
 
+        
+
         setSidebarList(arr);
+        if(user?.companyID==="COMP46"){
+        var arr=[ {
+          title: t('Factory'),
+          path: paths.dashboard.factory.factory,
+          icon: ICONS.g_factory,
+        },{
+          title: t('Expenses'),
+          path: paths.dashboard.expenses.expenses,
+          icon: ICONS.g_expenses,
+        }
+       ];
+      
+      
+        setSidebarListAccount(arr);
+      }
+        else{
+          setSidebarListAccount(accountItems);
+        }
       }
     };
 
@@ -256,84 +342,23 @@ export function useNavData() {
 
     // You might want to add additional dependencies if needed.
   }, [user]);
+  
 
   const data = useMemo(
     () => [
+     
       {
         subheader: t('HRMS'),
-        items: sidebarList,
+        items:sidebarList
       },
 
+    
       {
         subheader: 'Accounting',
-        items: [
-          {
-            title: t('Factory'),
-            path: paths.dashboard.factory.factory,
-            icon: ICONS.g_factory,
-          },
-          {
-            title: t('Vendor'),
-            path: paths.dashboard.vendor.vendor,
-            icon: ICONS.g_vendor,
-            children: [
-              { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
-              { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
-            ],
-          },
-          {
-            title: t('Purchase'),
-            path: paths.dashboard.purchase.purchaseOrder,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
-              { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
-              { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
-            ],
-          },
-          {
-            title: t('Products'),
-            path: paths.dashboard.products.products,
-            icon: ICONS.g_products,
-            children: [
-              { title: t('Product Details'), path: paths.dashboard.products.products },
-              { title: t('Customer'), path: paths.dashboard.products.customers },
-            ],
-          },
-          {
-            title: t('Sales'),
-            path: paths.dashboard.sale.salePayment,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
-              { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
-              { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
-            ],
-          },
-          {
-            title: t('Expenses'),
-            path: paths.dashboard.expenses.expenses,
-            icon: ICONS.g_expenses,
-          },
-          {
-            title: t('Assets'),
-            path: paths.dashboard.assets.assets,
-            icon: ICONS.g_assets,
-          },
-          {
-            title: t('Balancesheet'),
-            path: paths.dashboard.balancesheet.balancesheet,
-            icon: ICONS.g_balanceSheet,
-          },
-          {
-            title: t('Settings'),
-            path: paths.dashboard.settings.settings,
-            icon: ICONS.g_configurations,
-          },
-        ],
+        items: sidebarListAccount,
       },
     ],
-    [t, sidebarList]
+    [t,sidebarList,sidebarListAccount]
   );
 
   const data1 = useMemo(() => data, [data]);
