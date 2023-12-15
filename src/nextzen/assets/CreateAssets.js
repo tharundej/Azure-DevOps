@@ -20,12 +20,17 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { createAssetsAPI, updateAssetsAPI } from '../../api/Accounts/Assets';
 import SnackBarComponent from '../global/SnackBarComponent';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import { getLocationAPI, getTaxs } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from 'src/nextzen/context/user/UserConext';
 
-export default function CreateAssets({ currentData, handleClose, getTableData }) {
+export default function CreateAssets({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     assetsName: Yup.string().required('Asset Name is Required'),
@@ -212,7 +217,7 @@ export default function CreateAssets({ currentData, handleClose, getTableData })
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.assetId > 0 ? '' : getTableData();
+      currentData?.assetId > 0 ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         // Handle the case where the asset already exists

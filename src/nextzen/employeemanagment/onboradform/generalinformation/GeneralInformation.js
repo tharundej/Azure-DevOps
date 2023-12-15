@@ -247,7 +247,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           maxBodyLength: Infinity,
           url: `${baseUrl}/onBoarding`,
           headers: { 
-         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+         'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
              
             'Content-Type': 'text/plain'
           },
@@ -693,7 +693,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
-                    
+                     maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
                     
@@ -785,6 +785,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               />
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Offer Date"
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
@@ -800,6 +801,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                  
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Joining Date*"
                       value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}

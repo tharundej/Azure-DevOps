@@ -215,7 +215,7 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
               }
               getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
-                <TextField {...params} label="Select Factory / Location Name" variant="outlined" />
+                <TextField {...params} label="Select Factory / Branch Name" variant="outlined" />
               )}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
