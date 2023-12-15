@@ -36,4 +36,4 @@ COPY . .
 
 # start app
 
-CMD ["pnpm" , "run", "build"]
+CMD ["npm" , "start"]
