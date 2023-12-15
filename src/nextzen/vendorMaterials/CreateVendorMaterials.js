@@ -16,7 +16,12 @@ import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
+export default function CreateVendorMaterials({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
@@ -116,7 +121,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.id ? '' : getTableData();
+      currentData?.id ? handleCountChange() : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
