@@ -16,6 +16,10 @@ const CustomersTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -71,6 +75,7 @@ const CustomersTable = () => {
       const response = await deleteCutomerApi(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -139,7 +144,11 @@ const CustomersTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateCustomers currentData={editModalData} handleClose={handleClose} />
+          <CreateCustomers
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -154,6 +163,7 @@ const CustomersTable = () => {
         filterName="CustomersHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );
