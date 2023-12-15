@@ -53,7 +53,7 @@ export default function ApplyLoan({ handleClose,getTableData }) {
     
       data.companyID = (user?.companyID)?user?.companyID:'',
       data.employeeID = (user?.employeeID)?user?.employeeID:''
-      const response = await instance.post('https://xql1qfwp-3001.inc1.devtunnels.ms/erp/addLoanDetails', data).then(
+      const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
           console.log(successData)
           enqueueSnackbar(successData?.data?.message,{variant:'success'})

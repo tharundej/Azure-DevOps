@@ -221,7 +221,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
       // url: baseUrl + `${endpoint}`,
-      url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
+      url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords',
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
@@ -314,35 +315,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   const handleDeleteRow = (event) => {
     console.log(event);
-  };
-
-  const approveLeave = (rowdata, event) => {
-    var payload = {
-      leave_id: rowdata?.leaveId,
-      emp_id: rowdata?.employeeId,
-      status: event?.id,
-      leave_type_id: rowdata?.leaveTypeId,
-      duration: rowdata?.requestedDuration,
-    };
-    console.log(payload, 'requestedddbodyyy');
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      // url: baseUrl + `approveLeave`,
-      url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
-      data: payload,
-    };
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response, 'responsedata', response.data);
-        enqueueSnackbar(response.data.message, { variant: 'success' });
-        getTableData();
-      })
-      .catch((error) => {
-        enqueueSnackbar(error.message, { variant: 'Error' });
-        console.log(error);
-      });
   };
 
   const handleEditRow = (rowData, eventData) => {
@@ -479,7 +451,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         'Upcoming',
         'Ongoing',
         'On Hold',
-        'OnHold',''
+        'OnHold','','rejected','Rejected'
       ].includes(row?.status)
     ) {
       rowValues = rowActions;
@@ -500,29 +472,29 @@ const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
-
-const handleLoanExpand=(rowID,rowIndex)=>{
-  // const loanPayload ={
-  //   employeeID:rowID
-  // }
-  // const config={
-  //   method: 'POST',
-  //   maxBodyLength: Infinity,
-  //   // url: baseUrl + `approveLeave`,
-  //   url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
-  //   data: loanPayload,
-  // }
-  // axios
-  //     .request(config)
-  //     .then((response) => {
-  //       console.log(response, 'responsedata', response.data);
-  //       enqueueSnackbar(response.data.message, { variant: 'success' });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       enqueueSnackbar(error.message, { variant: 'Error' });
-   
-  //     });
+const [loanDetails,setloanDetails] = useState()
+const handleLoanExpand=(rowID,rowloanID,rowIndex)=>{
+  const loanPayload ={
+    employeeID:rowID,
+    loanID:rowloanID
+  }
+  const config={
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url:baseUrl+`/getLoanDetails`,
+    
+    data: loanPayload,
+  }
+  axios
+      .request(config)
+      .then((response) => {
+        console.log(response, 'responsedata', response.data);
+        setloanDetails(response?.data?.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
 }
 
@@ -904,7 +876,7 @@ const [index, setIndex]=useState(""); // index setting
                               }
                               else if (clickedElementId==="employeeID"){
                               
-                                handleLoanExpand(row.employeeID,index)
+                                handleLoanExpand(row.employeeID,row?.loanID,index)
                               }
                             }}
                             selected={table.selected.includes(row.id)}
@@ -966,12 +938,27 @@ const [index, setIndex]=useState(""); // index setting
    {expandedLoanRow == index && (
     
                     <TableRow>
-                      <TableCell colSpan={TABLE_HEAD.length + 1}>
-                     
-                          <Typography>Installments Remaining: {row?.noOfInstallments}</Typography>
-                          <Typography>Installments Paid:{row?.noOfInstallments}</Typography>
+                     {loanDetails && <TableCell colSpan={TABLE_HEAD.length + 1}>
+                         <Typography variant="body2">Loan ID : {loanDetails?.loanID}</Typography>
+                          <Typography variant="body2">Total No of Installments : {loanDetails?.totalNumberOfInstallments}</Typography>
+                          <Typography variant="body2">Installments Paid : {loanDetails?.totalNumberOfInstallments - loanDetails?.balanceInstallments}</Typography>
+                          <Typography variant="body2">Installment Balance : {loanDetails?.balanceInstallments}</Typography>
+                          {loanDetails?.InstallmentDetails?.length>0 &&<Typography variant="subtitle2">Installment Details</Typography>}
+                          <Card sx={{ maxWidth: '1200px' }}>
+                            <CardContent>
+                              <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                {loanDetails?.InstallmentDetails?.map((item, index) => (
+                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
+                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
+                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
+                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
+                                  </Grid>
+                                ))}
+                              </Grid>
+                            </CardContent>
+                          </Card>
 
-                      </TableCell>
+                      </TableCell>}
                     </TableRow>
                   )}
                         </>
