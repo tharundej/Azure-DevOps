@@ -9,7 +9,7 @@ import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
 import { bgGradient } from 'src/theme/css';
-
+import { useSnackbar } from 'src/components/snackbar';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -35,6 +35,7 @@ const employeeData=[ {
 ]
 
 const PreviousWork = ({employeeIDForApis}) => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
@@ -148,10 +149,12 @@ const PreviousWork = ({employeeIDForApis}) => {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
       ApiHit()
     })
     .catch((error) => {
       console.log(error);
+      enqueueSnackbar(response?.data?.message, { variant: 'error' });
     });
     
    }
