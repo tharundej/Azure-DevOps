@@ -17,7 +17,7 @@ import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 import { City, Country, State } from 'country-state-city';
 
-export default function CreateFactory({ currentData, handleClose, getTableData }) {
+export default function CreateSettings({ currentData, handleClose, getTableData }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
@@ -177,7 +177,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading={currentData?.locationName ? 'Edit Factory / Branch' : 'Add New Factory / Branch'} />
+        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -195,7 +195,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Factory / Branch Name" />
+            <RHFTextField name="locationName" label="Factory / location Name" />
             <RHFTextField
               name="locationPhone"
               label="Phone"
@@ -273,7 +273,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   );
 }
 
-CreateFactory.propTypes = {
+CreateSettings.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
 };
