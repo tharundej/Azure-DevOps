@@ -30,7 +30,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
   const NewUserSchema = Yup.object().shape({
     vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
     vendorName: Yup.string().required('vendor Name is Required'),
-    vendorPhoneNo: Yup.number().required('vendor Phone No is Required'),
+    vendorPhoneNo: Yup.number().required('vendor Phone Number is Required'),
     vendorEmailID: Yup.string().required('vendor Email ID is Required'),
     address1: Yup.string().required('Address 1 is Required'),
     address2: Yup.string(),
