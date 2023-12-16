@@ -4,12 +4,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Dialog from '@mui/material/Dialog';
 import axios from 'axios';
-
 import LoadingButton from '@mui/lab/LoadingButton';
 import ModalHeader from '../../global/modalheader/ModalHeader';
-
-
-import { Autocomplete, TextField,Chip,DialogContent,DialogActions,Grid , Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
+import { Autocomplete, TextField,Chip,DialogContent,DialogActions,Grid ,InputLabelProps, Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
 import FormProvider, {
     RHFSwitch,
     RHFTextField,
@@ -19,7 +16,6 @@ import FormProvider, {
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -30,7 +26,6 @@ const MenuProps = {
     },
   },
 };
-
 const names = [
   'Select All',
   'Oliver Hansen',
@@ -44,14 +39,46 @@ const names = [
   'Virginia Andrews',
   'Kelly Snyder',
 ];
-
 export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
-
     const [employeeListData,setEmployesListData] = useState()
     const {user} = useContext(UserContext)
+    const [disableHealthInsurancePremium,setDisableHealthInsurancePremium]=useState()// Initialize outside useEffect
+    const [fieldValues, setFieldValues] = useState([]);
+    const [healthInsuranceupdate,sethealthInsuranceUpdate]= useState()
+    const [healthInsuranceDetails,setHealthInsuranceDetails]=useState()
+    const [selectCount,setSelectCount] = useState(1)
+    const [deductionDetails, setDeductionDetails] = useState();
+    const [personName, setPersonName] = useState();
+    const list=[{id:"healthInsurancePremium",name:"Health Insurance Premium"},{id:"loanRequest",name:"Loan Request"},{id:"absenceDeductions",name:"Absence Deductions"},{id:"unionDues",name:'Union Dues'},{id:"garnishments",name:"Garnishments"},{id:"salaryAdvanceRequest",name:'Salary Advance'},{id:"otherDeductions",name:"Other Deductions"}]
     useEffect(()=>{
         getEmployeesList()
     },[])
+    useEffect(()=>{
+      if(personName){
+        getLatestInstallmentNumber()
+      }
+    },[personName])
+    
+  
+    // Initialize field values when selectCount changes
+    useEffect(() => {
+      setFieldValues((prevValues) => {
+        const updatedValues = [...prevValues];
+        if (updatedValues.length < selectCount) {
+          for (let i = updatedValues.length; i < selectCount; i++) {
+            updatedValues.push({
+              Type: '',
+              amount: 0,
+              comments: '',
+              noOfInstallments: 1,
+              totalInstallments: 0,
+            });
+          }
+        }
+        return updatedValues;
+      });
+    }, [selectCount]);
+    
     const getEmployeesList =()=>{
         const data ={
           companyID:user?.companyID
@@ -68,112 +95,108 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
          .catch((error)=>{
           console.log(error)
          })
-      }
+      };
+    
+    const handleChange = (event) => {
+    setPersonName(event?.target?.value)
+    
+    };
+    
+    const handleAutocompleteChange = (event, index) => {
+      const { value } = event.target;
 
-    const defaultValues = useMemo(
-        () => ({   
-            employee_id: currentUser?.employee_id || '',
-            monday: currentUser?.monday || '',   
-        }),
-        [currentUser]
-      );
-      const NewUserSchema = Yup.object().shape({
-        companyId: Yup.string(),
-        employeeId: Yup.string(),
+      setFieldValues((prevValues) => {
+        const updatedValues = [...prevValues];
+        updatedValues[index].Type = value;
+        return updatedValues;
+      });
+    };
+    // const handleTextFieldChange = (bonusName, field, value) => {
+    //   setDeductionDetails((prevDetails) => {
+    //     const updatedDetails = [...prevDetails];
+    
+    //     const existingIndex = updatedDetails.findIndex(
+    //       (detail) => detail.Type === bonusName
+    //     );
+    
+    //     if (existingIndex !== -1) {
+    //     if(field=="comments"){
+    //       updatedDetails[existingIndex] = {
+    //         ...updatedDetails[existingIndex],
+    //         [field]: value
+    //       };
+    //     }
        
+    //     else{
+    //       updatedDetails[existingIndex] = {
+    //         ...updatedDetails[existingIndex],
+    //         [field]: parseInt(value)
+    //       };
+    //     }
+    //     } else {
+    //       const newDetail = {
+            
+    //         Type: bonusName,
+    //         comments: '',
+    //         amount: '',
+    //         noOfInstallments:1,
+    //         [field]: parseInt(value)
+    //       };
+    //       updatedDetails.push(newDetail);
+    //     }
     
+    //     return updatedDetails;
+    //   });
+    // };
+  
+
+    const handleTextFieldChange = (index, field, value) => {
+      setFieldValues((prevValues) => {
+        const updatedValues = prevValues.map((item, idx) => {
+          if (idx === index) {
+            return {
+              ...item,
+              [field]: value,
+            };
+          }
+    
+          if (item.Type === prevValues[index].Type) {
+            return {
+              ...item,
+              [field]: value,
+            };
+          }
+    
+          return item;
+        });
+        return updatedValues;
       });
-    
-      const   methods = useForm({
-        resolver: yupResolver(NewUserSchema),
-        defaultValues,
-      });
-    
-      const {
-        reset, 
-        watch,
-        control,
-        setValue,
-        handleSubmit,
-        formState: { isSubmitting },
-      } = methods;
-    
-  const [personName, setPersonName] = React.useState();
-
-  const handleChange = (event) => {
-   setPersonName(event?.target?.value)
-   
-  };
-
-
-  const list=[{id:"healthInsurancePremium",name:"Health Insurance Premium"},{id:"loanRequest",name:"Loan Request"},{id:"absenceDeductions",name:"Absence Deductions"},{id:"unionDues",name:'Union Dues'},{id:"garnishments",name:"Garnishments"},{id:"salaryAdvanceRequest",name:'Salary Advance'},{id:"otherDeductions",name:"Other Deductions"}]
-  const [selectedOptions, setSelectedOptions] = React.useState();
-  const [deductionDetails, setDeductionDetails] = React.useState([]);
-  const [requestType,setRequestType] = useState([])
-  const handleAutocompleteChange = (event, newValue) => {
-    setSelectedOptions(event.target.value);
-  };
-
-  const handleTextFieldChange = (bonusName, field, value) => {
-    setDeductionDetails((prevDetails) => {
-      const updatedDetails = [...prevDetails];
+    };
   
-      const existingIndex = updatedDetails.findIndex(
-        (detail) => detail.Type === bonusName
-      );
   
-      if (existingIndex !== -1) {
-      if(field=="comments"){
-        updatedDetails[existingIndex] = {
-          ...updatedDetails[existingIndex],
-          [field]: value
-        };
-      }
-     
-      else{
-        updatedDetails[existingIndex] = {
-          ...updatedDetails[existingIndex],
-          [field]: parseInt(value)
-        };
-      }
-      } else {
-        const newDetail = {
-          
-          Type: bonusName,
-          comments: '',
-          amount: '',
-          noOfInstallments:1,
-          [field]: parseInt(value)
-        };
-        updatedDetails.push(newDetail);
-      }
-  
-      return updatedDetails;
+
+ 
+const handleRemove=()=>{
+  if (fieldValues.length > 0) {
+    setFieldValues((prevValues) => {
+      const updatedValues = [...prevValues];
+      updatedValues.pop(); // Remove the last added deduction type
+      return updatedValues;
     });
-  };
-  
-console.log(deductionDetails,"deductionDetails",requestType)
-  const [selectCount,setSelectCount] = useState(1)
-const handleRemove=(deductionType)=>{
-  setSelectCount(selectCount-1)
-  setSelectedOptions(null)
-  setDeductionDetails((prevDetails) =>
-  prevDetails.filter((detail) => detail.deductionType !== deductionType)
-  );
+    setSelectCount((prevCount) => prevCount - 1);
+  }
 }
-console.log(personName,"personname")
 const handleAdd =()=>{
   setSelectCount(selectCount+1)
 }
-// const updatedDeductionDetails = deductionDetails.filter(
-//   (detail) => (detail.Type !== "loanRequest" || detail.Type!=="salaryAdvanceRequest")
-// );
-
+const filteredFieldValues = fieldValues.filter(
+  (value) => value.Type !== "loanRequest" && value.Type !== "salaryAdvanceRequest"
+);
 const AddDeductions=()=>{
   const payload ={
     companyID:user?.companyID,
     employeeID:personName,
-    deductionType:deductionDetails
+    deductionType:filteredFieldValues
   }
   const config = {
     method: 'POST',
@@ -195,8 +218,6 @@ const AddDeductions=()=>{
       
     });
 }
-const [healthInsuranceupdate,sethealthInsuranceUpdate]= useState()
-const [healthInsuranceDetails,setHealthInsuranceDetails]=useState()
 const getLatestInstallmentNumber=()=>{
   const payload ={
     employeeID:personName,
@@ -219,11 +240,10 @@ const getLatestInstallmentNumber=()=>{
       
     });
 }
-
 const getHealthInsuranceDetails=()=>{
   const payload ={
     employeeID:personName,
-    deductionType:selectedOptions
+    deductionType:deductionDetails
   }
   const config = {
     method: 'POST',
@@ -242,10 +262,10 @@ const getHealthInsuranceDetails=()=>{
       
     });
 }
-const AddLoanRequestDeduction=()=>{
+const AddLoanRequestDeduction=(e)=>{
   const payload ={
     employeeID:personName,
-    requestType:selectedOptions,
+    requestType:e,
     companyID:user?.companyID
   }
   const config = {
@@ -266,36 +286,40 @@ const AddLoanRequestDeduction=()=>{
     });
 }
 
-useEffect(()=>{
-  if(personName){
-    getLatestInstallmentNumber()
-  }
-  if(selectedOptions=='loanRequest'){
-    AddLoanRequestDeduction()
-  }
-},[personName,selectedOptions])
-const [disableHealthInsurancePremium,setDisableHealthInsurancePremium]=useState()// Initialize outside useEffect
-
 useEffect(() => {
+  console.log(fieldValues,"fieldValuess")
+  const index = fieldValues.findIndex(
+    (fieldValue) => fieldValue.Type === 'healthInsurancePremium'
+  );
+
+  {console.log(index,'indexValueee')}
   if (healthInsuranceupdate?.NumberOfInstallments > 0) {
-    console.log(selectedOptions,"selectedoptionss")
-    if(selectedOptions=="healthInsurancePremium"){
-      console.log(selectedOptions,"selectedoptionss")
-      deductionDetails.push({Type:selectedOptions})
-      AddDeductions()
-      getHealthInsuranceDetails()
-      setDisableHealthInsurancePremium(true)
+    {console.log('ifffblockkk',healthInsuranceupdate)}
+    if (index !== -1) {
+      {console.log("ifindexxblock",index)}
+      setDeductionDetails('healthInsurancePremium')
+      setDisableHealthInsurancePremium(true);
+      AddDeductions();
+      getHealthInsuranceDetails();
     }
-    
   } else {
     setDisableHealthInsurancePremium(false);
   }
-}, [healthInsuranceupdate?.NumberOfInstallments,selectedOptions]);
+  {console.log(deductionDetails,"deductionType")}
+}, [healthInsuranceupdate?.NumberOfInstallments,fieldValues]);
 
+useEffect(() => {
+  fieldValues.forEach((value) => {
+    if (value.Type === 'loanRequest' || value.Type === 'salaryAdvanceRequest') {
+      AddLoanRequestDeduction(value.Type);
+    }
+  });
+}, [fieldValues]);
 
+// setHealthInsuranceDetails({deductionAmount:1000,loanID:50})
   return (
     <>
-        <FormProvider  methods={methods} onSubmit={(event) => onSubmitEdit2(timesheetData, event)}>
+       
         <ModalHeader heading={EditData?.employeeId ? 'Edit Deductions ' : 'Add Deductions '}/>
         <DialogContent>
             <Box
@@ -309,7 +333,6 @@ useEffect(() => {
             
             >
               
-
       <FormControl sx={{ mt:1, width: "100%" }}>
       
       
@@ -331,7 +354,7 @@ useEffect(() => {
         </Select>
         </FormControl>
         {console.log(selectCount,"Selectcount")}
-        {[...Array(selectCount)].map((_, index) => (
+        {/* {[...Array(selectCount)].map((_, index) => (
       <>
        <FormControl sx={{ mt:1, width: "100%" }}>
        
@@ -382,14 +405,7 @@ useEffect(() => {
   </Grid>
   {(selectedOptions=='healthInsurancePremium'&& !disableHealthInsurancePremium)&&
   <Grid container spacing={1} flexDirection="row">
-       {/* <Grid item xs={12} md={6}>
-      <TextField
-        label="Current Installment"
-        variant="outlined"
-        fullWidth
-        onChange={(e) => handleTextFieldChange(selectedOptions,'noOfInstallments',e.target.value)}
-      />
-    </Grid> */}
+      
     <Grid item xs={12} md={12}>
       <TextField
         label="Duration of Health Insurance"
@@ -401,9 +417,91 @@ useEffect(() => {
     </Grid>
   </Grid>}
      </>
-        ))}
+        ))} */}<div>
+    {fieldValues.map((fieldValue, index) => (
+      <React.Fragment key={index}>
+      
+        <FormControl sx={{ mt:1, width: "100%" }}>
+       
+       <InputLabel id="demo-multiple-checkbox-label">Deductions</InputLabel>
+     <Select
+      labelId="demo-multiple-checkbox-label"
+      id="demo-multiple-checkbox"
+      fullWidth
+      onChange={(event) => handleAutocompleteChange(event, index)}
+      MenuProps={MenuProps}
+      input={<OutlinedInput label="Deductions" />}
+     >
+       {list?.map((options) => (
+        
+           <MenuItem key={options?.id} value={options?.id}>
+            {options?.name}
+         </MenuItem>
+       ))}
+     </Select>
+  {console.log(fieldValue,"fieldValueee",disableHealthInsurancePremium)}
+     </FormControl>
+        <Grid container spacing={1} flexDirection="row" sx={{marginTop:1}}>
+      
+      <Grid item xs={12} md={6}>
+        <TextField
+          label="Deduction Amount"
+          placeholder="Enter Deducting Amount"
+          variant="outlined"
+          fullWidth
+          // value={
+          //   (fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium)
+          //     ? (healthInsuranceDetails?.deductionAmount || 0) // Convert to string if needed
+          //     : ''
+          // }
+          defaultValue={
+            fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium
+              ? (healthInsuranceDetails?.deductionAmount !== undefined
+                  ? healthInsuranceDetails.deductionAmount
+                  : '')
+              : 0
+          }
+          onChange={(e) =>
+            handleTextFieldChange(
+              index,
+              'amount',
+              e.target.value !== '' ? parseInt(e.target.value) : ''
+            )
+          }
+        />
+        </Grid>
+      
+      <Grid item xs={12} md={6}>
+        <TextField
+          label="Deduction Reason"
+          placeholder="Enter Remarks"
+          variant="outlined"
+          fullWidth
+          // disabled={/* Disable logic */}
+          onChange={(e) =>
+            handleTextFieldChange(
+              index,
+              'comments',
+              (e.target.value)
+            )
+          }
+        />
+        </Grid>
+  </Grid>
+        {(fieldValue.Type === "healthInsurancePremium" || fieldValue.totalInstallments>0) && <TextField
+        label="Duration of Health Insurance"
+        placeholder="no.of months covered by insurance"
+        variant="outlined"
+        fullWidth
+        sx={{marginTop:1}}
+        onChange={(e) => handleTextFieldChange(index,'totalInstallments',parseInt(e.target.value))}
+      />}
+      </React.Fragment>
+    ))}
+  </div>
+
       <div style={{display:"flex"}}>  <Button onClick={handleAdd}>ADD</Button>
-        <Button onClick={()=>handleRemove(selectedOptions)}>Remove</Button>
+        <Button onClick={()=>handleRemove()}>Remove</Button>
         </div>
       </Box>
      
@@ -418,7 +516,7 @@ useEffect(() => {
               </Stack>
              </DialogActions>
             </DialogContent>
-      </FormProvider>
+     
     </>
   );
 }

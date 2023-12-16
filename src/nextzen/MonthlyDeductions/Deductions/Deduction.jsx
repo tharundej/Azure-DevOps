@@ -8,10 +8,11 @@ import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { FormControl, Select,MenuProps,InputLabel,OutlinedInput , MenuItem} from '@mui/material';
+import { FormControl, Select,MenuProps,InputLabel,OutlinedInput , MenuItem,Typography} from '@mui/material';
 export default function Deduction({defaultPayload,componentPage}) {
    const {enqueueSnackbar} = useSnackbar()
    const [employeeListData,setEmployesListData] = useState()
+   const [count,setCount] = useState(0)
    const {user} = useContext(UserContext)
   const TABLE_HEAD = [
     // {
@@ -56,9 +57,11 @@ const getEmployeesList =()=>{
     console.log(error)
    })
 }
-const [personName, setPersonName] = React.useState();
+const [personName, setPersonName] = useState();
+const [defaultPayloadValue,setDefaultPayload] = useState()
 const handleChange = (event) => {
   setPersonName(event?.target?.value)
+  setCount(count+1)
  };
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -71,10 +74,16 @@ const MenuProps = {
   },
 };
 
-const defaultPayloadValue=(defaultPayload)?defaultPayload:{
-  "employeeID":personName
-}
+// setDefaultPayload((defaultPayload)?defaultPayload:{
+//   "employeeID":personName
+// }
+// )
 
+useEffect(()=>{
+  console.log(personName,"person")
+    setDefaultPayload({ "employeeID": personName });
+   console.log(defaultPayloadValue,"defaultpayalodvaluee")
+},[personName])
 
 return (
 <>
@@ -97,15 +106,19 @@ return (
           ))}
         </Select>
 </FormControl>
-{personName!=undefined && <BasicTable
-headerData={TABLE_HEAD}
-defaultPayload={defaultPayloadValue}
-endpoint='/getLatestDeductionRecords'
-bodyData='data'
-filterName="DeductionFilter"
-componentPage={componentPage}
-/>}
-
+{personName ? (
+        <BasicTable
+          headerData={TABLE_HEAD}
+          defaultPayload={defaultPayloadValue}
+          endpoint="/getLatestDeductionRecords"
+          bodyData="data"
+          filterName="DeductionFilter"
+          componentPage={componentPage}
+          count={count} 
+        />
+      ) : (
+        <Typography variant="body1" sx={{justifyContent:'center',textAlign:'center',alignItems:'center'}}>Please select an employee.</Typography>
+      )}
 
 </>
 );
