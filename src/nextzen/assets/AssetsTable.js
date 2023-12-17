@@ -19,6 +19,10 @@ const AssetsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -72,6 +76,7 @@ const AssetsTable = () => {
       const response = await DeleteAssetsAPI(deleteData);
       console.log('Delete success', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -187,7 +192,11 @@ const AssetsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateAssets currentData={editModalData} handleClose={handleClose} />
+          <CreateAssets
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -202,6 +211,7 @@ const AssetsTable = () => {
         filterName="AssetsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );
