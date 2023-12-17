@@ -520,6 +520,15 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
           {dropDownvalue?.rolesValue?.roleName}
           </Box>
         </Stack>
+
+        <Stack direction="row" alignItems="center">
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
+         CTC
+          </Box>
+          <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
+          {dropDownvalue?.ctc}
+          </Box>
+        </Stack>
        
         {/* <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>

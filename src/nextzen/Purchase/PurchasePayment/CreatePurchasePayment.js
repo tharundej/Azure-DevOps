@@ -12,10 +12,10 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 
 import instance from 'src/api/BaseURL';
 
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, TextField ,Grid,Autocomplete} from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
-import { Autocomplete } from '@mui/material';
+
 export default function CreatePurchasePayment({ currentData, handleClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
@@ -65,7 +65,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   } = methods;
   const values = watch();
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data1) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
     try {
@@ -110,6 +110,9 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
 
     setData(newObj);
   }
+
+  const paymentTypeOptions=["Cash","Check","UPI"];
+  const paymentStatusOptions = ["Paid", "Partial Paid", "Not Paid"];
 
   return (
     <div style={{ paddingTop: '20px' }}>
@@ -168,8 +171,42 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     id="date-picker-inline"
                     label="Due Date"
                   />
-            <TextField name="Payment Method" label="Payment Method" />
-            <TextField name="Payment Status" label="Payment Status" />
+            <Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={paymentTypeOptions}
+                value={data?.paymentType || ""}
+                getOptionLabel={(option) => option}
+                onChange={(e, value) => {
+                  console.log(value);
+                  const newArray = { ...data, paymentType: value }; // Create a new object with the updated paymentType
+                  setData(newArray);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="Payment Type" />}
+              />
+              </Grid>
+              <Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={paymentStatusOptions}
+                value={data?.paymentStatus || ""}
+                getOptionLabel={(option) => option}
+                onChange={(e, value) => {
+                  console.log(value);
+                  const newArray = { ...data, paymentStatus: value }; // Create a new object with the updated paymentType
+                  setData(newArray);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="Payment Status" />}
+              />
+              </Grid>
             
           </Box>
           
@@ -179,7 +216,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting} onClick={onSubmit}>
             Save
           </LoadingButton>
         </DialogActions>

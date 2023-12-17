@@ -1262,6 +1262,26 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
               </Grid>
 
 
+              <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="CTC"
+                    label="CTC"
+                    variant="outlined"
+                    id="CTC"
+                     value={currentUser?.ctc}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        ctc: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
+
+
 
               {/* checking  */}
 
