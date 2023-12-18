@@ -91,8 +91,8 @@ export default function ApplyLoan({ handleClose,getTableData }) {
             <Grid container flexDirection="row" spacing={1}>
    <Grid item xs={12} md={6}>
                 <RHFSelect name="requestType" label="Request Type">
-                   <MenuItem value="salaryAdvanceRequest">Salary Advance Request</MenuItem>
-                   <MenuItem value="loanRequest">Loan Request</MenuItem>
+                   <MenuItem value="Salary Advance Request">Salary Advance Request</MenuItem>
+                   <MenuItem value="Loan Request">Loan Request</MenuItem>
                 </RHFSelect>
     </Grid>
                 <Grid item xs={12} md={6}>

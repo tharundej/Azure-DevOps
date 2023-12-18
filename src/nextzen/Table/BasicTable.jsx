@@ -157,7 +157,7 @@ const BasicTable = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
-  console.log(initialDefaultPayload, 'initialDefaultPayload====================');
+  console.log(initialDefaultPayload, 'initialDefaultPayload====================',defaultPayload);
   //  console.log(actions,"actions==......")
   //  console.log(onclickActions(),"onclickActions  function --->")
   const [newPage, setNewPage] = useState(initialDefaultPayload?.Page);
@@ -220,9 +220,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
-      // url: baseUrl + `${endpoint}`,
-      url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords',
-      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
+      url: baseUrl + `${endpoint}`,
+      // url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`+`${endpoint}`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,

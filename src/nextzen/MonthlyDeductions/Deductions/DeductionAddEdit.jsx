@@ -1,18 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import * as Yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Dialog from '@mui/material/Dialog';
 import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ModalHeader from '../../global/modalheader/ModalHeader';
-import { Autocomplete, TextField,Chip,DialogContent,DialogActions,Grid ,InputLabelProps, Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
-import FormProvider, {
-    RHFSwitch,
-    RHFTextField,
-    RHFUploadAvatar,
-    RHFAutocomplete,
-  } from 'src/components/hook-form';
+import Iconify from 'src/components/iconify/iconify';
+import { Autocomplete, TextField,Chip,Dialog,DialogContent,DialogActions,Grid ,IconButton,Tooltip,InputLabelProps, Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
@@ -26,19 +17,6 @@ const MenuProps = {
     },
   },
 };
-const names = [
-  'Select All',
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
     const [employeeListData,setEmployesListData] = useState()
     const {user} = useContext(UserContext)
@@ -49,6 +27,7 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
     const [selectCount,setSelectCount] = useState(1)
     const [deductionDetails, setDeductionDetails] = useState();
     const [personName, setPersonName] = useState();
+    const [itemAdded,setItemAdded] = useState(true); 
     const list=[{id:"healthInsurancePremium",name:"Health Insurance Premium"},{id:"loanRequest",name:"Loan Request"},{id:"absenceDeductions",name:"Absence Deductions"},{id:"unionDues",name:'Union Dues'},{id:"garnishments",name:"Garnishments"},{id:"salaryAdvanceRequest",name:'Salary Advance'},{id:"otherDeductions",name:"Other Deductions"}]
     useEffect(()=>{
         getEmployeesList()
@@ -177,6 +156,7 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
 
  
 const handleRemove=()=>{
+  setItemAdded(true)
   if (fieldValues.length > 0) {
     setFieldValues((prevValues) => {
       const updatedValues = [...prevValues];
@@ -188,6 +168,7 @@ const handleRemove=()=>{
 }
 const handleAdd =()=>{
   setSelectCount(selectCount+1)
+  setItemAdded(false)
 }
 const filteredFieldValues = fieldValues.filter(
   (value) => value.Type !== "loanRequest" && value.Type !== "salaryAdvanceRequest"
@@ -454,13 +435,13 @@ useEffect(() => {
           //     ? (healthInsuranceDetails?.deductionAmount || 0) // Convert to string if needed
           //     : ''
           // }
-          defaultValue={
-            fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium
-              ? (healthInsuranceDetails?.deductionAmount !== undefined
-                  ? healthInsuranceDetails.deductionAmount
-                  : '')
-              : 0
-          }
+          // defaultValue={
+          //   fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium
+          //     ? (healthInsuranceDetails?.deductionAmount !== undefined
+          //         ? healthInsuranceDetails.deductionAmount
+          //         : '')
+          //     : ''
+          // }
           onChange={(e) =>
             handleTextFieldChange(
               index,
@@ -500,13 +481,25 @@ useEffect(() => {
     ))}
   </div>
 
-      <div style={{display:"flex"}}>  <Button onClick={handleAdd}>ADD</Button>
-        <Button onClick={()=>handleRemove()}>Remove</Button>
+      <div style={{display:"flex",float:'right',right:5,textAlign:'right',justifyContent:'right'}}>   
+      {itemAdded ? (
+    <Tooltip title="Add" placement="top">
+      <IconButton onClick={handleAdd}>
+        <Iconify icon="icons8:plus" sx={{color:'black'}}/>
+      </IconButton>
+    </Tooltip>
+  ) : (
+    <Tooltip title="Remove" placement="top">
+      <IconButton onClick={handleRemove}>
+        <Iconify icon="icons8:minus" sx={{color:'black'}}/>
+      </IconButton>
+    </Tooltip>
+  )}
         </div>
       </Box>
      
       <DialogActions>
-              <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+              <Stack alignItems="flex-end" sx={{ display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
               <Button variant='outlined' onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>
                 <Button variant="contained" color='primary' onClick={AddDeductions}>
                   {/* {!currentUser ? 'Update Timesheet' : 'Add  TimeSheet'} */}
