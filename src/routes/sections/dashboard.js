@@ -390,6 +390,7 @@ export const dashboardRoutes = [
           },
         ],
       },
+
       {
         path: 'vendor',
         children: [
@@ -619,7 +620,7 @@ export const dashboardRoutes = [
       { path: 'roleconfiguration', element: <RoleConfiguration /> },
 
    { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
-  
+
   ],
 },
 ];

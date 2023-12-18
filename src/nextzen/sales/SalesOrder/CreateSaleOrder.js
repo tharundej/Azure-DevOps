@@ -38,19 +38,19 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
       locationID: currentData?.locationID || 0,
       billToName: currentData?.billToName || '',
-      billToAddres:currentData?.billToAddres || '',
-      billToState:currentData?.billToState || '',
-      billToCity:currentData?.billToCity || '',
-      billToPincode:currentData?.billToPincode || 0,
-      billToGST:currentData?.billToGST || '',
-      billToStateCode:currentData?.billToStateCode || 0,
-      shipToName:currentData?.shipToName || '',
-      shipToAddress:currentData?.shipToAddress || '',
-      shipToState:currentData?.shipToState || '',
-      shipToCity:currentData?.shipToCity || '',
-      shipToPincode:currentData?.shipToPincode || 0,
-      shipToGST:currentData?.shipToGST || '',
-      shipToStateCode:currentData?.shipToStateCode || 0,
+      billToAddres: currentData?.billToAddres || '',
+      billToState: currentData?.billToState || '',
+      billToCity: currentData?.billToCity || '',
+      billToPincode: currentData?.billToPincode || 0,
+      billToGST: currentData?.billToGST || '',
+      billToStateCode: currentData?.billToStateCode || 0,
+      shipToName: currentData?.shipToName || '',
+      shipToAddress: currentData?.shipToAddress || '',
+      shipToState: currentData?.shipToState || '',
+      shipToCity: currentData?.shipToCity || '',
+      shipToPincode: currentData?.shipToPincode || 0,
+      shipToGST: currentData?.shipToGST || '',
+      shipToStateCode: currentData?.shipToStateCode || 0,
       paymentTerm: currentData?.paymentTerm || '',
       grossTotalAmount: currentData?.grossTotalAmount || 0,
       gstAmount: currentData?.gstAmount || 0,
@@ -113,7 +113,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     }
   };
   const fetchProduct = async () => {
-    const data = { companyID: user?.companyID ? user?.companyID : '',
+    const data = {
+      companyID: user?.companyID ? user?.companyID : '',
     };
     try {
       const response = await getProductListAPI(data);
@@ -127,8 +128,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     }
   };
   const fetchCustomer = async () => {
-    const data = {  companyId: user?.companyID ? user?.companyID : '',
-   };
+    const data = {
+      companyId: user?.companyID ? user?.companyID : '',
+    };
     try {
       const response = await getCustomerListAPI(data);
       setCustomerOptions(response);
@@ -164,19 +166,19 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const HandleDropDownChange = (selectedValue, fieldName, index, gstRate, price) => {
     setValue(fieldName, selectedValue);
     if (gstRate) {
-      setValue(`addPurchaseMaterial[${index}].rate`, price ? price : 0);
-      setValue(`addPurchaseMaterial[${index}].gstRate`, gstRate ? gstRate : 0);
+      setValue(`orderProduct[${index}].rate`, price ? price : 0);
+      setValue(`orderProduct[${index}].gstRate`, gstRate ? gstRate : 0);
     }
   };
   const updateCalculatedValues = (index) => {
-    const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
-    const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
-    const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
+    const parsedQuantity = parseFloat(watch(`orderProduct[${index}].quantity`));
+    const parsedPrice = parseFloat(watch(`orderProduct[${index}].rate`));
+    const parsedGstRate = parseFloat(watch(`orderProduct[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
     const gstAmount = amount * (parsedGstRate / 100);
-    setValue(`addPurchaseMaterial[${index}].amount`, amount);
-    setValue(`addPurchaseMaterial[${index}].gstAmount`, gstAmount);
-    setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
+    setValue(`orderProduct[${index}].amount`, amount);
+    setValue(`orderProduct[${index}].gstAmount`, gstAmount);
+    setValue(`orderProduct[${index}].totalAmount`, amount + gstAmount);
   };
 
   const onSubmit = handleSubmit(async (data) => {
@@ -202,6 +204,18 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       data.grossTotalAmount = parseInt(data.grossTotalAmount);
       data.gstAmount = parseInt(data.gstAmount);
       data.advanceAmount = parseInt(data.advanceAmount);
+
+      data?.orderProduct?.forEach((product, index) => {
+        data.orderProduct[index].productId = parseInt(product.productId) || 0;
+        data.orderProduct[index].quantity = parseFloat(product.quantity) || 0;
+        data.orderProduct[index].rate = parseFloat(product.rate) || 0;
+        data.orderProduct[index].amount = parseFloat(product.amount) || 0;
+        data.orderProduct[index].gstRate = parseFloat(product.gstRate) || 0;
+        data.orderProduct[index].gstAmount = parseFloat(product.gstAmount) || 0;
+        data.orderProduct[index].discount = parseFloat(product.discount) || 0;
+      });
+
+
       console.log('Create Factory Data', data);
       let response = await createSalesOrderAPI(data);
       // if (currentData?.locationName) {
@@ -301,13 +315,13 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       }}
     >
       {/* <RHFAutocomplete
-        name={`addPurchaseMaterial[${index}].materialId`}
-        id={`addPurchaseMaterial[${index}].materialId`}
+        name={`orderProduct[${index}].materialId`}
+        id={`orderProduct[${index}].materialId`}
         options={productOptions || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
             newValue.id,
-            `addPurchaseMaterial[${index}].materialId`,
+            `orderProduct[${index}].materialId`,
             index,
             newValue.gstRate,
             newValue.materialPrice
@@ -318,27 +332,27 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           <TextField {...params} label="Select Product" variant="outlined" />
         )}
       /> */}
-       <RHFAutocomplete
-              name={`addPurchaseMaterial[${index}].product`}
-              id={`addPurchaseMaterial[${index}].product`}
-              options={productOptions || []}
-              onChange={(event, newValue) =>
-                HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].product`)
-              }
+      <RHFAutocomplete
+        name={`orderProduct[${index}].productId`}
+        id={`orderProduct[${index}].productId`}
+        options={productOptions || []}
+        onChange={(event, newValue) =>
+          HandleDropDownChange(newValue.productId, `orderProduct[${index}].productId`)
+        }
 
-              value={productOptions.find((option) => option.productId === selectedProduct) || null}
-              getOptionLabel={(option) => option.productName} // Specify the property to display in the input
-              renderInput={(params) => (
-                <TextField {...params} label="Select Product" variant="outlined" />
-              )}
-            />
+        value={productOptions.find((option) => option.productId === selectedProduct) || null}
+        getOptionLabel={(option) => option.productName} // Specify the property to display in the input
+        renderInput={(params) => (
+          <TextField {...params} label="Select Product" variant="outlined" />
+        )}
+      />
 
-     <RHFAutocomplete
-        name={`addPurchaseMaterial[${index}].unitOfMeasure`}
-        id={`addPurchaseMaterial[${index}].unitOfMeasure`}
+      <RHFAutocomplete
+        name={`orderProduct[${index}].unitOfMeasure`}
+        id={`orderProduct[${index}].unitOfMeasure`}
         options={unitOptions || []}
         onChange={(event, newValue) =>
-          HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].unitOfMeasure`)
+          HandleDropDownChange(newValue, `orderProduct[${index}].unitOfMeasure`)
         }
         getOptionLabel={(option) => option}
         renderInput={(params) => (
@@ -347,21 +361,21 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       />
 
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].quantity`}
+        name={`orderProduct[${index}].quantity`}
         label="Quantity"
         type="number"
         defaultValue={1}
         onChange={(e) => HandleInputChange(e, index)}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].rate`}
+        name={`orderProduct[${index}].rate`}
         label="Rate"
         type="number"
         defaultValue={0}
         onChange={(e) => HandleInputChange(e, index)}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].amount`}
+        name={`orderProduct[${index}].amount`}
         label="Amount"
         defaultValue={0}
         InputProps={{
@@ -369,41 +383,47 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         }}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].gstRate`}
+        name={`orderProduct[${index}].gstRate`}
         label="GST Rate"
         defaultValue={0}
         type="number"
         onChange={(e) => HandleInputChange(e, index)}
       />
-      <RHFTextField
-        name={`addPurchaseMaterial[${index}].gstAmount`}
+      {/* <RHFTextField
+        name={`orderProduct[${index}].gstAmount`}
         label="GST Amount"
         defaultValue={0}
         InputProps={{
           readOnly: true,
         }}
-      />
-      <RHFTextField
-        name={`addPurchaseMaterial[${index}].totalAmount`}
+      /> */}
+      {/* <RHFTextField
+        name={`orderProduct[${index}].totalAmount`}
         label="Total Amount"
         defaultValue={0}
         InputProps={{
           readOnly: true,
         }}
-      />
+      /> */}
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].discount`}
+        name={`orderProduct[${index}].discount`}
         type="number"
         defaultValue={0}
         label="Discount"
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].advanceAmount`}
+        name={`orderProduct[${index}].hsnCode`}
+
+        defaultValue={''}
+        label="HSN Code"
+      />
+      {/* <RHFTextField
+        name={`orderProduct[${index}].advanceAmount`}
         type="number"
         defaultValue={0}
         label="Advance Amount"
-      />
-      <RHFTextField name={`addPurchaseMaterial[${index}].comments`} label="Comments" />
+      /> */}
+      <RHFTextField name={`orderProduct[${index}].comments`} label="Comments" />
       <Button
         sx={{ height: '40px', marginTop: '3px' }}
         variant="contained"
@@ -436,7 +456,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
 
   return (
     <div>
-      <ModalHeader heading={"Add New Sale Order"}/>
+      <ModalHeader heading={"Add New Sale Order"} />
       <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* <DialogTitle>ADD New Purchase Order</DialogTitle> */}
         <SnackBarComponent
@@ -458,7 +478,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             }}
           >
 
-             <RHFAutocomplete
+            <RHFAutocomplete
               name="customerId"
               id="customerId"
               options={customerOptions || []}
@@ -566,7 +586,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             <RHFTextField name="companyStateCode" label="Company State Code" /> */}
             <RHFTextField name="paymentTerm" label="Payment Term" />
             <RHFTextField name="grossTotalAmount" label="Gross Total Amount" />
-            <RHFTextField name="gstAmount" label="GST Amount"/>
+            <RHFTextField name="gstAmount" label="GST Amount" />
             <RHFTextField name="advanceAmount" label="Advance Amount" />
           </Box>
           <Box
@@ -585,7 +605,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               }}
               startIcon={<Iconify icon="mingcute:add-line" />}
               sx={{ margin: '20px' }}
-              // disabled={!selectedVendor}
+            // disabled={!selectedVendor}
             >
               Add
             </Button>
