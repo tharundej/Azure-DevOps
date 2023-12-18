@@ -12,7 +12,7 @@ import Card from '@mui/material/Card';
 import { fShortenNumber } from 'src/utils/format-number';
 // components
 import Iconify from 'src/components/iconify';
-import { formatDateBirthday } from 'src/nextzen/global/GetDateFormat';
+import { formatDateBirthday,formatDateToYYYYMMDD,formatDate } from 'src/nextzen/global/GetDateFormat';
 import Scrollbar from 'src/components/scrollbar';
 // ----------------------------------------------------------------------
 
