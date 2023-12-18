@@ -45,7 +45,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { setCommentRange } from 'typescript';
 
-export default function CreateSwapRequest({ currentUser , handleClose }) {
+export default function CreateSwapRequest({ currentUser , handleClose,getTableData }) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -164,6 +164,7 @@ const [Comment,setComment]=useState('')
 
       const response = await instance.post('/createSwapRequest', data).then(
         (successData) => {
+          getTableData()
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
 

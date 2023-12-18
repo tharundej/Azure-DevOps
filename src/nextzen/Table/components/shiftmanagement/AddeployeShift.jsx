@@ -45,7 +45,7 @@ import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function AddEmployeShift({ currentUser, handleClose }) {
+export default function AddEmployeShift({ currentUser, handleClose ,getTableData}) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -282,9 +282,10 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       } else {
         const response = await instance.post('/addShiftDetails', data).then(
           (successData) => {
+
+            getTableData()
             handleClose();
             enqueueSnackbar(response.data.message, { variant: 'success' });
-
             console.log('sucess', successData);
           },
           (error) => {

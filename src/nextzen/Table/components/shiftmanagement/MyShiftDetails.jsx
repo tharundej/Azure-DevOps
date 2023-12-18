@@ -32,7 +32,7 @@ export default function MyShiftDetails() {
 
         
     
-        { id: "employee_name", label: "Employee ID", width: 180, type: "text" },
+        { id: "shift_group", label: "Shift Group Name", width: 180, type: "text" },
 
         { id: "shift_name", label: "Shift Name", width: 180, type: "text" },
     
@@ -44,7 +44,7 @@ export default function MyShiftDetails() {
         { id: "end_time", label: "End Time", width: 100, type: "text" },
         // { id: "start_date", label: "Start Date", width: 100, type: "text" },
         // { id: "end_date ", label: "End Date", width: 100, type: "text" },
-        { id: "", label: "View Team Mates", width: 100,eyeIcon:true, type: "text" },
+        { id: "", label: "View Team Mates", width: 100, type: "view" },
     
         // { id: '', width: 88 },
     

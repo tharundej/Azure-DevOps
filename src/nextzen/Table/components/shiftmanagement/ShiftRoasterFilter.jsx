@@ -86,7 +86,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch}){
+export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch,getTableData}){
   const {user} = useContext(UserContext)
     const theme = useTheme();
     const names = [
@@ -364,7 +364,7 @@ const getShiftGroupName = async ()=>{
  }}
  className="custom-dialog"  
 >
- <AddEmployeShift currentUser={{}} handleClose={handleClose}/>
+ <AddEmployeShift currentUser={{}} handleClose={handleClose}  getTableData={getTableData}/>
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">
@@ -381,7 +381,7 @@ const getShiftGroupName = async ()=>{
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employee To Shift</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}  startIcon={<Iconify icon="mingcute:add-line" />}>Add Employee To Shift</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>

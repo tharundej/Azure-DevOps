@@ -45,7 +45,7 @@ import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function EditShiftRoaster({ currentUser, editData, handleClose }) {
+export default function EditShiftRoaster({ currentUser, editData, handleClose ,count}) {
   const [ListEMploye,setListEMploye] =useState([])
  
 
@@ -104,7 +104,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
    
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
-const [count , setCount]=useState(0)
+// const [count , setCount]=useState(0)
   const [employeSwapDetails, setEmployeSwapDetails] = useState([]);
   const [currentEmployeSwapData, setCurrentEmployeSwapData] = useState({});
   const [currentEmployeSwapData1, setCurrentEmployeSwapData1] = useState({});
@@ -371,7 +371,7 @@ const [count , setCount]=useState(0)
 
       const response = await instance.post('/editShiftDetails', data).then(
         (successData) => {
-          setCount(count+1)
+          count = count + 1
           handleClose();
           enqueueSnackbar(response.data.message, { variant: 'success' });
 

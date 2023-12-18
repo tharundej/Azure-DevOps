@@ -44,7 +44,7 @@ import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData,}) {
+export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData,count}) {
 console.log("🚀 ~ file: ApproveSwap.jsx:47 ~ ApproveSwap ~ rowData:", rowData)
 
   const [datesUsed, setDatesUsed] = useState({
@@ -119,10 +119,10 @@ console.log("🚀 ~ file: ApproveSwap.jsx:47 ~ ApproveSwap ~ rowData:", rowData)
 
       const response = await instance.post('/ApproveSwap', data).then(
         (successData) => {
-
+            count = count + 1
             ApproveClose()
+            enqueueSnackbar(response.message,{variant:'success'})
 
-          enqueueSnackbar(response.data.message,{variant:'success'})
 
           console.log('sucess', successData);
         },
@@ -167,7 +167,7 @@ console.log("🚀 ~ file: ApproveSwap.jsx:47 ~ ApproveSwap ~ rowData:", rowData)
 
 
 
-{status=="Approve" &&
+{status=="Approved" &&
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
         <DatePicker

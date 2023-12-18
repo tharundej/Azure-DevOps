@@ -53,7 +53,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
       },
     },
   };
-export default function SwapRequestSearchFilter({filterSearch,filterData}){
+export default function SwapRequestSearchFilter({filterSearch,filterData,getTableData}){
   const theme = useTheme();
   const {user} = useContext(UserContext)
   const [leaveType,SetLeaveType]= useState();
@@ -329,7 +329,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
  }}
  className="custom-dialog"  
 >
- <CreateSwapRequest currentUser={{}} handleClose={handleRequestClose} />
+ <CreateSwapRequest currentUser={{}} handleClose={handleRequestClose} getTableData={getTableData} />
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">
@@ -350,7 +350,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData}){
                <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Shift Swap</Button>
                </Grid> */}
                <Grid item  sx={{marginLeft:'4px'}}>  
-               <Button variant='contained' color='primary' className="button" onClick={handleForm}>Request Swap</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleForm} startIcon={<Iconify icon="mingcute:add-line" />}>Request Swap</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
