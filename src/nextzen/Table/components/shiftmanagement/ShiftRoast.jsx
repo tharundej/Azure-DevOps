@@ -43,20 +43,20 @@ export default function ShiftRoast() {
         { id: "shiftName", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "", label: "Employees", width: 180, type: "view" },
         
         { id: "departmentName", label: "Department", width: 180, type: "text" },
         { id: "designationName", label: "Designation", width: 180, type: "text" },
         { id: "gradeName", label: "Grade", width: 220, type: "text" },
+        { id: "", label: "Employees", width: 180, type: "view" },
         // { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
         
         // { id: "start_date", label: " Start Date", width: 100, type: "text" },
         // { id: "end_date", label: "End Date", width: 100, type: "text" },
         // { id: "status", label: "Status", width: 100, t ype: "badge" },
         // { id: '', width: 88 },
-    
+        
       ];
-    
+      
       const defaultPayload={
         "cid":(user?.companyID)?user?.companyID : '',
         "locationId": (user?.locationID)?user?.locationID : '',

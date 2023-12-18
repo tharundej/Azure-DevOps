@@ -112,19 +112,8 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
   const [employeData, setEmployeData] = useState([]);
   const [ShiftGroupName, setShiftGroupName] = useState('');
   const [ShiftName, setShiftName] = useState([]);
-  // console.log(
-  //   '🚀 ~ file: AddeployeShift.jsx:134 ~ AddEmployeShift ~ ShiftGroupName:',
-  //   ShiftGroupName
-  // );
-  console.log('🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:', employeData);
   const [CurrentGradeData, setCurrentGradeData] = useState({});
-  console.log(
-    '🚀 ~ file: AddeployeShift.jsx:140 ~ AddEmployeShift ~ CurrentGradeData:',
-    CurrentGradeData.designationGradeID
-  );
   const [SwitchValue, SetSwitchValue] = useState('');
-  console.log('🚀 ~ file: AddeployeShift.jsx:142 ~ AddEmployeShift ~ SwitchValue:', SwitchValue);
-
   const getDepartment = async () => {
     try {
       const data = {
@@ -133,10 +122,6 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
       };
       const response = await instance.post('/getDepartment', data);
       setDepartmentData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -147,14 +132,10 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
     try {
       const data = {
         companyID: (user?.companyID)?user?.companyID : '',
-        departmentID: newvalue.departmentID,
+        departmentID: (newvalue != null)? newvalue?.departmentID : 0,
       };
       const response = await instance.post('/onboardingDesignation', data);
       setDesignationData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -164,15 +145,10 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
   const getGrade = async (newvalue) => {
     try {
       const data = {
-        designationID: newvalue.designationID,
+        designationID: (newvalue != null) ? newvalue?.designationID : 0,
       };
       const response = await instance.post('/onboardingDesignationGrade', data);
       setgradeData(response.data.data);
-
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -185,10 +161,6 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
       };
       const response = await instance.post('/getEmployeeIDDetails', data);
       setEmployeData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -201,10 +173,6 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
   //     };
   //     const response = await instance.post('/getShiftGroupName', data);
   //     setShiftGroupName(response.data.data);
-  //     console.log(
-  //       '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
-  //       response.data.data
-  //     );
   //   } catch (error) {
   //     console.error('Error', error);
   //     throw error;
@@ -219,10 +187,6 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
-      console.log(
-        '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
-        response.data.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -232,7 +196,6 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
-    console.log('🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:', values);
     //  setemployeeList ( currentEmployeData[0]?.employeeId);
 
     // setCommaSepaatedEmployeString(EmployeList.join(','))
