@@ -66,12 +66,12 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data1) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
+    const obj=data;
+    data.balanceAmount=data?.totalAmount-data?.paidAmount || 0;
     try {
-      console.log(data, 'data111ugsghghh');
+      console.log(obj, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchasePayment', data).then(
+      const response = await instance.post('addPurchasePayment', obj).then(
         (successData) => {
           console.log('sucess', successData);
         },
@@ -132,7 +132,25 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
           >
             
             <TextField name="PO Number" label="PO Number" value={data?.poNumber || ""} onChange={(e)=>{handleChangeString(e,"poNumber")}}  />
-            <TextField name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
+            <DatePicker
+                  sx={{width:'100%'}}
+                  fullWidth
+                    value={data?.poDate ? dayjs(data?.poDate).toDate() : null}
+                    onChange={(date) => {
+                      setData(prev => ({
+                        ...prev,
+                        poDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="PO Date"
+                  />
+            <TextField type="number" name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
@@ -151,8 +169,30 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     id="date-picker-inline"
                     label="Paid Date"
                   />
-            <TextField name="No of Instalments" label="Number of Instalments" value={data?.noOfInstallements || ""} onChange={(e)=>{handleChangeInt(e,"noOfInstallements")}} />
-            <TextField name="Balance Amount" label="Balance Amount" value={data?.balanceAmount || ""}  onChange={(e)=>{handleChangeFloat(e,"balanceAmount")}}/>
+
+<TextField type="number" name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeInt(e,"invoiceNumber")}} />
+            <DatePicker
+                  sx={{width:'100%'}}
+                  fullWidth
+                    value={data?.invoiceDate ? dayjs(data?.invoiceDate).toDate() : null}
+                    onChange={(date) => {
+                      setData(prev => ({
+                        ...prev,
+                        invoiceDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                      }))
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    inputFormat="yyyy-MM-dd"
+                    variant="inline"
+                    format="yyyy-MM-dd"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Invoice Date"
+                  />
+            
+            <TextField name="No of Instalments" label="Number of Instalments" value={data?.numOfInstallments || ""} onChange={(e)=>{handleChangeInt(e,"numOfInstallments")}} />
+            <TextField type="number" name="paidAmount" label="Paid Amount" value={data?.paidAmount || ""} onChange={(e)=>{handleChangeFloat(e,"paidAmount")}} />
+            <TextField name="Balance Amount" label="Balance Amount" value={data?.totalAmount-data?.paidAmount || ""} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
@@ -176,11 +216,11 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                 disablePortal
                 id="combo-box-demo"
                 options={paymentTypeOptions}
-                value={data?.paymentType || ""}
+                value={data?.paymentMethod || ""}
                 getOptionLabel={(option) => option}
                 onChange={(e, value) => {
                   console.log(value);
-                  const newArray = { ...data, paymentType: value }; // Create a new object with the updated paymentType
+                  const newArray = { ...data, paymentMethod: value }; // Create a new object with the updated paymentType
                   setData(newArray);
                 }}
                 sx={{
