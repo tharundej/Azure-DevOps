@@ -58,29 +58,21 @@ export default function ShiftRoast() {
       ];
     
       const defaultPayload={
-        "cid":(user?.companyID)?user?.companyID:'',
-        "locationId": (user?.locationID)?user?.locationID:'',
+        "cid":(user?.companyID)?user?.companyID : '',
+        "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
         "count": 5,
         "externalFilters": {
             "shiftName": "",
-          
-            "startDate": {
-                "from": "",
-                "to": ""
-            },
-            "endDate": {
-                "from": "",
-                "to": ""
-            }
+            "shiftGroupName":""
+           
         },
         "sort": {
-            "key": 0,
+            "key": 1,
             "orderBy": ""
         }
     }
-    
       const actions = [
     
         { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},

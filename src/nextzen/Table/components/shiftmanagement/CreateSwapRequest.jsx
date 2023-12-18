@@ -42,6 +42,8 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { setCommentRange } from 'typescript';
 
 export default function CreateSwapRequest({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -126,7 +128,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   // states
   const [shiftGroupName,setShiftGroupName] = useState([])
   const [ShiftNameDetails,setShiftNameDetails] = useState({})
-
+const [Comment,setComment]=useState('')
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
@@ -155,7 +157,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     employeeId:(user?.employeeID)?user?.employeeID : '',
     toShiftGroupId:parseInt( ShiftNameDetails.employeeShiftGroupId),
     startDate:formatDateToYYYYMMDD( datesUsed.startDate),
-    
+    comment: Comment,
 
   }
       console.log(data, 'data111ugsghghh');
@@ -178,18 +180,18 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     }
   });
 
+  const handleChange =(event)=>{
+    setComment(event.target.value)
+  }
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '0px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Employee Request Swap  "/>
       <Grid container spacing={3}>
 
 <Grid xs={12} md={12}>
-  <Grid sx={{ padding: '8px' }}>
-    <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here 
-    </Typography>
-  </Grid>
+
   <Card sx={{ p: 3 }}>
     <Box
       rowGap={1}
@@ -312,7 +314,7 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
           />
         </DemoContainer>
       </LocalizationProvider> */}
-<RHFTextField name="comment" label="Comments " />
+<RHFTextField onChange={handleChange} name="comment" label="Comments " />
 
 
       {/* <br />
@@ -394,10 +396,10 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
 
 
         <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                <Button  sx={{mr:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
+                <LoadingButton type="submit"   sx={{backgroundColor:'#3B82F6'}} variant="contained" color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Request Shift Swap'}
                 </LoadingButton>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
   </Card>
 </Grid>

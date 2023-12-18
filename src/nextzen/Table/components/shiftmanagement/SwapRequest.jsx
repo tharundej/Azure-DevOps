@@ -62,21 +62,24 @@ export default function Swaprequest() {
       "page":0,
       "search":"",
       "externalFilters":{
-      "requestDate":{
-      "fromRequestDate":"",
-      "toRequestDate":""
-      },
-      "startDate":{
-      "fromStartDate":"",
-      "toStartDate":""
-      },
-      "status":""
-  }, 
-      "sort":{
-      "key":0,
-      "order":"employeeName"
-  }
-  }
+        "requestDate":{
+        "from":"",
+        "to":""
+        },
+        "startDate":{
+        "from":"",
+        "to":""
+        },
+        "employeeName":"",
+        "fromShiftGroup":"",
+        "toShiftGroup":"",
+        "status":""
+    },
+        "sort":{
+        "key":1,
+        "order":""
+    }
+    }
 
   
  const [approveShow  , setApproveShow]= useState(false)
@@ -106,9 +109,9 @@ const ApproveClose =() =>{
   } 
   const actions = [
     
-    { name: "Approve",  icon: "charm:circle-tick", id: "Approve", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+    { name: "Approve",  icon: "charm:circle-tick", id: "Approved", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
 
-    { name: "Reject", icon: "charm:circle-cross", id: "Reject", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
+    { name: "Reject", icon: "charm:circle-cross", id: "Rejected", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
 
   ];
     

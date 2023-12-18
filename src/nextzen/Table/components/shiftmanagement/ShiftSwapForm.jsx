@@ -42,6 +42,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ShiftSwapForm({ currentUser , handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -257,16 +258,13 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     }
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '0px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Employee Shift Swap "/>
       <Grid container spacing={3}>
 
 <Grid xs={12} md={12}>
-  <Grid sx={{ padding: '8px' }}>
-    <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here
-    </Typography>
-  </Grid>
+
   <Card sx={{ p: 3 }}>
     <Box
       rowGap={1}
@@ -545,10 +543,11 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
     </Box>
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+
+                <Button  variant="outlined"  sx={{mr:"5px"}} onClick={handleClose}>Cancel</Button>
+                <LoadingButton type="submit" variant="contained"   sx={{backgroundColor:'#3B82F6'}} color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Swap Shift'}
                 </LoadingButton>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
   </Card>
 

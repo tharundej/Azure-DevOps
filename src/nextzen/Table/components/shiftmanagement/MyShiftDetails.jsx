@@ -58,8 +58,9 @@ export default function MyShiftDetails() {
       "count":5,
       "Search":"",
       "externalFilters":{
-      "shift_name": ""
-   
+        "shift_name": "",
+        "shift_group": "",
+ 
   },
       "sort": {
       "orderby": "",

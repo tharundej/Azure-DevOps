@@ -42,8 +42,10 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData,}) {
+console.log("🚀 ~ file: ApproveSwap.jsx:47 ~ ApproveSwap ~ rowData:", rowData)
 
   const [datesUsed, setDatesUsed] = useState({
 
@@ -139,16 +141,17 @@ export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData
     ApproveClose()
   }
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div >
     <FormProvider methods={methods} onSubmit={onSubmit}>
+      <ModalHeader heading=" Update Swap Request"/>
     <Grid container spacing={3}>
 
 <Grid xs={12} md={12}>
-<Grid sx={{ padding: '8px' }}>
+{/* <Grid sx={{ padding: '8px' }}>
   <Typography sx={{ marginLeft: '5px' }}>
     Update Swap Request
   </Typography>
-</Grid>
+</Grid> */}
 <Card sx={{ p: 3 }}>
   <Box
     rowGap={1}
@@ -191,10 +194,10 @@ export default function ApproveSwap({ currentUser ,ApproveClose , status,rowData
 
 
       <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
+              <Button  sx={{mr:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
               <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
                 {!currentUser ? 'Create User' : 'Update Swap'}
               </LoadingButton>
-              <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
             </Stack>
 </Card>
 </Grid>

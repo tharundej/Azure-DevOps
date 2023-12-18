@@ -1,5 +1,5 @@
 import PropTypes, { element } from 'prop-types';
-import React,{ useEffect, useState,useCallback } from 'react';
+import React,{ useEffect, useState,useCallback, useContext } from 'react';
 import axios from 'axios';
 import { styled } from '@mui/system';
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
@@ -11,6 +11,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Today } from '@mui/icons-material';
@@ -24,6 +26,8 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ShiftSwapForm from './ShiftSwapForm';
 import CreateSwapRequest from './CreateSwapRequest';
+import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 const defaultFilters = {
   name: '',
   type: [],
@@ -51,29 +55,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   };
 export default function SwapSearchFilter({filterSearch,filterData}){
   const theme = useTheme();
+  const {user} = useContext(UserContext)
   const [leaveType,SetLeaveType]= useState();
-  const getLeaveType = () => {
-    const payload = {
-        // companyId: "C1"
-        companyId:localStorage.getItem('companyID')
-    }
-   
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: baseUrl + `/getLeaveType`,
-      // url:`https://qx41jxft-3001.inc1.devtunnels.ms/erp/getLeaveType`,
-      data:  payload
-    };
-  
-    axios.request(config).then((response) => {
-      SetLeaveType(response?.data?.list)
-    })
-  
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+ 
  
   const [dropdown,setDropdown]=useState({
 // 
@@ -86,7 +70,7 @@ export default function SwapSearchFilter({filterSearch,filterData}){
   const [datesFiledArray,setDatesFiledArray]=useState(
       [
         {
-          field:'swap_date',
+          field:'start_date',
           from:'applyDatefrom',
           to:'applyDateto'
         },
@@ -125,6 +109,78 @@ export default function SwapSearchFilter({filterSearch,filterData}){
     status: "",         // Add default value for "status"
     leave_type_name: "",  // Add default value for "leave_type_name"
   })
+  const [ShiftGroupName, setShiftGroupName]= useState([])
+  const [ShiftName, setShiftName]= useState([])
+  const[FromShiftGroup,setFromShiftGroup]=useState([])
+  const[ToShiftGroup,setToShiftGroup]=useState([])
+  const[FromShiftName,setFromShiftName]=useState([])
+  const[ToShiftName,setToShiftName]=useState([])
+
+  const handleChangeSingleDropDown =(event,newvalue,field)=>{
+    if(field==="from_shift_group"){
+      setFromShiftGroup(newvalue)
+      const obj=dropdown;
+      obj[field]=newvalue.shiftGroupName;
+      setDropdown(obj);
+    }
+   else if(field==="to_shift_group"){
+      setToShiftGroup(newvalue)
+      const obj=dropdown;
+      obj[field]=newvalue.shiftGroupName;
+      setDropdown(obj);
+    }
+   else if(field==="from_shift_name"){
+      setFromShiftName(newvalue)
+      const obj=dropdown;
+      obj[field]=newvalue.shiftGroupName;
+      setDropdown(obj);
+    }
+   else if(field==="to_shift_name"){
+      setToShiftName(newvalue)
+      const obj=dropdown;
+      obj[field]=newvalue.shiftGroupName;
+      setDropdown(obj);
+    }
+  }
+  const getShiftName = async (newvalue) => {
+    try {
+      const data = {
+        companyId: (user?.companyID)?user?.companyID : '',
+        locationId: (user?.locationID)?user?.locationID : '',
+      };
+      const response = await instance.post('/getShiftConfig', data);
+      setShiftName(response.data.data);
+      console.log(
+        '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
+        response.data.data
+      );
+    } catch (error) {
+      console.error('Error', error);
+      throw error;
+    }
+  };
+  const getShiftGroupName = async ()=>{
+    try{
+    const data = {
+      
+      companyId : (user?.companyID)? user?.companyID : '',
+      locationId : (user?.locationID)?user?.locationID : '',
+      supervisorId : (user?.employeeID)?user?.employeeID : '',
+  
+    }
+    const response = await instance.post('/getShiftGroupName',data);
+    setShiftGroupName (response.data.data);
+    console.log("🚀 ~ file: ShiftRoasterFilter.jsx:126 ~ getShiftGroupName ~ response.data.data:", response.data.data)
+  
+    }
+    catch (error){
+      console.error('Error', error);
+      throw error;
+  
+    }
+  }
+
+
   function formDateDataStructure(){
     return new Promise((resolve) => {
      
@@ -174,6 +230,8 @@ export default function SwapSearchFilter({filterSearch,filterData}){
     const handleClickOpen=()=>{
       setOpen(true);
       // getLeaveType();
+      getShiftGroupName()
+      getShiftName()
     }
     const handleClickClose=()=>{
       setOpen(false)
@@ -200,6 +258,10 @@ export default function SwapSearchFilter({filterSearch,filterData}){
       setDatesData([]);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
+      data.from_shift_group = FromShiftGroup?.shiftGroupName;
+      data.to_shift_group = ToShiftGroup?.shiftGroupName;
+      data.from_shift_name = FromShiftName?.shiftName;
+      data.to_shift_name = ToShiftName?.shiftName;
 
       filterData(data);
       setOpen(false);
@@ -207,16 +269,14 @@ export default function SwapSearchFilter({filterSearch,filterData}){
 
     const handleCancel = async()=>{
       setDropdownStatus([]);
-      setDropdownLeaveType([]);
+      setFromShiftGroup([]);
+      setFromShiftName([])
+      setToShiftGroup([])
+      setToShiftName([])
       setDates({
     applyDatefrom:"",
     applyDateto:"",
-    fromDatefrom:"",
-    fromDateto:"",
-    toDatefrom:"",
-    toDateto:"",
-    status: "",        
-    leave_type_name: "",  
+ 
       })
       setOpen(false);
     }
@@ -295,12 +355,12 @@ export default function SwapSearchFilter({filterSearch,filterData}){
                <Grid item>  
                <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Shift Swap</Button>
                </Grid>
-               <Grid item  sx={{marginLeft:'4px'}}>  
+               {/* <Grid item  sx={{marginLeft:'4px'}}>  
                <Button variant='contained' color='primary' className="button" onClick={handleRequestForm}>Request Swap</Button>
-               </Grid>
+               </Grid> */}
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-               <Iconify icon="mi:filter"/>
+               <Iconify icon="mi:filter"/>Filters
                </Button>
       </Grid>
  
@@ -312,25 +372,33 @@ export default function SwapSearchFilter({filterSearch,filterData}){
      
       <Dialog
         onClose={handleClickClose}
-        aria-labelledby="customized-dialog-title"
+       
         open={open}
       >
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
-        </DialogTitle>
+        <Grid container flex flexDirection={"row"}>
+      <Grid item  xs={10}>
+      <DialogTitle>Filters</DialogTitle>
+      </Grid>
+      <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
+      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={handleClickClose} />
+      </Grid>
+      </Grid>
         <DialogContent sx={{mt:0,paddingBottom:0}}>
           
           <Grid>
-                <Grid>
+          <Grid>
             <Typography>Swap Date</Typography>
      
-            <Grid container flexDirection="row">
-              <Grid item>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+            <Grid container flexDirection="row" flexWrap="nowrap" ms={12} lg={12} xs={12}>
+              <Grid ms={8} lg={8} xs={8} item>
+               
+
+             <LocalizationProvider     dateAdapter={AdapterDayjs}>
+                  <DemoContainer     components={['DatePicker']}>
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
+                    className="datepiker-ui"
+                      sx={{ width: '100%'  ,paddingLeft: '3px'}}
                       label="From Date"
                       value={dates?.applyDatefrom ? dayjs(dates.applyDatefrom) : null}
                       defaultValue={dayjs(new Date())}
@@ -343,12 +411,16 @@ export default function SwapSearchFilter({filterSearch,filterData}){
                     />
                   </DemoContainer>
                 </LocalizationProvider>
+                
                 </Grid>
-                <Grid item>
+                <Grid ms={8} lg={8} xs={8} item>
+                 
+
              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
+                  <DemoContainer    components={['DatePicker']}>
                     <DatePicker
-                      sx={{ width: '100%', paddingLeft: '3px' }}
+                    className="datepiker-ui"
+                      sx={{ width: '100%',paddingLeft: '3px' }}
                       label="To Date"
                       value={dates?.applyDateto ? dayjs(dates.applyDateto) : null}
                       defaultValue={dayjs(new Date())}
@@ -361,148 +433,122 @@ export default function SwapSearchFilter({filterSearch,filterData}){
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                </Grid>
-                </Grid>
-                </Grid>
-             {/* <Grid sx={{marginTop:2}}>
-
-             <Typography>Start Date</Typography>
-     
-     <Grid container flexDirection="row">
-       <Grid item>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DemoContainer components={['DatePicker']}>
-             <DatePicker
-               sx={{ width: '100%', paddingLeft: '3px' }}
-               label="From Date"
-               value={dates?.fromDatefrom ? dayjs(dates.fromDatefrom) : null}
-               defaultValue={dayjs(new Date())}
-               onChange={(newValue) => {
-                 setDates((prev) => ({
-                   ...prev,
-                   fromDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
-                 }));
-               }}
-             />
-           </DemoContainer>
-         </LocalizationProvider>
-         </Grid>
-         <Grid item>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DemoContainer components={['DatePicker']}>
-             <DatePicker
-               sx={{ width: '100%', paddingLeft: '3px' }}
-               label="To Date"
-               value={dates?.fromDateto ? dayjs(dates.fromDateto) : null}
-               defaultValue={dayjs(new Date())}
-               onChange={(newValue) => {
-                 setDates((prev) => ({
-                   ...prev,
-                   fromDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
-                 }));
-               }}
-             />
-           </DemoContainer>
-         </LocalizationProvider>
-         </Grid>
-         </Grid>
-         </Grid>
-      <Grid sx={{marginTop:2}}>
-
-      <Typography>End Date</Typography>
-     
-     <Grid container flexDirection="row">
-       <Grid item>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DemoContainer components={['DatePicker']}>
-             <DatePicker
-               sx={{ width: '100%', paddingLeft: '3px' }}
-               label="From Date"
-               value={dates?.toDatefrom ? dayjs(dates.toDatefrom) : null}
-               defaultValue={dayjs(new Date())}
-               onChange={(newValue) => {
-                 setDates((prev) => ({
-                   ...prev,
-                   toDatefrom:newValue? formatDateToYYYYMMDD(newValue):"",
-                 }));
-               }}
-             />
-           </DemoContainer>
-         </LocalizationProvider>
-         </Grid>
-         <Grid item>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DemoContainer components={['DatePicker']}>
-             <DatePicker
-               sx={{ width: '100%', paddingLeft: '3px' }}
-               label="To Date"
-               value={dates?.toDateto ? dayjs(dates.toDateto) : null}
-               defaultValue={dayjs(new Date())}
-               onChange={(newValue) => {
-                 setDates((prev) => ({
-                   ...prev,
-                   toDateto: newValue ? formatDateToYYYYMMDD(newValue):"",
-                 }));
-               }}
-             />
-           </DemoContainer>
-         </LocalizationProvider>
-         </Grid>
-         </Grid>
-         </Grid> */}
-      <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Status</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
-                  multiple
-                  value={dropdownstatus}
-                  onChange={(e)=>handleChangeDropDown(e,'status')}
-                  input={<OutlinedInput label="Status" />}
-                  MenuProps={MenuProps}
-                >
-                 
-                    <MenuItem value="pending">Pending</MenuItem>
-                    <MenuItem value="approved">Approved</MenuItem>
-                    <MenuItem value="rejected">Rejected</MenuItem>
                   
-                </Select>
-              </FormControl>
-                   </Grid>
-                   {/* <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="leave_type_name">Leave Type</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_2"
-                  id="demo-multiple-status_2"
-                  multiple
-                  value={dropdownLeaveType}
-                  onChange={(e)=>handleChangeDropDown(e,'leave_type_name')}
-                  input={<OutlinedInput label="Leave Type" />}
-                  MenuProps={MenuProps}
-                >
-                 
- {leaveType?.map((status) => {
-  return (
-                <MenuItem value={status.leaveTypeName} key={status.leaveTypeID}>
-                  {status.leaveTypeName}
-                </MenuItem>
-  )
-  })}
+                </Grid>
+                </Grid>
+                </Grid>
 
-                </Select>
-              </FormControl>
-                   </Grid> */}
+                {/* <Grid>
+                  <Grid marginTop="10px"marginBottom="10px" xs={12} md={6}>
+                  <FormControl fullWidth >
+                    <InputLabel fullWidth id="status">Status</InputLabel>
+                    <Select
+                    fullWidth
+                    labelId='status'
+                    id='demo'
+                    multiple
+                    value={dropdownstatus || []}
+                    onChange={(e)=>handleChangeDropDown(e,'status')}
+                    inputProps={<OutlinedInput label="Status"/>}
+                    MenuProps={MenuProps}
+                    >
+                      <MenuItem value="Pending">Pending</MenuItem>
+                      <MenuItem value="Approved">Approved</MenuItem>
+                      <MenuItem value="Rejected">Rejected</MenuItem>
+
+                    </Select>
+                  </FormControl>
+                   </Grid>
+               
+                </Grid> */}
+                <Grid marginTop="10px">
+         <Autocomplete
+                  disablePortal
+                  id="combo-box-demff33"
+                  options={ShiftGroupName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={FromShiftGroup || ""}
+                  getOptionLabel={(option) => option.shiftGroupName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftGroupName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeSingleDropDown(e,newvalue,'from_shift_group')}
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
+                />
+                </Grid>
+                <Grid marginTop='10px'>
+         <Autocomplete
+                  disablePortal
+                  id="combo-box-demff33"
+                  options={ShiftGroupName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={ToShiftGroup || ""}
+                  getOptionLabel={(option) => option.shiftGroupName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftGroupName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeSingleDropDown(e,newvalue,'to_shift_group')}
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select To Shift Group Name" />}
+                />
+                </Grid>
+                <Grid marginTop='10px'>
+         <Autocomplete
+                  disablePortal
+                  id="combo-box-demff33"
+                  options={ShiftName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={FromShiftName || ""}
+                  getOptionLabel={(option) => option.shiftName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftGroupName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeSingleDropDown(e,newvalue,'from_shift_name')}
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select From Shift Name" />}
+                />
+                </Grid>
+                <Grid marginTop='10px' marginBottom="15px">
+         <Autocomplete
+                  disablePortal
+                  id="combo-box-demff33"
+                  options={ShiftName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={ToShiftName || ""}
+                  getOptionLabel={(option) => option.shiftName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftGroupName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeSingleDropDown(e,newvalue,'to_shift_name')}
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select To ShiftName" />}
+                />
                 </Grid>
                </Grid>
-           
+               <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
+      <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
+            Reset
+          </Button>
+      <Button variant='outlined' sx={{margin:"2px"}} onClick={handleApply}>apply</Button>
+      {/* </Badge> */}
+
+      </Grid >  
          </DialogContent>
-       <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
+       {/* <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div> */}
     </Dialog>
     </>
     )

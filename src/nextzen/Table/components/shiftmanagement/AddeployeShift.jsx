@@ -43,6 +43,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function AddEmployeShift({ currentUser, handleClose }) {
   const [datesUsed, setDatesUsed] = useState({
@@ -301,13 +302,14 @@ const handleShift = (event)=>{
 setShiftGroupName(event.target.value)
 }
   return (
-    <div style={{ paddingTop: '20px' }}>
+    
+    <div style={{ paddingTop: '0px' }}>
+      {/* <ModalHeader heading="Apply Claim" /> */}
       <FormProvider methods={methods} onSubmit={onSubmit}>
+      <ModalHeader heading="Add Employee Shift Here" />  
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
-            <Grid sx={{ padding: '8px' }}>
-              <Typography sx={{ marginLeft: '5px' }}>Add Employee Shift Here </Typography>
-            </Grid>
+
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={1}
@@ -473,17 +475,18 @@ setShiftGroupName(event.target.value)
                 alignItems="flex-end"
                 sx={{ mt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
               >
+                <Button variant="outlined"  sx={{ mr: '5px' }} onClick={handleClose}>
+                  Cancel
+                </Button>
                 <LoadingButton
                   type="submit"
+                  sx={{backgroundColor:'#3B82F6'}}
                   variant="contained"
                   color="primary"
                   loading={isSubmitting}
                 >
                   {!currentUser ? 'Create User' : 'Add Employee To Shift'}
                 </LoadingButton>
-                <Button sx={{ ml: '5px' }} onClick={handleClose}>
-                  Cancel
-                </Button>
               </Stack>
             </Card>
           </Grid>
