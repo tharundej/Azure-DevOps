@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo ,useState} from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 // routes
 import { paths } from 'src/routes/paths';
 // locales
@@ -75,12 +75,13 @@ export function useNavData() {
   const {user}=useContext(UserContext);
   console.log(user,'UserContext')
   const [sidebarList,setSidebarList]=useState([])
+  const [sidebarListAccount,setSidebarListAccount]=useState([])
   const items= [
     {
       title: t('Dashboard'),
       path: paths.dashboard.root,
       icon: ICONS.g_dashboard,
-      key:'Dashboard'
+      key: 'Dashboard',
     },
     // {
     //   title: t('signup'),
@@ -97,25 +98,25 @@ export function useNavData() {
       title: t('Employee Management'),
       path: paths.dashboard.employee.root,
       icon: ICONS.g_employeeManagement,
-      key:'employeeManagement'
+      key: 'employeeManagement',
     },
     {
       title: t('Leave Management'),
       path: paths.dashboard.leave.root,
       icon: ICONS.g_leaveManagement,
-      key:'leaveManagement'
+      key: 'leaveManagement',
     },
     {
       title: t('Time Sheet Management'),
       path: paths.dashboard.timesheet.root,
       icon: ICONS.g_timesheetManagement,
-      key:'timeSheetManagement'
+      key: 'timeSheetManagement',
     },
     {
       title: t('Shift Management'),
       path: paths.dashboard.Shift.root,
       icon: ICONS.g_shiftManagement,
-      key:'shiftManagement'
+      key: 'shiftManagement',
     },
     {
       title: t('Claims'),
@@ -127,26 +128,26 @@ export function useNavData() {
       //   path: paths.dashboard.claims.compoffapprove },
 
       // ],
-      key:'claims'
+      key: 'claims',
     },
     {
       title: t('Payroll'),
       path: paths.dashboard.payroll.root,
       icon: ICONS.g_payroll,
-      key:'payroll'
+      key: 'payroll',
     },
     {
       title: t('IT Declaration'),
       path: paths.dashboard.itdeclaration.root,
       icon: ICONS.g_itDeclarations,
-      key:'itDeclaration',
-      name:'IT Declaration'
+      key: 'itDeclaration',
+      name: 'IT Declaration',
     },
     {
       title: t('Monthly Additions and Deductions'),
       path: paths.dashboard.monthlydeductions.root,
       icon: ICONS.g_monthlyAdditionalDeductions,
-      key:'monthlyAdditionalDeductions'
+      key: 'monthlyAdditionalDeductions',
     },
     {
       title: t('Appraisal Management'),
@@ -154,18 +155,36 @@ export function useNavData() {
       icon: ICONS.g_appraisal,
     },
     {
-      title:t('Configurations'),
-      path:paths.dashboard.configurations.root,
-      icon:ICONS.g_configurations,
-      key:'configurations',
+      title: t('Configurations'),
+      path: paths.dashboard.configurations.root,
+      icon: ICONS.g_configurations,
+      key: 'configurations',
       children: [
-        { title: t('Leave Configuration'), path: paths.dashboard.configurations.leaveconfiguration },
-        { title: t('Compensantory Configuration'), path: paths.dashboard.configurations.compoffconfiguration },
-         { title: t('Appraisal Configuration'), path: paths.dashboard.configurations.appraisalconfiguration },
-         { title: t('Expense Claim Configuration'), path: paths.dashboard.configurations.expenseclaimconfiguration },
-         { title: t('Shift Configuration'), path: paths.dashboard.configurations.shiftconfiguration },
-         { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
-         { title: t('Tax Section Configuration'), path: paths.dashboard.configurations.taxsectionconfiguration },
+        {
+          title: t('Leave Configuration'),
+          path: paths.dashboard.configurations.leaveconfiguration,
+        },
+        {
+          title: t('Compensantory Configuration'),
+          path: paths.dashboard.configurations.compoffconfiguration,
+        },
+        {
+          title: t('Appraisal Configuration'),
+          path: paths.dashboard.configurations.appraisalconfiguration,
+        },
+        {
+          title: t('Expense Claim Configuration'),
+          path: paths.dashboard.configurations.expenseclaimconfiguration,
+        },
+        {
+          title: t('Shift Configuration'),
+          path: paths.dashboard.configurations.shiftconfiguration,
+        },
+        { title: t('Role Configuration'), path: paths.dashboard.configurations.roleconfiguration },
+        {
+          title: t('Tax Section Configuration'),
+          path: paths.dashboard.configurations.taxsectionconfiguration,
+        },
       ],
     },
     // {
@@ -206,7 +225,75 @@ export function useNavData() {
     //   path: paths.dashboard.general.file,
     //   icon: ICONS.file,
     // },
+  ];
+
+  const accountItems=[
+    {
+      title: t('Factory'),
+      path: paths.dashboard.factory.factory,
+      icon: ICONS.g_factory,
+    },
+    {
+      title: t('Vendor'),
+      path: paths.dashboard.vendor.vendor,
+      icon: ICONS.g_vendor,
+      children: [
+        { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
+        { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
+      ],
+    },
+    {
+      title: t('Purchase'),
+      path: paths.dashboard.purchase.purchaseOrder,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
+        { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
+        { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
+      ],
+    },
+    {
+      title: t('Products'),
+      path: paths.dashboard.products.products,
+      icon: ICONS.g_products,
+      children: [
+        { title: t('Product Details'), path: paths.dashboard.products.products },
+        { title: t('Customer'), path: paths.dashboard.products.customers },
+      ],
+    },
+    {
+      title: t('Sales'),
+      path: paths.dashboard.sale.salePayment,
+      icon: ICONS.g_purchases,
+      children: [
+        { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
+        { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
+        { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
+      ],
+    },
+    {
+      title: t('Expenses'),
+      path: paths.dashboard.expenses.expenses,
+      icon: ICONS.g_expenses,
+    },
+    {
+      title: t('Assets'),
+      path: paths.dashboard.assets.assets,
+      icon: ICONS.g_assets,
+    },
+    {
+      title: t('Balancesheet'),
+      path: paths.dashboard.balancesheet.balancesheet,
+      icon: ICONS.g_balanceSheet,
+    },
+    {
+      title: t('Settings'),
+      path: paths.dashboard.settings.settings,
+      icon: ICONS.g_configurations,
+    },
   ]
+
+  
 
   useEffect(() => {
     const updateSidebarList = () => {
@@ -235,6 +322,24 @@ export function useNavData() {
         
 
         setSidebarList(arr);
+        if(user?.companyID==="COMP46"){
+        var arr=[ {
+          title: t('Factory'),
+          path: paths.dashboard.factory.factory,
+          icon: ICONS.g_factory,
+        },{
+          title: t('Expenses'),
+          path: paths.dashboard.expenses.expenses,
+          icon: ICONS.g_expenses,
+        }
+       ];
+      
+      
+        setSidebarListAccount(arr);
+      }
+        else{
+          setSidebarListAccount(accountItems);
+        }
       }
     };
 
@@ -255,77 +360,13 @@ export function useNavData() {
     
       {
         subheader: 'Accounting',
-        items: [
-          {
-            title: t('Factory'),
-            path: paths.dashboard.factory.factory,
-            icon: ICONS.g_factory,
-          },
-          {
-            title: t('Vendor'),
-            path: paths.dashboard.vendor.vendor,
-            icon: ICONS.g_vendor,
-            children: [
-              { title: t('Vendor Details'), path: paths.dashboard.vendor.vendor },
-              { title: t('Vendor Materials'), path: paths.dashboard.vendor.vendormaterials },
-            ],
-          },
-          {
-            title: t('Purchase'),
-            path: paths.dashboard.purchase.purchaseOrder,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Purchase Order'), path: paths.dashboard.purchase.purchaseOrder },
-              { title: t('Purchase Invoice'), path: paths.dashboard.purchase.purchaseInvoice },
-              { title: t('Purchase Payment'), path: paths.dashboard.purchase.purchasePayment },
-            ],
-          },
-          {
-            title: t('Products'),
-            path: paths.dashboard.products.products,
-            icon: ICONS.g_products,
-            children: [
-              { title: t('Product Details'), path: paths.dashboard.products.products },
-              { title: t('Customer'), path: paths.dashboard.products.customers },
-            ],
-          },
-          {
-            title: t('Sales'),
-            path: paths.dashboard.sale.salePayment,
-            icon: ICONS.g_purchases,
-            children: [
-              { title: t('Sales Order'), path: paths.dashboard.sale.saleOrder },
-              { title: t('Sales Invoice'), path: paths.dashboard.sale.saleInvoice },
-              { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
-            ],
-          },
-          {
-            title: t('Expenses'),
-            path: paths.dashboard.expenses.expenses,
-            icon: ICONS.g_expenses,
-          },
-          {
-            title: t('Assets'),
-            path: paths.dashboard.assets.assets,
-            icon: ICONS.g_assets,
-          },
-          {
-            title: t('Balancesheet'),
-            path: paths.dashboard.balancesheet.balancesheet,
-            icon: ICONS.g_balanceSheet,
-          },
-        ],
+        items: sidebarListAccount,
       },
     ],
-    [t,sidebarList]
+    [t,sidebarList,sidebarListAccount]
   );
-
-
-
-
-
 
   const data1 = useMemo(() => data, [data]);
 
-  return data1 ;
+  return data1;
 }

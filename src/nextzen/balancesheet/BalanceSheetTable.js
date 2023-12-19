@@ -101,11 +101,11 @@ const BalanceSheetTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'InvoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'Particulars', label: 'Particulars', type: 'text', minWidth: '180px' },
-    { id: 'TransactionNo ', label: 'Transaction No', type: 'text', minWidth: '180px' },
+    { id: 'TransactionNo ', label: 'Transaction Number', type: 'text', minWidth: '180px' },
     { id: 'Credit ', label: 'Credit', type: 'text', minWidth: '180px' },
     { id: 'Debit', label: 'Debit', type: 'text', minWidth: '180px' },
     { id: 'BalanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },

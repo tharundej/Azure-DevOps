@@ -25,7 +25,7 @@ export default function Loans({defaultPayload,componentPage}) {
     
           label: "Employee Id",
           minWidth:"8pc",
-          type: "text",
+          type: "expand",
     
         },
     
@@ -37,7 +37,7 @@ export default function Loans({defaultPayload,componentPage}) {
         { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
          { id: "paidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
-        { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
+        // { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
         { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
         { id: "approvedDate", label: "Paid Date", minWidth: "8pc", type: "date" },
         { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },

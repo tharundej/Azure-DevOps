@@ -12,11 +12,11 @@ import Card from '@mui/material/Card';
 import { fShortenNumber } from 'src/utils/format-number';
 // components
 import Iconify from 'src/components/iconify';
-import { formatDateBirthday } from 'src/nextzen/global/GetDateFormat';
+import { formatDateBirthday,formatDateToYYYYMMDD,formatDate } from 'src/nextzen/global/GetDateFormat';
 import Scrollbar from 'src/components/scrollbar';
 // ----------------------------------------------------------------------
 
-export default function BirthdayReminders({ title,  list, ...other }) {
+export default function HolidayList({ title,  list, ...other }) {
   const recordsToShow = 5;
   return (
     <Card {...other}
@@ -26,7 +26,7 @@ export default function BirthdayReminders({ title,  list, ...other }) {
     <Scrollbar sx={{ pb: 1 }}>
     <Stack spacing={3} sx={{ p: 3 }}>
       {list.map((author, index) => (
-        <AuthorItem key={author.employeeID} author={author} index={index} />
+        <AuthorItem key={author?.holidayName} author={author} index={index} />
       ))}
     </Stack>
     </Scrollbar>
@@ -35,7 +35,7 @@ export default function BirthdayReminders({ title,  list, ...other }) {
   );
 }
 
-BirthdayReminders.propTypes = {
+HolidayList.propTypes = {
   list: PropTypes.array,
   subheader: PropTypes.string,
   title: PropTypes.string,
@@ -46,10 +46,10 @@ BirthdayReminders.propTypes = {
 function AuthorItem({ author, index }) {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Avatar alt={author?.employeeName} src={author?.avatarUrl} />
+      {/* <Avatar alt={author?.holidayName} src={author?.avatarUrl} /> */}
 
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{author?.employeeName}</Typography>
+        <Typography variant="subtitle2">{author?.holidayName}</Typography>
 
         <Typography
           variant="caption"
@@ -60,12 +60,12 @@ function AuthorItem({ author, index }) {
             color: 'text.secondary',
           }}
         >
-         {formatDateBirthday(author?.dateOfBirth)}
+         {formatDateBirthday(author?.holidayDate)}
         </Typography>
       </Box>
 
       <Iconify
-        icon="la:birthday-cake"
+        icon="game-icons:party-flags"
         sx={{
           p: 1,
           width: 40,

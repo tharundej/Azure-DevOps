@@ -27,11 +27,105 @@ import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import PunchINOutCard from 'src/nextzen/dashboard/PunchInOut/PunchINOutCard';
 import BirthdayReminders from 'src/nextzen/usersdashboard/birthdayreminders/BirthdayReminders,';
+import { useEffect,useState } from 'react';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import axios from 'axios';
+import HolidayList from 'src/nextzen/usersdashboard/holiday/HolidayList';
+import LeaveRequest from 'src/nextzen/usersdashboard/leaverequest/LeaveRequest';
+
+
 
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
   const { user } = useContext(UserContext);
+  const [birthdayList,setBirthdayList]=useState([]);
+  const [holidayList,setHolidayList]=useState([])
+  const [leaveRequestList,setLeaveRequestList]=useState([])
+
+  const ApiHitBirthday=()=>{
+    
+let data = JSON.stringify({
+  "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+});
+ 
+let config = {
+  method: 'post',
+  url: `${baseUrl}/getDateofBirth`,
+  headers: { 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+ 
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+  setBirthdayList(response?.data.data || [])
+})
+.catch((error) => {
+  console.log(error);
+});
+  }
+
+  const ApiHitLeaveRequest=()=>{
+    
+    let data = JSON.stringify({
+      // "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      employeeID:JSON.parse(localStorage.getItem('userDetails'))?.employeeID
+    });
+     
+    let config = {
+      method: 'post',
+      url: `${baseUrl}/getLastLeaveRecordsOfEmployee`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setLeaveRequestList(response?.data.data || [])
+    })
+    .catch((error) => {
+      console.log(error);
+      setLeaveRequestList([])
+    });
+      }
+
+  const ApiHitHolidays=()=>{
+    
+    let data = JSON.stringify({
+      "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "locationID":JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+    });
+     
+    let config = {
+      method: 'post',
+      url: `${baseUrl}/getHolidayList`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setHolidayList(response?.data?.data || [])
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+      }
+
+  useEffect(()=>{
+    ApiHitBirthday();
+    ApiHitHolidays();
+    ApiHitLeaveRequest();
+  },[])
 
   const theme = useTheme();
 
@@ -58,11 +152,25 @@ export default function OverviewAppView() {
           <PunchINOutCard />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
-          <BirthdayReminders title="Bithday Reminders" list={
-            [{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'},{employeeID:'1',name:"Chaya",dataOfBirth:'1994-04-11'},{employeeID:'2',name:"Sham",dataOfBirth:'1994-05-29'}]} />
+          <BirthdayReminders title="Bithday Reminders" list={birthdayList} />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={6} lg={4}>
+          <HolidayList title="UP Coming Holiday" list={holidayList} />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={4}>
+          <HolidayList title="UP Coming Holiday" list={holidayList} />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={6}>
+          <LeaveRequest title="Leave Request" list={leaveRequestList} />
+        </Grid>
+
+
+
+
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Active Users"
             percent={2.6}
@@ -71,9 +179,9 @@ export default function OverviewAppView() {
               series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={4}>
+        {/* <Grid xs={12} md={4}>
           <AppWidgetSummary
             title="Total Installed"
             percent={0.2}
@@ -213,7 +321,7 @@ export default function OverviewAppView() {
               }}
             />
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

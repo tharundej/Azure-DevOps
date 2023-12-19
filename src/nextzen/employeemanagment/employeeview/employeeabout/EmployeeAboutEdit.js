@@ -239,7 +239,7 @@ console.log(currentUser,"jjjjjjjjjj")
             // url: `${baseUrl}/updateOnboardingForm`,
             url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateOnboardingForm",
             headers: { 
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA', 
+              'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
             },
             data : obj
@@ -1270,6 +1270,26 @@ console.log(currentUser,"jjjjjjjjjj")
                 style={{  width: '100%' }} />}
               />
               </Grid>
+
+
+              <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="CTC"
+                    label="CTC"
+                    variant="outlined"
+                    id="CTC"
+                     value={currentUser?.ctc}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        ctc: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
 
 
 

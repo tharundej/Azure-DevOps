@@ -16,7 +16,12 @@ import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
+export default function CreateVendorMaterials({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
@@ -65,7 +70,6 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
         let response = await getVendorAPI(data);
-        response = null;
         console.log({ response });
         if (response === null) {
           handleCallSnackbar('No Vendor Found. Please Add Vendor', 'warning');
@@ -117,7 +121,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.id ? '' : getTableData();
+      currentData?.id ? handleCountChange() : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
@@ -170,23 +174,10 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select Vendor Name"
-                  variant="outlined"
-                  helperText={
-                    <span>
-                      Add Vendor or{' '}
-                      <Link to="/vendor-page" onClick="">
-                        go to Vendor Page
-                      </Link>
-                    </span>
-                  }
-                />
+                <TextField {...params} label="Select Vendor Name" variant="outlined" />
               )}
             />
-
-            <RHFTextField name="materialName" label="Material Names" />
+            <RHFTextField name="materialName" label="Material Name" />
             <RHFTextField name="hsnId" label="HSN ID" />
             <RHFTextField name="materialType" label="Material Type" />
             <RHFTextField name="materialPrice" label="Material Price" />
