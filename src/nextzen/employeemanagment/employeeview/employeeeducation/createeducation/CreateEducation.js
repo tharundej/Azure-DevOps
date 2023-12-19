@@ -152,6 +152,8 @@ const CreateEducation = ({
     const invalidFields = defaultValues.filter(
       (item) => !item.nameOfTheDegree || !item.stream
     );
+
+    console.log(invalidFields,'invalidFields')
   
     if (invalidFields.length > 0) {
       // Show an error message for required fields
@@ -259,13 +261,22 @@ const CreateEducation = ({
     const newObj = defaultValues;
     const newArray = [...defaultValues];
 
-    if (field === 'grade' || field === 'yearOfPassing') {
+    if ( field === 'yearOfPassing') {
       newObj[index][field] = e?.target?.value;
       newArray[index] = {
         ...newArray[index],
         [field]: parseInt(value, 10),
       };
-    } else {
+    } 
+    else if(field==="grade"){
+      newObj[index][field] = e?.target?.value;
+      newArray[index] = {
+        ...newArray[index],
+        [field]: parseFloat(value, 10),
+      };
+
+    }
+      else {
       newObj[index][field] = e?.target?.value;
       newArray[index] = {
         ...newArray[index],
@@ -314,7 +325,38 @@ const CreateEducation = ({
     setDefaultValues(newArray);
   };
 
-  const handleDeleteDocument = (index, index1) => {
+  const ApiHitDeleteDocument=(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/deleteEduAndWorkDoc`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
+    })
+    .catch((error) => {
+      console.log(error);
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+    });
+  }
+
+  const handleDeleteDocument = (index, index1,file) => {
+
+
+   const obj={
+    id:file?.id
+   }
+
+   ApiHitDeleteDocument(obj);
+
     const updatedItems = defaultValues[index].documents.filter((item, index3) => index3 !== index1);
 
     const newArray = [...defaultValues];
@@ -730,7 +772,7 @@ const CreateEducation = ({
                                 {index1 !== 0 && (
                                   <IconButton
                                     onClick={() => {
-                                      handleDeleteDocument(index, index1);
+                                      handleDeleteDocument(index, index1,file);
                                     }}
                                     color="primary"
                                   >

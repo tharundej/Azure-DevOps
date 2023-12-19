@@ -79,6 +79,15 @@ const PurchasePaymentTable = () => {
     { id: 'dueDate', label: 'Due Date', type: 'date', minWidth: '180px' },
    
   ]);
+
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      
+    } else if (event?.name === 'Delete') {
+      const deleteData = { id: rowdata.id || 0, title: rowdata.materialName || '' };
+      
+    }
+  };
   return (
     <>
       <Helmet>
@@ -92,6 +101,7 @@ const PurchasePaymentTable = () => {
         rowActions={actions}
         filterName="PurchasePaymentHead"
         handleEditRowParent={() => {}}
+        onClickActions={onClickActions}
       />
     </>
   );
