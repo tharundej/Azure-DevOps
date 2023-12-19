@@ -294,5 +294,8 @@ export const paths = {
     balancesheet: {
       balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
+    settings: {
+      settings: `${ROOTS.DASHBOARD}/settings`,
+    },
   },
 };

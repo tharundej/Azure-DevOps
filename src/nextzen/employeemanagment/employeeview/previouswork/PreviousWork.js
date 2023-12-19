@@ -9,7 +9,7 @@ import CreatePreviousWork from './createpreviouswork/CreatePreviousWork';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import EmployeeRecords from '../employeepreviouswork/employeepreviousworkdocuments/EmployeeRecords';
 import { bgGradient } from 'src/theme/css';
-
+import { useSnackbar } from 'src/components/snackbar';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -35,6 +35,7 @@ const employeeData=[ {
 ]
 
 const PreviousWork = ({employeeIDForApis}) => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
@@ -128,6 +129,35 @@ const PreviousWork = ({employeeIDForApis}) => {
    },[])
  
    const color='primary'
+
+   const ApiHitDelete=(data)=>{
+   
+    const obj={
+      id:data.id
+    }
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/deleteExperience`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
+      ApiHit()
+    })
+    .catch((error) => {
+      console.log(error);
+      enqueueSnackbar(response?.data?.message, { variant: 'error' });
+    });
+    
+   }
    
   return (
     <>
@@ -171,8 +201,8 @@ const PreviousWork = ({employeeIDForApis}) => {
                               <Iconify icon="material-symbols:edit" />
                             </IconButton>
                             <IconButton onClick={() => {
-                              const item = itm;
-                              handleAddEducation([item], "updateEducationDetails");
+                              
+                             ApiHitDelete(itm);
                             }} sx={{ marginLeft: 1 }}>
                               <Iconify icon="material-symbols:delete" />
                             </IconButton>

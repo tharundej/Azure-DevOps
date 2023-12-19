@@ -1,18 +1,21 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
-import { Dialog } from '@mui/material';
+
 import { Helmet } from 'react-helmet-async';
 
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
+import CreateSettings from './CreateSettings';
+import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
-import { deleteCutomerApi } from 'src/api/Accounts/Customers';
-import CreateCustomers from './CreateCustomers';
+import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
 import UserContext from '../context/user/UserConext';
+import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
 
-const CustomersTable = () => {
+const SettingsTable = () => {
   const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
@@ -46,10 +49,12 @@ const CustomersTable = () => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
-        customerId: rowdata?.customerId || 0,
-        customerName: rowdata.customerName || '',
+        locationID: rowdata?.locationID || 0,
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+        title: rowdata?.locationName || '',
       };
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
@@ -72,7 +77,7 @@ const CustomersTable = () => {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await deleteCutomerApi(deleteData);
+      const response = await DeleteAccountInformationAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
       handleCountChange();
@@ -82,41 +87,35 @@ const CustomersTable = () => {
     }
   };
   const [filterOptions, setFilterOptions] = useState({});
-  const [bodyContent, setBodyContent] = useState([]);
-  const ApiHit = async () => {
-    try {
-      const response = await getCustomerListAPI(defaultPayload);
-      console.log('location success', response);
-      setBodyContent(response);
-    } catch (error) {
-      console.log('API request failed:', error.message);
-    }
-  };
-
-  useEffect(() => {
-    ApiHit();
-  }, []);
   const defaultPayload = {
-    companyId: user?.companyID ? user?.companyID : '',
+    count: 5,
     page: 0,
-    count: 10,
     search: '',
+    companyId: user?.companyID ? user?.companyID : '',
+    externalFilters: {
+      locationName: '',
+      locationPhone: '',
+      locationEmailid: '',
+      locationCity: '',
+      locationPincode: '',
+      locationState: '',
+      locationStateCode: '',
+      locationCountry: '',
+    },
     sort: {
-      orderby: '',
-      key: 0,
+      key: 1,
+      orderBy: 'location_id',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'id', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
-    { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
-    { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
-    { id: 'customerPhoneNo', label: ' Phone Number', type: 'text', minWidth: '180px' },
-    { id: 'customerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
-    { id: 'customerGstNo', label: 'GST Number', type: 'text', minWidth: '180px' },
-    { id: 'customerPanNo', label: 'PAN Number', type: 'text', minWidth: '180px' },
-    { id: 'customerTanNo', label: 'Customer TAN Number', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
+    { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
+    { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
+    { id: 'accountHolderName', label: 'Account Holder Name', type: 'text', minWidth: '180px' },
+    { id: 'ifscCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
+    { id: 'bankBranch', label: 'Bank Branch', type: 'text', minWidth: '180px' },
+    { id: 'businessEmailId', label: 'Business Email ID', type: 'text', minWidth: '180px' },
+    { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -130,8 +129,8 @@ const CustomersTable = () => {
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
-        itemName="Delete Customer"
-        message={`Are you sure you want to delete ${deleteData?.customerName}?`}
+        itemName="Delete Settings"
+        message={`Are you sure you want to delete ${deleteData?.title}?`}
       />
       {editShowForm && (
         <Dialog
@@ -144,7 +143,7 @@ const CustomersTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateCustomers
+          <CreateSettings
             currentData={editModalData}
             handleClose={handleClose}
             handleCountChange={handleCountChange}
@@ -152,15 +151,15 @@ const CustomersTable = () => {
         </Dialog>
       )}
       <Helmet>
-        <title> Dashboard: Customers</title>
+        <title> Dashboard: Settings</title>
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listcustomers"
+        endpoint="/GetAccountInformation"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="CustomersHead"
+        filterName="SettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
         count={count}
@@ -168,4 +167,4 @@ const CustomersTable = () => {
     </>
   );
 };
-export default CustomersTable;
+export default SettingsTable;

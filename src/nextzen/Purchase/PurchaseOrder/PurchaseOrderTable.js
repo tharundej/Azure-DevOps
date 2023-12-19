@@ -156,7 +156,7 @@ const PurchaseOrderTable = () => {
     { id: 'vendorAddress', label: 'Vendor Address', type: 'text', minWidth: '180px' },
     { id: 'vendorPAN', label: 'Vendor PAN', type: 'text', minWidth: '180px' },
     { id: 'emailID', label: 'Email ID', type: 'text', minWidth: '180px' },
-    { id: 'contactNo', label: 'Contact No', type: 'text', minWidth: '180px' },
+    { id: 'contactNo', label: 'Contact Number', type: 'text', minWidth: '180px' },
     { id: 'vendorLocation', label: 'Vendor Location', type: 'text', minWidth: '180px' },
     { id: 'companyName', label: 'Company Name', type: 'text', minWidth: '180px' },
     {

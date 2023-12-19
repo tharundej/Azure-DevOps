@@ -17,8 +17,13 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateProducts({ currentData, handleClose, getTableData }) {
-  const {user} = useContext(UserContext);
+export default function CreateProducts({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     productName: Yup.string().required('Product Name is Required'),
     productCategory: Yup.string().required('Product Category is Required'),
@@ -77,7 +82,7 @@ export default function CreateProducts({ currentData, handleClose, getTableData 
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.productID ? '' : getTableData();
+      currentData?.productID ? handleCountChange() : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {

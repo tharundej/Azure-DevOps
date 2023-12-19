@@ -35,7 +35,10 @@ import SnackBarComponent from '../global/SnackBarComponent';
 export default function CreateExpenses({ currentData, handleClose, handleCountChange }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
-    invoiceNO: Yup.string().required(),
+    invoiceNO: Yup.string()
+      .required('Invoice Number is required')
+      .matches(/^[A-Za-z0-9]+$/, 'Invoice Number must contain only letters and numbers')
+      .max(20, 'Invoice Number must not exceed 20 characters'),
     totalAmount: Yup.number().required(),
     paidAmount: Yup.number().required(),
     totalLiter: Yup.number(),
@@ -90,8 +93,6 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const statusOptions = ['Paid', 'Unpaid'];
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
     event.target.value == 'Others' ? setType(false) : setType(true);
@@ -117,7 +118,8 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
     data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     data.locationID = selectedFactory;
     data.expenseType = selectedValue;
-    data.status = selectedStatus;
+    data.quantity = parseInt(data.quantity);
+    data.rate = parseInt(data.rate);
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
@@ -213,7 +215,7 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
               }
               getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
-                <TextField {...params} label="Select Factory / Location Name" variant="outlined" />
+                <TextField {...params} label="Select Factory / Branch Name" variant="outlined" />
               )}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -232,7 +234,17 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="invoiceNO" label="invoice NO" />
+            <RHFTextField
+              name="invoiceNO"
+              label="Invoice Number"
+              inputProps={{
+                maxLength: 20,
+                pattern: '^[a-zA-Z0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20);
+              }}
+            />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -251,15 +263,66 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
             </LocalizationProvider>
             {type && (
               <>
-                <RHFTextField name="vehicleType" label="Vehicle Type" />
-                <RHFTextField name="vehicleRegNO" label="Vehicle No" />
-                <RHFTextField type="number" name="totalLiter" label="Total Liter" />
-                <RHFTextField name="fuelType" label="Fuel Type" />
+                <RHFTextField
+                  name="vehicleType"
+                  label="Vehicle Type"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 20);
+                  }}
+                />
+                <RHFTextField
+                  name="vehicleRegNO"
+                  label="Vehicle Number"
+                  inputProps={{
+                    maxLength: 10,
+                    pattern: '^[a-zA-Z0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+                  }}
+                />
+                <RHFTextField
+                  type="number"
+                  name="totalLiter"
+                  label="Total Liter"
+                  inputProps={{
+                    maxLength: 10,
+                    pattern: '^[0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  }}
+                />
+                <RHFTextField
+                  name="fuelType"
+                  label="Fuel Type"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 20);
+                  }}
+                />
               </>
             )}
             {type == false && (
               <>
-                <RHFTextField name="itemName" label="Item Name" />
+                <RHFTextField
+                  name="itemName"
+                  label="Item Name"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20);
+                  }}
+                />
                 <RHFTextField
                   type="number"
                   onChange={(e) => HandleInputChange(e)}
@@ -274,20 +337,32 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                   label="Rate"
                   defaultValue={0}
                 />
-                <RHFAutocomplete
-                  name="status"
-                  id="status"
-                  options={statusOptions || []}
-                  value={selectedStatus}
-                  onChange={(event, newValue) => setSelectedStatus(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select status Type" variant="outlined" />
-                  )}
-                />
               </>
             )}
-            <RHFTextField type="number" name="totalAmount" label="Total Amount" />
-            <RHFTextField type="number" name="paidAmount" label="Paid Amount" />
+            <RHFTextField
+              type="number"
+              name="totalAmount"
+              label="Total Amount"
+              inputProps={{
+                maxLength: 10,
+                pattern: '^[0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+              }}
+            />
+            <RHFTextField
+              type="number"
+              name="paidAmount"
+              label="Paid Amount"
+              inputProps={{
+                maxLength: 10,
+                pattern: '^[0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+              }}
+            />
           </Box>
         </DialogContent>
         <DialogActions>

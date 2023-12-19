@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm, Controller,useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
- 
+import { useSnackbar } from 'src/components/snackbar';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
@@ -163,7 +163,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       } = methods;
    
       const values = watch();
-   
+      const { enqueueSnackbar } = useSnackbar();
       const onSubmit = handleSubmit(async (data) => {
         console.log(currentUser,'uyfgv');
    
@@ -181,7 +181,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
             url: `${baseUrl}${endpoint}`,
             // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
             headers: {
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+              'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json'
             },
             data : currentUser
@@ -192,11 +192,13 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            enqueueSnackbar(response?.data?.message, { variant: 'success' });
             callApi();
             onHandleClose();
           })
           .catch((error) => {
             console.log(error);
+            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
           });
       });
  
@@ -408,7 +410,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="panNumber"
                      value={currentUser?.panNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=10){
                       setCurrentUser(prev=>({
                         ...prev,
                         panNumber:e?.target.value
@@ -430,7 +432,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="passportNumber"
                      value={currentUser?.passportNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         passportNumber:e?.target.value
@@ -451,7 +453,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="pfNumber"
                      value={currentUser?.pfNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         pfNumber: parseInt(e.target.value, 10) || ''
@@ -471,7 +473,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ptNumber"
                      value={currentUser?.ptNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=11){
                       setCurrentUser(prev=>({
                         ...prev,
                         ptNumber: parseInt(e.target.value, 10) || ''

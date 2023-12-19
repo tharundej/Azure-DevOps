@@ -62,6 +62,16 @@ export const getCustomerListAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+export const getListofPoNumberAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`listofPoNumber`, requestBody, apiHeaders);
+    console.log('API response:', response.data); // Log the response data
+    return response.data.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
 
 
 export const getTaxs = async (requestBody) => {

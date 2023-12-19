@@ -79,12 +79,12 @@ const SalesOrderTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
     { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'InvoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'MSME/UAMNo.', label: 'MSME/UAM No.', type: 'text', minWidth: '180px' },
+    { id: 'MSME/UAMNo.', label: 'MSME/UAM Number.', type: 'text', minWidth: '180px' },
     { id: 'FactoryName', label: 'Factory Name', type: 'text', minWidth: '180px' },
     { id: 'ProductName', label: 'Product Name', type: 'text', minWidth: '180px' },
     { id: 'ProductQuantity', label: 'Product Quantity', type: 'text', minWidth: '180px' },
@@ -96,9 +96,9 @@ const SalesOrderTable = () => {
     { id: 'CustomerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
     { id: 'CustomerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
     { id: 'DeliveryAddress', label: 'Delivery Address', type: 'text', minWidth: '180px' },
-    { id: 'CustomerContactNo', label: 'Customer Contact No', type: 'text', minWidth: '180px' },
+    { id: 'CustomerContactNo', label: 'Customer Contact Number', type: 'text', minWidth: '180px' },
     { id: 'CustomerPAN', label: 'Customer PAN', type: 'text', minWidth: '180px' },
-    { id: 'CustomerGSTNo', label: 'Customer GST No', type: 'text', minWidth: '180px' },
+    { id: 'CustomerGSTNo', label: 'Customer GST Number', type: 'text', minWidth: '180px' },
 
   ]);
   return (

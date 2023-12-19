@@ -17,7 +17,12 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateCustomers({ currentData, handleClose, getTableData }) {
+export default function CreateCustomers({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const newUserSchema = Yup.object().shape({
     customer_name: Yup.string().required('Customer Name is Required'),
@@ -31,9 +36,9 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
     state_code: Yup.number(),
     country: Yup.string(),
     pincode: Yup.number(),
-    customer_gst_no: Yup.string().required('Customer GST No is Required'),
-    customer_pan_no: Yup.string().required('Customer PAN No is Required'),
-    customer_tan_no: Yup.string().required('Customer TAN No is Required'),
+    customer_gst_no: Yup.string().required('Customer GST Number is Required'),
+    customer_pan_no: Yup.string().required('Customer PAN Number is Required'),
+    customer_tan_no: Yup.string().required('Customer TAN Number is Required'),
     status: Yup.string(),
   });
 
@@ -98,7 +103,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.customerName ? '' : getTableData();
+      currentData?.customerName ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.Message, 'warning');
@@ -141,7 +146,7 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
             <RHFTextField name="customer_name" label="Customer Name" />
             <RHFTextField name="customer_company_name" label="Customer Company Name" />
             <RHFTextField name="customer_email_id" label="Email ID" />
-            <RHFTextField type="number" name="customer_phone_no" label="Phone No" />
+            <RHFTextField type="number" name="customer_phone_no" label="Phone Number" />
             <RHFTextField name="customer_address_line1" label="Customer Address Line 1" />
             <RHFTextField name="customer_address_line2" label="Customer Address Line 2" />
             <RHFTextField name="city" label="City" />
@@ -149,9 +154,9 @@ export default function CreateCustomers({ currentData, handleClose, getTableData
             <RHFTextField type="number" name="state_code" label="State Code" />
             <RHFTextField name="country" label="Country" />
             <RHFTextField type="number" name="pincode" label="Pincode" />
-            <RHFTextField name="customer_gst_no" label="GST No" />
-            <RHFTextField name="customer_pan_no" label="PAN No" />
-            <RHFTextField name="customer_tan_no" label="Customer TAN No" />
+            <RHFTextField name="customer_gst_no" label="GST Number" />
+            <RHFTextField name="customer_pan_no" label="PAN Number" />
+            <RHFTextField name="customer_tan_no" label="Customer TAN Number" />
             <RHFAutocomplete
               name="status"
               id="status"
