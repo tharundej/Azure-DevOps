@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
-import { useState,useRef ,useCallback,useMemo} from 'react';
+import { useState,useRef ,useCallback,useMemo,useEffect} from 'react';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 // @mui
-import { Typography ,Card} from '@mui/material';
+import { Typography ,Card,IconButton} from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
 import { useTheme, alpha } from '@mui/material/styles';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 // theme
 import { bgGradient } from 'src/theme/css';
 import FormProvider, {
@@ -23,9 +24,10 @@ import FormProvider, {
 
 export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const [avatarUrl1, setAvatarUrl] = useState(avatarUrl);
+  console.log(avatarUrl,'avatarUr1')
   const theme = useTheme();
   const [hovered, setHovered] = useState(false);
-  const [newAvatarUrl, setNewAvatarUrl] = useState('');
+  const [newAvatarUrl, setNewAvatarUrl] = useState(avatarUrl);
   const fileInputRef = useRef(null);
   let fileInput;
 
@@ -39,10 +41,10 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
   const defaultValues = useMemo(
     () => ({
       
-      avatarUrl: avatarUrl,
+      avatarUrl1: avatarUrl,
     
     }),
-    [avatarUrl]
+    [avatarUrl,avatarUrl1]
   );
 
   const methods = useForm({
@@ -118,23 +120,47 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       });
 
       if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
+        setValue('avatarUrl1', newFile, { shouldValidate: true });
       }
     onSubmit()
     },
     [setValue]
   );
 
+  const handleCameraIconClick = () => {
+    // Trigger a click on the file input when the camera icon is clicked
+    document.getElementById('fileInput').click();
+  };
+
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 900);
+    };
+
+    // Initial check on mount
+    handleResize();
+
+    // Listen for window resize events
+    window.addEventListener('resize', handleResize);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   return (
     <Box
       sx={{
         ...bgGradient({
-          color: alpha(theme.palette.primary.darker, 0.8),
+          color: alpha(theme.palette.primary.light, 0.0),
           imgUrl: coverUrl,
         }),
         height: 1,
-        color: 'common.white',
+        // color: 'common.white',
       }}
     >
       <Stack
@@ -147,9 +173,12 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
           position: { md: 'absolute' },
         }}
       >
-    {/* <label htmlFor="fileInput" style={{ position: 'relative', cursor: 'pointer' }}>
+    <label
+      htmlFor="fileInput"
+      style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
+    >
       <Avatar
-        src={avatarUrl1}
+        src={newAvatarUrl}
         alt={name}
         sx={{
           mx: 'auto',
@@ -165,33 +194,32 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
         onChange={handleFileChange}
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0 }}
       />
-    </label> */}
-   <FormProvider methods={methods} onSubmit={onSubmit}>
+       {!isMobileView && ( // Only show the icon if the screen width is greater than 600px
+            <IconButton
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                backgroundColor: theme.palette.common.white,
+              }}
+              onClick={handleCameraIconClick}
+            >
+              <PhotoCameraIcon />
+            </IconButton>
+          )}
+    </label>
+   {/* <FormProvider methods={methods} onSubmit={onSubmit}>
    <Box >
               <RHFUploadAvatar
               
-                name="avatarUrl"
+                name="avatarUrl1"
                 maxSize={3145728}
                 onDrop={handleDrop}
-                // helperText={
-                //   <Typography
-                //     variant="caption"
-                //     sx={{
-                //       mt: 3,
-                //       mx: 'auto',
-                //       display: 'block',
-                //       textAlign: 'center',
-                //       color: 'text.disabled',
-                //     }}
-                //   >
-                //     Allowed *.jpeg, *.jpg, *.png, *.gif
-                //     <br /> max size of {fData(3145728)}
-                //   </Typography>
-                // }
+                
               />
             </Box>
           
-            </FormProvider>
+            </FormProvider> */}
 
         <ListItemText
           sx={{
@@ -203,10 +231,11 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
           secondary={role}
           primaryTypographyProps={{
             typography: 'h4',
+            color:'white'
           }}
           secondaryTypographyProps={{
             mt: 0.5,
-            color: 'inherit',
+            color:'white',
             component: 'span',
             typography: 'body2',
             sx: { opacity: 0.48 },

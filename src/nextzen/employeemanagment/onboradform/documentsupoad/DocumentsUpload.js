@@ -200,7 +200,7 @@ const VisuallyHiddenInput = styled('input')({
     //   }
   return (
     <>
-         <Grid style={{ paddingTop: '20px' }} xs={12} md={8}>
+         <Grid style={{ paddingTop: '20px' }} xs={12} md={12} lg={12}>
             <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
@@ -214,20 +214,19 @@ const VisuallyHiddenInput = styled('input')({
 
                 
                    {defaultValues?.map((file,index)=>(
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                <Grid item xs={12} md={6} >
-
+                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                  <Grid item xs={12} md={6}>
                
                 <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
+                    fullWidth
                         label="Select Document"
                         value={file?.fileType}
                         onChange={(e)=>{handleCategoryChange(e,index)}}
                         name="Select Document"
                     >
-                        <MenuItem value="aadhar">Aadhaar123</MenuItem>
+                        <MenuItem value="aadhar">Aadhaar</MenuItem>
                         <MenuItem value="pan-card">Pan Card</MenuItem>
                         <MenuItem value="pass-port">Passport</MenuItem>
                         
@@ -236,8 +235,8 @@ const VisuallyHiddenInput = styled('input')({
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
-                <Grid>
+                {/* <Grid item xs={12} md={6}>
+                <Grid> */}
 
                   <Grid item>
                 
@@ -261,7 +260,7 @@ const VisuallyHiddenInput = styled('input')({
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
                   </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
+                  {/* <Grid container alignItems="center" justifyContent="flex-end" item>
                   { index===0 &&
                    
                       <Button 
@@ -294,16 +293,16 @@ const VisuallyHiddenInput = styled('input')({
                     
 
                   }
-                  </Grid>
+                  </Grid> */}
                   
                   
                 </Grid>
                
-                </Grid>
+               
                
                    
 
-              </Grid>
+             
                ))}
 
 

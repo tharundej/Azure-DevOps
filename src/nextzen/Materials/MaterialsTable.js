@@ -87,7 +87,7 @@ const MaterialsTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'Vendor Name', label: 'Vendor Name', type: 'text', minWidth: '180px' },
     { id: 'HSN ID', label: 'HSN ID', type: 'text', minWidth: '180px' },
     { id: 'Material Name', label: 'Material Name', type: 'text', minWidth: '180px' },

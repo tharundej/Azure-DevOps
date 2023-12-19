@@ -28,7 +28,9 @@ function formatDate(inputDate) {
 
 
 function formatDateBirthday(inputDate) {
-  if (!inputDate) {
+  console.log(inputDate,'inputDateinputDate')
+
+  if (!inputDate ||  inputDate===null || inputDate===undefined) {
     return '-'; // Return an empty string if inputDate is null, undefined, or empty
   }
   else{

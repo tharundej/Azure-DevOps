@@ -18,6 +18,7 @@ const FactoryTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -44,6 +45,7 @@ const FactoryTable = () => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
         locationID: rowdata?.locationID || 0,
@@ -74,10 +76,14 @@ const FactoryTable = () => {
       const response = await DeleteFactoryAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
+  };
+  const handleCountChange = () => {
+    setCount(count + 1);
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
@@ -97,20 +103,19 @@ const FactoryTable = () => {
     },
     sort: {
       key: 1,
-      orderBy: '',
+      orderBy: 'location_id',
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Factory / location Name', type: 'text', minWidth: '190px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
+    { id: 'locationName', label: 'Factory / Branch Name', type: 'text', minWidth: '190px' },
     { id: 'locationEmailid', label: 'Email ID', type: 'text', minWidth: '180px' },
-    { id: 'locationPhone', label: 'Phone No', type: 'text', minWidth: '180px' },
+    { id: 'locationPhone', label: 'Phone Number', type: 'text', minWidth: '180px' },
     { id: 'address', label: 'Address', type: 'text', minWidth: '180px' },
-    { id: 'locationCity', label: 'City', type: 'text', minWidth: '180px' },
     { id: 'locationPincode', label: 'Pincode', type: 'text', minWidth: '180px' },
-    { id: 'locationState', label: 'State', type: 'text', minWidth: '180px' },
-    { id: 'locationStateCode', label: 'State Code', type: 'text', minWidth: '180px' },
     { id: 'locationCountry', label: 'Country', type: 'text', minWidth: '180px' },
+    { id: 'locationState', label: 'State', type: 'text', minWidth: '180px' },
+    { id: 'locationCity', label: 'City', type: 'text', minWidth: '180px' },
     { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
@@ -139,7 +144,11 @@ const FactoryTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentData={editModalData} handleClose={handleClose} />
+          <CreateFactory
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -154,10 +163,9 @@ const FactoryTable = () => {
         filterName="FactoryHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );
 };
 export default FactoryTable;
-
-

@@ -226,13 +226,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       }}
     >
       <RHFAutocomplete
-        name={`addPurchaseMaterial[${index}].materialId`}
-        id={`addPurchaseMaterial[${index}].materialId`}
+        name={`addPurchaseMaterial[${index}].materialID`}
+        id={`addPurchaseMaterial[${index}].materialID`}
         options={vendorMaterials || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
-            newValue?.id,
-            `addPurchaseMaterial[${index}].materialId`,
+            newValue?.materialID,
+            `addPurchaseMaterial[${index}].materialID`,
             index,
             newValue?.gstRate,
             newValue?.materialPrice
@@ -333,7 +333,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
   };
   const handleDeleteClick = (index) => {
     setValue(`addPurchaseMaterial[${index}].totalAmount`, 0);
-    setValue(`addPurchaseMaterial[${index}].materialId`, 0);
+    setValue(`addPurchaseMaterial[${index}].materialID`, 0);
     setContentList((prevList) => {
       const updatedList = [...prevList];
       updatedList[index] = '';
@@ -345,14 +345,16 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     calculateGrandTotal();
   }, [contentList]);
   const onSubmit = handleSubmit(async (data) => {
+    console.log("watch('addPurchaseMaterial')", watch('addPurchaseMaterial'));
     data.addPurchaseMaterial = watch('addPurchaseMaterial')?.filter(
-      (material) => material?.materialId !== undefined && material?.materialId !== 0
+      (material) => material?.materialID !== undefined && material?.materialID !== 0
     );
     if (!data.addPurchaseMaterial || data.addPurchaseMaterial.length === 0) {
       handleCallSnackbar('Please Add at least one Material', 'warning');
       return;
     }
     data?.addPurchaseMaterial?.forEach((material, index) => {
+      data.addPurchaseMaterial[index].materialID = parseInt(material.materialID) || 0;
       data.addPurchaseMaterial[index].quantity = parseFloat(material.quantity) || 0;
       data.addPurchaseMaterial[index].rate = parseFloat(material.rate) || 0;
       data.addPurchaseMaterial[index].amount = parseFloat(material.amount) || 0;
