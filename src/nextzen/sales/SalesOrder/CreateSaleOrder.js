@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
-import { createSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
+import { createSalesOrderAPI, editSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
@@ -37,6 +37,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     () => ({
       companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
       locationID: currentData?.locationID || 0,
+      advanceAmount: currentData?.advanceAmount || 0,
       billToName: currentData?.billToName || '',
       billToAddres: currentData?.billToAddres || '',
       billToState: currentData?.billToState || '',
@@ -195,8 +196,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       //     console.log('lllll', error);
       //   }
       // );
-      data.locationPhone = parseInt(data.locationPhone);
-      data.locationPincode = parseInt(data.locationPincode);
+      // data.locationPhone = parseInt(data.locationPhone);
+      // data.locationPincode = parseInt(data.locationPincode);
       data.billToPincode = parseInt(data.billToPincode);
       data.billToStateCode = parseInt(data.billToStateCode);
       data.shipToPincode = parseInt(data.shipToPincode);
@@ -217,12 +218,18 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
 
 
       console.log('Create Factory Data', data);
-      let response = await createSalesOrderAPI(data);
+      // let response = await createSalesOrderAPI(data);
       // if (currentData?.locationName) {
       //   response = await updateFactoryAPI(data);
       // } else {
       //   response = await createFactoryAPI(data);
       // }
+      let response = '';
+      if (currentData?.billToName) {
+        response = await editSalesOrderAPI(data);
+      } else {
+        response = await createSalesOrderAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset();
@@ -544,20 +551,20 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               name="advanceAmount"
               label="advanceAmount"
             />
-            <RHFTextField
+            {/* <RHFTextField
               name="gstAmount"
               label="GST Amount"
               InputProps={{
                 readOnly: true,
               }}
-            />
-            <RHFTextField
+            /> */}
+            {/* <RHFTextField
               name="grandTotalAmount"
               label="Grand Total Amount"
               InputProps={{
                 readOnly: true,
               }}
-            />
+            /> */}
             <RHFTextField name="billToName" label="Bill To Name" />
             <RHFTextField name="billToAddress" label="Billing Address" />
             <RHFTextField name="billToState" label="Bill to state" />
