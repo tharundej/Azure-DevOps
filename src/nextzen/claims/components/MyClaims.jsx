@@ -57,7 +57,7 @@ import ModalHeader from '../../global/modalheader/ModalHeader';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 
-
+import ApplyClaim from './ApplyClaim';
 
 
 export default function MyClaims({ currentUser, }) {
@@ -167,9 +167,18 @@ export default function MyClaims({ currentUser, }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
-    getProjectName(claimTypePayLoad);
+    claimTypeOptionsApi(claimTypePayLoad);
   }
   const handleClose = () => setOpen(false);
+
+  // both add and edit modal
+   
+   const [openAddEdit, setOpenAddEdit] = React.useState(false);
+   const handleOpenAddEdit = () => {
+    setOpenAddEdit(true);
+     claimTypeOptionsApi(claimTypePayLoad);
+   }
+   const handleCloseAddEdit = () =>{ setOpenAddEdit(false)};
 
 
   // modal edit
@@ -360,14 +369,14 @@ export default function MyClaims({ currentUser, }) {
   };
 
   const onclickActions = async (rowData, eventData) => {
-    await getProjectName(claimTypePayLoad);
+    await claimTypeOptionsApi(claimTypePayLoad);
     console.log(rowData, eventData, "CompoffAprrove from to basic table")
     if (rowData && eventData) {
 
       console.log(rowData, claimTypeOptions, 'rowDatarowData')
       // hit api for options return the resposnse.data.data
       // const arr= await ApiHitClaimTypeOptions()
-      // getProjectName(claimTypePayLoad);
+      // claimTypeOptionsApi(claimTypePayLoad);
       const updatedRowData = {
         ...rowData,
         companyId: companyID,
@@ -483,8 +492,8 @@ export default function MyClaims({ currentUser, }) {
   const claimTypePayLoad = {
     companyId: companyID,
   }
-  console.log(claimTypePayLoad, "claimTypePayLoad")
-  const getProjectName = async (claimTypePayLoad) => {
+  // console.log(claimTypePayLoad, "claimTypePayLoad")
+  const claimTypeOptionsApi = async (claimTypePayLoad) => {
     const response = await axios.post(baseUrl + '/GetClaimType', claimTypePayLoad).then(
       (response) => {
         console.log('sucesswwwwee', response?.data?.data);
@@ -550,13 +559,26 @@ export default function MyClaims({ currentUser, }) {
     setDel(null);
     setConfirmDeleteOpen(false);
   };
-
+//
 
   return (
     <>
       <Helmet>
         <title> Dashboard: myclaims</title>
       </Helmet>
+{/* <button onClick={handleOpenAddEdit}>add edit</button>
+      <Dialog
+        fullWidth
+        // maxWidth={false}
+        open={openAddEdit}
+        onClose={handleCloseAddEdit}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+       <ApplyClaim handleCloseAddEdit={handleCloseAddEdit} />
+      </Dialog> */}
+      
       <Dialog
         fullWidth
         maxWidth={false}

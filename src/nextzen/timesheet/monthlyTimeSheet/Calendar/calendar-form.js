@@ -41,7 +41,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 });
-export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose,projectInfo }) {
+export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose,projectInfo, editData ,eventClickMe,date}) {
   const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
@@ -242,7 +242,85 @@ projectInfo
 // },[])
 console.log(projectInfo,"data from calendar time sheet",projectData,projectData?.projectID.length)
 //  to store data
-const [projectDetails, setProjectDetails] = useState({});
+
+
+// const [projectDetails, setProjectDetails] = useState({
+//   employeeName:projectInfo?.employeeName,
+//   projectID:projectInfo?.projectID,
+//   todayDate:date?.start,
+// });
+
+// const editData=[
+//   ACCOUNTS={
+//     "hours": "sd",
+//     "des": "dfer"
+// }
+// HRMS={
+//     "hours": "12",
+//     "des": "23"
+// }
+// ]
+// const [projectDetails, setProjectDetails] = useState({
+//   employeeName: projectInfo?.employeeName,
+//   projectID: [
+//     { "Id": 1, "name": "ERP" },
+//     { "Id": 3, "name": "ACCOUNTS" }
+//   ],
+//   todayDate: date?.start,
+//   // Dynamically create properties for each project
+//   ...Object.fromEntries(
+//     projectInfo?.projectID?.map((project) => [
+//       project.name,
+//       { hours: "", des: "" }
+//     ]) || []
+//   )
+// });
+
+
+// const editData = [
+//   {
+//     ACCOUNTS: {
+//       hours: "sd",
+//       des: "dfer"
+//     }
+//   },
+//   {
+//     HRMS: {
+//       hours: "12",
+//       des: "23"
+//     }
+//   }
+// ];
+
+const initialProjectDetails = {
+  employeeName: projectInfo?.employeeName,
+  projectID: [
+    { "Id": 1, "name": "ERP" },
+    { "Id": 3, "name": "ACCOUNTS" }
+  ],
+  todayDate: date?.start,
+  // Dynamically create properties for each project with empty values
+  ...Object.fromEntries(
+    projectInfo?.projectID?.map((project) => [
+      project.name,
+      { hours: "", des: "" }
+    ]) || []
+  )
+};
+
+// If editData is not empty, update the initial state
+if (editData) {
+  editData.forEach((editItem) => {
+    for (const [key, value] of Object.entries(editItem)) {
+      if (initialProjectDetails.hasOwnProperty(key)) {
+        initialProjectDetails[key] = { ...initialProjectDetails[key], ...value };
+      }
+    }
+  });
+}
+
+const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
+
 
   const handleTextFieldChange = (projectname, field, value) => {
     setProjectDetails((prevDetails) => ({
@@ -251,6 +329,12 @@ const [projectDetails, setProjectDetails] = useState({});
     }));
   };
   console.log(projectDetails,"projectDetails")
+
+  // eventdata print 
+  // console.log( eventData," eventDataeventData")
+
+  // dates 
+  console.log(date,"datedatedate")
   return (
   
   <>
@@ -311,7 +395,7 @@ const [projectDetails, setProjectDetails] = useState({});
           type="submit"
           variant="contained"
           loading={isSubmitting}
-          disabled={dateError}
+          // disabled={dateError}
           color='primary'
         >
           Save Changes

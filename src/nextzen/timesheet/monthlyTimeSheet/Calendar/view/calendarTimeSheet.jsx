@@ -137,7 +137,29 @@ useEffect(()=>{
     type:"holiday"
    }))
 :[]
+
    const overallEvents = [...updatedEvents,...HolidayEvents]
+
+   const eventDataMe= [
+   {  "title": "9 Hours", "start": "2023-12-07", "end": "2023-12-07", "type": "holiday" },
+   {  "title": "12 Hours", "start": "2023-12-09", "end": "2023-12-09", "type": "holiday" },
+   { "title": "20 Hours",  "start": "2023-12-26", "end": "2023-12-26", "type": "holiday", "editData": [
+      { "ACCOUNTS": {  "hours": "sd",   "des": "dfer"  } },
+      {  "HRMS": { "hours": "12", "des": "23" } }
+    ]
+  },
+  { "title": "8 Hours",  "start": "2023-12-20", "end": "2023-12-20", "type": "holiday", "editData": [
+    { "ACCOUNTS": {  "hours": "100",   "des": "kkkkk"  } },
+    {  "HRMS": { "hours": "120", "des": "onnnnnn" } }
+  ]
+},
+{ "title": "10 Hours",  "start": "2023-12-22", "end": "2023-12-22", "type": "holiday", "editData": [
+  { "ACCOUNTS": {  "hours": "10",   "des": "NOT Done"  } },
+  {  "HRMS": { "hours": "123", "des": "onGoing" } }
+]
+}
+  
+   ]
     
   const renderResults = (
     <CalendarFiltersResult
@@ -209,7 +231,24 @@ const handleEmployeeChange = (event, newValue) => {
     employeeName: newValue,
   }));
 };
-console.log(data,"dataatdada")
+console.log(data,"dataatdada",selectedRange)
+
+
+const onDayData = () => {
+  if (selectedRange?.start) {
+    // Assuming eventDataMe is defined in the same scope
+    const editDataArray = eventDataMe
+      .filter((event) => event.editData && event.start === selectedRange?.start) // Filter based on start date
+      .map((event) => event.editData)
+      .flat(); // Flatten the array of editData arrays
+
+    console.log(editDataArray, "editDataArray");
+    // Do something with the extracted editDataArray
+    return editDataArray;
+  }
+};
+
+
   return (
  <>
      <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -282,8 +321,9 @@ console.log(data,"dataatdada")
               initialView={view}
               eventDisplay="block"
               selectAllow={selectAllowCallback}
-              events={overallEvents}
-              eventContent={renderEventContent}
+              // events={overallEvents}
+              events={eventDataMe}
+              // eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}
              eventClick={onClickEvent}
@@ -327,9 +367,15 @@ console.log(data,"dataatdada")
         <CalendarForm
           currentEvent={currentEvent}
           colorOptions={CALENDAR_COLOR_OPTIONS}
-          selectedRange={selectedRange}
+          // selectedRange={selectedRange}
+          date={selectedRange}
           onClose={onCloseForm}
           projectInfo={data}
+          //event data passing
+          // eventData={overallEvents}
+          editData={onDayData()}
+          eventClickMe={onClickEvent} // just using above events
+          
         />
         {/* </DialogTitle> */}
       </Dialog>

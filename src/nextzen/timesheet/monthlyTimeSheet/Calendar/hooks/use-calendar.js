@@ -104,15 +104,16 @@ export default function useCalendar() {
  
 
   const onClickEvent = useCallback(
-    (arg) => {
-      const { event } = arg;
-      if (event.extendedProps.type === 'holiday') {
-        return;
-      }
-      onOpenForm();
-      setSelectEventId(event.id);
-    },
-    [onOpenForm]
+    
+    // (arg) => {
+    //   const { event } = arg;
+    //   if (event.extendedProps.type === 'holiday') {
+    //     return;
+    //   }
+    //   onOpenForm();
+    //   setSelectEventId(event.id);
+    // },
+    // [onOpenForm]
   );
 
 
