@@ -88,44 +88,6 @@ export default function AdditionAddEdit({currentUser, EditData ,handleClose}) {
         return updatedValues;
       });
     };
-    // const handleTextFieldChange = (bonusName, field, value) => {
-    //   setDeductionDetails((prevDetails) => {
-    //     const updatedDetails = [...prevDetails];
-    
-    //     const existingIndex = updatedDetails.findIndex(
-    //       (detail) => detail.Type === bonusName
-    //     );
-    
-    //     if (existingIndex !== -1) {
-    //     if(field=="comments"){
-    //       updatedDetails[existingIndex] = {
-    //         ...updatedDetails[existingIndex],
-    //         [field]: value
-    //       };
-    //     }
-       
-    //     else{
-    //       updatedDetails[existingIndex] = {
-    //         ...updatedDetails[existingIndex],
-    //         [field]: parseInt(value)
-    //       };
-    //     }
-    //     } else {
-    //       const newDetail = {
-            
-    //         Type: bonusName,
-    //         comments: '',
-    //         amount: '',
-    //         noOfInstallments:1,
-    //         [field]: parseInt(value)
-    //       };
-    //       updatedDetails.push(newDetail);
-    //     }
-    
-    //     return updatedDetails;
-    //   });
-    // };
-  
 
     const handleTextFieldChange = (index, field, value) => {
       setFieldValues((prevValues) => {
@@ -137,7 +99,7 @@ export default function AdditionAddEdit({currentUser, EditData ,handleClose}) {
             };
           }
     
-          if (item.Type === prevValues[index].Type) {
+          if (item.AdditionsType === prevValues[index].AdditionsType) {
             return {
               ...item,
               [field]: value,
@@ -178,13 +140,13 @@ const AddAdditions=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/AdditionsDetails`,
+    url:baseUrl + `/AdditionsDetails`,
     data: payload
   
   }
   axios.request(config).then((response) => {
     console.log(response,"responseeee")
-    // handleClose()
+    handleClose()
     // enqueueSnackbar(response.data.message,{variant:'success'})
   
   })
@@ -237,7 +199,7 @@ const AddAdditions=()=>{
       <React.Fragment key={index}>
       
         <FormControl sx={{ mt:1, width: "100%" }}>
-       
+      {console.log(fieldValue,"fieldValuee")}
        <InputLabel id="demo-multiple-checkbox-label">Additions</InputLabel>
      <Select
       labelId="demo-multiple-checkbox-label"
@@ -273,7 +235,7 @@ const AddAdditions=()=>{
           }
         />
         </Grid>
-      
+      {console.log(index,"indexxx")}
       <Grid item xs={12} md={6}>
         <TextField
           label="Remarks"
@@ -317,7 +279,6 @@ const AddAdditions=()=>{
               <Stack alignItems="flex-end" sx={{ display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
               <Button variant='outlined' onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>
                 <Button variant="contained" color='primary' onClick={AddAdditions}>
-                  {/* {!currentUser ? 'Update Timesheet' : 'Add  TimeSheet'} */}
                   {EditData?.employeeId ? 'Edit Additions' : 'Add Additions '}
                 </Button>
               

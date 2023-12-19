@@ -84,8 +84,7 @@ const getLatestAdditions =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + '/GetAdditionsDetails',
-    url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/GetAdditionsDetails`,
+    url:baseUrl + '/GetAdditionsDetails',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -155,7 +154,7 @@ PaperProps={{
            {!additionCard[index] ? (
            <>
            <Typography>
-             <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.AdditionsType}
+             <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.additionsType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
                onClick={() => handleAddition(index)}
@@ -163,13 +162,13 @@ PaperProps={{
                <Iconify icon="iconamoon:arrow-down-2-thin" />
              </IconButton>
            </Typography>
-           <Typography> <span>Date : {formatDate(itm?.date)}</span></Typography>
+           <Typography>   {itm?.additionsType!="Over Time Hours" && <span>Date : {formatDate(itm?.date)}</span>}</Typography>
           
          </>
            ):(<>
              <Typography>
-                  <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.AdditionsType}<br />
-                  <span>Date : {formatDate(itm?.date)}</span>
+                  <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.additionsType}<br />
+                  {itm?.additionsType!="Over Time Hours" && <span>Date : {formatDate(itm?.date)}</span>}
                   <IconButton
                     sx={{ position: 'absolute', top: 15, right: 0 }}
                     onClick={() => handleAddition(index)}

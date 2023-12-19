@@ -90,46 +90,8 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
         return updatedValues;
       });
     };
-    // const handleTextFieldChange = (bonusName, field, value) => {
-    //   setDeductionDetails((prevDetails) => {
-    //     const updatedDetails = [...prevDetails];
-    
-    //     const existingIndex = updatedDetails.findIndex(
-    //       (detail) => detail.Type === bonusName
-    //     );
-    
-    //     if (existingIndex !== -1) {
-    //     if(field=="comments"){
-    //       updatedDetails[existingIndex] = {
-    //         ...updatedDetails[existingIndex],
-    //         [field]: value
-    //       };
-    //     }
-       
-    //     else{
-    //       updatedDetails[existingIndex] = {
-    //         ...updatedDetails[existingIndex],
-    //         [field]: parseInt(value)
-    //       };
-    //     }
-    //     } else {
-    //       const newDetail = {
-            
-    //         Type: bonusName,
-    //         comments: '',
-    //         amount: '',
-    //         noOfInstallments:1,
-    //         [field]: parseInt(value)
-    //       };
-    //       updatedDetails.push(newDetail);
-    //     }
-    
-    //     return updatedDetails;
-    //   });
-    // };
-  
 
-    const handleTextFieldChange = (index, field, value) => {
+const handleTextFieldChange = (index, field, value) => {
       setFieldValues((prevValues) => {
         const updatedValues = prevValues.map((item, idx) => {
           if (idx === index) {
@@ -182,8 +144,7 @@ const AddDeductions=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/addOtherDeductions`,
-    // url: baseUrl + `/approveLoanDetails`,
+    url:baseUrl + `/addOtherDeductions`,
     data: payload
   
   }
@@ -206,7 +167,7 @@ const getLatestInstallmentNumber=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestInstallmentNumber`,
+    url:baseUrl + `/getLatestInstallmentNumber`,
     data: payload
   
   }
@@ -229,7 +190,7 @@ const getHealthInsuranceDetails=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getEmployeeInstallments`,
+    url:baseUrl + `/getEmployeeInstallments`,
     data: payload
   
   }
@@ -252,7 +213,7 @@ const AddLoanRequestDeduction=(e)=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/addDeductionDetails`,
+    url: baseUrl + `/addDeductionDetails`,
     data: payload
   
   }
@@ -335,75 +296,12 @@ useEffect(() => {
         </Select>
         </FormControl>
         {console.log(selectCount,"Selectcount")}
-        {/* {[...Array(selectCount)].map((_, index) => (
-      <>
-       <FormControl sx={{ mt:1, width: "100%" }}>
-       
-        <InputLabel id="demo-multiple-checkbox-label">Deductions</InputLabel>
-      <Select
-       labelId="demo-multiple-checkbox-label"
-       id="demo-multiple-checkbox"
-       fullWidth
-       onChange={handleAutocompleteChange}
-       MenuProps={MenuProps}
-       input={<OutlinedInput label="Deductions" />}
-      >
-        {list?.map((options) => (
-         
-            <MenuItem key={options?.id} value={options?.id}>
-             {options?.name}
-          </MenuItem>
-        ))}
-      </Select>
-   
-      </FormControl>
-     
-    <Grid container spacing={1} flexDirection="row">
-      
-    <Grid item xs={12} md={6}>
-    <TextField
-        label="Deduction Amount"
-        placeholder='Enter Deducting Amount'
-        variant="outlined"
-        fullWidth
-        disabled={disableHealthInsurancePremium && selectedOptions === "healthInsurancePremium"}
-        value={
-          (selectedOptions === "healthInsurancePremium" && disableHealthInsurancePremium)
-            ? healthInsuranceDetails?.deductionAmount
-            : null
-        }
-        onChange={(e) => handleTextFieldChange(selectedOptions, 'amount', e.target.value)}
-    />
-    </Grid>
-    {(!disableHealthInsurancePremium)?<Grid item xs={12} md={6}>
-      <TextField
-        label="Deduction Reason"
-        variant="outlined"
-        fullWidth
-        onChange={(e) => handleTextFieldChange(selectedOptions,'comments',e.target.value)}
-      />
-    </Grid>:null}
-  </Grid>
-  {(selectedOptions=='healthInsurancePremium'&& !disableHealthInsurancePremium)&&
-  <Grid container spacing={1} flexDirection="row">
-      
-    <Grid item xs={12} md={12}>
-      <TextField
-        label="Duration of Health Insurance"
-        placeholder="no.of months covered by insurance"
-        variant="outlined"
-        fullWidth
-        onChange={(e) => handleTextFieldChange(selectedOptions,'totalInstallments',e.target.value)}
-      />
-    </Grid>
-  </Grid>}
-     </>
-        ))} */}<div>
+ <div>
     {fieldValues.map((fieldValue, index) => (
       <React.Fragment key={index}>
       
         <FormControl sx={{ mt:1, width: "100%" }}>
-       
+       {console.log(fieldValue,"fieldvaluess")}
        <InputLabel id="demo-multiple-checkbox-label">Deductions</InputLabel>
      <Select
       labelId="demo-multiple-checkbox-label"
