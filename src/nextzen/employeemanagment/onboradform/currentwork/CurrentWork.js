@@ -118,7 +118,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   })
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
-   "Contract","Permanent"
+   "Contract","Permanent","daily Wise"
 
 ])
 
