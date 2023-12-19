@@ -62,7 +62,7 @@ const bull = (
 );
 
 export default function HrITTab() {
-  // const baseUrl = ' https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = ' https://xql1qfwp-3001.inc1.devtunnels.ms/';
 
   const {enqueueSnackbar} = useSnackbar()
   const {user} = useContext(UserContext)
@@ -87,10 +87,10 @@ const [loading,setLoading] = useState(false);
     { id: 'employeeName', label: 'Employee Name', width: 180, type: 'text' },
     { id: 'departmentName', label: 'Department Name', width: 180, type: 'text' },
     { id: 'declaration', label: 'Declaration', width: 220, type: 'bool' },
-    { id: 'rentDetails', label: 'Rent Details', width: 220, type: 'bool' },
-    { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
-    { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
-    { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
+    // { id: 'rentDetails', label: 'Rent Details', width: 220, type: 'bool' },
+    // { id: 'licPremium', label: 'LIC Details', width: 220, type: 'bool' },
+    // { id: 'housingDetails', label: 'Housing Property', width: 220, type: 'bool' },
+    // { id: 'medicalDetails', label: 'Medical Insurance', width: 220, type: 'bool' },
     { id: 'status', label: 'Status', width: 220, type: 'badge' },
     // { id: '', width: 88 },
   ];
@@ -114,7 +114,9 @@ const [loading,setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const [expanded, setExpanded] = React.useState(false);
-
+  const [selectedFiles, setSelectedFiles] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [data, setData] = useState();
   const [declaationrMessage, setDeclaationrMessage] = useState('');
   const [rentMessage, setRentMessage] = useState('');
   const [LicrMessage, setLicrMessage] = useState('');
@@ -199,20 +201,22 @@ const [loading,setLoading] = useState(false);
     console.log('submitted data111', data);
   };
 
-
-  const getEmpItDetails = async (data) => {
-    setLoading(true)
+  const getEmpItDetails = async () => {
     const payload = {
-      employeeID: editData?.employeeID,
-      companyID: cmpId,
-      financialYear: selectedYear?.financialYear,
-    };
+      employeeId: empId,
 
+      companyId: cmpId,
+
+      financialYear: selectedYear?.financialYear,
+
+      // rowsPerPage: rowsPerPage,
+
+      PageNum: 0,
+    };
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      //    url: baseUrl + '/updateSingleDepartmentInfo ',
-      url: baseUrl + '/getAllDeclarationDetails',
+      url: baseUrl + '/getDeclarations',
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',
@@ -222,27 +226,102 @@ const [loading,setLoading] = useState(false);
     const result = await axios
       .request(config)
       .then((response) => {
-        console.log('successresponse1', response);
-        setItDetailsFromApi(response?.data);
-        setItDetails(response?.data)
         if (response.status === 200) {
-          setLoading(false)
-          setSnackbarSeverity('success');
-          setSnackbarMessage('Designation Added successfully!');
-          setSnackbarOpen(true);
-          //  setHitGetDepartment(!hitGetDepartment)
-          console.log('successresponse', response);
+          const rowsData = response?.data?.data?.rows;
+          console.log(JSON.stringify(response.data));
+          setData(rowsData);
+console.log(response ,"response123")
+let selectedFiles = {};
+
+response?.data?.data?.rows.forEach(row => {
+  if (row.attachmentsRequired === 1 && Array.isArray(row.documents)) {
+    if (!selectedFiles[row.configId]) {
+      selectedFiles[row.configId] = [];
+    }
+
+    // Iterate through documents in the current row
+    row.documents.forEach(document => {
+      selectedFiles[row.configId].push({
+        documentId: document.id,
+        fileName: document.fileName,
+        originalFileName: document.originalFileName
+      });
+    });
+
+    console.log("Selected files for configId:", selectedFiles[row.configId]);
+  }
+});
+
+// Now, selectedFiles is an object with configId as the key and an array of file information as the value
+console.log(selectedFiles, "selected files");
+setSelectedFile(selectedFiles);
+
+// Now, selectedFiles is an object with configId as the key and an array of file information as the value
+console.log(selectedFiles, "selected files");
+setSelectedFiles(selectedFiles)
+
         }
-        console.log('successresponse2', response);
       })
       .catch((error) => {
-        setOpen(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Error Designation Adding . Please try again.');
-        setSnackbarOpen(true);
         console.log(error);
       });
+    console.log(result, 'resultsreults');
   };
+
+//   const getEmpItDetails = async (data) => {
+//     setLoading(true)
+//     const payload = {
+//       employeeID: editData?.employeeID,
+//       companyID: cmpId,
+//       financialYear: selectedYear?.financialYear,
+//     };
+
+//     const config = {
+//       method: 'post',
+//       maxBodyLength: Infinity,
+//       //    url: baseUrl + '/updateSingleDepartmentInfo ',
+//       url: baseUrl + '/getAllDeclarationDetails',
+//       headers: {
+//         Authorization: token,
+//         'Content-Type': 'text/plain',
+//       },
+//       data: payload,
+//     };
+//     const result = await axios
+//       .request(config)
+//       .then((response) => {
+//         console.log('successresponse1', response);
+//         setItDetailsFromApi(response?.data);
+//         // setItDetails(response?.data)
+//         if (response.status === 200) {
+//           setLoading(false)
+//           // Extract declarationDetails from the response data
+//       // const declarationDetails = response?.data?.declarationDetails;
+
+//       // Parse the JSON string
+// const parsedData = response.data
+
+// // Access the declarationDetails
+// const declarationDetails = parsedData.declarationDetails;
+
+//       // Set declarationDetails to itDetails state
+//       setItDetails((prevDetails) => ({
+//         ...prevDetails,
+//         declarationDetails,
+//       }));
+        
+//           console.log('successresponse', declarationDetails);
+//         }
+//         console.log('successresponse2', response);
+//       })
+//       .catch((error) => {
+//         setOpen(true);
+//         setSnackbarSeverity('error');
+//         setSnackbarMessage('Error Designation Adding . Please try again.');
+//         setSnackbarOpen(true);
+//         console.log(error);
+//       });
+//   };
   const handleOpen = () => setOpen(true);
 
   const handleCloseEdit = () => setOpenEdit(false);
@@ -261,7 +340,8 @@ useEffect(()=>{
 
   getEmpItDetails()
   const responseData = itDetailsFromApi;
-  setItDetails(responseData);
+  // setItDetails(responseData);
+  console.log("responseData" ,responseData)
 },[reload])
   function camelCaseToSentence(camelCase) {
     // Add a space before all capital letters, then convert to lowercase
@@ -289,7 +369,7 @@ useEffect(()=>{
       financialYear: selectedYear?.financialYear,
       status: type
   }
-  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -380,7 +460,7 @@ useEffect(()=>{
   console.log("")
     
   }, [selectedYear?.financialYear])
-  console.log(itDetails ,"itDetails")
+  console.log(selectedFiles ,selectedFile ,"selectedFiles")
   return (
     <>
       {showForm && (
@@ -443,42 +523,85 @@ useEffect(()=>{
                   <Typography>Declaration</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Tax Section</TableCell>
-                          <TableCell>Tax Scheme</TableCell>
-                          <TableCell>Limit</TableCell>
-                          <TableCell>Declared</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      {itDetails?.declarationDetails ? (
-                      <TableBody>
-                        {itDetails?.declarationDetails &&
-                          itDetails?.declarationDetails?.map((row, index) => (
-                            <TableRow
-                              style={{
-                                height: '20px',
-                                borderBottom: '1px solid black',
-                                backgroundColor: 'white',
-                              }}
-                              key={row.configId}
-                            >
-                              <TableCell style={{ width: '35rem', padding: '4px !important' }}>
-                                {row.taxSection}
-                              </TableCell>
-                              <TableCell>{row.taxScheme}</TableCell>
-                              <TableCell>{row.taxLimit}</TableCell>
-                              <TableCell>{row.declared}</TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                      ) : (
-                        <p>No Declaration Details available.</p>
-                      )}
-                    </Table>
-                  </TableContainer>
+                {data && selectedYear?.financialYear ? (
+            <>
+              <TableContainer
+                component={Paper}
+                style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Tax Section</TableCell>
+                      <TableCell>Tax Scheme</TableCell>
+                      <TableCell>Limit</TableCell>
+                      <TableCell>Declared</TableCell>
+                      <TableCell>File Upload</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data &&
+                      data
+                        // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        ?.map((row, index) => (
+                          <TableRow
+                            style={{
+                              height: '20px',
+                              borderBottom: '1px solid black',
+                              backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
+                            }}
+                            key={row.configId}
+                          >
+                            <TableCell style={{ width: '35rem', padding: '4px !important' }}>
+                              {row.taxSection}
+                            </TableCell>
+                            <TableCell>{row.taxScheme}</TableCell>
+                            <TableCell>{row.taxLimit}</TableCell>
+                            <TableCell>
+                              <TextField
+                                type="number"
+                                value={row.declared}
+                                // onChange={handleAgeChange(row.configId)}
+                                // inputProps={{
+                                //   max: row.taxLimit,
+                                // }}
+                              />
+                            </TableCell>
+
+                            {row.attachmentsRequired ? 
+                            (
+//                        
+<TableCell>
+ 
+  {selectedFiles[row.configId] && selectedFiles[row.configId].length > 0 && (
+    <a
+    href={baseUrl + `/download?file=${selectedFiles[row.configId][0].originalFileName}`}
+      target="_blank"  // Opens the link in a new tab
+      rel="noopener noreferrer"
+    >
+      {selectedFiles[row.configId][0].fileName}
+    </a>
+  )}
+ 
+</TableCell>
+
+                  ) : (
+                    <TableCell> </TableCell>
+                  )}
+               
+
+
+
+
+                          </TableRow>
+                        ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+             
+            </>
+          ) : "No Data Available"}
                 
                     <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
      {' '}
@@ -498,360 +621,7 @@ useEffect(()=>{
    </div>
                 </AccordionDetails>
               </Accordion>
-              <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel2a-content"
-                  id="panel2a-header"
-                >
-                  <Typography>Rent Details</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{ margin: '16px 0' }}>
-                {itDetails?.rentDetails ? (
-                  <>
-                  {console.log(itDetails ,"itdetailsinsidedilog")}
-                  {itDetails?.rentDetails && (
-                    <Grid container spacing={2}>
-                      {Object.entries(itDetails.rentDetails).map(([key, value]) =>
-                        // Exclude 'documents' key and handle arrays separately
-                        key !== 'rentDocs' && key !== 'landLordDocs' && !Array.isArray(value) ? (
-                          <React.Fragment key={key}>
-                            <Grid item xs={6}>
-                              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                {camelCaseToSentence(key)}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography>{value}</Typography>
-                            </Grid>
-                          </React.Fragment>
-                        ) : null
-                      )}
-                      {itDetails.rentDetails.data && (
-                        <Grid item xs={12}>
-                          <TableContainer component={Paper}>
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Month</TableCell>
-                                  <TableCell>City Type</TableCell>
-                                  <TableCell>Rent Amount</TableCell>
-                                  <TableCell>Submitted Amount</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {itDetails.rentDetails.data.map((monthData, index) => (
-                                  <TableRow key={index}>
-                                    <TableCell>{monthData.month}</TableCell>
-                                    <TableCell>{monthData.cityType}</TableCell>
-                                    <TableCell>{monthData.rentAmount}</TableCell>
-                                    <TableCell>{monthData.submittedAmount}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </Grid>
-                      )}
-
-                      <Grid item xs={12}>
-                        <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                          Rent Documents:
-                        </Typography>
-                        {itDetails?.rentDetails?.rentDocs && (
-                          <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                            {itDetails.rentDetails.rentDocs.map((doc, index) => (
-                              <li key={index}>
-                                <Link
-                                  href={doc.fileContent !== "" ?doc.fileContent  : null }
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {`Document ${index + 1}: ${doc.fileName }`}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                          Landlord Documents:
-                        </Typography>
-                        {itDetails?.rentDetails?.landLordDocs && (
-                          <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                            {itDetails.rentDetails.landLordDocs.map((doc, index) => (
-                              <li key={index}>
-                            <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
-  {`Document ${index + 1}: ${doc.fileName}`}
-</Link>
-
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </Grid>
-                    </Grid>
-                  )}
-                </>  ) : (
-                    <p>No Rent details available.</p>
-                  )}
-                       
-                                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
-     {' '}
-     {/* <Grid item xs={4}>
-              <TextField
-                label="Comment "
-                variant="outlined"
-                fullWidth
-                name="rentMessage"
-                value={message?.rentMessage?message?.rentMessage : ''}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
-                onChange={handleMessage}
-              />
-            </Grid> */}
-  
-  
-   </div>
-                </AccordionDetails>
-              </Accordion>
-              <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel3a-content"
-                  id="panel3a-header"
-                >
-                  <Typography>LIC Details</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{ margin: '16px 0' }}>
-                {itDetails?.licData ? ( 
-                  <>
-                  {itDetails?.licData && (
-                    <Grid container spacing={2}>
-                      {itDetails.licData.map((licItem, index) => (
-                        <React.Fragment key={index}>
-                          <Grid item xs={12}>
-                            <Grid container spacing={2}>
-                              {Object.entries(licItem).map(([key, value]) =>
-                                key !== 'documents' ? (
-                                  <React.Fragment key={key}>
-                                    <Grid item xs={6}>
-                                      <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                        {camelCaseToSentence(key)}
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                      <Typography>{value}</Typography>
-                                    </Grid>
-                                  </React.Fragment>
-                                ) : null
-                              )}
-                              {licItem.documents && (
-                                <Grid item xs={12}>
-                                  <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                    Documents:
-                                  </Typography>
-                                  <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                                    {licItem?.documents?.map((doc, docIndex) => (
-                                      <li key={docIndex}>
-                                        <Link
-                                          href={doc.fileContent !== "" ?doc.fileContent  : null }
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                        >
-                                          {`Document ${docIndex + 1}: ${doc.fileName !== "" ?doc.fileName  : null }`}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </Grid>
-                              )}
-                            </Grid>
-                          </Grid>
-                          {index < itDetails.licData.length - 1 && (
-                            <Grid item xs={12}>
-                              <Divider variant="middle" style={{ background: 'black' }} />
-                            </Grid>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </Grid>
-                  )}
-                  </>
-                  ) : (
-                    <p>No LIC  Details available.</p>
-                  )}
-                                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
-     {' '}
-     {/* <Grid item xs={4}>
-              <TextField
-                label="Comment "
-                variant="outlined"
-                fullWidth
-                name="licrMessage"
-                value={message?.licrMessage?message?.licrMessage : ''}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
-                onChange={handleMessage}
-              />
-            </Grid> */}
-   
-  
-   </div>
-                </AccordionDetails>
-              </Accordion>
-              <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel2a-content"
-                  id="panel2a-header"
-                >
-                  <Typography>Housing Property Details</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                {itDetails?.housingPropertyDetails ? (
-                  <>
-                  {itDetails?.housingPropertyDetails && itDetails.housingPropertyDetails.length > 0 && (
-                    <Grid container spacing={2}>
-                      {Object.entries(itDetails.housingPropertyDetails[0]).map(([key, value]) => (
-                        <React.Fragment key={key}>
-                          <Grid item xs={6}>
-                            <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                              {camelCaseToSentence(key)}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography>{value}</Typography>
-                          </Grid>
-                          {key === 'documents' && value && (
-                            <Grid item xs={12}>
-                              <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                Documents:
-                              </Typography>
-                              <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                                {value?.map((doc, docIndex) => (
-                                  <li key={docIndex}>
-                                  <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
-  {`Document ${docIndex + 1}: ${doc.fileName}`}
-</Link>
-
-                                  </li>
-                                ))}
-                              </ul>
-                            </Grid>
-                          )}
-                        </React.Fragment>
-                      ))}
-                      <Grid item xs={12}>
-                        <Divider variant="middle" style={{ background: 'black' }} />
-                      </Grid>
-                    </Grid>
-                  )}
-</>
-) : (
-  <p>No Housing Property Details available.</p>
-)}
-                                        <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
-     {' '}
-     {/* <Grid item xs={4}>
-              <TextField
-                label="Comment "
-                variant="outlined"
-                fullWidth
-                name="houseMessage"
-                value={message?.houseMessage?message?.houseMessage : "" }
-                // onChange={(e) => handleFormChange(e, rowIndex)}
-                onChange={handleMessage}
-              />
-            </Grid> */}
-     
-  
-   </div>
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel4a-content"
-                  id="panel4a-header"
-                >
-                  <Typography>Medical Insurance Details</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{ margin: '16px 0' }}>
              
-                {itDetails?.medicalData ? (
-               <>
-                  {itDetails?.medicalData && (
-                    <Grid container spacing={2}>
-                      {itDetails.medicalData.map((medicalItem, index) => (
-                        <React.Fragment key={index}>
-                          <Grid item xs={12}>
-                            <Grid container spacing={2}>
-                              {Object.entries(medicalItem).map(([key, value]) =>
-                                key !== 'documents' ? (
-                                  <React.Fragment key={key}>
-                                    <Grid item xs={6}>
-                                      <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                        {camelCaseToSentence(key)}
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                      <Typography>{value}</Typography>
-                                    </Grid>
-                                  </React.Fragment>
-                                ) : null
-                              )}
-                              {medicalItem.documents && (
-                                <Grid item xs={12}>
-                                  <Typography style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                    Documents:
-                                  </Typography>
-                                  <ul style={{ margin: '0', paddingInlineStart: '20px' }}>
-                                    {medicalItem.documents.map((doc, docIndex) => (
-                                      <li key={docIndex}>
-                                      <Link href={doc.fileContent} target="_blank" rel="noopener noreferrer">
-  {`Document ${index + 1}: ${doc.fileName}`}
-</Link>
-
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </Grid>
-                              )}
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Divider variant="middle" style={{ background: 'black' }} />
-                          </Grid>
-                        </React.Fragment>
-                      ))}
-                    </Grid>
-                  )}
-</>
-
-) : (
-  <p>No Medical Dtails available.</p>
-)}
-<div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
-     {' '}
-     {/* <Grid item xs={4}>
-              <TextField
-                label="Comment "
-                variant="outlined"
-                fullWidth
-                name="medicalMessage"
-                value={message?.medicalMessage ?message?.medicalMessage: ""}
-                // onChange={(e) => handleFormChange(e, rowIndex)}
-                onChange={handleMessage}
-              />
-            </Grid> */}
-    
-  
-   </div>
-                </AccordionDetails>
-              </Accordion>
-
               {/* <Button onClick={updateDepartment}>Approve</Button> */}
             </Box>
             

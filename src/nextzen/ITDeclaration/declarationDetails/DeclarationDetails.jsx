@@ -38,7 +38,7 @@ const Alert = React.forwardRef((props, ref) => (
 const DeclarationDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useContext(UserContext);
-  const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp';
+  // const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp';
   const [file, setFile] = useState(null);
   const empId = user?.employeeID ? user?.employeeID : '';
   const cmpId = user?.companyID ? user?.companyID : '';
@@ -171,6 +171,36 @@ const DeclarationDetails = () => {
           const rowsData = response?.data?.data?.rows;
           console.log(JSON.stringify(response.data));
           setData(rowsData);
+console.log(response ,"response123")
+let selectedFiles = {};
+
+response?.data?.data?.rows.forEach(row => {
+  if (row.attachmentsRequired === 1 && Array.isArray(row.documents)) {
+    if (!selectedFiles[row.configId]) {
+      selectedFiles[row.configId] = [];
+    }
+
+    // Iterate through documents in the current row
+    row.documents.forEach(document => {
+      selectedFiles[row.configId].push({
+        documentId: document.id,
+        fileName: document.fileName,
+        originalFileName: document.originalFileName
+      });
+    });
+
+    console.log("Selected files for configId:", selectedFiles[row.configId]);
+  }
+});
+
+// Now, selectedFiles is an object with configId as the key and an array of file information as the value
+console.log(selectedFiles, "selected files");
+setSelectedFile(selectedFiles);
+
+// Now, selectedFiles is an object with configId as the key and an array of file information as the value
+console.log(selectedFiles, "selected files");
+setSelectedFiles(selectedFiles)
+
         }
       })
       .catch((error) => {
@@ -178,7 +208,7 @@ const DeclarationDetails = () => {
       });
     console.log(result, 'resultsreults');
   };
-
+  console.log(selectedFile, "outsideDatte");
   useEffect(() => {
     const fetchData = async () => {
       await getDeclarationsList();
@@ -187,12 +217,33 @@ const DeclarationDetails = () => {
   }, [reloading, selectedYear?.financialYear]);
 
   const updateDeclarationsList = async () => {
+    const missingAttachments = data?.some((item) => item.attachmentsRequired === 1 && !selectedFiles[item.configId]?.length);
+
+    if (missingAttachments) {
+      // Show an error message or handle the case where attachments are missing
+      // enqueueSnackbar('Attachments are required for specific Section.', { variant: 'error' });
+      enqueueSnackbar('Related Doccument is required for proof.', { variant: 'error' });
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const newArray = data?.map((item) => ({
       configId: item.configId,
       declared: parseInt(item.declared, 10),
     }));
-    console.log(newArray, 'newarray');
+
+    const newDocuments = Object.entries(selectedFiles).map(([configId, fileObjects]) => (
+      fileObjects.map((fileObject) => ({
+        id: fileObject.documentId,
+        configID: parseInt(configId),
+        description: "",
+        fileName: fileObject.fileName,
+        financialYear: selectedYear?.financialYear,
+        fileContent: fileObject.fileContent,
+      }))
+    )).flat();
+    
+    console.log(newDocuments, 'newDocuments');
     const payload = {
       employeeId: empId,
 
@@ -201,6 +252,7 @@ const DeclarationDetails = () => {
       financialYear: selectedYear?.financialYear,
 
       records: newArray,
+      documents :newDocuments
     };
 
     const config = {
@@ -280,13 +332,74 @@ const DeclarationDetails = () => {
       setSelectedYear(parsedValue);
     }
   }, []);
+
+  function getBase64(file, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(file);
+  }
+  const convertImage = (e) => {
+    const imageData = URL.createObjectURL(e.target.files[0]);
+    getBase64(e.target.files[0], (base64Data) => {
+      const parts = base64Data.split(';base64,');
+      setImages([...images, parts[1]]);
+
+      // Add the file name to the fileNames state
+      setFileNames([...fileNames, e.target.files[0].name]);
+
+  // Create a new object with fileName and fileContent
+  const newFileObject = {
+    fileName: e.target.files[0].name,
+    fileContent: parts[1],
+  };
+
+  // Create a new array by merging the previous data with the new object
+  const newFileData = [...fileData, newFileObject];
+
+  // Update the state with the new array
+  setFileData(newFileData);
+
+     ;
+    });
+  };
+  var [images ,setImages ] =React.useState([])
+  var [ fileNames ,setFileNames  ] =React.useState([])
+
   const handleFileChangeForRow = (configId, event) => {
     const file = event.target.files[0];
-    setSelectedFiles((prevFiles) => ({
-      ...prevFiles,
-      [configId]: file,
-    }));
+  
+    const imageData = URL.createObjectURL(file);
+  
+    getBase64(file, (base64Data) => {
+      const parts = base64Data.split(';base64,');
+  
+      setImages([...images, parts[1]]);
+  
+      setFileNames([...fileNames, file.name]);
+      const newFileObject = {
+        documentId: 0, 
+        fileName: file.name,
+        originalFileName: file.name, 
+        fileContent: parts[1],
+      };
+     
+      setSelectedFiles((prevFiles) => {
+        const updatedFiles = { ...prevFiles };
+        delete updatedFiles[configId];
+        return {
+          ...updatedFiles,
+          [configId]: [newFileObject],
+        };
+      });
+      console.log("base64", newFileObject);
+    });
+
+    console.log("selected", selectedFile);
   };
+  
+
+
+  console.log(selectedFiles ,"file uploaded inselectedFiles")
   return (
     <div>
       {loading ? (
@@ -316,7 +429,7 @@ const DeclarationDetails = () => {
               )}
             />
           </Grid>
-          {selectedYear?.financialYear ? (
+          {data && selectedYear?.financialYear ? (
             <>
               <TableContainer
                 component={Paper}
@@ -363,26 +476,36 @@ const DeclarationDetails = () => {
 
                             {row.attachmentsRequired ? 
                             (
-                              <TableCell>
-                              <Button
-                                className="button"
-                                variant="contained"
-                                startIcon={<CloudUploadIcon />}
-                                component="label"
-                              >
-                                <Input
-                                  type="file"
-                                  accept=".zip"
-                                  style={{ display: 'none' }}
-                                  onChange={(event) => handleFileChangeForRow(row.configId, event)}
-                                />
-                                Upload Zip
-                              </Button>
-                              {selectedFiles[row.configId] && (
-                          <span>{selectedFiles[row.configId].name}</span>
-                        )}
-                              
-                            </TableCell>
+//                        
+<TableCell>
+  <Button
+    className="button"
+    variant="contained"
+    startIcon={<CloudUploadIcon />}
+    component="label"
+  >
+    <Input
+      type="file"
+      accept=".zip"
+      style={{ display: 'none' }}
+      onChange={(event) => handleFileChangeForRow(row.configId, event)}
+    />
+    Upload Zip
+  </Button>
+  {selectedFiles[row.configId] && selectedFiles[row.configId].length > 0 && (
+    <a
+    href={baseUrl + `/download?file=${selectedFiles[row.configId][0].originalFileName}`}
+      target="_blank"  // Opens the link in a new tab
+      rel="noopener noreferrer"
+    >
+      {selectedFiles[row.configId][0].fileName}
+    </a>
+  )}
+  {/* {selectedFiles[row.configId] && selectedFiles[row.configId].length > 0 && (
+    <span>{selectedFiles[row.configId][0].fileName}</span>
+  )} */}
+</TableCell>
+
                   ) : (
                     <TableCell> </TableCell>
                   )}
@@ -419,6 +542,23 @@ const DeclarationDetails = () => {
                     <Button className="button" onClick={updateDeclarationsList}>
                       Save
                     </Button>
+                    {/* <Button
+                                className="button"
+                                variant="contained"
+                                startIcon={<CloudUploadIcon />}
+                                component="label"
+                              >
+                                <Input
+                                  type="file"
+                                  accept=".zip"
+                                  style={{ display: 'none' }}
+                                  onChange={(event) => handleFileChangeForRow(row.configId =1, event)}
+                                />
+                                Upload Zip
+                              </Button>
+                              {selectedFiles[row.configId] && (
+                          <span>{selectedFiles[row.configId].name}</span>
+                        )} */}
                   </Grid>
                   <Grid item xs={8} sm={10}>
                     <TablePagination

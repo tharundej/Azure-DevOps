@@ -21,11 +21,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-// utils
-// routes
+
 import { useRouter } from 'src/routes/hooks';
-// assets
-// components
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,
@@ -42,7 +40,7 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-
+import Switch from '@mui/material/Switch';
 
 export default function AddTaxSectionConfig({
   currentUser,
@@ -57,8 +55,8 @@ export default function AddTaxSectionConfig({
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-// const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
-
+const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+const [valueSelected, setValueSelected] = useState();
   const empId = localStorage.getItem('employeeID');
   const cmpId = localStorage.getItem('companyID');
   const token = localStorage.getItem('accessToken');
@@ -115,8 +113,6 @@ export default function AddTaxSectionConfig({
       
     });
 
-    // setFormData({ ...formData, [name]: integerValue });
-
     console.log(formData);
   };
 
@@ -131,26 +127,14 @@ export default function AddTaxSectionConfig({
     });
   };
 
-
-
-  const snackBarAlertHandleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-    // setOpen(false);
-  };
- 
- 
-
-
   const AddTaxConfiguration = async () => {
     const payload = 
     {
         companyId:cmpId,
         taxSection:formData?.taxSection,
         taxScheme:formData?.taxScheme,
-        taxLimit:formData?.taxLimit
+        taxLimit:formData?.taxLimit,
+       attachmentsRequired:valueSelected?.attachmentsRequired
     }
 
     const config = {
@@ -188,14 +172,27 @@ export default function AddTaxSectionConfig({
       });
    
   };
- 
-
+  
 useEffect(()=>{
   console.log("")
 }, [hitGetDepartment])
 
   console.log(departmentType, 'DEPARTMENT TYPE    ');
   console.log(formData, 'formdata ');
+
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
+
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+   
+    setValueSelected((prevFormData) => ({
+      ...prevFormData,
+      [name]: mappedValue,
+    }));
+  
+  }
+  
   return (
     <div
       style={{
@@ -265,7 +262,16 @@ useEffect(()=>{
                 variant="outlined"
                 fullWidth
               />
-
+         <FormControlLabel
+  control={
+    <Switch
+      name="attachmentsRequired"
+      checked={formData?.attachmentsRequired} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('attachmentsRequired', event.target.checked)}
+    />
+  }
+  label="Document Required"
+/>
               {/* <Button onClick={AddTaxConfiguration}>Add working</Button> */}
 
           
@@ -320,6 +326,6 @@ useEffect(()=>{
   );
 }
 
-AddTaxSectionConfig.propTypes = {
-  currentUser: PropTypes.object,
-};
+// AddTaxSectionConfig.propTypes = {
+//   currentUser: PropTypes.object,
+// };

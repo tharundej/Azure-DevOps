@@ -27,6 +27,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import AddTaxSectionConfig from './AddTaxSectionConfig';
 import {useSnackbar} from '../../../components/snackbar'
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -35,7 +37,7 @@ const bull = (
 );
 
 export default function TAxSectionConfig() {
-// const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+//  const baseUrl = 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
 const {enqueueSnackbar} = useSnackbar()
   const {user}=useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
@@ -57,6 +59,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     { id: 'taxScheme', label: 'Tax Scheme', width: 350, type: 'text' },
     
    { id: 'taxLimit', label: 'Limit', width: 280, type: 'text' },
+   { id: 'attachmentsRequired', label: 'Doccument Required', width: 280, type: 'bool' },
 
    
     // { id: '', width: 88 },
@@ -138,7 +141,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
        configId:valueSelected?.configId,
        taxSection:valueSelected?.taxSection,
        taxScheme:valueSelected?.taxScheme,
-       taxLimit:parseInt(valueSelected?.taxLimit)
+       taxLimit:parseInt(valueSelected?.taxLimit),
+       attachmentsRequired:valueSelected?.attachmentsRequired
        }
 
     const config = {
@@ -222,7 +226,19 @@ const  deleteFunction =(rowdata, event)=>{
   const handleOpen = () => setOpen(true);
  
   const handleCloseEdit = () => setOpenEdit(false);
- 
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
+
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+  
+    setValueSelected((prevFormData) => ({
+      ...prevFormData,
+      [name]: mappedValue,
+    }));
+  
+    
+  };
   return (
     <>
       {showForm && (
@@ -299,7 +315,16 @@ const  deleteFunction =(rowdata, event)=>{
                 fullWidth
               />
           
-             
+          <FormControlLabel
+  control={
+    <Switch
+      name="attachmentsRequired"
+      checked={valueSelected?.attachmentsRequired} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('attachmentsRequired', event.target.checked)}
+    />
+  }
+  label="Document Required"
+/>
 
        
       

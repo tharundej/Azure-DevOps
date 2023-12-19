@@ -128,6 +128,7 @@ import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectio
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 
 const defaultFilters = {
   name: '',
@@ -150,7 +151,7 @@ const BasicTable = ({
   handleEditRowParent,
   handleOpenModal,
   SecondoryTable,
-  componentPage,count
+  componentPage,count,isShowHandle
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -206,7 +207,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
-    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
+    const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
     // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
@@ -228,7 +229,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+        token
       },
       data: initialDefaultPayload,
     };
@@ -788,6 +789,10 @@ const [index, setIndex]=useState(""); // index setting
 
 {filterName === 'AddRoleFilter' && (
             <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
+
+{filterName === 'CreatePayRunFilter' && (
+            <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
           <Card>

@@ -265,41 +265,7 @@ export default function TaxSectionFilter({
     console.log(searchTerm, 'search ........');
   };
 
-  const getDepartment = async () => {
-    const payload = {
-      companyID: cmpId,
-      //  "locationID": 30
-    };
 
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: baseUrl +'getSingleLicPremium',
-      url: baseUrl + '/onboardingDepartment',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/onboardingDepartment',
-      headers: {
-        Authorization:
-       token , 'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data?.data;
-          setDepartmentType(rowsData);
-          setDepartmentLength(response?.data?.data.length);
-          console.log(JSON.stringify(response?.data?.data), 'result');
-
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //  console.log(result, 'resultsreults');
-  };
 
   console.log(departmentLength, 'departmentlenght');
 
@@ -410,14 +376,7 @@ export default function TaxSectionFilter({
   };
 
   console.log(formData, 'data in the form ');
-  useEffect(() => {
-    console.log("calling in filter folder")
-    const fetchData = async () => {
-      getDesignationGrade();
-      getDepartment();
-    };
-    fetchData();
-  }, []);
+  
   return (
     <>
       <Grid
