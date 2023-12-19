@@ -482,8 +482,8 @@ const handleLoanExpand=(rowID,rowloanID,rowIndex)=>{
   const config={
     method: 'POST',
     maxBodyLength: Infinity,
-    // url:baseUrl+`/getLoanDetails`,
-    url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetails`,
+    url:baseUrl+`/getLoanDetails`,
+    // url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetails`,
     data: loanPayload,
   }
   axios

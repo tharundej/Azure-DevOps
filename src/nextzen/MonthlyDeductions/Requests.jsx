@@ -9,39 +9,6 @@ import UserContext from '../context/user/UserConext';
 
 export default function Requests() {
   const {user} = useContext(UserContext)
-  const SalarydefaultPayload={
-    "count": 5,
-    "page": 0,
-    "search": "",
-    "companyID":(user?.companyID)?user?.companyID:'',
-    "employeeID":(user?.employeeID)?user?.employeeID:'',
-    "roleID":(user?.roleID)?user?.roleID:'',
-    "records":"",
-    "externalFilters": {
-  "requestDate": {
-   
-  "from": "",
-   
-  "to": ""
-   
-  },
-   
-  "paidDate": {
-   
-  "from": "",
-   
-  "to": ""
-   
-  },
-      "status": "",
-      "requestAmount":"",
-      "paidAmount":""
-    },
-    "sort": {
-      "key": 1,
-      "orderBy": "sa_id"
-    }
-  }
   const loandefaultPayload ={
     "count": 5,
     "page": 0,
@@ -80,25 +47,7 @@ export default function Requests() {
     }
   }
   const deductiondefaultpayload={
-    "count":5,
-    "page":0,
-    "search":"",
-    "companyID":(user?.companyID)?user?.companyID:'',
-    "employeeID":(user?.employeeID)?user?.employeeID:'',
-    "roleID":(user?.roleID)?user?.roleID:'',
-    "records":"",
-    "externalFilters":{
-        "deductionType":"",
-        "noOfInstallments":"",
-        "deductedDate":{
-            "from":"",
-            "to":""
-        }
-    },
-    "sort":{
-        "key":1,
-        "orderby":"deduction_id"
-    }
+   "employeeID":user?.employeeID
 }
       const tabLabels = ["Loans" , "My Deductions"]
       const tabContents = [

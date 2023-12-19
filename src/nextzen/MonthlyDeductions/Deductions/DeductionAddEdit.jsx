@@ -25,10 +25,11 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
     const [healthInsuranceupdate,sethealthInsuranceUpdate]= useState()
     const [healthInsuranceDetails,setHealthInsuranceDetails]=useState()
     const [selectCount,setSelectCount] = useState(1)
-    const [deductionDetails, setDeductionDetails] = useState();
+    const [deductionDetails, setDeductionDetails] = useState("");
     const [personName, setPersonName] = useState();
-    const [itemAdded,setItemAdded] = useState(true); 
-    const list=[{id:"healthInsurancePremium",name:"Health Insurance Premium"},{id:"loanRequest",name:"Loan Request"},{id:"absenceDeductions",name:"Absence Deductions"},{id:"unionDues",name:'Union Dues'},{id:"garnishments",name:"Garnishments"},{id:"salaryAdvanceRequest",name:'Salary Advance'},{id:"otherDeductions",name:"Other Deductions"}]
+    const [itemAdded,setItemAdded] = useState(true);
+    const [filteredFieldValues,setFilteredValues]=useState(); 
+    const list=[{id:"Health Insurance Premium",name:"Health Insurance Premium"},{id:"Loan Request",name:"Loan Request"},{id:"Absence Deductions",name:"Absence Deductions"},{id:"Union Dues",name:'Union Dues'},{id:"Garnishments",name:"Garnishments"},{id:"Salary Advance Request",name:'Salary Advance'},{id:"Other Deductions",name:"Other Deductions"}]
     useEffect(()=>{
         getEmployeesList()
     },[])
@@ -132,9 +133,19 @@ const handleAdd =()=>{
   setSelectCount(selectCount+1)
   setItemAdded(false)
 }
-const filteredFieldValues = fieldValues.filter(
-  (value) => value.Type !== "loanRequest" && value.Type !== "salaryAdvanceRequest"
-);
+
+
+useEffect(()=>{
+  if(disableHealthInsurancePremium && healthInsuranceupdate?.NumberOfInstallments)
+{
+   const filteredField =  fieldValues.filter((value) => value.Type !== "Health Insurance Premium");
+   setFilteredValues(filteredField)
+}
+else{
+  setFilteredValues(fieldValues)
+}
+},[healthInsuranceupdate?.NumberOfInstallments,fieldValues])
+
 const AddDeductions=()=>{
   const payload ={
     companyID:user?.companyID,
@@ -144,7 +155,8 @@ const AddDeductions=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:baseUrl + `/addOtherDeductions`,
+    // url:baseUrl + `/addOtherDeductions`,
+    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/addOtherDeductions`,
     data: payload
   
   }
@@ -167,7 +179,8 @@ const getLatestInstallmentNumber=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    url:baseUrl + `/getLatestInstallmentNumber`,
+    // url:baseUrl + `/getLatestInstallmentNumber`,
+    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestInstallmentNumber`,
     data: payload
   
   }
@@ -182,6 +195,60 @@ const getLatestInstallmentNumber=()=>{
       
     });
 }
+
+// const AddLoanRequestDeduction=(e)=>{
+//   const payload ={
+//     employeeID:personName,
+//     requestType:e,
+//     companyID:user?.companyID
+//   }
+//   const config = {
+//     method: 'POST',
+//     maxBodyLength:Infinity,
+//     url: baseUrl + `/addDeductionDetails`,
+//     data: payload
+  
+//   }
+//   axios.request(config).then((response) => {
+//     console.log(response,"responseeee")
+//     // enqueueSnackbar(response.data.message,{variant:'success'})
+  
+//   })
+//     .catch((error) => {
+//       console.log(error,"Errorrrr")
+      
+//     });
+// }
+
+useEffect(() => {
+  console.log(fieldValues,"fieldValuess")
+  const index = fieldValues.findIndex(
+    (fieldValue) => fieldValue.Type == 'Health Insurance Premium'
+  );
+
+  {console.log(index,'indexValueee')}
+  if (healthInsuranceupdate?.NumberOfInstallments > 0) {
+    {console.log('ifffblockkk',healthInsuranceupdate)}
+    if (index !== -1) {
+      {console.log("ifindexxblock",index)}
+      setDeductionDetails('Health Insurance Premium')
+      setDisableHealthInsurancePremium(true);
+     
+      // AddDeductions();
+    }
+  } else {
+    setDisableHealthInsurancePremium(false);
+  }
+  
+}, [healthInsuranceupdate?.NumberOfInstallments,fieldValues]);
+{console.log(deductionDetails,"deductionType")}
+
+useEffect(()=>{
+  if(deductionDetails){
+    getHealthInsuranceDetails()
+  };
+},[deductionDetails])
+
 const getHealthInsuranceDetails=()=>{
   const payload ={
     employeeID:personName,
@@ -204,59 +271,14 @@ const getHealthInsuranceDetails=()=>{
       
     });
 }
-const AddLoanRequestDeduction=(e)=>{
-  const payload ={
-    employeeID:personName,
-    requestType:e,
-    companyID:user?.companyID
-  }
-  const config = {
-    method: 'POST',
-    maxBodyLength:Infinity,
-    url: baseUrl + `/addDeductionDetails`,
-    data: payload
-  
-  }
-  axios.request(config).then((response) => {
-    console.log(response,"responseeee")
-    // enqueueSnackbar(response.data.message,{variant:'success'})
-  
-  })
-    .catch((error) => {
-      console.log(error,"Errorrrr")
-      
-    });
-}
 
-useEffect(() => {
-  console.log(fieldValues,"fieldValuess")
-  const index = fieldValues.findIndex(
-    (fieldValue) => fieldValue.Type === 'healthInsurancePremium'
-  );
-
-  {console.log(index,'indexValueee')}
-  if (healthInsuranceupdate?.NumberOfInstallments > 0) {
-    {console.log('ifffblockkk',healthInsuranceupdate)}
-    if (index !== -1) {
-      {console.log("ifindexxblock",index)}
-      setDeductionDetails('healthInsurancePremium')
-      setDisableHealthInsurancePremium(true);
-      AddDeductions();
-      getHealthInsuranceDetails();
-    }
-  } else {
-    setDisableHealthInsurancePremium(false);
-  }
-  {console.log(deductionDetails,"deductionType")}
-}, [healthInsuranceupdate?.NumberOfInstallments,fieldValues]);
-
-useEffect(() => {
-  fieldValues.forEach((value) => {
-    if (value.Type === 'loanRequest' || value.Type === 'salaryAdvanceRequest') {
-      AddLoanRequestDeduction(value.Type);
-    }
-  });
-}, [fieldValues]);
+// useEffect(() => {
+//   fieldValues.forEach((value) => {
+//     if (value.Type === 'Loan Request' || value.Type === 'Salary Advance Request') {
+//       AddLoanRequestDeduction(value.Type);
+//     }
+//   });
+// }, [fieldValues]);
 
 // setHealthInsuranceDetails({deductionAmount:1000,loanID:50})
   return (
@@ -322,24 +344,27 @@ useEffect(() => {
      </FormControl>
         <Grid container spacing={1} flexDirection="row" sx={{marginTop:1}}>
       
+      {(fieldValue.Type=='Loan Request' || fieldValue?.Type=='Salary Advance Request')?null:
       <Grid item xs={12} md={6}>
         <TextField
+          id="deduction amount"
           label="Deduction Amount"
           placeholder="Enter Deducting Amount"
           variant="outlined"
           fullWidth
-          // value={
-          //   (fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium)
-          //     ? (healthInsuranceDetails?.deductionAmount || 0) // Convert to string if needed
-          //     : ''
-          // }
-          // defaultValue={
-          //   fieldValue.Type === "healthInsurancePremium" && disableHealthInsurancePremium
-          //     ? (healthInsuranceDetails?.deductionAmount !== undefined
-          //         ? healthInsuranceDetails.deductionAmount
-          //         : '')
-          //     : ''
-          // }
+          value={
+            (fieldValue.Type === deductionDetails && disableHealthInsurancePremium)
+              ? (healthInsuranceDetails?.deductionAmount || 0) // Convert to string if needed
+              : fieldValue.amount
+          }
+          defaultValue={
+            fieldValue.Type === deductionDetails && disableHealthInsurancePremium
+              ? (healthInsuranceDetails?.deductionAmount !== undefined
+                  ? healthInsuranceDetails.deductionAmount
+                  : fieldValue.amount)
+              : ''
+          }
+          disabled={fieldValue.Type === deductionDetails && disableHealthInsurancePremium}
           onChange={(e) =>
             handleTextFieldChange(
               index,
@@ -348,8 +373,9 @@ useEffect(() => {
             )
           }
         />
-        </Grid>
+        </Grid>}
       
+      {(fieldValue.Type === deductionDetails && disableHealthInsurancePremium) ?null:
       <Grid item xs={12} md={6}>
         <TextField
           label="Deduction Reason"
@@ -365,9 +391,9 @@ useEffect(() => {
             )
           }
         />
-        </Grid>
+        </Grid>}
   </Grid>
-        {(fieldValue.Type === "healthInsurancePremium" || fieldValue.totalInstallments>0) && <TextField
+        {(fieldValue.Type === "Health Insurance Premium" || fieldValue.totalInstallments>0) && (!disableHealthInsurancePremium) && <TextField
         label="Duration of Health Insurance"
         placeholder="no.of months covered by insurance"
         variant="outlined"

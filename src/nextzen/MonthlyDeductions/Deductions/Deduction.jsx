@@ -24,6 +24,7 @@ export default function Deduction({defaultPayload,componentPage}) {
    const [employeeListData,setEmployesListData] = useState()
    const [personName, setPersonName] = useState();
    const [deductionDetails,setDeductionDetails]= useState()
+   const [deductionInstallment,setDeductionInstallment]=useState()
    const [count,setCount] = useState(0)
    const [showForm, setShowForm] = useState(false);
    const [showFilter,setShowFilter]= useState(false)
@@ -59,6 +60,13 @@ useEffect(()=>{
   }
   
 },[personName])
+
+useEffect(()=>{
+  if(componentPage=="MyRequests"){
+    setPersonName(user?.employeeID)
+  }
+},[])
+
 const getEmployeesList =()=>{
   const data ={
     companyID:user?.companyID
@@ -76,16 +84,35 @@ const getEmployeesList =()=>{
     console.log(error)
    })
 }
-
+const getDeductionDetails =(deductionType)=>{
+  const data ={
+   "employeeID":personName,
+   "deductionType":deductionType
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:baseUrl + '/getOtherDeductions',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    console.log(response,"Responsee",response?.data?.data?.deductionType)
+    setDeductionInstallment(response?.data)
+   })
+   .catch((error)=>{
+    console.log(error)
+   })
+}
 
 const handleChange = (event) => {
   setPersonName(event?.target?.value)
   setCount(count+1)
  };
- const handleDeduction=(index)=>{
+ const handleDeduction=(deductionType,index)=>{
   const newExpanded = [...deductionCard];
   newExpanded[index] = !newExpanded[index];
   setDeductionCard(newExpanded);
+  getDeductionDetails(deductionType)
 }
 
 const ITEM_HEIGHT = 48;
@@ -99,17 +126,18 @@ const MenuProps = {
   },
 };
 
+const payloadData = (componentPage=="MyRequests")?defaultPayload:{
+    employeeID:personName,
+}
+
 const getLatestDeductions =()=>{
   setLoader(true)
-  const data ={
-    employeeID:personName,
-    count:5,
-    page:0
-  }
+  const data = payloadData
   const config={
     method:'POST',
     maxBodyLength:Infinity,
     url:baseUrl + `/getLatestDeductionRecords`,
+    // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords`,
     data:data
    }
    axios.request(config).then((response)=>{
@@ -132,7 +160,7 @@ const [dropdowndeductiontype,setdropdowndeductiontype]=useState([])
 const [datesFiledArray,setDatesFiledArray]=useState(
   [
     {
-      field:'deductedDate',
+      field:'externalFilters',
       from:'deductedDateStart',
       to:'deductedDateEnd'
     }
@@ -151,9 +179,6 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
   const [dates,setDates]=useState({
     deductedDateStart:"",
     deductedDateEnd:"",
-    PaidDateFrom:"",
-    PaidDateTo:"",
- 
   })
   function formDateDataStructure(){
     return new Promise((resolve) => {
@@ -238,6 +263,8 @@ return (
 <DeductionAddEdit EditData={{}} handleClose={handleClose}/>
       </Dialog>
     )}
+    {(componentPage=="MyRequests" && !loader) && <Button size="small" sx={{float:'right'}} onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>}
+ {componentPage!="MyRequests" && 
  <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
  <Grid item xs={12} md={8}>
  <FormControl sx={{width:"100%"}}>
@@ -261,15 +288,15 @@ return (
 </FormControl>
 </Grid>
 <Grid item xs={12} md={4}>
-<Button size="small" variant='contained' color='primary' className="button" onClick={()=>setShowForm(true)} sx={{ marginLeft:  1 }}>Add Deduction</Button>
- 
-  <Button size="small" sx={{marginLeft:2,marginTop:1}} onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>
+ <Button size="small" variant='contained' color='primary' className="button" onClick={()=>setShowForm(true)} sx={{ marginLeft:  1 }}>Add Deduction</Button>
+ <Button size="small" onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>
   </Grid>
-  </Grid>
+  </Grid>}
+  
   {!personName ? (
   <Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center',marginTop:20}}>Please select an employee.</Typography>
 ) : (
-  loader?<Card sx={{height:"60vh",textAlign:'center',justifyContent:'center',alignItems:'center'}}><LoadingScreen/>
+  loader?<Card sx={{textAlign:'center',justifyContent:'center',alignItems:'center'}}><LoadingScreen/>
   </Card>:deductionDetails?.data!=null?
   <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
     {deductionDetails?.data?.map((itm,index)=>(
@@ -279,38 +306,72 @@ return (
            {!deductionCard[index] ? (
            <>
            <Typography>
-             <span style={{ fontWeight: 700 }}>Deduction Type : </span> {itm?.deductionType}
+             <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
-               onClick={() => handleDeduction(index)}
+               onClick={() => handleDeduction(itm?.deductionType,index)}
              >
                <Iconify icon="iconamoon:arrow-down-2-thin" />
              </IconButton>
            </Typography>
-           <Typography> <span>Date : {formatDate(itm?.deductedDate)}</span></Typography>
+           {itm?.deductionType!="Over Time Hours" && <Typography> <span>Date : {formatDate(itm?.deductedDate)}</span></Typography>}
          </>
-           ):(<>
+           )
+           : 
+           (
+            itm?.deductionType=="Over Time Hours" || 
+            itm?.deductionType=="Union Dues" || 
+            itm?.deductionType=="Garnishments"||
+            itm?.deductionType=="Other Deductions"
+            )?
+
+           <>
             <Typography>
-                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.AdditionsType}<br />
-                 <span>Date : {formatDate(itm?.deductedDate)}</span>
+              {console.log(deductionInstallment,"Deductionisntallment")}
+                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}<br />
+                 {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
                  <IconButton
                    sx={{ position: 'absolute', top: 15, right: 0 }}
-                   onClick={() => handleDeduction(index)}
+                   onClick={() => handleDeduction(itm?.deductionType,index)}
                  >
                    <Iconify icon="iconamoon:arrow-up-2-thin" />
                  </IconButton>
                </Typography>
                
                <Typography><span>Deducted Amount : </span> {itm?.deductedAmount}</Typography>
-               <Typography><span>Balance Amount : </span> {itm?.balanceAmount}</Typography>
+               {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
                <Typography><span>Remarks : </span>{itm?.comments}</Typography>
-               </>)}
+               </> 
+           :
+           <>
+            <Typography>
+              {console.log(deductionInstallment,"Deductionisntallment")}
+                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}<br />
+                 {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
+                 <IconButton
+                   sx={{ position: 'absolute', top: 15, right: 0 }}
+                   onClick={() => handleDeduction(itm?.deductionType,index)}
+                 >
+                   <Iconify icon="iconamoon:arrow-up-2-thin" />
+                 </IconButton>
+               </Typography>
+               {deductionInstallment?.data?.map((item, index) => (
+                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
+                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
+                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
+                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
+                                  </Grid>
+                                ))}
+              
+           </>
+               }
+               
           </CardContent>
         </Card>
         </Grid>
       
     ))}
-    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center',marginTop:20}}>No Deductions for Selected Employee.</Typography>)}
+    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center'}}>No Deductions for Selected Employee.</Typography>)}
 
 {showFilter && (<Dialog
         onClose={handleClickClose}
@@ -367,7 +428,7 @@ return (
                 </Grid>
             </Grid>
             
-               
+{/*                
                   <Grid container flexDirection="row" marginTop="10px" xs={12} md={12}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="Status">Deduction Type</InputLabel>
@@ -387,7 +448,7 @@ return (
                 </Select>
               </FormControl>
                    </Grid>
-              
+               */}
                </Grid>
            
          </DialogContent>
