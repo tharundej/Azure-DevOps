@@ -157,7 +157,15 @@ export default function EmployeeTable() {
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
     { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
     { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'contactNumber', label: 'Contact Number',  type: 'text', minWidth:'180px' },
     { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'date', minWidth:'180px' },
+    { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
+    { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
+    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
+    { id: 'designationGrade', label: 'Designation Grade',  type: 'text', minWidth:'180px' },
+    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
+
+    { id: 'roleName', label: 'Role Name',  type: 'text', minWidth:'180px' },
     { id: 'fatherName', label: 'Father Name ',  type: 'text', minWidth:'180px' },
     { id: 'motherName', label: 'Mother Name',  type: 'text', minWidth:'180px' },
     { id: 'maritalStatus', label: 'Marital Status',  type: 'text', minWidth:'180px' },
@@ -172,14 +180,8 @@ export default function EmployeeTable() {
     { id: 'pAddressLine2', label: 'Permanent Address Line 2',  type: 'text', minWidth:'280px' },
     { id: 'pCity', label: 'Permanent City',  type: 'text', minWidth:'180px' },
     { id: 'pState', label: 'Permanent State ',  type: 'text', minWidth:'180px' },
-    { id: 'pPincode', label: 'Permanent Pincode',  type: 'text', minWidth:'180px' },
-    { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
-    { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
-    { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },
-    { id: 'designationGrade', label: 'Designation Grade',  type: 'text', minWidth:'180px' },
-    { id: 'workingLocation', label: 'Working Location',  type: 'text', minWidth:'180px' },
-
-    { id: 'roleName', label: 'Role Name',  type: 'text', minWidth:'180px' }
+    { id: 'pPincode', label: 'Permanent Pincode',  type: 'text', minWidth:'180px' }
+    
    
     
   ]);

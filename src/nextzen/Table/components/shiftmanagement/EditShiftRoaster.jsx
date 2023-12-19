@@ -43,8 +43,9 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function EditShiftRoaster({ currentUser, editData, handleClose }) {
+export default function EditShiftRoaster({ currentUser, editData, handleClose ,count}) {
   const [ListEMploye,setListEMploye] =useState([])
  
 
@@ -103,7 +104,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose })
    
   }, []);
   const [isemployeLevel, setIsemployeLevel] = useState(false);
-const [count , setCount]=useState(0)
+// const [count , setCount]=useState(0)
   const [employeSwapDetails, setEmployeSwapDetails] = useState([]);
   const [currentEmployeSwapData, setCurrentEmployeSwapData] = useState({});
   const [currentEmployeSwapData1, setCurrentEmployeSwapData1] = useState({});
@@ -370,7 +371,7 @@ const [count , setCount]=useState(0)
 
       const response = await instance.post('/editShiftDetails', data).then(
         (successData) => {
-          setCount(count+1)
+          count = count + 1
           handleClose();
           enqueueSnackbar(response.data.message, { variant: 'success' });
 
@@ -399,13 +400,14 @@ const [count , setCount]=useState(0)
   //   { title: '12 Angry Men', year: 1957 },
   // ];
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '0px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Edit Employee Shift Here"/>
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
-            <Grid sx={{ padding: '8px' }}>
+            {/* <Grid sx={{ padding: '8px' }}>
               <Typography sx={{ marginLeft: '5px' }}>Edit Employee Shift Here</Typography>
-            </Grid>
+            </Grid> */}
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={1}
@@ -581,6 +583,9 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                 alignItems="flex-end"
                 sx={{ mt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
               >
+                <Button sx={{ mr: '5px' }} variant="outlined" onClick={handleClose}>
+                  Cancel
+                </Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"
@@ -590,9 +595,6 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   {!currentUser ? 'Create User' : 'Save Employe To Shift'}
                 </LoadingButton>
 
-                <Button sx={{ ml: '5px' }} onClick={handleClose}>
-                  Cancel
-                </Button>
               </Stack>
             </Card>
           </Grid>

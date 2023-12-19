@@ -1,47 +1,39 @@
 import {Card,CardContent,Typography,IconButton,Grid} from '@mui/material';
-import {useState,useEffect,useCallback, useContext} from 'react';
-import axios from 'axios';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {useState,useEffect, useContext} from 'react';
 import { LoadingScreen } from 'src/components/loading-screen';
 import Iconify from 'src/components/iconify';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { getPendingApprovedAPI } from 'src/api/HRMS/LeaveManagement';
 export default function ApprovedLeaves(){
    const {user} = useContext(UserContext)
     const [listData,setListData] = useState();
     const [loading,setLoading] = useState(false);
     const [approved,setApproved] = useState(Array(listData?.response?.length).fill(false));
+    
+    useEffect(()=>{
+      PendingApproved()
+    },[])
     const handleApproved=(index)=>{
         const newExpanded = [...approved];
         newExpanded[index] = !newExpanded[index];
         setApproved(newExpanded);
       }
-      const PendingApproved =  useCallback((e) => {
+      const PendingApproved = async () => {
         setLoading(true);
-        const payload = {
-          employee_id:(user?.employeeID)?user?.employeeID:'',
-          flag:e
+        try{
+        const PendingApprovedpayload = {
+          employee_id:user?.employeeID,
+          flag:false
         }
-        const config = {
-        method: 'POST',
-        maxBodyLength: Infinity,
-        url: baseUrl + `/pendingapproved`,
-        data:  payload
-        }
-      axios.request(config).then((response) => {
-        setListData(response?.data)
-        setLoading(false);
-      })
-        .catch((error) => {
+        const pendingApprovedResponse = await getPendingApprovedAPI(PendingApprovedpayload)
+        setListData(pendingApprovedResponse?.data)
+        setLoading(false)
+      }
+      catch(error){
           console.log(error);
           setLoading(false);
-        });
-      }, [setListData]);
-
-      useEffect(()=>{
-        PendingApproved(false)
-      },[])
-
-
+        };
+      }
     return (
    <>
    <>
@@ -91,7 +83,6 @@ export default function ApprovedLeaves(){
     </Grid>
     }
   </>
-
 </>
     )
 }

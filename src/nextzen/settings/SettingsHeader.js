@@ -6,9 +6,9 @@ import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import CreateVehicleExpenses from './CreateVehicleExpenses';
+import CreateSettings from './CreateSettings';
 
-const VehicleHead = ({ filterSearch, filterData }) => {
+const SettingsHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,12 +38,12 @@ const VehicleHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateVehicleExpenses currentUser={{}} handleClose={handleClose} />
+          <CreateSettings currentData={{}} handleClose={handleClose} getTableData={getTableData} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
-          <Typography variant="h4">Vehicle Expenses</Typography>
+          {/* <Typography variant="h4">Factory Details</Typography> */}
         </Grid>
         <Grid md={4} xs={4} item>
           <TextField
@@ -89,9 +89,9 @@ const VehicleHead = ({ filterSearch, filterData }) => {
   );
 };
 
-VehicleHead.propTypes = {
+SettingsHead.propTypes = {
   filterSearch: PropTypes.func, // A function to handle search filtering.
   filterData: PropTypes.any, // The data to be filtered (modify 'any' with the actual data type if known).
 };
 
-export default VehicleHead;
+export default SettingsHead;

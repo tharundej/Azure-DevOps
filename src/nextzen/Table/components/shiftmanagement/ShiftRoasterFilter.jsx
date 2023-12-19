@@ -1,6 +1,7 @@
 import PropTypes, { element } from 'prop-types';
 
-import React,{ useEffect, useState,useCallback } from 'react';
+import React,{ useEffect, useState,useCallback,  } from 'react';
+import { useContext } from 'react';
 
 import { styled } from '@mui/system';
 
@@ -10,6 +11,7 @@ import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton
    DialogActions,Typography} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
@@ -40,6 +42,8 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import AddEmployeShift from './AddeployeShift';
+import instance from 'src/api/BaseURL';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 
@@ -82,7 +86,8 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch}){
+export default function ShiftRoasterFilter({filterData,filterOptions,filterSearch,getTableData}){
+  const {user} = useContext(UserContext)
     const theme = useTheme();
     const names = [
       'Oliver Hansen',
@@ -100,9 +105,55 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
     const [dropdown,setDropdown]=useState({
   
     })
+    const [ShiftName,setShiftName]= useState([])
+    const [ShiftGroupName,setShiftGroupName]= useState([])
+    const[FilterShiftName,setFilterShiftName]=useState([])
+    const[FilterShiftGroupName,setFilterShiftGroupName]=useState([])
+useEffect(() => {
+  getShiftName()
+  getShiftGroupName()
+}, [])
+
   
+const getShiftGroupName = async ()=>{
+  try{
+  const data = {
+    
+    companyId : (user?.companyID)? user?.companyID : '',
+    locationId : (user?.locationID)?user?.locationID : '',
+    supervisorId : (user?.employeeID)?user?.employeeID : '',
 
+  }
+  const response = await instance.post('/getShiftGroupName',data);
+  setShiftGroupName (response.data.data);
+  console.log("🚀 ~ file: ShiftRoasterFilter.jsx:126 ~ getShiftGroupName ~ response.data.data:", response.data.data)
 
+  }
+  catch (error){
+    console.error('Error', error);
+    throw error;
+
+  }
+}
+ const getShiftName = async (newvalue) => {
+  try {
+    const data = {
+      companyId: (user?.companyID)?user?.companyID : '',
+      locationId: (user?.locationID)?user?.locationID : '',
+    };
+    const response = await instance.post('/getShiftConfig', data);
+    setShiftName(response.data.data);
+
+     
+    console.log(
+      '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
+      response.data.data
+    );
+  } catch (error) {
+    console.error('Error', error);
+    throw error;
+  }
+};
     const [search, setSearch]=useState("");
     const debounce = (func, delay) => {
       let debounceTimer;
@@ -140,21 +191,14 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
     const [dropdownFiledArray,setDropdownFiledArray]=useState(
       [
         {
-          field:'shift_name',
+          field:'shiftName',
           options:[]
         },
         {
-          field:'shift_term',
+          field:'shiftGroupName',
           options:[]
         },
-        {
-          field:'shift_group',
-          options:[]
-        },
-        {
-          field:'supervisor_name',
-          options:[]
-        }
+
       ]
     )
   
@@ -213,8 +257,9 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
            
           if(dropdown[item.field]?.length>0){
             const arrayOfStrings = dropdown[item.field];
-            const commaSeparatedString = arrayOfStrings.join(', ');
-            arr1[item.field]=commaSeparatedString;
+            console.log(arrayOfStrings,'arrayofstrings')
+           // const commaSeparatedString = arrayOfStrings.join(', ');
+            arr1[item.field]=arrayOfStrings;
           }
           
   
@@ -248,35 +293,27 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
       }
   
   
-      const handleChangeDropDown = (event,field) => {
+      const handleChangeDropDown = (event,newvalue,field) => {
+        
         const {
           target: { value },
         } = event;
         
-        if(field==="shift_group"){
-          setDropdownProjectName(value)
+        if(field==="shiftName"){
+          setFilterShiftName(newvalue)
           const obj=dropdown;
-          obj[field]=value;
+          obj[field]=newvalue?.shiftName;
+          setDropdown(obj);
+          console.log(newvalue?.shiftConfigurationId,'newvalue?.employeeShiftGroupId');
+
+        }
+        else if(field==="shiftGroupName"){
+          setFilterShiftGroupName(newvalue)
+          const obj=dropdown;
+          obj[field]=newvalue?.shiftGroupName;
           setDropdown(obj);
         }
-        else if(field==="shift_name"){
-          setDropdownStatus(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
-        else if(field==="shift_term"){
-          setdropdownActivity(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
-        else if(field==="supervisor_name"){
-            setdropdownEmployeename(value)
-          const obj=dropdown;
-          obj[field]=value;
-          setDropdown(obj);
-        }
+
       
   
           // On autofill we get a stringified value.
@@ -286,7 +323,8 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
        // console.log( typeof value === 'string' ? value.split(',') : value,)
       };
       const handleCancel = async()=>{
-        setDropdownStatus([]);
+        setFilterShiftGroupName([])
+        setFilterShiftName([])
         // setDropdownLeaveType([]);
       //   setDates({
       // applyDatefrom:"",
@@ -326,7 +364,7 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
  }}
  className="custom-dialog"  
 >
- <AddEmployeShift currentUser={{}} handleClose={handleClose}/>
+ <AddEmployeShift currentUser={{}} handleClose={handleClose}  getTableData={getTableData}/>
       </Dialog>
     )}
  <Grid container alignItems="center" paddingBottom="10px">
@@ -343,11 +381,11 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
                
                 <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
                <Grid item>  
-               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}>Add Employee To Shift</Button>
+               <Button variant='contained' color='primary' className="button" onClick={handleTimeForm}  startIcon={<Iconify icon="mingcute:add-line" />}>Add Employee To Shift</Button>
                </Grid>
                <Grid sx={{marginLeft:'4px'}}>
                <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-               <Iconify icon="mi:filter"/>
+               <Iconify icon="mi:filter"/>Filters
                </Button>
       </Grid>
  
@@ -357,169 +395,80 @@ export default function ShiftRoasterFilter({filterData,filterOptions,filterSearc
       </Grid>
          </Grid>
      
-      <Dialog
-       onClose={handleClickClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-
-      >
+         <Dialog open={open} onClose={handleClickClose}  >
+      <Grid container flex flexDirection={"row"}>
+      <Grid item  xs={10}>
+      <DialogTitle>Filters</DialogTitle>
+      </Grid>
+      <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
+      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={handleClickClose} />
+      </Grid>
+      </Grid>
         
-        <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}>Filters
-        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+        {/* <DialogTitle sx={{textAlign:"center",paddingBottom:0,paddingTop:2}}> Filters
         <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
-        </DialogTitle>
+        </DialogTitle> */}
+        <DialogContent sx={{padding:"0px"}} >
 
-        <DialogContent style={{paddingTop: '20px', paddingRight: '17px', paddingBottom: '44px', paddingLeft: '44px'}}>
 
           
 
-          <Grid container spacing={2} xs={12}>
-
-               
-            <Typography style={{marginBottom:"0.8rem"}}> Date Activity</Typography>
-     
-
-            <Grid container  spacing={2} >
-              <Grid item xs={6}>
-              <FormControl fullWidth>
-        <InputLabel id="supervisor_name">Supervisor Name</InputLabel>
-        <Select
-          labelId="demo-multiple-name-shift_name_1"
-          id="demo-multiple-shift_name_1"
-          multiple
-          value={dropdownEmployeename}
-          onChange={(e) => handleChangeDropDown(e, 'supervisor_name')}
-          input={<OutlinedInput label="Employee Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                <FormControl fullWidth>
-        <InputLabel id="shift_group">Shift Group</InputLabel>
-        <Select
-          labelId="demo-multiple-name-shift_name_1"
-          id="demo-multiple-shift_name_1"
-          multiple
-          value={dropdownProjectName}
-          onChange={(e) => handleChangeDropDown(e, 'shift_group')}
-          input={<OutlinedInput label="Project Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-                </Grid>
-                </Grid>
-               
-                <Grid container marginTop={2}>
-  {/* <Typography>Offer Date</Typography> */}
-  <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="shift_term">Shift Term</InputLabel>
-        <Select
-          labelId="demo-multiple-name-shift_name_1"
-          id="demo-multiple-shift_name_1"
-          multiple
-          value={dropdownActivity}
-          onChange={(e) => handleChangeDropDown(e, 'shift_term')}
-          input={<OutlinedInput label="Activity Name" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-    <Grid item xs={6}>
-      <FormControl fullWidth>
-        <InputLabel id="shift_name">Shift Name</InputLabel>
-        <Select
-          labelId="demo-multiple-name-shift_name_2"
-          id="demo-multiple-shift_name_2"
-          multiple
-          value={dropdownshift_name}
-          onChange={(e) => handleChangeDropDown(e, 'shift_name')}
-          input={<OutlinedInput label="Status" />}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  </Grid>
-</Grid>
 
 
-                {/* <Grid>
-                  <Grid marginTop="10px" xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="shift_name">shift_name</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-shift_name_1"
-                  id="demo-multiple-shift_name_1"
-                  multiple
-                  value={dropdownshift_name}
-                  onChange={(e)=>handleChangeDropDown(e,'shift_name')}
-                  input={<OutlinedInput label="shift_name" />}
-                  MenuProps={MenuProps}
-                >
-                  {names.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-                </Grid> */}
-               </Grid>
+        <Grid  item xs={6} md={4} margin={3}>
+          <Grid sx={{margin:"8px"}} >
+          <Autocomplete
+                  disablePortal
+                  id="combo-box-dem33"
+                  options={ShiftName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={FilterShiftName || ""}
+                  getOptionLabel={(option) => option.shiftName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeDropDown(e,newvalue,'shiftName')}
 
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
+                />
+          </Grid>
+          <Grid  sx={{margin:"8px"}}>
+          <Autocomplete
+                  disablePortal
+                  id="combo-box-demff33"
+                  options={ShiftGroupName || []}
+                  // defaultValue={(foundShift?.length !== 0)? foundShift?.shiftConfigurationId : null }
+                  value={FilterShiftGroupName || ""}
+                  getOptionLabel={(option) => option.shiftGroupName || ""}
+                  // onChange={(e, newvalue) => {
+                  // setFilterShiftGroupName(newvalue)
+                  //   // getDesignation(newvalue)
+                  // }}
+                  onChange={(e,newvalue)=>handleChangeDropDown(e,newvalue,'shiftGroupName')}
+                  sx={{
+                    width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
+                />
+          </Grid>
+        </Grid>
+        <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
+      {/* <Badge badgeContent={badgeContent} color="error"> */}
+      <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
+            Reset
+          </Button>
+      <Button variant='outlined' sx={{margin:"2px" , marginRight:"10px",backgroundColor:'#3B82F6'}} onClick={handleApply}>apply</Button>
+      {/* </Badge> */}
 
-           
+      </Grid >
          </DialogContent>
-         <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
-         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Cancel</Button></div>
-   
+         {/* <div style={{marginBottom:16}}>  <Button variant="contained" color='primary' sx={{float:'right',marginRight:2}} onClick={()=>{handleApply()}}>Apply</Button>
+         <Button sx={{float:'right',right:15}} onClick={()=>{handleCancel()}}>Reset</Button></div> */}
+
     </Dialog>
     </>
     )

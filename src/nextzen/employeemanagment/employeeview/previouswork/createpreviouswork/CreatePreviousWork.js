@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import { useSnackbar } from 'src/components/snackbar';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -58,7 +58,7 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import FilesDisplay from '../../employeeeducation/createeducation/FilesDisplay';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
-
+  const { enqueueSnackbar } = useSnackbar();
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
     "Contract","Permanent"
   
@@ -149,6 +149,16 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
   }
   const [defaultValues, setDefaultValues] = useState([]);
     const onSave=()=>{
+
+      const invalidFields = defaultValues.filter(
+        (item) => !item.previousCompanyName || !item.designation
+      );
+    
+      if (invalidFields.length > 0) {
+        // Show an error message for required fields
+        enqueueSnackbar('Please fill in all required fields.', { variant: 'error' });
+        return;
+      }
    
 
      const obj={
@@ -179,12 +189,14 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         onhandleClose();
         callApi();
         setDefaultValues([])
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
         setDefaultValues([])
       });
     }
@@ -428,7 +440,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     fullWidth
                 
                     name="previousCompanyName"
-                    label="Company Name"
+                    label="Company Name*"
                     variant="outlined"
                     id={`previousCompanyName${index}`}
                      value={item?.previousCompanyName}
@@ -442,7 +454,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     fullWidth
                     
                     name="designation"
-                    label="Designation"
+                    label="Designation*"
                     id="designation"
                      value={item?.designation}
                     onChange={(e) => {

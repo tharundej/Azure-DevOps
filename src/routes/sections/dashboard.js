@@ -16,6 +16,7 @@ import PurchasePayment from 'src/nextzen/Purchase/PurchasePayment/PurchasePaymen
 import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
 import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
 import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
+import Settings from 'src/nextzen/settings/Settings';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -437,6 +438,15 @@ export const dashboardRoutes = [
         children: [
           {
             element: <Balancesheet />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        children: [
+          {
+            element: <Settings />,
             index: true,
           },
         ],

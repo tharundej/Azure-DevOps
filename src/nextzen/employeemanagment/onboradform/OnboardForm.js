@@ -224,7 +224,11 @@ const handleCallSnackbar=(message,severity)=>{
              {!loading && <Typography>Save and Continue</Typography>}
            </Button>}
               {activeStep+1===5 &&
-              <Button onClick={handleSubmit} sx={{backgroundColor:'#3B82F6', mr: 1, color:'white' }}>
+              <Button onClick={handleSubmit}  sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+              '&:hover': {
+                backgroundColor: '#1565C0', // Change this to the desired hover color
+              },
+            }}>
                 Submit
               </Button>}
               {(activeStep+1!==1 && activeStep+1!==5)&&(

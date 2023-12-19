@@ -13,19 +13,24 @@ import { fShortenNumber } from 'src/utils/format-number';
 // components
 import Iconify from 'src/components/iconify';
 import { formatDateBirthday } from 'src/nextzen/global/GetDateFormat';
+import Scrollbar from 'src/components/scrollbar';
 // ----------------------------------------------------------------------
 
 export default function BirthdayReminders({ title,  list, ...other }) {
   const recordsToShow = 5;
   return (
-    <Card {...other} sx={{ maxHeight: `calc(${recordsToShow} * 70px)`, overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: '#888 #f0f0f0', '&::-webkit-scrollbar-thumb': { background: '#888' }, '&::-webkit-scrollbar-track': { background: '#f0f0f0' }, '&::-webkit-scrollbar-button': { display: 'none' }, '&::-webkit-scrollbar-corner': { display: 'none' } }}>
+    <Card {...other}
+    sx={{ height: '50vh' }}
+     >
     <CardHeader title={title} />
-
+    <Scrollbar sx={{ pb: 1 }}>
     <Stack spacing={3} sx={{ p: 3 }}>
-      {list.slice(0, recordsToShow).map((author, index) => (
+      {list.map((author, index) => (
         <AuthorItem key={author.employeeID} author={author} index={index} />
       ))}
     </Stack>
+    </Scrollbar>
+  
   </Card>
   );
 }
@@ -41,10 +46,10 @@ BirthdayReminders.propTypes = {
 function AuthorItem({ author, index }) {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Avatar alt={author?.name} src={author?.avatarUrl} />
+      <Avatar alt={author?.employeeName} src={author?.avatarUrl} />
 
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{author?.name}</Typography>
+        <Typography variant="subtitle2">{author?.employeeName}</Typography>
 
         <Typography
           variant="caption"
@@ -55,7 +60,7 @@ function AuthorItem({ author, index }) {
             color: 'text.secondary',
           }}
         >
-         {formatDateBirthday(author?.dataOfBirth)}
+         {formatDateBirthday(author?.dateOfBirth)}
         </Typography>
       </Box>
 

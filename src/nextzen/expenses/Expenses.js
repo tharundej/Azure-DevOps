@@ -9,7 +9,12 @@ import { useState } from 'react';
 import CreateExpenses from './CreateExpenses';
 
 export default function Expenses() {
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const tabLabels = ['Fuel', 'Vehicles', 'Others'];
+
   const tabContents = [
     <div>
       <Fuel />
@@ -42,7 +47,11 @@ export default function Expenses() {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses currentData={{}} handleClose={handleClose} />
+          <CreateExpenses
+            currentData={{}}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <div style={{ textAlign: 'right' }}>

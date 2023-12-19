@@ -16,6 +16,10 @@ const CustomersTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -71,6 +75,7 @@ const CustomersTable = () => {
       const response = await deleteCutomerApi(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -102,15 +107,15 @@ const CustomersTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'id', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'id', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'customerName', label: 'Customer Name', type: 'text', minWidth: '180px' },
     { id: 'customerCompanyName', label: 'Customer Company Name', type: 'text', minWidth: '180px' },
     { id: 'customerEmailId', label: ' Email Id', type: 'text', minWidth: '180px' },
-    { id: 'customerPhoneNo', label: ' Phone No', type: 'text', minWidth: '180px' },
+    { id: 'customerPhoneNo', label: ' Phone Number', type: 'text', minWidth: '180px' },
     { id: 'customerAddress', label: 'Customer Address', type: 'text', minWidth: '180px' },
-    { id: 'customerGstNo', label: 'GST No', type: 'text', minWidth: '180px' },
-    { id: 'customerPanNo', label: 'PAN No', type: 'text', minWidth: '180px' },
-    { id: 'customerTanNo', label: 'Customer TAN No', type: 'text', minWidth: '180px' },
+    { id: 'customerGstNo', label: 'GST Number', type: 'text', minWidth: '180px' },
+    { id: 'customerPanNo', label: 'PAN Number', type: 'text', minWidth: '180px' },
+    { id: 'customerTanNo', label: 'Customer TAN Number', type: 'text', minWidth: '180px' },
     { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
   return (
@@ -139,7 +144,11 @@ const CustomersTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateCustomers currentData={editModalData} handleClose={handleClose} />
+          <CreateCustomers
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -154,6 +163,7 @@ const CustomersTable = () => {
         filterName="CustomersHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

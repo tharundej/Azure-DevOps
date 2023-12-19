@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateFactory from './CreateFactory';
 
-const FactoryHead = ({ filterSearch, filterData }) => {
+const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +38,7 @@ const FactoryHead = ({ filterSearch, filterData }) => {
           }}
           className="custom-dialog"
         >
-          <CreateFactory currentData={{}} handleClose={handleClose} />
+          <CreateFactory currentData={{}} handleClose={handleClose} getTableData={getTableData} />
         </Dialog>
       )}
       <Grid container alignItems="center" paddingBottom="10px">

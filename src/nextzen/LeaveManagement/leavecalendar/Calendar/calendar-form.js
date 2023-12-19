@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useCallback, useState,useEffect, useContext } from 'react';
-import axios from 'axios';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {Box,Stack,Button,Tooltip,IconButton,DialogActions,Typography,MenuItem,Card,Grid,CardContent} from '@mui/material';
-
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -19,7 +17,6 @@ import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect } from 'src/components/hook-form';
-
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -32,7 +29,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
 import Label from 'src/components/label/label';
-
+import { getAvailableLeaveAPI, getLeaveTypeAPI, getLossOfPayAPI } from 'src/api/HRMS/LeaveManagement';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -45,7 +42,6 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 export default function CalendarForm({ currentEvent, colorOptions,selectedRange,onClose }) {
-
   const {user} = useContext(UserContext)
   const { enqueueSnackbar } = useSnackbar();
   const [attachmentString,setAttachmentString] = useState("");
@@ -74,7 +70,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     color:Yup.string(),
     lop:Yup.number()
   });
-
   const methods = useForm({
     resolver: yupResolver(EventSchema),
     defaultValues: currentEvent,
@@ -86,7 +81,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const values = watch();
   
   const [datesUsed, setDatesUsed] = useState({
@@ -94,7 +88,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     toDate:(selectedRange?.end)?dayjs(selectedRange?.end):dayjs(new Date()),
     
   });
-
   const [leaveType,setLeaveType] = useState();
   useEffect(()=>{
     lossOfPay()
@@ -103,15 +96,12 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
     const numericalValue = lop?.lop ? lop.lop.replace(/[^\d.]/g, '') : null;
     
     console.log(numericalValue,"valuee")
-
   const dateError = datesUsed?.fromDate && datesUsed?.toDate ? datesUsed?.fromDate >= datesUsed?.toDate : false;
   const onSubmit = handleSubmit(async (data) => {
     const selectedValue = data?.day_span;
-
     const fulldayValue = selectedValue === "full_day" ? "1" : "0";
     const firsthalfValue = selectedValue === "first_half" ? "1" : "0";
     const secondhalfValue = selectedValue === "second_half" ? "1" : "0";
-
     const eventData = {
       leaveTypeId:data?.leaveTypeId,
       companyId: (user?.companyID)?user?.companyID:'',
@@ -142,7 +132,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       // Handle the error, e.g., show a snackbar.
     }
   });
-
   const onDelete = useCallback(async () => {
     try {
       const {leaveId,employeeId}= currentEvent
@@ -154,7 +143,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       enqueueSnackbar(error.message,{variant:'error'})
     }
   }, [currentEvent?.leaveId, onClose]);
-
   
   function getBase64(file) {
     const reader = new FileReader();
@@ -166,7 +154,6 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
       console.log('Error: ', error);
     };
  }
-
  const [fileName,setFileName] = useState()
  function handleFileSelect(event) {
   const fileInput = event.target;
@@ -174,104 +161,68 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
   setFileName(file.name)
   if (file) {
     const reader = new FileReader();
-
     reader.onload = function (e) {
       const base64String = e.target.result;
       setAttachmentString(base64String.split(',')[1]);
     };
-
     reader.readAsDataURL(file);
   }
 }
-
 useEffect(()=>{
   AvailableLeaves();
   getLeaveList();
 },[])
-
-
-const getLeaveList = () => {
+const getLeaveList = async () => {
   setLoader(true);
-  const payload = {
-    companyId: (user?.companyID)?user?.companyID:'',
-    employeeId: (user?.employeeID)?user?.employeeID:''
+  try{ 
+   const LeaveTypePayload = {
+    companyId: user?.companyID,
+    employeeId: user?.employeeID
   }
-  const config = {
-    method: 'POST',
-    maxBodyLength: Infinity,
-    url: baseUrl + `/getLeaveType`,
-    data:  payload
-  };
-
-  axios.request(config).then((response) => {
-    setLoader(false);
-    setListLeave(response?.data?.list)
-  })
-
-    .catch((error) => {
+  const leaveTypeResponse = await getLeaveTypeAPI(LeaveTypePayload)
+  setListLeave(leaveTypeResponse?.data?.list)
+  setLoader(false);
+ }
+  catch(error) {
       enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
       console.log(error);
       setLoader(false);
-    });
+  };
 }
-
-const AvailableLeaves = () => {
+const AvailableLeaves = async () => {
   setLoader(true);
-  const payload = {
-    companyId: (user?.companyID)?user?.companyID:'',
-     employeeId:(user?.employeeID)?user?.employeeID:''
+  try{
+  const AvailableLeavesPayload = {
+    companyId:user?.companyID,
+     employeeId:user?.employeeID
   }
- 
-  const config = {
-    method: 'POST',
-    maxBodyLength: Infinity,
-    url: baseUrl + `/availableLeave`,
-    data:  payload
+  const LeaveResponse = await getAvailableLeaveAPI(AvailableLeavesPayload)
+  setAvailableLeaves(LeaveResponse?.data)
+  setLoader(false);
+ }
+  catch(error){
+      enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
+        console.log(error);
+        setLoader(false);
   };
-
-  axios.request(config).then((response) => {
-    setLoader(false);
-    setAvailableLeaves(response?.data)
-  })
-
-    .catch((error) => {
-         enqueueSnackbar(`Error: ${error.response?.data?.message || "Something went wrong"}`, { variant: 'error' });
-      console.log(error);
-      setLoader(false);
-    });
 }
-
 const isSameDay = dayjs(datesUsed.fromDate).isSame(datesUsed.toDate, 'day');
-
-const lossOfPay = ()=>{
-  const payload = {
-  companyId: user?.companyID,
-  employeeId: user?.employeeID,
-  leaveTypeId: leaveType,
-  fromDate: formatDateToYYYYMMDD(datesUsed?.fromDate),
-  toDate: formatDateToYYYYMMDD(datesUsed?.toDate)
-  }
-  const config = {
-    method: 'POST',
-    maxBodyLength: Infinity,
-    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/getLossOfPay`,
-    url:baseUrl+'/getLossOfPay',
-    data:  payload
+const lossOfPay = async()=>{
+  try {
+    const LossOfPayPayload = {
+      companyId: user?.companyID,
+      employeeId: user?.employeeID,
+      leaveTypeId: leaveType,
+      fromDate: formatDateToYYYYMMDD(datesUsed?.fromDate),
+      toDate: formatDateToYYYYMMDD(datesUsed?.toDate)
+      }
+      const lopResponse = await getLossOfPayAPI(LossOfPayPayload)
+      setLOP(lopResponse?.data)
+  } 
+  catch(error) {
+        console.log(error,"error in loss of pay");
   };
-  axios.request(config).then((response) => {
-    setLOP(response?.data)
-    // enqueueSnackbar((response?.data?.lop), { variant: 'success' ,autoHideDuration:3000});
-   console.log(response,"response dataa")
-  })
-
-    .catch((error) => {
-      console.log(error,"error in loss of pay");
-     
-    });
-
 }
-
-
   return (
   
   <>
@@ -310,7 +261,6 @@ const lossOfPay = ()=>{
     <FormProvider methods={methods} onSubmit={onSubmit}>
     <Typography variant="subtitle1" sx={{ px: 4 }}>Available Leaves</Typography>
 <Grid container spacing={1} sx={{ px: 3 , py:2}}>
-
       {availableLeaves? (
     availableLeaves?.balances?.map((itm) => (
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
@@ -320,7 +270,6 @@ const lossOfPay = ()=>{
               <CardContent sx={{ px: 1,pt:0.5}} style={{paddingBottom:'2px'}}>
               <Box sx={{ flexGrow: 1,display:'flex' ,alignItems: 'center',justifyContent:'center'}} flexDirection="row">
                 <Typography variant="subtitle2">{itm?.leaveTypeName} :</Typography>&nbsp;
-
                 <Typography
                   variant="body2"
                   sx={{
@@ -341,7 +290,6 @@ const lossOfPay = ()=>{
         </Typography>
       </Grid>
     }
-
       </Grid>
       
       <Stack spacing={3} sx={{ px: 3 }}>
@@ -434,7 +382,6 @@ const lossOfPay = ()=>{
           )}
         /> */}
       </Stack>
-
       <DialogActions>
         {!!currentEvent?.leaveId && (
           <Tooltip title="Delete Event">
@@ -443,13 +390,10 @@ const lossOfPay = ()=>{
             </IconButton>
           </Tooltip>
         )}
-
         <Box sx={{ flexGrow: 1 }} />
-
         <Button variant="outlined" color="inherit" onClick={onClose}>
           Cancel
         </Button>
-
         <LoadingButton
           type="submit"
           variant="contained"
@@ -464,14 +408,9 @@ const lossOfPay = ()=>{
     </>}
     
 {/* Confirmation Dialog I need to keeppppp */}
-
-
-
     </>
   );
-
 }
-
 CalendarForm.propTypes = {
   colorOptions: PropTypes.arrayOf(PropTypes.string),
   currentEvent: PropTypes.object,

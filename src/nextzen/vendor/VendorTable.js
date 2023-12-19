@@ -18,6 +18,10 @@ const VendorTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -71,6 +75,7 @@ const VendorTable = () => {
       const response = await DeleteVendorAPI(deleteData);
       console.log('Delete success', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange()
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -106,23 +111,23 @@ const VendorTable = () => {
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'vendorName', label: 'Vendor Name', type: 'text', minWidth: '180px' },
-    { id: 'vendorEmailID', label: 'Vendor  Email ID', type: 'text', minWidth: '180px' },
-    { id: 'vendorPhoneNo', label: 'Vendor Phone No', type: 'text', minWidth: '180px' },
-    { id: 'city', label: 'City', type: 'text', minWidth: '180px' },
+    { id: 'vendorEmailID', label: 'Vendor Email ID', type: 'text', minWidth: '180px' },
+    { id: 'vendorPhoneNo', label: 'Vendor Phone Number', type: 'text', minWidth: '200px' },
     { id: 'state', label: 'State', type: 'text', minWidth: '180px' },
-    { id: 'vendorPANNo', label: 'PAN No', type: 'text', minWidth: '180px' },
-    { id: 'vendorGSTNo', label: 'GST No', type: 'text', minWidth: '180px' },
-    { id: 'vendorTANNo', label: 'TAN No', type: 'text', minWidth: '180px' },
+    { id: 'city', label: 'City', type: 'text', minWidth: '180px' },
+    { id: 'vendorPANNo', label: 'PAN Number', type: 'text', minWidth: '180px' },
+    { id: 'vendorGSTNo', label: 'GST Number', type: 'text', minWidth: '180px' },
+    { id: 'vendorTANNo', label: 'TAN Number', type: 'text', minWidth: '180px' },
     { id: 'vendorBankName', label: 'Bank Name', type: 'text', minWidth: '180px' },
     {
       id: 'vendorAccountHolderName',
-      label: 'Account Holder name',
+      label: 'Account Holder Name',
       type: 'text',
       minWidth: '180px',
     },
-    { id: 'vendorBankAccountNo', label: 'Account No', type: 'text', minWidth: '180px' },
+    { id: 'vendorBankAccountNo', label: 'Account Number', type: 'text', minWidth: '180px' },
     { id: 'vendorBankIFSCCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
     { id: 'bankBranchName', label: 'Bank Branch', type: 'text', minWidth: '180px' },
     { id: 'onboardingDate', label: 'Onboard Date', type: 'text', minWidth: '180px' },
@@ -155,7 +160,7 @@ const VendorTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateVendor currentData={editModalData} handleClose={handleClose} />
+          <CreateVendor currentData={editModalData} handleClose={handleClose} handleCountChange={handleCountChange} />
         </Dialog>
       )}
       <Helmet>
@@ -170,6 +175,7 @@ const VendorTable = () => {
         filterName="VendorHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

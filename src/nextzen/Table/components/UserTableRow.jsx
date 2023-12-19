@@ -101,7 +101,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                     sx={{ mr: 2 }}
                   />
                 )}
-                {ele.eyeIcon && (
+                {/* {ele.eyeIcon && (
                   <Avatar
                     alt={row[ele.id]}
                     src={
@@ -113,7 +113,27 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
 
                     sx={{ mr: 2 }}
                   />
-                )}
+                )} */}
+
+
+          {ele.type === 'view' && (
+             
+             <ListItemText
+
+               primary={(row[ele.id] === "")?(<span   style={{fontSize: 30,
+               }}> <Iconify icon="" color="green" /></span>) : <Iconify icon="lets-icons:view" color="green"                     onClick={(row)=>{SecondoryTable(row)}}
+               />
+               
+              }
+               secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+               primaryTypographyProps={{ typography: 'body2'}}
+               secondaryTypographyProps={{
+                 component: 'span',
+                 color: 'text.disabled',
+               }}
+             />
+           )}
+
 
                 {ele.type === 'text' && <Grid container flexDirection="row">
 
@@ -203,6 +223,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                     variant="soft"
                     color={
                       (row[ele?.id]?.toLowerCase() === 'approved' && 'success') || 
+                      (row[ele?.id]?.toLowerCase() === 'swapped' && 'success') || 
                       (row[ele?.id]?.toLowerCase() === 'pending' && 'warning') ||
                       (row[ele?.id]?.toLowerCase() === 'rejected' && 'error') ||
                       (row[ele?.id]+""?.toLowerCase() === 'true' && 'success') ||
