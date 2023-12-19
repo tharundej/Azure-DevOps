@@ -542,7 +542,8 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
             Reset
           </Button>
-      <Button variant='outlined' sx={{margin:"2px",backgroundColor:'#3B82F6'}} onClick={handleApply}>apply</Button>
+      <Button variant='outlined' sx={{margin:"2px",backgroundColor:'#3B82F6'
+    }} onClick={handleApply}>apply</Button>
       {/* </Badge> */}
 
       </Grid >  
