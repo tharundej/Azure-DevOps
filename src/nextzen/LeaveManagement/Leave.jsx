@@ -11,6 +11,8 @@ import Approveleave from './approveleave/ApproveLeave';
 import LeaveRequest from './leavecalendar/Calendar/LeaveRequest';
 import { useContext , useEffect,useState} from 'react';
 import UserContext from '../context/user/UserConext';
+import MyCompoff from './compoff/MyCompoff';
+import CompoffApprove from './compoff/CompoffApprove';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -53,8 +55,10 @@ export default function BasicCard() {
         arrContents.push(item.content);
       }
     });
-
+    arrLabels.push("My Compoff","Approve Compoff");
+    arrContents.push(<MyCompoff/>,<CompoffApprove/>);
     setTabLabels(arrLabels);
+
     setTabContents(arrContents);
   }, [user]);
 
