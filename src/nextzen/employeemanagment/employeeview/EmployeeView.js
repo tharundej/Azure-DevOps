@@ -43,11 +43,7 @@ const TABS = [
       label: 'Experience',
       icon: <Iconify icon="solar:users-group-rounded-bold" width={18} />,
     },
-    {
-      value: 'Statoury',
-      label: 'Statoury',
-      icon: <Iconify icon="mdi:card-account-details-star" width={18} />,
-    },
+    
     {
       value: 'Documents',
       label: 'Documents',
@@ -57,6 +53,11 @@ const TABS = [
       value: 'EmployeePermission',
       label: 'Employee Permission',
       icon: <Iconify icon="mdi:checkbox-outline" width={18} />,
+    },
+    {
+      value: 'Statoury',
+      label: 'Statoury',
+      icon: <Iconify icon="mdi:card-account-details-star" width={18} />,
     },
     
   ];

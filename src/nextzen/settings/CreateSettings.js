@@ -11,7 +11,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createFactoryAPI, updateFactoryAPI } from 'src/api/Accounts/Factory';
-import { getStateAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
@@ -21,42 +21,30 @@ import {
   updateAccountInformationAPI,
 } from 'src/api/Accounts/Settings';
 
-export default function CreateSettings({ currentData, handleClose, getTableData }) {
+export default function CreateSettings({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
-    locationPhone: Yup.string().matches(
-      /^[1-9]\d{9}$/,
-      'Phone must be 10 digits and should not start with 0'
-    ),
-    locationEmailID: Yup.string().email('Invalid email format').required('Email is required'),
-    locationAddressLine1: Yup.string(),
-    locationAddressLine2: Yup.string(),
-    locationCity: Yup.string(),
-    locationPincode: Yup.string().matches(
-      /^[1-9]\d{5}$/,
-      'Pincode must be 6 digits and should not start with 0'
-    ),
-    locationState: Yup.string(),
-    status: Yup.string(),
+    businessEmailId: Yup.string().email('Invalid email format').required('Email is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
+      accountInformationId: currentData?.accountInformationId || 0,
       locationID: currentData?.locationID || 0,
       companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
-      locationName: currentData?.locationName || '',
-      locationPhone: currentData?.locationPhone || '',
-      locationEmailID: currentData?.locationEmailid || '',
-      locationAddressLine1: currentData?.addressLine1 || '',
-      locationAddressLine2: currentData?.addressLine2 || '',
-      locationPincode: currentData?.locationPincode || '',
-      locationCity: currentData?.locationCity || '',
-      locationState: currentData?.locationState || '',
-      locationState: currentData?.locationState || '',
-      locationStateCode: currentData?.locationStateCode || '',
-      locationCountry: currentData?.locationCountry || '',
-      status: currentData?.status || '',
+      bankName: currentData?.bankName || '',
+      bankAccountNo: currentData?.bankAccountNo || '',
+      accountHolderName: currentData?.accountHolderName || '',
+      ifscCode: currentData?.ifscCode || '',
+      bankBranch: currentData?.bankBranch || '',
+      msmeUamNo: currentData?.msmeUamNo || '',
+      businessEmailId: currentData?.businessEmailId || '',
     }),
     [currentData]
   );
@@ -75,79 +63,35 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-  const [errorMessage, setErrorMessage] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState({ isoCode: 'IN', name: 'India' });
-  const [selectedState, setSelectedState] = useState({});
-  const [selectedCity, setSelectedCity] = useState({});
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
-  useEffect(() => {
-    const mockCountries = Country.getAllCountries();
-    setCountries(mockCountries);
-  }, []);
-  useEffect(() => {
-    console.log({ selectedCountry });
-    const fetchStates = async () => {
-      if (selectedCountry) {
-        const statesList = State.getStatesOfCountry(selectedCountry.isoCode);
-        setStates(statesList);
-        const selectedState =
-          statesList.find((state) => state.name === currentData?.locationState) || statesList[0];
-        setSelectedState(selectedState);
-      } else {
-        setStates([]);
-      }
-    };
-    fetchStates();
-  }, [selectedCountry]);
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (selectedState) {
-        const cities = City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode);
-        setCities(cities);
-        const selectedCity =
-          cities.find((city) => city.name === currentData?.locationCity) || cities[0];
-        setSelectedCity(selectedCity);
-      } else {
-        setCities([]);
-      }
-    };
-    fetchCities();
-  }, [selectedState]);
 
-  const statusOptions = ['Active', 'In Active'];
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState(defaultValues.status || statusOptions[0]);
+  const [selectedFactory, setSelectedFactory] = useState();
+  const [factoryOptions, setFactoryOptions] = useState([]);
+  const fetchFactory = async () => {
+    const data = { companyID: user?.companyID ? user?.companyID : '' };
+    try {
+      const response = await getLocationAPI(data);
+      setFactoryOptions(response);
+      setSelectedFactory(defaultValues.locationID);
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log('API request failed:', error.message);
+    }
+  };
+  useEffect(() => {
+    fetchFactory();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    data.locationCountry = selectedCountry
-      ? {
-          isoCode: selectedCountry.isoCode,
-          name: selectedCountry.name,
-        }
-      : null;
-    data.locationState = selectedState
-      ? {
-          isoCode: selectedState.isoCode,
-          name: selectedState.name,
-        }
-      : null;
-    data.locationCity = selectedCity
-      ? {
-          isoCode: selectedCity.isoCode,
-          name: selectedCity.name,
-        }
-      : null;
+    data.locationID = selectedFactory;
+    data.bankAccountNo = parseInt(data.bankAccountNo);
     try {
-      data.locationPhone = parseInt(data.locationPhone);
-      data.locationPincode = parseInt(data.locationPincode);
       console.log('Create Factory Data', data);
       let response = '';
-      if (currentData?.locationName) {
+      if (currentData?.accountInformationId) {
         response = await updateAccountInformationAPI(data);
       } else {
         response = await createAccountInformationAPI(data);
@@ -158,7 +102,7 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.locationName ? '' : getTableData();
+      currentData?.accountInformationId ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -181,7 +125,13 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
+        <ModalHeader
+          heading={
+            currentData?.accountInformationId
+              ? 'Edit Account Information'
+              : 'Add New Account Information'
+          }
+        />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -199,74 +149,33 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Factory / location Name" />
+            <RHFAutocomplete
+              name="locationID"
+              id="locationID"
+              options={factoryOptions || []}
+              value={factoryOptions.find((option) => option.locationID === selectedFactory) || null}
+              onChange={(event, newValue) =>
+                setSelectedFactory(newValue ? newValue.locationID : null)
+              }
+              getOptionLabel={(option) => option.locationName}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Factory / Branch Name" variant="outlined" />
+              )}
+            />
+            <RHFTextField name="bankName" label="Bank Name" />
             <RHFTextField
-              name="locationPhone"
-              label="Phone"
+              name="bankAccountNo"
+              label="Bank Account No"
               pattern="[0-9]*"
               onInput={(e) => {
-                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 20);
               }}
             />
-            <RHFTextField name="locationEmailID" label="Email ID" />
-            <RHFTextField name="locationAddressLine1" label="Address Line 1" />
-            <RHFTextField name="locationAddressLine2" label="Address Line 2" />
-            <RHFAutocomplete
-              name="locationCountry"
-              options={countries || []}
-              value={
-                countries?.find((option) => option.name === currentData?.locationCountry) ||
-                selectedCountry
-              }
-              onChange={(event, newValue) => setSelectedCountry(newValue)}
-              getOptionLabel={(option) => option.name}
-              renderInput={(params) => (
-                <TextField {...params} label="Select Country" variant="outlined" />
-              )}
-            />
-            <RHFAutocomplete
-              name="locationState"
-              options={states || []}
-              value={
-                states?.find((option) => option.name === currentData?.locationState) ||
-                selectedState
-              }
-              onChange={(event, newValue) => setSelectedState(newValue)}
-              getOptionLabel={(option) => option.name}
-              renderInput={(params) => (
-                <TextField {...params} label="Select State" variant="outlined" />
-              )}
-            />
-            <RHFAutocomplete
-              name="locationCity"
-              options={cities || []}
-              value={
-                cities?.find((option) => option.name === currentData?.locationCity) || selectedCity
-              }
-              onChange={(event, newValue) => setSelectedCity(newValue)}
-              getOptionLabel={(option) => option.name}
-              renderInput={(params) => (
-                <TextField {...params} label="Select City" variant="outlined" />
-              )}
-            />
-            <RHFTextField
-              name="locationPincode"
-              label="Pincode"
-              pattern="[0-9]*"
-              onInput={(e) => {
-                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
-              }}
-            />
-            <RHFAutocomplete
-              name="status"
-              id="status"
-              options={statusOptions || []}
-              value={selectedStatus}
-              onChange={(event, newValue) => setSelectedStatus(newValue)}
-              renderInput={(params) => (
-                <TextField {...params} label="Select status Type" variant="outlined" />
-              )}
-            />
+            <RHFTextField name="accountHolderName" label="Account Holder Name" />
+            <RHFTextField name="ifscCode" label="IFSC Code" />
+            <RHFTextField name="bankBranch" label="Bank Branch" />
+            <RHFTextField name="msmeUamNo" label="MSME UAM Number" />
+            <RHFTextField name="businessEmailId" label="Business Email ID" />
           </Box>
         </DialogContent>
         <DialogActions>
@@ -275,7 +184,7 @@ export default function CreateSettings({ currentData, handleClose, getTableData 
           </Button>
 
           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
-            {currentData?.locationName ? 'Update' : 'Save'}
+            {currentData?.accountInformationId ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>

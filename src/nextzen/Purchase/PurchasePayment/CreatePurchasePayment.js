@@ -7,16 +7,47 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 import instance from 'src/api/BaseURL';
 
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, TextField ,Grid,Autocomplete} from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
-import { Autocomplete } from '@mui/material';
+
 export default function CreatePurchasePayment({ currentData, handleClose }) {
+  const [poNumberOptions,setPoNumberOptions]=useState([])
+  const ApiHitGetOptions=async(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/listofPoNumber`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setPoNumberOptions(response?.data?.data)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(()=>{
+    const obj={
+      "companyId":  JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  }
+    ApiHitGetOptions(obj);
+  },[])
+
+
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -65,23 +96,26 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   } = methods;
   const values = watch();
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
-    try {
-      console.log(data, 'data111ugsghghh');
+  const onSubmit = handleSubmit(async (data1) => {
+    const obj=data;
+    obj.poNumber=obj?.poNumber?.poNumber || "",
+    obj.paymentMethod=obj.paymentMethod || ""
+    obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    console.log(obj,'kkk')
+    // try {
+    //   console.log(obj, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchasePayment', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    //   const response = await instance.post('addPurchasePayment', obj).then(
+    //     (successData) => {
+    //       console.log('sucess', successData);
+    //     },
+    //     (error) => {
+    //       console.log('lllll', error);
+    //     }
+    //   );
+    // } catch (error) {
+    //   console.error(error);
+    // }
   });
 
   const handleChangeString=(e,field)=>{
@@ -111,6 +145,9 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
     setData(newObj);
   }
 
+  const paymentTypeOptions=["Cash","Check","UPI"];
+  const paymentStatusOptions = ["Paid", "Partial Paid", "Not Paid"];
+
   return (
     <div style={{ paddingTop: '20px' }}>
     
@@ -127,9 +164,29 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
+
+<Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={poNumberOptions || []}
+                value={data?.poNumber}
+                getOptionLabel={(option) => option.poNumber}
+                onChange={(e,value) => {
+                  const newObj={...data};
+                  newObj.poNumber=value;
+
+                  setData(newObj);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="PO Number" />}
+              />
+              </Grid>
             
-            <TextField name="PO Number" label="PO Number" value={data?.poNumber || ""} onChange={(e)=>{handleChangeString(e,"poNumber")}}  />
-            <TextField name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
+            
+            <TextField type="number" name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
@@ -148,16 +205,16 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     id="date-picker-inline"
                     label="Paid Date"
                   />
-            <TextField name="No of Instalments" label="Number of Instalments" value={data?.noOfInstallements || ""} onChange={(e)=>{handleChangeInt(e,"noOfInstallements")}} />
-            <TextField name="Balance Amount" label="Balance Amount" value={data?.balanceAmount || ""}  onChange={(e)=>{handleChangeFloat(e,"balanceAmount")}}/>
+
+<TextField type="number" name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
-                    value={data?.dueDate ? dayjs(data?.dueDate).toDate() : null}
+                    value={data?.invoiceDate ? dayjs(data?.invoiceDate).toDate() : null}
                     onChange={(date) => {
                       setData(prev => ({
                         ...prev,
-                        dueDate: date ? dayjs(date).format('YYYY-MM-DD') : null
+                        invoiceDate: date ? dayjs(date).format('YYYY-MM-DD') : null
                       }))
                     }}
                     renderInput={(params) => <TextField {...params} />}
@@ -166,10 +223,32 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     format="yyyy-MM-dd"
                     margin="normal"
                     id="date-picker-inline"
-                    label="Due Date"
+                    label="Invoice Date"
                   />
-            <TextField name="Payment Method" label="Payment Method" />
-            <TextField name="Payment Status" label="Payment Status" />
+            
+           
+            <TextField type="number" name="paidAmount" label="Paid Amount" value={data?.paidAmount || ""} onChange={(e)=>{handleChangeFloat(e,"paidAmount")}} />
+            
+         
+            <Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={paymentTypeOptions}
+                value={data?.paymentMethod || ""}
+                getOptionLabel={(option) => option}
+                onChange={(e, value) => {
+                  console.log(value);
+                  const newArray = { ...data, paymentMethod: value }; // Create a new object with the updated paymentType
+                  setData(newArray);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="Payment Type" />}
+              />
+              </Grid>
+              
             
           </Box>
           
@@ -179,7 +258,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting} onClick={onSubmit}>
             Save
           </LoadingButton>
         </DialogActions>

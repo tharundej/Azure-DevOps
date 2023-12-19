@@ -19,6 +19,10 @@ const SettingsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -76,6 +80,7 @@ const SettingsTable = () => {
       const response = await DeleteAccountInformationAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -138,7 +143,11 @@ const SettingsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateSettings currentData={editModalData} handleClose={handleClose} />
+          <CreateSettings
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -153,6 +162,7 @@ const SettingsTable = () => {
         filterName="SettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

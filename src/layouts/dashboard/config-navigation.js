@@ -286,6 +286,11 @@ export function useNavData() {
       path: paths.dashboard.balancesheet.balancesheet,
       icon: ICONS.g_balanceSheet,
     },
+    {
+      title: t('Settings'),
+      path: paths.dashboard.settings.settings,
+      icon: ICONS.g_configurations,
+    },
   ]
 
   
