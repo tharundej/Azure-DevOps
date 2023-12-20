@@ -292,22 +292,6 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 //   }
 // ];
 console.log(editData,"editttttttdata")
-// const initialProjectDetails = {
-//   employeeName: projectInfo?.employeeName,
-//   projectID: [
-//     { "projectId": 1, "projectName": "ERP" },
-//     { "projectId": 3, "projectName": "ACCOUNTS" }
-//   ],
-//   todayDate: date?.start,
-//   // Dynamically create properties for each project with empty values
-//   ...Object.fromEntries(
-//     projectInfo?.projectID?.map((project) => [
-//       project.projectName,
-//       { description: "",employeename:"",hours: "",projectId:"",projectName:"" }
-//     ]) || []
-//   )
-// };
-// second method
 const initialProjectDetails = {
   employeeName: projectInfo?.employeeName,
   projectID: [
@@ -319,25 +303,41 @@ const initialProjectDetails = {
   ...Object.fromEntries(
     projectInfo?.projectID?.map((project) => [
       project.projectName,
-      { description: "", employeename: "", hours: "", projectId: "", projectName: "" }
-      
+      { description: "",employeename:"",hours: "",projectId:"",projectName:"" }
     ]) || []
   )
 };
+// second method
+// const initialProjectDetails = {
+//   employeeName: projectInfo?.employeeName,
+//   projectID: [
+//     { "projectId": 1, "projectName": "ERP" },
+//     { "projectId": 3, "projectName": "ACCOUNTS" }
+//   ],
+//   todayDate: date?.start,
+//   // Dynamically create properties for each project with empty values
+//   ...Object.fromEntries(
+//     projectInfo?.projectID?.map((project) => [
+//       project.projectName,
+//       { description: "", employeename: "", hours: "", projectId: "", projectName: "" }
+
+//     ]) || []
+//   )
+// };
 
 // Update properties based on editData
-editData.forEach((editItem) => {
-  const projectKey = initialProjectDetails.projectID.find((p) => p.projectId === editItem.projectId)?.projectName;
-  if (projectKey) {
-    initialProjectDetails[projectKey] = {
-      description: editItem.description || "",
-      employeename: editItem.employeename || "",
-      hours: editItem.hours || "",
-      projectId: editItem.projectId || "",
-      projectName: editItem.projectName || ""
-    };
-  }
-});
+// editData.forEach((editItem) => {
+//   const projectKey = initialProjectDetails.projectID.find((p) => p.projectId === editItem.projectId)?.projectName;
+//   if (projectKey) {
+//     initialProjectDetails[projectKey] = {
+//       description: editItem.description || "",
+//       employeename: editItem.employeename || "",
+//       hours: editItem.hours || "",
+//       projectId: editItem.projectId || "",
+//       projectName: editItem.projectName || ""
+//     };
+//   }
+// });
 
 // Log the updated initialProjectDetails
 console.log(initialProjectDetails);
