@@ -22,7 +22,7 @@ COPY package-lock.json ./
 
 COPY . .
 
-RUN npm install
+RUN pnpm install
 
 ENV TZ Asia/India
 
