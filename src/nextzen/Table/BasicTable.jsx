@@ -473,31 +473,6 @@ const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
-const [loanDetails,setloanDetails] = useState()
-const handleLoanExpand=(rowID,rowloanID,rowIndex)=>{
-  const loanPayload ={
-    employeeID:rowID,
-    loanID:rowloanID
-  }
-  const config={
-    method: 'POST',
-    maxBodyLength: Infinity,
-    url:baseUrl+`/getLoanDetails`,
-    // url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetails`,
-    data: loanPayload,
-  }
-  axios
-      .request(config)
-      .then((response) => {
-        console.log(response, 'responsedata', response.data);
-        setloanDetails(response?.data?.data)
-       
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
-}
 
 const [index, setIndex]=useState(""); // index setting
 
@@ -878,10 +853,7 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
-                              else if (clickedElementId==="employeeID"){
-                              
-                                handleLoanExpand(row.employeeID,row?.loanID,index)
-                              }
+                             
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
@@ -937,32 +909,6 @@ const [index, setIndex]=useState(""); // index setting
           ))}
            {/* </Box> */}
                       </TableCell>
-                    </TableRow>
-                  )}
-   {expandedLoanRow == index && (
-    
-                    <TableRow>
-                     {loanDetails && <TableCell colSpan={TABLE_HEAD.length + 1}>
-                         <Typography variant="body2">Loan ID : {loanDetails?.loanID}</Typography>
-                          <Typography variant="body2">Total No of Installments : {loanDetails?.totalNumberOfInstallments}</Typography>
-                          <Typography variant="body2">Installments Paid : {loanDetails?.totalNumberOfInstallments - loanDetails?.balanceInstallments}</Typography>
-                          <Typography variant="body2">Installment Balance : {loanDetails?.balanceInstallments}</Typography>
-                          {loanDetails?.InstallmentDetails?.length>0 &&<Typography variant="subtitle2">Installment Details</Typography>}
-                          <Card sx={{ maxWidth: '1200px' }}>
-                            <CardContent>
-                              <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                {loanDetails?.InstallmentDetails?.map((item, index) => (
-                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
-                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
-                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
-                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
-                                  </Grid>
-                                ))}
-                              </Grid>
-                            </CardContent>
-                          </Card>
-
-                      </TableCell>}
                     </TableRow>
                   )}
                         </>

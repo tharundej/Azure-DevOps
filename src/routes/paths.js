@@ -157,6 +157,7 @@ export const paths = {
     },
     leave: {
       root: `/leave`,
+     
     },
 
     timesheet: {
@@ -177,6 +178,7 @@ export const paths = {
     },
     monthlydeductions: {
       root: `/monthlydeductions`,
+      userview: (id) => `/monthlydeductions/${id}/loandetails`,
     },
 
     appraisal: {

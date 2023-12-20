@@ -13,6 +13,8 @@ import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
 import UserContext from '../../context/user/UserConext';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import { LoadingButton } from '@mui/lab';
 export default function Loans({defaultPayload,componentPage}) {
@@ -26,7 +28,7 @@ export default function Loans({defaultPayload,componentPage}) {
     
           label: "Employee Id",
           minWidth:"8pc",
-          type: "expand",
+          type: "text",
     
         },
     
@@ -162,7 +164,33 @@ export default function Loans({defaultPayload,componentPage}) {
   
   }
 
+  const router = useRouter();
 
+
+  const handleLoanDetails = useCallback(
+    (ele) => {
+console.log(ele,"elementtt")
+      const secretPass = "XkhZG4fW2t2W";
+
+      const encryptData = () => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(ele?.employeeID),
+          secretPass
+        ).toString();
+
+       // setEncrptedData(data);
+       console.log('called',data)
+         router.push(paths.dashboard.monthlydeductions.userview(data));
+       
+      };
+      //encryptData()
+     router.push(paths.dashboard.monthlydeductions.userview(ele?.employeeID));
+      
+      
+    },
+    [router]
+    
+  );
   
   const NewUserSchema = Yup.object().shape({
     loanID:Yup.number(),
@@ -449,6 +477,7 @@ rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
 componentPage={componentPage}
 count={count}
+handleEditRowParent={handleLoanDetails}
 />  
     </>
   );
