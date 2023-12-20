@@ -33,7 +33,7 @@ export default function Swaprequest() {
 
       
     
-        { id: "employeeShiftSwapId", label: "Employee Shift Swap ID", width: 180, type: "text" },
+        // { id: "employeeShiftSwapId", label: "Employee Shift Swap ID", width: 180, type: "text" },
 
         { id: "employeeName", label: "Employee Name", width: 180, type: "text" },
         { id: "fromShiftGroup", label: "From Shift Group", width: 180, type: "text" },
@@ -43,11 +43,11 @@ export default function Swaprequest() {
         // { id: "Date", label: "Date", width: 220, type: "text" },
     
     
-        { id: "requestDate", label: "Request Date", width: 100, type: "text" },
+        { id: "requestDate", label: "Request Date", width: 180, type: "text" },
         // { id: "company_id ", label: "Compony ID", width: 100, type: "text" },
-        { id: "startDate", label: "Start Date", width: 100, type: "text" },
+        { id: "startDate", label: "Start Date", width: 180, type: "text" },
         // { id: "endDate", label: "End Date", width: 100, type: "text" },
-        { id: "comment", label: "Comment", width: 100, type: "text" },
+        { id: "comment", label: "Comment", width: 220, type: "text" },
         
         { id: "status", label: "Status", width: 100, type: "badge" },
         // { id: '', width: 88 }, 
@@ -58,25 +58,28 @@ export default function Swaprequest() {
     const defaultPayload ={
       "companyId":(user?.companyID)?user?.companyID:'',
       "supervisorId":(user?.employeeID)?user?.employeeID:'',
-      "count":7,
+      "count":5,
       "page":0,
       "search":"",
       "externalFilters":{
-      "requestDate":{
-      "fromRequestDate":"",
-      "toRequestDate":""
-      },
-      "startDate":{
-      "fromStartDate":"",
-      "toStartDate":""
-      },
-      "status":""
-  }, 
-      "sort":{
-      "key":0,
-      "order":"employeeName"
-  }
-  }
+        "requestDate":{
+        "from":"",
+        "to":""
+        },
+        "startDate":{
+        "from":"",
+        "to":""
+        },
+        "employeeName":"",
+        "fromShiftGroup":"",
+        "toShiftGroup":"",
+        "status":""
+    },
+        "sort":{
+        "key":1,
+        "order":""
+    }
+    }
 
   
  const [approveShow  , setApproveShow]= useState(false)
@@ -86,6 +89,7 @@ const ApproveClose =() =>{
 }
  const [rowData,setRowData]= useState([])
  const [status,setStatus]= useState()
+ const [count,setCount]= useState(0)
   const onClickActions=(rowdata,event)=>{
     if(event?.name==="Approve"){
       setApproveShow(true)
@@ -96,6 +100,7 @@ const ApproveClose =() =>{
     else if(event?.name==="Reject"){
       setApproveShow(true)
       setStatus(event.id)
+      setRowData(rowdata)
       
     }
   }
@@ -106,9 +111,9 @@ const ApproveClose =() =>{
   } 
   const actions = [
     
-    { name: "Approve",  icon: "charm:circle-tick", id: "Approve", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
+    { name: "Approve",  icon: "charm:circle-tick", id: "Swapped", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
 
-    { name: "Reject", icon: "charm:circle-cross", id: "Reject", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
+    { name: "Reject", icon: "charm:circle-cross", id: "Rejected", type: "serviceCall", endpoint: '/updateTimesheetStatus' },
 
   ];
     
@@ -134,7 +139,7 @@ const ApproveClose =() =>{
       }}
       className="custom-dialog" 
       >
-        <ApproveSwap currentUser={{}} ApproveClose={ApproveClose} status={status} rowData={rowData}   />
+        <ApproveSwap currentUser={{}} ApproveClose={ApproveClose} status={status} rowData={rowData}  count={count}  />
          </Dialog>
     }
       {/* {showForm && (
@@ -166,6 +171,7 @@ bodyData='data'
 rowActions={actions}
 onClickActions={onClickActions}
 filterName='SwapRequestSearchFilter'
+count={count}
 />  
     </>
   );
