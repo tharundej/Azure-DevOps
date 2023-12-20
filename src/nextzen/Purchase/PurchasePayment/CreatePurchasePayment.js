@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -17,6 +18,36 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
 
 export default function CreatePurchasePayment({ currentData, handleClose }) {
+  const [poNumberOptions,setPoNumberOptions]=useState([])
+  const ApiHitGetOptions=async(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/listofPoNumber`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setPoNumberOptions(response?.data?.data)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(()=>{
+    const obj={
+      "companyId":  JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  }
+    ApiHitGetOptions(obj);
+  },[])
+
+
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -67,21 +98,24 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
 
   const onSubmit = handleSubmit(async (data1) => {
     const obj=data;
-    data.balanceAmount=data?.totalAmount-data?.paidAmount || 0;
-    try {
-      console.log(obj, 'data111ugsghghh');
+    obj.poNumber=obj?.poNumber?.poNumber || "",
+    obj.paymentMethod=obj.paymentMethod || ""
+    obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    console.log(obj,'kkk')
+    // try {
+    //   console.log(obj, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchasePayment', obj).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    //   const response = await instance.post('addPurchasePayment', obj).then(
+    //     (successData) => {
+    //       console.log('sucess', successData);
+    //     },
+    //     (error) => {
+    //       console.log('lllll', error);
+    //     }
+    //   );
+    // } catch (error) {
+    //   console.error(error);
+    // }
   });
 
   const handleChangeString=(e,field)=>{
@@ -130,26 +164,28 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
+
+<Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={poNumberOptions || []}
+                value={data?.poNumber}
+                getOptionLabel={(option) => option.poNumber}
+                onChange={(e,value) => {
+                  const newObj={...data};
+                  newObj.poNumber=value;
+
+                  setData(newObj);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="PO Number" />}
+              />
+              </Grid>
             
-            <TextField name="PO Number" label="PO Number" value={data?.poNumber || ""} onChange={(e)=>{handleChangeString(e,"poNumber")}}  />
-            <DatePicker
-                  sx={{width:'100%'}}
-                  fullWidth
-                    value={data?.poDate ? dayjs(data?.poDate).toDate() : null}
-                    onChange={(date) => {
-                      setData(prev => ({
-                        ...prev,
-                        poDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                      }))
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                    inputFormat="yyyy-MM-dd"
-                    variant="inline"
-                    format="yyyy-MM-dd"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="PO Date"
-                  />
+            
             <TextField type="number" name="Amount" label="Amount" value={data?.totalAmount || ""} onChange={(e)=>{handleChangeFloat(e,"totalAmount")}} />
             <DatePicker
                   sx={{width:'100%'}}
@@ -170,7 +206,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     label="Paid Date"
                   />
 
-<TextField type="number" name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeInt(e,"invoiceNumber")}} />
+<TextField type="number" name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
@@ -190,27 +226,10 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     label="Invoice Date"
                   />
             
-            <TextField name="No of Instalments" label="Number of Instalments" value={data?.numOfInstallments || ""} onChange={(e)=>{handleChangeInt(e,"numOfInstallments")}} />
+           
             <TextField type="number" name="paidAmount" label="Paid Amount" value={data?.paidAmount || ""} onChange={(e)=>{handleChangeFloat(e,"paidAmount")}} />
-            <TextField name="Balance Amount" label="Balance Amount" value={data?.totalAmount-data?.paidAmount || ""} />
-            <DatePicker
-                  sx={{width:'100%'}}
-                  fullWidth
-                    value={data?.dueDate ? dayjs(data?.dueDate).toDate() : null}
-                    onChange={(date) => {
-                      setData(prev => ({
-                        ...prev,
-                        dueDate: date ? dayjs(date).format('YYYY-MM-DD') : null
-                      }))
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                    inputFormat="yyyy-MM-dd"
-                    variant="inline"
-                    format="yyyy-MM-dd"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="Due Date"
-                  />
+            
+         
             <Grid md={6} xs={12} item>
                 <Autocomplete
                 disablePortal
@@ -229,24 +248,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                 renderInput={(params) => <TextField {...params} label="Payment Type" />}
               />
               </Grid>
-              <Grid md={6} xs={12} item>
-                <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={paymentStatusOptions}
-                value={data?.paymentStatus || ""}
-                getOptionLabel={(option) => option}
-                onChange={(e, value) => {
-                  console.log(value);
-                  const newArray = { ...data, paymentStatus: value }; // Create a new object with the updated paymentType
-                  setData(newArray);
-                }}
-                sx={{
-                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
-                }}
-                renderInput={(params) => <TextField {...params} label="Payment Status" />}
-              />
-              </Grid>
+              
             
           </Box>
           

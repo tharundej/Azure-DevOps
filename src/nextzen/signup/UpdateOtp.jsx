@@ -175,7 +175,7 @@ export default function UpdateOtp() {
 
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.login}
+        href={paths.auth.jwt.companyregisteration}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -184,7 +184,7 @@ export default function UpdateOtp() {
         }}
       >
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-        Return to sign in
+        Return to sign up
       </Link>
     </Stack>
   );

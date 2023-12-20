@@ -96,6 +96,7 @@ export default function LeavePeriodFilters({
   filterOptions,
   filterSearch,
   searchData,
+  getTableData,
 }) {
   const theme = useTheme();
   // const leavePeriodTypes = [
@@ -312,7 +313,7 @@ export default function LeavePeriodFilters({
           />
         </Grid>
          <Grid item lg={3} md={3} xs={6} sm={3}>
-          <LeavePeriodForm />
+          <LeavePeriodForm  getTableData={getTableData}/>
         </Grid>
          <Grid item lg={3} md={3} xs={6} sm={3}>
           <Grid>
@@ -376,11 +377,17 @@ export default function LeavePeriodFilters({
                   MenuProps={MenuProps}
                   // sx={{minWidth:'300px'}}
                 >
-                  {leavePeriodTypes?.map((name) => (
-                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                      {name?.leavePeriodType}
-                    </MenuItem>
-                  ))}
+                  {leavePeriodTypes?.length > 0 ? (
+  leavePeriodTypes.map((name) => (
+    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+      {name?.leavePeriodType}
+    </MenuItem>
+  ))
+) : (
+  <MenuItem value="" style={getStyles(name, personName, theme)}>
+    No options available
+  </MenuItem>
+)}
                 </Select>
               </FormControl>
             </Grid>
@@ -420,6 +427,7 @@ LeavePeriodFilters.propTypes = {
     PropTypes.shape({
       fieldName: PropTypes.string,
       options: PropTypes.arrayOf(PropTypes.string),
+      getTableData:PropTypes.func
     })
   ),
 };

@@ -89,7 +89,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions,searchData  }) {
+export default function PayScheduleFilters({ filterData, filterOptions,searchData ,getTableData }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -306,7 +306,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
           
         </Grid>
         <Grid item md={2} xs={2}>
-        <PayScheduleform/>
+        <PayScheduleform getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2} >
         <Grid>

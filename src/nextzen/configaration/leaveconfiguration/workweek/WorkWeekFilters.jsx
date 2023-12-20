@@ -89,7 +89,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function WorkWeekFilters({ filterData, filterOptions, filterSearch, searchData }) {
+export default function WorkWeekFilters({ filterData, filterOptions, filterSearch, searchData ,getTableData}) {
   const theme = useTheme();
   const dayTypes = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const actionsTypes = ['FullDay', 'HalfDay', 'Holiday'];
@@ -279,7 +279,7 @@ export default function WorkWeekFilters({ filterData, filterOptions, filterSearc
           />
         </Grid>
         <Grid item md={2} xs={2}>
-          <WorkWeekForm />
+          <WorkWeekForm getTableData={getTableData} />
         </Grid>
         <Grid item md={2} xs={2}>
           <Grid>
