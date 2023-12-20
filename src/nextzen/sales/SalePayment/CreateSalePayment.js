@@ -111,7 +111,7 @@ export default function CreateSalePayment({ currentData, handleClose }) {
               </DemoContainer>
             </LocalizationProvider>
             <RHFTextField name="EWay Bill" label="EWay Bill" />
-            <RHFTextField type="number" name="No of Instalments" label="No of Instalments" />
+            <RHFTextField type="number" name="No of Instalments" label="Number of Instalments" />
             <RHFTextField type="number" name="Received Amount" label="Received Amount" />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -152,7 +152,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   ];
   const EmployementTypeOptions = [
    "Permanent",
-   "Contract"
+   "Contract",'Daily Wise'
 
     
   ];
@@ -673,7 +673,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={12} lg={6}>
+                  <Grid marginTop="10px" xs={12} md={6} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">State</InputLabel>
                 <Select
@@ -699,7 +699,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
                     
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
+                   <Grid marginTop="10px" xs={6} md={6} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
                 <Select

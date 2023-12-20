@@ -7,6 +7,7 @@ import MyTimeSheet from './components/MyTimeSheet';
 import Project from './components/Project';
 import TimeSheetApproval from './components/TimeSheetApproval';
 import UserContext from '../context/user/UserConext';
+import TimeSheetByManager from './components/timesheetbymanager/TimeSheetByManager';
 
 
 
@@ -38,6 +39,11 @@ export default function TimeSheet() {
           label: 'Employee Time Sheet ',
           content: <TimeSheetApproval key="approvals" />,
         },
+        {
+          id: 'myTeam',
+          label: 'My Team Time Sheet ',
+          content: <TimeSheetByManager key="myTeam" />,
+        },
         // Add other data as needed
       ];
       useEffect(() => {
@@ -57,7 +63,11 @@ export default function TimeSheet() {
             arrContents.push(item.content);
           }
         });
-     
+        arrLabels.push('My Team');
+        arrContents.push( 
+         
+           <TimeSheetByManager key="myTeam" />
+        );
         setTabLabels(arrLabels);
         setTabContents(arrContents);
       }, [user]);

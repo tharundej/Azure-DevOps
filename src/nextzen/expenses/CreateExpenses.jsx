@@ -32,10 +32,13 @@ import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses'
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateExpenses({ currentData, handleClose, setCount, count }) {
+export default function CreateExpenses({ currentData, handleClose, handleCountChange }) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
-    invoiceNO: Yup.string().required(),
+    invoiceNO: Yup.string()
+      .required('Invoice Number is required')
+      .matches(/^[A-Za-z0-9]+$/, 'Invoice Number must contain only letters and numbers')
+      .max(20, 'Invoice Number must not exceed 20 characters'),
     totalAmount: Yup.number().required(),
     paidAmount: Yup.number().required(),
     totalLiter: Yup.number(),
@@ -57,6 +60,9 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
       invoiceDate: currentData?.invoiceDate || '',
       totalAmount: currentData?.totalAmount || '',
       paidAmount: currentData?.paidAmount || '',
+      quantity: currentData?.quantity || '',
+      rate: currentData?.rate || '',
+      status: currentData?.status || '',
     }),
     [currentData]
   );
@@ -79,8 +85,8 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
     expenseDate: defaultValues?.expenseDate ? dayjs(defaultValues?.expenseDate) : dayjs(new Date()),
     invoiceDate: defaultValues?.invoiceDate ? dayjs(defaultValues?.invoiceDate) : dayjs(new Date()),
   });
-  const [type, setType] = useState(true);
-  const [selectedValue, setSelectedValue] = useState('Fuel');
+  const [type, setType] = useState(defaultValues?.expenseType == 'Others' ? false : true);
+  const [selectedValue, setSelectedValue] = useState(defaultValues.expenseType || 'Fuel');
   const [factoryOptions, setFactoryOptions] = useState([]);
   const [selectedFactory, setSelectedFactory] = useState();
   const [errorMessage, setErrorMessage] = useState('');
@@ -112,6 +118,8 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
     data.invoiceDate = formatDateToYYYYMMDD(datesUsed?.invoiceDate);
     data.locationID = selectedFactory;
     data.expenseType = selectedValue;
+    data.quantity = parseInt(data.quantity);
+    data.rate = parseInt(data.rate);
     try {
       console.log(data, 'data111ugsghghh');
       let response = '';
@@ -120,7 +128,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
       } else {
         response = await createExpensesAPI(data);
       }
-      setCount(count + 1);
+      if (handleCountChange) handleCountChange();
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
@@ -149,10 +157,16 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
   const HandleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+  const HandleInputChange = (e) => {
+    setValue(e?.target?.name, e?.target?.value);
+    const parsedQuantity = parseFloat(watch(`quantity`));
+    const parsedPrice = parseFloat(watch(`rate`));
+    setValue(`totalAmount`, parsedQuantity * parsedPrice);
+  };
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading="Add New Expense" />
+        <ModalHeader heading={currentData.expenseID ? 'Update Expense' : 'Add New Expense'} />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -201,7 +215,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
               }
               getOptionLabel={(option) => option.locationName}
               renderInput={(params) => (
-                <TextField {...params} label="Select Factory / Location Name" variant="outlined" />
+                <TextField {...params} label="Select Factory / Branch Name" variant="outlined" />
               )}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -220,7 +234,17 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFTextField name="invoiceNO" label="invoice NO" />
+            <RHFTextField
+              name="invoiceNO"
+              label="Invoice Number"
+              inputProps={{
+                maxLength: 20,
+                pattern: '^[a-zA-Z0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20);
+              }}
+            />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -239,15 +263,106 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
             </LocalizationProvider>
             {type && (
               <>
-                <RHFTextField name="vehicleType" label="Vehicle Type" />
-                <RHFTextField name="vehicleRegNO" label="Vehicle No" />
-                <RHFTextField type="number" name="totalLiter" label="Total Liter" />
-                <RHFTextField name="fuelType" label="Fuel Type" />
+                <RHFTextField
+                  name="vehicleType"
+                  label="Vehicle Type"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 20);
+                  }}
+                />
+                <RHFTextField
+                  name="vehicleRegNO"
+                  label="Vehicle Number"
+                  inputProps={{
+                    maxLength: 10,
+                    pattern: '^[a-zA-Z0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+                  }}
+                />
+                <RHFTextField
+                  type="number"
+                  name="totalLiter"
+                  label="Total Liter"
+                  inputProps={{
+                    maxLength: 10,
+                    pattern: '^[0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  }}
+                />
+                <RHFTextField
+                  name="fuelType"
+                  label="Fuel Type"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 20);
+                  }}
+                />
               </>
             )}
-            {type == false && <RHFTextField name="itemName" label="Item Name" />}
-            <RHFTextField type="number" name="totalAmount" label="Total Amount" />
-            <RHFTextField type="number" name="paidAmount" label="Paid Amount" />
+            {type == false && (
+              <>
+                <RHFTextField
+                  name="itemName"
+                  label="Item Name"
+                  inputProps={{
+                    maxLength: 20,
+                    pattern: '^[a-zA-Z0-9]*$',
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20);
+                  }}
+                />
+                <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChange(e)}
+                  name="quantity"
+                  label="Quantity"
+                  defaultValue={0}
+                />
+                <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChange(e)}
+                  name="rate"
+                  label="Rate"
+                  defaultValue={0}
+                />
+              </>
+            )}
+            <RHFTextField
+              type="number"
+              name="totalAmount"
+              label="Total Amount"
+              inputProps={{
+                maxLength: 10,
+                pattern: '^[0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+              }}
+            />
+            <RHFTextField
+              type="number"
+              name="paidAmount"
+              label="Paid Amount"
+              inputProps={{
+                maxLength: 10,
+                pattern: '^[0-9]*$',
+              }}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+              }}
+            />
           </Box>
         </DialogContent>
         <DialogActions>
@@ -256,7 +371,7 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
           </Button>
 
           <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
-            Save
+            {currentData.expenseID ? 'Update' : 'Save'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
@@ -267,4 +382,5 @@ export default function CreateExpenses({ currentData, handleClose, setCount, cou
 CreateExpenses.propTypes = {
   currentData: PropTypes.object,
   handleClose: PropTypes.any,
+  handleCountChange: PropTypes.func,
 };

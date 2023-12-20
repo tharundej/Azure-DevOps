@@ -22,8 +22,10 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
-import { baseImageUrl } from 'src/nextzen/global/BaseUrl';
+import { baseImageUrl,baseUrl } from 'src/nextzen/global/BaseUrl';
+import { ASSETS_API } from 'src/config-global';
 
+import bg from '../../../components/image/bg2.jpg'
 
 const TABS = [
     {
@@ -41,11 +43,7 @@ const TABS = [
       label: 'Experience',
       icon: <Iconify icon="solar:users-group-rounded-bold" width={18} />,
     },
-    {
-      value: 'Statoury',
-      label: 'Statoury',
-      icon: <Iconify icon="mdi:card-account-details-star" width={18} />,
-    },
+    
     {
       value: 'Documents',
       label: 'Documents',
@@ -55,6 +53,11 @@ const TABS = [
       value: 'EmployeePermission',
       label: 'Employee Permission',
       icon: <Iconify icon="mdi:checkbox-outline" width={18} />,
+    },
+    {
+      value: 'Statoury',
+      label: 'Statoury',
+      icon: <Iconify icon="mdi:card-account-details-star" width={18} />,
     },
     
   ];
@@ -73,7 +76,8 @@ const EmployeeView = () => {
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
   const [severity,setSeverity]=useState("") 
-  const[employeeID,setEmployeeID]=useState("")     
+  const[employeeID,setEmployeeID]=useState("") 
+  const [avatarUrl,setAvatarUrl]=useState("")    
 
   const params = useParams();
   const { id } = params;
@@ -97,7 +101,7 @@ const EmployeeView = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://vshhg43l-3001.inc1.devtunnels.ms/erp/getMiniOnboardingDetails',
+        url: `${baseUrl}/getMiniOnboardingDetails`,
         headers: { 
           'Content-Type': 'application/json'
         },
@@ -108,6 +112,8 @@ const EmployeeView = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data.data,'setUserData'));
         setUserData(response.data.data)
+       console.log( `${ASSETS_API}/assets/images/cover/cover_${1 + 1}.jpg`,'avatarUrl')
+
       })
       .catch((error) => {
         console.log(error);
@@ -145,6 +151,10 @@ const EmployeeView = () => {
       setSnacbarMessage(message);
       setSeverity(severity);
     }
+
+    useEffect(() => {
+      setAvatarUrl(`${baseImageUrl}${userData.imageData}`);
+    }, [userData]);
   
   return (
     <div>
@@ -168,15 +178,16 @@ const EmployeeView = () => {
           mb: 3,
           height: 290,
         }}
-      >
-        <ProfileCover
-          role={userData?.roleName}
-          name={userData?.firstName}
-          // avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
-          avatarUrl ={ `${baseImageUrl}${userData.imageData}`}
-          coverUrl="aaa"
-        />
-<Tabs
+      >{avatarUrl?.length>0 && 
+      <ProfileCover
+        role={userData?.roleName}
+        name={userData?.firstName}
+        //  avatarUrl="http://192.168.1.199:3001/erp/download?file=COMP22_GANG31_20231212100718_489121__fnss__apple__fnse__.jpg"
+        avatarUrl ={`_GANG1_20231211093305_473297__fnss__gojo___fnse__.jpg`}
+        coverUrl={bg}
+      />}
+       
+  <Tabs
   value={currentTab}
   onChange={handleChangeTab}
   variant="scrollable"
@@ -193,8 +204,10 @@ const EmployeeView = () => {
     [`& .${tabsClasses.flexContainer}`]: {
       pr: { md: 3 },
       justifyContent: {
-        sm: 'center',
+        sm: 'flex-end',
         md: 'flex-end',
+        lg: 'flex-end',
+    
       },
     },
   }}

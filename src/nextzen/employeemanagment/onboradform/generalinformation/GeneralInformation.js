@@ -57,6 +57,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   const [isSameAsPermanent,setIsSameAsPermanent]=useState(false)
   const [pcountryIsoCode,setPCoutryIsoCode]=useState("")
+  const[rcountruIsoCode,setCoutryRIsoCode]=useState("")
  
   const [openSnackBar,setopenSnackBar]=useState(false);
   const [severitySnackbar,setseveritySnackbar]=useState("");
@@ -112,9 +113,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     // companyID: Yup.string(),
     // companyName: Yup.string(),
   
-    firstName: Yup.string().required("First name is required"),
-    middleName: Yup.string(),
-    lastName: Yup.string().required("Last name is required"),
+    firstName: Yup.string()
+    .required('First Name is Required')
+      .matches(/^[A-Za-z ]+$/, 'First Name must contain only letters and spaces'),
+    middleName: Yup.string() .matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
+    lastName: Yup.string().required("Last name is required") .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
    
     contactNumber: Yup.number()
     .required("Contact Number is required")
@@ -124,10 +127,10 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         "Contact Number must be exactly 10 digits",
         (val) => val && val.toString().length === 10
     ),
-    emergencyContactNumber: Yup.number(),
+    emergencyContactNumber: Yup.number().required('Emergency Contact Number'),
 
-    fatherName: Yup.string(),
-    motherName: Yup.string(),
+    fatherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Father Name must contain only letters and spaces'),
+    motherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Mother Name must contain only letters and spaces'),
     maritalStatus: Yup.object(),
     nationality: Yup.object(),
     religion: Yup.object(),
@@ -152,7 +155,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
   
      gender: Yup.object(),
     personalEmail: Yup.string().required("Email is required"),
-    companyEmail: Yup.string(),
+    companyEmail: Yup.string().required('Email is required'),
     
     // first_name: Yup.string().required('First Name is required'),
 
@@ -246,7 +249,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           maxBodyLength: Infinity,
           url: `${baseUrl}/onBoarding`,
           headers: { 
-         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+         'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
              
             'Content-Type': 'text/plain'
           },
@@ -267,10 +270,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         })
         .catch((error) => {
           console.log(error);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
           // setopenSnackBar(true);
           // setseveritySnackbar("warning");
           // setmessageSnackbar("Something Wrong")
           props.handleCallSnackbar(error.response.data.message,"error")
+          props.handleLoaderClose()
         });
 
   }
@@ -493,8 +501,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
      setOptions(newArray);
     console.log(newArray,'newArraynewArray')
   }
-  const onChnageAutoCompleterState=(obj)=>{
-    console.log(obj,'objjjjj')
+  const onChnageAutoCompleterState=async(obj)=>{
+    console.log(obj,'stateOptionsSatet1')
     const objState={
       country:obj?.name
     }
@@ -503,17 +511,19 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     async function stateOptions(){
       try {
         // const cityOptions1=await ApiHitCities(objState)
-        newArray.rcityOptions=City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
-        // console.log(cityOptions1,'stateOptionsSatet')
+       
+        newArray.rcityOptions=await City.getCitiesOfState(rcountruIsoCode, obj?.isoCode)
+        console.log(rcountruIsoCode,'stateOptionsSatet2')
+         
       }
       catch(e){
   
       }
     }
-    stateOptions()
+   await stateOptions()
     
      setOptions(newArray);
-    console.log(newArray,'newArraynewArray')
+    console.log(newArray,'stateOptionsSatet3')
   }
  
 
@@ -661,7 +671,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}}  type="text" />
                 <RHFTextField name="middleName" label="Middle Name" sx={{caretColor:'#3B82F6'}}/>
                 <RHFTextField name="lastName" label="Last Name*" sx={{caretColor:'#3B82F6'}}/>
                 <RHFTextField name="companyEmail" label="Company Email" sx={{caretColor:'#3B82F6'}} />
@@ -685,7 +695,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
-                    
+                     maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
                     
@@ -777,6 +787,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               />
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Offer Date"
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
@@ -792,6 +803,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                  
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Joining Date*"
                       value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
@@ -864,7 +876,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="pAddressLine2" label="Permanent Address Line2" sx={{caretColor:'#3B82F6'}} />
                 {/* <RHFAutocomplete
                 name="state"
-                label="Resendtial State"
+                label="Resindential State"
                 options={options?.countryOptions}
                 getOptionLabel={(option) => option.name}
                 
@@ -885,11 +897,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   </Typography>
                 </div>
                 { !isSameAsPermanent && <>
-                <RHFTextField name="rAddressLine1" label="Resendial Address Line1" />
-                <RHFTextField name="rAddressLine2" label="Resendial Address Line2" />
+                <RHFTextField name="rAddressLine1" label="Resindential Address Line1" />
+                <RHFTextField name="rAddressLine2" label="Resindential Address Line2" />
                 <RHFAutocomplete
                 name="rCountry"
-                label="Permanent Country"
+                label="Resindential Country"
                 options={options?.rcountryOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompletercountry={onChnageAutoCompletercountry}
@@ -904,7 +916,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFAutocomplete
                 sx={{caretColor:'#3B82F6'}}
                 name="rState"
-                label="Resendtial State"
+                label="Resindential State"
                 options={options?.rstateOptions || []}
                 getOptionLabel={(option) => option.name}
                 onChnageAutoCompleterState={onChnageAutoCompleterState}
@@ -918,7 +930,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                <RHFAutocomplete
                sx={{caretColor:'#3B82F6'}}
                 name="rCity"
-                label="Resendtial City"
+                label="Resindential City"
                 options={options?.rcityOptions || []}
                 getOptionLabel={(option) => option.name}
                 // onChnageAutoComplete={onChnageAutoCompleteState}
@@ -929,7 +941,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 )}
 
               />
-                <RHFTextField name="rPincode" label="Resendial Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="rPincode" label="Resindential Pincode" type="number" maxLength={6} sx={{caretColor:'#3B82F6'}}/>
                 </>
                 }
            

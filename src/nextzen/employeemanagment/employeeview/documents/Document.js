@@ -5,7 +5,7 @@ import axios from 'axios';
 import FilesGrid from '../files/FilesGrid';
 import { Button,Grid } from '@mui/material';
 import DocumentsUpload from './uploaddocuments/UploadDocuments';
-
+import { useSnackbar } from 'src/components/snackbar';
 import FileEditCreate from '../../../global/fileUploads/FileEditCreate'
 import { doc } from 'firebase/firestore';
 const Documets = ({employeeIDForApis}) => {
@@ -24,9 +24,30 @@ const Documets = ({employeeIDForApis}) => {
     const handeleClose=()=> setOpen(false);
     const handeleOpen=()=> setOpen(true);
 
-        const handleDelete=(dataIndex)=>{
-
-        }
+        const handleDelete=(data)=>{
+          const obj={
+            id:data.id
+          }
+          let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `${baseUrl}/deleteDocs`,
+            headers: { 
+              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+              'Content-Type': 'application/json'
+            },
+            data : obj
+          };
+          
+          axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+            ApiHitGetDocuments()
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        } 
 
       const handleEdit=(dataIndex)=>{
         setType("edit");

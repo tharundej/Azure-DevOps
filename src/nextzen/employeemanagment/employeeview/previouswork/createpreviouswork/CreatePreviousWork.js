@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import { useSnackbar } from 'src/components/snackbar';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
@@ -58,12 +58,56 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import FilesDisplay from '../../employeeeducation/createeducation/FilesDisplay';
 
 const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
-
+  const { enqueueSnackbar } = useSnackbar();
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
-    "Contract","Permanent"
+    "Contract","Permanent","Daily Wage"
   
   ])
   const [addDocuments,setAddDocuments]=useState([]);
+  
+
+  const ApiHitDeleteDocument=(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/deleteEduAndWorkDoc`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
+    })
+    .catch((error) => {
+      console.log(error);
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+    });
+  }
+
+  const handleDeleteDocument = (index, index1,file) => {
+
+
+   const obj={
+    id:file?.id
+   }
+
+   ApiHitDeleteDocument(obj);
+
+    const updatedItems = defaultValues[index].documents.filter((item, index3) => index3 !== index1);
+
+    const newArray = [...defaultValues];
+
+    newArray[index].documents = updatedItems;
+
+    //console.log(updatedItems,'updatedItems')
+
+    setDefaultValues(newArray);
+  };
 
   const handleAddDocumentNew=()=>{
     const newArray = [...addDocuments];
@@ -149,12 +193,26 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
   }
   const [defaultValues, setDefaultValues] = useState([]);
     const onSave=()=>{
+
+      const invalidFields = defaultValues.filter(
+        (item) => !item.previousCompanyName || !item.designation
+      );
+    
+      if (invalidFields.length > 0) {
+        // Show an error message for required fields
+        enqueueSnackbar('Please fill in all required fields.', { variant: 'error' });
+        return;
+      }
+      const arr = defaultValues;
+      if (endpoint !== 'addExperience') {
+        arr[0].documents = [...addDocuments];
+      }
    
 
      const obj={
       companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       employeeId: employeeIDForApis,
-      experience:defaultValues
+      experience:arr
      }
      
 
@@ -179,12 +237,14 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         onhandleClose();
         callApi();
         setDefaultValues([])
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
         setDefaultValues([])
       });
     }
@@ -310,17 +370,17 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
         setDefaultValues(newArray);
       }
 
-      const handleDeleteDocument=(index,index1)=>{
-        const updatedItems = defaultValues[index].documents.filter((item,index3) => index3 !== index1);
+      // const handleDeleteDocument=(index,index1)=>{
+      //   const updatedItems = defaultValues[index].documents.filter((item,index3) => index3 !== index1);
 
-        const newArray = [...defaultValues];
+      //   const newArray = [...defaultValues];
        
-        newArray[index].documents =updatedItems
+      //   newArray[index].documents =updatedItems
        
-        console.log(updatedItems,'updatedItems')
+      //   console.log(updatedItems,'updatedItems')
     
-       setDefaultValues(newArray);
-      }
+      //  setDefaultValues(newArray);
+      // }
 
        
             // const changeObj=newArray[index];
@@ -428,7 +488,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     fullWidth
                 
                     name="previousCompanyName"
-                    label="Company Name"
+                    label="Company Name*"
                     variant="outlined"
                     id={`previousCompanyName${index}`}
                      value={item?.previousCompanyName}
@@ -442,7 +502,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     fullWidth
                     
                     name="designation"
-                    label="Designation"
+                    label="Designation*"
                     id="designation"
                      value={item?.designation}
                     onChange={(e) => {
@@ -548,7 +608,91 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
               <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px',  }}>
                       Documents <Button sx={{cursor: 'pointer'}} onClick={handleAddDocumentNew}><AddCircleOutlineIcon  /></Button>
                     </Typography>
-                    <FilesDisplay dataOfFiles={item?.documents}  />
+                    <FilesDisplay dataOfFiles={item?.documents} 
+                    
+                    handleDeleteDocument={handleDeleteDocument}
+                    />
+
+
+{addDocuments &&
+                      addDocuments.map((file, index1) => (
+                        <Grid
+                          spacing={2}
+                          sx={{ paddingBottom: '10px', marginTop: '15px' }}
+                          container
+                          flexDirection="row"
+                          item
+                        >
+                          <Grid item xs={12} md={6}>
+                            <FormControl fullWidth>
+                              <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                              <Select
+                                label="Select Document"
+                                value={file?.fileType}
+                                onChange={(e) => {
+                                  handleCategoryChangeNew(e, index);
+                                }}
+                                name="Select Document"
+                              >
+                                <MenuItem value="Provisional">Provisional</MenuItem>
+                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
+                                <MenuItem value="degree">Degree</MenuItem>
+                                {/* Add more categories here */}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={12} md={6}>
+                            <Grid>
+                              <Grid item>
+                                <input
+                                  id={`file-upload-input-${index}-${index1}`}
+                                  type="file"
+                                  accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                                  style={{ display: 'none' }}
+                                />
+                                <Grid container alignItems="center" justifyContent="space-between">
+                                  <Grid item>
+                                    <label htmlFor={`file-upload-input-${index}-${index1}`}>
+                                      <Button
+                                        onChange={(e) => {
+                                          handleFileUploadNew(e, index);
+                                        }}
+                                        component="label"
+                                        variant="contained"
+                                        startIcon={<CloudUploadIcon />}
+                                      >
+                                        Upload file
+                                        <VisuallyHiddenInput type="file" />
+                                      </Button>
+                                    </label>
+                                    <Typography variant="body2" color="textSecondary">
+                                      {file.fileName
+                                        ? `Selected File: ${file.fileName}`
+                                        : 'No file selected'}
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item>
+                                    <IconButton
+                                      onClick={() => {
+                                        handleRemoveDocumentNew(index1);
+                                      }}
+                                      color="primary"
+                                    >
+                                      <Iconify
+                                        icon="zondicons:minus-outline"
+                                        sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                      />{' '}
+                                      {/* Set the font size to 24px */}
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      ))}
                                               </>}
               {endpoint==="addExperience" && item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
@@ -628,7 +772,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                                             
                                             <IconButton
                                             onClick={()=>{
-                                              handleDeleteDocument(index,index1)
+                                              handleDeleteDocument(index,index1,file)
                                             }}
                                             color="primary"
                                           >

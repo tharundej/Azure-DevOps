@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, Link, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { createVendorMaterialAPI, updateVendorMaterialAPI } from 'src/api/Accounts/VendorMaterials';
@@ -16,7 +16,12 @@ import { getTaxs, getVendorAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateVendorMaterials({ currentData, handleClose, getTableData }) {
+export default function CreateVendorMaterials({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     materialName: Yup.string().required('MaterialName Name is Required'),
@@ -64,13 +69,18 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
     const fetchVendor = async () => {
       const data = { companyID: user?.companyID ? user?.companyID : '' };
       try {
-        const response = await getVendorAPI(data);
-        setVendorOptions(response);
-        console.log('currentData.vendorID', currentData.vendorId);
-        console.log('currentData.vend', defaultValues.vendorID);
-        setSelectedVendor(
-          defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
-        );
+        let response = await getVendorAPI(data);
+        console.log({ response });
+        if (response === null) {
+          handleCallSnackbar('No Vendor Found. Please Add Vendor', 'warning');
+        } else {
+          setVendorOptions(response);
+          console.log('currentData.vendorID', currentData.vendorId);
+          console.log('currentData.vend', defaultValues.vendorID);
+          setSelectedVendor(
+            defaultValues.vendorID || (response.length > 0 ? response[0].vendorID : null)
+          );
+        }
       } catch (error) {
         setErrorMessage(error.message);
         console.log('API request failed:', error.message);
@@ -111,7 +121,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.id ? '' : getTableData();
+      currentData?.id ? handleCountChange() : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {
@@ -160,15 +170,14 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               name="vendorID"
               id="vendorID"
               options={vendorOptions || []}
-              value={vendorOptions.find((option) => option.vendorID === selectedVendor) || null}
+              value={vendorOptions?.find((option) => option.vendorID === selectedVendor) || null}
               onChange={(event, newValue) => setSelectedVendor(newValue ? newValue.vendorID : null)}
               getOptionLabel={(option) => option.vendorName} // Specify the property to display in the input
               renderInput={(params) => (
                 <TextField {...params} label="Select Vendor Name" variant="outlined" />
               )}
             />
-
-            <RHFTextField name="materialName" label="Material Names" />
+            <RHFTextField name="materialName" label="Material Name" />
             <RHFTextField name="hsnId" label="HSN ID" />
             <RHFTextField name="materialType" label="Material Type" />
             <RHFTextField name="materialPrice" label="Material Price" />
@@ -176,7 +185,7 @@ export default function CreateVendorMaterials({ currentData, handleClose, getTab
               name="gstRate"
               id="gstRate"
               options={taxsOptions || []}
-              value={taxsOptions.find((option) => option.value === selectedTaxs) || null}
+              value={taxsOptions?.find((option) => option.value === selectedTaxs) || null}
               onChange={(event, newValue) => setSelectedTaxs(newValue ? newValue.value : null)}
               renderInput={(params) => (
                 <TextField {...params} label="Select Tax" variant="outlined" />

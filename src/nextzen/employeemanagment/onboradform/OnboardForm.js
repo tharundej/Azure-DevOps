@@ -20,7 +20,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
+const steps = ['General Information', 'Education', 'Experience','Documents','Current Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -133,6 +133,10 @@ const handleCallSnackbar=(message,severity)=>{
     setOpenSnackbar(false);
   }
 
+  const handleLoaderClose=()=>{
+    setLoading(false)
+  }
+
   return (
     <Box sx={{ width: '100%' }} >
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
@@ -162,19 +166,19 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-            <GeneralInformation handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation  handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <EducationInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
+              <PreviousWorkDetails handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+              <DocumentsUpload handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
-              <CurrentWork handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+              <CurrentWork handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -220,7 +224,11 @@ const handleCallSnackbar=(message,severity)=>{
              {!loading && <Typography>Save and Continue</Typography>}
            </Button>}
               {activeStep+1===5 &&
-              <Button onClick={handleSubmit} sx={{backgroundColor:'#3B82F6', mr: 1, color:'white' }}>
+              <Button onClick={handleSubmit}  sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+              '&:hover': {
+                backgroundColor: '#1565C0', // Change this to the desired hover color
+              },
+            }}>
                 Submit
               </Button>}
               {(activeStep+1!==1 && activeStep+1!==5)&&(

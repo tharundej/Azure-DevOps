@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState ,forwardRef,useImperativeHandle,useEffec
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormGroup from '@mui/material/FormGroup';
+import { useSnackbar } from 'src/components/snackbar';
 
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -32,7 +33,7 @@ import { countries } from 'src/assets/data';
 import Label from 'src/components/label';
 
 import Iconify from 'src/components/iconify';
-import { useSnackbar } from 'src/components/snackbar';
+
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
@@ -56,6 +57,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const CurrentWork=forwardRef((props,ref)=> {
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [groupValue,setGroupValue]=useState("");
   const [groupOptions,setGroupOptions]=useState([]);
@@ -98,7 +100,7 @@ const CurrentWork=forwardRef((props,ref)=> {
 
   "employeeID":localStorage.getItem("employeeId"),
 
-  "employmentType":currentUser?.employmentType|| "Contract",
+  "employmentType":currentUser?.employmentType|| "",
 
   "locationID":currentUser?.locationID || undefined,
 
@@ -116,7 +118,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   })
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
-   "Contract","Permanent"
+   "Contract","Permanent","daily Wise"
 
 ])
 
@@ -144,7 +146,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
   });
   
 
-  const { enqueueSnackbar } = useSnackbar();
+ 
 
   const ApiHitCurrentWork=(obj)=>{
     props.handleLoader()
@@ -174,9 +176,11 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     
       console.log(JSON.stringify(response.data));
       if(response.data.code===400){
-        props.handleCallSnackbar(response.data.message,'warning')
+       // props.handleCallSnackbar(response.data.message,'warning')
+       enqueueSnackbar(response?.data?.message, { variant: 'success' })
       }
       else{
+        enqueueSnackbar(response?.data?.message, { variant: 'success' })
         router.push(paths.dashboard.employee.root);
       }
       
@@ -184,7 +188,8 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     })
     
     .catch((error) => {
-    
+      enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      props.handleLoaderClose()
       console.log(error);
     
     });

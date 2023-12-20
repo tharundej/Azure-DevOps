@@ -1,15 +1,20 @@
 import React,{forwardRef,useImperativeHandle,useState} from 'react'
 import axios from 'axios';
+import Iconify from 'src/components/iconify';
+
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'src/components/snackbar';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
 
   Select,
   MenuItem,
-  InputLabel,Stack } from '@mui/material'
+  InputLabel,Stack,IconButton } from '@mui/material'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const   DocumentsUpload=forwardRef((props,ref)=> {
+
+  const { enqueueSnackbar } = useSnackbar();
 
   var [defaultValues,setDefaultValues]=useState([ {
     fileType:'',
@@ -109,10 +114,15 @@ const VisuallyHiddenInput = styled('input')({
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' })
       props.nextStep()
+
+
     })
     .catch((error) => {
       console.log(error);
+      props.handleLoaderClose()
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
     });
   }
     var [attachments,setAttachments]=useState([]);
@@ -192,110 +202,125 @@ const VisuallyHiddenInput = styled('input')({
     //   }
   return (
     <>
-         <Grid style={{ paddingTop: '20px' }} xs={12} md={8}>
+       
             <Stack sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                // gridTemplateColumns={{
+                //   xs: 'repeat(1, 1fr)',
+                //   sm: 'repeat(2, 1fr)',
+                // }}
               >
 
                 
                    {defaultValues?.map((file,index)=>(
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                <Grid item xs={12} md={6} >
-
-               
-                <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
-                    <Select
+                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                 <Grid item xs={12} md={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                      <Select
                         label="Select Document"
                         value={file?.fileType}
-                        onChange={(e)=>{handleCategoryChange(e,index)}}
+                        onChange={(e) => {
+                          handleCategoryChange(e, index);
+                        }}
                         name="Select Document"
-                    >
-                        <MenuItem value="aadhar">Aadhaar123</MenuItem>
+                      >
+                       
+                       <MenuItem value="aadhar">Aadhaar</MenuItem>
                         <MenuItem value="pan-card">Pan Card</MenuItem>
                         <MenuItem value="pass-port">Passport</MenuItem>
-                        
+
                         {/* Add more categories here */}
-                    </Select>
+                      </Select>
                     </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                <Grid>
-
-                  <Grid item>
-                
-                  <input
-                   id={`file-upload-input-${index}`}
-                    type="file"
-                    accept=".pdf, .doc, .docx, .txt, .jpg, .png"
-                   
-                    style={{ display: 'none' }}
-                   
-                />
-                <label htmlFor= {`file-upload-input-${index}`}>
-                <Button
-                 onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
-                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                            Upload file
-                            <VisuallyHiddenInput type="file" />
-                          </Button>
-                </label>
-                <Typography variant="body2" color="textSecondary">
-                    {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
-                </Typography>
                   </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
-                  { index===0 &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
-                        
-                       
-                        
 
-                      }
-                      >Add Files</Button>
-                   
+               
+                  <Grid item xs={12} md={6}>
+                    <Grid>
+                      <Grid item>
+                        <input
+                          id={`file-upload-input-${index}`}
+                          type="file"
+                          accept=".pdf, .doc, .docx, .txt, .jpg, .png"
+                          style={{ display: 'none' }}
+                        />
+                        <Grid container alignItems="center" justifyContent="space-between">
+                          <Grid item>
+                            <label htmlFor={`file-upload-input-${index}`}>
+                              <Button
+                                 onChange={(e)=>{handleFileUpload(e,index)}}
+                                component="label"
+                                variant="contained"
+                                startIcon={<CloudUploadIcon />}
+                              >
+                                Upload file
+                                <VisuallyHiddenInput type="file" />
+                              </Button>
+                            </label>
+                            <Typography variant="body2" color="textSecondary">
+                              {file.fileName
+                                ? `Selected File: ${file.fileName}`
+                                : 'No file selected'}
+                            </Typography>
+                          </Grid>
 
-                  }
-                   { index!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index)
-                      }
-                       
-                        
-                       
-                        
+                          <Grid item>
+                            {
+                              index === 0 && (
+                                <IconButton
+                                  onClick={() => {
+                                    handleAddDocument(index);
+                                  }}
+                                  color="primary"
+                                >
+                                  <Iconify
+                                    icon="gala:add"
+                                    sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                  />{' '}
+                                  {/* Set the font size to 24px */}
+                                </IconButton>
+                              )
+                              // <Button
+                              // onClick={()=>{
+                              //   handleAddDocument(index)
+                              // }
 
-                      }
-                      >Delete</Button>
-                    
-
-                  }
+                              // }
+                              // >Add Files</Button>
+                            }
+                            {index !== 0 && (
+                              <IconButton
+                                onClick={() => {
+                                  handleDeleteDocument(index);
+                                }}
+                                color="primary"
+                              >
+                                <Iconify
+                                  icon="zondicons:minus-outline"
+                                  sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                />{' '}
+                                {/* Set the font size to 24px */}
+                              </IconButton>
+                            )}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
+                 
                   
                   
                 </Grid>
                
-                </Grid>
+               
                
                    
 
-              </Grid>
+             
                ))}
 
 
@@ -306,7 +331,7 @@ const VisuallyHiddenInput = styled('input')({
                 </Box>
 
               </Stack>
-            </Grid>
+          
 
     </>
   )

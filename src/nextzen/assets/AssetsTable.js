@@ -19,6 +19,10 @@ const AssetsTable = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -72,6 +76,7 @@ const AssetsTable = () => {
       const response = await DeleteAssetsAPI(deleteData);
       console.log('Delete success', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -136,20 +141,20 @@ const AssetsTable = () => {
   }, []);
 
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
+    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'assetsName', label: 'Assets Name', type: 'text', minWidth: '180px' },
     { id: 'assetsType', label: 'Assets Type', type: 'text', minWidth: '180px' },
     { id: 'moduleName', label: 'Model Name', type: 'text', minWidth: '180px' },
     { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
     { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
     { id: 'poValue', label: 'PO Value', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNo', label: 'Invoice No', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'Invoice_date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'startDate', label: 'Start Date', type: 'text', minWidth: '180px' },
     { id: 'warrantyDate', label: 'Warranty Date', type: 'text', minWidth: '180px' },
     { id: 'supplierName', label: 'Supplier Name', type: 'text', minWidth: '180px' },
     { id: 'supplierEmail', label: 'Supplier Email', type: 'text', minWidth: '180px' },
-    { id: 'supplierContact', label: 'Supplier Contact No', type: 'text', minWidth: '180px' },
+    { id: 'supplierContact', label: 'Supplier Contact Number', type: 'text', minWidth: '180px' },
     { id: 'expiryDate', label: 'Expiry Date', type: 'text', minWidth: '180px' },
     { id: 'lapseOfWarrantyDate', label: 'Lapse Of Warranty Date', type: 'text', minWidth: '180px' },
     { id: 'operationalDays', label: 'Operational Days', type: 'text', minWidth: '180px' },
@@ -187,7 +192,11 @@ const AssetsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateAssets currentData={editModalData} handleClose={handleClose} />
+          <CreateAssets
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -202,6 +211,7 @@ const AssetsTable = () => {
         filterName="AssetsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

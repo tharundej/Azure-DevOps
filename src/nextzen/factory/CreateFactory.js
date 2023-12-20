@@ -15,8 +15,14 @@ import { getStateAPI } from 'src/api/Accounts/Common';
 import SnackBarComponent from '../global/SnackBarComponent';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
+import { City, Country, State } from 'country-state-city';
 
-export default function CreateFactory({ currentData, handleClose, getTableData }) {
+export default function CreateFactory({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     locationName: Yup.string(),
@@ -45,9 +51,12 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       locationEmailID: currentData?.locationEmailid || '',
       locationAddressLine1: currentData?.addressLine1 || '',
       locationAddressLine2: currentData?.addressLine2 || '',
-      locationCity: currentData?.locationCity || '',
       locationPincode: currentData?.locationPincode || '',
+      locationCity: currentData?.locationCity || '',
       locationState: currentData?.locationState || '',
+      locationState: currentData?.locationState || '',
+      locationStateCode: currentData?.locationStateCode || '',
+      locationCountry: currentData?.locationCountry || '',
       status: currentData?.status || '',
     }),
     [currentData]
@@ -67,33 +76,46 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-
-  const [locationsOptions, setLocationsOptions] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState({ isoCode: 'IN', name: 'India' });
+  const [selectedState, setSelectedState] = useState({});
+  const [selectedCity, setSelectedCity] = useState({});
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const data = { companyID: user?.companyID ? user?.companyID : '' };
-      try {
-        const response = await getStateAPI(data);
-        console.log('location success', response);
-        if (response === null) {
-          handleCallSnackbar('No State Found. Please Add State', 'warning');
-        } else {
-          const stateNames = response.map((stateObj) => stateObj.state);
-          setLocationsOptions(stateNames);
-          console.log('defaultValues.locationState', defaultValues.locationState);
-          const defaultLocation = defaultValues.locationState;
-          setSelectedLocation(defaultLocation || stateNames[0]);
-        }
-      } catch (error) {
-        setErrorMessage(error.message);
-        console.log('API request failed:', error.message);
+    const mockCountries = Country.getAllCountries();
+    setCountries(mockCountries);
+  }, []);
+  useEffect(() => {
+    console.log({ selectedCountry });
+    const fetchStates = async () => {
+      if (selectedCountry) {
+        const statesList = State.getStatesOfCountry(selectedCountry.isoCode);
+        setStates(statesList);
+        const selectedState =
+          statesList.find((state) => state.name === currentData?.locationState) || statesList[0];
+        setSelectedState(selectedState);
+      } else {
+        setStates([]);
       }
     };
-
-    fetchData();
-  }, [defaultValues.locationState]);
+    fetchStates();
+  }, [selectedCountry]);
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (selectedState) {
+        const cities = City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode);
+        setCities(cities);
+        const selectedCity =
+          cities.find((city) => city.name === currentData?.locationCity) || cities[0];
+        setSelectedCity(selectedCity);
+      } else {
+        setCities([]);
+      }
+    };
+    fetchCities();
+  }, [selectedState]);
 
   const statusOptions = ['Active', 'In Active'];
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -103,8 +125,27 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    data.locationState = selectedLocation;
+    data.locationCountry = selectedCountry
+      ? {
+          isoCode: selectedCountry.isoCode,
+          name: selectedCountry.name,
+        }
+      : null;
+    data.locationState = selectedState
+      ? {
+          isoCode: selectedState.isoCode,
+          name: selectedState.name,
+        }
+      : null;
+    data.locationCity = selectedCity
+      ? {
+          isoCode: selectedCity.isoCode,
+          name: selectedCity.name,
+        }
+      : null;
     try {
+      data.locationPhone = parseInt(data.locationPhone);
+      data.locationPincode = parseInt(data.locationPincode);
       console.log('Create Factory Data', data);
       let response = '';
       if (currentData?.locationName) {
@@ -118,13 +159,13 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.locationName ? '' : getTableData();
+      currentData?.locationName ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
-        handleCallSnackbar(error.response.data.Message, 'warning');
-        console.log('request failed:', error.response.data.Message);
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
       } else {
-        handleCallSnackbar(error.Message, 'warning');
+        handleCallSnackbar(error.message, 'warning');
         console.log('API request failed:', error.message);
       }
     }
@@ -141,7 +182,9 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <ModalHeader heading={currentData?.locationName ? 'Edit Factory' : 'Add New Factory'} />
+        <ModalHeader
+          heading={currentData?.locationName ? 'Edit Factory / Branch' : 'Add New Factory / Branch'}
+        />
         <SnackBarComponent
           open={openSnackbar}
           onHandleCloseSnackbar={HandleCloseSnackbar}
@@ -159,7 +202,7 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               sm: 'repeat(2, 1fr)',
             }}
           >
-            <RHFTextField name="locationName" label="Factory / location Name" />
+            <RHFTextField name="locationName" label="Factory / Branch Name" />
             <RHFTextField
               name="locationPhone"
               label="Phone"
@@ -168,10 +211,47 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
                 e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
               }}
             />
-            <RHFTextField name="locationEmailID" label="EmailID" />
-            <RHFTextField name="locationAddressLine1" label="AddressLine1" />
-            <RHFTextField name="locationAddressLine2" label="AddressLine2" />
-            <RHFTextField name="locationCity" label="City" />
+            <RHFTextField name="locationEmailID" label="Email ID" />
+            <RHFTextField name="locationAddressLine1" label="Address Line 1" />
+            <RHFTextField name="locationAddressLine2" label="Address Line 2" />
+            <RHFAutocomplete
+              name="locationCountry"
+              options={countries || []}
+              value={
+                countries?.find((option) => option.name === currentData?.locationCountry) ||
+                selectedCountry
+              }
+              onChange={(event, newValue) => setSelectedCountry(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Country" variant="outlined" />
+              )}
+            />
+            <RHFAutocomplete
+              name="locationState"
+              options={states || []}
+              value={
+                states?.find((option) => option.name === currentData?.locationState) ||
+                selectedState
+              }
+              onChange={(event, newValue) => setSelectedState(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select State" variant="outlined" />
+              )}
+            />
+            <RHFAutocomplete
+              name="locationCity"
+              options={cities || []}
+              value={
+                cities?.find((option) => option.name === currentData?.locationCity) || selectedCity
+              }
+              onChange={(event, newValue) => setSelectedCity(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select City" variant="outlined" />
+              )}
+            />
             <RHFTextField
               name="locationPincode"
               label="Pincode"
@@ -179,17 +259,6 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               onInput={(e) => {
                 e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
               }}
-            />
-            <RHFAutocomplete
-              name="locationId"
-              id="location-autocomplete"
-              options={locationsOptions || []}
-              value={selectedLocation}
-              onChange={(event, newValue) => setSelectedLocation(newValue)}
-              getOptionLabel={(option) => option} // Adjust property based on your API response
-              renderInput={(params) => (
-                <TextField {...params} label="Select Location State" variant="outlined" />
-              )}
             />
             <RHFAutocomplete
               name="status"
@@ -202,7 +271,6 @@ export default function CreateFactory({ currentData, handleClose, getTableData }
               )}
             />
           </Box>
-
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>

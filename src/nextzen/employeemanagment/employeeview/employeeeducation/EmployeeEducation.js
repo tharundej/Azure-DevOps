@@ -11,7 +11,7 @@ import axios from 'axios';
 import { bgGradient } from 'src/theme/css';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import { useSnackbar } from 'src/components/snackbar';
 
 
 const employeeData=[ {
@@ -35,6 +35,7 @@ const employeeData=[ {
 ]
 
 const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const dottedLineStyle = {
     borderBottom: '1px dotted #000', // Adjust the color as needed
@@ -90,9 +91,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       }
      
   
-    const ApiHitDelete=()=>{
-      
-    }
+    
 
    const ApiHit=()=>{
     let data = JSON.stringify({
@@ -131,6 +130,35 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     handleCallSnackbar(msg,sev)
    }
    const color='primary'
+
+   const ApiHitDelete=(data)=>{
+   
+    const obj={
+      id:data.id
+    }
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/deleteEducationDetails`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
+      ApiHit()
+    })
+    .catch((error) => {
+      console.log(error);
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+    });
+    
+   }
    
   return (
     <>
@@ -182,7 +210,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                             </IconButton>
                             <IconButton onClick={() => {
                               const item = itm;
-                              handleAddEducation([item], "updateEducationDetails");
+                              ApiHitDelete(item);
                             }} sx={{ marginLeft: 1 }}>
                               <Iconify icon="material-symbols:delete" />
                             </IconButton>

@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Autocomplete, Grid, TextField } from '@mui/material';
+import { Autocomplete, Grid, TextField,Typography } from '@mui/material';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
 import Dialog from '@mui/material/Dialog';
 import MenuItem from '@mui/material/MenuItem';
@@ -233,8 +233,9 @@ const actions = [
         severity={severity}
         onHandleCloseSnackbar={HandleCloseSnackbar}
       />
+    
     <Dialog
-        fullWidth
+         fullWidth
         maxWidth={false}
         open={open}
         // onClose={handleClose}
@@ -244,10 +245,12 @@ const actions = [
       >
         <ModalHeader heading="Create View" />
      <DialogContent>
+   
       <Grid container marginTop="10px" spacing={2}>
-        <Grid item xs={12} md={3} lg={4} marginBottom="5px">
+        <Grid item xs={12} md={12} lg={12} marginBottom="5px">
          
           <TextField
+          fullWidth
             label="Group Name"
             id="groupname"
             value={groupname}
@@ -261,17 +264,17 @@ const actions = [
   {checkedState &&
     Object.entries(checkedState).map(([group, values], index) => (
       <Grid container direction="column" key={index}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              id={`main-heading-${group}`}
-              checked={values.mainHeading}
-              onChange={() => handleMainHeadingChange(group)}
-              style={{ color: '#001F3F', transform: 'scale(1.2)' }}
-            />
-          }
-          label={`${formatLabel(group)}`}
-        />
+       <FormControlLabel
+        control={
+          <Checkbox
+            id={`main-heading-${group}`}
+            checked={values.mainHeading}
+            onChange={() => handleMainHeadingChange(group)}
+            style={{ color: '#3b5bf6', transform: 'scale(1.2)' }}
+          />
+        }
+        label={<span style={{ fontWeight: 'bold' }}>{formatLabel(group)}</span>}
+      />
         {values.mainHeading &&
           <Grid container marginLeft='20px'>
             {Object.keys(values).map((key) =>
@@ -309,16 +312,19 @@ const actions = [
        
       }}
       >
+         </Grid>
+     
+      </DialogContent>
+      <Grid container alignItems="flex-end" justifyContent="flex-end" margin="5px">
       <Grid marginRight="15px" item>
-      <Button variant="contained"  onClick={handleModalClose} >
+      <Button variant="contained"  onClick={()=>{setGroupname("");handleModalClose()}} >
         Cancel
       </Button></Grid>
       <Grid item>
       <Button variant="contained" color="primary" onClick={handleSave}>
         Save
-      </Button></Grid>
-      </Grid>
-      </DialogContent>
+      </Button></Grid></Grid>
+     
 
       </Dialog>
     </div>

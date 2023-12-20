@@ -30,6 +30,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
   {label:"Contract",id:'2'},
+  {label:"Daily Wise",id:'3'},
 
 ]
 
@@ -235,7 +236,7 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
             maxBodyLength: Infinity,
             url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
-              'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA', 
+              'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
             },
             data : obj
@@ -1260,6 +1261,26 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
                 style={{  width: '100%' }} />}
               />
               </Grid>
+
+
+              <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="CTC"
+                    label="CTC"
+                    variant="outlined"
+                    id="CTC"
+                     value={currentUser?.ctc}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        ctc: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
+                  />
+                </Grid>
 
 
 

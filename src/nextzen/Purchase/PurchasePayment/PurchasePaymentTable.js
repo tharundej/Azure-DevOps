@@ -33,23 +33,61 @@ const PurchasePaymentTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 5,
-    page: 0,
-    search: '',
-    fcompanyID: user?.companyID ? user?.companyID : '',
-  };
+    companyID:user?.companyID,
+    "search": "",
+    "page": 1,
+    "count": 5,
+    "externalFilters": {
+        "status": "",
+        "paymentMethod": "",
+        "PoDate": {
+            "from": "",
+            "to": ""
+        },
+        "DueDate": {
+            "from": "",
+            "to": ""
+        },
+        "PaidDate": {
+            "from": "",
+            "to": ""
+        }
+    },
+    "sort": {
+        "key": 0,
+        "orderBy": ""
+    }
+}
+
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'S. No', type: 'text', minWidth: '180px' },
-    { id: 'PONumber', label: 'PO Number', type: 'text', minWidth: '180px' },
-    { id: 'PODate', label: 'PO Date', type: 'text', minWidth: '180px' },
-    { id: ' Amount', label: ' Amount', type: 'text', minWidth: '180px' },
-    { id: 'Paid Date', label: 'Paid Date', type: 'text', minWidth: '180px' },
-    { id: 'No of Installments', label: 'No of Installments', type: 'text', minWidth: '180px' },
-    { id: 'Balance Amount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
-    { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
-    { id: 'Payment Method', label: 'Payment Method', type: 'text', minWidth: '180px' },
-    { id: 'Status', label: 'Status', type: 'text', minWidth: '180px' },
+   
+    { id: 'poNumber', label: 'PO Number', type: 'text', minWidth: '180px' },
+    { id: 'poDate', label: 'PO Date', type: 'text', minWidth: '180px' },
+    
+    { id: 'invoiceNumber', label: 'Invoice Number', type: 'text', minWidth: '180px' },
+    { id: 'invoiceDate', label: 'Invoice Date', type: 'date', minWidth: '180px' },
+    { id: 'numOfInstallMents', label: 'Number of Installments', type: 'text', minWidth: '180px' },
+    { id: 'totalAmount', label: 'Amount', type: 'text', minWidth: '180px' },
+    { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },
+    { id: 'paidDate', label: 'Paid Date', type: 'text', minWidth: '180px' },
+    { id: 'paymentMethod', label: 'Payment Method', type: 'text', minWidth: '180px' },
+    { id: 'paymentStatus', label: 'Payment Status', type: 'text', minWidth: '180px' },
+   
+    { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
+   
+    
+    { id: 'dueDate', label: 'Due Date', type: 'date', minWidth: '180px' },
+   
   ]);
+
+  const onClickActions = (rowdata, event) => {
+    if (event?.name === 'Edit') {
+      
+    } else if (event?.name === 'Delete') {
+      const deleteData = { id: rowdata.id || 0, title: rowdata.materialName || '' };
+      
+    }
+  };
   return (
     <>
       <Helmet>
@@ -57,12 +95,13 @@ const PurchasePaymentTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchasePaymentDetails"
+        endpoint="/listPayments"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
         filterName="PurchasePaymentHead"
         handleEditRowParent={() => {}}
+        onClickActions={onClickActions}
       />
     </>
   );
