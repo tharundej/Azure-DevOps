@@ -153,12 +153,10 @@ const BasicTable = ({
   handleEditRowParent,
   handleOpenModal,
   SecondoryTable,
-<<<<<<< HEAD
-  componentPage,count,isShowHandle
-=======
+  isShowHandle,
   componentPage,count,
   mergingRowArray
->>>>>>> e44829ff62d0d355cd3b5893c95750707a1a1d51
+
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -214,7 +212,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
-    // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
     // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
