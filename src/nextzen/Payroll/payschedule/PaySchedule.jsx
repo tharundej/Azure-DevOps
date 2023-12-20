@@ -379,8 +379,6 @@ const [count, setCount] = useState();
   };
   console.log(valueSelected, 'valllllllllll');
   const handleAutocompleteChange = (field, value) => {
-    const newvalue=value
-    console.log(newvalue ,'field');
     console.log(field ,'field1');
     setSelectedOption(value);
     if (value) {

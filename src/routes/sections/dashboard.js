@@ -16,6 +16,7 @@ import PurchasePayment from 'src/nextzen/Purchase/PurchasePayment/PurchasePaymen
 import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
 import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
 import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
+import Settings from 'src/nextzen/settings/Settings';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -95,8 +96,8 @@ const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform
 
 // claims------------------------
 const Claims = lazy(() => import('src/nextzen/claims/Claims'));
-const CompoffApprove = lazy(() => import('src/nextzen/claims/components/CompoffApprove'));
-const MyCompoff = lazy(() => import('src/nextzen/claims/components/MyCompoff'));
+const CompoffApprove = lazy(() => import('src/nextzen/LeaveManagement/compoff/CompoffApprove'));
+const MyCompoff = lazy(() => import('src/nextzen/LeaveManagement/compoff/MyCompoff'));
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
@@ -437,6 +438,15 @@ export const dashboardRoutes = [
         children: [
           {
             element: <Balancesheet />,
+            index: true,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        children: [
+          {
+            element: <Settings />,
             index: true,
           },
         ],

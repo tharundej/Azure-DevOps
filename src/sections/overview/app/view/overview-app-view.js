@@ -31,6 +31,9 @@ import { useEffect,useState } from 'react';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import HolidayList from 'src/nextzen/usersdashboard/holiday/HolidayList';
+import LeaveRequest from 'src/nextzen/usersdashboard/leaverequest/LeaveRequest';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +41,7 @@ export default function OverviewAppView() {
   const { user } = useContext(UserContext);
   const [birthdayList,setBirthdayList]=useState([]);
   const [holidayList,setHolidayList]=useState([])
+  const [leaveRequestList,setLeaveRequestList]=useState([])
 
   const ApiHitBirthday=()=>{
     
@@ -57,12 +61,39 @@ let config = {
 axios.request(config)
 .then((response) => {
   console.log(JSON.stringify(response.data));
-  setBirthdayList(response?.data.data)
+  setBirthdayList(response?.data.data || [])
 })
 .catch((error) => {
   console.log(error);
 });
   }
+
+  const ApiHitLeaveRequest=()=>{
+    
+    let data = JSON.stringify({
+      // "companyID":JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      employeeID:JSON.parse(localStorage.getItem('userDetails'))?.employeeID
+    });
+     
+    let config = {
+      method: 'post',
+      url: `${baseUrl}/getLastLeaveRecordsOfEmployee`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setLeaveRequestList(response?.data.data || [])
+    })
+    .catch((error) => {
+      console.log(error);
+      setLeaveRequestList([])
+    });
+      }
 
   const ApiHitHolidays=()=>{
     
@@ -91,8 +122,9 @@ axios.request(config)
       }
 
   useEffect(()=>{
-    ApiHitBirthday()
+    ApiHitBirthday();
     ApiHitHolidays();
+    ApiHitLeaveRequest();
   },[])
 
   const theme = useTheme();
@@ -124,8 +156,19 @@ axios.request(config)
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <HolidayList title="UP Coming Holiday" list={holidayList} />
+          <HolidayList title="Up Coming Holiday" list={holidayList} />
         </Grid>
+
+        <Grid xs={12} md={6} lg={4}>
+          <HolidayList title="Up Coming Holiday" list={holidayList} />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={6}>
+          <LeaveRequest title="Leave Request" list={leaveRequestList} />
+        </Grid>
+
+
+
 
         {/* <Grid xs={12} md={4}>
           <AppWidgetSummary

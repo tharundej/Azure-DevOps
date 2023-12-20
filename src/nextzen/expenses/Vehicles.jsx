@@ -107,7 +107,7 @@ export default function Vehicle() {
     },
     sort: {
       orderBy: 'expenseDate',
-      order: 1,
+      order: -1,
     },
   };
 

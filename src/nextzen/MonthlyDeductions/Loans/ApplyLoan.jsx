@@ -12,9 +12,9 @@ import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {RHFTextField,RHFSelect} from 'src/components/hook-form';
 import instance  from 'src/api/BaseURL';
 import { Button } from '@mui/material';
-import { baseUrl } from '../global/BaseUrl';
-import UserContext from '../context/user/UserConext';
-import ModalHeader from '../global/modalheader/ModalHeader';
+import { baseUrl } from '../../global/BaseUrl';
+import UserContext from '../../context/user/UserConext';
+import ModalHeader from '../../global/modalheader/ModalHeader';
 export default function ApplyLoan({ handleClose,getTableData }) {
   const {user} = useContext(UserContext)
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function ApplyLoan({ handleClose,getTableData }) {
       const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
           console.log(successData)
-          enqueueSnackbar(successData?.data?.Message,{variant:'success'})
+          enqueueSnackbar(successData?.data?.message,{variant:'success'})
           getTableData()
           handleClose()
         },
@@ -91,8 +91,8 @@ export default function ApplyLoan({ handleClose,getTableData }) {
             <Grid container flexDirection="row" spacing={1}>
    <Grid item xs={12} md={6}>
                 <RHFSelect name="requestType" label="Request Type">
-                   <MenuItem value="salaryAdvanceRequest">Salary Advance Request</MenuItem>
-                   <MenuItem value="loanRequest">Loan Request</MenuItem>
+                   <MenuItem value="Salary Advance Request">Salary Advance Request</MenuItem>
+                   <MenuItem value="Loan Request">Loan Request</MenuItem>
                 </RHFSelect>
     </Grid>
                 <Grid item xs={12} md={6}>

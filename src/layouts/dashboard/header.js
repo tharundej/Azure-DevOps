@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import {Typography} from "@mui/material"
+import { Typography } from '@mui/material';
 // theme
 import { bgBlur } from 'src/theme/css';
 // hooks
@@ -30,51 +30,49 @@ import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 const headerMap = new Map();
-headerMap.set('leave','Leave Management');
-headerMap.set('employeemanagementhome','Employee Management')
-headerMap.set('timesheetmanagement','Time Sheet Management')
-headerMap.set('Shift','Shift management')
-headerMap.set('claims','Claims')
-headerMap.set('payroll','Payroll')
-headerMap.set('itdeclaration','IT Declaration')
-headerMap.set('monthlydeductions','Monthly Additions and Deductions')
-headerMap.set('appraisal','Appraisal Management')
-headerMap.set('leaveconfiguration','Leave Configuration')
-headerMap.set('appraisalconfiguration','Appraisal Configuration ')
-headerMap.set('expenseclaimconfiguration','Expense Claim Configuration ')
-headerMap.set('compoffconfiguration','Compensantory Configuration')
-headerMap.set('shiftconfiguration','Shift Configuration ')
-headerMap.set('roleconfiguration','Role Configuration ')
-headerMap.set('factory','Factory / Location')
-headerMap.set('assets','Assets')
-headerMap.set('vendor','Vendor')
-headerMap.set('vendormaterials','Vendor Materials')
-headerMap.set('products','Products')
-headerMap.set('customers','Customers')
-headerMap.set('order','Purchase Order')
-headerMap.set('payment','Purchase Payment')
-headerMap.set('invoice','Purchase Invoice')
+headerMap.set('leave', 'Leave Management');
+headerMap.set('employeemanagementhome', 'Employee Management');
+headerMap.set('timesheetmanagement', 'Time Sheet Management');
+headerMap.set('Shift', 'Shift management');
+headerMap.set('claims', 'Claims');
+headerMap.set('payroll', 'Payroll');
+headerMap.set('itdeclaration', 'IT Declaration');
+headerMap.set('monthlydeductions', 'Monthly Additions and Deductions');
+headerMap.set('appraisal', 'Appraisal Management');
+headerMap.set('leaveconfiguration', 'Leave Configuration');
+headerMap.set('appraisalconfiguration', 'Appraisal Configuration ');
+headerMap.set('expenseclaimconfiguration', 'Expense Claim Configuration ');
+headerMap.set('compoffconfiguration', 'Compensantory Configuration');
+headerMap.set('shiftconfiguration', 'Shift Configuration ');
+headerMap.set('roleconfiguration', 'Role Configuration ');
+headerMap.set('factory', 'Factory / Branch');
+headerMap.set('assets', 'Assets');
+headerMap.set('vendor', 'Vendor');
+headerMap.set('vendormaterials', 'Vendor Materials');
+headerMap.set('products', 'Products');
+headerMap.set('customers', 'Customers');
+headerMap.set('order', 'Purchase Order');
+headerMap.set('payment', 'Purchase Payment');
+headerMap.set('invoice', 'Purchase Invoice');
 
-headerMap.set('expenses','Expenses ')
-headerMap.set('balancesheet','Balancesheet')
-
-
-
+headerMap.set('expenses', 'Expenses ');
+headerMap.set('balancesheet', 'Balancesheet');
+headerMap.set('settings', 'Settings');
 
 export default function Header({ onOpenNav }) {
   function getLastWordAfterSlash(path) {
     // Split the path by '/'
     const pathParts = path.split('/');
-    
+
     // Get the last non-empty part
-    const lastPart = pathParts.filter(part => part !== '').pop();
-    console.log(lastPart,'currentPath')
-  
+    const lastPart = pathParts.filter((part) => part !== '').pop();
+    console.log(lastPart, 'currentPath');
+
     return lastPart || null; // Return the last part or null if there is none
   }
   const navigate = useLocation();
   const currentPath = location.pathname;
-  
+
   const splicedPath = getLastWordAfterSlash(currentPath);
   const theme = useTheme();
 
@@ -102,18 +100,17 @@ export default function Header({ onOpenNav }) {
 
       {/* <Searchbar /> */}
 
-     
-
       <Stack
-      flexGrow={1}
-      direction="row"
-      alignItems="center"
-      justifyContent="flex-end"
-      spacing={{ xs: 0.5, sm: 1 }}
-    >
-      <Typography style={{ color: 'black' }} component='span' variant='h5'>{headerMap.get(splicedPath)
-      }</Typography>
-    </Stack>
+        flexGrow={1}
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-end"
+        spacing={{ xs: 0.5, sm: 1 }}
+      >
+        <Typography style={{ color: 'black' }} component="span" variant="h5">
+          {headerMap.get(splicedPath)}
+        </Typography>
+      </Stack>
 
       <Stack
         flexGrow={1}
@@ -132,12 +129,6 @@ export default function Header({ onOpenNav }) {
 
         <AccountPopover />
       </Stack>
-
-      
-
-      
-
-      
     </>
   );
 

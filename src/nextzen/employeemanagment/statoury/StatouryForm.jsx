@@ -410,7 +410,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="panNumber"
                      value={currentUser?.panNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=10){
                       setCurrentUser(prev=>({
                         ...prev,
                         panNumber:e?.target.value
@@ -432,7 +432,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="passportNumber"
                      value={currentUser?.passportNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         passportNumber:e?.target.value
@@ -453,7 +453,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="pfNumber"
                      value={currentUser?.pfNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=12){
                       setCurrentUser(prev=>({
                         ...prev,
                         pfNumber: parseInt(e.target.value, 10) || ''
@@ -473,7 +473,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     id="ptNumber"
                      value={currentUser?.ptNumber}
                     onChange={(e) => {
-                      if(e?.target?.value?.length<=15){
+                      if(e?.target?.value?.length<=11){
                       setCurrentUser(prev=>({
                         ...prev,
                         ptNumber: parseInt(e.target.value, 10) || ''

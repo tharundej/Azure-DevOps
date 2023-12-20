@@ -13,6 +13,10 @@ import UserContext from '../context/user/UserConext';
 
 const ProductsTable = () => {
   const { user } = useContext(UserContext);
+  const [count, setCount] = useState(0);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const actions = [
     { name: 'Edit', icon: 'basil:edit-outline', id: 'edit', type: 'serviceCall', endpoint: '' },
     {
@@ -61,6 +65,7 @@ const ProductsTable = () => {
       const response = await DeleteProductAPI(deleteData);
       console.log('Delete success', response);
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
@@ -133,7 +138,11 @@ const ProductsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateProducts currentData={editModalData} handleClose={handleClose} />
+          <CreateProducts
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
         </Dialog>
       )}
       <Helmet>
@@ -148,6 +157,7 @@ const ProductsTable = () => {
         onClickActions={onClickActions}
         filterName="ProductsHead"
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

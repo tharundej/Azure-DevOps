@@ -25,7 +25,12 @@ import { getStateAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
 
-export default function CreateVendor({ currentData, handleClose, getTableData }) {
+export default function CreateVendor({
+  currentData,
+  handleClose,
+  getTableData,
+  handleCountChange,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     vendorCompanyName: Yup.string().required('vendor Company Name is Required'),
@@ -150,7 +155,7 @@ export default function CreateVendor({ currentData, handleClose, getTableData })
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.vendorID ? '' : getTableData();
+      currentData?.vendorID ? handleCountChange() : getTableData();
     } catch (error) {
       console.log('error', error);
       if (error.response && error.response.data && error.response.data.code === 400) {

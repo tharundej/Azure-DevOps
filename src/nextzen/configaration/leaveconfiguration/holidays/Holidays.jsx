@@ -256,18 +256,40 @@ export default function Holidays({ currentUser }) {
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
     console.log(selectedValue, 'ooooo');
     console.log(selectedOption, 'pppp');
+    const resultList = [];
+
+selectedValue.forEach((item) => {
+  if (typeof item === "object" && item !== null) {
+    const result = {
+      locationID: item.locationID,
+      locationName: item.locationName,
+    };
+    resultList.push(result);
+  }
+});
+console.log(resultList,'resultList');
+let extractedLocationIDs = resultList.map(item => item.locationID);
+let extractedLocationNames = resultList.map(item => item.locationName);
+console.log(extractedLocationIDs,'lllll')
     setFormData({
       ...formData,
       // [name]: selectedValue,
-      locationID: selectedValue?.locationID,
-      locationName: selectedValue?.locationName,
+      locationID: extractedLocationIDs,
+      locationName: extractedLocationNames,
     });
     const filed ='locationID'
     const filed2='locationName'
     setValueSelected((prevData) => ({
       ...prevData,
-      [filed]: selectedValue?.locationID,
-      [filed2]: selectedValue?.locationName,
+      locations: [
+        ...prevData.locations,
+        {
+          locationID: extractedLocationIDs[0], // Assuming extractedLocationIDs is an array
+          locationName: extractedLocationNames[0], // Assuming extractedLocationNames is an array
+        },
+      ],
+      // [locations]: [extractedLocationIDs,extractedLocationNames],
+      [filed2]: extractedLocationNames,
     }));
   };
 
@@ -275,7 +297,7 @@ export default function Holidays({ currentUser }) {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
     console.log('aaaaaaaaaa', formData);
-    data.locationID = valueSelected?.locationID;
+    data.locations = valueSelected?.locations;
     data.holidayName = valueSelected?.holidayName;
     data.repeatAnnualy = valueSelected?.repeatAnnualy;
     data.fulldayHalfday = valueSelected?.fulldayHalfday;

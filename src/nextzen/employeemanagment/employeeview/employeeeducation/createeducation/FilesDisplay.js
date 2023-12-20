@@ -29,7 +29,7 @@ const FilesDisplay = ({dataOfFiles,handleDeleteDocument}) => {
       </Grid>
 
       <Grid item>
-        <IconButton onClick={()=>{handleDeleteDocument(0,index)}}>
+        <IconButton onClick={()=>{handleDeleteDocument(0,index,category)}}>
           <Iconify icon="material-symbols:delete" />
         </IconButton>
       </Grid>

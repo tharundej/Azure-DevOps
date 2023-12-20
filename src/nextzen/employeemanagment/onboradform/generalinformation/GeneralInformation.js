@@ -113,9 +113,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     // companyID: Yup.string(),
     // companyName: Yup.string(),
   
-    firstName: Yup.string().required("First name is required"),
-    middleName: Yup.string(),
-    lastName: Yup.string().required("Last name is required"),
+    firstName: Yup.string()
+    .required('First Name is Required')
+      .matches(/^[A-Za-z ]+$/, 'First Name must contain only letters and spaces'),
+    middleName: Yup.string() .matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
+    lastName: Yup.string().required("Last name is required") .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
    
     contactNumber: Yup.number()
     .required("Contact Number is required")
@@ -127,8 +129,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     ),
     emergencyContactNumber: Yup.number().required('Emergency Contact Number'),
 
-    fatherName: Yup.string(),
-    motherName: Yup.string(),
+    fatherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Father Name must contain only letters and spaces'),
+    motherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Mother Name must contain only letters and spaces'),
     maritalStatus: Yup.object(),
     nationality: Yup.object(),
     religion: Yup.object(),
@@ -247,7 +249,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           maxBodyLength: Infinity,
           url: `${baseUrl}/onBoarding`,
           headers: { 
-         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+         'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
              
             'Content-Type': 'text/plain'
           },
@@ -669,7 +671,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
                 
                 
-                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}}  type="text" />
                 <RHFTextField name="middleName" label="Middle Name" sx={{caretColor:'#3B82F6'}}/>
                 <RHFTextField name="lastName" label="Last Name*" sx={{caretColor:'#3B82F6'}}/>
                 <RHFTextField name="companyEmail" label="Company Email" sx={{caretColor:'#3B82F6'}} />
@@ -693,7 +695,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
-                    
+                     maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Date Of Birth*"
                     
@@ -785,6 +787,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               />
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Offer Date"
                       value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
@@ -800,6 +803,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                  
                 
                     <DatePicker
+                    maxDate={new Date()}
                       sx={{ width: '100%', paddingLeft: '3px' }}
                       label="Joining Date*"
                       value={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate() : null}
