@@ -760,7 +760,7 @@ const IconOpen =()=>{
 
        
 
-          <TableContainer  component={Paper} sx={{ position: "relative", overflow: "unset", padding:'0px !important' ,  width: '100%' }}>
+          <TableContainer  component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', height:300, maxHeight:300, }}>
 
             <TableSelectedAction
 
@@ -801,14 +801,15 @@ const IconOpen =()=>{
  
 
             <Scrollbar>
-
-              <Table size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960 }} >
+            {/* <div style={{ height: '200px', overflowY: 'auto' }}> */}
+              <Table  stickyHeader={true} aria-label="sticky table" size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960,}} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom
                 // component={Paper}
-                // style={{ height: 400, width: '100%', position:"sticky"}}
-
+                // style={{ height: 400, width: '100%', position:"sticky",top: 0 }}
+                
+                
                   order={table.order}
 
                   orderBy={table.orderBy}
@@ -944,7 +945,7 @@ const IconOpen =()=>{
                     <TableNoData notFound={notFound} />
                   </TableBody>
               </Table>
-
+            {/* </div> */}
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom

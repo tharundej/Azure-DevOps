@@ -27,7 +27,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {useSnackbar} from '../../../components/snackbar'
 
-export default function GeneralForminfo({ currentUser ,getTableData }) {
+export default function GeneralForminfo({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -68,23 +68,23 @@ export default function GeneralForminfo({ currentUser ,getTableData }) {
   const token  =  (user?.accessToken)?user?.accessToken:''
   const defaultValues1 = useMemo(
     () => ({
-      payScheduleType: currentUser?.payScheduleType || '',
-      basicPayPercentage: currentUser?.basicPayPercentage || null,
-      hraPercentage: currentUser?.hraPercentage || null,
-      daPercentage: currentUser?.daPercentage || null,
-      employeePfPercentage: currentUser?.employeePfPercentage || null,
-      employerPfPercentage: currentUser?.employerPfPercentage || null,
-      ltaPercentage: currentUser?.ltaPercentage ,
-      esicPercentage: currentUser?.esicPercentage ,
-      tdsPercentage: currentUser?.tdsPercentage ,
+      payPcheduleType: currentUser?.payPcheduleType,
+      basicPayPercentage: currentUser?.basicPayPercentage,
+      hraPercentage: currentUser?.hraPercentage,
+      daPercentage: currentUser?.daPercentage,
+      employeePfPercentage: currentUser?.employeePfPercentage,
+      employerPfPercentage: currentUser?.employerPfPercentage,
+      ltaPercentage: currentUser?.ltaPercentage,
+      esicPercentage: currentUser?.esicPercentage,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
   const defaultValues2 = useMemo(
     () => ({
       // employementType: currentUser?.employementType || '',
-      payScheduleType: currentUser?.payScheduleType || '',
-      tdsPercentage: currentUser?.tdsPercentage || null,
+      payPcheduleType: currentUser?.payPcheduleType,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
@@ -286,8 +286,8 @@ export default function GeneralForminfo({ currentUser ,getTableData }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
-
+                  options={payPcheduleTypes.map((name) => name.type)}
+                 
                 />
                 <RHFTextField name="basicPayPercentage" label="Basic Pay %" />
 
@@ -359,7 +359,8 @@ export default function GeneralForminfo({ currentUser ,getTableData }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
+                  options={payPcheduleTypes.map((name) => name.type)}
+                 
                   sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
                 <RHFTextField

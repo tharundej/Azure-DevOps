@@ -183,7 +183,7 @@ export default function AmplifyNewPasswordView() {
       </LoadingButton>
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.login}
+        href={paths.auth.jwt.companyregisteration}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -192,7 +192,7 @@ export default function AmplifyNewPasswordView() {
         }}
       >
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-        Return to sign in
+        Return to sign up
       </Link>
     </Stack>
   );

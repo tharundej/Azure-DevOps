@@ -28,7 +28,7 @@ import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function WorkWeekForm({ currentUser }) {
+export default function WorkWeekForm({ currentUser ,getTableData}) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [open, setOpen] = useState(false);
@@ -111,13 +111,15 @@ export default function WorkWeekForm({ currentUser }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
-    data.locationID = formData?.Location?.locationID;
+    // data.locationID = formData?.Location?.locationID;
+    data.locationID = formData?.Location.map((name) => name.locationID);
     console.log('submitted data111', data);
     // handleClose()
     try {
       const response = await axios.post(baseUrl + '/addWorkWeek', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
+        getTableData()
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleClose();
@@ -222,7 +224,7 @@ export default function WorkWeekForm({ currentUser }) {
                 options={(DayTypes && DayTypes.length) ? DayTypes.map((DayType) => DayType.type) : []}
                 name="day"
                 label="Day"
-                multiple
+                // multiple
               />
               <RHFAutocomplete
                 options={actionTypes.map((actionType) => actionType.type)}

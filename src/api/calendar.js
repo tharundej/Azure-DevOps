@@ -40,6 +40,7 @@ export function useGetEvents() {
   return memoizedValue;
 }
 
+
 // ----------------------------------------------------------------------
 
 export async function createEvent(eventData,user) {

@@ -76,6 +76,8 @@ export default function PaySchedule({ currentUser }) {
     setOpenEdit(false);
     reset1();
   };
+const [count, setCount] = useState();
+  
 
   const handleOpenEdit = () => {
     setOpenEdit(true);
@@ -223,6 +225,9 @@ export default function PaySchedule({ currentUser }) {
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
     setValueSelected(rowdata);
+    
+   
+    {rowdata?.employementType === "Contract" ? setTextFieldVisible(false) : setTextFieldVisible(true) }
     // setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
@@ -261,7 +266,7 @@ export default function PaySchedule({ currentUser }) {
 
    
   };
-  const employeepayTypes = [{ type: "Permanent" }, { type: "Contract" }];
+  const employeepayTypes = ["Permanent" ,  "Contract" ];
   const payPcheduleTypes = [
     { type: '52-Once a week' },
     { type: '26-Once in a two weeks' },
@@ -293,7 +298,7 @@ export default function PaySchedule({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(true);
   };
-  const getOptionLabel = (employeepayType) => employeepayType?.type || 'Default Label';
+  const getOptionLabel = (employeepayType) => employeepayType ;
 
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
@@ -422,10 +427,10 @@ export default function PaySchedule({ currentUser }) {
   };
   console.log(valueSelected, 'valllllllllll');
   const handleAutocompleteChange = (field, value) => {
-    console.log(field, 'field');
+    console.log(field ,'field1');
     setSelectedOption(value);
     if (value) {
-      if (value.type === 'Permanent') {
+      if (value=== 'Permanent') {
         setTextFieldVisible(true);
         const updatedValueSelected = { ...valueSelected };
 
@@ -434,7 +439,7 @@ export default function PaySchedule({ currentUser }) {
 
         // Set the updated object as the new state
         setValueSelected(updatedValueSelected);
-      } else if (value.type === 'Contract') {
+      } else if (value === 'Contract') {
         setTextFieldVisible(false);
         const updatedValueSelected = { ...valueSelected };
 
@@ -650,9 +655,10 @@ export default function PaySchedule({ currentUser }) {
                   name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
-                   getOptionLabel={getOptionLabel}
-                  value={valueSelected?.employementType||undefined} // Use tableEDitData or an empty string
-                  onChange={handleAutocompleteChange}
+                    getOptionLabel={getOptionLabel}
+                    defaultValue={valueSelected?.employementType||""}
+                  value={valueSelected?.employementType||""} // Use tableEDitData or an empty string
+                  onChange={(e, newValue) => handleAutocompleteChange('employementType', newValue )}
                   sx={{
                     width: 330,
                     margin: 'auto',

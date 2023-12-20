@@ -7,8 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ReusableTabs from '../tabs/ReusableTabs';
-import CompoffApprove from './components/CompoffApprove';
-import MyCompoff from './components/MyCompoff';
+import CompoffApprove from '../LeaveManagement/compoff/CompoffApprove';
+import MyCompoff from '../LeaveManagement/compoff/MyCompoff';
 import MyClaims from "./components/MyClaims";
 import ApproveClaim from './components/ApproveClaim';
 import UserContext from '../context/user/UserConext';
@@ -92,16 +92,16 @@ export default function BasicCard() {
       label: 'Claim Approve',
       content: <ApproveClaim />,
     },
-    {
-      id: 'myCompoff',
-      label: 'My Compoff',
-      content: <MyCompoff />,
-    },
-    {
-      id: 'compoffApprove',
-      label: 'Compoff Approve',
-      content: <CompoffApprove />,
-    },
+    // {
+    //   id: 'myCompoff',
+    //   label: 'My Compoff',
+    //   content: <MyCompoff />,
+    // },
+    // {
+    //   id: 'compoffApprove',
+    //   label: 'Compoff Approve',
+    //   content: <CompoffApprove />,
+    // },
     // Add other data as needed
   ];
   useEffect(() => {
