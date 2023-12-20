@@ -30,6 +30,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
   {label:"Contract",id:'2'},
+  {label:"Daily Wise",id:'3'},
 
 ]
 

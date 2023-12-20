@@ -20,7 +20,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-const steps = ['General Information', 'Education Details', 'Previous Work Details','Upload Documents','Current Work Details'];
+const steps = ['General Information', 'Education', 'Experience','Documents','Current Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);

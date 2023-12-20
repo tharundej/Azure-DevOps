@@ -162,7 +162,7 @@ const AdditionsFilterSearch = ({currentUser,filterSearch,filterData}) => {
             />
             </Grid>
             <Grid md={2} xs={2} sx={{alignSelf:"center",textAlign:"center"}}>
-               <Button variant='contained'  sx={{borderRadius:"4px"}}  color='primary' onClick={handleOpen }>Add Additions</Button>
+               <Button variant='contained' size="small" color='primary' onClick={handleOpen }>Add Additions</Button>
               
                {/* onClick={buttonFunction} */}
             </Grid>

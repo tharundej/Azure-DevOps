@@ -79,8 +79,8 @@ import ShiftRoastFilter from './components/shiftmanagement/ShiftRoasterFilter';
 import MyShiftSearchFilter from './components/shiftmanagement/MyShiftSearchFilter';
 import AssignShiftSearchFilter from './components/shiftmanagement/AssignShiftSearchFilter';
 import SalarySearchFilter from '../MonthlyDeductions/SalarySearchFilter';
-import LoanSearchFilter from '../MonthlyDeductions/LoanSearchFilter';
-import DeductionFilter from '../MonthlyDeductions/DeductionFilter';
+import LoanSearchFilter from '../MonthlyDeductions/Loans/LoanSearchFilter';
+import DeductionFilter from '../MonthlyDeductions/Deductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
@@ -158,7 +158,7 @@ const BasicTable = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const [initialDefaultPayload, setInitialDefaultPayload] = useState(defaultPayload);
-  console.log(initialDefaultPayload, 'initialDefaultPayload====================');
+  console.log(initialDefaultPayload, 'initialDefaultPayload====================',defaultPayload);
   //  console.log(actions,"actions==......")
   //  console.log(onclickActions(),"onclickActions  function --->")
   const [newPage, setNewPage] = useState(initialDefaultPayload?.Page);
@@ -222,6 +222,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
       url: baseUrl + `${endpoint}`,
+      // url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`+`${endpoint}`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetailsHr`,
@@ -314,35 +316,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   const handleDeleteRow = (event) => {
     console.log(event);
-  };
-
-  const approveLeave = (rowdata, event) => {
-    var payload = {
-      leave_id: rowdata?.leaveId,
-      emp_id: rowdata?.employeeId,
-      status: event?.id,
-      leave_type_id: rowdata?.leaveTypeId,
-      duration: rowdata?.requestedDuration,
-    };
-    console.log(payload, 'requestedddbodyyy');
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      // url: baseUrl + `approveLeave`,
-      url: `https://27gq5020-5001.inc1.devtunnels.ms/erp/approveLeave`,
-      data: payload,
-    };
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response, 'responsedata', response.data);
-        enqueueSnackbar(response.data.message, { variant: 'success' });
-        getTableData();
-      })
-      .catch((error) => {
-        enqueueSnackbar(error.message, { variant: 'Error' });
-        console.log(error);
-      });
   };
 
   const handleEditRow = (rowData, eventData) => {
@@ -467,29 +440,32 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   };
 
   const getRowActionsBasedOnStatus = (row) => {
+    let rowValues = null;
+  
     if (
-      row?.status === 'pending' ||
-      row?.status === '' ||
-      row?.status === 'Pending' ||
-      row?.status === 'Active' ||
-      row?.status === 'InActive' ||
-      row?.status === 'active' ||
-      row?.status === 'Upcoming' ||
-      row?.status === 'Ongoing' ||
-      row?.status === 'On Hold'  || "OnHold" 
+      [
+        'pending',
+        'Pending',
+        'Active',
+        'InActive',
+        'active',
+        'Upcoming',
+        'Ongoing',
+        'On Hold',
+        'OnHold','','rejected','Rejected'
+      ].includes(row?.status)
     ) {
-      return rowActions;
-    } else if (!row?.status || row?.status === undefined) {
-      return rowActions;
-    } 
-    else if (row?.status === 'Completed') {
-      return [rowActions.find(action => action.name === 'View')];
+      rowValues = rowActions;
+    } else if (!row?.status || row?.status === 'undefined') {
+      rowValues = rowActions;
+    } else if (row?.status === 'Completed') {
+      rowValues = [rowActions.find((action) => action.name === 'View')];
+    } else if (row?.status === 'Approved' || row?.status.toLowerCase() === 'approved') {
+      rowValues = null;
     }
-    else {
-      return null;
-    }
+  
+    return rowValues;
   };
-
   // table expanded
 const [expandedRowId, setExpandedRowId] = useState(null);
 const [expandedLoanRow, setExpandedLoanRow] = useState(null);
@@ -497,16 +473,35 @@ const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
-
-const handleLoanExpand=(rowID,rowIndex)=>{
-  console.log(rowID,"rowww",rowIndex)
+const [loanDetails,setloanDetails] = useState()
+const handleLoanExpand=(rowID,rowloanID,rowIndex)=>{
+  const loanPayload ={
+    employeeID:rowID,
+    loanID:rowloanID
+  }
+  const config={
+    method: 'POST',
+    maxBodyLength: Infinity,
+    url:baseUrl+`/getLoanDetails`,
+    // url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetails`,
+    data: loanPayload,
+  }
+  axios
+      .request(config)
+      .then((response) => {
+        console.log(response, 'responsedata', response.data);
+        setloanDetails(response?.data?.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
 }
 
 const [index, setIndex]=useState(""); // index setting
-const [loanIndex,setLoanIndex]=useState("");
+
 {console.log(index,"indexindex",expandedRowId)}
-{console.log(loanIndex,"Loan Index",expandedLoanRow)}
   return (
     <>
       {loading ? (
@@ -863,6 +858,7 @@ const [loanIndex,setLoanIndex]=useState("");
                          
                             key={row.id}
                             row={row}
+                            rowActions={getRowActionsBasedOnStatus(row)}
                             // onHandleEditRow={(id) => 
                             //   {
                             //     if(handleEditRowParent)
@@ -885,8 +881,8 @@ const [loanIndex,setLoanIndex]=useState("");
                                 // console.log(row, "iddd");
                               }
                               else if (clickedElementId==="employeeID"){
-                                setLoanIndex(index)
-                                handleLoanExpand(row.employeeID,index)
+                              
+                                handleLoanExpand(row.employeeID,row?.loanID,index)
                               }
                             }}
                             selected={table.selected.includes(row.id)}
@@ -896,8 +892,7 @@ const [loanIndex,setLoanIndex]=useState("");
                               handleEditRow(row, event);
                             }}
                             headerContent={TABLE_HEAD}
-                            rowActions={getRowActionsBasedOnStatus(row)}
-                            SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
+                             SecondoryTable={(event)=>{SecondoryTable(row,event  )}}
                           />
 
 {expandedRowId === index && (
@@ -946,13 +941,30 @@ const [loanIndex,setLoanIndex]=useState("");
                       </TableCell>
                     </TableRow>
                   )}
-   {expandedLoanRow == loanIndex && (
+   {expandedLoanRow == index && (
+    
                     <TableRow>
-                      <TableCell colSpan={TABLE_HEAD.length + 1}>
-                     
-                          <Typography>Loan {row?.loanID}</Typography>
-                    
-                      </TableCell>
+                     {loanDetails && <TableCell colSpan={TABLE_HEAD.length + 1}>
+                         <Typography variant="body2">Loan ID : {loanDetails?.loanID}</Typography>
+                          <Typography variant="body2">Total No of Installments : {loanDetails?.totalNumberOfInstallments}</Typography>
+                          <Typography variant="body2">Installments Paid : {loanDetails?.totalNumberOfInstallments - loanDetails?.balanceInstallments}</Typography>
+                          <Typography variant="body2">Installment Balance : {loanDetails?.balanceInstallments}</Typography>
+                          {loanDetails?.InstallmentDetails?.length>0 &&<Typography variant="subtitle2">Installment Details</Typography>}
+                          <Card sx={{ maxWidth: '1200px' }}>
+                            <CardContent>
+                              <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                {loanDetails?.InstallmentDetails?.map((item, index) => (
+                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
+                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
+                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
+                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
+                                  </Grid>
+                                ))}
+                              </Grid>
+                            </CardContent>
+                          </Card>
+
+                      </TableCell>}
                     </TableRow>
                   )}
                         </>

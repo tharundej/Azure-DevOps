@@ -1,8 +1,8 @@
 import { height } from '@mui/system';
 import * as React from 'react';
 import ReusableTabs from '../tabs/ReusableTabs';
-import Deduction from './Deduction';
-import Loans from './loans';
+import Deduction from './Deductions/Deduction';
+import Loans from './Loans/loans';
 import SalaryAdvace from './SalaryAdvace';
 import Requests from './Requests';
 import UserContext from '../context/user/UserConext';
