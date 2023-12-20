@@ -128,11 +128,8 @@ import TaxSectionFilter from '../configaration/taxSectionConfiguration/TaxSectio
 import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRoleFilter';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-<<<<<<< HEAD
-import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
-=======
 import SettingsHead from '../settings/SettingsHeader';
->>>>>>> 96e77296809695706349bd57a343481232810616
+import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 
 const defaultFilters = {
   name: '',
@@ -211,7 +208,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     // if(actionType === 'pageChange'){
     //   initialDefaultPayloadCopy.Page = data;
     // }
-    const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+    // const baseUrl = 'https://vshhg43l-3001.inc1.devtunnels.ms/erp'
     // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA"
     const config = {
       method: 'POST',
@@ -233,11 +230,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-<<<<<<< HEAD
         token
-=======
-        JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
->>>>>>> 96e77296809695706349bd57a343481232810616
       },
       data: initialDefaultPayload,
     };
