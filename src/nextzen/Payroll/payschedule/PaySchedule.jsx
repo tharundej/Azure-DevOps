@@ -56,7 +56,7 @@ const bull = (
 
 export default function PaySchedule({ currentUser }) {
   const {enqueueSnackbar} = useSnackbar()
-  const [count ,setCount] =useState(0)
+ 
   // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
     const {user} = useContext(UserContext)
