@@ -210,10 +210,11 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                       (row[ele?.id]?.toLowerCase() === 'completed' && 'success') ||
                       (row[ele?.id]?.toLowerCase() === 'upcoming' && 'warning') ||
                       (row[ele?.id]?.toLowerCase() === 'ongoing' && 'secondary') ||
+                    
                       'default'
                     }
                   >
-                    {row[ele?.id] ? row[ele?.id].toString():"False"}
+                    {row[ele?.id] ? row[ele?.id].toString():(row[ele?.id] === null) ? " Not Submitted":"False"}
                    
                   </Label>
                 )}

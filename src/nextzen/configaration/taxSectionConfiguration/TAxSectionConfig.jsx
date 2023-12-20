@@ -45,10 +45,6 @@ const {enqueueSnackbar} = useSnackbar()
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
 
-    // State for Snackbar
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isReload ,setIsReload] = useState(false)
   const TABLE_HEAD = [
   
@@ -183,7 +179,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     const payload = {
       configId:data.configId
      }
-
+// const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -205,7 +201,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
         }else   if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
+          enqueueSnackbar(response.data.message,{variant:'error'})
           
          console.log('success',response);
        }

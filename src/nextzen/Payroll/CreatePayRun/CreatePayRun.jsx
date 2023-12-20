@@ -188,7 +188,7 @@ const isShowHandle=()=>{
           primary={cardData && cardData[0]?.payrollcost}
           secondary="Payroll Cost"
           primaryTypographyProps={{
-            typography: 'subtitle2',
+            typography: 'subtitle6',
             component: 'span',
             sx: { textAlign: 'center' },
           }}

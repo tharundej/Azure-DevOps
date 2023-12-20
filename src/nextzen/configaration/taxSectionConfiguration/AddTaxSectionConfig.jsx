@@ -55,7 +55,7 @@ export default function AddTaxSectionConfig({
     due_date: dayjs(new Date()),
     // activity_name:[]
   });
-const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+// const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 const [valueSelected, setValueSelected] = useState();
   const empId = localStorage.getItem('employeeID');
   const cmpId = localStorage.getItem('companyID');
@@ -136,7 +136,7 @@ const [valueSelected, setValueSelected] = useState();
         taxLimit:formData?.taxLimit,
        attachmentsRequired:valueSelected?.attachmentsRequired
     }
-
+// const baseUrl  ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     const config = {
       method: 'post',
       maxBodyLength: Infinity,

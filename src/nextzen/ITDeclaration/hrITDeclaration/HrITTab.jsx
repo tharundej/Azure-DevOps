@@ -122,7 +122,7 @@ const [loading,setLoading] = useState(false);
   const [LicrMessage, setLicrMessage] = useState('');
   const [medicalMessage, setMedicalMessage] = useState('');
  const [houseMessage, setHouseMessage] = useState('');
-
+ const [count,setCount] = useState(0)
  const [message ,setMessage] = useState({
   "declaationrMessage":"",
 "rentMessage":'',
@@ -181,8 +181,9 @@ const [loading,setLoading] = useState(false);
     companyID: cmpId,
     financialYear: selectedYear?.financialYear,
     externalFilters: {
-      fPDesignationName: '',
-      fDepartmentName: '',
+      fPDesignationID: '',
+      fPdepartmentID: '',
+      fPDesignationGradeID:""
     },
   };
   const handleSelectChange = (field, value, e) => {
@@ -203,7 +204,7 @@ const [loading,setLoading] = useState(false);
 
   const getEmpItDetails = async () => {
     const payload = {
-      employeeId: empId,
+      employeeId: valueSelected?.employeeID,
 
       companyId: cmpId,
 
@@ -392,7 +393,8 @@ useEffect(()=>{
             console.log(response?.data ,"response")
             enqueueSnackbar(response.data.message,{variant:'success'})
             setLoading(false)
-        
+            handleCloseEdit();
+            setCount(count+1)
           }else    if (response?.data.code === 400) {
             enqueueSnackbar(response.data.message,{variant:'error'})
             setLoading(false)
@@ -708,6 +710,7 @@ useEffect(()=>{
         rowActions={actions}
         onClickActions={onClickActions}
         filterName="HrTabFilter"
+        count={count}
       />)}
     </>
   );
