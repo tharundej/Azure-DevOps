@@ -34,6 +34,7 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
+import axios from 'axios';
 const defaultFilters = {
   colors: [],
   from_date: null,
@@ -137,8 +138,13 @@ useEffect(()=>{
     type:"holiday"
    }))
 :[]
-
+console.log(listOfHolidays,"listOfHolidays")
    const overallEvents = [...updatedEvents,...HolidayEvents]
+   const eventDataMe1=[
+    {
+
+    }
+   ]
 
    const eventDataMe= [
    {  "title": "9 Hours", "start": "2023-12-07", "end": "2023-12-07", "type": "holiday" },
@@ -160,6 +166,34 @@ useEffect(()=>{
 }
   
    ]
+
+ const getApiCall =  {
+    employeeId: "GANG22",
+    companyId:"comp22",
+    DateOfActivity:{
+        from:"2023-12-01",
+         to: "2023-12-31"
+    }
+}
+// console.log(getApiCall,"getApiCall")
+const [eventGetData,setEventGetData]= useState();
+const calendarGetData = async (getApiCall) => {
+  console.log("hello in function",getApiCall)
+  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
+    (response) => {
+      console.log('sucess data in api Calendar', response?.data?.data);
+      setClaimTypeOptions(response?.data?.data)
+    },
+    (error) => {
+      console.log('lllll', error);
+    }
+  );
+}
+
+useEffect(()=>{
+  calendarGetData(getApiCall)
+  console.log("hello useeffect")
+},[])
     
   const renderResults = (
     <CalendarFiltersResult
@@ -320,7 +354,7 @@ const onDayData = () => {
               initialDate={date}
               initialView={view}
               eventDisplay="block"
-              selectAllow={selectAllowCallback}
+              // selectAllow={selectAllowCallback}
               // events={overallEvents}
               events={eventDataMe}
               // eventContent={renderEventContent}

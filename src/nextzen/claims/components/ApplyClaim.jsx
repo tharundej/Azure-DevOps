@@ -69,6 +69,12 @@ export default function ApplyClaim({currentUser,handleCloseAddEdit}) {
     expenseConfigId: Yup.number(),
     currency: Yup.string(),
   });
+  const [selectedDate, setSelectedDate] = useState({
+    expenseStartDate: null,
+    expenseEndDate: null,
+    error: ""
+
+  });
 
   const defaultValues = useMemo(
     () => ({
@@ -79,8 +85,8 @@ export default function ApplyClaim({currentUser,handleCloseAddEdit}) {
       companyId: currentUser?.companyId || companyID,
       employeeId: currentUser?.employeeId || employeeID,
       expenseConfigId: currentUser?.expenseConfigId || 1,
-      expenseStartDate: currentUser?.expenseStartDate || null,
-      expenseEndDate: currentUser?.expenseEndDate || null,
+      expenseStartDate: currentUser?.expenseStartDate || selectedDate?.expenseStartDate || null,
+      expenseEndDate: currentUser?.expenseEndDate ||  selectedDate?.expenseEndDate|| null,
       // file_format: currentUser?.file_format || "pdf",
       file: currentUser?.file,
 
@@ -136,16 +142,11 @@ export default function ApplyClaim({currentUser,handleCloseAddEdit}) {
     return `${yyyy}-${mm}-${dd}`;
   };
   
-  const [selectedDate, setSelectedDate] = useState({
-    expenseStartDate: null,
-    expenseEndDate: null,
-    error: ""
-
-  });
+  
   const [editData, setEditData] = useState({
 
   })
-  console.log(editData,"editadata")
+  console.log(editData,"editadata",defaultValues)
   const handleDateChange = (newValue, dateFieldName) => {
     const selectedDateValue = dayjs(newValue).format("YYYY-MM-DD");
     const currentDate = dayjs().format("YYYY-MM-DD");
@@ -201,7 +202,7 @@ export default function ApplyClaim({currentUser,handleCloseAddEdit}) {
     setFile(selectedFile);
     console.log(e, "event1")
   };
-console.log(claimTypeOptions,"claimTypeOptions")
+// console.log(claimTypeOptions,"claimTypeOptions")
 
 useEffect(() => {
   getCurrentDate()
@@ -249,7 +250,7 @@ function getCurrentDate() {
               }}
             >
               {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-              <Autocomplete
+              <RHFAutocomplete
                 name="claimType"
                 label="Claim Type"
                 options={claimTypeOptions}
@@ -282,6 +283,7 @@ function getCurrentDate() {
                   {/* <DemoContainer  sx={{paddingTop:0}} components={['DatePicker']}> */}
                   <DatePicker
                     readOnly
+                   
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Claim Date"
                   //   value={dayjs(editData['claimDate'] || null)}
@@ -296,11 +298,12 @@ function getCurrentDate() {
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
+                   name="expenseStartDate"
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Expense Start Date"
                     value={dayjs(editData['expenseStartDate'] || null)}
                     onChange={(newValue) => {
-                      handleEditChange('expenseStartDate', formatDateToYYYYMMDD(newValue));
+                      handleDateChange('expenseStartDate', formatDateToYYYYMMDD(newValue));
                     }}
                   />
                 </LocalizationProvider>
@@ -308,11 +311,12 @@ function getCurrentDate() {
               <Grid sx={{ alignSelf: "flex-start" }}  >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>               
                   <DatePicker
+                  name="expenseEndDate"
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Expense End Date"
                     value={dayjs(editData['expenseEndDate'] || null)}
                     onChange={(newValue) => {
-                      handleEditChange('expenseEndDate', formatDateToYYYYMMDD(newValue));
+                      handleDateChange('expenseEndDate', formatDateToYYYYMMDD(newValue));
                     }}
                   />  
                 </LocalizationProvider>

@@ -577,8 +577,8 @@ export default function MyClaims({ currentUser, }) {
         }}
       >
        <ApplyClaim handleCloseAddEdit={handleCloseAddEdit} />
-      </Dialog> */}
-      
+      </Dialog>
+       */}
       <Dialog
         fullWidth
         maxWidth={false}

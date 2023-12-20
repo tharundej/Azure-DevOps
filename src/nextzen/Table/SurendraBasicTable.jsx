@@ -760,7 +760,7 @@ const IconOpen =()=>{
 
        
 
-          <TableContainer  component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%',minHeight:100, height:300,  }}>
+          <TableContainer  component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', height:300, maxHeight:300, }}>
 
             <TableSelectedAction
 
@@ -802,7 +802,7 @@ const IconOpen =()=>{
 
             <Scrollbar>
             {/* <div style={{ height: '200px', overflowY: 'auto' }}> */}
-              <Table  stickyHeader={true} aria-label="sticky table" size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960,  }} >
+              <Table  stickyHeader={true} aria-label="sticky table" size={table.dense ? 'medium' : 'small'} sx={{ minWidth: 960,}} >
 
                 {TABLE_HEAD && 
                 <TableHeadCustom

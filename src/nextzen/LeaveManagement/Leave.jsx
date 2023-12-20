@@ -36,6 +36,16 @@ export default function BasicCard() {
       label: 'Leave Overview',
       content: <LeaveRequest key="leaveCalendar" />,
     },
+    {
+      id: 'myCompoff',
+      label: 'MY Compoff',
+      content: <MyCompoff key="leaveCalendar" />,
+    },
+    {
+      id: 'myCompoff',
+      label: 'My Compoff',
+      content: <CompoffApprove key="leaveCalendar" />,
+    },
   ];
 
   useEffect(() => {
@@ -55,8 +65,8 @@ export default function BasicCard() {
         arrContents.push(item.content);
       }
     });
-    arrLabels.push("My Compoff","Approve Compoff");
-    arrContents.push(<MyCompoff/>,<CompoffApprove/>);
+    // arrLabels.push("My Compoff","Approve Compoff");
+    // arrContents.push(<MyCompoff/>,<CompoffApprove/>);
     setTabLabels(arrLabels);
 
     setTabContents(arrContents);
