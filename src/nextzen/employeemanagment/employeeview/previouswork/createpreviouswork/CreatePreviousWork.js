@@ -70,7 +70,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${baseUrl}/deleteEduAndWorkDoc`,
+      url: `${baseUrl}/deleteWorkDoc`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -350,7 +350,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
           ... newArray[index].documents[index1],
           fileType: value
         };
-        console.log(index)
+        console.log(newArray,'newArraynewArray')
         
         setDefaultValues(newArray);
       };
