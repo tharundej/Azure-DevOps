@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import GeneralForminfo from './GeneralForminfo';
 
-export default function PayScheduleform() {
+export default function PayScheduleform({getTableData}) {
   
     return (
       <Grid>
-        <GeneralForminfo  currentUser={{}} />
+        <GeneralForminfo  getTableData ={getTableData}currentUser={{}} />
       </Grid>
     );
   }

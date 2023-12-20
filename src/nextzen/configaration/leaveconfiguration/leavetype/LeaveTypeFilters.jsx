@@ -316,7 +316,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           />
         </Grid>
         <Grid item md={2} xs={2}>
-          <LeaveTypeForm getTableData={getTableData()}/>
+          <LeaveTypeForm getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2}>
           <Grid>

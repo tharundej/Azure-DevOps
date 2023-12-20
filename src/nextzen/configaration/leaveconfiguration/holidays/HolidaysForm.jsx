@@ -118,7 +118,7 @@ export default function HolidaysForm({ currentUser, getTableData }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    data.locationID = formData?.Location?.locationID;
+    data.locationID = formData?.Location.map((name) => name.locationID);
     console.log('submitted data111', data);
 
     try {
@@ -243,6 +243,7 @@ export default function HolidaysForm({ currentUser, getTableData }) {
                 options={RepeatsAnuallys.map((RepeatsAnually) => RepeatsAnually.type)}
               />
               <Autocomplete
+              multiple
                 disablePortal
                 name="Location"
                 id="combo-box-demo"
