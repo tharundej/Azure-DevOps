@@ -22,7 +22,7 @@ COPY package-lock.json ./
 
 COPY . .
 
-RUN pnpm install -g pnpm
+RUN npm install
 
 ENV TZ Asia/India
 
@@ -36,4 +36,4 @@ COPY . .
 
 # start app
 
-CMD ["pnpm" , "start"]
+CMD ["npm" , "start"]
