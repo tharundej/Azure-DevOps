@@ -243,7 +243,7 @@ const CreateEducation = ({
     //   const reader = new FileReader();
     //   reader.onload = function (e) {
     //     const base64String = e.target.result;
-    //     console.log('Base64 string:', base64String);
+    //     console.log('Base64 string:', base64String); 
     //     setAttachmentString(base64String)
     //     const newObj = defaultValues;
     //     newObj[index][name] = base64String;
@@ -329,7 +329,7 @@ const CreateEducation = ({
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${baseUrl}/deleteEduAndWorkDoc`,
+      url: `${baseUrl}/deleteEduDoc`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
