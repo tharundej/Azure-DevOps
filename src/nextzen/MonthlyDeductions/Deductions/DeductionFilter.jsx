@@ -16,15 +16,16 @@ import { Today } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
-import { baseUrl } from '../global/BaseUrl';
+import { baseUrl } from '../../global/BaseUrl';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFAutocomplete,RHFSelect,RHFTextField } from 'src/components/hook-form';
-import {useSnackbar} from '../../../src/components/snackbar' 
+import {useSnackbar} from '../../../components/snackbar' 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useContext } from 'react';
-import UserContext from '../context/user/UserConext';
+import UserContext from '../../context/user/UserConext';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import ModalHeader from '../global/modalheader/ModalHeader';
+import ModalHeader from '../../global/modalheader/ModalHeader';
+import DeductionAddEdit from './DeductionAddEdit';
 const defaultFilters = {
   name: '',
   type: [],
@@ -279,7 +280,7 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
  }}
  className="custom-dialog"  
 >
-  <ModalHeader heading="Add Deduction"/>
+  {/* <ModalHeader heading="Add Deduction"/>
 <FormProvider methods={methods} onSubmit={onSubmit}>
 <DialogContent>
   <Grid container>
@@ -310,7 +311,9 @@ export default function DeductionFilter({filterSearch,filterData,componentPage,g
 <Button variant="contained" color="primary" sx={{float:"right",right:5,marginTop:2,color:"white"}} type="submit">Add Deduction</Button>
 <Button sx={{float:"right",right:10,marginTop:2}} variant="outlined" onClick={handleDeductionCancel}>Cancel</Button>
 </DialogContent>
-</FormProvider>
+</FormProvider> */}
+
+<DeductionAddEdit EditData={{}} handleClose={handleClose}/>
       </Dialog>
     )}
 

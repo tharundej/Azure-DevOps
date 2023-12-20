@@ -41,14 +41,12 @@ import { useState } from 'react';
 import { Alert as MuiAlert } from '@mui/material';
 // ----------------------------------------------------------------------
 
-export default function VerifyOtp({ onHandleNextIncrement }) {
+export default function VerifyOtp({ onHandleNextIncrement , handleStep }) {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
-  const searchParams = useSearchParams();
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
-  const email = searchParams.get('email');
 
   const { confirmRegister, resendCodeRegister } = useAuthContext();
 
@@ -79,15 +77,27 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
   } = methods;
 
   const values = watch();
-
-  const onSubmit = handleSubmit(async (data) => {
-    setIsSubmittingLoad(false);
-    try {
-      const email = localStorage.getItem('email');
+  const handleBackToRegister = () => {
+    handleStep(0)(); // Call the handleStep function to navigate back to the first step
+  };
+  const email = localStorage.getItem('email');
       const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
 
       // Check if email is null, then use emailWhileUpdate
       const selectedEmail = email !== null ? email : emailWhileUpdate;
+      const maskEmail = (email) => {
+        const [username, domain] = email.split('@');
+        const maskedUsername = username.substr(0, Math.min(username.length, 3)) + '...'; // Masking part of the username
+        const maskedDomain = '...' + domain.substr(Math.max(0, domain.length - 6)); // Masking part of the domain
+        return maskedUsername + '@' + maskedDomain;
+      };
+      
+      // Displaying masked email in the UI
+      const maskedEmail = selectedEmail ? maskEmail(selectedEmail) : '';
+  const onSubmit = handleSubmit(async (data) => {
+    setIsSubmittingLoad(false);
+    try {
+      
       const payload = {
         email: selectedEmail,
         otp: data.code,
@@ -127,6 +137,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
   const handleResendCode = useCallback(async () => {
     try {
       startCountdown();
+      
       const email = localStorage.getItem('email');
       const emailWhileUpdate = localStorage.getItem('emailWhileUpdate');
 
@@ -202,8 +213,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
       </Typography>
 
       <Link
-        component={RouterLink}
-        href={paths.auth.jwt.login}
+        onClick={handleBackToRegister}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -212,7 +222,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
         }}
       >
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-        Return to sign in
+        Return to sign up
       </Link>
     </Stack>
   );
@@ -229,7 +239,7 @@ export default function VerifyOtp({ onHandleNextIncrement }) {
 
       <Stack spacing={1} sx={{ my: 5 }}>
         <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-          <Typography variant="h3">Please check your email!</Typography>
+          <Typography variant="h3">Please check your {maskedEmail}!</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Please enter the OTP to Verify and Create your Password.

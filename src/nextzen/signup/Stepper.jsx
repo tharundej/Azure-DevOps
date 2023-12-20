@@ -165,10 +165,10 @@ const handleCallSnackbar=(message,severity)=>{
               <JwtRegisterView style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} onHandleNextIncrement={handleNextIncrement} currentUser={{}} ref={childref} handleNext={handleNext} />
             )}
             {activeStep + 1 === 2 && (
-              <VerifyOtp style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} onHandleNextIncrement={handleNextIncrement} ref={childref} handleNext={handleNext}/>
+              <VerifyOtp style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} onHandleNextIncrement={handleNextIncrement} ref={childref} handleNext={handleNext} handleStep={handleStep }/>
             )}
             {activeStep + 1 === 3 && (
-              <AmplifyNewPasswordView style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  onHandleNextIncrement={handleNextIncrement} ref={childref} handleNext={handleNext}/>
+              <AmplifyNewPasswordView style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  onHandleNextIncrement={handleNextIncrement} ref={childref} handleNext={handleNext} handleStep ={handleStep }/>
             )}
              {/* {activeStep + 1 === 4 && (
               <DocumentsUpload style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>

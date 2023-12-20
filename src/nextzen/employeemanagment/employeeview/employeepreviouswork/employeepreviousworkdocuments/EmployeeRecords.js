@@ -81,7 +81,7 @@ const EmployeeRecords = ({docsData,docType,endpoint,employeeIDForApis,callApi}) 
         let config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: `${baseUrl}/deleteEduAndWorkDoc`,
+          url: `${baseUrl}/deleteEduDoc`,
           headers: { 
             'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
             'Content-Type': 'application/json'

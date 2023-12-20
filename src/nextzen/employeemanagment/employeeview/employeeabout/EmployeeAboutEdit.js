@@ -37,6 +37,7 @@ const employmentTypeOptions=[
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitDesgniationGrade,ApiHitLocations,ApiHitManager,ApiHitRoles,} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import Checkbox from '@mui/material/Checkbox';
 
 
 const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
@@ -122,8 +123,9 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
         rAddressLine2: Yup.string(),
         rCity: Yup.string(),
         rState: Yup.string(),
-        rPincode: Yup.number()
-
+        rPincode: Yup.number(),
+        salaryStructure:Yup.string(),
+        ctc:Yup.number(),
     
       });
     
@@ -157,14 +159,15 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
             rAddressLine2: currentUser?.rAddressLine2||'',
             rCity: currentUser?.rCity||'',
             rState: currentUser?.rState||'',
-            rPincode: currentUser?.rPincode||''
-           
+            rPincode: currentUser?.rPincode||'',
+            salaryStructure: currentUser?.salaryStructure||'false',
+            ctc: currentUser?.ctc|| 0,
     
     
         }),
         [currentUser]
       );
-
+console.log(currentUser,"jjjjjjjjjj")
       const [defaultValues,setDefaultvalues]=useState({})
 
       useEffect(()=>{
@@ -234,7 +237,8 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
           const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: `${baseUrl}/updateOnboardingForm`,
+            // url: `${baseUrl}/updateOnboardingForm`,
+            url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateOnboardingForm",
             headers: { 
               'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
@@ -258,6 +262,12 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
         }
       });
 
+      // checkbox codde for CTC 
+      const [isTextFieldVisible, setTextFieldVisible] = useState(false);
+
+      const handleCheckboxChange = () => {
+        setTextFieldVisible(!isTextFieldVisible);
+      };
       
   return (
     <>
@@ -1296,7 +1306,40 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
              {/* </Grid> */}
 
              
+             <div>
+      <label>
+        <Checkbox 
+        checked={currentUser?.salaryStructure}
+        onChange={(e) => {
+                      
+          setcurrentUser(prev=>({
+            ...prev,
+            salaryStructure:e?.target.checked
+          }))
+        }}
+        />
+         Follow the salary structure 
+      </label>
 
+      <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                
+                    name="ctc"
+                    label="Enter CTC"
+                    variant="outlined"
+                    id="ctc"
+                    value={currentUser?.ctc}
+                    onChange={(e) => {
+                      
+                      setcurrentUser(prev=>({
+                        ...prev,
+                       ctc: parseInt(e.target.value, 10)
+                      }))
+                    }}
+                  />
+                  </Grid>
+    </div>
                 
             
            
