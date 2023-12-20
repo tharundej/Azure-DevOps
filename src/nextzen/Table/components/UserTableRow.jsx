@@ -188,7 +188,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                  
                  <ListItemText
 
-                   primary={(row[ele.id] === true)?(<span   style={{fontSize: 30,
+                   primary={(row[ele.id] === true || row[ele.id] === 1 )?(<span   style={{fontSize: 30,
                    }}> <Iconify icon="teenyicons:tick-small-outline" color="green" /></span>) : <Iconify icon="basil:cross-outline" color="red" />
                    
                   }
@@ -231,10 +231,11 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                       (row[ele?.id]?.toLowerCase() === 'completed' && 'success') ||
                       (row[ele?.id]?.toLowerCase() === 'upcoming' && 'warning') ||
                       (row[ele?.id]?.toLowerCase() === 'ongoing' && 'secondary') ||
+                    
                       'default'
                     }
                   >
-                    {row[ele?.id] ? row[ele?.id].toString():"False"}
+                    {row[ele?.id] ? row[ele?.id].toString():(row[ele?.id] === null) ? " Not Submitted":"False"}
                    
                   </Label>
                 )}

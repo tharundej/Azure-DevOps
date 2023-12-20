@@ -223,19 +223,19 @@ const [hitGetDepartment , setHitGetDepartment] = useState(false)
          if (response.data.code === 200) {
           enqueueSnackbar(response?.data?.message,{variant:'success'})
           getTableData()
+          handleClose()
            setHitGetDepartment(!hitGetDepartment)
            console.log("success")
          }else  if (response.data.code === 400) {
-          enqueueSnackbar(error.response.data.message,{variant:'error'})
-        ;
+          enqueueSnackbar(response.data.message,{variant:'error'}) ;
           setHitGetDepartment(!hitGetDepartment)
           console.log("success")
-          handleClose();
+          // handleClose();
         }
    
        })
        .catch((error) => {
-        enqueueSnackbar(error.response.data.message,{variant:'error'})
+        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
         //  setOpen(true);
      ;
          console.log(error);

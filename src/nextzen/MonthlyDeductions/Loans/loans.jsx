@@ -1,19 +1,22 @@
 import * as React from 'react';
 import {Button,Dialog,DialogContent,TextField,Grid,Stack,Typography, MenuItem} from '@mui/material';
 import { useState,useCallback,useMemo,forwardRef} from 'react';
-import { BasicTable } from '../Table/BasicTable';
-import { baseUrl } from '../global/BaseUrl';
+import { BasicTable } from '../../Table/BasicTable';
+import { baseUrl } from '../../global/BaseUrl';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ApplyLoan from './ApplyLoan';
 import FormProvider from 'src/components/hook-form/form-provider';
-import {useSnackbar} from '../../components/snackbar';
+import {useSnackbar} from '../../../components/snackbar';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import { useContext } from 'react';
-import UserContext from '../context/user/UserConext';
-import ModalHeader from '../global/modalheader/ModalHeader';
+import UserContext from '../../context/user/UserConext';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import ModalHeader from '../../global/modalheader/ModalHeader';
+import { LoadingButton } from '@mui/lab';
 export default function Loans({defaultPayload,componentPage}) {
   const {user} = useContext(UserContext);
   const [count,setCount] = useState(0)
@@ -25,7 +28,7 @@ export default function Loans({defaultPayload,componentPage}) {
     
           label: "Employee Id",
           minWidth:"8pc",
-          type: "expand",
+          type: "text",
     
         },
     
@@ -34,12 +37,12 @@ export default function Loans({defaultPayload,componentPage}) {
         { id: "requestDate", label: "Request Date", minWidth: "8pc", type: "date" },
         { id: "requestType", label: "Request Type", minWidth: "9pc", type: "text" },
         { id: "requestAmount", label: "Request Amount", minWidth: "9pc", type: "text" },
-        { id: "paidDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+        { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "text" },
          { id: "paidAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
         { id: "noOfInstallments", label: "Installment Count", minWidth: "10pc", type: "text" },
         // { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
         { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
-        { id: "approvedDate", label: "Paid Date", minWidth: "8pc", type: "date" },
+        { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "date" },
         { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
         { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
         { id: "paymentStatus", label: "Payment Status", minWidth: '9pc', type: "text" },
@@ -78,6 +81,7 @@ export default function Loans({defaultPayload,componentPage}) {
       const [commentsValue,setCommentsValue]=useState("");
       const handleClose = () => {
         setShowForm(false);
+        setIsFormChanged(false);
         setAmountValue();
         setShowEditForm(false);
         setApproveForm(false);
@@ -150,8 +154,8 @@ export default function Loans({defaultPayload,componentPage}) {
       "employeeID":(user?.employeeID)?user?.employeeID:'',
       "loanID": rowData?.loanID,
       "paidAmount":rowData?.paidAmount,
-      "noOfInstallments":rowData?.noOfInstallments,
-      "interestRate":rowData?.interestRate,
+      // "noOfInstallments":rowData?.noOfInstallments,
+      // "interestRate":rowData?.interestRate,
       "status":"rejected",
       "paymentStatus":rowData?.paymentStatus,
       "approverComments":commentsValue
@@ -160,16 +164,40 @@ export default function Loans({defaultPayload,componentPage}) {
   
   }
 
+  const router = useRouter();
 
+
+  const handleLoanDetails = useCallback(
+    (ele) => {
+console.log(ele,"elementtt")
+      const secretPass = "XkhZG4fW2t2W";
+
+      const encryptData = () => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(ele?.employeeID),
+          secretPass
+        ).toString();
+
+       // setEncrptedData(data);
+       console.log('called',data)
+         router.push(paths.dashboard.monthlydeductions.userview(data));
+       
+      };
+      //encryptData()
+     router.push(paths.dashboard.monthlydeductions.userview(ele?.employeeID));
+      
+      
+    },
+    [router]
+    
+  );
   
   const NewUserSchema = Yup.object().shape({
-    noOfInstallments:Yup.number(),
     loanID:Yup.number(),
-    paidAmount:Yup.number(),
-    interestRate:Yup.number(),
+    paidAmount:Yup.number().required('Please Enter Amount'),
     status:Yup.string(),
     employeeID:Yup.string(),
-    approverComments:Yup.string(),
+    approverComments:Yup.string().required('Please Enter Remarks'),
     paymentStatus:Yup.string()
   })
  
@@ -180,8 +208,8 @@ export default function Loans({defaultPayload,componentPage}) {
       employeeID:(user?.employeeID)?user?.employeeID:'',
       loanID:0,
       paidAmount:"",
-      noOfInstallments:"",
-      interestRate:"",
+      // noOfInstallments:"",
+      // interestRate:"",
       status:"approved",
       approverComments:"",
       paymentStatus:""
@@ -205,25 +233,32 @@ export default function Loans({defaultPayload,componentPage}) {
 
   const values = watch();
   const apihit=(obj)=>{
+    console.log(obj,"dataa")
     const config = {
       method: 'POST',
       maxBodyLength:Infinity,
+      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/approveLoanDetails`,
       url: baseUrl + `/approveLoanDetails`,
       data: obj
     
     }
     axios.request(config).then((response) => {
+      console.log(response,"responseeee")
       enqueueSnackbar(response.data.message,{variant:'success'})
      handleClose()
+     reset()
      setCount(count+1)
     })
       .catch((error) => {
+        console.log(error,"Errorrrr")
         enqueueSnackbar(error.message,{variant:'error'})
        handleClose()
       });
   }
   const onSubmit = handleSubmit(async (data)=>{
     data.loanID=rowData?.loanID
+   
+    console.log(data,"Dataa")
     try{
       apihit(data)
     }
@@ -234,10 +269,28 @@ export default function Loans({defaultPayload,componentPage}) {
 
 
   const [amountValue,setAmountValue] = useState();
+  const [installmentValue,setInstallmentValue] = useState()
+  const [userCommentValue,setUserCommentValue] = useState()
+  const [isFormChanged, setIsFormChanged] = useState(false);
   const handleChange = useCallback((event) => {
+    if (!isFormChanged) {
+      setIsFormChanged(true);
+    }
     setAmountValue(event.target.value);
   }, []);
-      
+  const handleInstallmentValue = useCallback((event) => {
+    if (!isFormChanged) {
+      setIsFormChanged(true);
+    }
+    setInstallmentValue(event.target.value);
+    
+  }, []);
+  const handleCommentValue =useCallback((event)=>{
+    if (!isFormChanged) {
+      setIsFormChanged(true);
+    }
+      setUserCommentValue(event.target.value)
+  },[])
   const [showEditForm,setShowEditForm]= useState(false);
   const handleEditLoanForm=(rowdata)=>{
     setRowData(rowdata)
@@ -246,12 +299,15 @@ export default function Loans({defaultPayload,componentPage}) {
   const handleEditLoan=()=>{
    var payload = {
       "loanID":rowData?.loanID,
-      "requestAmount":parseInt(amountValue)
+      "requestAmount":amountValue?parseInt(amountValue):rowData?.requestAmount,
+      "noOfInstallments":installmentValue?parseInt(installmentValue):rowData?.noOfInstallments,
+     "comments":userCommentValue
   }
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
     url: baseUrl + `/updateLoanDetails`,
+    // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/updateLoanDetails`,
     data: payload
   
   }
@@ -298,8 +354,8 @@ export default function Loans({defaultPayload,componentPage}) {
 >
 <ModalHeader heading="Edit Loan Request"/>
   <DialogContent>
-  <Grid container spacing={2}>
-      <Grid  xs={12} md={12} sx={{marginLeft:3,marginTop:2}}>
+  <Grid container flexDirection="row" spacing={1}>
+      <Grid item xs={12} md={6} sx={{marginTop:2}}>
       <TextField
                 
                 fullWidth
@@ -309,12 +365,28 @@ export default function Loans({defaultPayload,componentPage}) {
                 label="Amount"
               />
       </Grid>
+      <Grid item xs={12} md={6} sx={{marginTop:2}}>
+      <TextField
+                
+                fullWidth
+                defaultValue={rowData?.noOfInstallments}
+                value={installmentValue}
+                onChange={handleInstallmentValue}
+                label="Installments"
+              />
+      </Grid>
+     </Grid>
+     <Grid xs={12} md={6} sx={{marginTop:2}}>
+      <TextField
+      fullWidth
+      label="User Remarks"
+      onChange={handleCommentValue}/>
      </Grid>
   </DialogContent>
   <Stack alignItems="flex-end" sx={{ mb:2,display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
              
                 <Button  sx={{marginRight:2}} onClick={handleClose} variant="outlined">Cancel</Button>
-                <Button sx={{right:5}} variant="contained" color="primary" disabled={amountValue===undefined || 0} onClick={handleEditLoan}>Apply</Button>
+                <Button sx={{right:5}} variant="contained" color="primary" disabled={!isFormChanged} onClick={handleEditLoan}>Apply</Button>
               </Stack>
       </Dialog>
     )}
@@ -336,14 +408,15 @@ export default function Loans({defaultPayload,componentPage}) {
 <Grid container>
   <Grid container flexDirection="row" spacing={1}>
   <Grid item xs={12} md={6}>
-<RHFTextField name="noOfInstallments" label="No of Installments"/>
+{/* <RHFTextField name="noOfInstallments" label="No of Installments"/> */}
+<RHFTextField name="paidAmount" label="Paid Amount"/>
 </Grid>
 <Grid item xs={12} md={6}>
-<RHFTextField name="paidAmount" label="Paid Amount"/>
+<RHFTextField name="approverComments" label="Remarks"/>
 </Grid>
   </Grid>
 
-<Grid container flexDirection="row" spacing={1}>
+{/* <Grid container flexDirection="row" spacing={1}>
 <Grid item sx={{marginTop:2}} xs={12} md={6}>
 <RHFTextField name="interestRate" label="Interest Rate" />
 </Grid>
@@ -351,7 +424,7 @@ export default function Loans({defaultPayload,componentPage}) {
 
 <RHFTextField name="approverComments" label="Comments"/>
 </Grid>
-</Grid>
+</Grid> */}
 {(user?.roleID>3)?<Grid container flexDirection="row" sx={{marginTop:2}} xs={12} md={12}>
 
 <RHFSelect name="paymentStatus" label="Payment Status">
@@ -381,8 +454,8 @@ PaperProps={{
 className="custom-dialog">
     <ModalHeader heading="Reject Request"/>
 <TextField 
-label="comments"
-placeholder='comments'
+label="Remarks"
+placeholder='Remarks'
 onChange={(e)=>handleComments(e)}
 sx={{margin:2}}
 />
@@ -404,6 +477,7 @@ rowActions={actionsBasedOnRoles}
 onClickActions={onClickActions}
 componentPage={componentPage}
 count={count}
+handleEditRowParent={handleLoanDetails}
 />  
     </>
   );

@@ -8,6 +8,7 @@ import Project from './components/Project';
 import TimeSheetApproval from './components/TimeSheetApproval';
 import UserContext from '../context/user/UserConext';
 import TimeSheetByManager from './components/timesheetbymanager/TimeSheetByManager';
+import { CalendarView } from './monthlyTimeSheet/Calendar/view';
 
 
 
@@ -63,10 +64,15 @@ export default function TimeSheet() {
             arrContents.push(item.content);
           }
         });
-        arrLabels.push('My Team');
+        arrLabels.push('My Team',);
         arrContents.push( 
          
            <TimeSheetByManager key="myTeam" />
+        );
+        arrLabels.push('Monthly',);
+        arrContents.push( 
+         
+           <CalendarView key="monthly" />
         );
         setTabLabels(arrLabels);
         setTabContents(arrContents);

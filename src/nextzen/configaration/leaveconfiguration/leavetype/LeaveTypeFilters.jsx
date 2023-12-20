@@ -316,7 +316,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           />
         </Grid>
         <Grid item md={2} xs={2}>
-          <LeaveTypeForm />
+          <LeaveTypeForm getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2}>
           <Grid>
@@ -383,11 +383,17 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
                   MenuProps={MenuProps}
                   //   sx={{minWidth:'300px'}}
                 >
-                  {leaveTypes.map((name,index) => (
-                    <MenuItem key={index} value={name} style={getStyles(name, personName, theme)}>
-                      {name?.leaveTypeName}
-                    </MenuItem>
-                  ))}
+                  {leaveTypes?.length > 0 ? (
+  leaveTypes.map((name, index) => (
+    <MenuItem key={index} value={name} style={getStyles(name, personName, theme)}>
+      {name?.leaveTypeName}
+    </MenuItem>
+  ))
+) : (
+  <MenuItem value="" style={getStyles(name, personName, theme)}>
+    No leave types available
+  </MenuItem>
+)}
                 </Select>
               </FormControl>
             </Grid>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Box,FormControl,Button,Typography,Grid,Paper,Stack,InputLabel,MenuItem,ListItemText,Select,InputAdornment,TextField,IconButton} from '@mui/material';
+import {Box,FormControl,Button,Typography,Grid,Paper,Stack,InputLabel,MenuItem,ListItemText,Select,InputAdornment,TextField,IconButton, Card} from '@mui/material';
 
 import './createPayRun.css';
 
@@ -12,7 +12,9 @@ import Iconify from 'src/components/iconify/iconify';
 
 import PropTypes from 'prop-types';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
 import axios from 'axios';
+import EarningsAndDeduction from './EarningsAndDeduction';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -21,13 +23,14 @@ const bull = (
 );
 
 export default function CreatePayRun({ moveToPageFunction  ,employmentType}) {
-
+  const [isShow,setISShow]=React.useState(true);
   const {user} = React.useContext(UserContext)
   const empId =  (user?.employeeID)?user?.employeeID:''
   const cmpId= (user?.companyID)?user?.companyID:''
 const roleId = (user?.roleID)?user?.roleID:''
 const token  =  (user?.accessToken)?user?.accessToken:''
 const [cardData ,setCardData] = React.useState()
+const [loading,setLoading] = React.useState(false);
   const TABLE_HEAD = [
     { id: 'employementType', label: 'Employee Type', type: 'text' },
 
@@ -91,7 +94,7 @@ const [cardData ,setCardData] = React.useState()
   };
 
  const getPayRunDetails = async () => {
-    // setLoading(true)
+    setLoading(true)
     const payload = {
      companyID : cmpId,
     };
@@ -112,14 +115,14 @@ const [cardData ,setCardData] = React.useState()
       .request(config)
       .then((response) => {
         if (response.status === 200) {
-          // setLoading(false)
+          setLoading(false)
           const rowsData = response?.data;
           setCardData(rowsData)
           console.log(JSON.stringify(response?.data), 'result');
         }
       })
       .catch((error) => {
-        // setLoading(false)
+        setLoading(false)
         console.log(error);
       });
     //  console.log(result, 'resultsreults');
@@ -128,39 +131,27 @@ const [cardData ,setCardData] = React.useState()
    React.useEffect(()=>{
     getPayRunDetails()
    },[])
-   const data = [
-    {
-        "TDS": 175625.00432533395,
-        "employeeGrossPay": 0,
-        "fromDate": "2023-12-01T00:00:00+05:30",
-        "payrollcost": 0,
-        "showMessage": "User",
-        "toDate": "2023-12-31T23:59:59.999999999+05:30"
-    },
-    {
-        "employeepf": 0,
-        "employerpf": 0,
-        "fromDate": "2023-12-01T00:00:00+05:30",
-        "showMessage": "User",
-        "tds": 0,
-        "toDate": "2023-12-31T23:59:59.999999999+05:30"
-    }
-];
+
 const formatDate = (dateString) => {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
   return formattedDate;
 };
    
+
+const isShowHandle=()=>{
+  setISShow(false);
+}
   return (
+   
+      
     <Box>
     
-{  cardData?.map((item ,idex) =>{
-<>
-<p></p>
-</>
-
-  }) }
+  {loading ? 
+      <>
+      <Card sx={{height:"60vh"}}><LoadingScreen/></Card>
+      </>:
+      <>
     <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
      <Grid xs={12} md={6} lg={6}>
   <Stack
@@ -197,7 +188,7 @@ const formatDate = (dateString) => {
           primary={cardData && cardData[0]?.payrollcost}
           secondary="Payroll Cost"
           primaryTypographyProps={{
-            typography: 'subtitle2',
+            typography: 'subtitle6',
             component: 'span',
             sx: { textAlign: 'center' },
           }}
@@ -337,18 +328,27 @@ const formatDate = (dateString) => {
   </Stack>
 </Grid>
       </Grid>
-      {/* from ai  */}
-     
     
-      <BasicTable
+     
+    {
+    
+    isShow ?  <BasicTable
+    isShowHandle={isShowHandle}
         headerData={TABLE_HEAD}
         endpoint="/getPayRunDetailsContract"
         defaultPayload={defaultPayload}
         rowActions={actions}
-        filterName="HrTabFilter"
-      />
-
+        filterName="CreatePayRunFilter"
+      /> :
+      
+      <EarningsAndDeduction/>
+      
+      }
+      
+      </>
+}
     </Box>
+    
   );
 }
 CreatePayRun.propTypes = {

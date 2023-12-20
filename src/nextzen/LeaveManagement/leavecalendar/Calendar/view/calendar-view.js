@@ -48,7 +48,7 @@ export default function CalendarView() {
   const [filters, setFilters] = useState(defaultFilters);
   const { events, eventsLoading } = useGetEvents();
   const [listOfHolidays,setListOfHolidays]= useState();
- 
+ console.log(listOfHolidays,"listOfHolidays")
 useEffect(()=>{
   holidayslist();
 },[])

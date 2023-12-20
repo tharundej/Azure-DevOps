@@ -32,7 +32,7 @@ import { useState } from 'react';
 // ----------------------------------------------------------------------
 
 
-export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) {
+export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement,handleStep}) {
   const { newPassword, forgotPassword } = useAuthContext();
   const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
@@ -85,7 +85,9 @@ export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) 
   } = methods;
 
   const values = watch();
-
+  const handleBackToRegister = () => {
+    handleStep(0)(); // Call the handleStep function to navigate back to the first step
+  };
   const onSubmit = handleSubmit(async (data) => {
     try {
       const email = localStorage.getItem('email');
@@ -200,8 +202,7 @@ export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) 
         Create Password
       </Button>
       <Link
-        component={RouterLink}
-        href={paths.auth.jwt.login}
+        onClick={handleBackToRegister}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -210,7 +211,7 @@ export default function AmplifyNewPasswordView({emailId,onHandleNextIncrement}) 
         }}
       >
         <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-        Return to sign in
+        Return to sign up
       </Link>
     </Stack>
   );

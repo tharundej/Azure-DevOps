@@ -156,11 +156,11 @@ axios.request(config)
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <HolidayList title="UP Coming Holiday" list={holidayList} />
+          <HolidayList title="Up Coming Holiday" list={holidayList} />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <HolidayList title="UP Coming Holiday" list={holidayList} />
+          <HolidayList title="Up Coming Holiday" list={holidayList} />
         </Grid>
 
         <Grid xs={12} md={6} lg={6}>
