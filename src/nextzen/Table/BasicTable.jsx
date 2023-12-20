@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback, useEffect } from 'react';
 // @mui
@@ -152,7 +152,8 @@ const BasicTable = ({
   handleEditRowParent,
   handleOpenModal,
   SecondoryTable,
-  componentPage,count
+  componentPage,count,
+  mergingRowArray
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -243,7 +244,26 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         setLoading(false);
         // // console.log(response?.data?.bodyContent);
         //setTableData(response?.data?.[bodyData]|| []);
-        setTableData(response?.data?.data || []);
+
+        if(mergingRowArray?.length>0){
+          if(response?.data?.data){
+            let resp=[];
+            response.data.data.forEach(element => {
+              let value = JSON.parse(JSON.stringify(element))
+              mergingRowArray.forEach(elementField => {
+                if(value[elementField.responseKey]?.length>0){
+                  value[elementField.bindingKey] = value[elementField.responseKey].map(item => item.locationName).join(', ')
+                }
+              })
+              resp.push(value);
+            })
+            setTableData(resp || [])
+          }
+
+        } else {
+
+          setTableData(response?.data?.data || []);
+        }
 
         setFilterHeaders(response?.data?.filterHeaders || []);
         setTotalRecordsCount(response?.data?.totalRecords || 0);
@@ -497,6 +517,8 @@ const [index, setIndex]=useState(""); // index setting
             <TimeSheetSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              // refreshTable={refreshTable}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AdditionsFilterSearch' && (
@@ -778,7 +800,7 @@ const [index, setIndex]=useState(""); // index setting
           {/* accounts  */}
           <Card>
             <TableContainer
-              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important'}}
+             component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%',minHeight:100, height:300,  }}
             >
               <TableSelectedAction
                 dense={table.dense}
@@ -1003,6 +1025,9 @@ BasicTable.propTypes = {
 };
 BasicTable.propTypes = {
   headerData: PropTypes.any,
+};
+BasicTable.propTypes = {
+  mergingRowArray: PropTypes.any,
 };
 
 BasicTable.propTypes = {

@@ -23,7 +23,7 @@ import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function GeneralForminfo({ currentUser }) {
+export default function GeneralForminfo({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -56,23 +56,23 @@ export default function GeneralForminfo({ currentUser }) {
 
   const defaultValues1 = useMemo(
     () => ({
-      payScheduleType: currentUser?.payScheduleType || '',
-      basicPayPercentage: currentUser?.basicPayPercentage || null,
-      hraPercentage: currentUser?.hraPercentage || null,
-      daPercentage: currentUser?.daPercentage || null,
-      employeePfPercentage: currentUser?.employeePfPercentage || null,
-      employerPfPercentage: currentUser?.employerPfPercentage || null,
-      ltaPercentage: currentUser?.ltaPercentage ,
-      esicPercentage: currentUser?.esicPercentage ,
-      tdsPercentage: currentUser?.tdsPercentage ,
+      payPcheduleType: currentUser?.payPcheduleType,
+      basicPayPercentage: currentUser?.basicPayPercentage,
+      hraPercentage: currentUser?.hraPercentage,
+      daPercentage: currentUser?.daPercentage,
+      employeePfPercentage: currentUser?.employeePfPercentage,
+      employerPfPercentage: currentUser?.employerPfPercentage,
+      ltaPercentage: currentUser?.ltaPercentage,
+      esicPercentage: currentUser?.esicPercentage,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
   const defaultValues2 = useMemo(
     () => ({
       // employementType: currentUser?.employementType || '',
-      payScheduleType: currentUser?.payScheduleType || '',
-      tdsPercentage: currentUser?.tdsPercentage || null,
+      payPcheduleType: currentUser?.payPcheduleType,
+      tdsPercentage: currentUser?.tdsPercentage,
     }),
     [currentUser]
   );
@@ -113,24 +113,25 @@ export default function GeneralForminfo({ currentUser }) {
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.employementType = selectedOption?.type;
+    data.employee_type = selectedOption?.type;
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.code === 200 || (201 && response?.data?.success)) {
+      if (response?.data?.code === 200 ||201) {
+        getTableData()
         handleClose();
         setSnackbarSeverity('success');
-        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        reset1();
         console.log('sucess', response);
       }
-      if (response?.code ===400) {
+      if (response?.data?.code ===400) {
         handleClose();
         setSnackbarSeverity('error');
-        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
 
         console.log('sucess', response);
@@ -145,24 +146,25 @@ export default function GeneralForminfo({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
-    data.employementType = selectedOption?.type;
+    data.employee_type = selectedOption?.type;
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     console.log('submitted data2222', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.code === 200 || (201 && response?.data?.success)) {
+      if (response?.data?.code === 200 || 201) {
         handleClose();
+        getTableData()
         setSnackbarSeverity('success');
-        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-
+        reset2()
         console.log('sucess', response);
       }
-      if (response?.code ===400) {
+      if (response?.data?.code ===400) {
         handleClose();
         setSnackbarSeverity('error');
-        setSnackbarMessage('PayRoll Added Succuessfully!');
+        setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
 
         console.log('sucess', response);
@@ -275,8 +277,8 @@ export default function GeneralForminfo({ currentUser }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
-
+                  options={payPcheduleTypes.map((name) => name.type)}
+                 
                 />
                 <RHFTextField name="basicPayPercentage" label="Basic Pay %" />
 
@@ -348,7 +350,8 @@ export default function GeneralForminfo({ currentUser }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((payScheduleType) => payScheduleType.type)}
+                  options={payPcheduleTypes.map((name) => name.type)}
+                 
                   sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
                 <RHFTextField

@@ -26,7 +26,7 @@ import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function Holidays({ currentUser }) {
@@ -36,13 +36,14 @@ export default function Holidays({ currentUser }) {
   const [open, setOpen] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState({});
-  const [count,setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  // const getLocations = location.map((name)=>name.locationName);
   const TABLE_HEAD = [
     { id: 'holidayName', label: 'Holiday Name', type: 'text', minWidth: 180 },
     { id: 'holidayDate', label: 'Holiday Date', type: 'text', minWidth: 180 },
     { id: 'fulldayHalfday', label: 'Full Day/Half Day', type: 'text', minWidth: 180 },
     { id: 'repeatAnnualy', label: 'Repeats Annually', type: 'text', minWidth: 180 },
-    { id: 'locationName', label: 'Locations', type: 'text', minWidth: 180 },
+    { id: 'locationViewMode', label: 'Locations', type: 'text', minWidth: 180 },
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
@@ -80,10 +81,16 @@ export default function Holidays({ currentUser }) {
   };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
-      setEditData(rowdata);
-      setValueSelected(rowdata);
+
+      const values = JSON.parse(JSON.stringify(rowdata))
+
+      values['prevValues'] = values.locations;
+      // values['locations'] = values.locations.map(item => item.locationID);
+      console.log('valuesvaluesvalues', values)
+      setEditData(values);
+      setValueSelected(values);
       handleOpenEdit();
-      buttonFunction(rowdata, event);
+      buttonFunction(values, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
     }
@@ -167,7 +174,7 @@ export default function Holidays({ currentUser }) {
   });
 
   const RepeatsAnuallys = [{ type: 'Yes' }, { type: 'No' }];
-  const Fullday_halfdays = [{ type: 'Full Day' }, { type: 'First Half' },{type: 'Second Half'}];
+  const Fullday_halfdays = [{ type: 'Full Day' }, { type: 'First Half' }, { type: 'Second Half' }];
 
   const defaultValues1 = useMemo(
     () => ({
@@ -221,7 +228,13 @@ export default function Holidays({ currentUser }) {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
-          const rowsData = response?.data?.data;
+          const rowsData = response?.data?.data?.map(({ locationID, locationName, ...rest }) => ({
+            value: locationID,
+            label: locationName,
+            locationID,
+            locationName,
+            ...rest
+          }));;
           setLocationType(rowsData);
           console.log(JSON.stringify(response?.data?.data), 'result');
 
@@ -241,31 +254,54 @@ export default function Holidays({ currentUser }) {
     fetchData();
   }, []);
   const handleAutocompleteChange = (name, selectedValue, selectedOption) => {
-    console.log(selectedValue,'ooooo')
+    console.log(selectedValue, 'ooooo');
+    console.log(selectedOption, 'pppp');
+    const resultList = [];
+
+selectedValue.forEach((item) => {
+  if (typeof item === "object" && item !== null) {
+    const result = {
+      locationID: item.locationID,
+      locationName: item.locationName,
+    };
+    resultList.push(result);
+  }
+});
+console.log(resultList,'resultList');
+let extractedLocationIDs = resultList.map(item => item.locationID);
+let extractedLocationNames = resultList.map(item => item.locationName);
+console.log(extractedLocationIDs,'lllll')
     setFormData({
       ...formData,
-      [name]: selectedValue,
-      locationID: selectedOption?.locationID,
-      locationName: selectedOption?.locationName,
+      // [name]: selectedValue,
+      locationID: extractedLocationIDs,
+      locationName: extractedLocationNames,
     });
     const filed ='locationID'
     const filed2='locationName'
     setValueSelected((prevData) => ({
       ...prevData,
-      [filed]: selectedValue?.locationID,
-      [filed2]: selectedValue?.locationName,
+      locations: [
+        ...prevData.locations,
+        {
+          locationID: extractedLocationIDs[0], // Assuming extractedLocationIDs is an array
+          locationName: extractedLocationNames[0], // Assuming extractedLocationNames is an array
+        },
+      ],
+      // [locations]: [extractedLocationIDs,extractedLocationNames],
+      [filed2]: extractedLocationNames,
     }));
-    
   };
+
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.holidayDate = formatDateToYYYYMMDD(selectedDates);
-    console.log("aaaaaaaaaa", formData)
-    data.locationID = valueSelected?.locationID
-    data.holidayName=valueSelected?.holidayName
-     data.repeatAnnualy=valueSelected?.repeatAnnualy
-     data.fulldayHalfday=valueSelected?.fulldayHalfday
-    data.holidayID=valueSelected?.holidayID
+    console.log('aaaaaaaaaa', formData);
+    data.locations = valueSelected?.locations;
+    data.holidayName = valueSelected?.holidayName;
+    data.repeatAnnualy = valueSelected?.repeatAnnualy;
+    data.fulldayHalfday = valueSelected?.fulldayHalfday;
+    data.holidayID = valueSelected?.holidayID;
     console.log('submitted data111', data);
 
     try {
@@ -275,7 +311,7 @@ export default function Holidays({ currentUser }) {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleCloseEdit();
-        setCount(count+1)
+        setCount(count + 1);
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -297,8 +333,9 @@ export default function Holidays({ currentUser }) {
     setSelectedDates(date);
   };
 
-console.log(valueSelected,'kkkk')
+  console.log(valueSelected, 'kkkk');
   console.log(formData, 'formdata for location');
+//  console.log(valueSelected.prevValues.map(item => item.locationName),'ram')
   return (
     <>
       <Snackbar
@@ -329,7 +366,7 @@ console.log(valueSelected,'kkkk')
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-        <ModalHeader heading="Edit Holiday" />
+          <ModalHeader heading="Edit Holiday" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -345,7 +382,7 @@ console.log(valueSelected,'kkkk')
                 name="holidayName"
                 label="Holiday Name"
                 value={valueSelected?.holidayName}
-                  onChange={(e) => handleSelectChange('holidayName', e.target.value)}
+                onChange={(e) => handleSelectChange('holidayName', e.target.value)}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
@@ -363,7 +400,7 @@ console.log(valueSelected,'kkkk')
                 name="fulldayHalfday"
                 label="FullDay/HalfDay"
                 value={valueSelected?.fulldayHalfday || null}
-                options={Fullday_halfdays.map((name)=>name.type)}
+                options={Fullday_halfdays.map((name) => name.type)}
                 // getOptionLabel={(option) => option.type }
                 onChange={(e, newValue) => handleSelectChange('fulldayHalfday', newValue || null)}
                 renderInput={(params) => (
@@ -375,7 +412,7 @@ console.log(valueSelected,'kkkk')
                 label="Repeats Anually"
                 value={valueSelected?.repeatAnnualy}
                 // onChange = {(e) => handleSelectChange('repeatAnnualy', e.target.value)}
-                options={RepeatsAnuallys.map((name)=>name.type)}
+                options={RepeatsAnuallys.map((name) => name.type)}
                 // getOptionLabel={(option) => option.type}
                 onChange={(e, newValue) => handleSelectChange('repeatAnnualy', newValue || null)}
                 renderInput={(params) => (
@@ -384,16 +421,19 @@ console.log(valueSelected,'kkkk')
               />
               <Autocomplete
                 disablePortal
+                multiple
                 name="Location"
                 id="combo-box-demo"
                 options={locationType?.map((employeepayType) => ({
                   label: employeepayType.locationName,
-                  value: employeepayType.locationName,
+                  value: employeepayType.locationID,
                   ...employeepayType,
                 }))}
-                value={valueSelected?.locationName}
-                onChange={(event, newValue, selectedOption) =>
-                  handleAutocompleteChange('locationName', newValue, selectedOption)
+                 value={valueSelected?.locations.map(location => location.locationName)||[]}
+                //  value={valueSelected?.locations.map(location => location.locationName)||[]}
+                onChange={(event, newValue, selectedOption) =>{
+                  console.log("locationNamelocationName",newValue, selectedOption)
+                  handleAutocompleteChange('locationName', newValue, selectedOption)}
                 }
                 renderInput={(params) => <TextField {...params} label="Location" />}
               />
@@ -401,7 +441,6 @@ console.log(valueSelected,'kkkk')
           </DialogContent>
 
           <DialogActions>
-           
             <Button variant="outlined" onClick={handleCloseEdit}>
               Cancel
             </Button>
@@ -413,13 +452,13 @@ console.log(valueSelected,'kkkk')
             >
               Save
             </LoadingButton> */}
-              <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
               variant="contained"
               onClick={onSubmit1}
-              >
-            Save
+            >
+              Save
             </Button>
           </DialogActions>
         </FormProvider>
@@ -432,6 +471,12 @@ console.log(valueSelected,'kkkk')
         filterName="holidaysFilterSearch"
         onClickActions={onClickActions}
         count={count}
+        mergingRowArray={[
+          {
+            responseKey: 'locations',
+            bindingKey: 'locationViewMode',
+          },
+        ]}
       />
     </>
   );

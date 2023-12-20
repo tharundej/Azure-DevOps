@@ -1,3 +1,4 @@
+import React from 'react';
 import Calendar from '@fullcalendar/react'; // => request placed at the top
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
@@ -6,9 +7,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback, useContext } from 'react';
+
 // @mui
 import { useTheme } from '@mui/material/styles';
-import {Card,OutlinedInput,FormControl,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
+import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -32,11 +34,17 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
+import axios from 'axios';
 const defaultFilters = {
   colors: [],
   from_date: null,
   to_date: null,
 };
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 export default function CalendarView() {
  //----------------Calendar -------------------
   
@@ -48,7 +56,7 @@ export default function CalendarView() {
   const [filters, setFilters] = useState(defaultFilters);
   const { events, eventsLoading } = useGetEvents();
   const [listOfHolidays,setListOfHolidays]= useState();
- console.log(listOfHolidays,"listOfHolidays")
+ 
 useEffect(()=>{
   holidayslist();
 },[])
@@ -130,7 +138,62 @@ useEffect(()=>{
     type:"holiday"
    }))
 :[]
+console.log(listOfHolidays,"listOfHolidays")
    const overallEvents = [...updatedEvents,...HolidayEvents]
+   const eventDataMe1=[
+    {
+
+    }
+   ]
+
+   const eventDataMe= [
+   {  "title": "9 Hours", "start": "2023-12-07", "end": "2023-12-07", "type": "holiday" },
+   {  "title": "12 Hours", "start": "2023-12-09", "end": "2023-12-09", "type": "holiday" },
+   { "title": "20 Hours",  "start": "2023-12-26", "end": "2023-12-26", "type": "holiday", "editData": [
+      { "ACCOUNTS": {  "hours": "sd",   "des": "dfer"  } },
+      {  "HRMS": { "hours": "12", "des": "23" } }
+    ]
+  },
+  { "title": "8 Hours",  "start": "2023-12-20", "end": "2023-12-20", "type": "holiday", "editData": [
+    { "ACCOUNTS": {  "hours": "100",   "des": "kkkkk"  } },
+    {  "HRMS": { "hours": "120", "des": "onnnnnn" } }
+  ]
+},
+{ "title": "10 Hours",  "start": "2023-12-22", "end": "2023-12-22", "type": "holiday", "editData": [
+  { "ACCOUNTS": {  "hours": "10",   "des": "NOT Done"  } },
+  {  "HRMS": { "hours": "123", "des": "onGoing" } }
+]
+}
+  
+   ]
+
+ const getApiCall =  {
+    employeeId: "GANG22",
+    companyId:"comp22",
+    DateOfActivity:{
+        from:"2023-12-01",
+         to: "2023-12-31"
+    }
+}
+// console.log(getApiCall,"getApiCall")
+const [eventGetData,setEventGetData]= useState();
+const calendarGetData = async (getApiCall) => {
+  console.log("hello in function",getApiCall)
+  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
+    (response) => {
+      console.log('sucess data in api Calendar', response?.data?.data);
+      setClaimTypeOptions(response?.data?.data)
+    },
+    (error) => {
+      console.log('lllll', error);
+    }
+  );
+}
+
+useEffect(()=>{
+  calendarGetData(getApiCall)
+  console.log("hello useeffect")
+},[])
     
   const renderResults = (
     <CalendarFiltersResult
@@ -162,13 +225,102 @@ const selectAllowCallback = (selectInfo) => {
   }
   return true; // Allow date selection for other cases
 };
+
+//  surendra work 
+// radio button 
+const [showAutocomplete, setShowAutocomplete] = React.useState(false);
+
+const handleSwitchChange = () => {
+  setShowAutocomplete(!showAutocomplete);
+};
+
+const projects = [
+  { Id: 1, name: 'ERP',  },
+  { Id: 2, name: 'HRMS',  },
+  { Id: 3, name: 'ACCOUNTS', },
+  { Id: 4, name: 'ERPBUZZ',  },
+]
+const employeeList = [
+  { Id: 1, name: 'Surendra',  },
+  { Id: 2, name: 'Anil',  },
+  { Id: 3, name: 'Sai', },
+  { Id: 4, name: 'Muzu',  },
+  { Id: 4, name: 'Nithin',  },
+]
+const [data, setData]=useState({
+  projectID:[],
+  employeeName:"",
+
+})
+const handleProjectChange = (event, newValue) => {
+  setData((prevData) => ({
+    ...prevData,
+    projectID: newValue,
+  }));
+};
+
+const handleEmployeeChange = (event, newValue) => {
+  setData((prevData) => ({
+    ...prevData,
+    employeeName: newValue,
+  }));
+};
+console.log(data,"dataatdada",selectedRange)
+
+
+const onDayData = () => {
+  if (selectedRange?.start) {
+    // Assuming eventDataMe is defined in the same scope
+    const editDataArray = eventDataMe
+      .filter((event) => event.editData && event.start === selectedRange?.start) // Filter based on start date
+      .map((event) => event.editData)
+      .flat(); // Flatten the array of editData arrays
+
+    console.log(editDataArray, "editDataArray");
+    // Do something with the extracted editDataArray
+    return editDataArray;
+  }
+};
+
+
   return (
  <>
      <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
-        <Stack
+     <Autocomplete
+        id="project-autocomplete"
+        fullWidth
+        multiple
+        options={projects || []}
+        value={data.projectID}
+        getOptionLabel={(option) => option?.name}
+        onChange={handleProjectChange}
+        renderInput={(params) => <TextField {...params} label="Select Project" />}
+      />
+
+      <Box>
+        <FormControlLabel
+          control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
+          label="Select Employee"
+        />
+
+        {showAutocomplete && (
+          <Autocomplete
+            id="employee-autocomplete"
+            fullWidth
+            options={employeeList || []}
+            value={data.employeeName}
+            getOptionLabel={(option) => option?.name}
+            onChange={handleEmployeeChange}
+            renderInput={(params) => <TextField {...params} label="Select Employee" />}
+          />
+        )}
+      </Box>
+        {/* <Stack
           alignItems="flex-end"
           justifyContent="flex-end"
         >
+      
+      
           <Button
             variant="contained"
             color="primary"
@@ -177,7 +329,7 @@ const selectAllowCallback = (selectInfo) => {
           >
            Leave Request
           </Button>
-        </Stack>
+        </Stack> */}
         {canReset && renderResults}
         <Card>
           <StyledCalendar>
@@ -202,9 +354,10 @@ const selectAllowCallback = (selectInfo) => {
               initialDate={date}
               initialView={view}
               eventDisplay="block"
-              selectAllow={selectAllowCallback}
-              events={overallEvents}
-              eventContent={renderEventContent}
+              // selectAllow={selectAllowCallback}
+              // events={overallEvents}
+              events={eventDataMe}
+              // eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}
              eventClick={onClickEvent}
@@ -237,16 +390,26 @@ const selectAllowCallback = (selectInfo) => {
           enter: theme.transitions.duration.shortest,
           exit: theme.transitions.duration.shortest - 80,
         }}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}  
       >
         {/* <DialogTitle sx={{ minHeight: 76 }}> */}
         {openForm && <ModalHeader 
-        heading={(currentEvent?.leaveId && currentEvent?.leaveStatus==="pending") ? 'Delete Event' :(currentEvent?.leaveId && currentEvent?.leaveStatus==="approved")?"View Request": 'Leave Request'}
+        heading="Add Time Sheet"
         />}
         <CalendarForm
           currentEvent={currentEvent}
           colorOptions={CALENDAR_COLOR_OPTIONS}
-          selectedRange={selectedRange}
+          // selectedRange={selectedRange}
+          date={selectedRange}
           onClose={onCloseForm}
+          projectInfo={data}
+          //event data passing
+          // eventData={overallEvents}
+          editData={onDayData()}
+          eventClickMe={onClickEvent} // just using above events
+          
         />
         {/* </DialogTitle> */}
       </Dialog>
