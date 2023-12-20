@@ -320,6 +320,7 @@ const initialProjectDetails = {
     projectInfo?.projectID?.map((project) => [
       project.projectName,
       { description: "", employeename: "", hours: "", projectId: "", projectName: "" }
+      
     ]) || []
   )
 };
