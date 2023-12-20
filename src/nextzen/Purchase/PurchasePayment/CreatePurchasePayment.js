@@ -57,18 +57,19 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
 
   const [data,setData]=useState({
    
-    "poNumber": currentData?.poNumber,
-    "poDate": currentData?.poDate,
-    "invoiceNumber":currentData?.invoiceNumber,
-    "invoiceDate": currentData?.invoiceDate,
-    "numOfInstallments": currentData?.numOfInstallments,
-    "totalAmount": currentData?.totalAmount,
-    "paidAmount": currentData?.paidAmount,
-    "paidDate": currentData?.paidDate,
+    "poNumber": currentData?.poNumber || undefined,
+   
+    "invoiceNumber":currentData?.invoiceNumber || "",
+    "invoiceDate": currentData?.invoiceDate || "",
+    reductionType:currentData?.reductionType || "",
+  
+    "paidAmount": currentData?.paidAmount || "",
+    "paidDate": currentData?.paidDate || "",
     "balanceAmount": currentData?.balanceAmount,
-    "paymentMethod": currentData?.paymentMethod,
-    "paymentStatus": currentData?.paymentStatus,
-    "dueDate": currentData?.dueDate
+    "paymentMethod": currentData?.paymentMethod || "",
+    "paymentStatus": currentData?.paymentStatus|| "",
+    reductionAmount:currentData?.reductionAmount || ""
+   
 })
 
   const defaultValues = useMemo(
@@ -98,24 +99,25 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
 
   const onSubmit = handleSubmit(async (data1) => {
     const obj=data;
-    obj.poNumber=obj?.poNumber?.poNumber || "",
+    console.log(obj,'oooooo')
+    obj.poNumber=obj?.poNumber?.poNumber || "";
     obj.paymentMethod=obj.paymentMethod || ""
-    obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    console.log(obj,'kkk')
-    // try {
-    //   console.log(obj, 'data111ugsghghh');
+    obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+   
+    try {
+      console.log(obj, 'data111ugsghghh');
 
-    //   const response = await instance.post('addPurchasePayment', obj).then(
-    //     (successData) => {
-    //       console.log('sucess', successData);
-    //     },
-    //     (error) => {
-    //       console.log('lllll', error);
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.error(error);
-    // }
+      const response = await instance.post('addPurchasePayment', obj).then(
+        (successData) => {
+          console.log('sucess', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   const handleChangeString=(e,field)=>{
@@ -173,6 +175,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                 value={data?.poNumber}
                 getOptionLabel={(option) => option.poNumber}
                 onChange={(e,value) => {
+                   console.log(value)
                   const newObj={...data};
                   newObj.poNumber=value;
 
@@ -206,7 +209,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     label="Paid Date"
                   />
 
-<TextField type="number" name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
+<TextField  name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
@@ -225,6 +228,9 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     id="date-picker-inline"
                     label="Invoice Date"
                   />
+
+            <TextField type="number" name="reductionAmount" label="Reduction Amount" value={data?.reductionAmount || ""} onChange={(e)=>{handleChangeFloat(e,"reductionAmount")}} />
+            <TextField type="number" name="reductionType" label="Reduction Type" value={data?.reductionType || ""} onChange={(e)=>{handleChangeString(e,"reductionType")}} />
             
            
             <TextField type="number" name="paidAmount" label="Paid Amount" value={data?.paidAmount || ""} onChange={(e)=>{handleChangeFloat(e,"paidAmount")}} />
