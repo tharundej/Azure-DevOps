@@ -583,6 +583,7 @@ export default function MyClaims({ currentUser, }) {
         fullWidth
         maxWidth={false}
         open={open}
+        
         // onClose={handleClose}
         PaperProps={{
           sx: { maxWidth: 720 },
