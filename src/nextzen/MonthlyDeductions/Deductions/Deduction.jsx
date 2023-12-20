@@ -289,7 +289,7 @@ return (
 </Grid>
 <Grid item xs={12} md={4}>
  <Button size="small" variant='contained' color='primary' className="button" onClick={()=>setShowForm(true)} sx={{ marginLeft:  1 }}>Add Deduction</Button>
- <Button size="small" onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>
+ {personName && <Button size="small" onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>}
   </Grid>
   </Grid>}
   
@@ -371,7 +371,7 @@ return (
         </Grid>
       
     ))}
-    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center'}}>No Deductions for Selected Employee.</Typography>)}
+    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center'}}>No Deductions.</Typography>)}
 
 {showFilter && (<Dialog
         onClose={handleClickClose}

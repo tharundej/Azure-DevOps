@@ -67,6 +67,7 @@ import { baseImageUrl, baseUrl } from '../global/BaseUrl';
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');
   const [pcountryIsoCode, setPCoutryIsoCode] = useState('');
+  const [logoUploaded, setLogoUploaded] = useState(false);
   const { register } = useAuthContext();
   const [shouldCallGetCompany, setShouldCallGetCompany] = useState(true);
   const theme = useTheme();
@@ -113,14 +114,21 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     reader.onloadend = () => {
       setSelectedFile(file);
       setImageData([{ name: file.name, data: reader.result }]);
-      
     };
 
     if (file) {
       reader.readAsDataURL(file);
     }
+    if (e.target.files && e.target.files.length > 0) {
+      setLogoUploaded(true);
+    }
   };
-
+  const handleFormSubmit = () => {
+    if (!logoUploaded) {
+      console.error('Please upload a logo');
+      return; 
+    }
+  };
   const RegisterSchema = Yup.object().shape({
     cin: Yup.string()
       .required('CIN is Required')
@@ -296,10 +304,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     try {
       if (!data.companyCountry || !data.companyState || !data.companyCity) {
         setErrorMsg('Please select country, state, and city.');
-        console.log('errorrrrrrrrrr')
+        console.log('errorrrrrrrrrr');
         return;
       }
-      console.log(data,'hhfhfhh');
+      console.log(data, 'hhfhfhh');
       await register?.(
         data.cin,
         data.companyName,
@@ -351,9 +359,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
         setCompanyId(response?.data?.data?.companyId);
-          
+
         setEmpIdPrefix(true);
-        setImageData([{ name: "sais", data: baseImageUrl + response?.data?.data?.logoName}]);
+        setImageData([{ name: 'sais', data: baseImageUrl + response?.data?.data?.logoName }]);
         setImageUrl(baseImageUrl + response?.data?.data?.logoName);
         const keyMappings = {
           companyId: 'companyId',
@@ -380,10 +388,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         const dataFromResponse = response?.data?.data;
         Object.keys(keyMappings).forEach((key) => {
           if (dataFromResponse.hasOwnProperty(key)) {
-            console.log(key,'companyLogo')
-            if(key==="companyCountry"){
-              console.log(dataFromResponse[key],'tre')
-
+            console.log(key, 'companyLogo');
+            if (key === 'companyCountry') {
+              console.log(dataFromResponse[key], 'tre');
             }
             if (key === 'companyDateOfIncorporation') {
               const obj = {
@@ -397,6 +404,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                 dataFromResponse[key] ? dayjs(dataFromResponse[key]).toDate() : null
               );
               // methods.setValue(keyMappings[key], dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
+            }
+            else if (key === 'companyRegistrationNo') {
+              methods.setValue(keyMappings[key],dataFromResponse[key]);
             } 
             else {
               methods.setValue(keyMappings[key], dataFromResponse[key]);
@@ -415,7 +425,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       console.log('error', error);
     }
   };
-console.log(imageUrl,'image')
+  console.log(imageUrl, 'image');
   const handleEmailBlur = () => {
     callApiIfAllFieldsFilled();
   };
@@ -438,13 +448,6 @@ console.log(imageUrl,'image')
         console.log(payload, 'Payload before API call');
 
         const response = await axiosInstance.post(baseUrl + '/checkRegisterFields', payload);
-
-        if (response?.data?.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
-          console.log('API call successful');
-        }
         if (response?.data?.code === 409) {
           setSnackbarSeverity('error');
           setSnackbarMessage(response?.data?.message);
@@ -496,12 +499,12 @@ console.log(imageUrl,'image')
       }
       const response = await axiosInstance.post(baseUrl + '/updateCompanyWhileRegister', payload);
       console.log(response);
-      if(response?.data?.code===200){
-      localStorage.setItem('emailWhileUpdate', response?.data?.data?.email);
-      onHandleNextIncrement();
+      if (response?.data?.code === 200) {
+        localStorage.setItem('emailWhileUpdate', response?.data?.data?.email);
+        onHandleNextIncrement();
       }
-      if(response?.data?.code===400){
-        console.log('kkkk')
+      if (response?.data?.code === 400) {
+        console.log('kkkk');
       }
     } catch (error) {
       console.error(error);
@@ -625,6 +628,7 @@ console.log(imageUrl,'image')
                   margin="normal"
                   id="date-picker-inline"
                   label="Date of Incorporation"
+                  maxDate={new Date()}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -728,7 +732,11 @@ console.log(imageUrl,'image')
               <Grid item xs={12} md={4}>
                 <RHFAutocomplete
                   name="companyCountry"
-                  label="Country"
+                  label={
+                    <span>
+                      Country <span style={{ color: 'red' }}>*</span>
+                    </span>
+                  }
                   options={options?.countryOptions || []}
                   getOptionLabel={(option) => option.name}
                   onChnageAutoComplete={onChnageAutoComplete}
@@ -742,7 +750,11 @@ console.log(imageUrl,'image')
               <Grid item xs={12} md={4}>
                 <RHFAutocomplete
                   name="companyState"
-                  label="State"
+                  label={
+                    <span>
+                      State <span style={{ color: 'red' }}>*</span>
+                    </span>
+                  }
                   options={options?.stateOptions || []}
                   getOptionLabel={(option) => option.name}
                   onChnageAutoComplete={onChnageAutoCompleteState}
@@ -756,7 +768,11 @@ console.log(imageUrl,'image')
               <Grid item xs={12} md={4}>
                 <RHFAutocomplete
                   name="companyCity"
-                  label="City"
+                  label={
+                    <span>
+                     City <span style={{ color: 'red' }}>*</span>
+                    </span>
+                  }
                   options={options?.cityOptions || []}
                   getOptionLabel={(option) => option.name}
                   // onChnageAutoComplete={onChnageAutoCompleteState}
@@ -798,7 +814,7 @@ console.log(imageUrl,'image')
           </Stack>
           <CardActions
             style={{
-              marginTop: '30px',
+              // marginTop: '30px',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'flex-start',
@@ -850,7 +866,7 @@ console.log(imageUrl,'image')
                     {/* imageData[0]?.data ? imageData[0]?.data :  */}
                     <img
                       src={imageData[0]?.data}
-                     // alt={selectedFile?.name || ""}
+                      // alt={selectedFile?.name || ""}
                       style={{
                         width: '100%',
                         height: '100%',
@@ -877,7 +893,7 @@ console.log(imageUrl,'image')
                   type="submit"
                   variant="contained"
                   onClick={onSubmit}
-                  style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+                  style={{ backgroundColor: '#3B82F6' }}
                 >
                   Create Account
                 </Button>
@@ -888,7 +904,7 @@ console.log(imageUrl,'image')
                   type="submit"
                   variant="contained"
                   onClick={onSubmit1}
-                  style={{ backgroundColor: '#3B82F6', marginBottom: '10px', marginLeft: '100px' }}
+                  style={{ backgroundColor: '#3B82F6' }}
                 >
                   Update Account
                 </Button>
