@@ -8,14 +8,37 @@ export default function loanDetails(){
 
   console.log(id,"iddddd")
     useEffect(()=>{
-        handleLoanExpand()
+        getLoanID()
     },[])
     const [loanDetails,setloanDetails] = useState()
-
+    const [employeevalue,setEmployeeValue]=useState()
+    const getLoanID=()=>{
+        const loanPayload ={
+          loanID:parseInt(id)
+        }
+        const config={
+          method: 'POST',
+          maxBodyLength: Infinity,
+        //   url:baseUrl+`/getLoanDetails`,
+          url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/GetLoanId`,
+          data: loanPayload,
+        }
+        axios
+            .request(config)
+            .then((response) => {
+              console.log(response, 'responsedata', response.data);
+              setEmployeeValue(response?.data?.data)
+             
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+      
+      }
     const handleLoanExpand=()=>{
         const loanPayload ={
-          employeeID:id,
-          loanID:""
+          employeeID:"",
+          loanID:id
         }
         const config={
           method: 'POST',

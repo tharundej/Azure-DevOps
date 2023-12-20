@@ -174,7 +174,7 @@ console.log(ele,"elementtt")
 
       const encryptData = () => {
         const data = CryptoJS.AES.encrypt(
-          JSON.stringify(ele?.employeeID),
+          JSON.stringify(ele?.loanID),
           secretPass
         ).toString();
 
@@ -184,7 +184,7 @@ console.log(ele,"elementtt")
        
       };
       //encryptData()
-     router.push(paths.dashboard.monthlydeductions.userview(ele?.employeeID));
+     router.push(paths.dashboard.monthlydeductions.userview(ele?.loanID));
       
       
     },
