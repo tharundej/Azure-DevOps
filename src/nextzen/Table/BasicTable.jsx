@@ -522,6 +522,8 @@ const [index, setIndex]=useState(""); // index setting
             <TimeSheetSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              // refreshTable={refreshTable}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AdditionsFilterSearch' && (
@@ -803,7 +805,7 @@ const [index, setIndex]=useState(""); // index setting
           {/* accounts  */}
           <Card>
             <TableContainer
-              sx={{ position: 'relative', overflow: 'unset', padding: '0px !important'}}
+             component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%',minHeight:100, height:300,  }}
             >
               <TableSelectedAction
                 dense={table.dense}

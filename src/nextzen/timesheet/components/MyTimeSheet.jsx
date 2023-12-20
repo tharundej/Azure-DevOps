@@ -31,6 +31,7 @@ import  Grid from '@mui/material/Grid';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import AddTimeSheet from './AddTimeSheet';
 const MyTimeSheet = ({currentUser,filterSearch}) => {
+  const[count, setCount]=useState(0)
     const TABLE_HEAD = [
 
         // {
@@ -441,7 +442,10 @@ console.log(startDate,"start",endDate,"end",value,"3333")
 }
 
 
-
+// count function
+const countFunction =()=>{
+  setCount(count+1)
+}
      
   return (
     <>
@@ -456,7 +460,7 @@ PaperProps={{
   sx: { maxWidth: 720 },
 }}     >
           {/* <ModalHeader heading="Edit Timeline "/> */}
-          <AddTimeSheet EditData={timesheetData} handleClose={handleCloseEdit} />
+          <AddTimeSheet EditData={timesheetData} handleClose={handleCloseEdit} countFunction={countFunction}/>
      
       </Dialog>
    
@@ -468,6 +472,7 @@ PaperProps={{
  bodyData='data'
  filterName="TimeSearchFilter"
  onClickActions={onclickActions}
+ count={count}
  />
     </>
   );
