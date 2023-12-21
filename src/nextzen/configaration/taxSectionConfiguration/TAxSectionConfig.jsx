@@ -135,10 +135,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     const payload = {
         companyId:cmpId,
        configId:valueSelected?.configId,
-       taxSection:valueSelected?.taxSection,
-       taxScheme:valueSelected?.taxScheme,
+       taxSection:valueSelected?.taxSection?.toString(),
+       taxScheme:valueSelected?.taxScheme?.toString(),
        taxLimit:parseInt(valueSelected?.taxLimit),
-       attachmentsRequired:valueSelected?.attachmentsRequired
+       attachmentsRequired:valueSelected?.attachmentsRequired? valueSelected?.attachmentsRequired : 0
        }
 
     const config = {
