@@ -102,6 +102,10 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
   const [ToShiftGroup_Name1, setToShiftGroup_Name1] = useState('');
   //validation
   const [shiftNameError, setShiftNameError] = useState(false);
+  const [DepartmentError, setDepartmentError] = useState(false);
+  const [DesignationError, setDesignationError] = useState(false);
+  const [GradeError, setGradeError] = useState(false);
+  const [Employerror, setEmployerror] = useState(false);
   const [departmentData, setDepartmentData] = useState([]);
   const [CurrentDepartmentData, setCurrentDepartmentData] = useState({});
   const [CurrentShiftGroupNameData, setCurrentShiftGroupNameData] = useState({});
@@ -239,10 +243,28 @@ export default function AddEmployeShift({ currentUser, handleClose ,getTableData
         locationId: (user?.locationID)? JSON.stringify(user?.locationID ): '',
       };
       console.log(data, 'data111ugsghghh');
-      if (CurrentShiftNameData?.shiftConfigurationId === undefined) {
+      if ( CurrentShiftNameData?.shiftConfigurationId === undefined ) {
         // Display an error or prevent submission
-        alert('Please select a shift name.');
-      } else {
+        setShiftNameError(true)
+      }
+      if ( !isemployeLevel &&  CurrentDepartmentData?.departmentID === undefined) {
+        // Display an error or prevent submission
+        setDepartmentError(true)
+      }
+      if ( !isemployeLevel &&  CurrentDesignationData?.designationID === undefined) {
+        // Display an error or prevent submission
+        setDesignationError(true)
+      }
+      if ( !isemployeLevel &&   CurrentGradeData?.designationGradeID === undefined) {
+        // Display an error or prevent submission
+        setGradeError(true)
+      }
+      if ( isemployeLevel &&   (data.employeeId.length === 0 ) ) {
+        // Display an error or prevent submission
+        setEmployerror(true)
+      }
+
+       else {
         const response = await instance.post('/addShiftDetails', data).then(
           (successData) => {
 
@@ -295,7 +317,7 @@ setShiftGroupName(event.target.value)
 </RHFSelect> */}
 
 <RHFTextField
-                 
+                  required
                   name="shiftGroupName"
                   label="Shift Group Name "
                   onChange={handleShift}
@@ -368,12 +390,17 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.departmentName}
                     onChange={(e, newvalue) => {
                       setCurrentDepartmentData(newvalue);
+                      setDepartmentError(newvalue === null);
                       getDesignation(newvalue);
+                    
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Department" />}
+                    renderInput={(params) => <TextField 
+                      error={DepartmentError}
+                      helperText={(DepartmentError)? 'Please select a Depatment.' : ''}
+                      {...params} label="Select Department" />}
                   />
                 )}
                 {/* <RHFSelect name="designationId" label="Select Designation">
@@ -394,12 +421,16 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.designationName}
                     onChange={(e, newvalue) => {
                       setCurrentDesignationData(newvalue);
+                      setDesignationError(newvalue === null ? true : false);
                       getGrade(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Designation" />}
+                    renderInput={(params) => <TextField
+                    error={DesignationError}
+                    helperText={(DesignationError)? "please select Designation" : ""}
+                       {...params} label="Select Designation" />}
                   />
                 )}
                 {!isemployeLevel && (
@@ -411,11 +442,15 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.designationGradeName}
                     onChange={(e, newvalue) => {
                       setCurrentGradeData(newvalue);
+                      setGradeError(newvalue === null ? true : false)
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Grade" />}
+                    renderInput={(params) => <TextField
+                    error={GradeError}
+                    helperText={(GradeError)? "please Select the Grade" : ""}
+                       {...params} label="Select Grade" />}
                   />
                 )}
                 {isemployeLevel && (
@@ -430,7 +465,10 @@ setShiftGroupName(event.target.value)
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label=" Select employee" />}
+                    renderInput={(params) => <TextField 
+                      error={Employerror}
+                      helperText={(Employerror)? "please select the employe" : ""}
+                       {...params} label=" Select employee" />}
                   />
                 )}
               </Box>

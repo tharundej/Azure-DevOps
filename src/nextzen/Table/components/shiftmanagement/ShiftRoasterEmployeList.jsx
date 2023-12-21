@@ -43,15 +43,13 @@ const ShiftRoasterEmployeList = ({roasterRowData,onClose}) => {
 
   return (
     <>
-     <div style={{ overflow:"scroll" }}>
-      <ModalHeader heading="Employee List"/>
+
+     <ModalHeader heading="Employee List"/>
+     
      <div style={{ display: "flex",  justifyContent: "flex-end" }}>
 
-  {/* <Stack sx={{justifyContent:"center" , alignItems:"center"}}>
+     <Grid fullWidth item sx={{alignSelf:"center" , marginRight:"20px"  }} xs={5}> 
 
-  <Button style={{borderRadius:"4px",boxSizing:"inherit", fontSize: "18px"  }} variant="outlined" size="large" color='inherit' onClick={onClose}>Close</Button>
-  </Stack> */}
-        <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
       <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={onClose} />
       </Grid>
 </div>
@@ -158,7 +156,7 @@ const ShiftRoasterEmployeList = ({roasterRowData,onClose}) => {
     </List> */}
     <Box sx={{ flexGrow: 1 }} />
 
-              </div>
+            
     </>
   )
 }
