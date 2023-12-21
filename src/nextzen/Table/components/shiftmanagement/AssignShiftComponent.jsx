@@ -112,7 +112,7 @@ export default function AssignShiftComponent() {
         "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
-        "count": 10,
+        "count": 5,
         "externalFilters": {
             "shiftName": "",
             "shiftTerm": "",
