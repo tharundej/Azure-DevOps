@@ -26,26 +26,27 @@ const bull = (
 );
 
 export default function BasicCard() {
-  const tabLabels = ['Declaration Details', 'Rent Details', 'LIC Premium','House Property','Medical Insurance Premium','Master Details' ,'HR Tab'];
+  // const tabLabels = ['Declaration Details', 'Rent Details', 'LIC Premium','House Property','Medical Insurance Premium','Master Details' ,'HR Tab'];
+  const tabLabels = ['Declaration Details', 'HR Tab'];
   const tabContents = [
     <div>
       <DeclarationDetails/>
     </div>,
-    <div>
-      <RentDetails/>
-    </div>,
-    <div>
-      <LicPremium/>
-    </div>,
-    <div>
-      <HouseProperty/>
-    </div>,
-    <div>
-      <MedicalPremium/>
-    </div>,
-    <div>
-      <MasterDetails/>
-    </div>,
+    // <div>
+    //   <RentDetails/>
+    // </div>,
+    // <div>
+    //   <LicPremium/>
+    // </div>,
+    // <div>
+    //   <HouseProperty/>
+    // </div>,
+    // <div>
+    //   <MedicalPremium/>
+    // </div>,
+    // <div>
+    //   <MasterDetails/>
+    // </div>,
      <div>
      {/* <HrITTab/> */}
      <HrSectionTab />

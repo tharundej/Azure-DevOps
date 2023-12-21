@@ -162,12 +162,12 @@ const AddDeductions=()=>{
   }
   axios.request(config).then((response) => {
     console.log(response,"responseeee")
-    // handleClose()
-    // enqueueSnackbar(response.data.message,{variant:'success'})
+    handleClose()
+    enqueueSnackbar(response.data.message,{variant:'success'})
   
   })
     .catch((error) => {
-      // handleClose()
+      handleClose()
       console.log(error,"Errorrrr")
       
     });

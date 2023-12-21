@@ -63,8 +63,11 @@ const MenuProps = {
 
 
 
-const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData}) => {
-
+const TimeSheetSearchFilterm = ({currentUser,filterSearch,filterData,getTableData}) => {
+const[count,setCount]=useState(0)
+  const refreshTable =()=>{
+    setCount(count+1)
+  }
   const { enqueueSnackbar } = useSnackbar();
    // dialog
     // const values = watch();
@@ -517,7 +520,7 @@ PaperProps={{
 
          >
         
-          < AddTimeSheet EditData={{}} handleClose={handleClose}/>
+          < AddTimeSheet EditData={{}} handleClose={handleClose} countFunction={getTableData}/>
 
      
       </Dialog>
@@ -534,7 +537,10 @@ PaperProps={{
           Filters
           <CancelOutlinedIcon
             sx={{ cursor: 'pointer', float: 'right' }}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              // handleCancel();
+              handleClickClose()
+            }}
           />
         </DialogTitle>
         <DialogContent sx={{ mt: 0, paddingBottom: 0, marginTop: 2 }}>

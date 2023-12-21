@@ -213,9 +213,9 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
-      departmentID: JSON.stringify(formData?.Department?.departmentID) || '',
-      designationID: JSON.stringify(formData?.Designation?.designationID) || '',
-      designationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
+      fPdepartmentID: JSON.stringify(formData?.Department?.departmentID) || '',
+      fPDesignationID: JSON.stringify(formData?.Designation?.designationID) || '',
+      fPDesignationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
     };
     filterData(obj);
     console.log(obj, 'FilterData');
@@ -383,6 +383,13 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
   }, []);
   const handleCancel = () => {
     setFormData({});
+    const obj = {
+      fPdepartmentID: '',
+      fPDesignationID:  '',
+      fPDesignationGradeID:  '',
+    };
+    filterData(obj);
+    // handleApply();
   };
 
   console.log(formData, 'inreset');
@@ -520,6 +527,8 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
             sx={{ float: 'right', right: 15 }}
             variant="outlined"
             onClick={() => {
+             
+              setFormData({});
               handleCancel();
             }}
           >

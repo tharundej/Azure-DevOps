@@ -42,8 +42,10 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { setCommentRange } from 'typescript';
 
-export default function CreateSwapRequest({ currentUser , handleClose }) {
+export default function CreateSwapRequest({ currentUser , handleClose,getTableData }) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -126,6 +128,9 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   // states
   const [shiftGroupName,setShiftGroupName] = useState([])
   const [ShiftNameDetails,setShiftNameDetails] = useState({})
+const [Comment,setComment]=useState('')
+
+const[GroupError,setGroupError]=useState(false)
 
   const getShiftGroupName= async ()=>{
     try{
@@ -137,7 +142,8 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
       console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
-    }catch(error){
+    }
+    catch(error){
   console.error("Error", error);
   throw error;
     }
@@ -155,13 +161,17 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
     employeeId:(user?.employeeID)?user?.employeeID : '',
     toShiftGroupId:parseInt( ShiftNameDetails.employeeShiftGroupId),
     startDate:formatDateToYYYYMMDD( datesUsed.startDate),
-    
+    comment: Comment,
 
   }
       console.log(data, 'data111ugsghghh');
-
+if(ShiftNameDetails.employeeShiftGroupId === undefined){
+  setGroupError(true)
+}
+else{
       const response = await instance.post('/createSwapRequest', data).then(
         (successData) => {
+          getTableData()
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
 
@@ -173,23 +183,23 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
           console.log('lllll', error);
         }
       );
-    } catch (error) {
+    } } catch (error) {
       console.error(error);
     }
   });
 
+  const handleChange =(event)=>{
+    setComment(event.target.value)
+  }
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '0px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Employee Request Swap  "/>
       <Grid container spacing={3}>
 
 <Grid xs={12} md={12}>
-  <Grid sx={{ padding: '8px' }}>
-    <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here 
-    </Typography>
-  </Grid>
+
   <Card sx={{ p: 3 }}>
     <Box
       rowGap={1}
@@ -257,7 +267,9 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="To Shift Group Name" />}
+  renderInput={(params) => <TextField
+  error={GroupError}helperText={(GroupError)? "Please Select To Shift Group Name " : ""}
+   {...params} label="To Shift Group Name" />}
 />
 
       {/* <Autocomplete
@@ -312,7 +324,9 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
           />
         </DemoContainer>
       </LocalizationProvider> */}
-<RHFTextField name="comment" label="Comments " />
+
+<RHFTextField required onChange={handleChange} name="comment" label="Comments " />
+
 
 
       {/* <br />
@@ -394,10 +408,10 @@ export default function CreateSwapRequest({ currentUser , handleClose }) {
 
 
         <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+                <Button  sx={{mr:"5px"}} variant="outlined" onClick={handleClose}>Cancel</Button>
+                <LoadingButton type="submit"   sx={{backgroundColor:'#3B82F6'}} variant="contained" color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Request Shift Swap'}
                 </LoadingButton>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
   </Card>
 </Grid>
