@@ -793,19 +793,17 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
 
 
-          <TextField 
+        <TextField 
           label="CTC"  
           id="ctc"
           value={currentWorkData?.ctc}
           type='number'
-          onChange={(e)=>{
-              
-            setCurrentWorkData(prev=>({
-              ...prev,
-              ctc:e?.target?.value
-            }))
+          readOnly
+          onChange={(e) => {
+            // Optionally, you can add logic here if needed
+            // Note: Since the field is read-only, the onChange event won't be triggered by user input
           }}
-          />
+        />
           
 
 
