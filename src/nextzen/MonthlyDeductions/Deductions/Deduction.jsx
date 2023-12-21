@@ -342,28 +342,7 @@ return (
                {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
                <Typography><span>Remarks : </span>{itm?.comments}</Typography>
                </> 
-           :
-           <>
-            <Typography>
-              {console.log(deductionInstallment,"Deductionisntallment")}
-                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}<br />
-                 {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
-                 <IconButton
-                   sx={{ position: 'absolute', top: 15, right: 0 }}
-                   onClick={() => handleDeduction(itm?.deductionType,index)}
-                 >
-                   <Iconify icon="iconamoon:arrow-up-2-thin" />
-                 </IconButton>
-               </Typography>
-               {deductionInstallment?.data?.map((item, index) => (
-                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
-                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
-                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
-                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
-                                  </Grid>
-                                ))}
-              
-           </>
+          :null
                }
                
           </CardContent>
