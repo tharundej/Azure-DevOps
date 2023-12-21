@@ -1,6 +1,7 @@
 import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
+import Badge from '@mui/material/Badge';
 
 import { styled } from '@mui/system';
 
@@ -84,6 +85,7 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+  const [badgeContent, setBadgeContent] = useState(false);
 
   const [userdropDownOptions,setUserDropDownOptions]=useState({})
   const [userdropDownvalue,setUserDropDownValue]=useState({})
@@ -418,6 +420,8 @@ const [stateOptions,setOptions]=useState([])
 
     const handleApply=async()=>{
       setDatesData([]);
+      setBadgeContent(true);
+
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
       console.log(data,userdropDownvalue,'for filterss')
@@ -479,10 +483,24 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
       <Grid item>
         <Stack  >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>Filter
-           
-      </Button>
+        {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
 
 
       </Stack>

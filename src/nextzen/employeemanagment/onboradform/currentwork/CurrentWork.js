@@ -110,7 +110,10 @@ const CurrentWork=forwardRef((props,ref)=> {
 
   "designationGradeID": currentUser?.designationGradeID || undefined,
 
-  "ctc":currentUser?.ctc || undefined,
+  "ctc":currentUser?.ctc || 0,
+  "monthlyPay":currentUser?.monthlyPay || 0,
+  "variablePay":currentUser?.variablePay || 0,
+  "bonus":currentUser?.bonus || 0,
 
 
   "roleID":currentUser?.roleID || undefined,
@@ -733,18 +736,75 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
 
 
-          <TextField label="CTC"  
+        <TextField 
+          label="Monthly Salary/PM"  
+          id="Monthly"
+          value={currentWorkData?.monthlyPay}
+          type='number'
+          onChange={(e) => {
+            const enteredValue = parseFloat(e?.target?.value) ;
+            const newMonthlySalary = enteredValue;
+            const newTotalSalary =  enteredValue * 12+currentWorkData?.variablePay+currentWorkData?.bonus;
+          
+            setCurrentWorkData((prev) => ({
+              ...prev,
+              monthlyPay: newMonthlySalary,
+              ctc: newTotalSalary,
+            }));
+          }}
+        />
+
+      <TextField 
+        label="Variable Pay/PA"  
+        id="Variable"
+        value={currentWorkData?.variablePay}
+        type='number'
+        onChange={(e) => {
+          const enteredValue = parseFloat(e?.target?.value) ;
+          const newVariablePay = enteredValue;
+          const newTotalSalary =  currentWorkData?.monthlyPay * 12+enteredValue+currentWorkData?.bonus;
+
+          setCurrentWorkData((prev) => ({
+            ...prev,
+            variablePay: newVariablePay,
+            ctc: newTotalSalary,
+          }));
+        }}
+       
+      />
+
+          <TextField 
+            label="Bonus Pay/PA"  
+            id="Bonus"
+            value={currentWorkData?.bonus}
+            type='number'
+            onChange={(e) => {
+              const enteredValue = parseFloat(e?.target?.value) ;
+              const newVariablePay = enteredValue;
+              const newTotalSalary =  currentWorkData?.monthlyPay * 12+enteredValue+currentWorkData?.variablePay;
+    
+              setCurrentWorkData((prev) => ({
+                ...prev,
+                bonus: newVariablePay,
+                ctc: newTotalSalary,
+              }));
+            }}
+            />
+
+
+
+        <TextField 
+          label="CTC"  
           id="ctc"
           value={currentWorkData?.ctc}
           type='number'
-          onChange={(e)=>{
-              
-            setCurrentWorkData(prev=>({
-              ...prev,
-              ctc:e?.target?.value
-            }))
+          readOnly
+          onChange={(e) => {
+            // Optionally, you can add logic here if needed
+            // Note: Since the field is read-only, the onChange event won't be triggered by user input
           }}
-          />
+        />
+          
 
 
 <FormGroup>

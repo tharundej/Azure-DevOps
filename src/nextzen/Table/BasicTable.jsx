@@ -513,6 +513,7 @@ const [index, setIndex]=useState(""); // index setting
             <SwapRequestSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
@@ -552,12 +553,13 @@ const [index, setIndex]=useState(""); // index setting
             />
           )}
           {filterName === 'ShiftRoastFilter' && (
-            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'MyShiftFilter' && (
             <MyShiftSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AssignShiftFilter' && (
@@ -636,7 +638,7 @@ const [index, setIndex]=useState(""); // index setting
             // />
           )}
           {filterName === 'SwapSearchFilter' && (
-            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData}/>
           )}
           {filterName === 'SalaryStructureFilterSearch' && (
             <SalaryStructureFilters
