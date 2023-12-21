@@ -23,7 +23,6 @@ pipeline {
                      sh '''
                          docker ps
                          docker rm -f node_n || true
-                         docker rmi ui_erp:8.0-${BUILD_NUMBER}
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 
