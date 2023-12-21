@@ -19,6 +19,7 @@ import Iconify from 'src/components/iconify/iconify';
 
 export default function CreatePurchasePayment({ currentData, handleClose }) {
   const [poNumberOptions,setPoNumberOptions]=useState([])
+  const [InvoiceNumberOptions,setInvoiceNumberOptions]=useState([]);
   const ApiHitGetOptions=async(obj)=>{
     let config = {
       method: 'post',
@@ -101,6 +102,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
     const obj=data;
     console.log(obj,'oooooo')
     obj.poNumber=obj?.poNumber?.poNumber || "";
+    obj.invoiceNo=obj?.invoiceNo?.invoiceNo || "";
     obj.paymentMethod=obj.paymentMethod || ""
     obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID;
    
@@ -150,6 +152,33 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   const paymentTypeOptions=["Cash","Check","UPI"];
   const paymentStatusOptions = ["Paid", "Partial Paid", "Not Paid"];
 
+  const ApiHitGetInvoiceNumberOptions=(poNumber)=>{
+    const obj={
+      poNumber:poNumber,
+     "companyId":  JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    }
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/invoicelist`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setInvoiceNumberOptions(response?.data?.data)
+    })
+    .catch((error) => {
+      console.log(error);
+      setInvoiceNumberOptions([])
+    });
+  }
+
   return (
     <div style={{ paddingTop: '20px' }}>
     
@@ -175,6 +204,7 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                 value={data?.poNumber}
                 getOptionLabel={(option) => option.poNumber}
                 onChange={(e,value) => {
+                  ApiHitGetInvoiceNumberOptions(value.poNumber)
                    console.log(value)
                   const newObj={...data};
                   newObj.poNumber=value;
@@ -208,6 +238,28 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                     id="date-picker-inline"
                     label="Paid Date"
                   />
+
+
+<Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={InvoiceNumberOptions || []}
+                value={data?.poNumber}
+                getOptionLabel={(option) => option.invoiceNo}
+                onChange={(e,value) => {
+                   console.log(value)
+                  const newObj={...data};
+                  newObj.invoiceNo=value;
+
+                  setData(newObj);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                }}
+                renderInput={(params) => <TextField {...params} label="Invoice Number" />}
+              />
+              </Grid>
 
 <TextField  name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
             <DatePicker
