@@ -22,8 +22,6 @@ pipeline {
                 script {
                      sh '''
                          docker ps
-                         // docker stop  ui_erp:8.0
-                         // docker rm  ui_erp:8.0
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 
