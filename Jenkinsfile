@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Clean Workspace') {
             steps {
-                eleteDir()
+                deleteDir()
             }
         }
         stage("Git clone"){
