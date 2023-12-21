@@ -39,6 +39,7 @@ const [EmployeData, setEmployeData] = useState([])
 
   return (
     <>
+
       
 
      <ModalHeader heading="Employee List"/>
@@ -50,6 +51,7 @@ const [EmployeData, setEmployeData] = useState([])
       </Grid>
 </div>
 <Grid container spacing={1} style={{overflow:"scroll"}}>
+
 {EmployeData.map((item,intex)=>(
   <Grid item key={item.id} xs={12} sm={6} md={6} lg={6}>
 

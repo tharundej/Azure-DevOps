@@ -129,7 +129,9 @@ export default function CreateSwapRequest({ currentUser , handleClose,getTableDa
   const [shiftGroupName,setShiftGroupName] = useState([])
   const [ShiftNameDetails,setShiftNameDetails] = useState({})
 const [Comment,setComment]=useState('')
+
 const[GroupError,setGroupError]=useState(false)
+
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
@@ -322,7 +324,9 @@ else{
           />
         </DemoContainer>
       </LocalizationProvider> */}
+
 <RHFTextField required onChange={handleChange} name="comment" label="Comments " />
+
 
 
       {/* <br />

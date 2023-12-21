@@ -43,11 +43,13 @@ const ShiftRoasterEmployeList = ({roasterRowData,onClose}) => {
 
   return (
     <>
+
      <ModalHeader heading="Employee List"/>
      
      <div style={{ display: "flex",  justifyContent: "flex-end" }}>
 
      <Grid fullWidth item sx={{alignSelf:"center" , marginRight:"20px"  }} xs={5}> 
+
       <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={onClose} />
       </Grid>
 </div>

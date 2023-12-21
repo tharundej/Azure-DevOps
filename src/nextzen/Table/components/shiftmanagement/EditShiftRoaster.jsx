@@ -366,7 +366,9 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose ,c
         DesignationGradeId: (fountGrade?.designationGradeID)?parseInt(fountGrade?.designationGradeID): 0,
         // locationId:(user?.locationID)?user?.locationID : null,
         companyId:(user?.companyID)?user?.companyID : '',
+
         employeeId: join() ,
+
       };
       console.log(data, 'data111ugsghghh');
     if(foundShift?.shiftConfigurationId === undefined){
