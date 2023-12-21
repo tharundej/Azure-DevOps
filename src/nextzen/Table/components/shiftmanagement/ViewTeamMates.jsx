@@ -39,15 +39,17 @@ const [EmployeData, setEmployeData] = useState([])
 
   return (
     <>
-     <div style={{ padding: '0px',overflow:"scroll" }}>
+      
+
      <ModalHeader heading="Employee List"/>
+     
      <div style={{ display: "flex",  justifyContent: "flex-end" }}>
 
-     <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
+     <Grid fullWidth item sx={{alignSelf:"center" , marginRight:"20px"  }} xs={5}> 
       <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={onClose} />
       </Grid>
 </div>
-<Grid container spacing={1}>
+<Grid container spacing={1} style={{overflow:"scroll"}}>
 {EmployeData.map((item,intex)=>(
   <Grid item key={item.id} xs={12} sm={6} md={6} lg={6}>
 
@@ -150,7 +152,7 @@ const [EmployeData, setEmployeData] = useState([])
     </List> */}
     <Box sx={{ flexGrow: 1 }} />
 
-              </div>
+              
     </>
   )
 }

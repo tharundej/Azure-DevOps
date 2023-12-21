@@ -129,6 +129,7 @@ export default function CreateSwapRequest({ currentUser , handleClose,getTableDa
   const [shiftGroupName,setShiftGroupName] = useState([])
   const [ShiftNameDetails,setShiftNameDetails] = useState({})
 const [Comment,setComment]=useState('')
+const[GroupError,setGroupError]=useState(false)
   const getShiftGroupName= async ()=>{
     try{
     const  data= {
@@ -139,7 +140,8 @@ const [Comment,setComment]=useState('')
       const response = await instance.post('/getShiftGroupName',data);
       setShiftGroupName(response.data.data)
       console.log("🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:", response.data.data)
-    }catch(error){
+    }
+    catch(error){
   console.error("Error", error);
   throw error;
     }
@@ -161,7 +163,10 @@ const [Comment,setComment]=useState('')
 
   }
       console.log(data, 'data111ugsghghh');
-
+if(ShiftNameDetails.employeeShiftGroupId === undefined){
+  setGroupError(true)
+}
+else{
       const response = await instance.post('/createSwapRequest', data).then(
         (successData) => {
           getTableData()
@@ -176,7 +181,7 @@ const [Comment,setComment]=useState('')
           console.log('lllll', error);
         }
       );
-    } catch (error) {
+    } } catch (error) {
       console.error(error);
     }
   });
@@ -260,7 +265,9 @@ const [Comment,setComment]=useState('')
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="To Shift Group Name" />}
+  renderInput={(params) => <TextField
+  error={GroupError}helperText={(GroupError)? "Please Select To Shift Group Name " : ""}
+   {...params} label="To Shift Group Name" />}
 />
 
       {/* <Autocomplete
@@ -315,7 +322,7 @@ const [Comment,setComment]=useState('')
           />
         </DemoContainer>
       </LocalizationProvider> */}
-<RHFTextField onChange={handleChange} name="comment" label="Comments " />
+<RHFTextField required onChange={handleChange} name="comment" label="Comments " />
 
 
       {/* <br />

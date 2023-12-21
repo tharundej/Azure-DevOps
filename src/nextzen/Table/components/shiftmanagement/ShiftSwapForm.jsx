@@ -91,6 +91,8 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
 
    const [newShift,setnewShift]= useState(false)
    const [curentShift,setcurentShift]= useState(false)
+   const [EmployeeError,setEmployeeError]= useState(false)
+   const [ShiftError,setShiftError]= useState(false)
    const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
@@ -229,7 +231,13 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
     comment:Comment,
   }
       console.log(data, 'data111ugsghghh');
-
+if(currentEmployeSwapData?.employee_id === undefined){
+  setEmployeeError(true)
+}
+else if(currentShiftGroupData?.employeeShiftGroupId === undefined){
+  setShiftError(true)
+}
+else {
       const response = await instance.post('/SwapShift', data).then(
         (successData) => {
           getTableData()
@@ -244,7 +252,8 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
           console.log('lllll', error);
         }
       );
-    } catch (error) {
+    }
+  } catch (error) {
       console.error(error);
     }
   });
@@ -302,7 +311,10 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="Select Employe" />}
+  renderInput={(params) => <TextField 
+    error={EmployeeError}
+    helperText={(EmployeeError) ?  "please select employee" : ""}
+   {...params} label="Select Employe" />}
 />
       <Autocomplete
   disablePortal
@@ -321,7 +333,10 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="To Shift Name" />}
+  renderInput={(params) => <TextField 
+  error={ShiftError}
+  helperText={(ShiftError)? "please select to shift" : ""}
+  {...params} label="To Shift Name" />}
 />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
@@ -340,7 +355,7 @@ export default function ShiftSwapForm({ currentUser , handleClose, getTableData 
         </DemoContainer>
       </LocalizationProvider>   
 
-      <RHFTextField  name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
+      <RHFTextField required name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
   { curentShift &&   
   //  <Grid>
   //     <Typography >
