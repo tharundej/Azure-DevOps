@@ -69,7 +69,7 @@ export default function loanDetails(){
       }
       const [showAll, setShowAll] = useState(false);
 
-      const visibleItemsCount = 1
+      const visibleItemsCount = 4
       
       const visibleInstallments = showAll ? loanDetails?.InstallmentDetails : loanDetails?.InstallmentDetails?.slice(0, visibleItemsCount);
      
