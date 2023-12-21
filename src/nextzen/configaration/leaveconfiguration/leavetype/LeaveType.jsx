@@ -35,7 +35,7 @@ export default function LeaveType({ currentUser }) {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
-  const [count,setCount] = useState(0)
+  const [count, setCount] = useState(0);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +52,13 @@ export default function LeaveType({ currentUser }) {
   const leaveTypeNames = [{ type: 'Annual' }, { type: 'Month' }];
   const TABLE_HEAD = [
     { id: 'leaveTypeName', label: 'Leave Name', type: 'text', minWidth: 180 },
-    { id: 'totalNumberLeave', label: 'Total Number Of Leaves Per Year', type: 'text', minWidth: 280 },
+    { id: 'gender', label: 'Gender', type: 'text', minWidth: 180 },
+    {
+      id: 'totalNumberLeave',
+      label: 'Total Number Of Leaves Per Year',
+      type: 'text',
+      minWidth: 280,
+    },
     // { id: 'leavePeriodType', label: 'Term Type', type: 'text', minWidth: 180 },
     { id: 'leaveTakeRange', label: 'Leave Take Range', type: 'text', minWidth: 180 },
     { id: 'upperCapLimit', label: 'Leave Upper Cap Limit', type: 'text', minWidth: 180 },
@@ -61,19 +67,20 @@ export default function LeaveType({ currentUser }) {
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
     // { name: 'Delete', icon: 'hh', path: 'jjj' },
   ];
-  const defaultPayload = {
-    count: 5,
-    page: 0,
-    search: '',
-    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    externalFilters: {
-      leaveTypeName: '',
-      leavePeriodType: '',
-    },
-    sort: {
-      key: 1,
-      orderBy: '',
-    },
+  const defaultPayload = 
+    {
+      "count": 5,
+      "page": 0,
+      "search": "",
+      //  "companyId": "COMP20",
+        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "externalFilters": {
+          "leaveTypeName": ""
+      },
+      "sort": {
+          "key":1,
+          "orderBy": ""
+      }
   };
   const NewUserSchema1 = Yup.object().shape({
     LeaveName: Yup.string(),
@@ -110,38 +117,42 @@ export default function LeaveType({ currentUser }) {
     reset: reset1,
   } = methods1;
   const handleSelectChange = (field, value) => {
-    // console.log('values:', value);
-    // console.log('event', event.target.value);
-    // setSelectedOption(value);
-    
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-    console.log(field, value, 'valllllllllll');
   };
+    const handleGenderChange = (_, value) => {
+      setValueSelected((prevData) => ({
+        ...prevData,
+        gender: value,
+      }));
+    };
+    
+ 
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
-    data.leaveTakeRange=JSON.parse(valueSelected.leaveTakeRange,10)
-    data.leaveTypeName=valueSelected.leaveTypeName
-    data.totalNumberLeave=JSON.parse(valueSelected.totalNumberLeave,10)
-    data.upperCapLimit=JSON.parse(valueSelected.upperCapLimit,10)
-    data.leaveTypeID=JSON.parse(valueSelected.leaveTypeID,10)
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.leaveTakeRange = JSON.parse(valueSelected.leaveTakeRange, 10);
+    data.leaveTypeName = valueSelected.leaveTypeName;
+    data.totalNumberLeave = JSON.parse(valueSelected.totalNumberLeave, 10);
+    data.upperCapLimit = JSON.parse(valueSelected.upperCapLimit, 10);
+    data.leaveTypeID = JSON.parse(valueSelected.leaveTypeID, 10);
+    data.gender = [valueSelected?.gender];
     // data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
     // data.leavePeriodType=valueSelected.leavePeriodType
     // data.locationID = formData?.Location?.locationID;
     console.log('submitted data111', data);
 
     try {
-      const response = await axios.post(baseUrl + '/editLeaveType', data);
+      const response = await axios.post(baseUrl + '/editLeaveType2', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         // handleClose();
         handleCloseEdit();
-        setCount(count+1)
+        setCount(count + 1);
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
@@ -162,10 +173,10 @@ export default function LeaveType({ currentUser }) {
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditData(rowdata);
-      setValueSelected(rowdata)
-      
+      setValueSelected(rowdata);
+
       handleOpenEdit();
-      console.log(rowdata,'edidataaaa')
+      console.log(rowdata, 'edidataaaa');
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
       deleteFunction(rowdata, event);
@@ -174,7 +185,7 @@ export default function LeaveType({ currentUser }) {
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
     setEditData(rowdata);
-    
+
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
   const deleteFunction = async (rowdata, event) => {
@@ -227,7 +238,14 @@ export default function LeaveType({ currentUser }) {
     setSnackbarOpen(false);
     setOpen(true);
   };
-
+  const genders = [
+    {
+      type: 'Male',
+    },
+    {
+      type: 'Female',
+    },
+  ];
   return (
     <>
       <Snackbar
@@ -258,7 +276,7 @@ export default function LeaveType({ currentUser }) {
         }}
       >
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-        <ModalHeader heading="Edit Leave Type" />
+          <ModalHeader heading="Edit Leave Type" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -270,7 +288,6 @@ export default function LeaveType({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              
               <RHFTextField
                 name="LeaveName"
                 label="Leave Name"
@@ -289,25 +306,23 @@ export default function LeaveType({ currentUser }) {
                 value={valueSelected?.upperCapLimit}
                 onChange={(e) => handleSelectChange('upperCapLimit', e.target.value)}
               />
-              {/* <Autocomplete
-                name="leaveTypeName"
-                label="Term Type"
-                options={leaveTypeNames.map((name)=>name.type)}
-                value={valueSelected?.leavePeriodType || null}
-                //  getOptionLabel={(option) => option.type} // Use 'label' as the display label
-                // isOptionEqualToValue={(option, value) => option.value === value}
-                onChange={(e, newValue) =>
-                  handleSelectChange('leavePeriodType', newValue || null)
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="leave Type Name" variant="outlined" />
-                )}
-              /> */}
               <RHFTextField
                 name="leaveTakeRange"
                 label="Leave Take Range"
                 value={valueSelected?.leaveTakeRange}
                 onChange={(e) => handleSelectChange('leaveTakeRange', e.target.value)}
+              />
+              <Autocomplete
+                  // multiple
+                name="gender"
+                label="Gender"
+                options={genders.map((name)=>name.type)}
+                // getOptionLabel={(option) => option.type || undefined}
+                value={valueSelected?.gender}
+                 onChange={ handleGenderChange}
+                renderInput={(params) => (
+                  <TextField {...params} label="Gender" variant="outlined" />
+                )}
               />
             </Box>
           </DialogContent>
@@ -324,19 +339,20 @@ export default function LeaveType({ currentUser }) {
             >
               Save
             </LoadingButton> */}
-             <Button
-             sx={{backgroundColor:'#3B82F6'}}
-             variant="contained"
-             onClick={onSubmit1}
-             type="submit"
-             >Save
-             </Button>
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              variant="contained"
+              onClick={onSubmit1}
+              type="submit"
+            >
+              Save
+            </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getallLeaveType"
+        endpoint="/getLeaveType"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="LeaveTypeFilterSearch"

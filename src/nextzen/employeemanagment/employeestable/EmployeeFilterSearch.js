@@ -152,7 +152,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   ];
   const EmployementTypeOptions = [
    "Permanent",
-   "Contract"
+   "Contract",'Daily Wise'
 
     
   ];
@@ -480,7 +480,7 @@ const [stateOptions,setOptions]=useState([])
       <Grid item>
         <Stack  >
             <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
+           <Iconify icon="mi:filter"/>Filter
            
       </Button>
 
@@ -673,31 +673,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={6} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">State</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPState"
-                  id="demo-multiple-fPState"
-                  multiple
-                  value={state}
-                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
-                  input={<OutlinedInput label="State" />}
-                  MenuProps={MenuProps}
-                >
-                  {stateOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
+                
                     
                    <Grid marginTop="10px" xs={6} md={6} lg={6}>
                 <FormControl fullWidth >
@@ -725,7 +701,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
+                   <Grid marginTop="10px" xs={12} md={6} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Marital Status</InputLabel>
                 <Select
@@ -751,65 +727,14 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   {/* Blood Group */}
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Blood Group</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fBloodGroup"
-                  id="demo-multiple-fBloodGroup"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fBloodGroup')}
-                  input={<OutlinedInput label="Blood Group" />}
-                  MenuProps={MenuProps}
-                >
-                  {BloodGroupOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-                   {/* State */}
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">State</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPState"
-                  id="demo-multiple-fPState"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
-                  input={<OutlinedInput label="State" />}
-                  MenuProps={MenuProps}
-                >
-                  {stateOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
+                  
+                
 
                   
 
                      <Grid  >
               
-                  <Grid item xs={12} md={12} lg={6} marginTop="10px">
+                  <Grid item xs={12} md={6} lg={6} marginTop="10px">
               
                 <Autocomplete
                   disablePortal

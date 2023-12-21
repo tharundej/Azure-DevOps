@@ -92,7 +92,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function HolidaysFilters({ filterData, filterOptions, filterSearch, searchData }) {
+export default function HolidaysFilters({ filterData, filterOptions, filterSearch, searchData ,getTableData}) {
   const theme = useTheme();
   // const holidayNames = [
   //   'Diwali',
@@ -334,7 +334,7 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          <HolidaysForm />
+          <HolidaysForm getTableData={getTableData}/>
           <Grid item>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>

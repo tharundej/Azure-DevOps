@@ -21,7 +21,7 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import RolePage from './RolePage';
 
 const RoleAndResponsibility = () => {
-
+const [count, setCount] = useState(0)
   const [openRoleModal,setOpenRoleModal]=useState(false);
   const [type,setType]=useState("create")
   const [data,setData]=useState("")
@@ -182,6 +182,7 @@ dropdowns:[
         setGroupname('');
         setCheckedState("")
         handleCallSnackbar(response.data.message,"success")
+        setCount(count+1)
       })
       .catch((error) => {
         console.log(error);
@@ -218,6 +219,7 @@ dropdowns:[
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setCheckedState(response.data.data);
+        setCount(count+1)
       })
       .catch((error) => {
         console.log(error);
@@ -275,7 +277,7 @@ dropdowns:[
 
       <BasicTable headerData={TABLE_HEAD} endpoint="/getGroupMains"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-      rowActions={actions} filterName="a"  handleEditRowParent={handleEditRowParent}/>
+      rowActions={actions} filterName="a"  handleEditRowParent={handleEditRowParent} count={count}/>
     </div>
   );
 };

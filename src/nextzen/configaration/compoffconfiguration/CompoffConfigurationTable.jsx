@@ -45,6 +45,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
   const [editData, setEditData] = useState();
   // const [selectedOption, setSelectedOption] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
+  const [count, setCount] = useState();
   const TABLE_HEAD = [
     { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth: 280 },
     { id: 'expiryDays', label: 'Expiry Days', type: 'text', minWidth: 280 },
@@ -92,6 +93,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
     setEditData(rowdata);
+    {rowdata?.compensantoryPolicies === "Leave" ? setTextFieldVisible(true) : setTextFieldVisible(false) }
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
   const deleteFunction = async (rowdata, event) => {
@@ -104,7 +106,9 @@ export default function CompoffConfigurationTable({ currentUser }) {
       };
       const response = await axios.post(baseUrl + '/deleteCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
+        setCount(count+1);
         setSnackbarSeverity('success');
+        setCount(count+1);
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         console.log('sucess', response);
@@ -134,49 +138,47 @@ export default function CompoffConfigurationTable({ currentUser }) {
   const [isTextFieldVisible, setTextFieldVisible] = useState(false);
   const handleAutocompleteChange = (field, value) => {
     console.log(field, 'field');
+    console.log(value, 'aaa');
     setSelectedOption(value);
-    // setEditData(value)
-    // Check if the selected option should show the text field
+    
     if (value) {
-      if (value.type === 'Leave') {
+      if (value === 'Leave') {
         setTextFieldVisible(true);
         const updatedValueSelected = { ...editData };
-        // Update the employementType property with the new value
+       
         updatedValueSelected.compensantoryPolicies = value;
-        // Set the updated object as the new state
         setEditData(updatedValueSelected);
-      } else if (value.type === 'Encashment') {
+      } else if (value === 'Encashment') {
         setTextFieldVisible(false);
         const updatedValueSelected = { ...editData };
-        // Update the employementType property with the new value
+       
         updatedValueSelected.compensantoryPolicies = value;
-        // Set the updated object as the new state
         setEditData(updatedValueSelected);
       }
     }
   };
   const handleSelectChange = (field, value) => {
-    // console.log('values:', value);
-    // console.log('event', event.target.value);
+     console.log('values:', value);
+     console.log('field:', field);
 
     setEditData((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
-  const getOptionLabel = (compensatory) => compensatory.type;
-
+  const getOptionLabel = (compensatory) => compensatory;
+  console.log(editData,'DATA')
   const NewUserSchema1 = Yup.object().shape({
-    expiryDays: Yup.number().required('Expiry Days is Required'),
+    expiryDays: Yup.number(),
   });
 
   const NewUserSchema2 = Yup.object().shape({
-    amount: Yup.number().required('Amount is Required'),
+    amount: Yup.number(),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      expiryDays: currentUser?.expiryDays || null,
+      expiryDays: currentUser?.expiryDays || undefined,
     }),
     [currentUser]
   );
@@ -212,18 +214,19 @@ export default function CompoffConfigurationTable({ currentUser }) {
     reset: reset2,
   } = methods2;
 
-  const compensatorytypes1 = [{ type: 'Leave' }, { type: 'Encashment' }];
+  const compensatorytypes1 = ['Leave', 'Encashment'];
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = editData?.compensantoryPolicies;
     data.compensantoryConfigurationID = editData?.compensantoryConfigurationID;
-    data.expiryDays = editData?.expiryDays;
+    data.expiryDays = JSON.parse(editData?.expiryDays,10);
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/editCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
+        setCount(count+1);
         handleCloseEdit();
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
@@ -251,13 +254,14 @@ export default function CompoffConfigurationTable({ currentUser }) {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = editData?.compensantoryPolicies;
     data.compensantoryConfigurationID = editData?.compensantoryConfigurationID;
-    data.amount = editData?.amount;
+    data.amount = JSON.parse(editData?.amount,10);
     console.log('submitted data2222', data);
 
     try {
       const response = await axios.post(baseUrl + '/editCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
         handleCloseEdit();
+        setCount(count+1);
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
@@ -327,14 +331,16 @@ export default function CompoffConfigurationTable({ currentUser }) {
             <ModalHeader heading="Edit Compensantory Configuration" />
 
             <DialogContent>
-              <Autocomplete
+            <Autocomplete
                 disablePortal
                 name="compensatory"
                 id="combo-box-demo"
                 options={compensatorytypes1}
+                defaultValue={editData?.compensantoryPolicies || ''}
                 getOptionLabel={getOptionLabel}
-                value={selectedOption?.compensantoryPolicies} // Use selectedOption or an empty string
-                onChange={handleAutocompleteChange}
+                value={editData?.compensantoryPolicies || ""} // Use selectedOption or an empty string
+                // onChange={handleAutocompleteChange}
+                onChange={(e, newValue) => handleAutocompleteChange('compensantoryPolicies', newValue )}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Compensatory" />}
               />
@@ -354,6 +360,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
                   sx={{ width: 280, marginLeft: 1.5 }}
                   value={editData?.expiryDays}
                   onChange={(e) => handleSelectChange('expiryDays', e.target.value)}
+                 
                 />
               </Box>
             </DialogContent>
@@ -391,8 +398,10 @@ export default function CompoffConfigurationTable({ currentUser }) {
                 id="combo-box-demo"
                 options={compensatorytypes1}
                 getOptionLabel={getOptionLabel}
-                value={selectedOption?.compensantoryPolicies} // Use selectedOption or an empty string
-                onChange={handleAutocompleteChange}
+                defaultValue={editData?.compensantoryPolicies || []}
+                value={editData?.compensantoryPolicies || ''} // Use selectedOption or an empty string
+                // onChange={handleAutocompleteChange}
+                onChange={(e, newValue) => handleAutocompleteChange('compensantoryPolicies', newValue )}
                 sx={{ width: 300, padding: '8px' }}
                 renderInput={(params) => <TextField {...params} label="Compensatory" />}
               />
@@ -408,7 +417,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
               >
                 <RHFTextField
                   name="amount"
-                  label="Amount"
+                  label="% of Basic Pay"
                   sx={{ width: 280, marginLeft: 1.5 }}
                   value={editData?.amount}
                   onChange={(e) => handleSelectChange('amount', e.target.value)}
@@ -447,6 +456,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
         rowActions={actions}
         filterName="CompoffFilterSearch"
         onClickActions={onClickActions}
+        count={count}
       />
     </>
   );

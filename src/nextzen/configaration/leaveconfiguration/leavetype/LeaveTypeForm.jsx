@@ -27,12 +27,12 @@ import axios from 'axios';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function LeaveTypeForm({ currentUser ,getTableData}) {
+export default function LeaveTypeForm({ currentUser, getTableData }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -43,8 +43,9 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
   const handleCloseEdit = () => setOpenEdit(false);
   const handleOpenEdit = () => {
     setOpenEdit(true);
-  }
-  const [count,setCount] = useState(0)
+  };
+  const [gender, setGender] = useState(['Male','Female']);
+  const [count, setCount] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -53,6 +54,7 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
     leaveTypeName: Yup.string().required('Term Type is Required'),
     upperCapLimit: Yup.number().required('El Upper Cap Limit is Required'),
     leaveTakeRange: Yup.number().required('El Taken Range is Required'),
+    // gender: Yup.string().required('Select Gender'),
   });
 
   const [formData, setFormData] = useState({});
@@ -65,6 +67,7 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
       leaveTypeName: currentUser?.leaveTypeName || null,
       upperCapLimit: currentUser?.upperCapLimit || null,
       leaveTakeRange: currentUser?.leaveTakeRange || null,
+      // gender: currentUser?.gender || null,
     }),
     [currentUser]
   );
@@ -81,51 +84,51 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
     reset: reset1,
   } = methods1;
 
-  useEffect(() => {
-    const getLeavePeriod = async () => {
-      try {
-        const defaultPayload = {
-          count: 5,
-          page: 0,
-          search: '',
-          companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-          externalFilters: {
-            leavePeriodType: '',
-          },
-          sort: {
-            key: 1,
-            orderBy: '',
-          },
-        };
-        const response = await axios.post(baseUrl + '/getAllLeavePeriod', defaultPayload);
+  // useEffect(() => {
+  //   const getLeavePeriod = async () => {
+  //     try {
+  //       const defaultPayload = {
+  //         count: 5,
+  //         page: 0,
+  //         search: '',
+  //         companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  //         externalFilters: {
+  //           leavePeriodType: '',
+  //         },
+  //         sort: {
+  //           key: 1,
+  //           orderBy: '',
+  //         },
+  //       };
+  //       const response = await axios.post(baseUrl + '/getAllLeavePeriod', defaultPayload);
 
-        if (response?.data?.code === 200) {
-          // setSnackbarSeverity('success');
-          // setSnackbarMessage(response?.data?.message);
-          // setSnackbarOpen(true);
-           handleClose();
-          console.log('success', response);
-        }
+  //       if (response?.data?.code === 200) {
+  //         // setSnackbarSeverity('success');
+  //         // setSnackbarMessage(response?.data?.message);
+  //         // setSnackbarOpen(true);
+  //         handleClose();
+  //         console.log('success', response);
+  //       }
 
-        if (response?.data?.code === 400) {
-          // setSnackbarSeverity('error');
-          // setSnackbarMessage(response?.data?.message);
-          // setSnackbarOpen(true);
-           handleClose();
-          console.log('error', response);
-        }
-      } catch (error) {
-        // setSnackbarSeverity('error');
-        // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-        // setSnackbarOpen(true);
-         handleClose();
-        console.log('error', error);
-      }
-    };
+  //       if (response?.data?.code === 400) {
+  //         // setSnackbarSeverity('error');
+  //         // setSnackbarMessage(response?.data?.message);
+  //         // setSnackbarOpen(true);
+  //         handleClose();
+  //         console.log('error', response);
+  //       }
+  //     } catch (error) {
+  //       // setSnackbarSeverity('error');
+  //       // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+  //       // setSnackbarOpen(true);
+  //       handleClose();
+  //       console.log('error', error);
+  //     }
+  //   };
 
-    // Call the async function immediately
-    getLeavePeriod();
-  }, []); // Empty dependency array to trigger this effect only on mount
+  //   // Call the async function immediately
+  //   getLeavePeriod();
+  // }, []); // Empty dependency array to trigger this effect only on mount
 
   //   const values = watch();
 
@@ -133,29 +136,29 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
     data.companyId = localStorage.getItem('companyID');
     // data.locationID = formData?.Location?.locationID;
     // data.leavePeriodID = console.log('submitted data111', data);
-
+    data.gender = gender
     try {
-      const response = await axios.post(baseUrl + '/addLeaveType', data);
+      const response = await axios.post(baseUrl + '/addLeaveType1', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-         handleClose();
-         getTableData
+        handleClose();
+        getTableData();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-         handleClose();
+        handleClose();
         console.log('sucess', response);
       }
     } catch (error) {
       setSnackbarSeverity('error');
       setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       setSnackbarOpen(true);
-       handleClose();
+      handleClose();
       console.log('error', error);
     }
   });
@@ -176,9 +179,22 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
     if (reason === 'clickaway') {
       return;
     }
-  setSnackbarOpen(false)
+    setSnackbarOpen(false);
     setOpen(false);
   };
+  const genders = [
+    {
+      type: 'Male',
+    },
+    {
+      type: 'Female',
+    },
+  ];
+  const defaultSelectedGenders = ['Male', 'Female'];
+  const handleGenderChange = (event,value) =>{
+    console.log(value,'valueeeeee');
+    setGender(value)
+  }
   return (
     <>
       <Snackbar
@@ -234,6 +250,19 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
               <RHFTextField name="upperCapLimit" label="Upper Cap Limit" />
 
               <RHFTextField name="leaveTakeRange" label="Leave Take Range" />
+              <Autocomplete
+                multiple
+                name="gender"
+                label="Gender"
+                options={genders.map((name) => name.type)}
+                defaultValue={defaultSelectedGenders}
+                onChange={(event,value) => {
+                  handleGenderChange(event, value); // Handle state update
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Gender" variant="outlined" />
+                )}
+              />
             </Box>
           </DialogContent>
 
@@ -254,7 +283,6 @@ export default function LeaveTypeForm({ currentUser ,getTableData}) {
               type="submit"
               variant="contained"
               onClick={onSubmit1}
-             
             >
               Save
             </Button>

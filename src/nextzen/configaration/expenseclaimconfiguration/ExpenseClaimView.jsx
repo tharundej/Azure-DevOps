@@ -1,240 +1,78 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { BasicTable } from '../../Table/BasicTable';
-import axios from 'axios';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { Alert, Snackbar } from '@mui/material';
-import PropTypes from 'prop-types';
+import Avatar from '@mui/material/Avatar';
 import * as Yup from 'yup';
-import DialogTitle from '@mui/material/DialogTitle';
+import { useTheme, alpha } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
+import Scrollbar from 'src/components/scrollbar';
+import ExpenseClaimForm from './ExpensiveClaimForm';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import { Snackbar, Alert, IconButton } from '@mui/material';
+import PropTypes from 'prop-types';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
-import Iconify from 'src/components/iconify/iconify';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Iconify from 'src/components/iconify/iconify';
+import Stack from '@mui/material/Stack';
+import axiosInstance from 'src/utils/axios';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { bgGradient } from 'src/theme/css';
 export default function ExpenseClaimView({ currentUser }) {
+  const theme = useTheme();
+  const color = 'primary';
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [open, setOpen] = useState(false);
-  const [openEdit, setOpenEdit] = React.useState(false);
-  const handleOpenEdit = () => {
-    setOpenEdit(true);
-  };
-  const handleOpen = () => setOpen(true);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [valueSelected, setValueSelected] = useState();
   const handleClose = () => {
+    setOpen(false);
+    setExpenseName(''); // Resetting the expenseName state to clear the value
+    reset1();
+  };
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpen(true);
+  };
+  const handleEditclose = () => {
+    setOpen(false);
+    setEditExpenseName(null);
+    reset1();
+  };
+  const handleCloseDialog = () => {
     setOpen(false);
     reset1();
   };
-  const [departmentOptions,setDepartmentOptions]=useState([])
-const [desginationOptions,setDesginationptions]=useState([])
-const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
-  const handleCloseEdit = () => setOpenEdit(false);
-  const [editData, setEditData] = useState();
-  const [showEdit, setShowEdit] = useState(false);
-  const TABLE_HEAD = [
-    { id: 'expense_name', label: 'Expense Name', type: 'text', minWidth: 180 },
-    { id: 'department_name', label: 'Department Name', type: 'text', minWidth: 180 },
-    { id: 'designation_grade_name', label: 'Designation Grade Name ', type: 'text', minWidth: 180 },
-    { id: 'designation_name', label: 'Designation Name', type: 'text', minWidth: 180 },
-  ];
-  const actions = [
-    // { name: 'Delete', icon: 'hh', path: 'jjj' },
-    { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj', endpoint: '/', type: 'edit' },
-  ];
-
-  const defaultPayload = {
-    company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    // employee_id: 'ibm1',
-    page: 0,
-    count: 5,
-    search: '',
-    externalFilters: {
-      department_name: '',
-      designation_name: '',
-      designation_grade_name: '',
-    },
-    sort: {
-      orderby: '',
-      key: 0,
-    },
-  };
-  const ApiHitDepartment = (obj) => {
-    const config = {
-      method: 'post',
-
-      maxBodyLength: Infinity,
-
-      url: `${baseUrl}/onboardingDepartment`,
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      data: obj,
-    };
-
-    axios
-      .request(config)
-
-      .then((response) => {
-        // console.log(JSON.stringify(response?.data));
-        setDepartmentOptions(response?.data?.data || []);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const ApiHitDesgniation = (obj) => {
-    const config = {
-      method: 'post',
-
-      maxBodyLength: Infinity,
-
-      url: `${baseUrl}/onboardingDesignation`,
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      data: obj,
-    };
-
-    axios
-      .request(config)
-
-      .then((response) => {
-        // console.log(JSON.stringify(response?.data));
-        setDesginationptions(response?.data?.data || []);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-
-  const handleEdit = (rowData) => {
-    rowData.company_id = 'COMP2';
-    const {
-      company_id,
-      department_name,
-      designation_grade_name,
-      designation_name,
-      expense_configuration_id,
-      expense_name,
-    } = rowData;
-    const payload = {
-      company_id,
-      department_name,
-      designation_grade_name,
-      designation_name,
-      expense_configuration_id,
-      expense_name,
-    };
-    console.log(rowData, 'rowData');
-    const config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      url: `http://192.168.0.123:3001/erp/updateExpenseConfig`,
-      headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
-      },
-      data: payload,
-    };
-    try {
-      axios.request(config).then((response) => {
-        if (response?.data?.code === 200) {
-          setSnackbarSeverity('success');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
-          console.log('sucess', response);
-        }
-        if (response?.data?.code === 400) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage(response?.data?.message);
-          setSnackbarOpen(true);
-
-          console.log('sucess', response);
-        }
-        console.log(response?.data);
-      });
-    } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Editing. Please try again.');
-      setSnackbarOpen(true);
-      console.log(' ', error);
-    }
-  };
-
-  const onClickActions = (rowdata, event) => {
-    if (event?.name === 'Edit') {
-      setEditData(rowdata);
-      handleOpenEdit();
-      buttonFunction(rowdata, event);
-    } else if (event?.name === 'Delete') {
-      deleteFunction(rowdata, event);
-    }
-  };
-  const buttonFunction = (rowdata) => {
-    setShowEdit(true);
-    setEditData(rowdata);
-    console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
-  };
-
-  // const deleteFunction = async (rowdata, event) => {
-  //   console.log('iam here ');
-  //   try {
-  //     console.log(rowdata, 'rowData:::::');
-  //     const data = {
-  //       expense_configuration_id: JSON.parse(rowdata.expense_configuration_id, 10),
-  //     };
-  //     const response = await axios.post(baseUrl + '/deleteExpenseConfig', data);
-  //     if (response?.status === 200) {
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage('Expense Configuration Deleted Succuessfully!');
-  //       setSnackbarOpen(true);
-
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setSnackbarSeverity('error');
-  //     setSnackbarMessage('Error While Deleting Expense Configuration. Please try again.');
-  //     setSnackbarOpen(true);
-  //     console.log('error', error);
-  //   }
-  // };
-
+  const [expenseConfigurations, setExpenseConfigurations] = useState([]);
+  const [expenseName, setExpenseName] = useState('');
+  const [editExpenseName, setEditExpenseName] = useState(null);
   const NewUserSchema1 = Yup.object().shape({
-    expense_name: Yup.string(),
-    department_name: Yup.string(),
-    designation_name: Yup.string(),
-    designation_grade_name: Yup.string(),
+    expenseName: Yup.string().required('Expense Name is Required'),
   });
 
   const defaultValues1 = useMemo(
     () => ({
-      expense_name: currentUser?.expense_name,
-      department_name: currentUser?.department_name,
-      designation_name: currentUser?.designation_name,
-      designation_grade_name: currentUser?.designation_grade_name,
+      expenseName: currentUser?.expenseName || null,
     }),
     [currentUser]
   );
 
   const methods1 = useForm({
     resolver: yupResolver(NewUserSchema1),
-    defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
+    defaultValues: defaultValues1,
   });
 
   const {
@@ -243,103 +81,118 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
     formState: { isSubmitting: isSubmitting1 },
     reset: reset1,
   } = methods1;
-  const departmentName = [{ type: 'HR' }, { type: 'Sales' }, { type: 'Dev' }];
-  const designationName = [{ type: 'executive' }, { type: 'Manager' }];
 
-  const designationGradeName = [{ type: 'senior' }, { type: 'junior' }];
-  const expenseNames = [{ type: 'Medical' }, { type: 'Travel' }];
-  //   const values = watch();
-  const onSubmitEdit2 = async (editData, event) => {
+  const onSubmit1 = handleSubmit1(async (data) => {
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    console.log('submitted data111', data);
+
     try {
-      event.preventDefault();
-      // editData.claim_type=editData?.claim_type?.label
-      const payload = {
-        expense_configuration_id: JSON.parse(editData?.expense_configuration_id, 10),
-        expense_name: editData?.expense_name?.type,
-        company_id: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-        department_id: JSON.parse(editData?.department_id,10),
-        designation_id: JSON.parse(editData?.designation_id,10),
-        designation_grade_id: JSON.parse(editData?.designation_grade_id,10),
-      };
-      console.log(payload, 'payload');
-      const response = await axios.post(baseUrl + '/updateExpenseConfig', payload);
-      if (response?.data?.status === '200') {
-        handleCloseEdit();
+      const response = await axiosInstance.post(baseUrl + '/addExpenseConfig', data);
+      console.log(response?.data);
+      if (response?.data?.code === 200) {
+        reset1();
+        handleAddExpenseConfig(data);
+        handleCloseDialog();
+
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         console.log('sucess', response);
-        handleCloseEdit();
       }
-      if (response?.data?.status === '400') {
+      if (response?.data?.code === 400) {
+        // handleAddExpenseConfig(data);
+        reset1();
+        handleCloseDialog();
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
+      setOpen(false);
       setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Editing. Please try again.');
+      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
       setSnackbarOpen(true);
-      handleCloseEdit();
-      console.log(' ', error);
+      console.log('error', error);
+    }
+  });
+  const onSubmit2 = handleSubmit1(async (data) => {
+    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.expenseConfigurationID = editExpenseName?.expenseConfigurationID;
+    console.log(editExpenseName?.expenseConfigurationID, 'editExpenseName?.expenseConfigurationID');
+    try {
+      const response = await axiosInstance.post(baseUrl + '/updateExpenseConfig', data);
+      console.log(response?.data);
+      if (response?.data?.status === '200') {
+        reset1();
+        handleEditclose();
+        getExpenseName();
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+      }
+      if (response?.data?.status === '400') {
+        handleEditclose();
+        reset1();
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setOpen(false);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('UnExpected Error. Please try again.');
+      setSnackbarOpen(true);
+      console.log('error', error);
+    }
+  });
+  const getExpenseName = async () => {
+    const payload = {
+      companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    };
+    try {
+      const response = await axiosInstance.post(baseUrl + '/getExpenseName', payload);
+      console.log(response?.data?.data);
+      if (response?.data?.code === 200) {
+        const data = response?.data?.data || []; // Access expenseName from the API response
+        setExpenseConfigurations(data);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error Fetching Expense Configurations:', error);
     }
   };
 
-  // const onSubmit1 = handleSubmit1(async (data) => {
-  //   data.companyId = 'COMP2';
-  //   console.log('submitted data111', data);
-
-  //   try {
-  //     const response = await axios.post(baseUrl + '/updateExpenseConfig', data);
-  //     if (response?.data?.code === 200) {
-  //       handleCloseEdit();
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage('Shift Configuration Added Succuessfully!');
-  //       setSnackbarOpen(true);
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setOpen(false);
-  //     setSnackbarSeverity('error');
-  //     setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-  //     setSnackbarOpen(true);
-  //     console.log('error', error);
-  //   }
-  // });
-  const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth > 530);
-
   useEffect(() => {
-    const handleResize = () => {
-      setIsLargeDevice(window.innerWidth > 530);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    getExpenseName();
   }, []);
-
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setSnackbarOpen(false);
-    setOpen(true);
+    setOpen(false);
   };
-  const handleSelectChange = (field, value) => {
-    // console.log('values:', value);
-    // console.log('event', event.target.value);
-    // setSelectedOption(value);
-    console.log(field, value, 'valllllllllll');
-    setEditData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
+  const handleExpenseName = (value) => {
+    console.log(value, 'valueeee');
+    setValue1('expenseName', value);
+    setExpenseName(value);
   };
-  console.log(editData, 'valueeeeeeeeeeeeeeeeeeee');
+  // console.log(expenseName, 'kkk');
+  const handleAddExpenseConfig = (data) => {
+    setExpenseConfigurations([...expenseConfigurations, data]);
+
+    handleClose();
+  };
+  const handlleEdit = (data) => {
+    setEditExpenseName(data);
+  };
   return (
     <>
       <Snackbar
@@ -359,106 +212,192 @@ const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
       <Dialog
         fullWidth
         maxWidth={false}
-        open={openEdit}
-        onClick={handleOpen}
+        open={open}
         onClose={handleClose}
         PaperProps={{
-          sx: { maxWidth: 720 },
+          sx: { maxWidth: 320 },
         }}
       >
-        <FormProvider methods={methods1} onSubmit={(event) => onSubmitEdit2(editData, event)}>
-        <ModalHeader heading="Edit Expense Config" />
+        <FormProvider methods={methods1} onSubmit={onSubmit1}>
+          <ModalHeader heading="Add Expense Configuration" />
           <DialogContent>
             <Box
               rowGap={3}
               columnGap={2}
               display="grid"
               marginTop={2}
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
+              // gridTemplateColumns={{
+              //   xs: 'repeat(1, 1fr)',
+              //   sm: 'repeat(2, 1fr)',
+              // }}
+              alignItems="center" // Align items vertically in the center
             >
-              <Autocomplete
-                name="expense_name"
+              {/* <div style={{ gridColumn: '1 / -1', textAlign: 'center' }}> */}
+
+              <RHFTextField
+                size="small"
+                name="expenseName"
                 label="Expense Name"
-                options={expenseNames.map((name)=>name.type)}
-                // getOptionLabel={(option) => option.type}
-                value={editData?.expense_name}
-                onChange={(e, newValue) => handleSelectChange('expense_name', newValue || null)}
-                sx={{ width: 300, padding: '8px' }}
-                renderInput={(params) => <TextField {...params} label="Expense Name" />}
+                fullWidth
+                value={expenseName}
+                onChange={(e) => handlleEdit(e.target.value)}
+                sx={{ margin: '0 auto' }} // Adjust width and center the text field
               />
-              <Autocomplete
-                name="department_name"
-                label="Department Name"
-                options={departmentName.map((name)=>name.type)}
-                // getOptionLabel={(option) => option.type}
-                value={editData?.department_name}
-                onChange={(e, newValue) => handleSelectChange('department_name', newValue || null)}
-                sx={{ width: 300, padding: '8px' }}
-                renderInput={(params) => <TextField {...params} label="Department Name" />}
-              />
-              <Autocomplete
-                name="designation_name"
-                label="Designation Name"
-                options={designationName.map((name)=>name.type)}
-                // getOptionLabel={(option) => option.type}
-                value={editData?.designation_name}
-                onChange={(e, newValue) => handleSelectChange('designation_name', newValue || null)}
-                sx={{ width: 300, padding: '8px' }}
-                renderInput={(params) => <TextField {...params} label="Designation Name" />}
-              />
-              <Autocomplete
-                name="designation_grade_name"
-                label="Designation Grade Name"
-                options={designationGradeName.map((name)=>name.type)}
-                // getOptionLabel={(option) => option.type}
-                value={editData?.designation_grade_name}
-                onChange={(e, newValue) =>
-                  handleSelectChange('designation_grade_name', newValue || null)
-                }
-                sx={{ width: 300, padding: '8px' }}
-                renderInput={(params) => <TextField {...params} label="Designation Grade Name" />}
-              />
+              {/* </div> */}
             </Box>
           </DialogContent>
 
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEdit}>
+            <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
             {/* <LoadingButton
               type="submit"
               variant="contained"
-              onClick={(event) => onSubmitEdit2(editData, event)}
+              onClick={onSubmit1}
               loading={isSubmitting1}
             >
               Save
             </LoadingButton> */}
-             <Button 
-             sx={{backgroundColor:'#3B82F6'}}
-            type="submit"
+            <Button
+              sx={{ backgroundColor: '#3B82F6' }}
+              type="submit"
               variant="contained"
-              onClick={(event) => onSubmitEdit2(editData, event)}
-              >
-            Save
+              onClick={onSubmit1}
+              onSubmit={onSubmit1}
+            >
+              Save
             </Button>
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <BasicTable
-        headerData={TABLE_HEAD}
-        endpoint="/getExpenseConfig"
-        defaultPayload={defaultPayload}
-        rowActions={actions}
-        filterName="ExpensiveClaimFilterSearch"
-        buttonFunction={handleEdit}
-        onClickActions={onClickActions}
-      />
+
+      <Grid container spacing={2} sx={{ p: 3 }}>
+        {expenseConfigurations.map((config, index) => (
+          <Grid
+            lg={2}
+            md={2}
+            xs={4}
+            sx={{
+              ...bgGradient({
+                direction: '135deg',
+                startColor: alpha(theme.palette[color].light, 0.2),
+                endColor: alpha(theme.palette[color].main, 0.2),
+              }),
+              p: 3,
+              borderRadius: 2,
+              color: `${color}.darker`,
+              backgroundColor: 'common.white',
+              padding: '10px',
+              margin: '10px',
+              boxShadow: '3',
+
+              height: '20vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              width: '180px',
+            }}
+          >
+            <div style={{ textAlign: 'center' }}>
+              <Typography variant="subtitle1">{config?.expenseName}</Typography>
+              <IconButton onClick={() => setEditExpenseName(config)}>
+                <Iconify icon="material-symbols:edit" />
+              </IconButton>
+            </div>
+          </Grid>
+        ))}
+
+        {editExpenseName && (
+          <Dialog
+            fullWidth
+            maxWidth={false}
+            open={true} // Open the dialog when editing an expense
+            onClose={() => setEditExpenseName(null)} // Close the dialog when canceled
+            PaperProps={{
+              sx: { maxWidth: 320 },
+            }}
+          >
+            <FormProvider methods={methods1} onSubmit={onSubmit2}>
+              {/* Form fields */}
+              <ModalHeader heading="Edit Expense Configuration" />
+              <DialogContent>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  marginTop={2}
+                  // Adjust width and center the text field
+                  alignItems="center"
+                >
+                  <RHFTextField
+                    size="small"
+                    name="expenseName"
+                    label="Expense Name"
+                    fullWidth
+                    value={editExpenseName?.expenseName || ''}
+                    onChange={(e) => {
+                      setValue1('expenseName', e.target.value); // Update the form value
+                      setEditExpenseName({ ...editExpenseName, expenseName: e.target.value }); // Update state
+                    }}
+                    sx={{ margin: '0 auto' }}
+                  />
+                </Box>
+              </DialogContent>
+
+              <DialogActions>
+                <Button variant="outlined" onClick={() => setEditExpenseName(null)}>
+                  Cancel
+                </Button>
+                <Button
+                  sx={{ backgroundColor: '#3B82F6' }}
+                  type="submit"
+                  variant="contained"
+                  onSubmit={onSubmit2}
+                  onClick={onSubmit2}
+                >
+                  Save
+                </Button>
+              </DialogActions>
+            </FormProvider>
+          </Dialog>
+        )}
+        <Grid />
+        <Grid
+          lg={2}
+          md={2}
+          xs={4}
+          onClick={handleOpenDialog}
+          sx={{
+            ...bgGradient({
+              direction: '135deg',
+              startColor: alpha(theme.palette[color].light, 0.2),
+              endColor: alpha(theme.palette[color].main, 0.2),
+            }),
+            p: 3,
+            borderRadius: 2,
+            color: `${color}.darker`,
+            backgroundColor: 'common.white',
+            padding: '10px',
+            margin: '10px',
+            boxShadow: '3',
+
+            height: '20vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            width: '180px',
+          }}
+        >
+          <AddCircleIcon sx={{ fontSize: 50 }} />
+        </Grid>
+      </Grid>
     </>
   );
 }

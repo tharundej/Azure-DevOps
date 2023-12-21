@@ -52,6 +52,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import PayScheduleform from './PayScheduleform';
 import { payScheduleType } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+import GeneralForminfo from './GeneralForminfo';
 
 const defaultFilters = {
   name: '',
@@ -89,7 +90,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function PayScheduleFilters({ filterData, filterOptions,searchData  }) {
+export default function PayScheduleFilters({ filterData, filterOptions,searchData ,getTableData }) {
   const theme = useTheme();
   const names = [
     'Oliver Hansen',
@@ -306,7 +307,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
           
         </Grid>
         <Grid item md={2} xs={2}>
-        <PayScheduleform/>
+        <PayScheduleform getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2} >
         <Grid>
