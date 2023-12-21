@@ -8,6 +8,7 @@ import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { useSnackbar } from 'src/components/snackbar';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -16,8 +17,10 @@ import instance from 'src/api/BaseURL';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField ,Grid,Autocomplete} from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Iconify from 'src/components/iconify/iconify';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 export default function CreatePurchasePayment({ currentData, handleClose }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [poNumberOptions,setPoNumberOptions]=useState([])
   const [InvoiceNumberOptions,setInvoiceNumberOptions]=useState([]);
   const ApiHitGetOptions=async(obj)=>{
@@ -98,25 +101,50 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   } = methods;
   const values = watch();
 
+  const APiHitSavePayment=(obj)=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/addpayment`,
+      headers: { 
+        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
+        'Content-Type': 'application/json'
+      },
+      data : obj
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      enqueueSnackbar(response?.data?.message, { variant: 'success' });
+      handleClose()
+    })
+    .catch((error) => {
+      console.log(error);
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+    });
+  }
+
   const onSubmit = handleSubmit(async (data1) => {
     const obj=data;
     console.log(obj,'oooooo')
     obj.poNumber=obj?.poNumber?.poNumber || "";
-    obj.invoiceNo=obj?.invoiceNo?.invoiceNo || "";
+    obj.invoiceNumber=obj?.invoiceNumber?.invoiceNumber || "";
     obj.paymentMethod=obj.paymentMethod || ""
     obj.companyId=JSON.parse(localStorage.getItem('userDetails'))?.companyID;
    
     try {
       console.log(obj, 'data111ugsghghh');
+      APiHitSavePayment(obj);
 
-      const response = await instance.post('addPurchasePayment', obj).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      // const response = await instance.post('addPurchasePayment', obj).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
     } catch (error) {
       console.error(error);
     }
@@ -180,9 +208,10 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
   }
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div >
+      <ModalHeader heading="Add New Purchase Payment" />
     
-        <DialogTitle>Add New Purchase Payment</DialogTitle>
+        {/* <DialogTitle>Add New Purchase Payment</DialogTitle> */}
 
         <DialogContent>
           <Box
@@ -246,11 +275,11 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
                 id="combo-box-demo"
                 options={InvoiceNumberOptions || []}
                 value={data?.poNumber}
-                getOptionLabel={(option) => option.invoiceNo}
+                getOptionLabel={(option) => option.invoiceNumber}
                 onChange={(e,value) => {
                    console.log(value)
                   const newObj={...data};
-                  newObj.invoiceNo=value;
+                  newObj.invoiceNumber=value;
 
                   setData(newObj);
                 }}
@@ -261,7 +290,6 @@ export default function CreatePurchasePayment({ currentData, handleClose }) {
               />
               </Grid>
 
-<TextField  name="invoice" label="Invoice Number" value={data?.invoiceNumber || ""} onChange={(e)=>{handleChangeString(e,"invoiceNumber")}} />
             <DatePicker
                   sx={{width:'100%'}}
                   fullWidth
