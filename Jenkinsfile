@@ -21,8 +21,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                         docker stop node_test
-                         docker rm node_test
+                         docker stop \$(docker ps -q) &&
+                         docker rm \$(docker ps -a -q) &&
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 
