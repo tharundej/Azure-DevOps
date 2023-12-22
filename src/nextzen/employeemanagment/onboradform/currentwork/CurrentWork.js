@@ -119,6 +119,7 @@ const CurrentWork=forwardRef((props,ref)=> {
   "roleID":currentUser?.roleID || undefined,
   salaryStructure:false
   })
+  
 
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
    "Contract","Permanent","daily Wise"
@@ -488,9 +489,13 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 {
 
                   ctc:parseInt(currentWorkData?.ctc,10),
+<<<<<<< Updated upstream
                   variablePay:currentWorkData?.variablePay,
                   monthlyPay:currentWorkData?.monthlyPay,
                   bonus:currentWorkData?.bonus,
+=======
+                  //
+>>>>>>> Stashed changes
                   companyID:currentWorkData?.companyID,
                   employeeID:localStorage.getItem('employeeIdCreated'),
                   employmentType:currentWorkData?.employmentType,

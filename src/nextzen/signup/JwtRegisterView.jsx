@@ -122,6 +122,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     }
     if (e.target.files && e.target.files.length > 0) {
       setLogoUploaded(true);
+      // setLogoError(true)
     }
    
   };
@@ -210,7 +211,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const defaultValues = {
     cin: '',
     companyName: '',
-    companyRegistrationNo: '',
+    companyRegistrationNo: undefined,
     companyCeoName: '',
     companyDateOfIncorporation: '',
     companyType: '',
@@ -419,7 +420,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
               // methods.setValue(keyMappings[key], dataFromResponse[key]? dayjs(dataFromResponse[key]).toDate() : null);
             }
             else if (key === 'companyRegistrationNo') {
-              methods.setValue(keyMappings[key],dataFromResponse[key]);
+              methods.setValue(keyMappings[key],dataFromResponse[key].toString());
             } 
             else {
               methods.setValue(keyMappings[key], dataFromResponse[key]);
