@@ -36,4 +36,4 @@ COPY . .
 
 # start app
 
-CMD ["npm" , "build"]
+CMD ["npm" , "start"]
