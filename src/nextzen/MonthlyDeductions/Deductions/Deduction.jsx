@@ -136,8 +136,8 @@ const getLatestDeductions =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:baseUrl + `/getLatestDeductionRecords`,
-    // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords`,
+    // url:baseUrl + `/getLatestDeductionRecords`,
+    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords`,
     data:data
    }
    axios.request(config).then((response)=>{
@@ -306,7 +306,7 @@ return (
            {!deductionCard[index] ? (
            <>
            <Typography>
-             <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}
+             <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType || itm?.requestType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
                onClick={() => handleDeduction(itm?.deductionType,index)}
@@ -318,31 +318,23 @@ return (
          </>
            )
            : 
-           (
-            itm?.deductionType=="Over Time Hours" || 
-            itm?.deductionType=="Union Dues" || 
-            itm?.deductionType=="Garnishments"||
-            itm?.deductionType=="Other Deductions"
-            )?
-
            <>
-            <Typography>
-              {console.log(deductionInstallment,"Deductionisntallment")}
-                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType}<br />
-                 {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
-                 <IconButton
-                   sx={{ position: 'absolute', top: 15, right: 0 }}
-                   onClick={() => handleDeduction(itm?.deductionType,index)}
-                 >
-                   <Iconify icon="iconamoon:arrow-up-2-thin" />
-                 </IconButton>
-               </Typography>
-               
-               <Typography><span>Deducted Amount : </span> {itm?.deductedAmount}</Typography>
-               {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
-               <Typography><span>Remarks : </span>{itm?.comments}</Typography>
-               </> 
-          :null
+           <Typography>
+             {console.log(deductionInstallment,"Deductionisntallment")}
+                <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType || itm?.requestType}<br />
+                {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
+                <IconButton
+                  sx={{ position: 'absolute', top: 15, right: 0 }}
+                  onClick={() => handleDeduction(itm?.deductionType,index)}
+                >
+                  <Iconify icon="iconamoon:arrow-up-2-thin" />
+                </IconButton>
+              </Typography>
+              
+              <Typography><span>Deducted Amount : </span> {itm?.deductionAmount}</Typography>
+              {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
+              <Typography><span>Remarks : </span>{itm?.comments}</Typography>
+              </> 
                }
                
           </CardContent>

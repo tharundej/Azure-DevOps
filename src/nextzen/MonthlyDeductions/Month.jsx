@@ -19,15 +19,16 @@ export default function Month() {
     //   content: <SalaryAdvace key="salaryAdvance" />,
     // },
     {
-      id: 'loans',
-      label: 'Loans',
-      content: <Loans key="loans" />,
-    },
-    {
       id: 'myDeductions',
       label: 'Deductions',
       content: <Deduction key="myDeductions" />,
     },
+    {
+      id: 'loans',
+      label: 'Loans',
+      content: <Loans key="loans" />,
+    },
+   
     {
       id: 'myRequest',
       label: 'My Requests',
