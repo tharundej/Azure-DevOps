@@ -43,8 +43,8 @@ export default function Loans({defaultPayload,componentPage}) {
         // { id: "interestRate", label: "Interest Rate", minWidth: "8pc", type: "text" },
         { id: "approverName", label: " Approver", minWidth: "8pc", type: "text" },
         { id: "paidDate", label: "Paid Date", minWidth: "8pc", type: "date" },
-        { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
-        { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
+        // { id: "comments", label: "User Remarks", minWidth: "8pc", type: "text" },
+        // { id: "approverComments", label: "HR Remarks", minWidth: "8pc", type: "text" },
         { id: "paymentStatus", label: "Payment Status", minWidth: '9pc', type: "text" },
         { id: "status", label: "Status", minWidth: '7pc', type: "badge" },
          
@@ -174,7 +174,7 @@ console.log(ele,"elementtt")
 
       const encryptData = () => {
         const data = CryptoJS.AES.encrypt(
-          JSON.stringify(ele?.employeeID),
+          JSON.stringify(ele?.loanID),
           secretPass
         ).toString();
 
@@ -184,7 +184,7 @@ console.log(ele,"elementtt")
        
       };
       //encryptData()
-     router.push(paths.dashboard.monthlydeductions.userview(ele?.employeeID));
+     router.push(paths.dashboard.monthlydeductions.userview(ele?.loanID));
       
       
     },
