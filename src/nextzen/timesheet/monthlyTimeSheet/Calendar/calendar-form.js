@@ -29,6 +29,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
 import Label from 'src/components/label/label';
+import axios from 'axios';
 import { getAvailableLeaveAPI, getLeaveTypeAPI, getLossOfPayAPI } from 'src/api/HRMS/LeaveManagement';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -292,22 +293,6 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 //   }
 // ];
 console.log(editData,"editttttttdata")
-const initialProjectDetails = {
-  employeeName: projectInfo?.employeeName,
-  projectID: [
-    { "projectId": 1, "projectName": "ERP" },
-    { "projectId": 3, "projectName": "ACCOUNTS" }
-  ],
-  todayDate: date?.start,
-  // Dynamically create properties for each project with empty values
-  ...Object.fromEntries(
-    projectInfo?.projectID?.map((project) => [
-      project.projectName,
-      { description: "",employeename:"",hours: "",projectId:"",projectName:"" }
-    ]) || []
-  )
-};
-// second method
 // const initialProjectDetails = {
 //   employeeName: projectInfo?.employeeName,
 //   projectID: [
@@ -319,23 +304,89 @@ const initialProjectDetails = {
 //   ...Object.fromEntries(
 //     projectInfo?.projectID?.map((project) => [
 //       project.projectName,
-//       { description: "", employeename: "", hours: "", projectId: "", projectName: "" }
-
+//       { description: "",employeename:"",hours: "",projectId:"",projectName:"" }
 //     ]) || []
 //   )
 // };
 
+
+// second method
+const initialProjectDetails = {
+  // employeeName: projectInfo?.employeeName,
+  companyId: "COMP22",
+  employeeId:"GANG12",
+  // projectID: [
+  //   { "projectId": 1, "projectName": "ERP" },
+  //   { "projectId": 3, "projectName": "ACCOUNTS" }
+  // ],
+  dateOfActivity: date?.start,
+  // Dynamically create properties for each project with empty values
+  ...Object.fromEntries(
+    projectInfo?.projectID?.map((project) => [
+      project.projectName,
+      { description: "", 
+      // employeename: "", 
+      hours: "", 
+      projectId: "", 
+      // projectName: "" 
+    }
+    ]) || []
+  ),
+  // Update properties based on editData
+  ...Object.fromEntries(
+    editData?.map((editItem) => [
+      editItem.projectName,
+      {
+        description: editItem.description || "",
+        // employeename: editItem.employeename || "",
+        hours: editItem.hours || "",
+        projectId: editItem.projectId || "",
+        // projectName: editItem.projectName || ""
+      }
+    ]) || []
+  )
+};
+
+// 3rd method
+// const initialProjectDetails = {
+//   employeeName: projectInfo?.employeeName,
+//   companyId: "COMP1",
+//   // projectID: [
+//   //   { "projectId": 1, "projectName": "ERP" },
+//   //   { "projectId": 3, "projectName": "ACCOUNTS" }
+//   // ],
+//   projectData:[],
+//   todayDate: date?.start,
+//   // Dynamically create properties for each project with empty values
+//   ...Object.fromEntries(
+//     projectInfo?.projectID?.map((project) => [
+//       project.projectName,
+//       { description: "", hours: "" }
+//     ]) || []
+//   ),
+//   // Initialize the projectData property
+//   projectData: [],
+// };
+
 // Update properties based on editData
-// editData.forEach((editItem) => {
-//   const projectKey = initialProjectDetails.projectID.find((p) => p.projectId === editItem.projectId)?.projectName;
-//   if (projectKey) {
-//     initialProjectDetails[projectKey] = {
+// editData?.forEach((editItem) => {
+//   const projectName = editItem.projectName;
+
+//   // Check if the project already exists in projectData
+//   const existingProject = initialProjectDetails.projectData.find(
+//     (project) => project.projectName === projectName
+//   );
+
+//   // If the project exists, update its properties; otherwise, create a new project
+//   if (existingProject) {
+//     existingProject.description = editItem.description || "";
+//     existingProject.hours = editItem.hours || "";
+//   } else {
+//     initialProjectDetails.projectData.push({
+//       projectName,
 //       description: editItem.description || "",
-//       employeename: editItem.employeename || "",
 //       hours: editItem.hours || "",
-//       projectId: editItem.projectId || "",
-//       projectName: editItem.projectName || ""
-//     };
+//     });
 //   }
 // });
 
@@ -343,41 +394,170 @@ const initialProjectDetails = {
 console.log(initialProjectDetails);
 
 
-// If editData is not empty, update the initial state
-if (editData) {
-  editData.forEach((editItem) => {
-    for (const [key, value] of Object.entries(editItem)) {
-      if (initialProjectDetails.hasOwnProperty(key)) {
-        initialProjectDetails[key] = { ...initialProjectDetails[key], ...value };
-      }
-    }
-  });
-  console.log(initialProjectDetails,"initialProjectDetails")
-}
+
+
+// // If editData is not empty, update the initial state
+// if (editData) {
+//   editData.forEach((editItem) => {
+//     for (const [key, value] of Object.entries(editItem)) {
+//       if (initialProjectDetails.hasOwnProperty(key)) {
+//         initialProjectDetails[key] = { ...initialProjectDetails[key], ...value };
+//       }
+//     }
+//   });
+//   console.log(initialProjectDetails,"initialProjectDetails")
+// }
 
 const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
 
 
-  const handleTextFieldChange = (projectname, field, value) => {
-    setProjectDetails((prevDetails) => ({
-      ...prevDetails,
-      [projectname]: { ...(prevDetails[projectname] || {}), [field]: value },
-    }));
-  };
+const handleTextFieldChange = (projectname, field, value, projectId) => {
+  console.log(projectId,"projectId12345")
+  setProjectDetails((prevDetails) => ({
+    ...prevDetails,
+    [projectname]: {
+      ...(prevDetails[projectname] || {}),
+      [field]: value,
+      projectId: typeof projectId === 'number' ? projectId.toString() : projectId
+      // [field1]: value1, // Add the additional field and value
+    },
+  }));
+};
+
+  // project data updation
+  // const handleTextFieldChange = (projectname, field, value) => {
+  //   setProjectDetails((prevDetails) => {
+  //     const updatedProjectDetails = {
+  //       ...prevDetails,
+  //       [projectname]: {
+  //         ...(prevDetails[projectname] || {}),
+  //         [field]: value,
+  //       },
+  //     };
+  
+  //     // Extract projectData array from updatedProjectDetails
+  //     const projectDataArray = Object.keys(updatedProjectDetails)
+  //       .filter(
+  //         (key) =>
+  //           key !== "employeeName" &&
+  //           key !== "todayDate" &&
+  //           key !== "companyId" &&
+  //           key !== "projectID"
+  //       )
+  //       .map((key) => ({
+  //         projectName: key,
+  //         ...updatedProjectDetails[key],
+  //       }));
+  
+  //     return {
+  //       ...updatedProjectDetails,
+  //       projectData: projectDataArray,
+  //     };
+  //   });
+  // };
+  
+
+  // const handleTextFieldChange = (projectId, field, value) => {
+  //   setProjectDetails((prevDetails) => ({
+  //     ...prevDetails,
+  //     projects: prevDetails.projects.map((project) =>
+  //       project.projectId === projectId
+  //         ? { ...project, [field]: value }
+  //         : project
+  //     ),
+  //   }));
+  // };
   console.log(projectDetails,"projectDetails",projectData,editData)
 
   // eventdata print 
   // console.log( eventData," eventDataeventData")
 
   // dates 
-  console.log(date,"datedatedate")
+  console.log(date,"datedatedate",editData)
+
+  // api hit before
+  // Extract projectData array from the input
+const projectDataArray = Object.keys(projectDetails)
+.filter(
+  (key) =>
+    key !== "employeeName" &&
+    key !== "projectName" &&
+    key !== "employeeId" &&
+    key !== "dateOfActivity" &&
+    key !== "companyId" &&
+    key !== "projectID"
+)
+.map((key) => ({
+  // projectName: key,
+  ...projectDetails[key]
+}));
+
+// Create the final output object
+const output = {
+...projectDetails,
+projectData: projectDataArray
+};
+
+// for deleting
+// ["employeeName", "dateOfActivity", "companyId", "projectID"].forEach((key) => {
+//   delete projectDetails[key];
+// });
+console.log(projectDetails,"projectDetails")
+console.log(projectDataArray,"projectDataArray",output)
+
+// api hit 
+const onSubmitEdit2 = async (editData, event) => {
+
+
+  try {
+    event.preventDefault();     
+    console.log(editData, "editDataeditData")
+    const keysToKeep = ["employeeId","employeeName", "dateOfActivity",  "projectData","companyId", ];
+
+// Extract the keys you want to keep and create a new object
+const keptKeysObject = Object.fromEntries(
+  Object.entries(editData).filter(([key]) => keysToKeep.includes(key))
+);
+
+const projectDataArray = Object.keys(editData)
+  .filter((key) => !keysToKeep.includes(key))
+  .map((key) => ({
+    // projectName: key,
+    ...editData[key]
+  }));
+
+// Create the final output object
+const output = {
+  ...keptKeysObject,
+  projectData: projectDataArray
+};
+
+console.log(output);
+
+
+    
+    const response = await axios.post( "https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/newupdateTimeSheet", output).then(
+      (res) => {
+        console.log('sucess', res);
+        
+      },
+      (error) => {
+        console.log('lllll', error);
+       
+      }
+    );
+  } catch (error) {
+    console.error(error);
+   
+  }
+}
   return (
   
   <>
 {/* <h1>hello</h1> */}
 
 
-<FormProvider methods={methods} onSubmit={onSubmit}>
+<FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(output, event)}>
 <DialogContent>
 <Box
                 rowGap={1}
@@ -398,17 +578,18 @@ const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
               label={`${project.projectName} hours`}
               value={(projectDetails[project.projectName]?.hours || '')}
               onChange={(e) =>
-                handleTextFieldChange(project.projectName, 'hours', e.target.value)
+                handleTextFieldChange(project.projectName, 'hours', e.target.value, project.projectId)
+                
               }
             />
           </Grid>
           <Grid item xs={6}>
             <TextField
               fullWidth
-              label={`${project.projectName} des`}
-              value={(projectDetails[project.projectName]?.des || '')}
+              label={`${project.projectName} description`}
+              value={(projectDetails[project.projectName]?.description|| '')}
               onChange={(e) =>
-                handleTextFieldChange(project.projectName, 'des', e.target.value)
+                handleTextFieldChange(project.projectName, 'description', e.target.value, project.projectId)
               }
             />
           </Grid>
