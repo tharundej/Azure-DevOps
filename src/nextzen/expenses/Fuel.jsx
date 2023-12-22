@@ -7,8 +7,9 @@ import UserContext from '../context/user/UserConext';
 import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 import CreateExpenses from './CreateExpenses';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { Dialog } from '@mui/material';
+import { Card, CardContent, Dialog, Typography } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
+import { Box } from '@mui/system';
 
 export default function Fuel() {
   const { user } = useContext(UserContext);
@@ -158,6 +159,7 @@ export default function Fuel() {
       <Helmet>
         <title> Dashboard: Fuel Expenses</title>
       </Helmet>
+      
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/listExpenses"
