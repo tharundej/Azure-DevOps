@@ -42,6 +42,10 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { LoadingButton } from '@mui/lab';
 import { parse } from 'date-fns';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { useContext } from 'react';
+import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 // import useTheme from '@mui/material';
 
 const bull = (
@@ -51,6 +55,15 @@ const bull = (
 );
 
 export default function PaySchedule({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
+ 
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+    // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+    const {user} = useContext(UserContext)
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -60,7 +73,7 @@ export default function PaySchedule({ currentUser }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false);
+    setOpenEdit(false);
     reset1();
   };
 const [count, setCount] = useState();
@@ -218,36 +231,40 @@ const [count, setCount] = useState();
     // setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
+
+  console.log(valueSelected,"valueeeeee")
   const deleteFunction = async (rowdata, event) => {
     console.log('iam here ');
     try {
       console.log(rowdata, 'rowData:::::');
       const data = {
-        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+        companyId:cmpId,
         payScheduleID: JSON.parse(rowdata.payScheduleId, 10),
       };
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
-      if (response?.data?.code === 200) {
-        setCount(count+1);
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
+    
+        if (response?.data?.code === 200   )
+          {
+            
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'success'})
+        // setLoading(false)
+        setCount(count+1)
       }
-      if (response?.data?.code === 400) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
+      if (response?.code ===400) {
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'error'})
+        // setLoading(false)
+        setCount(count+1)
+       
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Pay Schedule. Please try again.');
-      setSnackbarOpen(true);
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+      // setLoading(false)
       console.log('error', error);
     }
+
+   
   };
   const employeepayTypes = ["Permanent" ,  "Contract" ];
   const payPcheduleTypes = [
@@ -285,7 +302,7 @@ const [count, setCount] = useState();
 
   // const getOptionLabel1 = (payPcheduleType) => payPcheduleType.type;
   const onSubmit1 = handleSubmit1(async (data) => {
-    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.companyID = cmpId;
     // (data.employementType = valueSelected?.employementType?.type),
 
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
@@ -299,34 +316,35 @@ const [count, setCount] = useState();
       (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
       (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
       (data.payScheduleId = valueSelected?.payScheduleId);
-    // (data.employementType = valueSelected?.employementType?.type),
-       (data.payScheduleType = valueSelected?.payPcheduleType);
+    // (data.employementType = valueSelected?.employementType),
+      (data.payScheduleType = valueSelected?.payPcheduleType);
     console.log('valueSelectedaaaaaaaaaa', data);
 
     console.log(valueSelected?.employementType?.type, 'abc');
 
     try {
       const response = await axios.post(baseUrl + '/editPaySchedule', data);
-      if (response?.code === 200 || 201) {
-        setCount(count+1);
-        handleCloseEdit()
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-      if (response?.data?.code === 400) {
-        handleCloseEdit()
-        setSnackbarSeverity('errow');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+      if (response?.data?.code === 200   )
+      {
+    handleClose();
+    enqueueSnackbar(response.data.message,{variant:'success'})
+    // setLoading(false)
+    setCount(count+1)
+    console.log('sucess', response);
+  }
+  if (response?.data?.code ===400) {
+    handleClose();
+    enqueueSnackbar(response.data.message,{variant:'error'})
+    // setLoading(false)
+  
+    console.log('sucess', response);
+  }
+}
+ catch (error) {
+  enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+  // setLoading(false)
+  console.log('error', error);
+}
   });
 
 
@@ -336,38 +354,68 @@ const [count, setCount] = useState();
       event.preventDefault();
       const payload = {
         tdsPercentage: JSON.parse(valueSelected?.tdsPercentage, 10),
-        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-        payScheduleType:valueSelected?.payPcheduleType,
-        payScheduleID:JSON.parse(valueSelected?.payScheduleId,10),
-        employee_type:valueSelected?.employementType
+        companyId:cmpId,
+        payScheduleId : valueSelected?.payScheduleId,
+        employee_type :valueSelected?.employementType,
+        payScheduleType:valueSelected?.payPcheduleType 
       };
       console.log(payload, 'payload');
       const response = await axios.post(baseUrl + '/editPaySchedule', payload);
-      if (response?.code === 200 || 201) {
-        setCount(count+1);
-        handleCloseEdit()
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
+      if (response?.data?.code === 200   )
+          {
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'success'})
+        // setLoading(false)
+        setCount(count+1)
         console.log('sucess', response);
-      } else if (response?.data?.code === 400 || 401) {
-        handleCloseEdit()
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+      }
+      if (response?.data?.code ===400) {
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'error'})
+        // setLoading(false)
+        setCount(count+1)
         console.log('sucess', response);
       }
     } catch (error) {
-      setOpen(true);
-      setSnackbarSeverity('error');
-       setSnackbarMessage('UnExpected Error. Please try again');
-      setSnackbarOpen(true);
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+      // setLoading(false)
       console.log('error', error);
     }
   };
 
+  const onSubmit2 = handleSubmit2(async (data) => {
+    console.log('data:', data);
+    data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.employementType = valueSelected?.employementType?.type;
+    // (data.employementType = valueSelected?.employementType?.type),
+    data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10);
+    data.payPcheduleType = valueSelected?.payPcheduleType?.type;
+    data.payScheduleId = valueSelected?.payScheduleId;
+    console.log(data, 'data111ugsghghh');
 
+    try {
+      const response = await axios.post(baseUrl + '/editPaySchedule', data);
+      if (response?.data?.code === 200   )
+          {
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'success'})
+        // setLoading(false)
+
+        console.log('sucess', response);
+      }
+      if (response?.data?.code ===400) {
+        handleClose();
+        enqueueSnackbar(response.data.message,{variant:'error'})
+        // setLoading(false)
+
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+      // setLoading(false)
+      console.log('error', error);
+    }
+  });
   const handleSelectChange = (field, value) => {
     // console.log('values:', value);
     // console.log('event', event.target.value);
@@ -403,7 +451,10 @@ const [count, setCount] = useState();
       }
     }
   };
-  console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
+  console.log(valueSelected?.employementType, 'empltype');
+//   useEffect(()=>{
+// console.log("calling useEffect")
+//   },[valueSelected?.employementType])
   return (
     <>
       <Snackbar
@@ -433,9 +484,7 @@ const [count, setCount] = useState();
           sx: { maxWidth: 720 },
         }}
       >
-        {isTextFieldVisible}
-
-        {isTextFieldVisible ? (
+        {valueSelected?.employementType === 'permanent' || valueSelected?.employementType === 'Permanent' && (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <ModalHeader heading="Edit PayRoll" />
@@ -450,21 +499,34 @@ const [count, setCount] = useState();
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
+                {console.log(valueSelected,"employeetype")}
+                {/* <Autocomplete
                   disablePortal
                   name="employementType"
                   id="combo-box-demo"
                   options={employeepayTypes}
-                   getOptionLabel={getOptionLabel}
-                   defaultValue={valueSelected?.employementType||[]}
-                  value={valueSelected?.employementType||""} // Use tableEDitData or an empty string
-                  onChange={(e, newValue) => handleAutocompleteChange('employementType', newValue )}
+                  getOptionLabel={getOptionLabel}
+                  value={valueSelected?.employementType} // Use tableEDitData or an empty string
+                  onChange={handleAutocompleteChange}
                   sx={{
                     width: 330,
                     margin: 'auto',
                     marginTop: '-1px',
                   }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
+                /> */}
+             <Autocomplete
+                  name="employementType"
+                  label="Pay Schedule Type"
+                  value={valueSelected?.employementType || null}
+                  options={employeepayTypes.map((name) => name.type)}
+                  // getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('employementType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Employement Type" variant="outlined" />
+                  )}
                 />
                 <Autocomplete
                   name="payScheduleType"
@@ -495,7 +557,7 @@ const [count, setCount] = useState();
                 <RHFTextField
                   name="daPercentage"
                   label="DA %"
-                  value={valueSelected.daPercentage}
+                  value={valueSelected?.daPercentage}
                   onChange={(e) => handleSelectChange('daPercentage', e.target.value)}
                 />
                 <RHFTextField
@@ -553,7 +615,9 @@ const [count, setCount] = useState();
               </Button>
             </DialogActions>
           </FormProvider>
-        ) : (
+        ) 
+            }
+      { valueSelected?.employementType === 'contract' || valueSelected?.employementType === 'Contract' &&  (
           <FormProvider
             methods={methods2}
             onSubmit={(event) => onSubmitEdit2(valueSelected, event)}
@@ -570,7 +634,23 @@ const [count, setCount] = useState();
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
+                 {console.log(valueSelected?.employementType,"employeetype")}
+    
+<Autocomplete
+                  name="employementType"
+                  label="Pay Schedule Type"
+                  value={valueSelected?.employementType || null}
+                  options={employeepayTypes.map((name) => name.type)}
+                  // getOptionLabel={(option) => option.type}
+                  onChange={(e, newValue) =>
+                    handleSelectChange('employementType', newValue || null)
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Employement Type" variant="outlined" />
+                  )}
+                />
+
+      {/* hi          <Autocomplete
                   disablePortal
                   name="employementType"
                   id="combo-box-demo"
@@ -585,9 +665,10 @@ const [count, setCount] = useState();
                     marginTop: '-1px',
                   }}
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
-                />
+                /> */}
+                {console.log("valueSelected?.payPcheduleType " , valueSelected?.payPcheduleType )}
                 <Autocomplete
-                  name="payScheduleType"
+                  name="employementType"
                   label="Pay Schedule Type"
                   value={valueSelected?.payPcheduleType || null}
                   options={payPcheduleTypes.map((name) => name.type)}
@@ -640,7 +721,7 @@ const [count, setCount] = useState();
         rowActions={actions}
         filterName="PayScheduleFilterSearch"
         onClickActions={onClickActions}
-        count={count}
+        count = {count}
         //  bodyData='data'
         // buttonFunction={buttonFunction}
       />

@@ -130,6 +130,8 @@ import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilte
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../settings/SettingsHeader';
+import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
+import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
 
 const defaultFilters = {
   name: '',
@@ -152,8 +154,10 @@ const BasicTable = ({
   handleEditRowParent,
   handleOpenModal,
   SecondoryTable,
+  isShowHandle,
   componentPage,count,
   mergingRowArray
+
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -233,7 +237,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-        JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
+        token
       },
       data: initialDefaultPayload,
     };
@@ -510,6 +514,7 @@ const [index, setIndex]=useState(""); // index setting
             <SwapRequestSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
@@ -549,12 +554,13 @@ const [index, setIndex]=useState(""); // index setting
             />
           )}
           {filterName === 'ShiftRoastFilter' && (
-            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'MyShiftFilter' && (
             <MyShiftSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AssignShiftFilter' && (
@@ -633,7 +639,7 @@ const [index, setIndex]=useState(""); // index setting
             // />
           )}
           {filterName === 'SwapSearchFilter' && (
-            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData}/>
           )}
           {filterName === 'SalaryStructureFilterSearch' && (
             <SalaryStructureFilters
@@ -796,6 +802,14 @@ const [index, setIndex]=useState(""); // index setting
 
 {filterName === 'AddRoleFilter' && (
             <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
+
+{filterName === 'CreatePayRunFilter' && (
+            <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
+          
+{filterName === 'EarningAndDeductionFilter' && (
+            <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
           <Card>

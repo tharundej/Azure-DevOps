@@ -21,11 +21,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-// utils
-// routes
+import UserContext from 'src/nextzen/context/user/UserConext';
 import { useRouter } from 'src/routes/hooks';
-// assets
-// components
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,
@@ -42,7 +40,8 @@ import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-
+import Switch from '@mui/material/Switch';
+import { useContext } from 'react';
 
 export default function AddTaxSectionConfig({
   currentUser,
@@ -58,10 +57,13 @@ export default function AddTaxSectionConfig({
     // activity_name:[]
   });
 // const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+const [valueSelected, setValueSelected] = useState();
 
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+const {user}=useContext(UserContext)
+const empId =  (user?.employeeID)?user?.employeeID:''
+const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -78,6 +80,10 @@ export default function AddTaxSectionConfig({
   ];
   const [formData, setFormData] = useState({
     
+  });
+  const [errors, setErrors] = useState({
+    taxScheme: '',
+    taxSection: '',
   });
 
   const [open, setOpen] = useState(false);
@@ -104,6 +110,13 @@ export default function AddTaxSectionConfig({
     const integerValue = /^\d+$/.test(value) ? parseInt(value, 10) : value;
     let calculatedEligibleDeduction = integerValue;
 
+    const alphanumericRegex = /^[a-zA-Z0-9()\-_*]+$/;
+    setErrors({
+      ...errors,
+      [name]: '',
+    });
+
+   
     // Check if amountOfPremium is greater than 2500
     if (name === 'amountOfPremium' && integerValue > 25000) {
       calculatedEligibleDeduction = 25000;
@@ -114,8 +127,6 @@ export default function AddTaxSectionConfig({
       [name]: integerValue,
       
     });
-
-    // setFormData({ ...formData, [name]: integerValue });
 
     console.log(formData);
   };
@@ -130,72 +141,203 @@ export default function AddTaxSectionConfig({
       locationName: selectedOption?.locationName,
     });
   };
-
-
-
-  const snackBarAlertHandleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+  const AddTaxConfiguration = async () => {
+    // Validate the form fields
+    const validationErrors = validateForm();
+  
+    // Update the error state for each field individually
+    setErrors(validationErrors);
+  
+    // If there are validation errors, return without making the API call
+    if (Object.keys(validationErrors).length > 0) {
       return;
     }
-    setSnackbarOpen(false);
-    // setOpen(false);
-  };
- 
- 
-
-
-  const AddTaxConfiguration = async () => {
-    const payload = 
-    {
-        companyId:cmpId,
-        taxSection:formData?.taxSection,
-        taxScheme:formData?.taxScheme,
-        taxLimit:formData?.taxLimit
-    }
-
+  
+    // If there are no validation errors, proceed with the API call
+    const payload = {
+      companyId: cmpId,
+      taxSection: formData?.taxSection?.toString(),
+      taxScheme: formData?.taxScheme?.toString(),
+      taxLimit: formData?.taxLimit,
+      attachmentsRequired: valueSelected?.attachmentsRequired ? valueSelected?.attachmentsRequired : 0,
+    };
+  
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseUrl + '/configureDeclarations ',
-      // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
+      url: baseUrl + '/configureDeclarations',
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',
       },
       data: payload,
     };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.code === 200) {
-          enqueueSnackbar(response.data.message,{variant:'success'})
-          getTableData()
-          setHitGetDepartment(!hitGetDepartment);
-          handleClose()
-      
-        } else if (response.data.code === 400) {
-          enqueueSnackbar(response.data.message,{variant:'error'})
-       
-          setHitGetDepartment(!hitGetDepartment);
-       
-        }
-      })
-      .catch((error) => {
-        //  setOpen(true);
-        enqueueSnackbar("Something Went Wrong!",{variant:'error'})
-      
-        console.log(error);
-      });
-   
+  
+    try {
+      const response = await axios.request(config);
+      if (response.data.code === 200) {
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+        getTableData();
+        setHitGetDepartment(!hitGetDepartment);
+        handleClose();
+      } else if (response.data.code === 400) {
+        enqueueSnackbar(response.data.message, { variant: 'error' });
+        setHitGetDepartment(!hitGetDepartment);
+      }
+    } catch (error) {
+      enqueueSnackbar('Something Went Wrong!', { variant: 'error' });
+      console.log(error);
+    }
   };
- 
+  
+  // Function to validate the form fields
+  const validateForm = () => {
+    const errors = {};
+  
+    // Validate taxSection
+    if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+      errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+    }
+  
+    // Validate taxScheme
+    if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+      errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+    }
+  
+    return errors;
+  };
+  
+  // const AddTaxConfiguration = async () => {
+  //   // Validate the form fields
+  //   const validationErrors = validateForm();
+    
+  //   // If there are validation errors, update the error state and return
+  //   if (Object.keys(validationErrors).length > 0) {
+  //     setErrors(validationErrors);
+  //     return;
+  //   }
+  
+  //   // If there are no validation errors, proceed with the API call
+  //   const payload = {
+  //     companyId: cmpId,
+  //     taxSection: formData?.taxSection?.toString(),
+  //     taxScheme: formData?.taxScheme?.toString(),
+  //     taxLimit: formData?.taxLimit,
+  //     attachmentsRequired: valueSelected?.attachmentsRequired ? valueSelected?.attachmentsRequired : 0,
+  //   };
+  
+  //   const config = {
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: baseUrl + '/configureDeclarations',
+  //     headers: {
+  //       Authorization: token,
+  //       'Content-Type': 'text/plain',
+  //     },
+  //     data: payload,
+  //   };
+  
+  //   try {
+  //     const response = await axios.request(config);
+  //     if (response.data.code === 200) {
+  //       enqueueSnackbar(response.data.message, { variant: 'success' });
+  //       getTableData();
+  //       setHitGetDepartment(!hitGetDepartment);
+  //       handleClose();
+  //     } else if (response.data.code === 400) {
+  //       enqueueSnackbar(response.data.message, { variant: 'error' });
+  //       setHitGetDepartment(!hitGetDepartment);
+  //     }
+  //   } catch (error) {
+  //     enqueueSnackbar('Something Went Wrong!', { variant: 'error' });
+  //     console.log(error);
+  //   }
+  // };
+  
+  // // Function to validate the form fields
+  // const validateForm = () => {
+  //   const errors = {};
+  
+  //   // Validate taxSection
+  //   if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  //     errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+  //   }
+  
+  //   // Validate taxScheme
+  //   if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  //     errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+  //   }
+  
+  //   return errors;
+  // };
+  
 
+//   const AddTaxConfiguration = async () => {
+//     const payload = 
+//     {
+//         companyId:cmpId,
+//         taxSection:formData?.taxSection?.toString(),
+//         taxScheme:formData?.taxScheme?.toString(),
+//         taxLimit:formData?.taxLimit,
+//        attachmentsRequired:valueSelected?.attachmentsRequired? valueSelected?.attachmentsRequired : 0
+//     }
+// // const baseUrl  ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+//     const config = {
+//       method: 'post',
+//       maxBodyLength: Infinity,
+//       url: baseUrl + '/configureDeclarations ',
+//       // url : 'https://3p1h3gwl-3001.inc1.devtunnels.ms/erp/addDesignationGrade',
+//       headers: {
+//         Authorization: token,
+//         'Content-Type': 'text/plain',
+//       },
+//       data: payload,
+//     };
+//     const result = await axios
+//       .request(config)
+//       .then((response) => {
+//         if (response.data.code === 200) {
+//           enqueueSnackbar(response.data.message,{variant:'success'})
+//           getTableData()
+//           setHitGetDepartment(!hitGetDepartment);
+//           handleClose()
+      
+//         } else if (response.data.code === 400) {
+//           enqueueSnackbar(response.data.message,{variant:'error'})
+       
+//           setHitGetDepartment(!hitGetDepartment);
+       
+//         }
+//       })
+//       .catch((error) => {
+//         //  setOpen(true);
+//         enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+      
+//         console.log(error);
+//       });
+   
+//   };
+  
 useEffect(()=>{
   console.log("")
 }, [hitGetDepartment])
 
   console.log(departmentType, 'DEPARTMENT TYPE    ');
   console.log(formData, 'formdata ');
+
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
+
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+   
+    setValueSelected((prevFormData) => ({
+      ...prevFormData,
+      [name]: mappedValue,
+    }));
+  
+  }
+  
   return (
     <div
       style={{
@@ -223,6 +365,7 @@ useEffect(()=>{
         PaperProps={{
           sx: { maxWidth: 720 },
         }}
+        
       >
         {/* <FormProvider methods={methods1} onSubmit={onSubmit1}> */}
         <FormProvider>
@@ -246,6 +389,8 @@ useEffect(()=>{
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                helperText={errors.taxSection}  // Display error message
+                error={Boolean(errors.taxSection)}  // Add error style
               />
 
               <TextField
@@ -255,17 +400,29 @@ useEffect(()=>{
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
+                helperText={errors.taxScheme}  // Display error message
+                error={Boolean(errors.taxScheme)}  // Add error style
               />
 
               <TextField
                 label="Limit"
                 name="taxLimit"
+                type='number'
                 value={null}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
               />
-
+         <FormControlLabel
+  control={
+    <Switch
+      name="attachmentsRequired"
+      checked={formData?.attachmentsRequired} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('attachmentsRequired', event.target.checked)}
+    />
+  }
+  label="Document Required"
+/>
               {/* <Button onClick={AddTaxConfiguration}>Add working</Button> */}
 
           
@@ -320,6 +477,6 @@ useEffect(()=>{
   );
 }
 
-AddTaxSectionConfig.propTypes = {
-  currentUser: PropTypes.object,
-};
+// AddTaxSectionConfig.propTypes = {
+//   currentUser: PropTypes.object,
+// };

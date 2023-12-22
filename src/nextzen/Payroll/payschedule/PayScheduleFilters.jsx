@@ -52,6 +52,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import PayScheduleform from './PayScheduleform';
 import { payScheduleType } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+import GeneralForminfo from './GeneralForminfo';
 
 const defaultFilters = {
   name: '',
