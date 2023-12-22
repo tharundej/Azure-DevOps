@@ -45,8 +45,8 @@ export default function loanDetails(){
       }
     const handleLoanExpand=()=>{
         const loanPayload ={
-          employeeID:employeevalue,
-          loanID:parseInt(id)
+          employeeID:"GANG1",
+          loanID:60
         }
         const config={
           method: 'POST',
