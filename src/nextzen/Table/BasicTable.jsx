@@ -836,7 +836,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'}  >
+                <Table size={table.dense ? 'medium' : 'small'}  stickyHeader={true}>
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
