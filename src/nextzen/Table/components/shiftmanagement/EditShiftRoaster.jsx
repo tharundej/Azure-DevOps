@@ -143,6 +143,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose ,c
   const [fountDesignation,setfountDesignation]=useState([])
   const [fountGrade,setfountGrade]=useState([])
   const [fountEmployee,setfountEmployee]=useState([])
+  const[ShiftnameError,setShiftNameError] = useState(false)
 
   const defaultValueShift = async (value) =>{
     console.log("iama here ")
@@ -363,12 +364,18 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose ,c
         departmentId: (foundDepartment?.departmentID)?parseInt(foundDepartment?.departmentID) : 0,
         designationId:(fountDesignation?.designationID)? parseInt(fountDesignation?.designationID): 0,
         DesignationGradeId: (fountGrade?.designationGradeID)?parseInt(fountGrade?.designationGradeID): 0,
-        locationId:(user?.locationID)?user?.locationID : null,
+        // locationId:(user?.locationID)?user?.locationID : null,
         companyId:(user?.companyID)?user?.companyID : '',
-        employeeId:(editData?.toggle == 1)? join() : [] ,
+
+        employeeId: join() ,
+
       };
       console.log(data, 'data111ugsghghh');
-
+    if(foundShift?.shiftConfigurationId === undefined){
+      setShiftNameError(true)
+    }
+    else {
+    
       const response = await instance.post('/editShiftDetails', data).then(
         (successData) => {
           count = count + 1
@@ -383,7 +390,7 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose ,c
           console.log('lllll', error);
         }
       );
-    } catch (error) {
+    } }catch (error) {
       console.error(error);
     }
   });
@@ -449,9 +456,10 @@ width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
 renderInput={(params) => <TextField {...params} label="Select Shift Group Name" />}
 /> */}
                 <RHFTextField
+                  required
                   value={editData?.shiftGroupName}
                   name="shiftGroupName"
-                  label="Shift Group Name "
+                  label="Shift Group Name"
                   readonly
                 />
 
@@ -478,10 +486,13 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   sx={{
                     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                   }}
-                  renderInput={(params) => <TextField {...params} label="Select Shift  Name" />}
+                  renderInput={(params) => <TextField 
+                    error={ShiftnameError}
+                    helperText={(ShiftnameError)? "please select  Shift Name" : ""}
+                     {...params} label="Select Shift  Name" />}
                 />
 
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                {/* <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Switch
                     checked={isemployeLevel}
                     onChange={() => {
@@ -493,7 +504,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   ) : (
                     <span>Select On Department</span>
                   )}
-                </div>
+                </div> */}
                 {/* <RHFSelect name="departmentId" label="Select Department">
 
 <option value="full_day" >Full Day</option>
@@ -514,6 +525,9 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                       setfountDepartment(newvalue);
                      getDesignation1(newvalue);
                     }}
+                    editable={false}   // Set editable prop to false
+                    freeSolo={false}   // Set freeSolo prop to false
+                    disabled  
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
@@ -540,6 +554,9 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                       setfountDesignation(newvalue);
                      getGrade1(newvalue);
                     }}
+                    editable={false}   // Set editable prop to false
+                    freeSolo={false}   // Set freeSolo prop to false
+                    disabled  
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
@@ -556,10 +573,31 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     onChange={(e, newvalue) => {
                       setfountGrade(newvalue);
                     }}
+                    editable={false}   // Set editable prop to false
+                    freeSolo={false}   // Set freeSolo prop to false
+                    disabled  
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
                     renderInput={(params) => <TextField {...params} label="Select Grade" />}
+                  />
+                )}
+                                {editData?.toggle == '0' && (
+                  <Autocomplete
+                    multiple
+                    disablePortal
+                    id="hfy"
+                    options={employeData || []}
+                    value={EmployeMatching || []}
+                    getOptionLabel={(option) => option.EmployeeName}
+                    onChange={handleSelectEmployeChange}
+                    // editable={false}   // Set editable prop to false
+                    // freeSolo={false}   // Set freeSolo prop to false
+                    // disabled  
+                    sx={{
+                      width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+                    }}
+                    renderInput={(params) => <TextField {...params} label=" Select employee" />}
                   />
                 )}
                 {editData?.toggle == '1' && (
@@ -571,6 +609,9 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                     value={EmployeMatching || []}
                     getOptionLabel={(option) => option.EmployeeName}
                     onChange={handleSelectEmployeChange}
+                    // editable={false}   // Set editable prop to false
+                    // freeSolo={false}   // Set freeSolo prop to false
+                    // disabled  
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}

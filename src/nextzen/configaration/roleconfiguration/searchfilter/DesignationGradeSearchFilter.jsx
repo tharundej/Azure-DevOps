@@ -56,8 +56,10 @@ import AddDesignationConfig from '../AddDesignationConfig';
 import AddDesignationGradeConfig from '../AddDesignationGradeConfig';
 import AddDepartmentConfig from '../AddDepartmentConfig';
 import axios from 'axios';
-
+import Badge from '@mui/material/Badge';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const defaultFilters = {
   name: '',
@@ -198,9 +200,12 @@ export default function DesignationGradeSearchFilter({
       resolve(arr1);
     });
   }
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+  // const {enqueueSnackbar} = useSnackbar()
+  const {user}=useContext(UserContext)
+  const empId =  (user?.employeeID)?user?.employeeID:''
+  const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const [formData, setFormData] = useState({});
   const [designationGradeType, setDesignationGradeType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -209,6 +214,7 @@ export default function DesignationGradeSearchFilter({
   const [openDateRange, setOpendateRange] = useState(false);
   const [departmentLength, setDepartmentLength] = useState();
   const [designationtLength, setDesignationLength] = useState();
+  const [badgeContent, setBadgeContent] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -250,13 +256,14 @@ export default function DesignationGradeSearchFilter({
   };
 
   const handleApply = async () => {
+    setBadgeContent(true);
     console.log(formData, 'form dat  in apply');
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
-      departmentName: JSON.stringify(formData?.Department?.departmentName) || '',
-      designationName: JSON.stringify(formData?.Designation?.designationName) || '',
-      designationGradeName: JSON.stringify(formData?.DesignationGrade?.designationGradeName) || '',
+      departmentName: formData?.Department?.departmentName,
+      designationName: formData?.Designation?.designationName,
+      designationGradeName: formData?.DesignationGrade?.designationGradeName,
     };
     filterData(obj);
     console.log(obj, 'FilterData');
@@ -423,6 +430,15 @@ export default function DesignationGradeSearchFilter({
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log('calling in filter folder');
+    const fetchData = async () => {
+      getDesignationGrade();
+      getDepartment();
+    };
+    fetchData();
+  }, [!open]);
+
   const handleCancel = () => {
     setFormData({});
   };
@@ -475,11 +491,30 @@ export default function DesignationGradeSearchFilter({
         </Grid>
         <Grid item md={1} xs={1}>
           <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-            </Stack>
+            </Stack> */}
           </Grid>
         </Grid>
       </Grid>

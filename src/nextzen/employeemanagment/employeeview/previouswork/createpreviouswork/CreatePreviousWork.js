@@ -159,7 +159,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
     //setSelectedFile(file);
   };
 
-  const handleCategoryChangeNew = (e,index) => {
+  const 
+  handleCategoryChangeNew = (e,index) => {
     const { value, id } = e.target;
     // const newObj = defaultValues;
     

@@ -21,7 +21,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
+import UserContext from 'src/nextzen/context/user/UserConext';
 import { useRouter } from 'src/routes/hooks';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -41,6 +41,7 @@ import Iconify from 'src/components/iconify/iconify';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import Switch from '@mui/material/Switch';
+import { useContext } from 'react';
 
 export default function AddTaxSectionConfig({
   currentUser,
@@ -57,9 +58,12 @@ export default function AddTaxSectionConfig({
   });
 // const baseUrl = "https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
 const [valueSelected, setValueSelected] = useState();
-  const empId = localStorage.getItem('employeeID');
-  const cmpId = localStorage.getItem('companyID');
-  const token = localStorage.getItem('accessToken');
+
+const {user}=useContext(UserContext)
+const empId =  (user?.employeeID)?user?.employeeID:''
+const cmpId= (user?.companyID)?user?.companyID:''
+const roleId = (user?.roleID)?user?.roleID:''
+const token  =  (user?.accessToken)?user?.accessToken:''
   const [locationType, setLocationType] = useState([]);
   const [departmentType, setDepartmentType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -131,10 +135,10 @@ const [valueSelected, setValueSelected] = useState();
     const payload = 
     {
         companyId:cmpId,
-        taxSection:formData?.taxSection,
-        taxScheme:formData?.taxScheme,
+        taxSection:formData?.taxSection?.toString(),
+        taxScheme:formData?.taxScheme?.toString(),
         taxLimit:formData?.taxLimit,
-       attachmentsRequired:valueSelected?.attachmentsRequired
+       attachmentsRequired:valueSelected?.attachmentsRequired? valueSelected?.attachmentsRequired : 0
     }
 // const baseUrl  ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     const config = {
