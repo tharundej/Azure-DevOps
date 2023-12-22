@@ -66,8 +66,8 @@ export default function Expenses() {
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Grand Total Amount</Typography>
-              <Typography variant="h3">{fNumber(9999)}</Typography>
+              <Typography variant="subtitle2">Total Amount</Typography>
+              <Typography variant="h3">{fNumber(0)}</Typography>
             </Box>
           </Card>
         </Grid>
@@ -75,8 +75,8 @@ export default function Expenses() {
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Grand Advance Amount</Typography>
-              <Typography variant="h3">{fNumber(9999)}</Typography>
+              <Typography variant="subtitle2">Advance Amount</Typography>
+              <Typography variant="h3">{fNumber(0)}</Typography>
             </Box>
           </Card>
         </Grid>
@@ -84,8 +84,8 @@ export default function Expenses() {
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Grand Balance Amount</Typography>
-              <Typography variant="h3">{fNumber(9999)}</Typography>
+              <Typography variant="subtitle2">Balance Amount</Typography>
+              <Typography variant="h3">{fNumber(0)}</Typography>
             </Box>
           </Card>
         </Grid>
