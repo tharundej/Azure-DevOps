@@ -23,6 +23,7 @@ export default function useCalendar() {
   const [selectedRange, setSelectedRange] = useState(null);
 
   const [view, setView] = useState(smUp ? 'dayGridMonth' : 'listWeek');
+  console.log(date,"datedate")
 
   const onOpenForm = useCallback(() => {
     setOpenForm(true);
@@ -62,8 +63,10 @@ export default function useCalendar() {
 
       calendarApi.today();
       setDate(calendarApi.getDate());
+      
     }
   }, [calendarEl]);
+  
 
   const onDatePrev = useCallback(() => {
     if (calendarEl) {

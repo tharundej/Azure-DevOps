@@ -23,6 +23,7 @@ export default function Additions({defaultPayload,componentPage}){
   const[showForm,setShowForm] = useState()
   const [showFilter,setShowFilter]= useState(false)
   const [loader,setLoader] =useState()
+  const [openedCard, setOpenedCard] = useState(null);
   const handleClickClose=()=> {
     setShowFilter(false)
     console.log(filterData,"filterdataa");
@@ -87,6 +88,10 @@ const handleChange = (event) => {
  const handleAddition=(index)=>{
   const newExpanded = [...additionCard];
   newExpanded[index] = !newExpanded[index];
+  if (openedCard !== null && openedCard !== index) {
+    newExpanded[openedCard] = false;
+  }
+  setOpenedCard(index === openedCard ? null : index);
   setAdditionCard(newExpanded);
 }
 const [datesData,setDatesData]=useState([])
@@ -352,7 +357,10 @@ PaperProps={{
              <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.additionsType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
-               onClick={() => handleAddition(index)}
+               onClick={() => {
+                  setOpenedCard(index === openedCard ? null : index);
+                  handleAddition(index)
+                }}
              >
                <Iconify icon="iconamoon:arrow-down-2-thin" />
              </IconButton>
@@ -366,7 +374,10 @@ PaperProps={{
                   {itm?.additionsType!="Over Time Hours" && <span>Date : {formatDate(itm?.date)}</span>}
                   <IconButton
                     sx={{ position: 'absolute', top: 15, right: 0 }}
-                    onClick={() => handleAddition(index)}
+                    onClick={() => {
+                        setOpenedCard(index === openedCard ? null : index);
+                        handleAddition(index)
+                      }}
                   >
                     <Iconify icon="iconamoon:arrow-up-2-thin" />
                   </IconButton>

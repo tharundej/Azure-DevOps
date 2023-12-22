@@ -110,6 +110,7 @@ export default function LeaveFilter({filterSearch,filterData}){
          
         })
         setDatesData(arr1);
+        console.log(arr1.length,"arrr",arr1)
         resolve(arr1)
         
     })
