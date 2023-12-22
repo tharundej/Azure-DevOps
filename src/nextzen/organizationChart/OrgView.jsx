@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import ReusableTabs from '../../tabs/ReusableTabs';
+import ReusableTabs from 'src/nextzen/tabs/ReusableTabs';
 import OrganizationChart from './OrganizationChart';
 
 const tabLabels = ['OrganizationChart'];

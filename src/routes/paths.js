@@ -175,6 +175,9 @@ export const paths = {
     payroll: {
       root: `/payroll`,
     },
+    organizationchart: {
+      root: `/organizationchart`,
+    },
     monthlydeductions: {
       root: `/monthlydeductions`,
     },

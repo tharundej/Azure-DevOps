@@ -112,6 +112,10 @@ export function AuthProvider({ children }) {
       paySchedule: true,
       payScheduleHistory: true,
     },
+    organizationchart: {
+      // mainHeading: false,
+      OrganizationChart: true,
+    },
     shiftManagement: {
       assignShift: true,
       mainHeading: false,

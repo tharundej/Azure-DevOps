@@ -7,43 +7,60 @@ import Button from '@mui/material/Button';
 import { Icon } from '@iconify/react';
 import { baseUrl } from '../global/BaseUrl';
 import axios from 'axios';
+import { height } from '@mui/system';
 const OrganizationChart = () => {
   const [selectedManager, setSelectedManager] = useState(null);
+  var [emp, setEmp] = useState();
   const [orgDatas, setOrgDatas] = useState(null);
-  const ApiHit=(obj)=>{
+  const [allData, setAllData] = useState([]);
+  // const [ceoDetails, setCeoDetails] = useState([]);
+  const ApiHit = (obj) => {
     let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${baseUrl}/getOrgTree`,
-        headers: { 
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
-          'Content-Type': 'application/json', 
-        },
-        data : obj
-      };
-      
-      axios.request(config)
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/getOrgTree`,
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+        'Content-Type': 'application/json',
+      },
+      data: obj,
+    };
+
+    axios
+      .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data.data));
-        setOrgDatas(response?.data?.data)
+        // console.log(JSON.stringify(response.data.data));
+        setOrgDatas(response?.data?.data);
+        // setSelectedManager(employeeId);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
   const payload = {
-    "companyId": "COMP22",
-  }
-  useEffect(()=>{
-    ApiHit(payload)
-  },[])
-  const modifiedData = orgDatas?.underlings.map((underling) => ({
-    ...underling,
-    fullName: underling?.firstName + ' ' + underling?.middleName + ' ' +underling?.lastName,
-    combinedDesignation: underling?.designationGrade + ' ' + underling?.designation
-  }));
- const  employeeIdCeo = modifiedData?.employeeId;
-  console.log(modifiedData);
+    companyId: 'COMP22',
+  };
+  useEffect(() => {
+    ApiHit(payload);
+  }, []);
+
+  const details =
+    orgDatas?.details?.map((details) => ({
+      ...details,
+      fullName: details?.firstName + ' ' + details?.middleName + ' ' + details?.lastName,
+      combinedDesignation: details?.designationGrade + ' ' + details?.designation,
+    })) || null;
+  const Under =
+    orgDatas?.underlings?.map((underling) => ({
+      ...underling,
+      fullName: underling?.firstName + ' ' + underling?.middleName + ' ' + underling?.lastName,
+      combinedDesignation: underling?.designationGrade + ' ' + underling?.designation,
+    })) || [];
+
+  console.log(Under, 'under');
+  console.log(orgDatas);
+  console.log('details', details);
   const orgData = {
     name: 'Sreedhar Reddy Manikanti',
     role: 'IT : Project Manager',
@@ -120,8 +137,8 @@ const OrganizationChart = () => {
   const gridItemStyle = {
     width: '200px', // Adjust the width as needed
     textAlign: 'center',
-    margin: '0 auto', // Center the card
-
+     margin: '10px', // Center the card
+    height:'200px'
   };
 
   const ceoCardStyle = {
@@ -130,20 +147,84 @@ const OrganizationChart = () => {
     margin: '0 auto', // Center the card
   };
 
-  const renderEmployee = (employeeId) => (
-    <Grid item key={employee.employeeId} style={gridItemStyle}>
-      <Card>
+  const renderEmployee = (data) => (
+    <Grid container item direction='row' key={data.employeeId} style={{gridItemStyle,display:'flex',flexDirection: 'row',}}>
+        <Card>
         <CardContent>
-          <Typography>{employee.name}</Typography>
-          <Typography variant="subtitle2">{employee.role}</Typography>
-          <Typography variant="caption">Employee ID: {employee.employeeId}</Typography>
+          <Typography>{data.fullName}</Typography>
+          <Typography>{data.firstName + ' ' + data.middleName + ' ' + data.lastName}</Typography>
+          <Typography variant="subtitle2">
+            {data.designationGrade + ' ' + data.designation}
+          </Typography>
+          <Typography variant="caption">Employee ID: {data.employeeId}</Typography>
         </CardContent>
-      </Card>
+        </Card>
+      
     </Grid>
   );
+  const handleManagerClick = (employeeId) => {
+    // Call the API to get manager details
+    const payload = {
+      employeeId: employeeId,
+      companyId: 'COMP22',
+    };
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/getOrgTree`,
+      headers: {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
+        'Content-Type': 'application/json',
+      },
+      data: payload,
+    };
 
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data.data);
+        emp = response?.data?.data
+        setEmp(emp);
+        setSelectedManager(employeeId);
+        const employees =
+          emp?.underlings?.map((underling) => ({
+            ...underling,
+            fullName: `${underling.firstName} ${underling.middleName} ${underling.lastName}`,
+            combinedDesignation: `${underling.designationGrade} ${underling.designation}`,
+            employeeId: underling.employeeId,
+          })) || [];
+
+        setAllData(employees);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    const Employees =
+      emp?.underlings?.map((underling) => ({
+        ...underling,
+        fullName: `${underling.firstName} ${underling.middleName} ${underling.lastName}`,
+        combinedDesignation: `${underling.designationGrade} ${underling.designation}`,
+        employeeId: underling.employeeId,
+      })) || [];
+
+
+    console.log(allData, 'final');
+    console.log(Employees, 'Employees');
+    console.log(emp, 'emp');
+  };
   const renderManager = (manager) => (
-    <Grid container direction="row" spacing={2} key={manager.employeeId} style={{ ...gridItemStyle, display: selectedManager === manager.employeeId || !selectedManager ? 'flex' : 'none', flexDirection: 'row' }}>
+    <Grid
+      container
+      direction="row"
+      spacing={2}
+      key={manager.employeeId}
+      style={{
+        ...gridItemStyle,
+        display: selectedManager === manager.employeeId || !selectedManager ? 'flex' : 'none',
+        flexDirection: 'row',
+      }}
+    >
       <Grid item>
         {selectedManager && (
           <Button onClick={() => setSelectedManager(null)} style={{ marginBottom: 16 }}>
@@ -151,36 +232,49 @@ const OrganizationChart = () => {
             Back
           </Button>
         )}
-        <Card onClick={() => setSelectedManager(manager.employeeId)}>
+        <Card onClick={() => handleManagerClick(manager.employeeId)}>
           <CardContent>
-            <Typography>{manager.name}</Typography>
-            <Typography variant="subtitle2">{manager.role}</Typography>
+            <Typography>
+              {manager.firstName + ' ' + manager.middleName + ' ' + manager.lastName}
+            </Typography>
+            <Typography variant="subtitle2">
+              {manager.designationGrade + ' ' + manager.designation}
+            </Typography>
             <Typography variant="caption">Employee ID: {manager.employeeId}</Typography>
           </CardContent>
         </Card>
         {selectedManager === manager.employeeId && (
           <div style={{ marginTop: 16 }}>
             <Grid container item direction="row" spacing={2} style={{ flexDirection: 'row' }}>
-              {manager.children.map(renderEmployee)}
+              {/* {manager.children.map(renderEmployee)} */}
+              {!allData?.length && <Typography variant="subtitle1" style={{marginLeft:'20px',padding:'10px'}}>No Team Members</Typography>}
+              {allData && allData.map((Und) => renderEmployee(Und))}
+              {console.log(manager, 'manaaaa')}
             </Grid>
           </div>
         )}
       </Grid>
     </Grid>
   );
-  
-  
+
+  console.log();
   return (
     <div>
       <Card onClick={() => setSelectedManager('CEO')} style={ceoCardStyle}>
         <CardContent>
-          <Typography>{orgData.name}</Typography>
-          <Typography variant="subtitle2">{orgData.role}</Typography>
-          <Typography variant="caption">Employee ID: {orgData.employeeId}</Typography>
+          {details &&
+            details.map((detail) => (
+              <div key={detail.employeeId}>
+                <Typography>{detail.fullName}</Typography>
+                <Typography variant="subtitle2">{detail.combinedDesignation}</Typography>
+                <Typography variant="caption">Employee ID: {detail.employeeId}</Typography>
+              </div>
+            ))}
         </CardContent>
       </Card>
       <Grid container spacing={2} style={gridContainerStyle}>
-        {orgData.children.map(renderManager)}
+        {/*  {orgDatas.underlings.map(renderManager)} */}
+        {Under && Under.map((Und) => renderManager(Und))}
       </Grid>
     </div>
   );

@@ -7,7 +7,8 @@ import Box from '@mui/material/Box';
 import UserContext from 'src/nextzen/context/user/UserConext';
 // routes
 import { RouterLink } from 'src/routes/components';
-import Avatar from '@mui/material/Avatar';
+ import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/joy/Avatar';
 // ----------------------------------------------------------------------
 
 const InfobellLogo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
@@ -23,28 +24,28 @@ const InfobellLogo = forwardRef(({ disabledLink = false, sx, ...other }, ref) =>
   const companyLogo= (user?.companyLogo)?user?.companyLogo:''
   // OR using local (public folder)
   // -------------------------------------------------------
-  const logo = (
+  const InfobellLogo = (
     // default logo /logo/logo_single.svg
   
 
   
     <Box
-    component={"img" }
-    src={"/logo/logo_single.svg"}
+    component="img"
+    src={companyLogo ? companyLogo :   <Avatar src="/broken-image.jpg" />}
     style={companyLogo ? { marginLeft: '20px' } : {}}
     sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }}
-  />
+  />  
   
   );
 
 
   if (disabledLink) {
-    return logo;
+    return InfobellLogo;
   }
 
   return (
     <Link component={RouterLink} href="/dashboard" sx={{ display: 'contents' }}>
-      {logo}
+      {InfobellLogo}
     </Link>
   );
 });

@@ -17,6 +17,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { bgGradient } from 'src/theme/css';
 // components
 import Logo from 'src/components/logo';
+import InfobellLogo from 'src/components/logo/InfobellLogo';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ export default function AuthClassicLayout({ children, image, title }) {
   const mdUp = useResponsive('up', 'md');
 
   const renderLogo = (
-    <Logo
+    <InfobellLogo
       sx={{
         zIndex: 9,
         position: 'absolute',
