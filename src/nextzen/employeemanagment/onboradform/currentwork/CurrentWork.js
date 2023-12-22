@@ -98,7 +98,7 @@ const CurrentWork=forwardRef((props,ref)=> {
     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
     reportingManagerID:currentUser?.reportingManagerID|| undefined,
 
-  "employeeID":localStorage.getItem("employeeId"),
+  "employeeID":localStorage.getItem("employeeID"),
 
   "employmentType":currentUser?.employmentType|| "",
 
@@ -488,6 +488,9 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 {
 
                   ctc:parseInt(currentWorkData?.ctc,10),
+                  variablePay:currentWorkData?.variablePay,
+                  monthlyPay:currentWorkData?.monthlyPay,
+                  bonus:currentWorkData?.bonus,
                   companyID:currentWorkData?.companyID,
                   employeeID:localStorage.getItem('employeeIdCreated'),
                   employmentType:currentWorkData?.employmentType,
@@ -497,6 +500,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                   locationID:currentWorkData?.locationID?.locationID,
                   reportingManagerID:currentWorkData?.reportingManagerID?.managerID,
                   roleID:currentWorkData?.roleID?.roleID
+
 
                 }
                 ApiHitCurrentWork(obj);

@@ -107,6 +107,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const [cinFilled, setCinFilled] = useState(false);
   const [emailFilled, setEmailFilled] = useState(false);
   const [regNoFilled, setRegNoFilled] = useState(false);
+  const [LogoError, setLogoError] = useState(false);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -122,10 +123,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     if (e.target.files && e.target.files.length > 0) {
       setLogoUploaded(true);
     }
+   
   };
   const handleFormSubmit = () => {
     if (!logoUploaded) {
       console.error('Please upload a logo');
+      alert("Please upload a logo")
       return; 
     }
   };
@@ -200,7 +203,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyDateOfIncorporation: Yup.string(),
     companyCountry: Yup.object().required('Country is Required'),
     companyPincode: Yup.number('Pincode is Required').required('Pin code is Required'),
-    empIdPrefix: Yup.string().required('Employee ID type Required'),
+    empIdPrefix: Yup.string() .nullable()
+    .matches(/^[A-Za-z\s]*$/, 'Employee ID must contain only letters and spaces').required('Employee ID type Required'),
   });
 
   const defaultValues = {
@@ -301,12 +305,17 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   // console.log(imageData[0]?.data.split(',')[1]);
 
   const onSubmit = handleSubmit(async (data) => {
+
     try {
       if (!data.companyCountry || !data.companyState || !data.companyCity) {
         setErrorMsg('Please select country, state, and city.');
         console.log('errorrrrrrrrrr');
         return;
       }
+      if(!logoUploaded){
+        setLogoError(true)
+      }
+      else{
       console.log(data, 'hhfhfhh');
       await register?.(
         data.cin,
@@ -331,8 +340,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         (data.logoName = imageData[0]?.name),
         (data.companyLogo = imageData[0]?.data.split(',')[1])
       );
-
+    
       onHandleNextIncrement();
+    }
+   
+
+     
 
       // router.push(returnTo || PATH_AFTER_LOGIN);
       // router.push(returnTo || PATH_FOR_VERIFY);
@@ -497,6 +510,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       if (data.middleName != '') {
         data.middleName = data.middleName;
       }
+      if(!logoUploaded){
+        setLogoError(true)
+      }
+      else{
+        
+     
       const response = await axiosInstance.post(baseUrl + '/updateCompanyWhileRegister', payload);
       console.log(response);
       if (response?.data?.code === 200) {
@@ -506,7 +525,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       if (response?.data?.code === 400) {
         console.log('kkkk');
       }
-    } catch (error) {
+    }} catch (error) {
       console.error(error);
       setErrorMsg(typeof error === 'string' ? error : error.message);
       // setSnackbarOpen(true);
@@ -841,6 +860,11 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   />
                 </Button>
               </label>
+              {(LogoError)? (
+    <span style={{ color: 'red' }}>
+      Please upload the logo ..
+    </span>
+  ) : ''}
               {/* {selectedFile &&
               <img
                       src={imageUrl}
