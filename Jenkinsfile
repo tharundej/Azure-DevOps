@@ -20,9 +20,9 @@ pipeline {
          stage('Docker Compose Stop Delete') {
             steps {
                 script {
-                    sh '''
-                         docker stop node_test
-                         docker rm node_test
+                     sh '''
+                         docker ps
+                         docker rm -f node_n || true
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 
