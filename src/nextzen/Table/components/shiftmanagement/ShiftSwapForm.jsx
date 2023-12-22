@@ -39,11 +39,12 @@ import FormProvider, {
 import axios from 'axios';
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
-import { Autocomplete, List, ListItem, TextField } from '@mui/material';
+import { Autocomplete, CardContent, Divider, List, ListItem, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function ShiftSwapForm({ currentUser , handleClose }) {
+export default function ShiftSwapForm({ currentUser , handleClose, getTableData  }) {
   const [datesUsed, setDatesUsed] = useState({
     // end_date: dayjs(new Date()),
     start_date: dayjs(new Date()),
@@ -90,6 +91,8 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
    const [newShift,setnewShift]= useState(false)
    const [curentShift,setcurentShift]= useState(false)
+   const [EmployeeError,setEmployeeError]= useState(false)
+   const [ShiftError,setShiftError]= useState(false)
    const [shiftName,setShiftNames]=useState([])
   const [employeSwapDetails,setEmployeSwapDetails ] = useState([])
   const [ShiftGroupName,setShiftGroupName] =useState([])
@@ -228,9 +231,16 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     comment:Comment,
   }
       console.log(data, 'data111ugsghghh');
-
+if(currentEmployeSwapData?.employee_id === undefined){
+  setEmployeeError(true)
+}
+else if(currentShiftGroupData?.employeeShiftGroupId === undefined){
+  setShiftError(true)
+}
+else {
       const response = await instance.post('/SwapShift', data).then(
         (successData) => {
+          getTableData()
           handleClose()
           enqueueSnackbar(response.data.message,{variant:'success'})
 
@@ -242,7 +252,8 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
           console.log('lllll', error);
         }
       );
-    } catch (error) {
+    }
+  } catch (error) {
       console.error(error);
     }
   });
@@ -257,16 +268,13 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
     }
 
   return (
-    <div style={{ paddingTop: '20px' }}>
+    <div style={{ paddingTop: '0px' }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
+        <ModalHeader heading="Employee Shift Swap "/>
       <Grid container spacing={3}>
 
 <Grid xs={12} md={12}>
-  <Grid sx={{ padding: '8px' }}>
-    <Typography sx={{ marginLeft: '5px' }}>
-      Employee Shift Swap Here
-    </Typography>
-  </Grid>
+
   <Card sx={{ p: 3 }}>
     <Box
       rowGap={1}
@@ -303,7 +311,10 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="Select Employe" />}
+  renderInput={(params) => <TextField 
+    error={EmployeeError}
+    helperText={(EmployeeError) ?  "please select employee" : ""}
+   {...params} label="Select Employe" />}
 />
       <Autocomplete
   disablePortal
@@ -322,7 +333,10 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
   sx={{
     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
   }}
-  renderInput={(params) => <TextField {...params} label="To Shift Name" />}
+  renderInput={(params) => <TextField 
+  error={ShiftError}
+  helperText={(ShiftError)? "please select to shift" : ""}
+  {...params} label="To Shift Name" />}
 />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
@@ -341,12 +355,115 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         </DemoContainer>
       </LocalizationProvider>   
 
-      <RHFTextField  name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
-  { curentShift &&    <Grid>
-      <Typography >
-        Current Shift Details
-        </Typography> 
-        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+
+      <RHFTextField required name="comment" label="Comments " value={Comment}  onChange={handleComment}/>   
+
+  { curentShift &&   
+  //  <Grid>
+  //     <Typography >
+  //       Current Shift Details
+  //       </Typography> 
+  //       <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+  //       <ListItem
+  //       disablePadding
+  //       sx={{
+  //         border: '0px solid #ccc', // Add your border style
+  //         // borderRadius: '8px',    // Add your border radius
+  //         // padding: '8px',          // Add your padding
+  //         marginBottom: '8px',     // Add your margin
+  //         display: 'flex',
+  //         justifyContent: 'space-between',
+  //         alignItems: 'center',
+  //       }}
+  //     >
+  //       {/* Display specific name and value */}
+  //       <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Shift GroupName`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentEmployeSwapData?.shift_group}
+  //       </span>
+        
+  //       {/* Add more concatenated strings for other name-value pairs as needed */}
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Shift Name`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentEmployeSwapData?.shift_name}
+  //       </span>
+    
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Start Time`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentEmployeSwapData?.start_time}
+  //       </span>
+    
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`End Time`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentEmployeSwapData?.end_time}
+  //       </span>
+    
+  //     </ListItem>
+  //   </List>
+  //       </Grid>
+       <Grid>
+        <Card>
+          <ModalHeader heading="Current Shift Details"/>
+          <CardContent sx={{padding: "7px"}}>
+          <List sx={{ width: '100%',  maxWidth: 360, bgcolor: 'background.paper' }}>
         <ListItem
         disablePadding
         sx={{
@@ -371,6 +488,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         
         {/* Add more concatenated strings for other name-value pairs as needed */}
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -394,6 +512,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         </span>
     
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -417,6 +536,7 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         </span>
     
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -440,13 +560,118 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
         </span>
     
       </ListItem>
+      <Divider/>
     </List>
-        </Grid>}
-{ newShift &&      <Grid>
-      <Typography>
-        New Shift Details
-        </Typography> 
-        <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+          </CardContent>
+        </Card>
+       </Grid>
+        }
+{ newShift &&   
+  //  <Grid>
+  //     <Typography>
+  //       New Shift Details
+  //       </Typography> 
+  //       <List sx={{ width: '100%',border: "1px solid #ccc",  maxWidth: 360, bgcolor: 'background.paper' }}>
+  //       <ListItem
+  //       disablePadding
+  //       sx={{
+  //         border: '0px solid #ccc', // Add your border style
+  //         // borderRadius: '8px',    // Add your border radius
+  //         // padding: '8px',          // Add your padding
+  //         marginBottom: '8px',     // Add your margin
+  //         display: 'flex',
+  //         justifyContent: 'space-between',
+  //         alignItems: 'center',
+  //       }}
+  //     >
+  //       {/* Display specific name and value */}
+  //       <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Shift GroupName`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentShiftGroupData?.shiftGroupName}
+  //       </span>
+        
+  //       {/* Add more concatenated strings for other name-value pairs as needed */}
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Shift Name`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentShiftGroupData?.shiftName}
+  //       </span>
+    
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`Start Time`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentShiftGroupData?.startTime}
+  //       </span>
+    
+  //     </ListItem>
+  //     <ListItem
+  //         sx={{
+  //           border: '0px solid #ccc', // Add your border style
+  //           // borderRadius: '8px',    // Add your border radius
+  //           // padding: '8px',          // Add your padding
+  //           marginBottom: '8px',     // Add your margin
+  //           display: 'flex',
+  //           justifyContent: 'space-between',
+  //           alignItems: 'center',
+  //         }}
+  //       disablePadding
+
+  //     >
+  //             <span style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }}>
+  //         {`End Time`}
+  //       </span>
+
+  //       {/* Display Shift Name */}
+  //       <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
+  //         {currentShiftGroupData?.end_Time}
+  //       </span>
+    
+  //     </ListItem>
+  //   </List>  
+  //       </Grid>
+         <Grid>
+        <Card>
+          <ModalHeader heading="New Shift Details"/>
+          <CardContent sx={{padding: "7px"}}>
+          <List sx={{ width: '100%',  maxWidth: 360, bgcolor: 'background.paper' }}>
         <ListItem
         disablePadding
         sx={{
@@ -466,11 +691,12 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
         {/* Display Shift Name */}
         <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
-          {currentShiftGroupData?.shiftGroupName}
+        {currentShiftGroupData?.shiftGroupName}
         </span>
         
         {/* Add more concatenated strings for other name-value pairs as needed */}
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -490,10 +716,11 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
         {/* Display Shift Name */}
         <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
-          {currentShiftGroupData?.shiftName}
+           {currentShiftGroupData?.shiftName}
         </span>
     
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -513,10 +740,11 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
         {/* Display Shift Name */}
         <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
-          {currentShiftGroupData?.startTime}
+        {currentShiftGroupData?.startTime}
         </span>
     
       </ListItem>
+      <Divider/>
       <ListItem
           sx={{
             border: '0px solid #ccc', // Add your border style
@@ -536,19 +764,25 @@ export default function ShiftSwapForm({ currentUser , handleClose }) {
 
         {/* Display Shift Name */}
         <span  style={{ display:"flex", minWidth: "100px",alignItems:"center",justifyContent:"center",alignContent:"center", border: "0px solid #ccc" }} >
-          {currentShiftGroupData?.end_Time}
+        {currentShiftGroupData?.end_Time}
         </span>
     
       </ListItem>
-    </List>  
-        </Grid>}
+      <Divider/>
+    </List>
+          </CardContent>
+        </Card>
+       </Grid>
+
+        }
 
     </Box>
     <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
-                <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+
+                <Button  variant="outlined"  sx={{mr:"5px"}} onClick={handleClose}>Cancel</Button>
+                <LoadingButton type="submit" variant="contained"   sx={{backgroundColor:'#3B82F6'}} color="primary" loading={isSubmitting}>
                   {!currentUser ? 'Create User' : 'Swap Shift'}
                 </LoadingButton>
-                <Button  sx={{ml:"5px"}} onClick={handleClose}>Cancel</Button>
               </Stack>
   </Card>
 

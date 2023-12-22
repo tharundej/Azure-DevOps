@@ -55,6 +55,7 @@ import axios from 'axios';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import AddTaxSectionConfig from 'src/nextzen/configaration/taxSectionConfiguration/AddTaxSectionConfig';
+import Badge from '@mui/material/Badge';
 
 const defaultFilters = {
   name: '',
@@ -201,6 +202,7 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
   const [openDateRange, setOpendateRange] = useState(false);
   const [departmentLength, setDepartmentLength] = useState();
   const [designationtLength, setDesignationLength] = useState();
+  const [badgeContent, setBadgeContent] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -209,13 +211,14 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
   };
 
   const handleApply = async () => {
+    setBadgeContent(true);
     console.log(formData, 'form dat  in apply');
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
-      departmentID: JSON.stringify(formData?.Department?.departmentID) || '',
-      designationID: JSON.stringify(formData?.Designation?.designationID) || '',
-      designationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
+      fPdepartmentID: JSON.stringify(formData?.Department?.departmentID) || '',
+      fPDesignationID: JSON.stringify(formData?.Designation?.designationID) || '',
+      fPDesignationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
     };
     filterData(obj);
     console.log(obj, 'FilterData');
@@ -383,6 +386,13 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
   }, []);
   const handleCancel = () => {
     setFormData({});
+    const obj = {
+      fPdepartmentID: '',
+      fPDesignationID:  '',
+      fPDesignationGradeID:  '',
+    };
+    filterData(obj);
+    // handleApply();
   };
 
   console.log(formData, 'inreset');
@@ -412,11 +422,30 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
         </Grid> */}
         <Grid item md={2} xs={2}>
           <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+            
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-            </Stack>
+            </Stack> */}
           </Grid>
         </Grid>
       </Grid>
@@ -520,6 +549,8 @@ export default function HrFilter({ filterData, filterOptions, filterSearch, sear
             sx={{ float: 'right', right: 15 }}
             variant="outlined"
             onClick={() => {
+             
+              setFormData({});
               handleCancel();
             }}
           >

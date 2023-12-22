@@ -43,8 +43,9 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
-export default function AddEmployeShift({ currentUser, handleClose }) {
+export default function AddEmployeShift({ currentUser, handleClose ,getTableData}) {
   const [datesUsed, setDatesUsed] = useState({
     date_of_birth: dayjs(new Date()),
     joining_date: dayjs(new Date()),
@@ -101,6 +102,10 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const [ToShiftGroup_Name1, setToShiftGroup_Name1] = useState('');
   //validation
   const [shiftNameError, setShiftNameError] = useState(false);
+  const [DepartmentError, setDepartmentError] = useState(false);
+  const [DesignationError, setDesignationError] = useState(false);
+  const [GradeError, setGradeError] = useState(false);
+  const [Employerror, setEmployerror] = useState(false);
   const [departmentData, setDepartmentData] = useState([]);
   const [CurrentDepartmentData, setCurrentDepartmentData] = useState({});
   const [CurrentShiftGroupNameData, setCurrentShiftGroupNameData] = useState({});
@@ -111,19 +116,8 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const [employeData, setEmployeData] = useState([]);
   const [ShiftGroupName, setShiftGroupName] = useState('');
   const [ShiftName, setShiftName] = useState([]);
-  // console.log(
-  //   '🚀 ~ file: AddeployeShift.jsx:134 ~ AddEmployeShift ~ ShiftGroupName:',
-  //   ShiftGroupName
-  // );
-  console.log('🚀 ~ file: AddeployeShift.jsx:129 ~ AddEmployeShift ~ employeData:', employeData);
   const [CurrentGradeData, setCurrentGradeData] = useState({});
-  console.log(
-    '🚀 ~ file: AddeployeShift.jsx:140 ~ AddEmployeShift ~ CurrentGradeData:',
-    CurrentGradeData.designationGradeID
-  );
   const [SwitchValue, SetSwitchValue] = useState('');
-  console.log('🚀 ~ file: AddeployeShift.jsx:142 ~ AddEmployeShift ~ SwitchValue:', SwitchValue);
-
   const getDepartment = async () => {
     try {
       const data = {
@@ -132,10 +126,6 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       };
       const response = await instance.post('/getDepartment', data);
       setDepartmentData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -146,14 +136,10 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
     try {
       const data = {
         companyID: (user?.companyID)?user?.companyID : '',
-        departmentID: newvalue.departmentID,
+        departmentID: (newvalue != null)? newvalue?.departmentID : 0,
       };
       const response = await instance.post('/onboardingDesignation', data);
       setDesignationData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -163,15 +149,10 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const getGrade = async (newvalue) => {
     try {
       const data = {
-        designationID: newvalue.designationID,
+        designationID: (newvalue != null) ? newvalue?.designationID : 0,
       };
       const response = await instance.post('/onboardingDesignationGrade', data);
       setgradeData(response.data.data);
-
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -184,10 +165,6 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       };
       const response = await instance.post('/getEmployeeIDDetails', data);
       setEmployeData(response.data.data);
-      console.log(
-        '🚀 ~ file: EditTimeProject.jsx:119 ~ getEmployeReport ~ response.data:',
-        response.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -200,10 +177,6 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   //     };
   //     const response = await instance.post('/getShiftGroupName', data);
   //     setShiftGroupName(response.data.data);
-  //     console.log(
-  //       '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
-  //       response.data.data
-  //     );
   //   } catch (error) {
   //     console.error('Error', error);
   //     throw error;
@@ -218,10 +191,6 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
       };
       const response = await instance.post('/getShiftConfig', data);
       setShiftName(response.data.data);
-      console.log(
-        '🚀 ~ file: AddeployeShift.jsx:209 ~ getShiftgroupName ~ response.data.data:',
-        response.data.data
-      );
     } catch (error) {
       console.error('Error', error);
       throw error;
@@ -231,7 +200,6 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
   const [currentEmployeData, setCurrentEmployeData] = useState([]);
   const handleSelectEmployeChange = (event, values) => {
     setCurrentEmployeData(values);
-    console.log('🚀 ~ file: AddTimeProject.jsx:79 ~ handleSelectEmployeChange ~ values:', values);
     //  setemployeeList ( currentEmployeData[0]?.employeeId);
 
     // setCommaSepaatedEmployeString(EmployeList.join(','))
@@ -275,15 +243,34 @@ export default function AddEmployeShift({ currentUser, handleClose }) {
         locationId: (user?.locationID)? JSON.stringify(user?.locationID ): '',
       };
       console.log(data, 'data111ugsghghh');
-      if (CurrentShiftNameData?.shiftConfigurationId === undefined) {
+      if ( CurrentShiftNameData?.shiftConfigurationId === undefined ) {
         // Display an error or prevent submission
-        alert('Please select a shift name.');
-      } else {
+        setShiftNameError(true)
+      }
+      if ( !isemployeLevel &&  CurrentDepartmentData?.departmentID === undefined) {
+        // Display an error or prevent submission
+        setDepartmentError(true)
+      }
+      if ( !isemployeLevel &&  CurrentDesignationData?.designationID === undefined) {
+        // Display an error or prevent submission
+        setDesignationError(true)
+      }
+      if ( !isemployeLevel &&   CurrentGradeData?.designationGradeID === undefined) {
+        // Display an error or prevent submission
+        setGradeError(true)
+      }
+      if ( isemployeLevel &&   (data.employeeId.length === 0 ) ) {
+        // Display an error or prevent submission
+        setEmployerror(true)
+      }
+
+       else {
         const response = await instance.post('/addShiftDetails', data).then(
           (successData) => {
+
+            getTableData()
             handleClose();
             enqueueSnackbar(response.data.message, { variant: 'success' });
-
             console.log('sucess', successData);
           },
           (error) => {
@@ -301,13 +288,14 @@ const handleShift = (event)=>{
 setShiftGroupName(event.target.value)
 }
   return (
-    <div style={{ paddingTop: '20px' }}>
+    
+    <div style={{ paddingTop: '0px' }}>
+      {/* <ModalHeader heading="Apply Claim" /> */}
       <FormProvider methods={methods} onSubmit={onSubmit}>
+      <ModalHeader heading="Add Employee Shift Here" />  
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
-            <Grid sx={{ padding: '8px' }}>
-              <Typography sx={{ marginLeft: '5px' }}>Add Employee Shift Here </Typography>
-            </Grid>
+
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={1}
@@ -329,7 +317,7 @@ setShiftGroupName(event.target.value)
 </RHFSelect> */}
 
 <RHFTextField
-                 
+                  required
                   name="shiftGroupName"
                   label="Shift Group Name "
                   onChange={handleShift}
@@ -402,12 +390,17 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.departmentName}
                     onChange={(e, newvalue) => {
                       setCurrentDepartmentData(newvalue);
+                      setDepartmentError(newvalue === null);
                       getDesignation(newvalue);
+                    
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Department" />}
+                    renderInput={(params) => <TextField 
+                      error={DepartmentError}
+                      helperText={(DepartmentError)? 'Please select a Depatment.' : ''}
+                      {...params} label="Select Department" />}
                   />
                 )}
                 {/* <RHFSelect name="designationId" label="Select Designation">
@@ -428,12 +421,16 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.designationName}
                     onChange={(e, newvalue) => {
                       setCurrentDesignationData(newvalue);
+                      setDesignationError(newvalue === null ? true : false);
                       getGrade(newvalue);
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Designation" />}
+                    renderInput={(params) => <TextField
+                    error={DesignationError}
+                    helperText={(DesignationError)? "please select Designation" : ""}
+                       {...params} label="Select Designation" />}
                   />
                 )}
                 {!isemployeLevel && (
@@ -445,11 +442,15 @@ setShiftGroupName(event.target.value)
                     getOptionLabel={(option) => option.designationGradeName}
                     onChange={(e, newvalue) => {
                       setCurrentGradeData(newvalue);
+                      setGradeError(newvalue === null ? true : false)
                     }}
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label="Select Grade" />}
+                    renderInput={(params) => <TextField
+                    error={GradeError}
+                    helperText={(GradeError)? "please Select the Grade" : ""}
+                       {...params} label="Select Grade" />}
                   />
                 )}
                 {isemployeLevel && (
@@ -464,7 +465,10 @@ setShiftGroupName(event.target.value)
                     sx={{
                       width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
                     }}
-                    renderInput={(params) => <TextField {...params} label=" Select employee" />}
+                    renderInput={(params) => <TextField 
+                      error={Employerror}
+                      helperText={(Employerror)? "please select the employe" : ""}
+                       {...params} label=" Select employee" />}
                   />
                 )}
               </Box>
@@ -473,17 +477,18 @@ setShiftGroupName(event.target.value)
                 alignItems="flex-end"
                 sx={{ mt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
               >
+                <Button variant="outlined"  sx={{ mr: '5px' }} onClick={handleClose}>
+                  Cancel
+                </Button>
                 <LoadingButton
                   type="submit"
+                  sx={{backgroundColor:'#3B82F6'}}
                   variant="contained"
                   color="primary"
                   loading={isSubmitting}
                 >
                   {!currentUser ? 'Create User' : 'Add Employee To Shift'}
                 </LoadingButton>
-                <Button sx={{ ml: '5px' }} onClick={handleClose}>
-                  Cancel
-                </Button>
               </Stack>
             </Card>
           </Grid>

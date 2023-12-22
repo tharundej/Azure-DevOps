@@ -32,10 +32,10 @@ export default function ShiftSwap() {
 
     
     
-        { id: "employee_name", label: "Employee Name", width: 180, type: "text" },
+        { id: "employee_name", label: "Employee Name", width: 220, type: "text" },
 
         { id: "from_shift_name", label: "Old Shift Name", width: 180, type: "text" },
-        { id: "From_shift_group", label: "Old Shift Group Name", width: 180, type: "text" },
+        { id: "from_shift_group", label: "Old Shift Group Name", width: 180, type: "text" },
     
         // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
         { id: "to_shift_name", label: "New Shift Name", width: 220, type: "text" },
@@ -58,20 +58,25 @@ export default function ShiftSwap() {
       "approver_id":(user?.employeeID)?user?.employeeID:'',
       "page":0,
       "Search":"",
-      "count": 10,
+      "count": 5,
       "externalFilters":{
-      "status": "",
-      "start_date": {
-           "from": "",
-          "to": ""
-      }
-  } ,
-      "sort": {
-      "orderby": "employee_name",
-      "key": 0
-  } 
-   
-  }
+        "status": "",
+        "from_shift_group":"",
+        "to_shift_group":"",
+        "from_shift_name":"",
+        "to_shift_name":"",
+        "start_date": {
+            "from": "",
+            "to": ""
+     
+        }
+    } ,
+        "sort": {
+        "orderby": "employee_name",
+        "key": 1
+    } 
+     
+    }
     
       const actions = [
     

@@ -1,6 +1,7 @@
 import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
+import Badge from '@mui/material/Badge';
 
 import { styled } from '@mui/system';
 
@@ -84,6 +85,7 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+  const [badgeContent, setBadgeContent] = useState(false);
 
   const [userdropDownOptions,setUserDropDownOptions]=useState({})
   const [userdropDownvalue,setUserDropDownValue]=useState({})
@@ -418,6 +420,8 @@ const [stateOptions,setOptions]=useState([])
 
     const handleApply=async()=>{
       setDatesData([]);
+      setBadgeContent(true);
+
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
       console.log(data,userdropDownvalue,'for filterss')
@@ -479,10 +483,24 @@ const [stateOptions,setOptions]=useState([])
       </Grid>
       <Grid item>
         <Stack  >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>
-           
-      </Button>
+        {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
 
 
       </Stack>
@@ -673,31 +691,7 @@ const [stateOptions,setOptions]=useState([])
 
                 <Grid>
                   
-                  <Grid marginTop="10px" xs={12} md={6} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">State</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPState"
-                  id="demo-multiple-fPState"
-                  multiple
-                  value={state}
-                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
-                  input={<OutlinedInput label="State" />}
-                  MenuProps={MenuProps}
-                >
-                  {stateOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
+                
                     
                    <Grid marginTop="10px" xs={6} md={6} lg={6}>
                 <FormControl fullWidth >
@@ -725,7 +719,7 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
+                   <Grid marginTop="10px" xs={12} md={6} lg={6}>
                 <FormControl fullWidth >
                 <InputLabel fullWidth id="status">Marital Status</InputLabel>
                 <Select
@@ -751,65 +745,14 @@ const [stateOptions,setOptions]=useState([])
               </FormControl>
                    </Grid>
 
-                   {/* Blood Group */}
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Blood Group</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fBloodGroup"
-                  id="demo-multiple-fBloodGroup"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fBloodGroup')}
-                  input={<OutlinedInput label="Blood Group" />}
-                  MenuProps={MenuProps}
-                >
-                  {BloodGroupOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-                   {/* State */}
-                   <Grid marginTop="10px" xs={12} md={12} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">State</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPState"
-                  id="demo-multiple-fPState"
-                  multiple
-                  value={bloodgroup}
-                  onChange={(e)=>handleChangeDropDown(e,'fPState')}
-                  input={<OutlinedInput label="State" />}
-                  MenuProps={MenuProps}
-                >
-                  {stateOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                   </Grid>
-
+                  
+                
 
                   
 
                      <Grid  >
               
-                  <Grid item xs={12} md={12} lg={6} marginTop="10px">
+                  <Grid item xs={12} md={6} lg={6} marginTop="10px">
               
                 <Autocomplete
                   disablePortal

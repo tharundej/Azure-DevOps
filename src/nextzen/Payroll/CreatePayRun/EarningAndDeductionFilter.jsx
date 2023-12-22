@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import {
   Card,
   TextField,
@@ -18,7 +18,7 @@ import {
   Stack,
   DialogContent,
   DialogActions,
-  Typography,
+  Typography
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
@@ -36,7 +36,6 @@ import dayjs from 'dayjs';
 import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 import { Today } from '@mui/icons-material';
 
@@ -47,19 +46,17 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
+import Badge from '@mui/material/Badge';
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
-// import AddDepartmentConfig from '../AddDepartmentConfig';
-import AddDesignationConfig from '../AddDesignationConfig';
-import AddDesignationGradeConfig from '../AddDesignationGradeConfig';
-import AddDepartmentConfig from '../AddDepartmentConfig';
+
 import axios from 'axios';
-import Badge from '@mui/material/Badge';
+
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import { useContext } from 'react';
-import UserContext from 'src/nextzen/context/user/UserConext';
+import AddTaxSectionConfig from 'src/nextzen/configaration/taxSectionConfiguration/AddTaxSectionConfig';
+import EarningsAndDeduction from './EarningsAndDeduction';
 
 const defaultFilters = {
   name: '',
@@ -97,13 +94,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function DesignationGradeSearchFilter({
-  filterData,
-  filterOptions,
-  filterSearch,
-  searchData,
-  getTableData
-}) {
+export default function EarningAndDeductionFilter({ filterData, filterOptions, filterSearch, searchData }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
   const designationName = ['executive'];
@@ -200,12 +191,10 @@ export default function DesignationGradeSearchFilter({
       resolve(arr1);
     });
   }
-  // const {enqueueSnackbar} = useSnackbar()
-  const {user}=useContext(UserContext)
-  const empId =  (user?.employeeID)?user?.employeeID:''
-  const cmpId= (user?.companyID)?user?.companyID:''
-const roleId = (user?.roleID)?user?.roleID:''
-const token  =  (user?.accessToken)?user?.accessToken:''
+  const empId = localStorage.getItem('employeeID');
+  //   const cmpId= localStorage.getItem('companyID')
+  const cmpId = 'COMP1';
+  const token = localStorage.getItem('accessToken');
   const [formData, setFormData] = useState({});
   const [designationGradeType, setDesignationGradeType] = useState([]);
   const [designationType, setDesignationType] = useState([]);
@@ -222,51 +211,20 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     setOpen(false);
   };
 
-  const handleChangeDropDown = (event, field) => {
-    const {
-      target: { value },
-    } = event;
-
-    if (field === 'designation_grade_name') {
-      setDropdownDesignationGradeName(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'shift_name') {
-      setDropdownStatus(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'designation_name') {
-      setdropdownDesignation(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'leavePeriodType') {
-      setdropdownleavePeriodType(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    }
-
-    // On autofill we get a stringified value.
-
-    console.log(value);
-    // console.log( typeof value === 'string' ? value.split(',') : value,)
-  };
-
   const handleApply = async () => {
-    setBadgeContent(true);
     console.log(formData, 'form dat  in apply');
+    setBadgeContent(true);
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
-      departmentName: formData?.Department?.departmentName,
-      designationName: formData?.Designation?.designationName,
-      designationGradeName: formData?.DesignationGrade?.designationGradeName,
+      departmentID: JSON.stringify(formData?.Department?.departmentID) || '',
+      designationID: JSON.stringify(formData?.Designation?.designationID) || '',
+      designationGradeID: JSON.stringify(formData?.DesignationGrade?.designationGradeID) || '',
     };
     filterData(obj);
     console.log(obj, 'FilterData');
+
+    // filterData(data);
     handleClickClose();
   };
   const handleSearch = (searchTerm) => {
@@ -387,8 +345,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   };
   const handleDesignationChange = (name, selectedValue, selectedOption) => {
     const id = selectedValue?.departmentID;
-
-    console.log('data in handle change ', name, selectedValue, selectedOption);
     if (name === 'Department') {
       console.log('calling me ', selectedValue?.departmentID);
       getDesignation(id);
@@ -397,8 +353,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     setFormData({
       ...formData,
       [name]: selectedValue,
-      departmentID: selectedValue?.departmentID,
-      departmentName: selectedValue?.departmentName,
+      departmentID: selectedOption?.departmentID,
+      departmentName: selectedOption?.departmentName,
     });
   };
   const handleDesignationGradeChange = (name, selectedValue, selectedOption) => {
@@ -406,8 +362,8 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     setFormData({
       ...formData,
       [name]: selectedValue,
-      designationID: selectedValue?.designationID,
-      designationName: selectedValue?.designationName,
+      designationID: selectedOption?.designationID,
+      designationName: selectedOption?.designationName,
     });
     getDesignationGrade(id);
   };
@@ -415,12 +371,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     setFormData({
       ...formData,
       [name]: selectedValue,
-      designationGradeID: selectedValue?.designationGradeID,
-      departmentName: selectedValue?.designationGradeName,
+      designationGradeID: selectedOption?.designationGradeID,
+      departmentName: selectedOption?.designationGradeName,
     });
   };
 
-  console.log(formData, 'FormData UPDATED');
+  console.log(formData, 'data in the form ');
   useEffect(() => {
     console.log('calling in filter folder');
     const fetchData = async () => {
@@ -429,69 +385,45 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log('calling in filter folder');
-    const fetchData = async () => {
-      getDesignationGrade();
-      getDepartment();
-    };
-    fetchData();
-  }, [!open]);
-
   const handleCancel = () => {
     setFormData({});
   };
+const [openComponent ,setOpenComponent] =useState(false)
+  const handleOpen =()=>{
+  
+    setOpenComponent(true)
+  }
+  console.log(formData, 'inreset');
   return (
     <>
       <Grid
         container
-        spacing={0}
+        spacing={2}
         alignItems="center"
         justifyContent="flex-end"
         direction="row"
         xs={12}
         md={12}
         lg={12}
-        style={{ marginBottom: '0.1rem' }}
+        style={{ marginBottom: '0.5rem' }}
       >
-        <Grid item md={3} xs={3}>
+        <Grid item md={8} xs={8}>
           <TextField
             placeholder="Search...."
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
-        </Grid> 
-        {/* <Grid item  md={8} xs={8} direction="row" >
-      <AddDepartmentConfig />
-       <AddDesignationConfig/>
-       <AddDesignationConfig />
-       </Grid> */}
-        <Grid
-          item
-          container
-
-          alignItems="flex-end"
-          xs={8}
-          md={8}
-          lg={8}
-          // justifyContent="space-around"
-        >
-          <Grid item xs={4}>
-            <AddDepartmentConfig getTableData={getTableData}/>
-          </Grid>
-
-          <Grid item xs={4}>
-            <AddDesignationConfig getTableData={getTableData}/>
-          </Grid>
-
-          <Grid item xs={4}>
-            <AddDesignationGradeConfig getTableData={getTableData}/>
-          </Grid>
         </Grid>
-        <Grid item md={1} xs={1}>
-          <Grid>
 
+        <Grid item xs={2} msd={2}>
+         {/* <AddTaxSectionConfig /> */}
+         {/* <EarningsAndDeduction /> */}
+         <Button style={{ backgroundColor: '#007AFF', color: 'white' }} onClick={handleOpen}>
+               Verify And Complete
+              </Button>
+        </Grid>
+        <Grid item md={2} xs={2}>
+          <Grid>
           {badgeContent ===  true?(
                <Badge badgeContent={""} color="success" variant="dot" 
                
@@ -519,24 +451,6 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         </Grid>
       </Grid>
 
-      {/*       
-      <Grid item  container spacing={0} alignItems="flex-end" 
-      // justifyContent="space-around"
-      >
-   
-        <Grid item xs={3}>
-          <AddDepartmentConfig />
-        </Grid>
-    
-        <Grid item xs={4}>
-          <AddDesignationConfig />
-        </Grid>
-
-        <Grid item xs={3}>
-          <AddDesignationGradeConfig />
-
-        </Grid>
-      </Grid> */}
       <BootstrapDialog
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
@@ -643,19 +557,17 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           </Button>
         </div>
       </BootstrapDialog>
+      {/* {openComponent? <EarningsAndDeduction /> : null} */}
     </>
   );
 }
 
-// DesignationGradeSearchFilter.propTypes={
-//     handleFilters: PropTypes.any,
-// }
-DesignationGradeSearchFilter.propTypes = {
+EarningAndDeductionFilter.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
 };
 
-DesignationGradeSearchFilter.propTypes = {
+EarningAndDeductionFilter.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,

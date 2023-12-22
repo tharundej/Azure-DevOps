@@ -12,13 +12,12 @@ import { Dialog } from '@mui/material';
 import { BasicTable } from '../../BasicTable'; 
 import AddEmployeShift from './AddeployeShift';
 import instance from 'src/api/BaseURL';
-import { enqueueSnackbar } from 'notistack';
+
 import EditShiftRoaster from './EditShiftRoaster';
 import ShiftRoasterEmployeList from './ShiftRoasterEmployeList';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
-
-// import ReusableTabs from '../tabs/ReusableTabs';
+import { useSnackbar } from 'src/components/snackbar';// import ReusableTabs from '../tabs/ReusableTabs';
 // import './Time.css';
 
 const bull = (
@@ -31,6 +30,7 @@ const bull = (
 );
 
 export default function ShiftRoast() {
+  const { enqueueSnackbar } = useSnackbar();
    const {user} = useContext(UserContext)
       const TABLE_HEAD = [
 
@@ -43,44 +43,36 @@ export default function ShiftRoast() {
         { id: "shiftName", label: "Shift Name", width: 180, type: "text" },
         
         
-        { id: "", label: "Employees", width: 180,eyeIcon:true, type: "text" },
         
-        { id: "departmentName", label: "Department", width: 100, type: "text" },
-        { id: "designationName", label: "Designation", width: 100, type: "text" },
+        { id: "departmentName", label: "Department", width: 180, type: "text" },
+        { id: "designationName", label: "Designation", width: 180, type: "text" },
         { id: "gradeName", label: "Grade", width: 220, type: "text" },
+        { id: "", label: "Employees", width: 180, type: "view" },
         // { id: "supervisor_name", label: "Supervisor Name", width: 100, type: "text" },
         
         // { id: "start_date", label: " Start Date", width: 100, type: "text" },
         // { id: "end_date", label: "End Date", width: 100, type: "text" },
         // { id: "status", label: "Status", width: 100, t ype: "badge" },
         // { id: '', width: 88 },
-    
+        
       ];
-    
+      
       const defaultPayload={
-        "cid":(user?.companyID)?user?.companyID:'',
-        "locationId": (user?.locationID)?user?.locationID:'',
+        "cid":(user?.companyID)?user?.companyID : '',
+        "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
-        "count": 10,
+        "count": 5,
         "externalFilters": {
             "shiftName": "",
-            "shiftTerm": "",
-            "startDate": {
-                "from": "",
-                "to": ""
-            },
-            "endDate": {
-                "from": "",
-                "to": ""
-            }
+            "shiftGroupName":""
+           
         },
         "sort": {
-            "key": 0,
+            "key": 1,
             "orderBy": ""
         }
     }
-    
       const actions = [
     
         { name: "Edit", icon: "solar:pen-bold", id: "1", type: "serviceCall", endpoint: '/updateTimesheetStatus'},
@@ -96,6 +88,7 @@ export default function ShiftRoast() {
       const [showEdit, setShowEdit] = useState  (false);
       const handleClose = () => setShowEdit(false);
       const [editData,setEditData]=useState({})
+      const[count,setCount]=useState(0)
       const handleTimeForm =()=>{
         setShowForm(true)
         console.log("🚀 ~ file: Time.jsx:36 ~ handleTimeForm ~ handleTimeForm:", showForm)
@@ -114,13 +107,14 @@ export default function ShiftRoast() {
         try{
           console.log(rowdata,"rowData:::::")
         const  data= {
-          DeleteShiftRoaster: JSON.stringify( rowdata.project_id),
+          employee_shift_group_id:parseInt( rowdata?.shiftGroupId),
            
           };
-          const response = await instance.post('DeleteShiftRoaster',data);
+          const response = await instance.post('/deleteShiftGroupById',data);
           // setReportingManagerData(response.data.list)
           console.log("🚀 ~ file: AddTimeProject.jsx:119 ~ getEmployeReport ~ response.data:", response.data)
-          enqueueSnackbar(response.data.Message,{variant:'success'})
+          setCount(count + 1)
+          enqueueSnackbar(response.data.message,{variant:'success'})
         }catch(error){
       console.error("Error", error);
       enqueueSnackbar(error.Message,{variant:'Error'})
@@ -158,7 +152,7 @@ export default function ShiftRoast() {
  }}
  className="custom-dialog"  
 >
- <EditShiftRoaster currentUser={{}} handleClose={handleClose} editData={editData} />
+ <EditShiftRoaster currentUser={{}} handleClose={handleClose} editData={editData} count={count} />
       </Dialog>
     )}
  {employeListDialog && 
@@ -192,6 +186,7 @@ rowActions={actions}
 onClickActions={onClickActions}
 SecondoryTable={SecondoryTable}
 handleEditRowParent={handleEditRowParent}
+count={count}
 />  
     </>
   );

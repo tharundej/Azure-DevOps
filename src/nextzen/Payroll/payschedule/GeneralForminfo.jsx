@@ -22,6 +22,10 @@ import axios from 'axios';
 import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import { LoadingScreen } from 'src/components/loading-screen';
+import {useSnackbar} from '../../../components/snackbar'
 
 export default function GeneralForminfo({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
@@ -54,6 +58,14 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     tdsPercentage: Yup.number().required('TDS is Required'),
   });
 
+  const {enqueueSnackbar} = useSnackbar()
+  // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
+    // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
+    const {user} = useContext(UserContext)
+    const empId =  (user?.employeeID)?user?.employeeID:''
+    const cmpId= (user?.companyID)?user?.companyID:''
+  const roleId = (user?.roleID)?user?.roleID:''
+  const token  =  (user?.accessToken)?user?.accessToken:''
   const defaultValues1 = useMemo(
     () => ({
       payPcheduleType: currentUser?.payPcheduleType,
@@ -114,68 +126,65 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
+    data.companyId = cmpId;
     console.log('submitted data111', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.data?.code === 200 ||201) {
-        getTableData()
+     
+      if (response?.data?.code === 200   )
+          {
         handleClose();
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        reset1();
+        enqueueSnackbar(response.data.message,{variant:'success'})
+        // setLoading(false)
+        getTableData()
         console.log('sucess', response);
       }
       if (response?.data?.code ===400) {
         handleClose();
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
+        enqueueSnackbar(response.data.message,{variant:'error'})
+        // setLoading(false)
+        getTableData()
         console.log('sucess', response);
       }
     } catch (error) {
-      setOpen(true);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding PayRoll. Please try again.');
-      setSnackbarOpen(true);
+      enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+      // setLoading(false)
       console.log('error', error);
     }
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employee_type = selectedOption?.type;
-    data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    data.companyId = cmpId,
     console.log('submitted data2222', data);
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
-      if (response?.data?.code === 200 || 201) {
-        handleClose();
-        getTableData()
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        reset2()
-        console.log('sucess', response);
-      }
-      if (response?.data?.code ===400) {
-        handleClose();
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
-        console.log('sucess', response);
-      }
-    } catch (error) {
-      setOpen(true);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding PayRoll. Please try again.');
-      setSnackbarOpen(true);
-      console.log('error', error);
-    }
+      console.log(response.data ,"responseinpayroll")
+      console.log(response.data ,"responseinpayroll")
+      if (response?.data?.code === 200   )
+      {
+    
+    handleClose();
+    enqueueSnackbar(response?.data?.message,{variant:'success'})
+    // setLoading(false)
+    getTableData()
+    console.log('sucess', response);
+  }
+ if (response?.data?.code === 400) {
+    console.log(response?.data?.code ,"responseinpayroll")
+    handleClose();
+    enqueueSnackbar(response.data.message,{variant:'error'})
+    // setLoading(false)
+    getTableData()
+    console.log('sucess', response);
+  }
+} catch (error) {
+  enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+  // setLoading(false)
+  console.log('error', error);
+}
   });
 
   const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
@@ -256,7 +265,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFAutocomplete
+              <RHFAutocomplete
                   disablePortal
                   name="employementType"
                   id="combo-box-demo"
@@ -329,7 +338,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFAutocomplete
+             <RHFAutocomplete
                   disablePortal
                   name="employementType"
                   id="combo-box-demo"

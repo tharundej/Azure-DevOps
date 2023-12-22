@@ -18,7 +18,7 @@ import {
   Stack,
   DialogContent,
   DialogActions,
-  Typography,
+  Typography
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
@@ -46,6 +46,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
+import Badge from '@mui/material/Badge';
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
@@ -55,6 +56,7 @@ import axios from 'axios';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import AddTaxSectionConfig from 'src/nextzen/configaration/taxSectionConfiguration/AddTaxSectionConfig';
+import EarningsAndDeduction from './EarningsAndDeduction';
 
 const defaultFilters = {
   name: '',
@@ -92,7 +94,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function CreatePayRunFilter({ filterData, filterOptions, filterSearch, searchData }) {
+export default function CreatePayRunFilter({ filterData, filterOptions, filterSearch, searchData,isShowHandle }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
   const designationName = ['executive'];
@@ -201,6 +203,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
   const [openDateRange, setOpendateRange] = useState(false);
   const [departmentLength, setDepartmentLength] = useState();
   const [designationtLength, setDesignationLength] = useState();
+  const [badgeContent, setBadgeContent] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -210,6 +213,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
 
   const handleApply = async () => {
     console.log(formData, 'form dat  in apply');
+    setBadgeContent(true);
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
@@ -384,7 +388,11 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
   const handleCancel = () => {
     setFormData({});
   };
-
+const [openComponent ,setOpenComponent] =useState(false)
+  const handleOpen =()=>{
+    isShowHandle()
+    setOpenComponent(true)
+  }
   console.log(formData, 'inreset');
   return (
     <>
@@ -399,7 +407,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
         lg={12}
         style={{ marginBottom: '0.5rem' }}
       >
-        <Grid item md={10} xs={10}>
+        <Grid item md={6} xs={6}>
           <TextField
             placeholder="Search...."
             fullWidth
@@ -408,15 +416,37 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
         </Grid>
 
         <Grid item xs={4} msd={4}>
-         <AddTaxSectionConfig />
+         {/* <AddTaxSectionConfig /> */}
+         {/* <EarningsAndDeduction /> */}
+         <Button style={{ backgroundColor: '#007AFF', color: 'white' }} onClick={handleOpen}>
+               Calculate Earnings and Decduction
+              </Button>
         </Grid>
         <Grid item md={2} xs={2}>
           <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-            </Stack>
+            </Stack> */}
           </Grid>
         </Grid>
       </Grid>
@@ -527,6 +557,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
           </Button>
         </div>
       </BootstrapDialog>
+      {openComponent? <EarningsAndDeduction /> : null}
     </>
   );
 }

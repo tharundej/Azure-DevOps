@@ -13,7 +13,7 @@ export default function Approveleave(){
   const {user} = useContext(UserContext)
    const theme = useTheme();
     const defaultPayload={
-      "manager_id":(user?.employeeID)?user?.employeeID:'',
+      "manager_id":(user?.roleID==6 || user?.roleID==7)?user?.employeeID:'',
       "role_id": (user?.roleID)?user?.roleID:'',
       "company_id": (user?.companyID)?user?.companyID:'',
       "page": 0,

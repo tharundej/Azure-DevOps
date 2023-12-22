@@ -13,21 +13,19 @@ export default function Month() {
   const [tabLabels, setTabLabels] = useState([]);
   const [tabContents, setTabContents] = useState([]);
   const dataObj = [
-    // {
-    //   id: 'salaryAdvance',
-    //   label: 'Salary Requests',
-    //   content: <SalaryAdvace key="salaryAdvance" />,
-    // },
+   
     {
       id: 'loans',
       label: 'Loans',
       content: <Loans key="loans" />,
     },
+   
     {
       id: 'myDeductions',
       label: 'Deductions',
       content: <Deduction key="myDeductions" />,
     },
+  
     {
       id: 'myRequest',
       label: 'My Requests',

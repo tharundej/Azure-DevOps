@@ -6,6 +6,7 @@ import Loans from './Loans/loans';
 import SalaryAdvace from './SalaryAdvace';
 import { useContext } from 'react';
 import UserContext from '../context/user/UserConext';
+import Additions from './Additions/Additions';
 
 export default function Requests() {
   const {user} = useContext(UserContext)
@@ -49,10 +50,15 @@ export default function Requests() {
   const deductiondefaultpayload={
    "employeeID":user?.employeeID
 }
-      const tabLabels = ["Loans" , "My Deductions"]
+
+const additionDefaultPayload={
+  "employeeID": user?.employeeID,
+  "companyID":user?.companyID
+}
+      const tabLabels = ["Loans" ,"Additions", "My Deductions"]
       const tabContents = [
-        // <div><SalaryAdvace defaultPayload={SalarydefaultPayload} componentPage="MyRequests"/> </div>,
         <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
+        <div><Additions defaultPayload={additionDefaultPayload} componentPage="MyRequests"/></div>,
         <div><Deduction defaultPayload={deductiondefaultpayload} componentPage="MyRequests"/>  </div>,
       ]
   return (

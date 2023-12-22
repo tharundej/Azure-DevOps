@@ -1,5 +1,5 @@
 /* eslint no-use-before-define: 0 */ // --> OFF
-import { Button, Dialog } from '@mui/material';
+import { Box, Button, Card, CardContent, Dialog, Grid, Typography } from '@mui/material';
 import ReusableTabs from '../tabs/ReusableTabs';
 import Fuel from './Fuel';
 import OtherExpenses from './OtherExpenses';
@@ -7,6 +7,8 @@ import Vehicles from './Vehicles';
 import Iconify from 'src/components/iconify/iconify';
 import { useState } from 'react';
 import CreateExpenses from './CreateExpenses';
+import AppWidgetSummary from 'src/sections/overview/app/app-widget-summary';
+import { fNumber } from 'src/utils/format-number';
 
 export default function Expenses() {
   const [count, setCount] = useState(0);
@@ -54,13 +56,47 @@ export default function Expenses() {
           />
         </Dialog>
       )}
-      <div style={{ textAlign: 'right' }}>
+
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        sx={{ '& > *': { flex: '1 1 auto', maxWidth: '30%' } }}
+      >
+        <Grid xs={4} md={4}>
+          <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="subtitle2">Grand Total Amount</Typography>
+              <Typography variant="h3">{fNumber(9999)}</Typography>
+            </Box>
+          </Card>
+        </Grid>
+
+        <Grid xs={4} md={4}>
+          <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="subtitle2">Grand Advance Amount</Typography>
+              <Typography variant="h3">{fNumber(9999)}</Typography>
+            </Box>
+          </Card>
+        </Grid>
+
+        <Grid xs={4} md={4}>
+          <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="subtitle2">Grand Balance Amount</Typography>
+              <Typography variant="h3">{fNumber(9999)}</Typography>
+            </Box>
+          </Card>
+        </Grid>
+      </Box>
+
+      <div style={{ textAlign: 'right', marginTop: '20px' }}>
         <Button
           variant="contained"
           color="primary"
           onClick={handleOpen}
           startIcon={<Iconify icon="mingcute:add-line" />}
-          sx={{ margin: '20px' }}
         >
           Add
         </Button>
