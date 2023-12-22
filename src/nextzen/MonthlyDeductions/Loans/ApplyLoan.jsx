@@ -55,7 +55,6 @@ export default function ApplyLoan({ handleClose,getTableData }) {
       data.employeeID = (user?.employeeID)?user?.employeeID:''
       const response = await instance.post(baseUrl+'/addLoanDetails', data).then(
         (successData) => {
-          console.log(successData)
           enqueueSnackbar(successData?.data?.message,{variant:'success'})
           getTableData()
           handleClose()

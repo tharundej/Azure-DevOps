@@ -164,7 +164,7 @@ const handleClose = () => {
         endpoint="/getPayRunDetailsContract"
         defaultPayload={defaultPayload}
         rowActions={actions}
-        // filterName="CreatePayRunFilter"
+        filterName="EarningAndDeductionFilter"
       />
       </>
 }</>
