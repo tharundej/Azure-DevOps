@@ -157,13 +157,11 @@ const AddDeductions=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + `/addOtherDeductions`,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/addOtherDeductions`,
+    url:baseUrl + `/addOtherDeductions`,
     data: payload
   
   }
   axios.request(config).then((response) => {
-    console.log(response,"responseeee")
     handleClose()
     enqueueSnackbar(response.data.message,{variant:'success'})
   
@@ -181,13 +179,11 @@ const getLatestInstallmentNumber=()=>{
   const config = {
     method: 'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + `/getLatestInstallmentNumber`,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestInstallmentNumber`,
+    url:baseUrl + `/getLatestInstallmentNumber`,
     data: payload
   
   }
   axios.request(config).then((response) => {
-    console.log(response,"responseeee")
     sethealthInsuranceUpdate(response.data)
     // enqueueSnackbar(response.data.message,{variant:'success'})
   
@@ -198,44 +194,17 @@ const getLatestInstallmentNumber=()=>{
     });
 }
 
-// const AddLoanRequestDeduction=(e)=>{
-//   const payload ={
-//     employeeID:personName,
-//     requestType:e,
-//     companyID:user?.companyID
-//   }
-//   const config = {
-//     method: 'POST',
-//     maxBodyLength:Infinity,
-//     url: baseUrl + `/addDeductionDetails`,
-//     data: payload
-  
-//   }
-//   axios.request(config).then((response) => {
-//     console.log(response,"responseeee")
-//     // enqueueSnackbar(response.data.message,{variant:'success'})
-  
-//   })
-//     .catch((error) => {
-//       console.log(error,"Errorrrr")
-      
-//     });
-// }
-
 const getLoanRequestStatus =()=>{
-  console.log("loanrequest")
   const data = {
     "employeeID":personName
   }
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + `/getLatestDeductionRecords`,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/checkEmployeeStatus`,
+    url:baseUrl + `/checkEmployeeStatus`,
     data:data
    }
    axios.request(config).then((response)=>{
-   console.log(response?.data,"employeestatuss")
    setLoanStatus(response?.data)
    })
    .catch((error)=>{
@@ -244,16 +213,12 @@ const getLoanRequestStatus =()=>{
 }
 
 useEffect(() => {
-  console.log(fieldValues,"fieldValuess")
   const index = fieldValues.findIndex(
     (fieldValue) => fieldValue.Type == 'Health Insurance Premium'
   );
 
-  {console.log(index,'indexValueee')}
   if (healthInsuranceupdate?.NumberOfInstallments > 0) {
-    {console.log('ifffblockkk',healthInsuranceupdate)}
     if (index !== -1) {
-      {console.log("ifindexxblock",index)}
       setDeductionDetails('Health Insurance Premium')
       setDisableHealthInsurancePremium(true);
      
@@ -264,8 +229,6 @@ useEffect(() => {
   }
   
 }, [healthInsuranceupdate?.NumberOfInstallments,fieldValues]);
-{console.log(deductionDetails,"deductionType")}
-
 useEffect(()=>{
   if(deductionDetails){
     getHealthInsuranceDetails()
@@ -285,7 +248,6 @@ const getHealthInsuranceDetails=()=>{
   
   }
   axios.request(config).then((response) => {
-    console.log(response,"responseeee")
     setHealthInsuranceDetails(response?.data)
   
   })
@@ -295,15 +257,6 @@ const getHealthInsuranceDetails=()=>{
     });
 }
 
-// useEffect(() => {
-//   fieldValues.forEach((value) => {
-//     if (value.Type === 'Loan Request' || value.Type === 'Salary Advance Request') {
-//       AddLoanRequestDeduction(value.Type);
-//     }
-//   });
-// }, [fieldValues]);
-
-// setHealthInsuranceDetails({deductionAmount:1000,loanID:50})
   return (
     <>
        
@@ -340,13 +293,11 @@ const getHealthInsuranceDetails=()=>{
           ))}
         </Select>
         </FormControl>
-        {console.log(selectCount,"Selectcount")}
  <div>
     {fieldValues.map((fieldValue, index) => (
       <React.Fragment key={index}>
       
         <FormControl sx={{ mt:1, width: "100%" }}>
-       {console.log(fieldValue,"fieldvaluess")}
        <InputLabel id="demo-multiple-checkbox-label">Deductions</InputLabel>
      <Select
       labelId="demo-multiple-checkbox-label"
@@ -385,7 +336,6 @@ const getHealthInsuranceDetails=()=>{
          </MenuItem>
        ))}
      </Select>
-  {console.log(fieldValue,"fieldValueee",disableHealthInsurancePremium)}
      </FormControl>
         <Grid container spacing={1} flexDirection="row" sx={{marginTop:1}}>
       

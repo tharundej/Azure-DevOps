@@ -237,7 +237,6 @@ console.log(ele,"elementtt")
     const config = {
       method: 'POST',
       maxBodyLength:Infinity,
-      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/approveLoanDetails`,
       url: baseUrl + `/approveLoanDetails`,
       data: obj
     
@@ -307,7 +306,6 @@ console.log(ele,"elementtt")
     method: 'POST',
     maxBodyLength:Infinity,
     url: baseUrl + `/updateLoanDetails`,
-    // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/updateLoanDetails`,
     data: payload
   
   }

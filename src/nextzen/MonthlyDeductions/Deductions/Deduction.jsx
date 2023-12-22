@@ -93,8 +93,7 @@ const getDeductionDetails =(deductionType)=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + '/getOtherDeductions',
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getOtherDeductions`,
+    url:baseUrl + '/getOtherDeductions',
     data:data
    }
    axios.request(config).then((response)=>{
@@ -143,8 +142,7 @@ const getLatestDeductions =()=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    // url:baseUrl + `/getLatestDeductionRecords`,
-    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getLatestDeductionRecords`,
+    url:baseUrl + `/getLatestDeductionRecords`,
     data:data
    }
    axios.request(config).then((response)=>{
