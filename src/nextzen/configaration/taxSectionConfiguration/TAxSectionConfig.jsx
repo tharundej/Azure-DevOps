@@ -148,6 +148,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
   }
 
+  if (isNaN(formData?.taxLimit)) {
+    errors.taxLimit = 'Invalid value. Please enter a valid number.';
+  }
   return errors;
 };
   const updateDepartment = async (data) => {
