@@ -130,6 +130,7 @@ import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilte
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../settings/SettingsHeader';
+import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 
 const defaultFilters = {
   name: '',
@@ -152,8 +153,10 @@ const BasicTable = ({
   handleEditRowParent,
   handleOpenModal,
   SecondoryTable,
+  isShowHandle,
   componentPage,count,
   mergingRowArray
+
 }) => {
   const popover = usePopover();
   const { enqueueSnackbar } = useSnackbar();
@@ -233,7 +236,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url:`https://898vmqzh-3001.inc1.devtunnels.ms/erp${endpoint}`,
       headers: {
         Authorization:
-        JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
+        token
       },
       data: initialDefaultPayload,
     };
@@ -493,31 +496,6 @@ const handleExpandClick = (rowId, update , rowIndex) => {
   console.log(expandedRowId,"klkl",rowId)
   setExpandedRowId(expandedRowId === rowIndex ? null :rowIndex );
 };
-const [loanDetails,setloanDetails] = useState()
-const handleLoanExpand=(rowID,rowloanID,rowIndex)=>{
-  const loanPayload ={
-    employeeID:rowID,
-    loanID:rowloanID
-  }
-  const config={
-    method: 'POST',
-    maxBodyLength: Infinity,
-    url:baseUrl+`/getLoanDetails`,
-    // url: `https://xql1qfwp-3001.inc1.devtunnels.ms/erp/getLoanDetails`,
-    data: loanPayload,
-  }
-  axios
-      .request(config)
-      .then((response) => {
-        console.log(response, 'responsedata', response.data);
-        setloanDetails(response?.data?.data)
-       
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  setExpandedLoanRow(expandedLoanRow===rowIndex?null:rowIndex)
-}
 
 const [index, setIndex]=useState(""); // index setting
 
@@ -535,6 +513,7 @@ const [index, setIndex]=useState(""); // index setting
             <SwapRequestSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
@@ -574,12 +553,13 @@ const [index, setIndex]=useState(""); // index setting
             />
           )}
           {filterName === 'ShiftRoastFilter' && (
-            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <ShiftRoastFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'MyShiftFilter' && (
             <MyShiftSearchFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
+              getTableData={getTableData}
             />
           )}
           {filterName === 'AssignShiftFilter' && (
@@ -658,7 +638,7 @@ const [index, setIndex]=useState(""); // index setting
             // />
           )}
           {filterName === 'SwapSearchFilter' && (
-            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} />
+            <SwapSearchFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData}/>
           )}
           {filterName === 'SalaryStructureFilterSearch' && (
             <SalaryStructureFilters
@@ -822,6 +802,10 @@ const [index, setIndex]=useState(""); // index setting
 {filterName === 'AddRoleFilter' && (
             <AddRoleFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
+
+{filterName === 'CreatePayRunFilter' && (
+            <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -900,10 +884,7 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
-                              else if (clickedElementId==="employeeID"){
-                              
-                                handleLoanExpand(row.employeeID,row?.loanID,index)
-                              }
+                             
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
@@ -959,32 +940,6 @@ const [index, setIndex]=useState(""); // index setting
           ))}
            {/* </Box> */}
                       </TableCell>
-                    </TableRow>
-                  )}
-   {expandedLoanRow == index && (
-    
-                    <TableRow>
-                     {loanDetails && <TableCell colSpan={TABLE_HEAD.length + 1}>
-                         <Typography variant="body2">Loan ID : {loanDetails?.loanID}</Typography>
-                          <Typography variant="body2">Total No of Installments : {loanDetails?.totalNumberOfInstallments}</Typography>
-                          <Typography variant="body2">Installments Paid : {loanDetails?.totalNumberOfInstallments - loanDetails?.balanceInstallments}</Typography>
-                          <Typography variant="body2">Installment Balance : {loanDetails?.balanceInstallments}</Typography>
-                          {loanDetails?.InstallmentDetails?.length>0 &&<Typography variant="subtitle2">Installment Details</Typography>}
-                          <Card sx={{ maxWidth: '1200px' }}>
-                            <CardContent>
-                              <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                {loanDetails?.InstallmentDetails?.map((item, index) => (
-                                  <Grid item key={index} xs={6} sm={6} md={3} sx={{ flexBasis: '25%' }}>
-                                    <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
-                                    <Typography variant="body2">Deducted Date: {item?.deductedDate}</Typography>
-                                    <Typography variant="body2">Deducted Amount: {item?.totalDeductedAmount}</Typography>
-                                  </Grid>
-                                ))}
-                              </Grid>
-                            </CardContent>
-                          </Card>
-
-                      </TableCell>}
                     </TableRow>
                   )}
                         </>

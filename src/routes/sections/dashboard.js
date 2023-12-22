@@ -17,6 +17,7 @@ import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
 import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
 import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
 import Settings from 'src/nextzen/settings/Settings';
+import LoanDetails from 'src/nextzen/MonthlyDeductions/Loans/loanDetails';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -501,7 +502,9 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
-    children: [{ element: <MonthlyDeductions />, index: true }],
+    children: [
+      { element: <MonthlyDeductions />, index: true },
+      { path: ':id/loandetails', element: <LoanDetails/> },],
   },
   {
     path: 'timesheetmanagement',

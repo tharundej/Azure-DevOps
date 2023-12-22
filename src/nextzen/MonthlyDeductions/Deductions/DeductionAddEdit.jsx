@@ -28,14 +28,16 @@ export default function DeductionAddEdit({currentUser, EditData ,handleClose}) {
     const [deductionDetails, setDeductionDetails] = useState("");
     const [personName, setPersonName] = useState();
     const [itemAdded,setItemAdded] = useState(true);
+    const [loanStatus,setLoanStatus]=useState()
     const [filteredFieldValues,setFilteredValues]=useState(); 
-    const list=[{id:"Health Insurance Premium",name:"Health Insurance Premium"},{id:"Loan Request",name:"Loan Request"},{id:"Absence Deductions",name:"Absence Deductions"},{id:"Union Dues",name:'Union Dues'},{id:"Garnishments",name:"Garnishments"},{id:"Salary Advance Request",name:'Salary Advance'},{id:"Other Deductions",name:"Other Deductions"}]
+    const list=[{id:"Health Insurance Premium",name:"Health Insurance Premium"},{id:"Loan Request",name:"Loan Request"},{id:"Union Dues",name:'Union Dues'},{id:"Garnishments",name:"Garnishments"},{id:"Salary Advance Request",name:'Salary Advance'},{id:"Other Deductions",name:"Other Deductions"}]
     useEffect(()=>{
         getEmployeesList()
     },[])
     useEffect(()=>{
       if(personName){
         getLatestInstallmentNumber()
+        getLoanRequestStatus()
       }
     },[personName])
     
@@ -162,12 +164,12 @@ const AddDeductions=()=>{
   }
   axios.request(config).then((response) => {
     console.log(response,"responseeee")
-    // handleClose()
-    // enqueueSnackbar(response.data.message,{variant:'success'})
+    handleClose()
+    enqueueSnackbar(response.data.message,{variant:'success'})
   
   })
     .catch((error) => {
-      // handleClose()
+      handleClose()
       console.log(error,"Errorrrr")
       
     });
@@ -219,6 +221,27 @@ const getLatestInstallmentNumber=()=>{
       
 //     });
 // }
+
+const getLoanRequestStatus =()=>{
+  console.log("loanrequest")
+  const data = {
+    "employeeID":personName
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    // url:baseUrl + `/getLatestDeductionRecords`,
+    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/checkEmployeeStatus`,
+    data:data
+   }
+   axios.request(config).then((response)=>{
+   console.log(response?.data,"employeestatuss")
+   setLoanStatus(response?.data)
+   })
+   .catch((error)=>{
+    console.log(error)
+   })
+}
 
 useEffect(() => {
   console.log(fieldValues,"fieldValuess")
@@ -332,11 +355,33 @@ const getHealthInsuranceDetails=()=>{
       onChange={(event) => handleAutocompleteChange(event, index)}
       MenuProps={MenuProps}
       input={<OutlinedInput label="Deductions" />}
+     
      >
        {list?.map((options) => (
         
-           <MenuItem key={options?.id} value={options?.id}>
-            {options?.name}
+           <MenuItem key={options?.id} value={options?.id}
+           disabled={
+            (options?.id === 'Salary Advance Request' &&
+              (loanStatus?.salaryStatus === 'pending' || loanStatus?.salaryStatus === '')) ||
+            (options?.id === 'Loan Request' &&
+              (loanStatus?.loanStatus === 'pending' || loanStatus?.loanStatus === ''))||
+              (options?.id === 'Salary Advance Request' && loanStatus?.salaryDeductionStatus === 'completed')||
+              (options?.id === 'Loan Request' && loanStatus?.loanDeductionStatus === 'completed')
+          }>
+            {options?.name} 
+            {((options?.id === 'Salary Advance Request' && loanStatus?.salaryStatus === 'pending')
+    ? "(Request Not Approved)"
+    : (options?.id === 'Salary Advance Request' && loanStatus?.salaryStatus === '')
+    ? "(No Request)"
+    : (options?.id === 'Loan Request' && loanStatus?.loanStatus === 'pending')
+    ? "(Request Not Approved)"
+    : (options?.id === 'Loan Request' && loanStatus?.loanStatus === '')
+    ? "(No Request)"
+    : (options?.id === 'Salary Advance Request' && loanStatus?.salaryDeductionStatus === 'completed')
+    ?"(Installments Completed)"
+    : (options?.id === 'Loan Request' && loanStatus?.loanDeductionStatus === 'completed')
+    ?"(Installments Completed)":null)}
+      
          </MenuItem>
        ))}
      </Select>

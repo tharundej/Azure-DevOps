@@ -158,7 +158,7 @@ export default function CalendarForm({ currentEvent, colorOptions,selectedRange,
  function handleFileSelect(event) {
   const fileInput = event.target;
   const file = fileInput.files[0];
-  setFileName(file.name)
+  setFileName(file.projectName)
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -228,9 +228,9 @@ const lossOfPay = async()=>{
 // surendra work
 const [projectData,setProjectData]=useState(
 //   {
-//   projectID:[ { Id: 1, name: 'ERP',  },
-//   { Id: 2, name: 'HRMS',  },
-//   { Id: 3, name: 'ACCOUNTS', },],
+//   projectID:[ { projectId: 1, projectName: 'ERP',  },
+//   { projectId: 2, projectName: 'HRMS',  },
+//   { projectId: 3, projectName: 'ACCOUNTS', },],
   
 // }
 projectInfo
@@ -263,14 +263,14 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 // const [projectDetails, setProjectDetails] = useState({
 //   employeeName: projectInfo?.employeeName,
 //   projectID: [
-//     { "Id": 1, "name": "ERP" },
-//     { "Id": 3, "name": "ACCOUNTS" }
+//     { "projectId": 1, "projectName": "ERP" },
+//     { "projectId": 3, "projectName": "ACCOUNTS" }
 //   ],
 //   todayDate: date?.start,
 //   // Dynamically create properties for each project
 //   ...Object.fromEntries(
 //     projectInfo?.projectID?.map((project) => [
-//       project.name,
+//       project.projectName,
 //       { hours: "", des: "" }
 //     ]) || []
 //   )
@@ -291,22 +291,57 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 //     }
 //   }
 // ];
-
+console.log(editData,"editttttttdata")
 const initialProjectDetails = {
   employeeName: projectInfo?.employeeName,
   projectID: [
-    { "Id": 1, "name": "ERP" },
-    { "Id": 3, "name": "ACCOUNTS" }
+    { "projectId": 1, "projectName": "ERP" },
+    { "projectId": 3, "projectName": "ACCOUNTS" }
   ],
   todayDate: date?.start,
   // Dynamically create properties for each project with empty values
   ...Object.fromEntries(
     projectInfo?.projectID?.map((project) => [
-      project.name,
-      { hours: "", des: "" }
+      project.projectName,
+      { description: "",employeename:"",hours: "",projectId:"",projectName:"" }
     ]) || []
   )
 };
+// second method
+// const initialProjectDetails = {
+//   employeeName: projectInfo?.employeeName,
+//   projectID: [
+//     { "projectId": 1, "projectName": "ERP" },
+//     { "projectId": 3, "projectName": "ACCOUNTS" }
+//   ],
+//   todayDate: date?.start,
+//   // Dynamically create properties for each project with empty values
+//   ...Object.fromEntries(
+//     projectInfo?.projectID?.map((project) => [
+//       project.projectName,
+//       { description: "", employeename: "", hours: "", projectId: "", projectName: "" }
+
+//     ]) || []
+//   )
+// };
+
+// Update properties based on editData
+// editData.forEach((editItem) => {
+//   const projectKey = initialProjectDetails.projectID.find((p) => p.projectId === editItem.projectId)?.projectName;
+//   if (projectKey) {
+//     initialProjectDetails[projectKey] = {
+//       description: editItem.description || "",
+//       employeename: editItem.employeename || "",
+//       hours: editItem.hours || "",
+//       projectId: editItem.projectId || "",
+//       projectName: editItem.projectName || ""
+//     };
+//   }
+// });
+
+// Log the updated initialProjectDetails
+console.log(initialProjectDetails);
+
 
 // If editData is not empty, update the initial state
 if (editData) {
@@ -317,6 +352,7 @@ if (editData) {
       }
     }
   });
+  console.log(initialProjectDetails,"initialProjectDetails")
 }
 
 const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
@@ -328,7 +364,7 @@ const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
       [projectname]: { ...(prevDetails[projectname] || {}), [field]: value },
     }));
   };
-  console.log(projectDetails,"projectDetails")
+  console.log(projectDetails,"projectDetails",projectData,editData)
 
   // eventdata print 
   // console.log( eventData," eventDataeventData")
@@ -355,24 +391,24 @@ const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
 {projectData?.projectID?.length > 0 && (
   <>
     {projectData.projectID.map((project) => (
-        <Grid container spacing={1} mt={0.4} key={project.Id}>
+        <Grid container spacing={1} mt={0.4} key={project.projectId}>
           <Grid item xs={6}>
             <TextField
               fullWidth
-              label={`${project.name} hours`}
-              value={(projectDetails[project.name]?.hours || '')}
+              label={`${project.projectName} hours`}
+              value={(projectDetails[project.projectName]?.hours || '')}
               onChange={(e) =>
-                handleTextFieldChange(project.name, 'hours', e.target.value)
+                handleTextFieldChange(project.projectName, 'hours', e.target.value)
               }
             />
           </Grid>
           <Grid item xs={6}>
             <TextField
               fullWidth
-              label={`${project.name} des`}
-              value={(projectDetails[project.name]?.des || '')}
+              label={`${project.projectName} des`}
+              value={(projectDetails[project.projectName]?.des || '')}
               onChange={(e) =>
-                handleTextFieldChange(project.name, 'des', e.target.value)
+                handleTextFieldChange(project.projectName, 'des', e.target.value)
               }
             />
           </Grid>

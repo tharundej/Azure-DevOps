@@ -14,7 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-export default function Additions(){
+export default function Additions({defaultPayload,componentPage}){
   const [employeeListData,setEmployesListData] = useState()
   const [count,setCount] = useState(0)
   const [personName, setPersonName] = useState();
@@ -47,7 +47,13 @@ const MenuProps = {
         { id: "comments", label: "Remarks", minWidth: "8pc", type: "text" },
 
       ]
-    
+   
+useEffect(()=>{
+  if(componentPage=="MyRequests"){
+  setPersonName(user?.employeeID)
+  }
+},[])
+
       useEffect(()=>{
         getEmployeesList()
         if(personName){
@@ -175,14 +181,15 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     })
     setShowFilter(false);
   }
+
+  const payloadData = (componentPage=="MyRequests")?defaultPayload:{
+    employeeID:personName,
+    companyID:user?.companyID,
+} 
+
 const getLatestAdditions =()=>{
   setLoader(true)
-  const data ={
-    companyID:user?.companyID,
-    employeeID:personName,
-    count:5,
-    page:0
-  }
+  const data = payloadData
   const config={
     method:'POST',
     maxBodyLength:Infinity,
@@ -299,7 +306,7 @@ PaperProps={{
    
     </Dialog>)}
 
-      <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
+      {componentPage!="MyRequests" && <Grid container alignItems="center" justifyContent="space-between" paddingBottom="10px">
  <Grid item xs={12} md={8}>
       <FormControl sx={{ width: "100%"}}>
 <InputLabel id="demo-multiple-checkbox-label">Employees</InputLabel>
@@ -326,7 +333,8 @@ PaperProps={{
 <Button variant='contained' size="small" sx={{marginLeft:1}} color='primary' onClick={()=>setShowForm(true)}>Add Additions</Button>
 {personName && <Button size="small" sx={{marginLeft:2}} onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>}
 </Grid>
-</Grid>
+</Grid>}
+{(componentPage=="MyRequests" && personName) && <Button size="small" sx={{float:'right'}} onClick={()=>setShowFilter(true)}><Iconify icon="mi:filter" /> Filters</Button>}
 {!personName ? (
   <Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center',marginTop:20}}>Please select an employee.</Typography>
 ) : (
@@ -371,7 +379,7 @@ PaperProps={{
         </Card>
         </Grid>
     ))}
-    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center',marginTop:20}}>No Additions for Selected Employee.</Typography>
+    </Grid>:<Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center'}}>No Additions.</Typography>
 )}  </>
     )
 }

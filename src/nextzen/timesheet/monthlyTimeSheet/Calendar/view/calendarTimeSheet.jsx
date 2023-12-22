@@ -106,10 +106,10 @@ useEffect(()=>{
   useEffect(() => {
     onInitialView();
   }, [onInitialView]);
-  const handleFilters = useCallback((name, value) => {
+  const handleFilters = useCallback((projectName, value) => {
     setFilters((prevState) => ({
       ...prevState,
-      [name]: value,
+      [projectName]: value,
     }));
   }, []);
   const handleResetFilters = useCallback(() => {
@@ -130,21 +130,21 @@ useEffect(()=>{
     color:event.color
   }));
  
-  const HolidayEvents = listOfHolidays?
-  listOfHolidays?.map((event)=>({
-    title : event.holidayName,
-    start: event.holidayDate,
-    end: event.holidayDate,
-    type:"holiday"
-   }))
-:[]
-console.log(listOfHolidays,"listOfHolidays")
-   const overallEvents = [...updatedEvents,...HolidayEvents]
-   const eventDataMe1=[
-    {
 
-    }
-   ]
+  // surendra
+  const [eventGetData,setEventGetData]= useState();
+ 
+  
+//   const HolidayEvents = listOfHolidays?
+//   listOfHolidays?.map((event)=>({
+//     title : event.holidayName,
+//     start: event.holidayDate,
+//     end: event.holidayDate,
+//     type:"holiday"
+//    }))
+// :[]
+console.log(listOfHolidays,"listOfHolidays")
+  
 
    const eventDataMe= [
    {  "title": "9 Hours", "start": "2023-12-07", "end": "2023-12-07", "type": "holiday" },
@@ -176,23 +176,106 @@ console.log(listOfHolidays,"listOfHolidays")
     }
 }
 // console.log(getApiCall,"getApiCall")
-const [eventGetData,setEventGetData]= useState();
+
 const calendarGetData = async (getApiCall) => {
   console.log("hello in function",getApiCall)
-  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
+  const response = await axios.post(baseUrl +'/newtimesheet',getApiCall).then(
     (response) => {
       console.log('sucess data in api Calendar', response?.data?.data);
-      setClaimTypeOptions(response?.data?.data)
+      setEventGetData(response?.data?.data)
+      // setData()
+         // Extract unique projectIds from the API response
+    const projectIds = Array.from(
+      new Set(
+        response?.data?.data?.[0]?.projectData?.map((item) => item.projectId) || []
+      )
+    );
+
+    // Create an array of objects with projectId and projectName
+    const formattedProjectIds = projectIds.map((projectId) => {
+      const project = response?.data?.data?.[0]?.projectData?.find(
+        (item) => item.projectId === projectId
+      );
+      return {
+        projectId,
+        projectName: project?.projectName || ''
+      };
+    });
+
+    // Update the data state
+    setData((prevData) => ({
+      ...prevData,
+      projectID: formattedProjectIds,
+      // You might need to update other properties of the data state as well
+    }));
+
     },
     (error) => {
       console.log('lllll', error);
     }
   );
 }
+const HolidayEvents = eventGetData ? 
+eventGetData?.map((event)=>({
+  title : "10 hours",
+  start: event.dateofactivity,
+  end: event.dateofactivity,
+  
+ })) : []
+//  project id setting foe get data 
+//  const [projectIds, setProjectIds] = useState([]);
+
+//  useEffect(() => {
+//    // Extract unique projectIds from projectData
+//    const uniqueProjectIds = Array.from(new Set(projectData.map(item => item.projectId)));
+
+//    // Create an array of objects with projectId and projectName
+//    const formattedProjectIds = uniqueProjectIds.map(projectId => {
+//      const project = projectData.find(item => item.projectId === projectId);
+//      return {
+//        projectId,
+//        projectName: project.projectName
+//      };
+//    });
+
+//    // Update state with formattedProjectIds
+//    setProjectIds(formattedProjectIds);
+//  }, [projectData]);
+
+const addTimeSheet={
+   
+  "companyId": "COMP1",
+  "employeeId": "INFO48",
+     "projectId": [
+      {
+          "projectId": 141,
+          "hours": 7.5,
+          "description": "Updated description for Projectttttt 14999"
+      },
+     
+     
+  ]
+
+}
+const overallEvents = [...updatedEvents,...HolidayEvents]
+const calendarUpdateTimeSheet = async (addTimeSheet) => {
+  console.log("hello in function",getApiCall)
+  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/updateTimeSheet1',addTimeSheet).then(
+    (response) => {
+      console.log('sucess data in api add and Update', response?.data?.data);
+      // setEventGetData(response?.data?.data)
+    },
+    (error) => {
+      console.log('lllll', error);
+    }
+  );
+}
+console.log(eventGetData,"eventGetData")
 
 useEffect(()=>{
   calendarGetData(getApiCall)
   console.log("hello useeffect")
+  // calendarUpdateTimeSheet(addTimeSheet)
 },[])
     
   const renderResults = (
@@ -235,17 +318,18 @@ const handleSwitchChange = () => {
 };
 
 const projects = [
-  { Id: 1, name: 'ERP',  },
-  { Id: 2, name: 'HRMS',  },
-  { Id: 3, name: 'ACCOUNTS', },
-  { Id: 4, name: 'ERPBUZZ',  },
+  { projectId: 1, projectName: 'ERP',  },
+  { projectId: 2, projectName: 'HRMS',  },
+  { projectId: 3, projectName: 'ACCOUNTS', },
+  { projectId: 4, projectName: 'ERPBUZZ',  },
+  { projectId: 171, projectName: 'Buzz Staff',  },
 ]
 const employeeList = [
-  { Id: 1, name: 'Surendra',  },
-  { Id: 2, name: 'Anil',  },
-  { Id: 3, name: 'Sai', },
-  { Id: 4, name: 'Muzu',  },
-  { Id: 4, name: 'Nithin',  },
+  { projectId: 1, projectName: 'Surendra',  },
+  { projectId: 2, projectName: 'Anil',  },
+  { projectId: 3, projectName: 'Sai', },
+  { projectId: 4, projectName: 'Muzu',  },
+  { projectId: 4, projectName: 'Nithin',  },
 ]
 const [data, setData]=useState({
   projectID:[],
@@ -271,9 +355,11 @@ console.log(data,"dataatdada",selectedRange)
 const onDayData = () => {
   if (selectedRange?.start) {
     // Assuming eventDataMe is defined in the same scope
-    const editDataArray = eventDataMe
-      .filter((event) => event.editData && event.start === selectedRange?.start) // Filter based on start date
-      .map((event) => event.editData)
+    console.log(eventGetData,"HolidayEventsHolidayEventsHolidayEvents")
+    // const editDataArray = eventDataMe
+    const editDataArray = eventGetData
+      .filter((event) => event.projectData && event.Start === selectedRange?.start) // Filter based on start date
+      .map((event) => event.projectData)
       .flat(); // Flatten the array of editData arrays
 
     console.log(editDataArray, "editDataArray");
@@ -292,7 +378,7 @@ const onDayData = () => {
         multiple
         options={projects || []}
         value={data.projectID}
-        getOptionLabel={(option) => option?.name}
+        getOptionLabel={(option) => option?.projectName}
         onChange={handleProjectChange}
         renderInput={(params) => <TextField {...params} label="Select Project" />}
       />
@@ -309,7 +395,7 @@ const onDayData = () => {
             fullWidth
             options={employeeList || []}
             value={data.employeeName}
-            getOptionLabel={(option) => option?.name}
+            getOptionLabel={(option) => option?.projectName}
             onChange={handleEmployeeChange}
             renderInput={(params) => <TextField {...params} label="Select Employee" />}
           />
@@ -355,8 +441,8 @@ const onDayData = () => {
               initialView={view}
               eventDisplay="block"
               // selectAllow={selectAllowCallback}
-              // events={overallEvents}
-              events={eventDataMe}
+              events={overallEvents}
+              // events={eventDataMe}
               // eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}

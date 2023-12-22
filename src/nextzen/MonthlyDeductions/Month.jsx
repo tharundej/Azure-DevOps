@@ -23,11 +23,13 @@ export default function Month() {
       label: 'Loans',
       content: <Loans key="loans" />,
     },
+   
     {
       id: 'myDeductions',
       label: 'Deductions',
       content: <Deduction key="myDeductions" />,
     },
+  
     {
       id: 'myRequest',
       label: 'My Requests',
