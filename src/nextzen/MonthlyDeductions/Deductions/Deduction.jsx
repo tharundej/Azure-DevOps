@@ -29,6 +29,7 @@ export default function Deduction({defaultPayload,componentPage}) {
    const [showForm, setShowForm] = useState(false);
    const [showFilter,setShowFilter]= useState(false)
    const [loader,setLoader] = useState(false)
+   const [openedCard, setOpenedCard] = useState(null);
    const [deductionCard,setDeductionCard] = useState(Array(deductionDetails?.data?.length).fill(false));
    const {user} = useContext(UserContext)
   // const TABLE_HEAD = [
@@ -92,7 +93,8 @@ const getDeductionDetails =(deductionType)=>{
   const config={
     method:'POST',
     maxBodyLength:Infinity,
-    url:baseUrl + '/getOtherDeductions',
+    // url:baseUrl + '/getOtherDeductions',
+    url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/getOtherDeductions`,
     data:data
    }
    axios.request(config).then((response)=>{
@@ -111,7 +113,12 @@ const handleChange = (event) => {
  const handleDeduction=(deductionType,index)=>{
   const newExpanded = [...deductionCard];
   newExpanded[index] = !newExpanded[index];
+  if (openedCard !== null && openedCard !== index) {
+    newExpanded[openedCard] = false;
+  }
+  setOpenedCard(index === openedCard ? null : index);
   setDeductionCard(newExpanded);
+  console.log(deductionType,"DeductionType")
   getDeductionDetails(deductionType)
 }
 
@@ -305,35 +312,64 @@ return (
         <CardContent>
            {!deductionCard[index] ? (
            <>
-           <Typography>
+           <Typography variant='body2'>
              <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType || itm?.requestType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
-               onClick={() => handleDeduction(itm?.deductionType,index)}
+               onClick={() => {
+                setOpenedCard(index === openedCard ? null : index);
+                handleDeduction(itm?.deductionType || itm?.requestType, index);
+              }}
              >
-               <Iconify icon="iconamoon:arrow-down-2-thin" />
+               <Iconify icon={index === openedCard ? "iconamoon:arrow-up-2-thin" : "iconamoon:arrow-down-2-thin"} />
              </IconButton>
            </Typography>
-           {itm?.deductionType!="Over Time Hours" && <Typography> <span>Date : {formatDate(itm?.deductedDate)}</span></Typography>}
+           {itm?.deductionType!="Over Time Hours" && <Typography variant="body2">Date : {formatDate(itm?.deductedDate)}</Typography>}
          </>
            )
            : 
            <>
-           <Typography>
-             {console.log(deductionInstallment,"Deductionisntallment")}
+           <Typography variant='body2'>
                 <span style={{ fontWeight: 500 }}>Deduction Type : </span> {itm?.deductionType || itm?.requestType}<br />
-                {itm?.deductionType!="Over Time Hours" && <span>Date : {formatDate(itm?.deductedDate)}</span>}
+                {itm?.deductionType!="Over Time Hours" && <Typography variant='body2'><span>Date : {formatDate(itm?.deductedDate)}</span></Typography>}
                 <IconButton
                   sx={{ position: 'absolute', top: 15, right: 0 }}
-                  onClick={() => handleDeduction(itm?.deductionType,index)}
+                  onClick={() => {
+                    setOpenedCard(index === openedCard ? null : index);
+                    handleDeduction(itm?.deductionType || itm?.requestType, index);
+                  }}
                 >
-                  <Iconify icon="iconamoon:arrow-up-2-thin" />
+                <Iconify icon={index === openedCard ? "iconamoon:arrow-up-2-thin" : "iconamoon:arrow-down-2-thin"} />
                 </IconButton>
               </Typography>
               
-              <Typography><span>Deducted Amount : </span> {itm?.deductionAmount}</Typography>
-              {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
-              <Typography><span>Remarks : </span>{itm?.comments}</Typography>
+              {(itm?.deductionType=="Over Time Hours")?<><Typography variant='body2'><span>Deducted Amount : </span> {itm?.deductionAmount}</Typography>
+              {(itm?.deductionType=='Health Insurance Premium'|| itm?.deductionType=='Loan Request' || itm?.deductionType=='Salary Advance Request') && <Typography variant='body2'><span>Balance Amount : </span> {itm?.balanceAmount || 'null'}</Typography>}
+              <Typography variant='body2'><span>Remarks : </span>{itm?.comments}</Typography>
+              </>:
+              <>
+              {/* <Typography variant='body2'>Total Installments : {itm?.totalInstallments}</Typography> */}
+              {/* {deductionInstallment?.data?.length>0 && <Typography>Installment Details</Typography>} */}
+             {(itm?.requestType=="Salary Advance Request" || itm?.requestType=="Loan Request" || itm?.deductionType=="Health Insurance Premium")
+              ?(deductionInstallment && deductionInstallment?.data?.map((item)=>(
+                 <Grid item key={index} xs={12} sm={12} md={12}>
+                    <Card sx={{margin:1}}>
+                    <CardContent>
+                  <Typography variant='body2'> Installment No : {item?.noOfInstallments}</Typography>
+                  <Typography variant='body2'> Deducted Amount : {item?.deductedAmount}</Typography>
+                  <Typography variant='body2'>Deducted Date : {item?.deductedDate}</Typography>
+                  <Typography variant='body2'>Remarks : {item?.comments}</Typography>
+                  </CardContent>
+                  </Card>
+                </Grid>
+              ))) :
+              <>
+              <Typography variant="body2">Deducted Amount : {itm?.deductionAmount}</Typography>
+              <Typography variant="body2">Deducted Date : {itm?.deductedDate}</Typography>
+              <Typography variant="body2">Remarks : {itm?.comments}</Typography>
+              </>
+              }
+             </>}
               </> 
                }
                
