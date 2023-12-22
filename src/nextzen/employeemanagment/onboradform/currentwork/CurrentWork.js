@@ -489,13 +489,9 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
                 {
 
                   ctc:parseInt(currentWorkData?.ctc,10),
-<<<<<<< Updated upstream
                   variablePay:currentWorkData?.variablePay,
                   monthlyPay:currentWorkData?.monthlyPay,
                   bonus:currentWorkData?.bonus,
-=======
-                  //
->>>>>>> Stashed changes
                   companyID:currentWorkData?.companyID,
                   employeeID:localStorage.getItem('employeeIdCreated'),
                   employmentType:currentWorkData?.employmentType,
