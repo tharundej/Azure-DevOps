@@ -1846,17 +1846,6 @@
     "@emotion/weak-memoize" "^0.3.1"
     stylis "4.2.0"
 
-"@emotion/css@^11.7.1":
-  version "11.11.2"
-  resolved "https://registry.npmjs.org/@emotion/css/-/css-11.11.2.tgz"
-  integrity sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==
-  dependencies:
-    "@emotion/babel-plugin" "^11.11.0"
-    "@emotion/cache" "^11.11.0"
-    "@emotion/serialize" "^1.1.2"
-    "@emotion/sheet" "^1.2.2"
-    "@emotion/utils" "^1.2.1"
-
 "@emotion/hash@^0.9.1":
   version "0.9.1"
   resolved "https://registry.npmjs.org/@emotion/hash/-/hash-0.9.1.tgz"
@@ -11000,12 +10989,10 @@ react-native-url-polyfill@^1.3.0:
   dependencies:
     whatwg-url-without-unicode "8.0.0-3"
 
-react-organizational-chart@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.npmjs.org/react-organizational-chart/-/react-organizational-chart-2.2.1.tgz"
-  integrity sha512-JORmpLeYzCVtztdqCHsnKL8H3WiLRPHjohgh/PxQoszLuaQ+l3F8YefKSfpcBPZJhHwy3SlqjFjPC28a3Hh3QQ==
-  dependencies:
-    "@emotion/css" "^11.7.1"
+react-orgchart@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/react-orgchart/-/react-orgchart-1.0.5.tgz"
+  integrity sha512-9BseBKJSy028iyDdCb298YBGNp5VzOUWtYzmvBjE1rPWCGTpdYBZWjm9je+7ikR4HZraamdY9ZdUWlq6fKx/Zg==
 
 react-quill@^2.0.0:
   version "2.0.0"
