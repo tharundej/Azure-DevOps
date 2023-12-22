@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'DevOps'}
+    agent {label 'Staging'}
     stages{
          stage("Env Variables") {
             steps {
@@ -14,7 +14,7 @@ pipeline {
         }
         stage("Git clone"){
             steps{
-                checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'frontend_git', url: 'https://github.com/ani0310/BellHrms.git']])
+                checkout scmGit(branches: [[name: '*/main_stage']], extensions: [], userRemoteConfigs: [[credentialsId: 'frontend_git', url: 'https://github.com/ani0310/BellHrms.git']])
             }
         }
          stage('Docker Compose Stop Delete') {
