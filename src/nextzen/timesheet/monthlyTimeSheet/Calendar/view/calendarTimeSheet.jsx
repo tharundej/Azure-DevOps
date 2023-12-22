@@ -145,11 +145,12 @@ useEffect(()=>{
 // :[]
 console.log(listOfHolidays,"listOfHolidays")
   
-
+console.log(date,"datedate1234",view,eventsLoading)
    const eventDataMe= [
    {  "title": "9 Hours", "start": "2023-12-07", "end": "2023-12-07", "type": "holiday" },
    {  "title": "12 Hours", "start": "2023-12-09", "end": "2023-12-09", "type": "holiday" },
-   { "title": "20 Hours",  "start": "2023-12-26", "end": "2023-12-26", "type": "holiday", "editData": [
+   { "title": "20 Hours",  "start": "2023-12-26", "end": "2023-12-26", "type": "holiday", 
+   "editData": [
       { "ACCOUNTS": {  "hours": "sd",   "des": "dfer"  } },
       {  "HRMS": { "hours": "12", "des": "23" } }
     ]
@@ -168,21 +169,42 @@ console.log(listOfHolidays,"listOfHolidays")
    ]
 
  const getApiCall =  {
-    employeeId: "GANG22",
+    employeeId: "GANG12",
     companyId:"comp22",
     DateOfActivity:{
         from:"2023-12-01",
-         to: "2023-12-31"
+         to: "2023-12-30"
     }
 }
 // console.log(getApiCall,"getApiCall")
 
 const calendarGetData = async (getApiCall) => {
   console.log("hello in function",getApiCall)
-  const response = await axios.post(baseUrl +'/newtimesheet',getApiCall).then(
+  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
     (response) => {
-      console.log('sucess data in api Calendar', response?.data?.data);
+      console.log(response?.data?.data,'sucess data in api Calendar', response?.data?.data?.[0]?.projectData);
       setEventGetData(response?.data?.data)
+
+      const newData = response?.data?.data.map((item) => {
+        return {
+          managername: item.managername,
+          dateofactivity: item.dateofactivity,
+          projectData: item.projectData.map((project) => ({
+           projectName: {
+              date: project.date,
+              projectId: project.projectId,
+              projectName: project.projectName,
+              hours: project.hours,
+              description: project.description,
+              employeename: project.employeename,
+              status: project.status,
+            },
+          })),
+        };
+      });
+      
+      console.log(newData,"newwdataa",);
+      
       // setData()
          // Extract unique projectIds from the API response
     const projectIds = Array.from(
@@ -260,7 +282,7 @@ const addTimeSheet={
 const overallEvents = [...updatedEvents,...HolidayEvents]
 const calendarUpdateTimeSheet = async (addTimeSheet) => {
   console.log("hello in function",getApiCall)
-  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/updateTimeSheet1',addTimeSheet).then(
+  const response = await axios.post(baseUrl +'/updateTimeSheet1',addTimeSheet).then(
     (response) => {
       console.log('sucess data in api add and Update', response?.data?.data);
       // setEventGetData(response?.data?.data)
@@ -318,10 +340,10 @@ const handleSwitchChange = () => {
 };
 
 const projects = [
-  { projectId: 1, projectName: 'ERP',  },
-  { projectId: 2, projectName: 'HRMS',  },
-  { projectId: 3, projectName: 'ACCOUNTS', },
-  { projectId: 4, projectName: 'ERPBUZZ',  },
+  { projectId: 161, projectName: 'ERP',  },
+  { projectId: 167, projectName: 'ERP TESTING',  },
+  { projectId: 168, projectName: 'PUNCHIN', },
+  { projectId: 169, projectName: 'ERPBUZZ',  },
   { projectId: 171, projectName: 'Buzz Staff',  },
 ]
 const employeeList = [

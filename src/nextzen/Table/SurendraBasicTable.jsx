@@ -760,7 +760,7 @@ const IconOpen =()=>{
 
        
 
-          <TableContainer  component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', height:300, maxHeight:300, }}>
+          <TableContainer   component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', height:300, maxHeight:300, }}>
 
             <TableSelectedAction
 
