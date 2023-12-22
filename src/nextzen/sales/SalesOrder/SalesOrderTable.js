@@ -11,8 +11,10 @@ import { BasicTable } from '../../Table/BasicTable';
 import { getSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import CreateSaleOrder from './CreateSaleOrder';
 import { Dialog } from '@mui/material';
+import { deleteSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
 
 const SalesOrderTable = () => {
   const { user } = useContext(UserContext);
@@ -47,26 +49,40 @@ const SalesOrderTable = () => {
   const [deleteData, setDeleteData] = useState(null);
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
-  const [body_for_employee, setBody] = useState({
-    count: 5,
-    page: 1,
-  });
+  const [count, setCount] = useState(0);
+  // const [body_for_employee, setBody] = useState({
+  //   count: 5,
+  //   page: 1,
+  // });
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
       console.log({ rowdata });
     }
-    // else if (event?.name === 'Delete') {
-    //   const deleteData = {
-    //     locationID: rowdata?.locationID || 0,
-    //     companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
-    //     title: rowdata?.locationName || '',
-    //   };
-      // setDeleteData(deleteData);
-      // setConfirmDeleteOpen(true);
-      // handleDeleteConfirmed();
+    else if (event?.name === 'Delete') {
+      const deleteData = {
+        salesOrderId: rowdata?.salesOrderId || 0,
+        companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
+        salesOrderNo: rowdata?.soNumber || '',
+        title: rowdata?.billToCity || '',
+      };
+      setDeleteData(deleteData);
+      setConfirmDeleteOpen(true);
+      handleDeleteConfirmed();
     }
+  }
+    const handleCancelDelete = () => {
+      setDeleteData(null);
+      setConfirmDeleteOpen(false);
+    };
+    const handleDeleteConfirmed = async () => {
+      if (deleteData) {
+        await handleDeleteApiCall(deleteData);
+        setDeleteData(null);
+        setConfirmDeleteOpen(false);
+      }
+    };
     const handleCountChange = () => {
       setCount(count + 1);
     };
@@ -74,7 +90,19 @@ const SalesOrderTable = () => {
   const handleClose = () => {
     setEditShowForm(false);
   };
-  // const ApiHit = () => {
+
+  const handleDeleteApiCall = async (deleteData) => {
+    try {
+      const response = await deleteSalesOrderAPI(deleteData);
+      console.log('Delete Api Call', response);
+      handleCallSnackbar(response.message, 'success');
+      handleCountChange();
+    } catch (error) {
+      handleCallSnackbar(error.message, 'warning');
+      console.log('API request failed:', error.message);
+    }
+  };
+
   //   const data1 = body_for_employee;
   //   const config = {
   //     method: 'POST',
@@ -179,6 +207,19 @@ const SalesOrderTable = () => {
   ]);
   return (
     <>
+    <SnackBarComponent
+        open={openSnackbar}
+        severity={severity}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Factory"
+        message={`Are you sure you want to delete this sales order`}
+      />
      {editShowForm && (
         <Dialog
           fullWidth
@@ -190,6 +231,7 @@ const SalesOrderTable = () => {
           }}
           className="custom-dialog"
         >
+
           <CreateSaleOrder
             currentData={editModalData}
             handleClose={handleClose}
@@ -209,6 +251,7 @@ const SalesOrderTable = () => {
         filterName="SaleOrderHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
+        count={count}
       />
     </>
   );

@@ -32,3 +32,13 @@ export const editSalesOrderAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+export const deleteSalesOrderAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`deleteSalesOrder`, requestBody, apiHeaders);
+    console.log('API response:', response.data); // Log the response data
+    return response.data.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};

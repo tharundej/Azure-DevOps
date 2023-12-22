@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI, getListofSoNumberAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
 import { createSalesOrderAPI, editSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
 
@@ -99,6 +99,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
+
+
 
   const fetchVendor = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
@@ -225,7 +227,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       //   response = await createFactoryAPI(data);
       // }
       let response = '';
-      if (currentData?.billToName) {
+      if (currentData?.soNumber) {
         response = await editSalesOrderAPI(data);
       } else {
         response = await createSalesOrderAPI(data);
@@ -632,7 +634,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           </Button>
 
           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
-            Save
+          {currentData?.soNumber ? 'Update' : 'Save'}
           </LoadingButton>
           {/* <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             {currentData?.ProductName ? 'Update' : 'Save'}
