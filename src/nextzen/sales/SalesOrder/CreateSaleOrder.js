@@ -162,6 +162,32 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       handleCallSnackbar(error.message, 'warning');
     }
   };
+  const handleSalesOrderChange = async (event, newValue) => {
+    console.log('newValue', newValue);
+    try {
+
+        setValue('customerId', newValue?.customerName);
+        setValue('billToName', newValue?.customerCompanyName);
+        setValue('billToGST', newValue?.customerGstNo);
+        setValue('billToAddress', newValue?.customerAddressLine1);
+        setValue('billToPincode', newValue?.pincode);
+        setValue('billToStateCode', newValue?.stateCode);
+        setValue('billToState', newValue?.state);
+        // setValue('billToAddress', newValue?.customerAddressLine1);
+        // setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+        // setValue('locationId', response?.locationId ? response?.locationId : 0);
+        // setValue('VendorName', response?.vendorName);
+        // setValue('VendorAddress', response?.vendorAddress);
+        // setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+        const materialArray = Object.values(newValue?.purchaseMaterial || {});
+        setContentList(materialArray);
+        console.log(materialArray);
+
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -169,7 +195,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const HandleDropDownChange = (selectedValue, fieldName, index, gstRate, price) => {
     setValue(fieldName, selectedValue);
     if (gstRate) {
-      setValue(`orderProduct[${index}].rate`, price ? price : 0);
+      // setValue(`orderProduct[${index}].rate`, price ? price : 0);
       setValue(`orderProduct[${index}].gstRate`, gstRate ? gstRate : 0);
     }
   };
@@ -346,7 +372,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         id={`orderProduct[${index}].productId`}
         options={productOptions || []}
         onChange={(event, newValue) =>
-          HandleDropDownChange(newValue.productId, `orderProduct[${index}].productId`)
+          HandleDropDownChange(newValue.productId, `orderProduct[${index}].productId`, index, newValue?.gstRate,
+          newValue?.hsnId )
         }
 
         value={productOptions.find((option) => option.productId === selectedProduct) || null}
@@ -491,13 +518,23 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               name="customerId"
               id="customerId"
               options={customerOptions || []}
-
-              value={customerOptions.find((option) => option.customerId === selectedCustomer) || null}
+              onChange={handleSalesOrderChange}
+              // value={customerOptions.find((option) => option.customerId === selectedCustomer) || null}
               getOptionLabel={(option) => option.customerName} // Specify the property to display in the input
               renderInput={(params) => (
                 <TextField {...params} label="Select Customer" variant="outlined" />
               )}
             />
+             {/* <RHFAutocomplete
+              name="poId"
+              id="poId"
+              options={purchaseOrderOptions || []}
+              onChange={handlePurchaseOrderChange}
+              getOptionLabel={(option) => option.poNumber}
+              renderInput={(params) => (
+                <TextField {...params} label="Select PO Number" variant="outlined" />
+              )}
+            /> */}
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
@@ -515,7 +552,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFAutocomplete
+            {/* <RHFAutocomplete
               name="locationId"
               id="locationId"
               options={locationsOptions || []}
@@ -529,9 +566,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               renderInput={(params) => (
                 <TextField {...params} label="Select Billing Location" variant="outlined" />
               )}
-            />
+            /> */}
 
-            <RHFAutocomplete
+            {/* <RHFAutocomplete
               name="factoryShippingId"
               id="factoryShippingId"
               options={locationsOptions || []}
@@ -545,7 +582,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               renderInput={(params) => (
                 <TextField {...params} label="Select Shipping Location" variant="outlined" />
               )}
-            />
+            /> */}
 
             <RHFTextField
               defaultValue={0}
@@ -567,7 +604,10 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 readOnly: true,
               }}
             /> */}
-            <RHFTextField name="billToName" label="Bill To Name" />
+            <RHFTextField InputProps={{
+                readOnly: true,
+              }} name="billToName" label="Bill To Name" />
+
             <RHFTextField name="billToAddress" label="Billing Address" />
             <RHFTextField name="billToState" label="Bill to state" />
             <RHFTextField name="billToCity" label="Bill to City" />
