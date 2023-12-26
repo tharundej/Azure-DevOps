@@ -17,7 +17,7 @@ import { bgBlur } from 'src/theme/css';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 // components
-import Logo from 'src/components/logo';
+// import Logo from 'src/components/logo';
 import Label from 'src/components/label';
 //
 import { HEADER } from '../config-layout';
@@ -27,6 +27,9 @@ import NavMobile from './nav/mobile/nav-mobile';
 import NavDesktop from './nav/desktop';
 //
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
+import InfobellIndex from 'src/components/logo/InfobellIndex';
+import Logo from 'src/components/logo';
+import InfobellLogo from 'src/components/logo/InfobellLogo';
 
 // ----------------------------------------------------------------------
 
@@ -82,7 +85,7 @@ export default function Header() {
               </Link>
             }
           >
-            <Logo />
+            <InfobellLogo/>
           </Badge>
 
           <Box sx={{ flexGrow: 1 }} />

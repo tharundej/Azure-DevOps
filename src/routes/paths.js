@@ -176,6 +176,9 @@ export const paths = {
     payroll: {
       root: `/payroll`,
     },
+    organizationchart: {
+      root: `/organizationchart`,
+    },
     monthlydeductions: {
       root: `/monthlydeductions`,
       userview: (id) => `/monthlydeductions/${id}/loandetails`,

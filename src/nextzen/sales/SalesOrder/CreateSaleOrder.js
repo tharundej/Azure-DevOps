@@ -2,8 +2,11 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getCustomerListAPI, getProductListAPI, getListofSoNumberAPI } from 'src/api/Accounts/Common';
 import { getVendorMaterialListAPI } from 'src/api/Accounts/VendorMaterials';
+import { createSalesOrderAPI, editSalesOrderAPI } from 'src/api/Accounts/SalesOrder';
+
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -32,12 +35,30 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      ProductName: currentData?.ProductName || '',
-      ProductCategory: currentData?.ProductCategory || '',
-      hsnID: currentData?.hsnID || '',
-      status: currentData?.status || '',
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+      locationID: currentData?.locationID || 0,
+      advanceAmount: currentData?.advanceAmount || 0,
+      billToName: currentData?.billToName || '',
+      billToAddres: currentData?.billToAddres || '',
+      billToState: currentData?.billToState || '',
+      billToCity: currentData?.billToCity || '',
+      billToPincode: currentData?.billToPincode || 0,
+      billToGST: currentData?.billToGST || '',
+      billToStateCode: currentData?.billToStateCode || 0,
+      shipToName: currentData?.shipToName || '',
+      shipToAddress: currentData?.shipToAddress || '',
+      shipToState: currentData?.shipToState || '',
+      shipToCity: currentData?.shipToCity || '',
+      shipToPincode: currentData?.shipToPincode || 0,
+      shipToGST: currentData?.shipToGST || '',
+      shipToStateCode: currentData?.shipToStateCode || 0,
+      paymentTerm: currentData?.paymentTerm || '',
+      grossTotalAmount: currentData?.grossTotalAmount || 0,
+      gstAmount: currentData?.gstAmount || 0,
+      advanceAmount: currentData?.advanceAmount || '',
       vendorId: currentData?.vendorId || '',
       customerID: currentData?.customerID || '',
+      // company_phone_no: currentData?.company_phone_no || '6284824092',
     }),
     [currentData]
   );
@@ -75,6 +96,11 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const [selectedShippingLocation, setSelectedShippingLocation] = useState();
   const [productOptions, setProductOptions] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+
+
 
   const fetchVendor = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
@@ -90,7 +116,8 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     }
   };
   const fetchProduct = async () => {
-    const data = { companyID: user?.companyID ? user?.companyID : '',
+    const data = {
+      companyID: user?.companyID ? user?.companyID : '',
     };
     try {
       const response = await getProductListAPI(data);
@@ -104,8 +131,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     }
   };
   const fetchCustomer = async () => {
-    const data = {  companyId: user?.companyID ? user?.companyID : '',
-   };
+    const data = {
+      companyId: user?.companyID ? user?.companyID : '',
+    };
     try {
       const response = await getCustomerListAPI(data);
       setCustomerOptions(response);
@@ -134,6 +162,32 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       handleCallSnackbar(error.message, 'warning');
     }
   };
+  const handleSalesOrderChange = async (event, newValue) => {
+    console.log('newValue', newValue);
+    try {
+
+        setValue('customerId', newValue?.customerName);
+        setValue('billToName', newValue?.customerCompanyName);
+        setValue('billToGST', newValue?.customerGstNo);
+        setValue('billToAddress', newValue?.customerAddressLine1);
+        setValue('billToPincode', newValue?.pincode);
+        setValue('billToStateCode', newValue?.stateCode);
+        setValue('billToState', newValue?.state);
+        // setValue('billToAddress', newValue?.customerAddressLine1);
+        // setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+        // setValue('locationId', response?.locationId ? response?.locationId : 0);
+        // setValue('VendorName', response?.vendorName);
+        // setValue('VendorAddress', response?.vendorAddress);
+        // setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+        const materialArray = Object.values(newValue?.purchaseMaterial || {});
+        setContentList(materialArray);
+        console.log(materialArray);
+
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -141,39 +195,95 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
   const HandleDropDownChange = (selectedValue, fieldName, index, gstRate, price) => {
     setValue(fieldName, selectedValue);
     if (gstRate) {
-      setValue(`addPurchaseMaterial[${index}].rate`, price ? price : 0);
-      setValue(`addPurchaseMaterial[${index}].gstRate`, gstRate ? gstRate : 0);
+      // setValue(`orderProduct[${index}].rate`, price ? price : 0);
+      setValue(`orderProduct[${index}].gstRate`, gstRate ? gstRate : 0);
     }
   };
   const updateCalculatedValues = (index) => {
-    const parsedQuantity = parseFloat(watch(`addPurchaseMaterial[${index}].quantity`));
-    const parsedPrice = parseFloat(watch(`addPurchaseMaterial[${index}].rate`));
-    const parsedGstRate = parseFloat(watch(`addPurchaseMaterial[${index}].gstRate`));
+    const parsedQuantity = parseFloat(watch(`orderProduct[${index}].quantity`));
+    const parsedPrice = parseFloat(watch(`orderProduct[${index}].rate`));
+    const parsedGstRate = parseFloat(watch(`orderProduct[${index}].gstRate`));
     const amount = parsedQuantity * parsedPrice;
     const gstAmount = amount * (parsedGstRate / 100);
-    setValue(`addPurchaseMaterial[${index}].amount`, amount);
-    setValue(`addPurchaseMaterial[${index}].gstAmount`, gstAmount);
-    setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
+    setValue(`orderProduct[${index}].amount`, amount);
+    setValue(`orderProduct[${index}].gstAmount`, gstAmount);
+    setValue(`orderProduct[${index}].totalAmount`, amount + gstAmount);
   };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
     try {
-      console.log(data, 'data111ugsghghh');
+      // console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchaseOrder', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      // const response = await instance.post('AddSalesOrder', data).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
+      // data.locationPhone = parseInt(data.locationPhone);
+      // data.locationPincode = parseInt(data.locationPincode);
+      data.billToPincode = parseInt(data.billToPincode);
+      data.billToStateCode = parseInt(data.billToStateCode);
+      data.shipToPincode = parseInt(data.shipToPincode);
+      data.shipToStateCode = parseInt(data.shipToStateCode);
+      data.grossTotalAmount = parseInt(data.grossTotalAmount);
+      data.gstAmount = parseInt(data.gstAmount);
+      data.advanceAmount = parseInt(data.advanceAmount);
+
+      data?.orderProduct?.forEach((product, index) => {
+        data.orderProduct[index].productId = parseInt(product.productId) || 0;
+        data.orderProduct[index].quantity = parseFloat(product.quantity) || 0;
+        data.orderProduct[index].rate = parseFloat(product.rate) || 0;
+        data.orderProduct[index].amount = parseFloat(product.amount) || 0;
+        data.orderProduct[index].gstRate = parseFloat(product.gstRate) || 0;
+        data.orderProduct[index].gstAmount = parseFloat(product.gstAmount) || 0;
+        data.orderProduct[index].discount = parseFloat(product.discount) || 0;
+      });
+
+
+      console.log('Create Factory Data', data);
+      // let response = await createSalesOrderAPI(data);
+      // if (currentData?.locationName) {
+      //   response = await updateFactoryAPI(data);
+      // } else {
+      //   response = await createFactoryAPI(data);
+      // }
+      let response = '';
+      if (currentData?.soNumber) {
+        response = await editSalesOrderAPI(data);
+      } else {
+        response = await createSalesOrderAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      // currentData?.locationName ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      if (error.response) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const fetchUnits = async () => {
     try {
       const response = await getUnitOfMeasure();
@@ -240,13 +350,13 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       }}
     >
       {/* <RHFAutocomplete
-        name={`addPurchaseMaterial[${index}].materialId`}
-        id={`addPurchaseMaterial[${index}].materialId`}
+        name={`orderProduct[${index}].materialId`}
+        id={`orderProduct[${index}].materialId`}
         options={productOptions || []}
         onChange={(event, newValue) =>
           HandleDropDownChange(
             newValue.id,
-            `addPurchaseMaterial[${index}].materialId`,
+            `orderProduct[${index}].materialId`,
             index,
             newValue.gstRate,
             newValue.materialPrice
@@ -257,27 +367,28 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           <TextField {...params} label="Select Product" variant="outlined" />
         )}
       /> */}
-       <RHFAutocomplete
-              name={`addPurchaseMaterial[${index}].product`}
-              id={`addPurchaseMaterial[${index}].product`}
-              options={productOptions || []}
-              onChange={(event, newValue) =>
-                HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].product`)
-              }
+      <RHFAutocomplete
+        name={`orderProduct[${index}].productId`}
+        id={`orderProduct[${index}].productId`}
+        options={productOptions || []}
+        onChange={(event, newValue) =>
+          HandleDropDownChange(newValue.productId, `orderProduct[${index}].productId`, index, newValue?.gstRate,
+          newValue?.hsnId )
+        }
 
-              value={productOptions.find((option) => option.productId === selectedProduct) || null}
-              getOptionLabel={(option) => option.productName} // Specify the property to display in the input
-              renderInput={(params) => (
-                <TextField {...params} label="Select Product" variant="outlined" />
-              )}
-            />
+        value={productOptions.find((option) => option.productId === selectedProduct) || null}
+        getOptionLabel={(option) => option.productName} // Specify the property to display in the input
+        renderInput={(params) => (
+          <TextField {...params} label="Select Product" variant="outlined" />
+        )}
+      />
 
-     <RHFAutocomplete
-        name={`addPurchaseMaterial[${index}].unitOfMeasure`}
-        id={`addPurchaseMaterial[${index}].unitOfMeasure`}
+      <RHFAutocomplete
+        name={`orderProduct[${index}].unitOfMeasure`}
+        id={`orderProduct[${index}].unitOfMeasure`}
         options={unitOptions || []}
         onChange={(event, newValue) =>
-          HandleDropDownChange(newValue, `addPurchaseMaterial[${index}].unitOfMeasure`)
+          HandleDropDownChange(newValue, `orderProduct[${index}].unitOfMeasure`)
         }
         getOptionLabel={(option) => option}
         renderInput={(params) => (
@@ -286,21 +397,21 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       />
 
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].quantity`}
+        name={`orderProduct[${index}].quantity`}
         label="Quantity"
         type="number"
         defaultValue={1}
         onChange={(e) => HandleInputChange(e, index)}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].rate`}
+        name={`orderProduct[${index}].rate`}
         label="Rate"
         type="number"
         defaultValue={0}
         onChange={(e) => HandleInputChange(e, index)}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].amount`}
+        name={`orderProduct[${index}].amount`}
         label="Amount"
         defaultValue={0}
         InputProps={{
@@ -308,41 +419,47 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         }}
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].gstRate`}
+        name={`orderProduct[${index}].gstRate`}
         label="GST Rate"
         defaultValue={0}
         type="number"
         onChange={(e) => HandleInputChange(e, index)}
       />
-      <RHFTextField
-        name={`addPurchaseMaterial[${index}].gstAmount`}
+      {/* <RHFTextField
+        name={`orderProduct[${index}].gstAmount`}
         label="GST Amount"
         defaultValue={0}
         InputProps={{
           readOnly: true,
         }}
-      />
-      <RHFTextField
-        name={`addPurchaseMaterial[${index}].totalAmount`}
+      /> */}
+      {/* <RHFTextField
+        name={`orderProduct[${index}].totalAmount`}
         label="Total Amount"
         defaultValue={0}
         InputProps={{
           readOnly: true,
         }}
-      />
+      /> */}
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].discount`}
+        name={`orderProduct[${index}].discount`}
         type="number"
         defaultValue={0}
         label="Discount"
       />
       <RHFTextField
-        name={`addPurchaseMaterial[${index}].advanceAmount`}
+        name={`orderProduct[${index}].hsnCode`}
+
+        defaultValue={''}
+        label="HSN Code"
+      />
+      {/* <RHFTextField
+        name={`orderProduct[${index}].advanceAmount`}
         type="number"
         defaultValue={0}
         label="Advance Amount"
-      />
-      <RHFTextField name={`addPurchaseMaterial[${index}].comments`} label="Comments" />
+      /> */}
+      <RHFTextField name={`orderProduct[${index}].comments`} label="Comments" />
       <Button
         sx={{ height: '40px', marginTop: '3px' }}
         variant="contained"
@@ -375,9 +492,15 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
 
   return (
     <div>
-      <ModalHeader heading={"Add New Sale Order"}/>
+      <ModalHeader heading={"Add New Sale Order"} />
       <FormProvider methods={methods} onSubmit={onSubmit}>
         {/* <DialogTitle>ADD New Purchase Order</DialogTitle> */}
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
 
         <DialogContent>
           <Box
@@ -391,18 +514,28 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             }}
           >
 
-             <RHFAutocomplete
+            <RHFAutocomplete
               name="customerId"
               id="customerId"
               options={customerOptions || []}
-
-              value={customerOptions.find((option) => option.customerId === selectedCustomer) || null}
+              onChange={handleSalesOrderChange}
+              // value={customerOptions.find((option) => option.customerId === selectedCustomer) || null}
               getOptionLabel={(option) => option.customerName} // Specify the property to display in the input
               renderInput={(params) => (
                 <TextField {...params} label="Select Customer" variant="outlined" />
               )}
             />
-            <RHFTextField name="paymentTerm" label="Payment Term" />
+             {/* <RHFAutocomplete
+              name="poId"
+              id="poId"
+              options={purchaseOrderOptions || []}
+              onChange={handlePurchaseOrderChange}
+              getOptionLabel={(option) => option.poNumber}
+              renderInput={(params) => (
+                <TextField {...params} label="Select PO Number" variant="outlined" />
+              )}
+            /> */}
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
@@ -419,7 +552,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <RHFAutocomplete
+            {/* <RHFAutocomplete
               name="locationId"
               id="locationId"
               options={locationsOptions || []}
@@ -433,9 +566,9 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               renderInput={(params) => (
                 <TextField {...params} label="Select Billing Location" variant="outlined" />
               )}
-            />
+            /> */}
 
-            <RHFAutocomplete
+            {/* <RHFAutocomplete
               name="factoryShippingId"
               id="factoryShippingId"
               options={locationsOptions || []}
@@ -449,30 +582,32 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               renderInput={(params) => (
                 <TextField {...params} label="Select Shipping Location" variant="outlined" />
               )}
-            />
-            <RHFTextField name="companyBillingGST" label="Company Billing GST" />
-            <RHFTextField name="companyBillingPAN" label="Company Billing PAN" />
+            /> */}
+
             <RHFTextField
               defaultValue={0}
               type="number"
               name="advanceAmount"
               label="advanceAmount"
             />
-            <RHFTextField
+            {/* <RHFTextField
               name="gstAmount"
               label="GST Amount"
               InputProps={{
                 readOnly: true,
               }}
-            />
-            <RHFTextField
+            /> */}
+            {/* <RHFTextField
               name="grandTotalAmount"
               label="Grand Total Amount"
               InputProps={{
                 readOnly: true,
               }}
-            />
-            <RHFTextField name="billToName" label="Bill To Name" />
+            /> */}
+            <RHFTextField InputProps={{
+                readOnly: true,
+              }} name="billToName" label="Bill To Name" />
+
             <RHFTextField name="billToAddress" label="Billing Address" />
             <RHFTextField name="billToState" label="Bill to state" />
             <RHFTextField name="billToCity" label="Bill to City" />
@@ -486,7 +621,22 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             <RHFTextField name="shipToPincode" label="Shipping Pincode" />
             <RHFTextField name="shipToGST" label="Ship to GST" />
             <RHFTextField name="shipToStateCode" label="Ship to state code" />
-
+            {/* <RHFTextField name="companyPhoneNo" label="Ship to state code" />
+            <RHFTextField name="companyAccountId" label="Company AccountId" />
+            <RHFTextField name="companyEmailId" label="Company EmailId" />
+            <RHFTextField name="companyGST" label="Company GST" />
+            <RHFTextField name="companyPAN" label="Company PAN" />
+            <RHFTextField name="msmeUAMNo" label="MSME UAMNo" />
+            <RHFTextField name="companyAccountName" label="Company Account Name" />
+            <RHFTextField name="companyAccountNo" label="Company Account No" />
+            <RHFTextField name="companyBankName" label="Company Bank Name" />
+            <RHFTextField name="companyBankIFSC" label="Company Bank IFSC" />
+            <RHFTextField name="companyBankBranch" label="Company Bank Branch" />
+            <RHFTextField name="companyStateCode" label="Company State Code" /> */}
+            <RHFTextField name="paymentTerm" label="Payment Term" />
+            <RHFTextField name="grossTotalAmount" label="Gross Total Amount" />
+            <RHFTextField name="gstAmount" label="GST Amount" />
+            <RHFTextField name="advanceAmount" label="Advance Amount" />
           </Box>
           <Box
             marginTop={2}
@@ -504,7 +654,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
               }}
               startIcon={<Iconify icon="mingcute:add-line" />}
               sx={{ margin: '20px' }}
-              // disabled={!selectedVendor}
+            // disabled={!selectedVendor}
             >
               Add
             </Button>
@@ -524,8 +674,11 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           </Button>
 
           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
-            Save
+          {currentData?.soNumber ? 'Update' : 'Save'}
           </LoadingButton>
+          {/* <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+            {currentData?.ProductName ? 'Update' : 'Save'}
+          </LoadingButton> */}
         </DialogActions>
       </FormProvider>
     </div>

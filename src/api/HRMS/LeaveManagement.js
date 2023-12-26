@@ -1,6 +1,7 @@
-import instance from '../BaseURL';
+import instance from 'src/api/BaseURL';
 import { apiHeaders } from '../Token';
 export const ApproveLeaveAPI = async (requestBody) => {
+  
   try {
     const response = await instance.post(`approveLeave`, requestBody, apiHeaders);
     return response;
@@ -18,6 +19,7 @@ export const getHolidaysListAPI = async (requestBody) => {
   }
 };
 export const getLeaveTypeAPI = async (requestBody) => {
+  
   try {
     const response = await instance.post(`getLeaveType`, requestBody, apiHeaders);
     return response;
