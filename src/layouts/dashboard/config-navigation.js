@@ -8,9 +8,9 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 import UserContext from 'src/nextzen/context/user/UserConext';
-
+ 
 // ----------------------------------------------------------------------
-
+ 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/sidebar/${name}.svg`} sx={{ width: 0.8, height: 0.8 }} />
   // OR
@@ -18,7 +18,7 @@ const icon = (name) => (
   // https://icon-sets.iconify.design/solar/
   // https://www.streamlinehq.com/icons
 );
-
+ 
 const ICONS = {
   job: icon('ic_job'),
   blog: icon('ic_blog'),
@@ -44,7 +44,7 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
-
+ 
   g_dashboard: icon('dashboard'),
   g_employeeManagement: icon('employeeManagement'),
   g_leaveManagement: icon('leaveManagement'),
@@ -52,11 +52,12 @@ const ICONS = {
   g_shiftManagement: icon('shiftManagement'),
   g_claims: icon('claims'),
   g_payroll: icon('payroll'),
+  g_organizationchart:icon('organizationchart'),
   g_itDeclarations: icon('itDeclarations'),
   g_monthlyAdditionalDeductions: icon('monthlyAdditionalDeductions'),
   g_appraisal: icon('appraisal'),
   g_configurations: icon('configurations'),
-
+ 
   g_assets: icon('assets'),
   g_factory: icon('factory'),
   g_vendor: icon('vendor'),
@@ -67,9 +68,9 @@ const ICONS = {
   g_balanceSheet: icon('balanceSheet'),
   g_expenses: icon('expenses'),
 };
-
+ 
 // ----------------------------------------------------------------------
-
+ 
 export function useNavData() {
   const { t } = useLocales();
   const {user}=useContext(UserContext);
@@ -93,7 +94,7 @@ export function useNavData() {
     //   path: paths.dashboard.table.root,
     //   icon: ICONS.dashboard,
     // },
-
+ 
     {
       title: t('Employee Management'),
       path: paths.dashboard.employee.root,
@@ -126,7 +127,7 @@ export function useNavData() {
       //   {
       //     title: t('profile'),
       //   path: paths.dashboard.claims.compoffapprove },
-
+ 
       // ],
       key: 'claims',
     },
@@ -195,11 +196,11 @@ export function useNavData() {
     //     { title: t('profile'), path: paths.dashboard.user.root },
     //     { title: t('cards'), path: paths.dashboard.user.cards },
     //     { title: t('list'), path: paths.dashboard.user.list },
-
+ 
     //   ],
-
+ 
     // },
-
+ 
     // {
     //   title: t('ecommerce'),
     //   path: paths.dashboard.general.ecommerce,
@@ -226,7 +227,7 @@ export function useNavData() {
     //   icon: ICONS.file,
     // },
   ];
-
+ 
   const accountItems=[
     {
       title: t('Factory'),
@@ -292,9 +293,9 @@ export function useNavData() {
       icon: ICONS.g_configurations,
     },
   ]
-
-  
-
+ 
+ 
+ 
   useEffect(() => {
     const updateSidebarList = () => {
       if (user) {
@@ -305,22 +306,22 @@ export function useNavData() {
           icon: ICONS.g_dashboard,
           key:'Dashboard'
         })
-
+ 
         items.forEach((item) => {
           const permission = user?.rolePermissions[item?.key];
           console.log( typeof permission?.mainHeading,  permission?.mainHeading)
         if (permission && permission.hasOwnProperty('mainHeading') && permission.mainHeading) {
           console.log(`User Permission for ${item?.key}:`, permission);
           console.log(`mainHeading for ${item?.key}:`, permission.mainHeading);
-
+ 
           arr.push(item);
         }
-
-      
+ 
+     
         });
-
-        
-
+ 
+       
+ 
         setSidebarList(arr);
         if(user?.companyID==="COMP46"){
         var arr=[ {
@@ -333,8 +334,8 @@ export function useNavData() {
           icon: ICONS.g_expenses,
         }
        ];
-      
-      
+     
+     
         setSidebarListAccount(arr);
       }
         else{
@@ -342,13 +343,13 @@ export function useNavData() {
         }
       }
     };
-
+ 
     updateSidebarList(); // Initial update
-
+ 
     // You might want to add additional dependencies if needed.
   }, [user]);
-  
-
+ 
+ 
   const data = useMemo(
     () => [
      
@@ -356,8 +357,8 @@ export function useNavData() {
         subheader: t('HRMS'),
         items:sidebarList
       },
-
-    
+ 
+   
       {
         subheader: 'Accounting',
         items: sidebarListAccount,
@@ -365,8 +366,9 @@ export function useNavData() {
     ],
     [t,sidebarList,sidebarListAccount]
   );
-
+ 
   const data1 = useMemo(() => data, [data]);
-
+ 
   return data1;
 }
+ 

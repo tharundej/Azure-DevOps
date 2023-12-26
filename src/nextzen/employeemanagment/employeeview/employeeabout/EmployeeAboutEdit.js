@@ -1272,6 +1272,65 @@ console.log(currentUser,"jjjjjjjjjj")
               />
               </Grid>
 
+              <Grid md={6} xs={12} item>
+              
+        <TextField 
+          label="Monthly Salary/PM"  
+          id="Monthly"
+          value={currentUser?.monthlyPay}
+          type='number'
+          onChange={(e) => {
+            const enteredValue = parseFloat(e?.target?.value) ;
+            const newMonthlySalary = enteredValue;
+            const newTotalSalary =  enteredValue * 12+currentUser?.variablePay+currentUser?.bonus;
+          
+            setcurrentUser((prev) => ({
+              ...prev,
+              monthlyPay: newMonthlySalary,
+              ctc: newTotalSalary,
+            }));
+          }}
+        /> </Grid>
+
+<Grid md={6} xs={12} item>
+
+      <TextField 
+        label="Variable Pay/PA"  
+        id="Variable"
+        value={currentUser?.variablePay}
+        type='number'
+        onChange={(e) => {
+          const enteredValue = parseFloat(e?.target?.value) ;
+          const newVariablePay = enteredValue;
+          const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.bonus;
+
+          setcurrentUser((prev) => ({
+            ...prev,
+            variablePay: newVariablePay,
+            ctc: newTotalSalary,
+          }));
+        }}
+       
+      /></Grid>
+    <Grid md={6} xs={12} item>
+          <TextField 
+            label="Bonus Pay/PA"  
+            id="Bonus"
+            value={currentUser?.bonus}
+            type='number'
+            onChange={(e) => {
+              const enteredValue = parseFloat(e?.target?.value) ;
+              const newVariablePay = enteredValue;
+              const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.variablePay;
+    
+              setcurrentUser((prev) => ({
+                ...prev,
+                bonus: newVariablePay,
+                ctc: newTotalSalary,
+              }));
+            }}
+            /> </Grid>
+
 
               <Grid md={6} xs={12} item>
                   <TextField
@@ -1282,13 +1341,13 @@ console.log(currentUser,"jjjjjjjjjj")
                     variant="outlined"
                     id="CTC"
                      value={currentUser?.ctc}
-                    onChange={(e) => {
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        ctc: parseInt(e.target.value, 10) || ''
-                      }
-                      ))
-                    }}
+                    // onChange={(e) => {
+                    //   setcurrentUser(prev=>({
+                    //     ...prev,
+                    //     ctc: parseInt(e.target.value, 10) || ''
+                    //   }
+                    //   ))
+                    // }}
                   />
                 </Grid>
 
