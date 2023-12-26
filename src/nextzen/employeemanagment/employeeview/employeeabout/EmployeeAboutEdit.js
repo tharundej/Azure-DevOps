@@ -245,7 +245,7 @@ console.log(currentUser,"jjjjjjjjjj")
             method: 'post',
             maxBodyLength: Infinity,
             // url: `${baseUrl}/updateOnboardingForm`,
-            url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateOnboardingForm",
+            url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
               'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
@@ -1282,6 +1282,7 @@ console.log(currentUser,"jjjjjjjjjj")
               <Grid md={6} xs={12} item>
               
         <TextField 
+         style={{  width: '100%' }}
           label="Monthly Salary/PM"  
           id="Monthly"
           value={currentUser?.monthlyPay}
@@ -1302,6 +1303,7 @@ console.log(currentUser,"jjjjjjjjjj")
 <Grid md={6} xs={12} item>
 
       <TextField 
+       style={{  width: '100%' }}
         label="Variable Pay/PA"  
         id="Variable"
         value={currentUser?.variablePay}
@@ -1321,6 +1323,7 @@ console.log(currentUser,"jjjjjjjjjj")
       /></Grid>
     <Grid md={6} xs={12} item>
           <TextField 
+           style={{  width: '100%' }}
             label="Bonus Pay/PA"  
             id="Bonus"
             value={currentUser?.bonus}
@@ -1357,45 +1360,8 @@ console.log(currentUser,"jjjjjjjjjj")
                     // }}
                   />
                 </Grid>
-              <Grid md={6} xs={12} item>
-              <TextField 
-              fullWidth
-          label="Monthly Salary/PM"  
-          id="Monthly"
-          variant="outlined"
-          value={currentUser?.monthlyPay}
-          type='number'
-          onChange={(e) => {
-            const enteredValue = parseFloat(e?.target?.value) ;
-            const newMonthlySalary = enteredValue;
-            const newTotalSalary =  enteredValue * 12+currentUser?.variablePay+currentUser?.bonus;
-          
-            setcurrentUser((prev) => ({
-              ...prev,
-              monthlyPay: newMonthlySalary,
-              ctc: newTotalSalary,
-            }));
-          }}
-        />
-                </Grid>
-              <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="CTC"
-                    label="CTC"
-                    variant="outlined"
-                    id="CTC"
-                     value={currentUser?.ctc}
-                    onChange={(e) => {
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        ctc: parseInt(e.target.value, 10) || ''
-                      }
-                      ))
-                    }}
-                  />
-                </Grid>
+           
+              
 
 
 
@@ -1426,24 +1392,7 @@ console.log(currentUser,"jjjjjjjjjj")
          Follow the salary structure 
       </label>
 
-      <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="ctc"
-                    label="Enter CTC"
-                    variant="outlined"
-                    id="ctc"
-                    value={currentUser?.ctc}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                       ctc: parseInt(e.target.value, 10)
-                      }))
-                    }}
-                  />
-                  </Grid>
+    
     </div>
                 
             
