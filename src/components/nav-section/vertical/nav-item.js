@@ -41,9 +41,12 @@ export default function NavItem({ item, open, depth, active, config, externalLin
 
       {!(config.hiddenLabel && !subItem) && (
         <ListItemText
-          primary={<Tooltip title={title} placement="bottom-end">
+          primary={
+          // <Tooltip title={title} placement="bottom-end">
           <span>{title}</span>
-        </Tooltip>}
+        // </Tooltip>
+        
+      }
           secondary={
             caption ? (
               <Tooltip title={caption} placement="bottom-end">
