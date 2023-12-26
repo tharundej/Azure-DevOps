@@ -9,8 +9,9 @@ import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 import CreateExpenses from './CreateExpenses';
 import { Dialog } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
+import { baseUrl } from '../global/BaseUrl';
 
-export default function Vehicle() {
+export default function Vehicle({updateTotalExpense}) {
   const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
@@ -57,6 +58,10 @@ export default function Vehicle() {
       handleDeleteConfirmed();
     }
   };
+  const updateTotalState=(obj)=>{
+    updateTotalExpense(obj)
+
+  }
   const handleCancelDelete = () => {
     setDeleteData(null);
     setConfirmDeleteOpen(false);
@@ -126,6 +131,40 @@ export default function Vehicle() {
     { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
     { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
+  const ApiHitUpdate =async()=>{
+   
+    const payload = defaultPayload
+   
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl + '/listExpenses',
+      headers: {
+        Authorization:  user?.accessToken ,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data;
+          console.log(JSON.stringify(response.data));
+        updateTotalExpense(rowsData)
+
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(result, 'resultsreults');
+
+}
+useEffect(()=>{
+  console.log("useEffect called ")
+  ApiHitUpdate();
+} ,[])
   return (
     <>
       <SnackBarComponent
@@ -170,8 +209,9 @@ export default function Vehicle() {
         rowActions={actions}
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
-        filterName="VehicleHead"
+        filterName="VehicleFilter"
         count={count}
+        updateTotalState={updateTotalState}
       />
     </>
   );

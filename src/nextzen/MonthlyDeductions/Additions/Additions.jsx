@@ -24,6 +24,7 @@ export default function Additions({defaultPayload,componentPage}){
   const [showFilter,setShowFilter]= useState(false)
   const [loader,setLoader] =useState()
   const [openedCard, setOpenedCard] = useState(null);
+  const [payloadData,setPayloadData] = useState(null)
   const handleClickClose=()=> {
     setShowFilter(false)
     console.log(filterData,"filterdataa");
@@ -48,19 +49,30 @@ const MenuProps = {
         { id: "comments", label: "Remarks", minWidth: "8pc", type: "text" },
 
       ]
-   
+  
+const handleChange = (event) => {
+  setPersonName(event?.target?.value)
+  setCount(count+1)
+};
+
 useEffect(()=>{
   if(componentPage=="MyRequests"){
-  setPersonName(user?.employeeID)
+    setPersonName(user?.employeeID)
+    setPayloadData(defaultPayload)
   }
-},[])
+  else if(componentPage!="MyRequests" && personName!=null)
+  {
+    setPayloadData({employeeID:personName})
+  }
+},[personName,componentPage])
 
-      useEffect(()=>{
-        getEmployeesList()
-        if(personName){
-          getLatestAdditions()
-        }
-      },[personName])
+useEffect(()=>{
+  getEmployeesList()
+  if(personName!=null){
+    getLatestAdditions()
+  }
+  
+},[personName])
 
       const getEmployeesList =()=>{
         const data ={
@@ -80,10 +92,7 @@ useEffect(()=>{
          })
       }
     
-const handleChange = (event) => {
-  setPersonName(event?.target?.value)
-  setCount(count+1)
- };
+
 
  const handleAddition=(index)=>{
   const newExpanded = [...additionCard];
@@ -101,7 +110,7 @@ const [dropdownadditionType,setdropdownadditionType]=useState([])
 const [datesFiledArray,setDatesFiledArray]=useState(
   [
     {
-      field:'externalFilters',
+      field:'date',
       from:'additionDateStart',
       to:'additionDateEnd'
     }
@@ -174,10 +183,17 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     setDatesData([])
     const data = await formDateDataStructure();
     const data1=await formWithDropdown(data);
-    console.log(data,"dataaa")
-    setFilterDate(data);
+  setPayloadData(prevPayloadData => ({
+      ...prevPayloadData,
+      externalFilters: {
+          ...data,
+      },
+  }));
     handleClickClose()
   }
+  useEffect(()=>{
+    getLatestAdditions()
+  },[payloadData])
   const handleCancel = async()=>{ 
     setdropdownadditionType([]);
     setDates({
@@ -187,10 +203,7 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     setShowFilter(false);
   }
 
-  const payloadData = (componentPage=="MyRequests")?defaultPayload:{
-    employeeID:personName,
-    companyID:user?.companyID,
-} 
+
 
 const getLatestAdditions =()=>{
   setLoader(true)
