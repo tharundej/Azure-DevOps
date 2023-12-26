@@ -526,6 +526,22 @@ export const dashboardRoutes = [
     ],
   },
   {
+    path: 'organizationchart',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <OrganizationChart/>, index: true },
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
     path: 'claims',
     element: (
       <AuthGuard>

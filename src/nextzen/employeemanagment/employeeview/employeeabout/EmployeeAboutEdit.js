@@ -41,6 +41,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+   console.log("🚀 ~ file: EmployeeAboutEdit.js:44 ~ EmployeeAboutEdit ~ currentUserData:", currentUserData)
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
@@ -80,7 +81,13 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
   }, []);
 
   const [type,setType]=useState({label:"Permanent",id:'1'})
-    const [currentUser,setcurrentUser]=useState()
+    const [currentUser,setcurrentUser]=useState({
+      "ctc":currentUserData?.ctc || 0,
+      "monthlyPay":currentUserData?.monthlyPay || 0,
+      "variablePay":currentUserData?.variablePay || 0,
+      "bonus":currentUserData?.bonus || 0,
+    } )
+    console.log("🚀 ~ file: EmployeeAboutEdit.js:87 ~ EmployeeAboutEdit ~ currentUser:", currentUser)
 
     useEffect(()=>{
       if(currentUserData){
@@ -1348,6 +1355,45 @@ console.log(currentUser,"jjjjjjjjjj")
                     //   }
                     //   ))
                     // }}
+                  />
+                </Grid>
+              <Grid md={6} xs={12} item>
+              <TextField 
+              fullWidth
+          label="Monthly Salary/PM"  
+          id="Monthly"
+          variant="outlined"
+          value={currentUser?.monthlyPay}
+          type='number'
+          onChange={(e) => {
+            const enteredValue = parseFloat(e?.target?.value) ;
+            const newMonthlySalary = enteredValue;
+            const newTotalSalary =  enteredValue * 12+currentUser?.variablePay+currentUser?.bonus;
+          
+            setcurrentUser((prev) => ({
+              ...prev,
+              monthlyPay: newMonthlySalary,
+              ctc: newTotalSalary,
+            }));
+          }}
+        />
+                </Grid>
+              <Grid md={6} xs={12} item>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name="CTC"
+                    label="CTC"
+                    variant="outlined"
+                    id="CTC"
+                     value={currentUser?.ctc}
+                    onChange={(e) => {
+                      setcurrentUser(prev=>({
+                        ...prev,
+                        ctc: parseInt(e.target.value, 10) || ''
+                      }
+                      ))
+                    }}
                   />
                 </Grid>
 

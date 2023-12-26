@@ -138,6 +138,12 @@ export function useNavData() {
       key: 'payroll',
     },
     {
+      title: t('organizationchart'),
+      path: paths.dashboard.organizationchart.root,
+      icon: ICONS.g_organizationchart,
+      key: 'organizationchart',
+    },
+    {
       title: t('IT Declaration'),
       path: paths.dashboard.itdeclaration.root,
       icon: ICONS.g_itDeclarations,

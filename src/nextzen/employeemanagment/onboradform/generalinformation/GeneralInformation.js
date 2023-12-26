@@ -116,7 +116,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     firstName: Yup.string()
     .required('First Name is Required')
       .matches(/^[A-Za-z ]+$/, 'First Name must contain only letters and spaces'),
-    middleName: Yup.string() .matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
+    middleName: Yup.string(), //.matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
     lastName: Yup.string().required("Last name is required") .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
    
     contactNumber: Yup.number()

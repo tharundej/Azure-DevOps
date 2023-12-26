@@ -16,7 +16,7 @@ import {
   FileInput,
   Input,
 } from '@mui/material';
-Autocomplete;
+
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
@@ -62,10 +62,7 @@ const DeclarationDetails = () => {
   const startYear = 2022;
   const endYear = 2030;
   const [selectedFile, setSelectedFile] = useState(null);
-  //  const financialYears = [];
-  //  for (let year = startYear; year <= endYear; year++) {
-  //    financialYears.push(`${year}-${year + 1}`);
-  //  }
+  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -73,10 +70,8 @@ const DeclarationDetails = () => {
   };
 
   const handleUploadClick = () => {
-    // Call your function to handle the zip file upload
     if (selectedFile) {
       handleZipFileUpload(selectedFile);
-      // Clear the selected file after upload
       setSelectedFile(null);
     }
   }
@@ -217,11 +212,10 @@ setSelectedFiles(selectedFiles)
   }, [reloading, selectedYear?.financialYear]);
 
   const updateDeclarationsList = async () => {
-    const missingAttachments = data?.some((item) => item.attachmentsRequired === 1 && !selectedFiles[item.configId]?.length);
+    const missingAttachments = data?.some((item) => item.attachmentsRequired === 1 && !selectedFiles[item.configId]?.length && parseInt(item.declared, 10) > 0 );
 
     if (missingAttachments) {
-      // Show an error message or handle the case where attachments are missing
-      // enqueueSnackbar('Attachments are required for specific Section.', { variant: 'error' });
+
       enqueueSnackbar('Related Doccument is required for proof.', { variant: 'error' });
       setLoading(false);
       return;
@@ -399,7 +393,7 @@ setSelectedFiles(selectedFiles)
   
 
 
-  console.log(selectedFiles ,"file uploaded inselectedFiles")
+  console.log(selectedFiles  ,selectedYear,"file uploaded inselectedFiles")
   return (
     <div>
       {loading ? (
@@ -421,9 +415,7 @@ setSelectedFiles(selectedFiles)
                 <TextField
                   {...params}
                   label={
-                    financialYears && financialYears.length > 0
-                      ? 'Please Select Financial Year'
-                      : 'No Financial Years Available'
+                    'Please Select Financial Year'
                   }
                 />
               )}

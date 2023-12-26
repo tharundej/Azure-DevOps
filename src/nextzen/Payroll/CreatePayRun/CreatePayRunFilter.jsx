@@ -46,6 +46,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
+import Badge from '@mui/material/Badge';
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
@@ -202,6 +203,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
   const [openDateRange, setOpendateRange] = useState(false);
   const [departmentLength, setDepartmentLength] = useState();
   const [designationtLength, setDesignationLength] = useState();
+  const [badgeContent, setBadgeContent] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -211,6 +213,7 @@ export default function CreatePayRunFilter({ filterData, filterOptions, filterSe
 
   const handleApply = async () => {
     console.log(formData, 'form dat  in apply');
+    setBadgeContent(true);
     setDatesData([]);
     // const data = await formWithDropdown();
     const obj = {
@@ -421,11 +424,29 @@ const [openComponent ,setOpenComponent] =useState(false)
         </Grid>
         <Grid item md={2} xs={2}>
           <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-            </Stack>
+            </Stack> */}
           </Grid>
         </Grid>
       </Grid>

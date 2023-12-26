@@ -9,6 +9,7 @@ import TimeSheetApproval from './components/TimeSheetApproval';
 import UserContext from '../context/user/UserConext';
 import TimeSheetByManager from './components/timesheetbymanager/TimeSheetByManager';
 import { CalendarView } from './monthlyTimeSheet/Calendar/view';
+import TimeSheetAttendance from './components/timesheetattendance/TimeSheetAttendance';
 
 
 
@@ -45,6 +46,11 @@ export default function TimeSheet() {
           label: 'My Team Time Sheet ',
           content: <TimeSheetByManager key="myTeam" />,
         },
+        // {
+        //   id: 'myTeamAttendance',
+        //   label: 'My Team Attendence',
+        //   content: <TimeSheetAttendance key="myTeamAttendance" />,
+        // },
         // Add other data as needed
       ];
       useEffect(() => {
@@ -73,6 +79,11 @@ export default function TimeSheet() {
         arrContents.push( 
          
            <CalendarView key="monthly" />
+        );
+        arrLabels.push('Team Attendance',);
+        arrContents.push( 
+         
+           <TimeSheetAttendance key="myTeamAttendance" />
         );
         setTabLabels(arrLabels);
         setTabContents(arrContents);

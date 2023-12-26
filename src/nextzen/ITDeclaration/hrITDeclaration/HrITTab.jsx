@@ -370,7 +370,7 @@ useEffect(()=>{
       financialYear: selectedYear?.financialYear,
       status: type
   }
-  const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
+  // const baseUrl = 'https://xql1qfwp-3001.inc1.devtunnels.ms/erp'
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -561,6 +561,7 @@ useEffect(()=>{
                             <TableCell>{row.taxLimit}</TableCell>
                             <TableCell>
                               <TextField
+                              disabled
                                 type="number"
                                 value={row.declared}
                                 // onChange={handleAgeChange(row.configId)}
