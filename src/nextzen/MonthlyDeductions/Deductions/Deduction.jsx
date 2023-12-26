@@ -30,7 +30,7 @@ export default function Deduction({defaultPayload,componentPage}) {
    const [showFilter,setShowFilter]= useState(false)
    const [loader,setLoader] = useState(false)
    const [openedCard, setOpenedCard] = useState(null);
-   const [payloadData,setPayloadData] = useState();
+   const [payloadData,setPayloadData] = useState(null);
    const [deductionCard,setDeductionCard] = useState(Array(deductionDetails?.data?.length).fill(false));
    const {user} = useContext(UserContext)
   // const TABLE_HEAD = [
@@ -53,23 +53,24 @@ export default function Deduction({defaultPayload,componentPage}) {
   //   { id: "comments", label: "HR Remarks", minWidth: "10pc", type: "text" }
 
   // ];
+
+  const handleChange = (event) => {
+    setPersonName(event?.target?.value)
+    setCount(count+1)
+   };
+
   useEffect(()=>{
     if(componentPage=="MyRequests"){
       setPersonName(user?.employeeID)
-    }
-  },[])
-  
-  useEffect(()=>{
-    if(componentPage=="MyRequests"){
       setPayloadData(defaultPayload)
     }
-    else{
+    else if(componentPage!="MyRequests" && personName!=null)
+    {
       setPayloadData({employeeID:personName})
     }
-},[])
-
-useEffect(()=>{
+  },[personName,componentPage])
  
+useEffect(()=>{
   getEmployeesList()
   if(personName!=null){
     getLatestDeductions()
@@ -115,10 +116,7 @@ const getDeductionDetails =(deductionType)=>{
    })
 }
 
-const handleChange = (event) => {
-  setPersonName(event?.target?.value)
-  setCount(count+1)
- };
+
  const handleDeduction=(deductionType,index)=>{
   const newExpanded = [...deductionCard];
   newExpanded[index] = !newExpanded[index];
@@ -177,7 +175,7 @@ const [dropdowndeductiontype,setdropdowndeductiontype]=useState([])
 const [datesFiledArray,setDatesFiledArray]=useState(
   [
     {
-      field:'externalFilters',
+      field:'deductedDate',
       from:'deductedDateStart',
       to:'deductedDateEnd'
     }
@@ -252,11 +250,16 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     const data1=await formWithDropdown(data);
     setPayloadData(prevPayloadData => ({
       ...prevPayloadData,
-      ...data,
+      externalFilters: {
+          ...data,
+      },
   }));
-    setFilterDate(data);
     handleClickClose()
+   
   }
+  useEffect(()=>{
+    getLatestDeductions()
+  },[payloadData])
   const handleCancel = async()=>{
     setdropdowndeductiontype([]);
     setDates({
