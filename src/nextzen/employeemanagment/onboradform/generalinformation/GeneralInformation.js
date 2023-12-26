@@ -979,7 +979,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   }}
                 />
 
-                <RHFTextField name="state" label="State/Region" />
+              
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="address" label="Address" />
                 <RHFTextField name="zipCode" label="Zip/Code" />
