@@ -131,6 +131,7 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../settings/SettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
+import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
 
 const defaultFilters = {
   name: '',
@@ -806,6 +807,10 @@ const [index, setIndex]=useState(""); // index setting
 {filterName === 'CreatePayRunFilter' && (
             <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
+          
+{filterName === 'EarningAndDeductionFilter' && (
+            <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
           {/* accounts  */}
           <Card>
             <TableContainer
@@ -831,7 +836,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'}  >
+                <Table size={table.dense ? 'medium' : 'small'}  stickyHeader={true}>
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
