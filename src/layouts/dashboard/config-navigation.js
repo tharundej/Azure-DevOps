@@ -52,6 +52,7 @@ const ICONS = {
   g_shiftManagement: icon('shiftManagement'),
   g_claims: icon('claims'),
   g_payroll: icon('payroll'),
+  g_organizationchart:icon('organizationchart'),
   g_itDeclarations: icon('itDeclarations'),
   g_monthlyAdditionalDeductions: icon('monthlyAdditionalDeductions'),
   g_appraisal: icon('appraisal'),
@@ -135,6 +136,12 @@ export function useNavData() {
       path: paths.dashboard.payroll.root,
       icon: ICONS.g_payroll,
       key: 'payroll',
+    },
+    {
+      title: t('organizationchart'),
+      path: paths.dashboard.organizationchart.root,
+      icon: ICONS.g_organizationchart,
+      key: 'organizationchart',
     },
     {
       title: t('IT Declaration'),

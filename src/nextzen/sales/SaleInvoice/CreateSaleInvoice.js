@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import { getLocationAPI, getUnitOfMeasure, getVendorAPI } from 'src/api/Accounts/Common';
+import { getLocationAPI, getUnitOfMeasure, getVendorAPI, getListofSoNumberAPI } from 'src/api/Accounts/Common';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 import instance from 'src/api/BaseURL';
 
@@ -22,6 +23,7 @@ import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 export default function CreateSaleInvoice({ currentData, handleClose }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
@@ -33,15 +35,31 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
       ProductCategory: currentData?.ProductCategory || '',
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
+      companyId: user?.companyID ? user?.companyID : '',
+      salesOrderNo: currentData?.salesOrderNo || '',
     }),
     [currentData]
   );
 
   const [vendorMaterials, setVendorMaterials] = useState([]);
   const [unitOptions, setUnitOptions] = useState([]);
+  const [salesOrderOptions, setSalesOrderOptions] = useState();
+  const [selectedSalesOrder, setSelectedSalesOrder] = useState();
 
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -79,6 +97,60 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
+
+  const fetchSalesOrder = async () => {
+    try {
+      const data = {
+        companyId: user?.companyID ? user?.companyID : '',
+      };
+      const response = await getListofSoNumberAPI(data);
+      if (response === null) {
+        handleCallSnackbar('No Slaes Order Found. Please Add Sales Order', 'warning');
+      } else {
+        setSalesOrderOptions(response);
+        setSelectedSalesOrder(
+          defaultValues.purchaseOrderID ||
+            (response.length > 0 ? response[0].purchaseOrderID : null)
+        );
+      }
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
+  useEffect(() => {
+    fetchSalesOrder();
+  }, []);
+  // const handlePurchaseOrderChange = async (event, newValue) => {
+  //   console.log('newValue', newValue);
+  //   try {
+  //     const data = {
+  //       companyId: user?.companyID ? user?.companyID : '',
+  //       poNumber: newValue?.poNumber ? newValue?.poNumber : '',
+  //     };
+  //     const response = await ListPurchaseOrderDetailsAPI(data);
+  //     console.log({ response });
+  //     if (response === null) {
+  //       handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
+  //     } else {
+  //       setValue('poNumber', response?.poNumber);
+  //       setValue('PODate', response?.poDate);
+  //       setValue('ExpectedDeliveryDate', response?.expectedDeliveryDate);
+  //       setValue('paymentMode', response?.paymentTerm);
+  //       setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+  //       setValue('locationId', response?.locationId ? response?.locationId : 0);
+  //       setValue('VendorName', response?.vendorName);
+  //       setValue('VendorAddress', response?.vendorAddress);
+  //       setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+  //       const materialArray = Object.values(response?.purchaseMaterial || {});
+  //       setContentList(materialArray);
+  //       console.log(materialArray);
+  //     }
+  //   } catch (error) {
+  //     console.log('API request failed:', error.message);
+  //     handleCallSnackbar(error.message, 'warning');
+  //   }
+  // };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
@@ -259,6 +331,16 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
+             <RHFAutocomplete
+              name="poId"
+              id="poId"
+              options={salesOrderOptions || []}
+              // onChange={handlePurchaseOrderChange}
+              getOptionLabel={(option) => option.salesOrderNo}
+              renderInput={(params) => (
+                <TextField {...params} label="Select SO Number" variant="outlined" />
+              )}
+            />
             <RHFTextField name="SO Number" label="SO Number" />
             <RHFTextField name="Invoice Number" label="Invoice Number" />
 

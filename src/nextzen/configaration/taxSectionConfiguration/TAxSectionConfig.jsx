@@ -70,6 +70,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
    
   ];
+  const [errors, setErrors] = useState({
+    taxScheme: '',
+    taxSection: '',
+  });
   const [count,setCount] = useState(0)
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
@@ -145,8 +149,36 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     console.log('submitted data111', data);
 
   });
+ // Function to validate the form fields
+ const validateForm = () => {
+  const errors = {};
 
+  // Validate taxSection
+  if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+    errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+  }
+
+  // Validate taxScheme
+  if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+    errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
+  }
+
+  if (isNaN(formData?.taxLimit)) {
+    errors.taxLimit = 'Invalid value. Please enter a valid number.';
+  }
+  return errors;
+};
   const updateDepartment = async (data) => {
+      // Validate the form fields
+      const validationErrors = validateForm();
+  
+      // Update the error state for each field individually
+      setErrors(validationErrors);
+    
+      // If there are validation errors, return without making the API call
+      if (Object.keys(validationErrors).length > 0) {
+        return;
+      }
     const payload = {
         companyId:cmpId,
        configId:valueSelected?.configId,
@@ -318,6 +350,8 @@ const  deleteFunction =(rowdata, event)=>{
                 }
                 variant="outlined"
                 fullWidth
+                helperText={errors.taxSection}  // Display error message
+                error={Boolean(errors.taxSection)}  // Add error style
               />
 
               <TextField
@@ -329,12 +363,15 @@ const  deleteFunction =(rowdata, event)=>{
                 }
                 variant="outlined"
                 fullWidth
+                helperText={errors.taxScheme}  // Display error message
+                error={Boolean(errors.taxScheme)}  // Add error style
               />
           
 
               <TextField
                 label="Limit "
                 name="taxLimit"
+                type='number'
                 value={valueSelected?.taxLimit || null}
                  onChange={(e, newValue) =>
                   handleSelectChange('taxLimit', newValue , e|| null)

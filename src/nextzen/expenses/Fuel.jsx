@@ -7,11 +7,12 @@ import UserContext from '../context/user/UserConext';
 import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 import CreateExpenses from './CreateExpenses';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { Box, Card, Dialog, Grid, Typography } from '@mui/material';
+import { Box, Card , CardContent, Dialog, Grid, Typography } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { update } from 'lodash';
 import { baseUrl } from '../global/BaseUrl';
 // import { Box, Button, Card, CardContent, Dialog, Grid, Typography } from '@mui/material';
+// import { Box } from '@mui/system';
 
 export default function Fuel({ updateTotalExpense }) {
   const { user } = useContext(UserContext);
@@ -207,6 +208,7 @@ export default function Fuel({ updateTotalExpense }) {
       </Helmet>
      
 
+      
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/listExpenses"

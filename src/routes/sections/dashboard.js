@@ -161,7 +161,7 @@ const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
 const PurchaseOrder = lazy(() => import('src/nextzen/Purchase/PurchaseOrder/PurchaseOrder'));
 const Balancesheet = lazy(() => import('src/nextzen/balancesheet/BalanceSheet'));
-
+const OrganizationChart = lazy(() => import('src/nextzen/organizationChart/OrgView'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -391,6 +391,7 @@ export const dashboardRoutes = [
           },
         ],
       },
+
       {
         path: 'vendor',
         children: [
@@ -522,6 +523,22 @@ export const dashboardRoutes = [
     ],
   },
   {
+    path: 'organizationchart',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <OrganizationChart/>, index: true },
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
     path: 'claims',
     element: (
       <AuthGuard>
@@ -622,7 +639,7 @@ export const dashboardRoutes = [
       { path: 'roleconfiguration', element: <RoleConfiguration /> },
 
    { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
-  
+
   ],
 },
 ];
