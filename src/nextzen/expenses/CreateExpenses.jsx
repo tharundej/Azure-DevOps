@@ -172,6 +172,15 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
+  const HandleInputChangeFuel = (e) => {
+    setValue(e?.target?.name, e?.target?.value);
+  
+    const parsedTotalLiter = parseFloat(watch('totalLiter')) || 0;
+    const parsedRatePerLiter = parseFloat(watch('ratePerLiter')) || 0;
+  
+    // Update the totalAmount based on the calculation
+    setValue('totalAmount', parsedTotalLiter * parsedRatePerLiter);
+  };
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -313,6 +322,20 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                   onInput={(e) => {
                     e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
                   }}
+                />
+                  <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChangeFuel(e)}
+  name="ratePerLiter"  
+  label="Rate Per Liter"
+  defaultValue={0}
+                  // inputProps={{
+                  //   maxLength: 10,
+                  //   pattern: '^[0-9]*$',
+                  // }}
+                  // onInput={(e) => {
+                  //   e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  // }}
                 />
                 <RHFTextField
                   name="fuelType"
