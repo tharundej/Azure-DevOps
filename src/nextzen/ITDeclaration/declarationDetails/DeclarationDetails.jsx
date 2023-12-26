@@ -16,7 +16,7 @@ import {
   FileInput,
   Input,
 } from '@mui/material';
-Autocomplete;
+
 import InputAdornment from '@mui/material/InputAdornment';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify/iconify';
@@ -393,7 +393,7 @@ setSelectedFiles(selectedFiles)
   
 
 
-  console.log(selectedFiles ,"file uploaded inselectedFiles")
+  console.log(selectedFiles  ,selectedYear,"file uploaded inselectedFiles")
   return (
     <div>
       {loading ? (
@@ -415,9 +415,7 @@ setSelectedFiles(selectedFiles)
                 <TextField
                   {...params}
                   label={
-                    financialYears && financialYears.length > 0
-                      ? 'Please Select Financial Year'
-                      : 'No Financial Years Available'
+                    'Please Select Financial Year'
                   }
                 />
               )}
