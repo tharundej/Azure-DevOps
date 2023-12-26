@@ -1,26 +1,30 @@
 import { useEffect,useState } from "react"
-import { useParams } from "src/routes/hooks";
+import { useParams, useRouter } from "src/routes/hooks";
 import { baseUrl } from "src/nextzen/global/BaseUrl";
 import axios from "axios";
 import { _orders, ORDER_STATUS_OPTIONS } from 'src/_mock';
 import LoanHistory from "./loanHistory";
 import { CardContent,Card, CardHeader, Typography,Grid,Button } from "@mui/material";
 import { formatDate } from "src/nextzen/global/GetDateFormat";
+import Iconify from "src/components/iconify/iconify";
+import { paths } from "src/routes/paths";
 export default function loanDetails(){
     const params = useParams();
+    const router = useRouter()
   const { id } = params;
 
   console.log(id,"iddddd")
-    useEffect(()=>{
-        getLoanID()
-        // if(employeevalue){
-            handleLoanExpand()
-        // }
-    },[])
-
+   
 
     const [loanDetails,setloanDetails] = useState()
-    const [employeevalue,setEmployeeValue]=useState()
+    const [employeevalue,setEmployeeValue]=useState(null)
+    useEffect(()=>{
+      getLoanID()
+      if(employeevalue!=null){
+          handleLoanExpand()
+      }
+  },[employeevalue])
+
     const getLoanID=()=>{
         const loanPayload ={
           loanID:parseInt(id)
@@ -45,8 +49,8 @@ export default function loanDetails(){
       }
     const handleLoanExpand=()=>{
         const loanPayload ={
-          employeeID:"GANG1",
-          loanID:60
+          employeeID:employeevalue,
+          loanID:parseInt(id)
         }
         const config={
           method: 'POST',
@@ -66,6 +70,11 @@ export default function loanDetails(){
             });
       
       }
+
+      const handleCancel=()=>{
+        console.log("cancelll")
+        
+      }
       const [showAll, setShowAll] = useState(false);
 
       const visibleItemsCount = 4
@@ -74,12 +83,13 @@ export default function loanDetails(){
      
     return (
         <>
-
+        
         <Card sx={{marginBottom:1}}>
+        <CardHeader title="Loan Details"/>
           <Grid sx={{display:'flex'}}>
-          
+         
           <CardContent>
-          <Typography variant="subtitle1">Loan Details</Typography>
+          
           <Typography variant="body2">Requested Type : {loanDetails?.requestType}</Typography>
             <Typography  variant="body2">Requested Amount : {loanDetails?.requestAmount}</Typography>
             <Typography variant="body2">Requested Date : {formatDate(loanDetails?.requestDate)}</Typography>
@@ -89,7 +99,7 @@ export default function loanDetails(){
             <Typography variant="body2">Paid Installments : {loanDetails?.InstallmentDetails.length}</Typography>
           </CardContent>
           <CardContent>
-          <Typography variant="subtitle1">Installment Details</Typography>
+          {visibleInstallments?.length >0 ?<><Typography variant="subtitle1">Installment Details</Typography>
           <Grid container spacing={2}>
               
               {visibleInstallments?.map((item, index) => (
@@ -111,11 +121,12 @@ export default function loanDetails(){
             </Button>
           </Grid>
         )}
-            </Grid>
+            </Grid></>:null}
           </CardContent>
           </Grid>
           </Card>
          <LoanHistory  history={loanDetails?.approverComments} userHistory={loanDetails?.comments}/>
+         <Button variant="outlined" sx={{marginTop:1}} onClick={handleCancel}>Cancel</Button>
         </>
     )
 } 
