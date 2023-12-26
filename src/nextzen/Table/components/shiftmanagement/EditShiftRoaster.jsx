@@ -459,7 +459,7 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
                   required
                   value={editData?.shiftGroupName}
                   name="shiftGroupName"
-                  label="Shift Group Name "
+                  label="Shift Group Name"
                   readonly
                 />
 
