@@ -112,7 +112,7 @@ const EmployeeView = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data.data,'setUserData'));
         setUserData(response.data.data)
-       console.log( `${ASSETS_API}/assets/images/cover/cover_${1 + 1}.jpg`,'avatarUrl')
+       console.log( response.data.data,'avatarUrl')
 
       })
       .catch((error) => {
@@ -183,7 +183,7 @@ const EmployeeView = () => {
         role={userData?.roleName}
         name={userData?.firstName}
         //  avatarUrl="http://192.168.1.199:3001/erp/download?file=COMP22_GANG31_20231212100718_489121__fnss__apple__fnse__.jpg"
-        avatarUrl ={`_GANG1_20231211093305_473297__fnss__gojo___fnse__.jpg`}
+        avatarUrl ={userData?.imageData}
         coverUrl={bg}
       />}
        

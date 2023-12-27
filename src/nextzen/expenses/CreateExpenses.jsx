@@ -327,7 +327,7 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                   type="number"
                   onChange={(e) => HandleInputChangeFuel(e)}
   name="ratePerLiter"  
-  label="Rate Per Liter"
+  label="Price Per Liter"
   defaultValue={0}
                   // inputProps={{
                   //   maxLength: 10,

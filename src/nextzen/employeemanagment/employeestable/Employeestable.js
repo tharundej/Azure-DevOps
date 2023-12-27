@@ -139,7 +139,7 @@ export default function EmployeeTable() {
     },
      
     "sort": {
-      "key": 0,
+     "key": 1,
       "orderBy": "last_updated_by"
   }
     }

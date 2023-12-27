@@ -62,7 +62,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
    const handleOpen = () => setOpen(true);
 
   const NewUserSchema1 = Yup.object().shape({
-    marketRate: Yup.number().required('Market Rate is Required'),
+    marketRate: Yup.number().required('Market Salary is Required'),
     minimum: Yup.number().required('Minimum is Required'),
     midpoint: Yup.number().required('Midpoint is Required'),
     maximum: Yup.number().required('Maximum is Required'),
@@ -168,7 +168,7 @@ export default function SalaryStructureForm({ openModal,currentUserData,handleCl
                     fullWidth
                     type="number"
                     name="marketRate"
-                    label="Market Rate"
+                    label="Market Salary"
                     variant="outlined"
                     id="motherName"
                     value={currentUser?.marketRate}

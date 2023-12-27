@@ -160,7 +160,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
       </Grid>
 
       <Grid item>
-        {!edit && <Iconify 
+      {employeeStatouryData?.statutoryID!==0   && <Iconify 
         sx={{cursor: "pointer",color:'orange'}}
           onClick={()=>{
             setEndpoint("updateStatutoryDetails");
@@ -310,6 +310,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Typography variant='h5' component="body">Statoury Information</Typography>
 
         </Grid>
+        {employeeStatouryData?.statutoryID!==0  && 
         <Grid sx={{cursor: "pointer"}} onClick={()=>{
             console.log('handle clickeddd')
             handleEdit()
@@ -321,6 +322,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Button>Edit</Button>
 
         </Grid>
+        }
     </Grid>
      
       <Grid container spacing={{ xs: 5, sm: 5, lg: 20 ,md:5}}>
