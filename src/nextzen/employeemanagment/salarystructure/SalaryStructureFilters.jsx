@@ -415,7 +415,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                     
                       <Autocomplete
                         disablePortal
-                        id="Desgination"
+                        id="Designation"
                         options={options?.desginationOptions  || []}
                         value={optionsValue?.desginationValue}
                         getOptionLabel={(option) => option.designationName}
@@ -450,7 +450,7 @@ export default function SalaryStructureFilters({ filterData, filterOptions ,filt
                           
                           setOptionsValue(newArr)
                         }}
-                        renderInput={(params) => <TextField {...params} label="Desgination"
+                        renderInput={(params) => <TextField {...params} label="Designation"
                         style={{  width: '100%' }} />}
                       />
                     </Grid>

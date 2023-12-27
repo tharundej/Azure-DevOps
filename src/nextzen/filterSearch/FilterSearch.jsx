@@ -83,8 +83,8 @@ function getStyles(name, personName, theme) {
 export default function SearchFilter({filterSearch,filterData}){
   const theme = useTheme();
   const pfTypenames = [
-    'TypeA',
-    'TypeH'
+    'pfnolimit',
+    'pflimit'
     
   ];
 

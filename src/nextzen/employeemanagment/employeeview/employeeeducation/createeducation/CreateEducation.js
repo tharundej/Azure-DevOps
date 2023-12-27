@@ -425,7 +425,7 @@ const CreateEducation = ({
         <ModalHeader heading={(endpoint === 'addEducation' ? 'Add ' : 'Edit ') + 'Education'} />
         <>
           {defaultValues?.map((item, index) => (
-            <Grid md={12} xs={12} lg={12} padding="5px">
+            <Grid md={12} xs={12} lg={12} padding="5px" sx={{marginTop:1}}>
               <Grid item xs={12} md={6}>
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                   <Grid md={6} xs={12} item>
@@ -523,7 +523,7 @@ const CreateEducation = ({
                 </Grid>
 
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-                  <Grid md={6} xs={12} item>
+                  <Grid md={12} xs={12} item>
                     <TextField
                       fullWidth
                       name="universityName"
@@ -651,6 +651,7 @@ const CreateEducation = ({
                                         }}
                                         component="label"
                                         variant="contained"
+                                        color="primary"
                                         startIcon={<CloudUploadIcon />}
                                       >
                                         Upload file
@@ -732,6 +733,7 @@ const CreateEducation = ({
                                     }}
                                     component="label"
                                     variant="contained"
+                                    color="primary"
                                     startIcon={<CloudUploadIcon />}
                                   >
                                     Upload file

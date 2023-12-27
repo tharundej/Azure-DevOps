@@ -356,7 +356,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                 <label htmlFor= {`file-upload-input-${index}`}>
                 <Button
                  onChange={(e)=>{console.log(index,'dddd');handleFileUpload(e,index)}}
-                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                component="label" variant="contained" startIcon={<CloudUploadIcon />} color="primary">
                             Upload file
                             <VisuallyHiddenInput type="file" />
                           </Button>
