@@ -542,6 +542,7 @@ const EducationInformation = forwardRef((props, ref) => {
                               onChange={(e) => {
                                 handleFileUpload(e, index, index1);
                               }}
+                              color='primary'
                               component="label"
                               variant="contained"
                               startIcon={<CloudUploadIcon />}

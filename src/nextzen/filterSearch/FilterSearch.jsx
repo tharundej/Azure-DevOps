@@ -243,6 +243,7 @@ export default function SearchFilter({filterSearch,filterData}){
       const data = {};
       const data1=await formWithDropdown(data);
       console.log(data,';;;')
+      setOpen(false)
 
       filterData(data);
       // call parent function and pass it

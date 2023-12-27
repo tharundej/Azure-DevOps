@@ -345,7 +345,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       }
       else if(datesUsed?.date_of_birth===""){
         const obj={
-          joiningDate:'Date Of Birth is Mandatory',
+          dateOfBirth:'Date Of Birth is Mandatory',
           
         }
         setErrorMessage(obj);
@@ -353,9 +353,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       }
 
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offerDate = (datesUsed?.offer_date);
-      data.joiningDate = (datesUsed?.joining_date);
-      data.dateOfBirth = (datesUsed?.date_of_birth);
+      data.offerDate = (datesUsed?.offer_date || "");
+      data.joiningDate = (datesUsed?.joining_date || "");
+      data.dateOfBirth = (datesUsed?.date_of_birth || "");
        data.gender=data?.gender?.label|| "";
        data.maritalStatus=data?.maritalStatus?.label || ""
        data.religion=data?.religion?.label || "";
