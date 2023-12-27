@@ -167,10 +167,13 @@ console.log(date,"datedate1234",view,eventsLoading)
 }
   
    ]
-
+   
+   const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
  const getApiCall =  {
-    employeeId: "GANG12",
-    companyId:"comp22",
+    employeeId:employeeID ,
+    companyId: companyID,
     DateOfActivity:{
         from:"2023-12-01",
          to: "2023-12-30"
@@ -180,17 +183,21 @@ console.log(date,"datedate1234",view,eventsLoading)
 
 const calendarGetData = async (getApiCall) => {
   console.log("hello in function",getApiCall)
-  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
+  const response = await axios.post(baseUrl +'/newtimesheet',getApiCall).then(
     (response) => {
       console.log(response?.data?.data,'sucess data in api Calendar', response?.data?.data?.[0]?.projectData);
-      setEventGetData(response?.data?.data)
+      // setEventGetData(response?.data?.data)
+      // const lowercasedString = JSON.stringify(response?.data?.data).toLowerCase();
 
-      const newData = response?.data?.data.map((item) => {
+// if (response?.data?.data !== "null" ){
+
+// }
+      const newData = (response?.data?.data ?? []).map((item) => {
         return {
           managername: item.managername,
           dateofactivity: item.dateofactivity,
           projectData: item.projectData.map((project) => ({
-           projectName: {
+            [project.projectName]: {
               date: project.date,
               projectId: project.projectId,
               projectName: project.projectName,
@@ -204,6 +211,7 @@ const calendarGetData = async (getApiCall) => {
       });
       
       console.log(newData,"newwdataa",);
+      setEventGetData(newData)
       
       // setData()
          // Extract unique projectIds from the API response
@@ -339,13 +347,93 @@ const handleSwitchChange = () => {
   setShowAutocomplete(!showAutocomplete);
 };
 
-const projects = [
-  { projectId: 161, projectName: 'ERP',  },
-  { projectId: 167, projectName: 'ERP TESTING',  },
-  { projectId: 168, projectName: 'PUNCHIN', },
-  { projectId: 169, projectName: 'ERPBUZZ',  },
-  { projectId: 171, projectName: 'Buzz Staff',  },
-]
+// const projects = [
+//   { projectId: 161, projectName: 'ERP',  },
+//   { projectId: 167, projectName: 'ERP TESTING',  },
+//   { projectId: 168, projectName: 'PUNCHIN', },
+//   // { projectId: 169, projectName: 'ERPBUZZ',  },
+//   { projectId: 169, projectName: 'HRMS',  },
+//   { projectId: 171, projectName: 'Buzz Staff',  },
+// ]
+const [projects,setProjects]=useState()
+const [data, setData]=useState({
+  projectID:[],
+  // employeeName:"",
+
+})
+
+useEffect(()=>{
+  getProjectName()
+  getEmployeeList(data)
+},[data.projectID])
+const getProjectName = async()=>{
+  try {
+  
+    const data = {
+      
+        employeeID:employeeID,
+        companyID:companyID,
+       
+      // Other data properties as needed
+    };
+    const response = await axios.post('https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForEmployee', data).then(
+      (response) => {
+        console.log(response?.data?.list,'sucesswwww999', response);
+        setProjects(response?.data?.list)
+        // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+        // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+     
+      }
+    );
+
+
+    
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+const getEmployeeList = async(projectData)=>{
+  try {
+  console.log(projectData?.projectID,"projectdataaaaa")
+    const dataPaload = {
+      
+      projectManager:employeeID,
+        companyId:companyID,
+        projectIDs:projectData?.projectID,
+       
+      // Other data properties as needed
+    };
+    const response = await axios.post('https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager', dataPaload).then(
+      (response) => {
+        console.log('sucesswww9999w', response);
+        // setProjectDetails(response?.data?.data)
+        // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+        // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+     
+      }
+    );
+
+
+    
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+
 const employeeList = [
   { projectId: 1, projectName: 'Surendra',  },
   { projectId: 2, projectName: 'Anil',  },
@@ -353,11 +441,7 @@ const employeeList = [
   { projectId: 4, projectName: 'Muzu',  },
   { projectId: 4, projectName: 'Nithin',  },
 ]
-const [data, setData]=useState({
-  projectID:[],
-  employeeName:"",
 
-})
 const handleProjectChange = (event, newValue) => {
   setData((prevData) => ({
     ...prevData,
@@ -377,14 +461,16 @@ console.log(data,"dataatdada",selectedRange)
 const onDayData = () => {
   if (selectedRange?.start) {
     // Assuming eventDataMe is defined in the same scope
-    console.log(eventGetData,"HolidayEventsHolidayEventsHolidayEvents")
+    console.log(eventGetData,"HolidayEventsHolidayEventsHolidayEvents",selectedRange?.start, )
     // const editDataArray = eventDataMe
     const editDataArray = eventGetData
-      .filter((event) => event.projectData && event.Start === selectedRange?.start) // Filter based on start date
+      .filter((event) => event.projectData && event.dateofactivity === selectedRange?.start) // Filter based on start date
+    //   .filter((event) => {console.log(event,"eeeeeeeeee",event.dateofactivity,selectedRange?.start);
+    // return(event.projectData && event.dateofactivity === selectedRange?.start)}) // Filter based on start date
       .map((event) => event.projectData)
       .flat(); // Flatten the array of editData arrays
 
-    console.log(editDataArray, "editDataArray");
+    console.log(editDataArray, "editDataArray",selectedRange?.start);
     // Do something with the extracted editDataArray
     return editDataArray;
   }
