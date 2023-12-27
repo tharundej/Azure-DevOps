@@ -109,7 +109,7 @@ export default function ApproveClaim({ currentUser }) {
       "status": ""
     },
     "sort": {
-      "key": 0,
+     "key": 1,
       "order": ""
     }
 

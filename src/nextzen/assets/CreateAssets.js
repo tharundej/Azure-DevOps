@@ -125,7 +125,40 @@ export default function CreateAssets({
     setValue('totalAmount', calculatedTotalAmount);
   };
 
-  const assetsConditionOptions = ['In Use', 'Scrap & Sold', 'Spare', 'Scrap', 'Under Maintenance'];
+  const assetsConditionOptions = [
+    'In Use',
+    'Scrap & Sold',
+    'Spare',
+    'Scrap',
+    'Under Maintenance',
+    'Equities (Stocks)',
+    'Bonds',
+    'Derivatives',
+    'Real Estate',
+    'Infrastructure',
+    'Natural Resources',
+    'Machinery and Equipment',
+    'Vehicles',
+    'Furniture and Fixtures',
+    'Intellectual Property',
+    'Brand Value',
+    'Goodwill',
+    'Employee Skills and Knowledge',
+    'Training and Development Programs',
+    'Bank Accounts',
+    'Certificates of Deposit (CDs)',
+    'Money Market Instruments',
+    'Software',
+    'Hardware',
+    'Data',
+    'Customer Database',
+    'Customer Loyalty Programs',
+    'Inventory',
+    'Suppliers and Vendor Relationships',
+    'Carbon Credits',
+    'Renewable Energy Credits',
+    'Others',
+  ];
   const asstesTypeOptions = ['Electronic1', 'Electronic2'];
   const [selectedassetsCondition, setSelectedassetsCondition] = useState(
     defaultValues.assetsCondition || ''

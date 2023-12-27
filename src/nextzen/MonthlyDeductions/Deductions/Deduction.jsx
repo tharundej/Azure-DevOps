@@ -22,7 +22,7 @@ import { FormControl, Select,MenuProps,DialogContent,DialogTitle,IconButton,Dial
 export default function Deduction({defaultPayload,componentPage}) {
    const {enqueueSnackbar} = useSnackbar()
    const [employeeListData,setEmployesListData] = useState()
-   const [personName, setPersonName] = useState();
+   const [personName, setPersonName] = useState(null);
    const [deductionDetails,setDeductionDetails]= useState()
    const [deductionInstallment,setDeductionInstallment]=useState()
    const [count,setCount] = useState(0)
@@ -30,6 +30,7 @@ export default function Deduction({defaultPayload,componentPage}) {
    const [showFilter,setShowFilter]= useState(false)
    const [loader,setLoader] = useState(false)
    const [openedCard, setOpenedCard] = useState(null);
+   const [payloadData,setPayloadData] = useState(null);
    const [deductionCard,setDeductionCard] = useState(Array(deductionDetails?.data?.length).fill(false));
    const {user} = useContext(UserContext)
   // const TABLE_HEAD = [
@@ -53,20 +54,30 @@ export default function Deduction({defaultPayload,componentPage}) {
 
   // ];
 
-useEffect(()=>{
+  const handleChange = (event) => {
+    setPersonName(event?.target?.value)
+    setCount(count+1)
+   };
+
+  useEffect(()=>{
+    if(componentPage=="MyRequests"){
+      setPersonName(user?.employeeID)
+      setPayloadData(defaultPayload)
+    }
+    else if(componentPage!="MyRequests" && personName!=null)
+    {
+      setPayloadData({employeeID:personName})
+    }
+  },[personName,componentPage])
  
+useEffect(()=>{
   getEmployeesList()
-  if(personName){
+  if(personName!=null){
     getLatestDeductions()
   }
   
 },[personName])
 
-useEffect(()=>{
-  if(componentPage=="MyRequests"){
-    setPersonName(user?.employeeID)
-  }
-},[])
 
 const getEmployeesList =()=>{
   const data ={
@@ -105,10 +116,7 @@ const getDeductionDetails =(deductionType)=>{
    })
 }
 
-const handleChange = (event) => {
-  setPersonName(event?.target?.value)
-  setCount(count+1)
- };
+
  const handleDeduction=(deductionType,index)=>{
   const newExpanded = [...deductionCard];
   newExpanded[index] = !newExpanded[index];
@@ -132,9 +140,10 @@ const MenuProps = {
   },
 };
 
-const payloadData = (componentPage=="MyRequests")?defaultPayload:{
-    employeeID:personName,
-}
+// const payloadData = (componentPage=="MyRequests")?defaultPayload:{
+//     employeeID:personName,
+// }
+
 
 const getLatestDeductions =()=>{
   setLoader(true)
@@ -156,16 +165,17 @@ const getLatestDeductions =()=>{
    })
 }
 const handleClose = () => setShowForm(false);
-const handleClickClose=()=> setShowFilter(false)
+const [filterData,setFilterDate]=useState()
+const handleClickClose=()=> {setShowFilter(false);console.log(payloadData,"dataa")}
 
 const [datesData,setDatesData]=useState([])
 const [dropdown,setDropdown]=useState({})
-const [filterData,setFilterDate]=useState()
+
 const [dropdowndeductiontype,setdropdowndeductiontype]=useState([])
 const [datesFiledArray,setDatesFiledArray]=useState(
   [
     {
-      field:'externalFilters',
+      field:'deductedDate',
       from:'deductedDateStart',
       to:'deductedDateEnd'
     }
@@ -238,9 +248,18 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     setDatesData([])
     const data = await formDateDataStructure();
     const data1=await formWithDropdown(data);
-    setFilterDate(data);
+    setPayloadData(prevPayloadData => ({
+      ...prevPayloadData,
+      externalFilters: {
+          ...data,
+      },
+  }));
     handleClickClose()
+   
   }
+  useEffect(()=>{
+    getLatestDeductions()
+  },[payloadData])
   const handleCancel = async()=>{
     setdropdowndeductiontype([]);
     setDates({

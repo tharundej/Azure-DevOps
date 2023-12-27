@@ -41,6 +41,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,currentUserData,userlocation,dropDownOptions,dropDownvalue,employeeIDForApis}) => {
+   console.log("🚀 ~ file: EmployeeAboutEdit.js:44 ~ EmployeeAboutEdit ~ currentUserData:", currentUserData)
    console.log(dropDownOptions,'dropDownOptionsdropDownOptions')
    const [userdropDownOptions,setUserDropDownOptions]=useState("");
    const [userdropDownvalue,setUserDropDownValue]=useState("")
@@ -80,7 +81,13 @@ const EmployeeAboutEdit = ({handleCallSnackbar,ApiHit,open,handleEditClose,curre
   }, []);
 
   const [type,setType]=useState({label:"Permanent",id:'1'})
-    const [currentUser,setcurrentUser]=useState()
+    const [currentUser,setcurrentUser]=useState({
+      "ctc":currentUserData?.ctc || 0,
+      "monthlyPay":currentUserData?.monthlyPay || 0,
+      "variablePay":currentUserData?.variablePay || 0,
+      "bonus":currentUserData?.bonus || 0,
+    } )
+    console.log("🚀 ~ file: EmployeeAboutEdit.js:87 ~ EmployeeAboutEdit ~ currentUser:", currentUser)
 
     useEffect(()=>{
       if(currentUserData){
@@ -200,6 +207,7 @@ console.log(currentUser,"jjjjjjjjjj")
         console.log(currentUser,userdropDownvalue,'userdropDownvalue')
         const obj={
           ...currentUser,
+          employmentType:userdropDownvalue?.employmentType?.label || "",
           departmentID:userdropDownvalue?.departmentValue?.departmentID || null,
           designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID ||null,
           designationID:userdropDownvalue?.desginationValue?.designationID || null,
@@ -238,7 +246,7 @@ console.log(currentUser,"jjjjjjjjjj")
             method: 'post',
             maxBodyLength: Infinity,
             // url: `${baseUrl}/updateOnboardingForm`,
-            url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateOnboardingForm",
+            url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
               'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
@@ -544,14 +552,14 @@ console.log(currentUser,"jjjjjjjjjj")
               
               <Autocomplete
                 disablePortal
-                id="martialStatus"
+                id="employemnType"
                 options={employmentTypeOptions || []}
-                value={userdropDownvalue?.employeementTypeValue}
+                value={userdropDownvalue?.employmentType}
                 getOptionLabel={(option) => option?.label}
                 onChange={async(e, newvalue) => {
                 
                   var newArr = { ...userdropDownvalue };
-                  newArr.employeementTypeValue=newvalue;
+                  newArr.employmentType=newvalue;
 
                   setUserDropDownValue(newArr)
                 }
@@ -1272,6 +1280,68 @@ console.log(currentUser,"jjjjjjjjjj")
               />
               </Grid>
 
+              <Grid md={6} xs={12} item>
+              
+        <TextField 
+         style={{  width: '100%' }}
+          label="Monthly Salary/PM"  
+          id="Monthly"
+          value={currentUser?.monthlyPay}
+          type='number'
+          onChange={(e) => {
+            const enteredValue = parseFloat(e?.target?.value) ;
+            const newMonthlySalary = enteredValue;
+            const newTotalSalary =  enteredValue * 12+currentUser?.variablePay+currentUser?.bonus;
+          
+            setcurrentUser((prev) => ({
+              ...prev,
+              monthlyPay: newMonthlySalary,
+              ctc: newTotalSalary,
+            }));
+          }}
+        /> </Grid>
+
+<Grid md={6} xs={12} item>
+
+      <TextField 
+       style={{  width: '100%' }}
+        label="Variable Pay/PA"  
+        id="Variable"
+        value={currentUser?.variablePay}
+        type='number'
+        onChange={(e) => {
+          const enteredValue = parseFloat(e?.target?.value) ;
+          const newVariablePay = enteredValue;
+          const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.bonus;
+
+          setcurrentUser((prev) => ({
+            ...prev,
+            variablePay: newVariablePay,
+            ctc: newTotalSalary,
+          }));
+        }}
+       
+      /></Grid>
+    <Grid md={6} xs={12} item>
+          <TextField 
+           style={{  width: '100%' }}
+            label="Bonus Pay/PA"  
+            id="Bonus"
+            value={currentUser?.bonus}
+            type='number'
+            onChange={(e) => {
+              const enteredValue = parseFloat(e?.target?.value) ;
+              const newVariablePay = enteredValue;
+              const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.variablePay;
+    
+              setcurrentUser((prev) => ({
+                ...prev,
+                bonus: newVariablePay,
+                ctc: newTotalSalary,
+              }));
+            }}
+            /> </Grid>
+
 
               <Grid md={6} xs={12} item>
                   <TextField
@@ -1282,15 +1352,17 @@ console.log(currentUser,"jjjjjjjjjj")
                     variant="outlined"
                     id="CTC"
                      value={currentUser?.ctc}
-                    onChange={(e) => {
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        ctc: parseInt(e.target.value, 10) || ''
-                      }
-                      ))
-                    }}
+                    // onChange={(e) => {
+                    //   setcurrentUser(prev=>({
+                    //     ...prev,
+                    //     ctc: parseInt(e.target.value, 10) || ''
+                    //   }
+                    //   ))
+                    // }}
                   />
                 </Grid>
+           
+              
 
 
 
@@ -1321,24 +1393,7 @@ console.log(currentUser,"jjjjjjjjjj")
          Follow the salary structure 
       </label>
 
-      <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="ctc"
-                    label="Enter CTC"
-                    variant="outlined"
-                    id="ctc"
-                    value={currentUser?.ctc}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                       ctc: parseInt(e.target.value, 10)
-                      }))
-                    }}
-                  />
-                  </Grid>
+    
     </div>
                 
             

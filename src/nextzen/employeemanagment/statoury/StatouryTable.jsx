@@ -57,7 +57,7 @@ export const StatouryTable = () => {
   
      "sort": {
   
-     "key": 0,
+    "key": 1,
   
      "orderBy": "employee_id"
   

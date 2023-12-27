@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -163,6 +164,23 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
     const parsedPrice = parseFloat(watch(`rate`));
     setValue(`totalAmount`, parsedQuantity * parsedPrice);
   };
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    console.log({ checked });
+    checked ? setValue('itemName', 'Machinery Expenses : ') : setValue('itemName', '');
+  }, [checked]);
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+  const HandleInputChangeFuel = (e) => {
+    setValue(e?.target?.name, e?.target?.value);
+  
+    const parsedTotalLiter = parseFloat(watch('totalLiter')) || 0;
+    const parsedRatePerLiter = parseFloat(watch('ratePerLiter')) || 0;
+  
+    // Update the totalAmount based on the calculation
+    setValue('totalAmount', parsedTotalLiter * parsedRatePerLiter);
+  };
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -204,7 +222,15 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                 control={<Radio />}
                 label="Others"
               />
+              <br />
+              {type == false && user?.companyID == 'COMP46' && (
+                <FormControlLabel
+                  control={<Checkbox checked={checked} onChange={handleChange} />}
+                  label="Machinery Expenses"
+                />
+              )}
             </RadioGroup>
+
             <RHFAutocomplete
               name="locationID"
               id="locationID"
@@ -297,6 +323,20 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                     e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
                   }}
                 />
+                  <RHFTextField
+                  type="number"
+                  onChange={(e) => HandleInputChangeFuel(e)}
+  name="ratePerLiter"  
+  label="Rate Per Liter"
+  defaultValue={0}
+                  // inputProps={{
+                  //   maxLength: 10,
+                  //   pattern: '^[0-9]*$',
+                  // }}
+                  // onInput={(e) => {
+                  //   e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  // }}
+                />
                 <RHFTextField
                   name="fuelType"
                   label="Fuel Type"
@@ -316,11 +356,10 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                   name="itemName"
                   label="Item Name"
                   inputProps={{
-                    maxLength: 20,
-                    pattern: '^[a-zA-Z0-9]*$',
+                    pattern: '^[a-zA-Z0-9:]*$',
                   }}
                   onInput={(e) => {
-                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20);
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9:]/g, '');
                   }}
                 />
                 <RHFTextField

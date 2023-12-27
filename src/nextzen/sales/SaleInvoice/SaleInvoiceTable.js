@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -7,8 +7,10 @@ import axios from 'axios';
 import { _userList } from '../../../_mock';
 
 import { BasicTable } from '../../Table/BasicTable';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 const SaleInvoiceTable = () => {
+  const { user } = useContext(UserContext);
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -24,23 +26,51 @@ const SaleInvoiceTable = () => {
   useEffect(() => {
     ApiHit();
   }, []);
+  // const defaultPayload = {
+  //   count: 5,
+  //   page: 0,
+  //   search: '',
+  //   fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  // };
   const defaultPayload = {
-    count: 5,
+    companyId: user?.companyID ? user?.companyID : '',
+    perPage: 10,
     page: 0,
     search: '',
-    fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    count: 5,
+    externalFilters: {
+      salesOrderNo:"",
+        salesInvoiceNo:"",
+        productName:"",
+        salesInvoiceId:"",
+        hsnCode:"",
+        comments:"",
+        salesInvoiceProductId:"",
+        invoiceDate: {
+            from: "",
+            to: ""
+        }
+
+    },
+    sort: {
+      orderBy: "",
+      order:1,
+    },
   };
+
+
+
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
+    { id: 'balaceProduct', label: 'SO Number', type: 'text', minWidth: '180px' },
     { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
     { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
-    { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
+    { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
     { id: 'Quantity', label: 'Quantity', type: 'text', minWidth: '180px' },
-    { id: 'Unit of measure', label: 'Unit of Measure', type: 'text', minWidth: '180px' },
-    { id: 'Rate', label: 'Rate', type: 'text', minWidth: '180px' },
-    { id: ' SGST', label: 'SGST', type: 'text', minWidth: '180px' },
-    { id: 'CGST', label: 'CGST', type: 'text', minWidth: '180px' },
+    { id: 'unitsOfMeasure', label: 'Unit of Measure', type: 'text', minWidth: '180px' },
+    { id: 'rate', label: 'Rate', type: 'text', minWidth: '180px' },
+    { id: 'gstRate', label: 'GST', type: 'text', minWidth: '180px' },
+    { id: 'amount', label: 'Amount', type: 'text', minWidth: '180px' },
     { id: 'IGST', label: 'IGST', type: 'text', minWidth: '180px' },
     { id: 'Discount', label: 'Discount', type: 'text', minWidth: '180px' },
   ]);
@@ -51,7 +81,7 @@ const SaleInvoiceTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchaseOrderDetails"
+        endpoint="/listSalesInvoice"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}

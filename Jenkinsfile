@@ -14,7 +14,7 @@ pipeline {
         }
         stage("Git clone"){
             steps{
-                checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'frontend_git', url: 'https://github.com/ani0310/BellHrms.git']])
+                checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'Info_Github', url: 'https://github.com/Infobell-IT-Solutions-India/ERP_FE.git']])
             }
         }
          stage('Docker Compose Stop Delete') {
@@ -22,7 +22,7 @@ pipeline {
                 script {
                      sh '''
                          docker ps
-                         docker rm -f node_n || true
+                         docker rm -f node_test || true
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 

@@ -116,7 +116,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     firstName: Yup.string()
     .required('First Name is Required')
       .matches(/^[A-Za-z ]+$/, 'First Name must contain only letters and spaces'),
-    middleName: Yup.string() .matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
+    middleName: Yup.string(), //.matches(/^[A-Za-z ]+$/, 'Middle Name must contain only letters and spaces'),
     lastName: Yup.string().required("Last name is required") .matches(/^[A-Za-z ]+$/, 'Last Name must contain only letters and spaces'),
    
     contactNumber: Yup.number()
@@ -127,10 +127,15 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         "Contact Number must be exactly 10 digits",
         (val) => val && val.toString().length === 10
     ),
-    emergencyContactNumber: Yup.number().required('Emergency Contact Number'),
-
-    fatherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Father Name must contain only letters and spaces'),
-    motherName: Yup.string().matches(/^[A-Za-z ]+$/, 'Mother Name must contain only letters and spaces'),
+    emergencyContactNumber: Yup.number() .required("Contact Number is required")
+    .integer("Contact Number must be an integer")
+    .test(
+        "len",
+        "Contact Number must be exactly 10 digits",
+        (val) => val && val.toString().length === 10
+    ),
+    fatherName: Yup.string(),
+    motherName: Yup.string(),
     maritalStatus: Yup.object(),
     nationality: Yup.object(),
     religion: Yup.object(),
@@ -335,7 +340,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         setErrorMessage(obj);
         return ;
       }
-      else if(datesUsed?.joining_date===""){
+      else if(datesUsed?.joining_date==="" || datesUsed?.joining_date===null){
         const obj={
           joiningDate:'Joining Date is Mandatory',
           
@@ -343,9 +348,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         setErrorMessage(obj);
         return ;
       }
-      else if(datesUsed?.date_of_birth===""){
+      else if(datesUsed?.date_of_birth==="" || datesUsed?.date_of_birth===null){
         const obj={
-          joiningDate:'Date Of Birth is Mandatory',
+          dateOfBirth:'Date Of Birth is Mandatory',
           
         }
         setErrorMessage(obj);
@@ -353,9 +358,9 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       }
 
       // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      data.offerDate = (datesUsed?.offer_date);
-      data.joiningDate = (datesUsed?.joining_date);
-      data.dateOfBirth = (datesUsed?.date_of_birth);
+      data.offerDate = (datesUsed?.offer_date || "");
+      data.joiningDate = (datesUsed?.joining_date || "");
+      data.dateOfBirth = (datesUsed?.date_of_birth || "");
        data.gender=data?.gender?.label|| "";
        data.maritalStatus=data?.maritalStatus?.label || ""
        data.religion=data?.religion?.label || "";
@@ -674,8 +679,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                 <RHFTextField name="firstName" label="First Name*" sx={{caretColor:'#3B82F6'}}  type="text" />
                 <RHFTextField name="middleName" label="Middle Name" sx={{caretColor:'#3B82F6'}}/>
                 <RHFTextField name="lastName" label="Last Name*" sx={{caretColor:'#3B82F6'}}/>
-                <RHFTextField name="companyEmail" label="Company Email" sx={{caretColor:'#3B82F6'}} />
-                <RHFTextField name="personalEmail" label="Personal Email" sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="companyEmail" label="Company Email*" sx={{caretColor:'#3B82F6'}} />
+                <RHFTextField name="personalEmail" label="Personal Email*" sx={{caretColor:'#3B82F6'}}/>
                 <RHFAutocomplete
                 name="gender"
                 label="Gender"
@@ -692,7 +697,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
               />
 
                 <RHFTextField name="contactNumber" label="Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
-                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
+                <RHFTextField name="emergencyContactNumber" label="Emergency Contact Number*" type="number" maxLength={10} sx={{caretColor:'#3B82F6'}}/>
                
                     <DatePicker
                      maxDate={new Date()}
@@ -979,7 +984,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                   }}
                 />
 
-                <RHFTextField name="state" label="State/Region" />
+              
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="address" label="Address" />
                 <RHFTextField name="zipCode" label="Zip/Code" />

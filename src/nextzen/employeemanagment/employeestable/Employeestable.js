@@ -90,8 +90,10 @@ export default function EmployeeTable() {
   },[])
 
   const {user}=useContext(UserContext)
+  console.log(user,'pppoppp')
 
   const defaultPayload={
+    fullAccess:user?.rolePermissions?.employeeManagement?.fullAccess || false,
     employeeID: user?.employeeID,
     roleID:user?.roleID,
     "count": 5,
@@ -137,7 +139,7 @@ export default function EmployeeTable() {
     },
      
     "sort": {
-      "key": 0,
+     "key": 1,
       "orderBy": "last_updated_by"
   }
     }
@@ -155,11 +157,11 @@ export default function EmployeeTable() {
     { id: 'firstName', label: 'First name',  type: 'text', minWidth:'180px' },
     { id: 'middleName', label: 'Middle Name ',  type: 'text', minWidth:'180px' },
     { id: 'lastName', label: 'Last Name',  type: 'text', minWidth:'180px' },
-    { id: 'companyEmail', label: 'Company Email ID',  type: 'text', minWidth:'180px' },
-    { id: 'personalEmail', label: 'Personal Email ID',  type: 'text', minWidth:'180px' },
+    { id: 'companyEmail', label: 'Company Email',  type: 'text', minWidth:'180px' },
+    { id: 'personalEmail', label: 'Personal Email',  type: 'text', minWidth:'180px' },
     { id: 'reportingManager', label: 'Reporting Manager',  type: 'text', minWidth:'180px' },
     { id: 'contactNumber', label: 'Contact Number',  type: 'text', minWidth:'180px' },
-    { id: 'dateOfBirth', label: 'Date Of Birth',  type: 'date', minWidth:'180px' },
+    { id: 'dateOfBirth', label: 'Date of Birth',  type: 'date', minWidth:'180px' },
     { id: 'employmentType', label: 'Employment Type',  type: 'text', minWidth:'180px' },
     { id: 'departmentId', label: 'Department ID',  type: 'text', minWidth:'180px' },
     { id: 'designationName', label: 'Designation Name',  type: 'text', minWidth:'180px' },

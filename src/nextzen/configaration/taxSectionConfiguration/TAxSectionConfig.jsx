@@ -29,6 +29,7 @@ import AddTaxSectionConfig from './AddTaxSectionConfig';
 import {useSnackbar} from '../../../components/snackbar'
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -79,6 +80,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   const [valueSelected, setValueSelected] = useState();
   const [openAddRoleConfig ,setOpenAddRoleConfig] = useState(false)
   const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
+  
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
     setEditData(rowdata);
@@ -91,7 +95,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       handleOpenEdit();
       buttonFunction(rowdata, event);
     } else if (event?.name === 'Delete') {
-      deleteFunction(rowdata, event);
+      setDeleteData(rowdata);
+      setConfirmDeleteOpen(true);
+      // handleDeleteConfirmed(rowdata, event)
+      // deleteFunction(rowdata, event);
     }
   };
   const [openEdit, setOpenEdit] = React.useState(false);
@@ -110,6 +117,14 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     setShowForm(false);
   }
 
+  const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async (rowdata, event) => {
+    deleteFunction(deleteData, event);
+  
+  };
   const [tableData, SetTableData] = useState({});
 
   const defaultPayload = 
@@ -230,6 +245,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
           enqueueSnackbar(response.data.message,{variant:'success'})
           setCount(count+1)
              setIsReload(!isReload)
+             setConfirmDeleteOpen(false);
             //  setHitGetDepartment(!hitGetDepartment)
           console.log('success',response);
         }else   if (response.data.code === 400) {
@@ -267,8 +283,24 @@ const  deleteFunction =(rowdata, event)=>{
   
     
   };
+
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   return (
     <>
+     <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Assets"
+        message={`Are you sure you want to delete ${deleteData?.assetsName}?`}
+      />
       {showForm && (
         <Dialog
           fullWidth

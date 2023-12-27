@@ -37,6 +37,7 @@ const FactoryTable = () => {
       endpoint: '',
     },
   ];
+
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
