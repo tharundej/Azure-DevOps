@@ -58,6 +58,9 @@ const VisuallyHiddenInput = styled('input')({
 
 const degreeOptions = [
   { label: 'Bachelor of Arts', value: 'BA' },
+  { label: 'Secondary School of Education', value: 'SSC' },
+  { label: 'CBSE', value: 'cbse' },
+  { label: 'Intermediate', value: 'inter' },
   { label: 'Bachelor of Science', value: 'BS' },
   { label: 'Bachelor of Commerce', value: 'BCom' },
   { label: 'Bachelor of Technology', value: 'B.Tech' },

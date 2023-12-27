@@ -36,7 +36,7 @@ export default function Approveleave(){
           }
       },
       "sort": {
-          "key": 0,
+         "key": 1,
           "orderby": "al.apply_date"
       }
   }

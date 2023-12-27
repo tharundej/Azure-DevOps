@@ -24,7 +24,7 @@ export default function SalaryStructure() {
     ];
     const actions = [
      
-      { name: 'Edit', icon: 'hh', path: 'jjj' ,endpoint:'/'},
+     
     ];
 
     const defaultPayload = 

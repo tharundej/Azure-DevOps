@@ -126,7 +126,7 @@ export default function AssignShiftComponent() {
             }
         },
         "sort": {
-            "key": 0,
+           "key": 1,
             "orderBy": ""
         }
     }
