@@ -9,8 +9,9 @@ import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { Dialog } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
+import { baseUrl } from '../global/BaseUrl';
 
-export default function OtherExpenses() {
+export default function OtherExpenses({updateTotalExpense}) {
   const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
@@ -107,6 +108,10 @@ export default function OtherExpenses() {
       order: -1,
     },
   };
+  const updateTotalState=(obj)=>{
+    updateTotalExpense(obj)
+
+  }
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
@@ -119,6 +124,40 @@ export default function OtherExpenses() {
     { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
     { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
+  const ApiHitUpdate =async()=>{
+   
+    const payload = defaultPayload
+   
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl + '/listExpenses',
+      headers: {
+        Authorization:  user?.accessToken ,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data;
+          console.log(JSON.stringify(response.data));
+        updateTotalExpense(rowsData)
+
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(result, 'resultsreults');
+
+}
+useEffect(()=>{
+  console.log("useEffect called ")
+  ApiHitUpdate();
+} ,[])
   return (
     <>
       <SnackBarComponent
@@ -161,10 +200,11 @@ export default function OtherExpenses() {
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="OtherExpensesHead"
+        filterName="OtherFIlter"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
         count={count}
+        updateTotalState={updateTotalState}
       />
     </>
   );

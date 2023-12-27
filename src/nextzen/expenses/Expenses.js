@@ -12,20 +12,27 @@ import { fNumber } from 'src/utils/format-number';
 
 export default function Expenses() {
   const [count, setCount] = useState(0);
+  const [totalExpense ,setTotalExpense] = useState([])
   const handleCountChange = () => {
     setCount(count + 1);
   };
   const tabLabels = ['Fuel', 'Vehicles', 'Others'];
 
+  const updateTotalExpense = (newValue) => {
+    setTotalExpense(newValue);
+    console.log('Updated totalExpense:', newValue);
+  }; 
+
+  console.log(totalExpense ,"totalExpense")
   const tabContents = [
     <div>
-      <Fuel />
+      <Fuel updateTotalExpense={updateTotalExpense}  />
     </div>,
     <div>
-      <Vehicles />
+      <Vehicles  updateTotalExpense={updateTotalExpense} />
     </div>,
     <div>
-      <OtherExpenses />
+      <OtherExpenses updateTotalExpense={updateTotalExpense} />
     </div>,
   ];
   const [showForm, setShowForm] = useState(false);
@@ -67,7 +74,7 @@ export default function Expenses() {
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle2">Total Amount</Typography>
-              <Typography variant="h3">{fNumber(0)}</Typography>
+              <Typography variant="h3">{totalExpense?.totalAmountSum}</Typography>
             </Box>
           </Card>
         </Grid>
@@ -76,7 +83,7 @@ export default function Expenses() {
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle2">Advance Amount</Typography>
-              <Typography variant="h3">{fNumber(0)}</Typography>
+              <Typography variant="h3">{totalExpense?.paidAmountSum}</Typography>
             </Box>
           </Card>
         </Grid>
@@ -85,7 +92,7 @@ export default function Expenses() {
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle2">Balance Amount</Typography>
-              <Typography variant="h3">{fNumber(0)}</Typography>
+              <Typography variant="h3">{totalExpense?.balanceAmountSum}</Typography>
             </Box>
           </Card>
         </Grid>

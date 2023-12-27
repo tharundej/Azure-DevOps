@@ -302,7 +302,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
               <ModalHeader heading={type==="create"?"Add Document":"Edit Documents"} />
          <DialogContent>
           
-         <Grid xs={12} md={8}>
+         <Grid xs={12} md={12} lg={12}>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={3}
@@ -318,7 +318,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                    {defaultValues && defaultValues?.map((file,index)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
-                <Grid item xs={12} md={12} >
+                <Grid item xs={12} md={6} >
 
                
                 <FormControl fullWidth>
@@ -340,7 +340,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12}>
+                <Grid item xs={12} md={6}>
                 <Grid>
 
                   <Grid item>
@@ -408,7 +408,7 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                    
 
               </Grid>
-               ))}
+                   ))}
 
 
 

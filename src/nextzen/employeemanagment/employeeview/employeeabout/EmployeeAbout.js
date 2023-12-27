@@ -187,6 +187,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
 
           const arrValue={
+            employmentType:{label:currentEmployee?.employmentType} || undefined,
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,
@@ -526,7 +527,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
          CTC
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
-          {dropDownvalue?.ctc}
+          {currentEmployee?.ctc}
           </Box>
         </Stack>
        

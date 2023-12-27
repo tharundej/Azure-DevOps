@@ -242,11 +242,13 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
         onhandleClose();
         callApi();
         setDefaultValues([])
+        setAddDocuments([])
       })
       .catch((error) => {
         console.log(error);
         enqueueSnackbar(response?.data?.message, { variant: 'error' });
         setDefaultValues([])
+        setAddDocuments([])
       });
     }
 
@@ -430,21 +432,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
         //setSelectedFile(file);
       };
 
-      const handleChangeDate=(newvalue,field,index)=>{
-
-        const newArray = [...defaultValues];
-
-        console.log(newvalue,'newvalue')
-
-       
-         newArray[index] = {
-           ...newArray[index],
-           [field]: newvalue
-       }
-
-       setDefaultValues(newArray)
-
-      }
+  
       
      
       
@@ -492,7 +480,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                     label="Company Name*"
                     variant="outlined"
                     id={`previousCompanyName${index}`}
-                     value={item?.previousCompanyName}
+                     value={item?.previousCompanyName || ""}
                     onChange={(e) => {
                       handleChange(e, index, 'previousCompanyName');
                     }}
@@ -635,9 +623,9 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                                 }}
                                 name="Select Document"
                               >
-                                <MenuItem value="Provisional">Provisional</MenuItem>
-                                <MenuItem value="marksmemo">Marks Memo</MenuItem>
-                                <MenuItem value="degree">Degree</MenuItem>
+                                <MenuItem value="salaryslips">Salary Slips</MenuItem>
+                                <MenuItem value="Seperation">Seperation Letter</MenuItem>
+                              
                                 {/* Add more categories here */}
                               </Select>
                             </FormControl>
@@ -695,7 +683,8 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                         </Grid>
                       ))}
                                               </>}
-              {endpoint==="addExperience" && item?.documents?.map((file,index1)=>(
+                                             
+              { endpoint==="addExperience" && item?.documents && item?.documents?.map((file,index1)=>(
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
 
                 <Grid item xs={12} md={6} >
