@@ -105,7 +105,7 @@ console.log(entries,"historyy",hrentries);
   );
   return (
     <Card>
-      <CardHeader title="History" />
+      <CardHeader title="Comments History" />
       <Stack
         spacing={3}
         alignItems={{ md: 'flex-start' }}
@@ -113,9 +113,11 @@ console.log(entries,"historyy",hrentries);
         sx={{ p: 3 }}
       >
         
-        {userRemarksTimeline}
+        {entries && entries.length > 0 ? userRemarksTimeline : <Box>No Remarks</Box>}
 
-        {hrRemarksTimeline}
+{/* {hrentries && hrentries.length > 0 ? hrRemarksTimeline : <Box>No Remarks</Box>} */}
+{hrRemarksTimeline}
+
       </Stack>
     </Card>
   );
