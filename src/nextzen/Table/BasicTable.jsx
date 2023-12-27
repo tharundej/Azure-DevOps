@@ -131,6 +131,10 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../settings/SettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
+import FuelFilter from '../expenses/FuelFilter';
+import VehicleFilter from '../expenses/VehicleFilter';
+import OtherFIlter from '../expenses/OtherFIlter';
+import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
 
 const defaultFilters = {
   name: '',
@@ -155,7 +159,8 @@ const BasicTable = ({
   SecondoryTable,
   isShowHandle,
   componentPage,count,
-  mergingRowArray
+  mergingRowArray,
+  updateTotalState
 
 }) => {
   const popover = usePopover();
@@ -288,6 +293,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         //     ...prevData, Page:data
         //   }))
         // }
+        if(updateTotalState){
+          
+            updateTotalState(response?.data)
+        }
       })
 
       .catch((error) => {
@@ -792,6 +801,30 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+           {filterName === 'FuelFilter' && (
+            <FuelFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+            {filterName === 'VehicleFilter' && (
+            <VehicleFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+             {filterName === 'OtherFIlter' && (
+            <OtherFIlter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
              {filterName === 'HrTabFilter' && (
             <HrFilter filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch}  getTableData={getTableData}/>
           )}
@@ -805,6 +838,10 @@ const [index, setIndex]=useState(""); // index setting
 
 {filterName === 'CreatePayRunFilter' && (
             <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
+          )}
+          
+{filterName === 'EarningAndDeductionFilter' && (
+            <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
           <Card>
@@ -831,7 +868,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'}  >
+                <Table size={table.dense ? 'medium' : 'small'}  stickyHeader={true}>
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}

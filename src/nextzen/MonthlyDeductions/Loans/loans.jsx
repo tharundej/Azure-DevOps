@@ -17,7 +17,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import { LoadingButton } from '@mui/lab';
-export default function Loans({defaultPayload,componentPage}) {
+export default function Loans({defaultPayload,componentPage,fullAccess}) {
   const {user} = useContext(UserContext);
   const [count,setCount] = useState(0)
   const {enqueueSnackbar} = useSnackbar()
@@ -99,7 +99,7 @@ export default function Loans({defaultPayload,componentPage}) {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
-    "records":"All Records",
+    "fullAccess":true,
     "externalFilters": {
   "requestDate": {
    
@@ -237,7 +237,6 @@ console.log(ele,"elementtt")
     const config = {
       method: 'POST',
       maxBodyLength:Infinity,
-      // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/approveLoanDetails`,
       url: baseUrl + `/approveLoanDetails`,
       data: obj
     
@@ -307,7 +306,6 @@ console.log(ele,"elementtt")
     method: 'POST',
     maxBodyLength:Infinity,
     url: baseUrl + `/updateLoanDetails`,
-    // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/updateLoanDetails`,
     data: payload
   
   }

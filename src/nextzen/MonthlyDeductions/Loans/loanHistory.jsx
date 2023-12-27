@@ -30,41 +30,7 @@ export default function LoanHistory({ history,userHistory }) {
         hrentries = Object.entries(history)?.map(([time, title]) => ({ time, title }));
     }
 console.log(entries,"historyy",hrentries);
-//   const renderSummary = (
-//     <Stack
-//       spacing={2}
-//       component={Paper}
-//       variant="outlined"
-//       sx={{
-//         p: 2.5,
-//         minWidth: 260,
-//         flexShrink: 0,
-//         borderRadius: 2,
-//         typography: 'body2',
-//         borderStyle: 'dashed',
-//       }}
-//     >
-//         User History
-//       <Stack spacing={0.5}>
-//         <Box sx={{ color: 'text.disabled' }}>Order time</Box>
-//         {/* {fDateTime(history.orderTime)} */}
-//       </Stack>
-//       <Stack spacing={0.5}>
-//         <Box sx={{ color: 'text.disabled' }}>Payment time</Box>
-//         {/* {fDateTime(history.orderTime)} */}
-//       </Stack>
-//       <Stack spacing={0.5}>
-//         <Box sx={{ color: 'text.disabled' }}>Delivery time for the carrier</Box>
-//         {/* {fDateTime(history.orderTime)} */}
-//       </Stack>
-//       <Stack spacing={0.5}>
-//         <Box sx={{ color: 'text.disabled' }}>Completion time</Box>
-//         {/* {fDateTime(history.orderTime)} */}
-//       </Stack>
-//     </Stack>
-//   );
-
-  const userRemarksTimeline = (
+ const userRemarksTimeline = (
     <Timeline
       sx={{
         p: 0,
@@ -139,7 +105,7 @@ console.log(entries,"historyy",hrentries);
   );
   return (
     <Card>
-      <CardHeader title="History" />
+      <CardHeader title="Comments History" />
       <Stack
         spacing={3}
         alignItems={{ md: 'flex-start' }}
@@ -147,9 +113,11 @@ console.log(entries,"historyy",hrentries);
         sx={{ p: 3 }}
       >
         
-        {userRemarksTimeline}
+        {entries && entries.length > 0 ? userRemarksTimeline : <Box>No Remarks</Box>}
 
-        {hrRemarksTimeline}
+{/* {hrentries && hrentries.length > 0 ? hrRemarksTimeline : <Box>No Remarks</Box>} */}
+{hrRemarksTimeline}
+
       </Stack>
     </Card>
   );

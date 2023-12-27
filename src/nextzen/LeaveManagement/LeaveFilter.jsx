@@ -1,7 +1,7 @@
 import PropTypes, { element } from 'prop-types';
 import React,{ useState, useContext } from 'react';
 import { maxWidth, styled } from '@mui/system';
-import {TextField,Grid,Button,MenuItem,Stack,DialogContent,Dialog,DialogTitle,Typography} from '@mui/material';
+import {TextField,Grid,Button,MenuItem,Stack,Badge,DialogContent,Dialog,DialogTitle,Typography} from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -36,6 +36,7 @@ const defaultFilters = {
 export default function LeaveFilter({filterSearch,filterData}){
   const theme = useTheme();
   const {user} = useContext(UserContext)
+  const [badgeContent, setBadgeContent] = useState(false);
   const [leaveType,SetLeaveType]= useState();
   
   const getLeaveType = async() => {
@@ -109,6 +110,7 @@ export default function LeaveFilter({filterSearch,filterData}){
          
         })
         setDatesData(arr1);
+        console.log(arr1.length,"arrr",arr1)
         resolve(arr1)
         
     })
@@ -168,6 +170,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     };
     const handleApply = async()=>{
       setDatesData([]);
+      setBadgeContent(true);
       const data = await formDateDataStructure();
       const data1=await formWithDropdown(data);
       filterData(data);
@@ -214,9 +217,24 @@ export default function LeaveFilter({filterSearch,filterData}){
             </Grid>
             <Grid md={4} xs={4} item>
         <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-            <Button onClick={handleClickOpen} sx={{width:"80px"}}>
-           <Iconify icon="mi:filter"/>Filter
-      </Button>
+        {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
       </Stack>
       </Grid>
          </Grid>

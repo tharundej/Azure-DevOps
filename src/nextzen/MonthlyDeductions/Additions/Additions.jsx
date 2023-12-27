@@ -23,6 +23,8 @@ export default function Additions({defaultPayload,componentPage}){
   const[showForm,setShowForm] = useState()
   const [showFilter,setShowFilter]= useState(false)
   const [loader,setLoader] =useState()
+  const [openedCard, setOpenedCard] = useState(null);
+  const [payloadData,setPayloadData] = useState(null)
   const handleClickClose=()=> {
     setShowFilter(false)
     console.log(filterData,"filterdataa");
@@ -47,19 +49,30 @@ const MenuProps = {
         { id: "comments", label: "Remarks", minWidth: "8pc", type: "text" },
 
       ]
-   
+  
+const handleChange = (event) => {
+  setPersonName(event?.target?.value)
+  setCount(count+1)
+};
+
 useEffect(()=>{
   if(componentPage=="MyRequests"){
-  setPersonName(user?.employeeID)
+    setPersonName(user?.employeeID)
+    setPayloadData(defaultPayload)
   }
-},[])
+  else if(componentPage!="MyRequests" && personName!=null)
+  {
+    setPayloadData({employeeID:personName})
+  }
+},[personName,componentPage])
 
-      useEffect(()=>{
-        getEmployeesList()
-        if(personName){
-          getLatestAdditions()
-        }
-      },[personName])
+useEffect(()=>{
+  getEmployeesList()
+  if(personName!=null){
+    getLatestAdditions()
+  }
+  
+},[personName])
 
       const getEmployeesList =()=>{
         const data ={
@@ -79,14 +92,15 @@ useEffect(()=>{
          })
       }
     
-const handleChange = (event) => {
-  setPersonName(event?.target?.value)
-  setCount(count+1)
- };
+
 
  const handleAddition=(index)=>{
   const newExpanded = [...additionCard];
   newExpanded[index] = !newExpanded[index];
+  if (openedCard !== null && openedCard !== index) {
+    newExpanded[openedCard] = false;
+  }
+  setOpenedCard(index === openedCard ? null : index);
   setAdditionCard(newExpanded);
 }
 const [datesData,setDatesData]=useState([])
@@ -96,7 +110,7 @@ const [dropdownadditionType,setdropdownadditionType]=useState([])
 const [datesFiledArray,setDatesFiledArray]=useState(
   [
     {
-      field:'externalFilters',
+      field:'date',
       from:'additionDateStart',
       to:'additionDateEnd'
     }
@@ -169,10 +183,17 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     setDatesData([])
     const data = await formDateDataStructure();
     const data1=await formWithDropdown(data);
-    console.log(data,"dataaa")
-    setFilterDate(data);
+  setPayloadData(prevPayloadData => ({
+      ...prevPayloadData,
+      externalFilters: {
+          ...data,
+      },
+  }));
     handleClickClose()
   }
+  useEffect(()=>{
+    getLatestAdditions()
+  },[payloadData])
   const handleCancel = async()=>{ 
     setdropdownadditionType([]);
     setDates({
@@ -182,10 +203,7 @@ const [dropdownFiledArray,setDropdownFiledArray]=useState(
     setShowFilter(false);
   }
 
-  const payloadData = (componentPage=="MyRequests")?defaultPayload:{
-    employeeID:personName,
-    companyID:user?.companyID,
-} 
+
 
 const getLatestAdditions =()=>{
   setLoader(true)
@@ -352,7 +370,10 @@ PaperProps={{
              <span style={{ fontWeight: 500 }}>Addition Type : </span> {itm?.additionsType}
              <IconButton
                sx={{ position: 'absolute', top: 15, right: 0 }}
-               onClick={() => handleAddition(index)}
+               onClick={() => {
+                  setOpenedCard(index === openedCard ? null : index);
+                  handleAddition(index)
+                }}
              >
                <Iconify icon="iconamoon:arrow-down-2-thin" />
              </IconButton>
@@ -366,7 +387,10 @@ PaperProps={{
                   {itm?.additionsType!="Over Time Hours" && <span>Date : {formatDate(itm?.date)}</span>}
                   <IconButton
                     sx={{ position: 'absolute', top: 15, right: 0 }}
-                    onClick={() => handleAddition(index)}
+                    onClick={() => {
+                        setOpenedCard(index === openedCard ? null : index);
+                        handleAddition(index)
+                      }}
                   >
                     <Iconify icon="iconamoon:arrow-up-2-thin" />
                   </IconButton>
