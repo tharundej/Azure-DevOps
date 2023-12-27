@@ -15,6 +15,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
 import axios from 'axios';
 import EarningsAndDeduction from './EarningsAndDeduction';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 const bull = (
   <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
@@ -103,8 +104,8 @@ const [loading,setLoading] = React.useState(false);
       method: 'post',
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
-      // url: baseUrl + '/getPayRunCount',
-      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
+      url: baseUrl + '/payRunTotalCalculations',
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',

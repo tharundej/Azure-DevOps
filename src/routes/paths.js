@@ -155,6 +155,9 @@ export const paths = {
     itdeclaration: {
       root: `/itdeclaration`,
     },
+    itdeclarationv2: {
+      root: `/itdeclarationv2`,
+    },
     leave: {
       root: `/leave`,
      

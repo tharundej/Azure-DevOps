@@ -102,6 +102,7 @@ const MyCompoff = lazy(() => import('src/nextzen/LeaveManagement/compoff/MyCompo
 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
+const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclarationVersionTwo'));
 
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
@@ -119,6 +120,7 @@ const PayScheduleform = lazy(() => import('src/nextzen/Payroll/payschedule/PaySc
 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
+
 
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
@@ -590,6 +592,23 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <Itdeclaration />, index: true },
+
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path: 'itdeclarationv2',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclarationv2 />, index: true },
 
       // { path: 'profile', element: <UserProfilePage /> },
     ],

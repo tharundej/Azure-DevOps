@@ -30,7 +30,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import Badge from '@mui/material/Badge';
 import dayjs from 'dayjs';
 
 import Dialog from '@mui/material/Dialog';
@@ -129,7 +129,7 @@ export default function LeavePeriodFilters({
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownDesignation, setdropdownDesignation] = useState([]);
   const [dropdownleavePeriodType, setdropdownleavePeriodType] = useState([]);
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'date_activity',
@@ -275,7 +275,7 @@ export default function LeavePeriodFilters({
 
   const handleApply = async () => {
     setDatesData([]);
-
+    setBadgeContent(true);
     const data = await formWithDropdown();
 
     const comma = data.join(',');
@@ -295,36 +295,50 @@ export default function LeavePeriodFilters({
   return (
     <>
       <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        justifyContent="flex-end"
-        direction="row"
-        style={{ marginBottom: '0.1rem' }}
-        lg={12}
-        md={12}
-        xs={12}
+  container
+  spacing={2}
+  alignItems="center"
+  direction="row"
+  style={{ marginBottom: '0.1rem' }}
+  lg={12}
+  md={12}
+  xs={12}
+>
+  <Grid item lg={8} md={8} xs={12} sm={8}>
+    <TextField
+      placeholder="Search...."
+      fullWidth
+      onChange={(e) => handleSearch(e.target.value)}
+    />
+  </Grid>
+  <Grid item lg={2} md={2} xs={8} sm={2}>
+    <LeavePeriodForm getTableData={getTableData} />
+  </Grid>
+  <Grid item lg={2} md={2} xs={4} sm={2}>
+    {badgeContent === true ? (
+      <Badge
+        badgeContent={""}
+        color="success"
+        variant="dot"
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
       >
-      <Grid item lg={6} md={6} xs={12} sm={6}>
-          <TextField
-            placeholder="Search...."
-            fullWidth
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-        </Grid>
-         <Grid item lg={3} md={3} xs={6} sm={3}>
-          <LeavePeriodForm  getTableData={getTableData}/>
-        </Grid>
-         <Grid item lg={3} md={3} xs={6} sm={3}>
-          <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
-                <Iconify icon="mi:filter" />
-              </Button>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Grid>
+        <Button onClick={handleClickOpen} style={{ width: "80px" }}>
+          <Iconify icon="mi:filter" />
+          Filters
+        </Button>
+      </Badge>
+    ) : (
+      <Button onClick={handleClickOpen} style={{ width: "80px" }}>
+        <Iconify icon="mi:filter" />
+        Filters
+      </Button>
+    )}
+  </Grid>
+</Grid>
+
 
       <BootstrapDialog
         onClose={handleClickClose}
