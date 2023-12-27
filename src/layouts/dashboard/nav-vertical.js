@@ -1,33 +1,42 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 // @mui
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
+import { Typography,Avatar,Drawer, Stack,Box,Grid , Button, IconButton} from '@mui/material';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
-import { usePathname } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 import { NavSectionVertical } from 'src/components/nav-section';
 //
 import { NAV } from '../config-layout';
+import { useAuthContext } from 'src/auth/hooks';
 import { useNavData } from './config-navigation';
-import { NavToggleButton, NavUpgrade } from '../_common';
-
+import { useSnackbar } from 'src/components/snackbar';
+import { AccountPopover, NavToggleButton, NavUpgrade } from '../_common';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 // ----------------------------------------------------------------------
 
 export default function NavVertical({ openNav, onCloseNav }) {
-  const { user } = useMockedUser();
-
+  const { user } = useContext(UserContext)
+  const { logout } = useAuthContext();
   const pathname = usePathname();
-
+const router = useRouter()
   const lgUp = useResponsive('up', 'lg');
-
+  const { enqueueSnackbar } = useSnackbar();
   const navData = useNavData();
-
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace('/');
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
+  };
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -46,8 +55,31 @@ export default function NavVertical({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4, mb: 1 }} />
+      {/* <Logo sx={{ mt: 3, ml: 4, mb: 1 }} /> */}
 
+      <Grid sx={{display:"flex"}}>
+      <Avatar
+          src={user?.photoURL}
+          alt={user?.displayName}
+          sx={{
+            width: 36,
+            height: 36,
+            ml:4,mt:2,
+            border: (theme) => `solid 2px ${theme.palette.background.default}`,
+          }}
+        >
+          {user?.employeeName ? user?.employeeName[0] : ''}
+        </Avatar>
+        <Box sx={{ p: 2, pb: 1.5 }}>
+          <Typography variant="subtitle2" noWrap>
+            {user?.employeeName}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {user?.roleName}
+          </Typography>
+          </Box>
+<Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon/></Button>
+        </Grid>
       <NavSectionVertical
         data={navData}
         config={{
