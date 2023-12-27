@@ -48,7 +48,7 @@ export default function NavMini() {
         <Logo sx={{ mx: 'auto', my: 2 }} />
 
         <NavSectionMini
-          data={navData}
+          data={navData || []}
           config={{
             currentRole: user?.role || 'admin',
           }}

@@ -68,7 +68,7 @@ const NavItem = forwardRef(({ item, depth, open, active, externalLink, config, .
       )}
 
       {caption && (
-        <Tooltip title={caption} arrow>
+        <Tooltip  arrow>
           <Iconify width={16} icon="eva:info-outline" sx={{ ml: 0.5, color: 'text.disabled' }} />
         </Tooltip>
       )}
