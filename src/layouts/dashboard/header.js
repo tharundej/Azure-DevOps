@@ -100,7 +100,7 @@ export default function Header({ onOpenNav }) {
 
       {/* <Searchbar /> */}
 
-      <Stack
+      {/* <Stack
         flexGrow={1}
         direction="row"
         alignItems="center"
@@ -110,8 +110,8 @@ export default function Header({ onOpenNav }) {
         <Typography style={{ color: 'black' }} component="span" variant="h5">
           {headerMap.get(splicedPath)}
         </Typography>
-      </Stack>
-
+      </Stack> */}
+{/* 
       <Stack
         flexGrow={1}
         direction="row"
@@ -119,16 +119,16 @@ export default function Header({ onOpenNav }) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        {/* <LanguagePopover />
+        <LanguagePopover />
 
         <NotificationsPopover />
 
         <ContactsPopover />
 
-        <SettingsButton /> */}
+        <SettingsButton />
 
         <AccountPopover />
-      </Stack>
+      </Stack> */}
     </>
   );
 

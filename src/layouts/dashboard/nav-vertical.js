@@ -55,7 +55,12 @@ const router = useRouter()
         },
       }}
     >
-      {/* <Logo sx={{ mt: 3, ml: 4, mb: 1 }} /> */}
+     <Grid sx={{display:'flex',mt:3,ml:4}}>
+     <Logo />
+     <Typography variant="subtitle2" sx={{ml:2}}>
+            {/* {user?.employeeName} */} Infobellit
+          </Typography>
+      </Grid> 
 
       <Grid sx={{display:"flex"}}>
       <Avatar
@@ -78,12 +83,12 @@ const router = useRouter()
             {user?.roleName}
           </Typography>
           </Box>
-<Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon/></Button>
+<Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
         </Grid>
       <NavSectionVertical
         data={navData}
         config={{
-          currentRole: user?.role || 'admin',
+          currentRole: user?.role || 'admin', 
         }}
       />
 
