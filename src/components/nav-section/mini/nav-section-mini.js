@@ -8,10 +8,11 @@ import NavList from './nav-list';
 // ----------------------------------------------------------------------
 
 function NavSectionMini({ data, config, sx, ...other }) {
+  console.log(data,"dataa")
   return (
     <Stack sx={sx} {...other}>
-      {data.map((group, index) => (
-        <Group key={group.subheader || index} items={group.items} config={navMiniConfig(config)} />
+      {data && data.map((group, index) => (
+        <Group key={group?.subheader || index} items={group?.items} config={navMiniConfig(config)} />
       ))}
     </Stack>
   );
@@ -30,7 +31,7 @@ export default memo(NavSectionMini);
 function Group({ items, config }) {
   return (
     <>
-      {items.map((list) => (
+      {items && items.map((list) => (
         <NavList
           key={list.title + list.path}
           data={list}

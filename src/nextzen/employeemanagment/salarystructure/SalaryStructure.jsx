@@ -18,8 +18,8 @@ export default function SalaryStructure() {
       { id: 'minimum', label: 'Minimum Salary', type: 'text',minWidth:'150px' },
       { id: 'midpoint', label: 'Midpoint Salary', type: 'text',minWidth:'150px' },
       { id: 'maximum', label: 'Maximum Salary', type: 'text' ,minWidth:'150px'},
-      { id: 'spread', label: 'Spread', type: 'text',minWidth:'150px' },
-      { id: 'range', label: 'Range', type: 'text' ,minWidth:'150px'},
+      // { id: 'spread', label: 'Spread', type: 'text',minWidth:'150px' },
+      // { id: 'range', label: 'Range', type: 'text' ,minWidth:'150px'},
 
     ];
     const actions = [

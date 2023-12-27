@@ -54,9 +54,9 @@ const NavItem = forwardRef(({ item, depth, open, active, externalLink, config, .
             }),
           }}
           primary={
-            // <Tooltip title={title}  placement="bottom-end">
+            <Tooltip title={title}  placement="bottom-end">
               {title}
-            // </Tooltip>
+             </Tooltip>
           }
           primaryTypographyProps={{
             noWrap: true,
