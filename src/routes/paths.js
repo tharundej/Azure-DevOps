@@ -199,19 +199,6 @@ export const paths = {
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
       },
-   
- 
- 
-    // configaration:{
-    //   root:`${ROOTS.DASHBOARD}/configaration`,
-    //   LeaveConfiguration: `${ROOTS.DASHBOARD}/leaveconfiguration`,
-    // list: `${ROOTS.DASHBOARD}/user/list`,
-    // cards: `${ROOTS.DASHBOARD}/user/cards`,
-    // profile: `${ROOTS.DASHBOARD}/user/profile`,
-    // account: `${ROOTS.DASHBOARD}/user/account`,
-    // },
- 
-    // monthlydeductions
  
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

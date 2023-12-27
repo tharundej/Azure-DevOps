@@ -131,6 +131,9 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../settings/SettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
+import FuelFilter from '../expenses/FuelFilter';
+import VehicleFilter from '../expenses/VehicleFilter';
+import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
 
 const defaultFilters = {
@@ -156,7 +159,8 @@ const BasicTable = ({
   SecondoryTable,
   isShowHandle,
   componentPage,count,
-  mergingRowArray
+  mergingRowArray,
+  updateTotalState
 
 }) => {
   const popover = usePopover();
@@ -289,6 +293,10 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         //     ...prevData, Page:data
         //   }))
         // }
+        if(updateTotalState){
+          
+            updateTotalState(response?.data)
+        }
       })
 
       .catch((error) => {
@@ -787,6 +795,30 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'DesignationGradeFilterSearch' && (
             <DesignationGradeSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'FuelFilter' && (
+            <FuelFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+            {filterName === 'VehicleFilter' && (
+            <VehicleFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+             {filterName === 'OtherFIlter' && (
+            <OtherFIlter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}

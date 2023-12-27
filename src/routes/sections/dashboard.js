@@ -476,9 +476,7 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
-      //  { path: ':id/edit', element: <Edits /> },
-      // { path: 'reusetable', element: <ReuseTable /> },
-      //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+
     ],
   },
   {
@@ -641,11 +639,6 @@ export const dashboardRoutes = [
     </AuthGuard>
   ),
   children: [
-    // {
-    //   element: <Personal />,
-    //   index: true,
-    // },
- 
     { element: <Organizationchart/> ,index:true },
 ],
 },
