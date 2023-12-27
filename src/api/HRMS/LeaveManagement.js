@@ -21,7 +21,7 @@ export const getHolidaysListAPI = async (requestBody) => {
 export const getLeaveTypeAPI = async (requestBody) => {
   
   try {
-    const response = await instance.post(`getLeaveType`, requestBody, apiHeaders);
+    const response = await instance.post(`getleaveType`, requestBody, apiHeaders);
     return response;
   } catch (error) {
     throw error; 
