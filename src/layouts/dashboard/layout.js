@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }) {
   if (isHorizontal) {
     return (
       <>
-        <Header onOpenNav={nav.onTrue} />
+        {/* <Header onOpenNav={nav.onTrue} /> */}
 
         {lgUp ? renderHorizontal : renderNavVertical}
 
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }) {
   if (isMini) {
     return (
       <>
-        <Header onOpenNav={nav.onTrue} />
+        {/* <Header onOpenNav={nav.onTrue} /> */}
 
         <Box
           sx={{
@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <>
-      <Header onOpenNav={nav.onTrue} />
+      {/* <Header onOpenNav={nav.onTrue} /> */}
 
       <Box
         sx={{
