@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect } from 'react';
 // @mui
-import { Typography,Avatar,Drawer, Stack,Box,Grid , Button, IconButton} from '@mui/material';
+import { Typography,Avatar,Drawer, Stack,Box,Grid , Button, IconButton, Divider} from '@mui/material';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useMockedUser } from 'src/hooks/use-mocked-user';
@@ -55,14 +55,15 @@ const router = useRouter()
         },
       }}
     >
-     <Grid sx={{display:'flex',mt:3,ml:4}}>
+     <Grid sx={{display:'flex',mt:1.5,ml:4}}>
      <Logo />
      <Typography variant="subtitle2" sx={{ml:2}}>
             {/* {user?.employeeName} */} Infobellit
           </Typography>
       </Grid> 
+      <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
 
-      <Grid sx={{display:"flex"}}>
+      <Grid sx={{display:"flex",minHeight:'50px'}}>
       <Avatar
           src={user?.photoURL}
           alt={user?.displayName}
@@ -85,6 +86,7 @@ const router = useRouter()
           </Box>
 <Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
         </Grid>
+        <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
       <NavSectionVertical
         data={navData}
         config={{
