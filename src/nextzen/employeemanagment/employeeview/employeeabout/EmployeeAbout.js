@@ -187,6 +187,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
 
           const arrValue={
+            employmentType:{label:currentEmployee?.employmentType} || undefined,
             locationValue:locationValue,
             departmentValue:departmentValue,
             desginationValue:desginationValue,

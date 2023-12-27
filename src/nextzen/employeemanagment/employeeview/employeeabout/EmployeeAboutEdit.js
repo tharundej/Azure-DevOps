@@ -207,6 +207,7 @@ console.log(currentUser,"jjjjjjjjjj")
         console.log(currentUser,userdropDownvalue,'userdropDownvalue')
         const obj={
           ...currentUser,
+          employmentType:userdropDownvalue?.employmentType?.label || "",
           departmentID:userdropDownvalue?.departmentValue?.departmentID || null,
           designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID ||null,
           designationID:userdropDownvalue?.desginationValue?.designationID || null,
@@ -551,14 +552,14 @@ console.log(currentUser,"jjjjjjjjjj")
               
               <Autocomplete
                 disablePortal
-                id="martialStatus"
+                id="employemnType"
                 options={employmentTypeOptions || []}
-                value={userdropDownvalue?.employeementTypeValue}
+                value={userdropDownvalue?.employmentType}
                 getOptionLabel={(option) => option?.label}
                 onChange={async(e, newvalue) => {
                 
                   var newArr = { ...userdropDownvalue };
-                  newArr.employeementTypeValue=newvalue;
+                  newArr.employmentType=newvalue;
 
                   setUserDropDownValue(newArr)
                 }
