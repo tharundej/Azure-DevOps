@@ -19,16 +19,16 @@ import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
 import Settings from 'src/nextzen/settings/Settings';
 import LoanDetails from 'src/nextzen/MonthlyDeductions/Loans/loanDetails';
 // ----------------------------------------------------------------------
-
+ 
 // employee Management
-
+ 
 const EmployeeManagementHome = lazy(() =>
   import('src/nextzen/employeemanagment/employeemanagementhome/EmployeeManagementHome')
 );
 const EmployeeView = lazy(() =>
   import('../../nextzen/employeemanagment/employeeview/EmployeeView')
 );
-
+ 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
@@ -82,7 +82,7 @@ const KanbanPage = lazy(() => import('src/pages/dashboard/kanban'));
 const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission'));
 // BLANK PAGE
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
-
+ 
 // ----------------------------------------------------------------------
 // const BasicTable = lazy(() => import('src/nextzen/Table/BasicTable'));
 const UserNewEditForm1 = lazy(() => import('src/nextzen/Table/components/UserNewEditForm1'));
@@ -90,63 +90,67 @@ const UserNewEditForm1 = lazy(() => import('src/nextzen/Table/components/UserNew
 const Edits = lazy(() => import('src/nextzen/Table/components/Edits'));
 const ReuseTable = lazy(() => import('src/nextzen/Table/reusetable'));
 const ReuseTableTwo = lazy(() => import('src/nextzen/Table/Reuseabletwo'));
-
+ 
 // signup------------------------
 const SignupHome = lazy(() => import('src/nextzen/signup/SignupHome'));
 const OnBoardForm = lazy(() => import('src/nextzen/employeemanagment/onboradform/OnboardForm'));
-
+ 
 // claims------------------------
 const Claims = lazy(() => import('src/nextzen/claims/Claims'));
 const CompoffApprove = lazy(() => import('src/nextzen/LeaveManagement/compoff/CompoffApprove'));
 const MyCompoff = lazy(() => import('src/nextzen/LeaveManagement/compoff/MyCompoff'));
-
+ 
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
 const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclarationVersionTwo'));
-
+ 
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
-
+ 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
 const TimeSheetManagement = lazy(() => import('src/nextzen/timesheet/TimeSheet'));
-
+ 
 // Payroll manangement------------------------
 const Payroll = lazy(() => import('src/nextzen/Payroll/Payroll'));
-
+ 
 const PaySchedule = lazy(() => import('src/nextzen/Payroll/payschedule/PaySchedule'));
-
+ 
 const PayScheduleform = lazy(() => import('src/nextzen/Payroll/payschedule/PayScheduleform'));
-
+ 
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
 
-
+ 
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
-
+ 
 const Configaration = lazy(() => import('../../nextzen/configaration/Configaration'));
-
+ 
+const Personal =  lazy(() => import('../../nextzen/personal/Personal'));
+ 
+const Organizationchart =  lazy(() => import('../../nextzen/personal/organizationChart/OrgView'));
+ 
 const LeaveConfiguration = lazy(() =>
   import('../../nextzen/configaration/leaveconfiguration/LeaveConfiguration')
 );
-
+ 
 const CompoffConfiguration = lazy(() =>
   import('../../nextzen/configaration/compoffconfiguration/ComoffConfigView')
 );
-
+ 
 const AppraisalConfiguration = lazy(() =>
   import('../../nextzen/configaration/appraisalconfiguration/AppraisalConfiguration')
 );
-
+ 
 const ExpensClaimConfiguration = lazy(() =>
   import('../../nextzen/configaration/expenseclaimconfiguration/ExpenseClaimConfiguration')
 );
-
+ 
 const ShiftConfiguration = lazy(() =>
   import('../../nextzen/configaration/shiftconfiguration/ShiftConfiguration')
 );
-
+ 
 const RoleConfiguration = lazy(() =>
   import('../../nextzen/configaration/roleconfiguration/RoleConfigTab')
 );
@@ -163,7 +167,6 @@ const Products = lazy(() => import('src/nextzen/Products/Products'));
 const Customers = lazy(() => import('src/nextzen/Customers/Customers'));
 const PurchaseOrder = lazy(() => import('src/nextzen/Purchase/PurchaseOrder/PurchaseOrder'));
 const Balancesheet = lazy(() => import('src/nextzen/balancesheet/BalanceSheet'));
-const OrganizationChart = lazy(() => import('src/nextzen/organizationChart/OrgView'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -176,7 +179,7 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
-
+ 
     children: [
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
@@ -185,19 +188,19 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
-
+ 
       {
         path: 'table',
         children: [
           { element: <ReuseTable />, index: true },
           { path: 'userneweditform', element: <UserNewEditForm1 /> },
           { path: ':id/edit', element: <Edits /> },
-
+ 
           // { path: 'reusetable', element: <ReuseTable /> },
           // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
         ],
       },
-
+ 
       // {
       //   path: 'employeemanagementhome',
       //   children: [
@@ -205,14 +208,14 @@ export const dashboardRoutes = [
       //     { path: ':id/edit', element: <Edits /> },
       //     { path: 'userneweditform', element: <UserNewEditForm1 /> },
       //     { path: 'onboardform', element: <OnBoardForm />},
-
+ 
       //     { path: 'employeeview', element: <EmployeeView />},
       //     //  { path: ':id/edit', element: <Edits /> },
       //     // { path: 'reusetable', element: <ReuseTable /> },
       //     //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
       //   ],
       // },
-
+ 
       {
         path: 'user',
         children: [
@@ -223,12 +226,12 @@ export const dashboardRoutes = [
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
-
+ 
           // { path: 'reusetable', element: <ReuseTable /> },
           // { path: 'reusetabletwo', element: <ReuseTableTwo /> },
         ],
       },
-
+ 
       // {
       //   path: 'leave',
       //   children: [
@@ -264,7 +267,7 @@ export const dashboardRoutes = [
           // { path: 'profile', element: <UserProfilePage /> },
         ],
       },
-
+ 
       // {
       //   path: 'payroll',
       //   children: [
@@ -288,7 +291,7 @@ export const dashboardRoutes = [
       //     // { path: 'profile', element: <UserProfilePage /> },
       //   ],
       // },
-
+ 
       {
         path: 'appraisal',
         children: [
@@ -393,7 +396,7 @@ export const dashboardRoutes = [
           },
         ],
       },
-
+ 
       {
         path: 'vendor',
         children: [
@@ -475,9 +478,7 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
-      //  { path: ':id/edit', element: <Edits /> },
-      // { path: 'reusetable', element: <ReuseTable /> },
-      //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+
     ],
   },
   {
@@ -525,22 +526,6 @@ export const dashboardRoutes = [
     ],
   },
   {
-    path: 'organizationchart',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <OrganizationChart/>, index: true },
-      // { path: 'profile', element: <UserProfilePage /> },
-    ],
-  },
-  {
     path: 'claims',
     element: (
       <AuthGuard>
@@ -570,15 +555,15 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <Payroll />, index: true },
-
+ 
       // { path: 'profile', element: <UserProfilePage /> },
-
+ 
       { path: 'payschedule', element: <PaySchedule /> },
-
+ 
       { path: ':id/payscheduleform', element: <PayScheduleform /> },
     ],
   },
-
+ 
   {
     path: 'itdeclaration',
     element: (
@@ -592,6 +577,23 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <Itdeclaration />, index: true },
+ 
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path: 'itdeclarationv2',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclarationv2 />, index: true },
 
       // { path: 'profile', element: <UserProfilePage /> },
     ],
@@ -644,21 +646,36 @@ export const dashboardRoutes = [
         element: <Configaration />,
         index: true,
       },
-
+ 
       { path: 'leaveconfiguration', element: <LeaveConfiguration /> },
-
+ 
       { path: 'compoffconfiguration', element: <CompoffConfiguration /> },
-
+ 
       { path: 'appraisalconfiguration', element: <AppraisalConfiguration /> },
-
+ 
       { path: 'expenseclaimconfiguration', element: <ExpensClaimConfiguration /> },
-
+ 
       { path: 'shiftconfiguration', element: <ShiftConfiguration /> },
-
+ 
       { path: 'roleconfiguration', element: <RoleConfiguration /> },
-
+ 
    { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
-
+ 
   ],
+},
+{
+  path: 'personal',
+  element: (
+    <AuthGuard>
+      <DashboardLayout>
+        <Suspense fallback={<LoadingScreen />}>
+          <Outlet />
+        </Suspense>
+      </DashboardLayout>
+    </AuthGuard>
+  ),
+  children: [
+    { element: <Organizationchart/> ,index:true },
+],
 },
 ];

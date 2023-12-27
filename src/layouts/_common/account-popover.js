@@ -23,38 +23,38 @@ import { useContext } from 'react';
 import UserContextProvider from 'src/nextzen/context/user/UserContextProvider';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import Button from '@mui/material/Button';
-
+ 
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';// ----------------------------------------------------------------------
-
+ 
 const OPTIONS = [
+  {
+    label: 'Profile',
+    linkTo: paths.dashboard.personal.root,
+  },
   {
     label: 'Dashboard',
     linkTo: '/dashboard',
   },
   // {
-  //   label: 'Profile',
-  //   linkTo: paths.dashboard.user.profile,
-  // },
-  // {
   //   label: 'Settings',
   //   linkTo: paths.dashboard.user.account,
   // },
 ];
-
+ 
 // ----------------------------------------------------------------------
-
+ 
 export default function AccountPopover() {
-
+ 
   const {user}=useContext(UserContext)
   console.log(user);
   const router = useRouter();
-
+ 
   const { logout } = useAuthContext();
-
+ 
   const { enqueueSnackbar } = useSnackbar();
-
+ 
   const popover = usePopover();
-
+ 
   const handleLogout = async () => {
     try {
       await logout();
@@ -65,12 +65,12 @@ export default function AccountPopover() {
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
-
+ 
   const handleClickItem = (path) => {
     popover.onClose();
     router.push(path);
   };
-
+ 
   return (
     <>
       <IconButton
@@ -101,13 +101,13 @@ export default function AccountPopover() {
           {user?.employeeName ? user?.employeeName[0] : ''}
         </Avatar>
       </IconButton>
-
+ 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
             {user?.employeeName}
           </Typography>
-
+ 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.companyEmail}
           </Typography>
@@ -115,9 +115,9 @@ export default function AccountPopover() {
             {user?.roleName}
           </Typography>
         </Box>
-
+ 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
+ 
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
@@ -125,9 +125,9 @@ export default function AccountPopover() {
             </MenuItem>
           ))}
         </Stack>
-
+ 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
+ 
         <MenuItem
           onClick={handleLogout}
           sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}

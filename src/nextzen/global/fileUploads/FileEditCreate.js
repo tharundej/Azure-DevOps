@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Grid,Box,Card ,Typography,Button,  FormControl,
   Select,
   MenuItem,
-  InputLabel } from '@mui/material'
+  InputLabel,IconButton } from '@mui/material'
 
   import { Helmet } from "react-helmet-async";
 import Dialog from '@mui/material/Dialog';
@@ -302,26 +302,23 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
               <ModalHeader heading={type==="create"?"Add Document":"Edit Documents"} />
          <DialogContent>
           
-         <Grid xs={12} md={8}>
+         <Grid xs={12} md={12} lg={12}>
             <Card sx={{ p: 3 }}>
               <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                // gridTemplateColumns={{
+                //   xs: 'repeat(1, 1fr)',
+                //   sm: 'repeat(2, 1fr)',
+                // }}
               >
 
                 
-                   {defaultValues && defaultValues?.map((file,index)=>(
-                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
-
-                <Grid item xs={12} md={12} >
-
-               
-                <FormControl fullWidth>
+{defaultValues && defaultValues?.map((file,index)=>(
+                        <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
+                          <Grid item xs={12} md={6}>
+                             <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
                     <Select
                         label="Select Document"
@@ -340,12 +337,10 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12}>
-                <Grid>
-
-                  <Grid item>
-                
-                  <input
+                          <Grid item xs={12} md={6}>
+                		<Grid container>
+                              <Grid item>
+                                 <input
                    id={`file-upload-input-${index}`}
                     type="file"
                     accept=".pdf, .doc, .docx, .txt, .jpg, .png"
@@ -365,51 +360,41 @@ const  FileEditCreate=({callApi,open,documents,onhandleClose,docType,endpoint,ty
                     {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                 </Typography>
                   </Grid>
-                  <Grid container alignItems="center" justifyContent="flex-end" item>
-                  { index===0 && type!=="edit" &&
-                   
-                      <Button 
-                      onClick={()=>{
-                        handleAddDocument(index)
-                      }
-                       
+
+                                  <Grid item>
+                                    {index===0 &&
+                                    <IconButton
+                                      onClick={() => {
+                                        handleAddDocument(index)
+                                      }}
+                                      color="primary"
+                                    >
+                                      <Iconify
+                                         icon="gala:add"
+                                        sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                      />{' '}
+                                      {/* Set the font size to 24px */}
+                                    </IconButton>}
+                                    {index!==0 &&
+                                    <IconButton
+                                      onClick={() => {
+                                        handleDeleteDocument(index)
+                                      }}
+                                      color="primary"
+                                    >
+                                      <Iconify
+                                        icon="zondicons:minus-outline"
+                                        sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                      />{' '}
+                                      {/* Set the font size to 24px */}
+                                    </IconButton>}
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Grid>
                         
                        
-                        
-
-                      }
-                      >Add</Button>
-                   
-
-                  }
-                   { index!==0 &&
-                    
-                      <Button 
-                      onClick={()=>{
-                        handleDeleteDocument(index)
-                      }
-                       
-                        
-                       
-                        
-
-                      }
-                      >Delete</Button>
-                    
-
-                  }
-                  </Grid>
-                  
-                  
-                </Grid>
-               
-                </Grid>
-               
-                   
-
-              </Grid>
-               ))}
-
+                      ))}
 
 
                    

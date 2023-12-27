@@ -207,6 +207,7 @@ console.log(currentUser,"jjjjjjjjjj")
         console.log(currentUser,userdropDownvalue,'userdropDownvalue')
         const obj={
           ...currentUser,
+          employmentType:userdropDownvalue?.employmentType?.label || "",
           departmentID:userdropDownvalue?.departmentValue?.departmentID || null,
           designationGradeID:userdropDownvalue?.desginationGradeValue?.designationGradeID ||null,
           designationID:userdropDownvalue?.desginationValue?.designationID || null,
@@ -245,7 +246,7 @@ console.log(currentUser,"jjjjjjjjjj")
             method: 'post',
             maxBodyLength: Infinity,
             // url: `${baseUrl}/updateOnboardingForm`,
-            url: "https://2d56hsdn-3001.inc1.devtunnels.ms/erp/updateOnboardingForm",
+            url: `${baseUrl}/updateOnboardingForm`,
             headers: { 
               'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json', 
@@ -551,14 +552,14 @@ console.log(currentUser,"jjjjjjjjjj")
               
               <Autocomplete
                 disablePortal
-                id="martialStatus"
+                id="employemnType"
                 options={employmentTypeOptions || []}
-                value={userdropDownvalue?.employeementTypeValue}
+                value={userdropDownvalue?.employmentType}
                 getOptionLabel={(option) => option?.label}
                 onChange={async(e, newvalue) => {
                 
                   var newArr = { ...userdropDownvalue };
-                  newArr.employeementTypeValue=newvalue;
+                  newArr.employmentType=newvalue;
 
                   setUserDropDownValue(newArr)
                 }
@@ -1279,31 +1280,12 @@ console.log(currentUser,"jjjjjjjjjj")
               />
               </Grid>
 
-
               <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="CTC"
-                    label="CTC"
-                    variant="outlined"
-                    id="CTC"
-                     value={currentUser?.ctc}
-                    onChange={(e) => {
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        ctc: parseInt(e.target.value, 10) || ''
-                      }
-                      ))
-                    }}
-                  />
-                </Grid>
-              <Grid md={6} xs={12} item>
-              <TextField 
-              fullWidth
+              
+        <TextField 
+         style={{  width: '100%' }}
           label="Monthly Salary/PM"  
           id="Monthly"
-          variant="outlined"
           value={currentUser?.monthlyPay}
           type='number'
           onChange={(e) => {
@@ -1317,8 +1299,50 @@ console.log(currentUser,"jjjjjjjjjj")
               ctc: newTotalSalary,
             }));
           }}
-        />
-                </Grid>
+        /> </Grid>
+
+<Grid md={6} xs={12} item>
+
+      <TextField 
+       style={{  width: '100%' }}
+        label="Variable Pay/PA"  
+        id="Variable"
+        value={currentUser?.variablePay}
+        type='number'
+        onChange={(e) => {
+          const enteredValue = parseFloat(e?.target?.value) ;
+          const newVariablePay = enteredValue;
+          const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.bonus;
+
+          setcurrentUser((prev) => ({
+            ...prev,
+            variablePay: newVariablePay,
+            ctc: newTotalSalary,
+          }));
+        }}
+       
+      /></Grid>
+    <Grid md={6} xs={12} item>
+          <TextField 
+           style={{  width: '100%' }}
+            label="Bonus Pay/PA"  
+            id="Bonus"
+            value={currentUser?.bonus}
+            type='number'
+            onChange={(e) => {
+              const enteredValue = parseFloat(e?.target?.value) ;
+              const newVariablePay = enteredValue;
+              const newTotalSalary =  currentUser?.monthlyPay * 12+enteredValue+currentUser?.variablePay;
+    
+              setcurrentUser((prev) => ({
+                ...prev,
+                bonus: newVariablePay,
+                ctc: newTotalSalary,
+              }));
+            }}
+            /> </Grid>
+
+
               <Grid md={6} xs={12} item>
                   <TextField
                     fullWidth
@@ -1328,15 +1352,17 @@ console.log(currentUser,"jjjjjjjjjj")
                     variant="outlined"
                     id="CTC"
                      value={currentUser?.ctc}
-                    onChange={(e) => {
-                      setcurrentUser(prev=>({
-                        ...prev,
-                        ctc: parseInt(e.target.value, 10) || ''
-                      }
-                      ))
-                    }}
+                    // onChange={(e) => {
+                    //   setcurrentUser(prev=>({
+                    //     ...prev,
+                    //     ctc: parseInt(e.target.value, 10) || ''
+                    //   }
+                    //   ))
+                    // }}
                   />
                 </Grid>
+           
+              
 
 
 
@@ -1367,24 +1393,7 @@ console.log(currentUser,"jjjjjjjjjj")
          Follow the salary structure 
       </label>
 
-      <Grid md={6} xs={12} item>
-                  <TextField
-                    fullWidth
-                
-                    name="ctc"
-                    label="Enter CTC"
-                    variant="outlined"
-                    id="ctc"
-                    value={currentUser?.ctc}
-                    onChange={(e) => {
-                      
-                      setcurrentUser(prev=>({
-                        ...prev,
-                       ctc: parseInt(e.target.value, 10)
-                      }))
-                    }}
-                  />
-                  </Grid>
+    
     </div>
                 
             

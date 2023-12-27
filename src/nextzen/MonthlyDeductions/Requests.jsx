@@ -17,7 +17,7 @@ export default function Requests() {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
-    "records":"",
+    "fullAccess":false,
     "externalFilters": {
   "requestDate": {
    

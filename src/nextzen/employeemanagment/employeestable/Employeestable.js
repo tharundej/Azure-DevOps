@@ -90,8 +90,10 @@ export default function EmployeeTable() {
   },[])
 
   const {user}=useContext(UserContext)
+  console.log(user,'pppoppp')
 
   const defaultPayload={
+    fullAccess:user?.rolePermissions?.employeeManagement?.fullAccess || false,
     employeeID: user?.employeeID,
     roleID:user?.roleID,
     "count": 5,
@@ -137,7 +139,7 @@ export default function EmployeeTable() {
     },
      
     "sort": {
-      "key": 0,
+     "key": 1,
       "orderBy": "last_updated_by"
   }
     }
