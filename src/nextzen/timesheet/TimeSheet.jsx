@@ -31,16 +31,16 @@ export default function TimeSheet() {
           label: 'Projects',
           content: <Project  key="projects" />,
         },
-        {
-          id: 'myTimesheet',
-          label: 'My Time Sheet',
-          content: <MyTimeSheet key="myTimesheet" />,
-        },
-        {
-          id: 'approvals',
-          label: 'Employee Time Sheet ',
-          content: <TimeSheetApproval key="approvals" />,
-        },
+        // {
+        //   id: 'myTimesheet',
+        //   label: 'My Time Sheet',
+        //   content: <MyTimeSheet key="myTimesheet" />,
+        // },
+        // {
+        //   id: 'approvals',
+        //   label: 'Employee Time Sheet ',
+        //   content: <TimeSheetApproval key="approvals" />,
+        // },
         {
           id: 'myTeam',
           label: 'My Team Time Sheet ',
