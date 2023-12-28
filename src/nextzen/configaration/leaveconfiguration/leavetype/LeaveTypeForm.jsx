@@ -31,8 +31,10 @@ import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateForm
 import { Alert, Snackbar } from '@mui/material';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
 export default function LeaveTypeForm({ currentUser, getTableData }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -84,53 +86,6 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
     reset: reset1,
   } = methods1;
 
-  // useEffect(() => {
-  //   const getLeavePeriod = async () => {
-  //     try {
-  //       const defaultPayload = {
-  //         count: 5,
-  //         page: 0,
-  //         search: '',
-  //         companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-  //         externalFilters: {
-  //           leavePeriodType: '',
-  //         },
-  //         sort: {
-  //           key: 1,
-  //           orderBy: '',
-  //         },
-  //       };
-  //       const response = await axios.post(baseUrl + '/getAllLeavePeriod', defaultPayload);
-
-  //       if (response?.data?.code === 200) {
-  //         // setSnackbarSeverity('success');
-  //         // setSnackbarMessage(response?.data?.message);
-  //         // setSnackbarOpen(true);
-  //         handleClose();
-  //         console.log('success', response);
-  //       }
-
-  //       if (response?.data?.code === 400) {
-  //         // setSnackbarSeverity('error');
-  //         // setSnackbarMessage(response?.data?.message);
-  //         // setSnackbarOpen(true);
-  //         handleClose();
-  //         console.log('error', response);
-  //       }
-  //     } catch (error) {
-  //       // setSnackbarSeverity('error');
-  //       // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-  //       // setSnackbarOpen(true);
-  //       handleClose();
-  //       console.log('error', error);
-  //     }
-  //   };
-
-  //   // Call the async function immediately
-  //   getLeavePeriod();
-  // }, []); // Empty dependency array to trigger this effect only on mount
-
-  //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
@@ -140,25 +95,28 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
     try {
       const response = await axios.post(baseUrl + '/addLeaveType1', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleClose();
         getTableData();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-      setSnackbarOpen(true);
-      handleClose();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+      // setSnackbarOpen(true);
+      // handleClose();
+      enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -217,7 +175,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
         Add Leave Type
@@ -245,11 +203,11 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
               }}
             >
               <RHFTextField name="leaveTypeName" label="Leave Name" />
-              <RHFTextField name="totalNumberLeave" label="Total Number Of Leaves" />
+              <RHFTextField name="totalNumberLeave" label="Total Number Of Leaves Per Year" />
 
-              <RHFTextField name="upperCapLimit" label="Upper Cap Limit" />
+              <RHFTextField name="upperCapLimit" label="Max Leaves Hold" />
 
-              <RHFTextField name="leaveTakeRange" label="Leave Take Range" />
+              <RHFTextField name="leaveTakeRange" label="Max Continuous Leaves" />
               <Autocomplete
                 multiple
                 name="gender"

@@ -347,7 +347,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
    
 
      
-
+    
       // router.push(returnTo || PATH_AFTER_LOGIN);
       // router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {

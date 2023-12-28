@@ -236,20 +236,12 @@ const [projectData,setProjectData]=useState(
 // }
 projectInfo
 )
-// useEffect(()=>{
-//   if (projectInfo){
-//     setProjectData(projectInfo)
-//   }
-// },[])
+
 console.log(projectInfo,"data from calendar time sheet",projectData,projectData?.projectID.length)
 //  to store data
 
 
-// const [projectDetails, setProjectDetails] = useState({
-//   employeeName:projectInfo?.employeeName,
-//   projectID:projectInfo?.projectID,
-//   todayDate:date?.start,
-// });
+
 
 // const editData=[
 //   ACCOUNTS={
@@ -278,21 +270,8 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 // });
 
 
-// const editData = [
-//   {
-//     ACCOUNTS: {
-//       hours: "sd",
-//       des: "dfer"
-//     }
-//   },
-//   {
-//     HRMS: {
-//       hours: "12",
-//       des: "23"
-//     }
-//   }
-// ];
-console.log(editData,"editttttttdata")
+
+console.log(editData,"editttttttdata",projectInfo)
 // const initialProjectDetails = {
 //   employeeName: projectInfo?.employeeName,
 //   projectID: [
@@ -333,18 +312,18 @@ const initialProjectDetails = {
     ]) || []
   ),
   // Update properties based on editData
+  
   ...Object.fromEntries(
     editData?.map((editItem) => [
-      editItem.projectName,
+      Object.keys(editItem)[0], // Get the project name from the object
       {
-        description: editItem.description || "",
-        // employeename: editItem.employeename || "",
-        hours: editItem.hours || "",
-        projectId: editItem.projectId || "",
-        // projectName: editItem.projectName || ""
+        description: editItem[Object.keys(editItem)[0]].description || "",
+        hours: editItem[Object.keys(editItem)[0]].hours || "",
+        projectId: editItem[Object.keys(editItem)[0]].projectId || "",
       }
     ]) || []
   )
+  
 };
 
 // 3rd method
@@ -410,7 +389,7 @@ console.log(initialProjectDetails);
 
 const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
 
-
+console.log(projectDetails,"projectDetails12")
 const handleTextFieldChange = (projectname, field, value, projectId) => {
   console.log(projectId,"projectId12345")
   setProjectDetails((prevDetails) => ({
@@ -536,7 +515,7 @@ console.log(output);
 
 
     
-    const response = await axios.post( "https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/newupdateTimeSheet", output).then(
+    const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
         
@@ -619,6 +598,8 @@ console.log(output);
         </LoadingButton>
       </DialogActions>
     </FormProvider>
+
+    
     </>
   );
 }
