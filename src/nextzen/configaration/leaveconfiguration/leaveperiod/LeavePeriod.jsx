@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
-import {baseUrl} from '../../../global/BaseUrl';
+import { baseUrl } from '../../../global/BaseUrl';
 import {
   Alert,
   Autocomplete,
@@ -26,15 +26,18 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LoadingButton } from '@mui/lab';
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
 export default function LeavePeriod({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
+  const [valueSelected, setValueSelected] = useState();
   const [selectedDates, setSelectedDates] = useState(dayjs());
   const [selectedDates2, setSelectedDates2] = useState(dayjs());
   const [locationType, setLocationType] = useState([]);
@@ -45,17 +48,31 @@ export default function LeavePeriod({ currentUser }) {
   };
   const [openEdit, setOpenEdit] = React.useState(false);
   const handleOpenEdit = () => {
+    // if (valueSelected) {
+    //   setSelectedDates(dayjs(valueSelected.startDate));
+    //   setSelectedDates2(dayjs(valueSelected.endDate));
+    // }
     setOpenEdit(true);
   };
   const handleCloseEdit = () => setOpenEdit(false);
   const [editData, setEditData] = useState();
   const [showEdit, setShowEdit] = useState(false);
-  const [valueSelected, setValueSelected] = useState();
-  const [count,setCount] = useState(0)
+
+  const [count, setCount] = useState(0);
   const NewUserSchema1 = Yup.object().shape({
     leavePeriodType: Yup.string(),
   });
-
+  useEffect(() => {
+    const currentYear = dayjs().year();
+    if (valueSelected?.leavePeriodType === 'Year') {
+      setSelectedDates(dayjs(`${currentYear}-01-01`));
+      setSelectedDates2(dayjs(`${currentYear}-12-31`));
+    } else if (valueSelected?.leavePeriodType === 'Financial Year') {
+      const nextYear = currentYear + 1;
+      setSelectedDates(dayjs(`${currentYear}-04-01`));
+      setSelectedDates2(dayjs(`${nextYear}-03-31`));
+    }
+  }, [valueSelected]);
   const defaultValues1 = useMemo(
     () => ({
       leavePeriodType: currentUser?.leavePeriodType,
@@ -122,24 +139,27 @@ export default function LeavePeriod({ currentUser }) {
       };
       const response = await axios.post(baseUrl + '/deleteLeavePeriod', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleCloseEdit();
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        // handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
-      setSnackbarOpen(true);
-      handleCloseEdit();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
+      // setSnackbarOpen(true);
+      // handleCloseEdit();
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   };
@@ -196,24 +216,26 @@ export default function LeavePeriod({ currentUser }) {
       const response = await axios.post(baseUrl + '/editLeavePeriod', data);
       if (response?.data?.code === 200) {
         handleClose();
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        setCount(count+1)
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        setCount(count + 1);
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        handleClose();
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-
+        // handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Leave Period. Please try again.');
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Adding Leave Period. Please try again.');
+      // setSnackbarOpen(true);
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -232,6 +254,15 @@ export default function LeavePeriod({ currentUser }) {
       ...prevData,
       [field]: value,
     }));
+    const currentYear = dayjs().year();
+    if (value === 'Year') {
+      setSelectedDates(dayjs(`${currentYear}-01-01`));
+      setSelectedDates2(dayjs(`${currentYear}-12-31`));
+    } else if (value === 'Financial Year') {
+      const nextYear = currentYear + 1;
+      setSelectedDates(dayjs(`${currentYear}-04-01`));
+      setSelectedDates2(dayjs(`${nextYear}-03-31`));
+    }
   };
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const [isLargeDevice, setIsLargeDevice] = React.useState(window.innerWidth > 530);
@@ -311,16 +342,17 @@ export default function LeavePeriod({ currentUser }) {
                 renderInput={(params) => (
                   <TextField {...params} label="Leave Period Type" variant="outlined" />
                 )}
-                sx={{marginTop:'8px'}}
+                sx={{ marginTop: '8px' }}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="Start Date"
-                    value={selectedDates2}
+                    value={selectedDates}
+                    disabled
                     // onChange={handleDateChanges2}
-                    onChange={(e, newValue) => handleSelectChange('startDate', newValue || null)}
+                    // onChange={(e, newValue) => handleSelectChange('startDate', newValue || null)}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -329,8 +361,9 @@ export default function LeavePeriod({ currentUser }) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    value={selectedDates}
-                    onChange={handleDateChanges}
+                    value={selectedDates2}
+                    disabled
+                    // onChange={handleDateChanges}
                   />
                 </DemoContainer>
               </LocalizationProvider>

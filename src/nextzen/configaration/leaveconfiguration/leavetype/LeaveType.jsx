@@ -29,8 +29,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { da } from 'date-fns/locale';
+import { useSnackbar } from 'notistack';
 
 export default function LeaveType({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -60,8 +62,8 @@ export default function LeaveType({ currentUser }) {
       minWidth: 280,
     },
     // { id: 'leavePeriodType', label: 'Term Type', type: 'text', minWidth: 180 },
-    { id: 'leaveTakeRange', label: 'Leave Take Range', type: 'text', minWidth: 180 },
-    { id: 'upperCapLimit', label: 'Leave Upper Cap Limit', type: 'text', minWidth: 180 },
+    { id: 'leaveTakeRange', label: 'Max Continuous Leaves', type: 'text', minWidth: 200 },
+    { id: 'upperCapLimit', label: 'Max Leaves Hold', type: 'text', minWidth: 180 },
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
@@ -147,26 +149,29 @@ export default function LeaveType({ currentUser }) {
     try {
       const response = await axios.post(baseUrl + '/editLeaveType2', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
         // handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleCloseEdit();
         setCount(count + 1);
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleCloseEdit();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleCloseEdit();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Leave Type. Please try again.');
-      setSnackbarOpen(true);
-      handleCloseEdit();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
+      // setSnackbarOpen(true);
+      // handleCloseEdit();
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -296,19 +301,19 @@ export default function LeaveType({ currentUser }) {
               />
               <RHFTextField
                 name="totalNumberLeave"
-                label="Total Number Of Leaves"
+                label="Total Number Of Leaves Per Year"
                 value={valueSelected?.totalNumberLeave}
                 onChange={(e) => handleSelectChange('totalNumberLeave', e.target.value)}
               />
               <RHFTextField
                 name="upperCapLimit"
-                label="Upper Cap Limit"
+                label="Max Leaves Hold"
                 value={valueSelected?.upperCapLimit}
                 onChange={(e) => handleSelectChange('upperCapLimit', e.target.value)}
               />
               <RHFTextField
                 name="leaveTakeRange"
-                label="Leave Take Range"
+                label="Max Continuous Leaves"
                 value={valueSelected?.leaveTakeRange}
                 onChange={(e) => handleSelectChange('leaveTakeRange', e.target.value)}
               />

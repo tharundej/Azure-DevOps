@@ -58,7 +58,7 @@ const router = useRouter()
      <Grid sx={{display:'flex',mt:1.5,ml:4}}>
      <Logo />
      <Typography variant="subtitle2" sx={{ml:2}}>
-            {/* {user?.employeeName} */} Infobellit
+            {user?.companyName} 
           </Typography>
       </Grid> 
       <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
