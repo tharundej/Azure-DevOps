@@ -515,6 +515,7 @@ const [index, setIndex]=useState(""); // index setting
         <LoadingScreen sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
       ) : (
         <Container
+        sx={{padding:'10px'}}
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
@@ -844,7 +845,7 @@ const [index, setIndex]=useState(""); // index setting
             <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
-          <Card sx={{margin:'10px'}}>
+          <Card >
             <TableContainer
              component={Paper} sx={{top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', minheight:100,  }}
             >
