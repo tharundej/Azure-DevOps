@@ -127,7 +127,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
       console.log(JSON.stringify(response.data.data,'setUserData'));
       setUserData(response.data.data)
       setNewAvatarUrl(baseImageUrl+response.data.data?.imageData)
-     console.log( response.data.data,'avatarUrl')
+     console.log(baseImageUrl+response.data.data?.imageData,'avatarUrl')
 
     })
     .catch((error) => {
