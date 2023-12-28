@@ -157,7 +157,7 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
   ];
   const EmployementTypeOptions = [
    "Permanent",
-   "Contract",'Daily Wise'
+   "Contract",'Daily Wise',"Hours Wise"
 
     
   ];

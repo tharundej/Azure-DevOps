@@ -73,7 +73,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
   return (
     <>
      
-      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
+      <TableRow hover  sx={{cursor:'pointer',backgroundColor:'#F0F5FE'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
@@ -87,7 +87,8 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
-                  cursor:'pointer'
+                  cursor:'pointer',
+                  
                 }}
               >
                 {ele.containesAvatar && (
