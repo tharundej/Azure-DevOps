@@ -24,7 +24,7 @@ const PurchasePaymentTable = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
-    count: 5,
+    count: 10,
     page: 1,
   });
   const ApiHit = () => {};
@@ -36,7 +36,7 @@ const PurchasePaymentTable = () => {
     companyID:user?.companyID,
     "search": "",
     "page": 1,
-    "count": 5,
+    "count": 10,
     "externalFilters": {
         "status": "",
         "paymentMethod": "",

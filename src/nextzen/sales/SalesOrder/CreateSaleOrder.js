@@ -323,7 +323,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             orderBy: 'hsnId',
           },
           page: 0,
-          count: 5,
+          count: 10,
         };
         setSelectedVendor(newValue.vendorID || 0);
         const vendorMaterialResponse = await getVendorMaterialListAPI(vendorMaterialPayload);

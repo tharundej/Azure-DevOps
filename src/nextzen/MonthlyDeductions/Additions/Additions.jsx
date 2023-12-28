@@ -234,7 +234,7 @@ maxWidth={false}
 open={showForm}
 onClose={handleClose}
 PaperProps={{
-  sx: { maxWidth: 720 },
+  sx: { maxWidth: 500 , overflow:'auto'},
 }}
 >
         <AdditionAddEdit  EditData={{}} handleClose={handleClose}/>
