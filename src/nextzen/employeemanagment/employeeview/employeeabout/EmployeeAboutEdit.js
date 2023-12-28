@@ -566,7 +566,7 @@ console.log(currentUser,"jjjjjjjjjj")
                 
               }
 
-                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                renderInput={(params) => <TextField {...params} label="Employement Type"
                 style={{  width: '100%' }} />}
               />
                  </Grid>

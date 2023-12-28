@@ -5,7 +5,7 @@ import CryptoJS from "crypto-js";
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
-import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
+import { Container,Card,Tab ,Link,Grid,Button,Stack} from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import ProfileCover from 'src/sections/user/profile-cover';
 import Iconify from '../../../components/iconify/iconify';
@@ -161,8 +161,10 @@ const EmployeeView = () => {
   
   return (
     <div>
-         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+         <Stack maxWidth={settings.themeStretch ? false : 'lg'}>
+          
+         
+          <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"
@@ -237,9 +239,9 @@ const EmployeeView = () => {
     [`& .${tabsClasses.flexContainer}`]: {
       pr: { md: 3 },
       justifyContent: {
-        sm: 'flex-end',
-        md: 'flex-end',
-        lg: 'flex-end',
+        sm: 'flex-start',
+        md: 'flex-start',
+        lg: 'flex-start',
     
       },
     },
@@ -299,7 +301,7 @@ const EmployeeView = () => {
       // )} */}
 
       {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
-    </Container>
+    </Stack>
 
 
 
