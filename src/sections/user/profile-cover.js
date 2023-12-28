@@ -182,7 +182,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
     >
       <Avatar
-        src={baseImageUrl+avatarUrl}
+        src={newAvatarUrl}
         alt={name}
         sx={{
           mx: 'auto',

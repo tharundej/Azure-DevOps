@@ -2,6 +2,7 @@ import PropTypes, { element } from 'prop-types';
 
 import React,{ useEffect, useState,useCallback } from 'react';
 import Badge from '@mui/material/Badge';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 import { styled } from '@mui/system';
 
@@ -43,7 +44,7 @@ import { paths } from 'src/routes/paths';
 // import CustomDateRangePicker from '../global/CustomDateRangePicker';
 
 import { useRouter } from 'src/routes/hooks';
-import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 
 
 
@@ -101,12 +102,14 @@ export default function EmployeeFilterSearch({filterSearch,filterData}){
         const locations = await ApiHitLocations();
         const roles= await ApiHitRoles()
         const manager=await ApiHitManager()
+        const department=await ApiHitDepartmentWithoutLocation();
 
         const arr={
           locationsOptions:locations,
          
           rolesOptions:roles,
-          managerOptions:manager
+          managerOptions:manager,
+          departmentOptions:department
 
 
         }
@@ -521,7 +524,8 @@ const [stateOptions,setOptions]=useState([])
       >
         
         <DialogTitle sx={{textAlign:"start",paddingBottom:0,paddingTop:2}}>Filters
-        <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button>
+        <CancelOutlinedIcon sx={{cursor:"pointer",float:'right'}} onClick={()=>setOpen(false)} />
+        {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
         </DialogTitle>
 
         <DialogContent sx={{mt:0,paddingBottom:0}}>
@@ -684,65 +688,65 @@ const [stateOptions,setOptions]=useState([])
 
 
                  {/* drop down options */}
-                <Grid>
+              
 
 
               
 
-                <Grid>
+                <Grid container marginTop='10px' spacing={3}>
                   
                 
                     
-                   <Grid marginTop="10px" xs={6} md={6} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="employment_type">Employement Type</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-fPEmployementType"
-                  id="demo-multiple-fPEmployementType"
-                  multiple
-                  value={dropdownEmployemtType}
-                  onChange={(e)=>handleChangeDropDown(e,'fPEmployementType')}
-                  input={<OutlinedInput label="Employemt Type" />}
-                  MenuProps={MenuProps}
-                >
-                  {EmployementTypeOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <Grid   md={6} xs={12} item>
+                      <FormControl fullWidth >
+                      <InputLabel fullWidth id="status">Employement Type</InputLabel>
+                      <Select
+                      fullWidth
+                      labelId="demo-multiple-name-fPEmployementType"
+                      id="demo-multiple-fPEmployementType"
+                      multiple
+                      value={dropdownEmployemtType}
+                      onChange={(e)=>handleChangeDropDown(e,'fPEmployementType')}
+                      input={<OutlinedInput label="Employemt Type" />}
+                        MenuProps={MenuProps}
+                      >
+                        {EmployementTypeOptions?.map((name) => (
+                          <MenuItem
+                            key={name}
+                            value={name}
+                            style={getStyles(name, personName, theme)}
+                          >
+                            {name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                    </Grid>
 
-                   <Grid marginTop="10px" xs={12} md={6} lg={6}>
-                <FormControl fullWidth >
-                <InputLabel fullWidth id="status">Marital Status</InputLabel>
-                <Select
-                fullWidth
-                  labelId="demo-multiple-name-status_1"
-                  id="demo-multiple-status_1"
-                  multiple
-                  value={dropdownmartial}
-                  onChange={(e)=>handleChangeDropDown(e,'fMaritalStatus')}
-                  input={<OutlinedInput label="Marital Status" />}
-                  MenuProps={MenuProps}
-                >
-                  {MaritalOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                   <Grid   md={6} xs={12} item>
+                      <FormControl fullWidth >
+                      <InputLabel fullWidth id="status">Marital Status</InputLabel>
+                      <Select
+                      fullWidth
+                        labelId="demo-multiple-name-status_1"
+                        id="demo-multiple-status_1"
+                        multiple
+                        value={dropdownmartial}
+                        onChange={(e)=>handleChangeDropDown(e,'fMaritalStatus')}
+                        input={<OutlinedInput label="Marital Status" />}
+                        MenuProps={MenuProps}
+                      >
+                        {MaritalOptions?.map((name) => (
+                          <MenuItem
+                            key={name}
+                            value={name}
+                            style={getStyles(name, personName, theme)}
+                          >
+                            {name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                    </Grid>
 
                   
@@ -750,9 +754,8 @@ const [stateOptions,setOptions]=useState([])
 
                   
 
-                     <Grid  >
-              
-                  <Grid item xs={12} md={6} lg={6} marginTop="10px">
+                    
+                  <Grid  md={6} xs={12} item >
               
                 <Autocomplete
                   disablePortal
@@ -771,17 +774,17 @@ const [stateOptions,setOptions]=useState([])
                    
                    
                     try{
-                      const deptObj={
-                        companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-                        locationID:newvalue?.locationID
-                      }
-                      const department=await ApiHitDepartment(deptObj);
-                      var optionsArr={...userdropDownOptions};
-                      optionsArr.departmentOptions=department;
-                      optionsArr.desginationGradeOptions=[];
-                      optionsArr.desginationOptions=[];
-                      console.log(optionsArr,'optionsArroptionsArr')
-                      setUserDropDownOptions(optionsArr)
+                      // const deptObj={
+                      //   companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+                      //   locationID:newvalue?.locationID
+                      // }
+                      // const department=await ApiHitDepartmentWithoutLocation();
+                      // var optionsArr={...userdropDownOptions};
+                      // optionsArr.departmentOptions=department;
+                      // optionsArr.desginationGradeOptions=[];
+                      // optionsArr.desginationOptions=[];
+                      // console.log(optionsArr,'optionsArroptionsArr')
+                      // setUserDropDownOptions(optionsArr)
 
                     }
                     catch(error){
@@ -798,12 +801,12 @@ const [stateOptions,setOptions]=useState([])
                  
                   
                   renderInput={(params) => <TextField {...params} label="Location"
-                  style={{  width: '100%' }} />}
+                  />}
                 />
                       </Grid>
-                     </Grid>
                     
-                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+                    
+                <Grid  md={6} xs={12} item >
                 {/* {console.log(typeof userdropDownOptions?.departmentOptions,userdropDownOptions,'ppppp')} */}
                   <Autocomplete
                     disablePortal
@@ -845,13 +848,13 @@ const [stateOptions,setOptions]=useState([])
                       setUserDropDownValue(newArr)
                     }}
                     renderInput={(params) => <TextField {...params} label="Department"
-                    style={{  width: '100%' }} />}
+                     />}
                   />
                 </Grid>
                      
 
-                     <Grid container >
-                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+                    
+                <Grid  md={6} xs={12} item  >
                  
                   <Autocomplete
                     disablePortal
@@ -891,13 +894,13 @@ const [stateOptions,setOptions]=useState([])
                       setUserDropDownValue(newArr)
                     }}
                     renderInput={(params) => <TextField {...params} label="Desgination"
-                    style={{  width: '100%' }} />}
+                     />}
                   />
                 </Grid>
-                      </Grid>
-
-                      <Grid container >
-                <Grid item xs={12} md={12} lg={6}  marginTop="10px">
+               
+                      
+              
+                <Grid md={6} xs={12} item >
                 
                   <Autocomplete
                     disablePortal
@@ -920,13 +923,13 @@ const [stateOptions,setOptions]=useState([])
                       setUserDropDownValue(newArr)
                     }}
                     renderInput={(params) => <TextField {...params} label="DesginationGrade"
-                    style={{ width: '100%' }} />}
+                    />}
                   />
                 </Grid>
-              </Grid>
+             
 
-              <Grid container >
-                <Grid item xs={12} md={12} lg={6} marginTop="10px">
+           
+                <Grid  md={6} xs={12} item >
                 
                   <Autocomplete
                     disablePortal
@@ -949,14 +952,13 @@ const [stateOptions,setOptions]=useState([])
                       setUserDropDownValue(newArr)
                     }}
                     renderInput={(params) => <TextField {...params} label="Role"
-                    style={{ width: '100%' }} />}
+                    />}
                   />
                 </Grid>
-              </Grid>
+           
 
-
-              <Grid container >
-                <Grid item xs={12} md={12} lg={6} marginTop="10px">
+             
+                <Grid  md={6} xs={12} item >
                 
                   <Autocomplete
                     disablePortal
@@ -982,9 +984,9 @@ const [stateOptions,setOptions]=useState([])
                     style={{  width: '100%' }} />}
                   />
                 </Grid>
-              </Grid>
+              
                 </Grid>
-               </Grid>
+              
 
                
 
@@ -993,6 +995,18 @@ const [stateOptions,setOptions]=useState([])
          </DialogContent>
          <Grid container flexDirection="row" alignItems='flex-end' justifyContent="flex-end" spacing={2} padding='10px'>
          <Button onClick={()=>{
+          var newArr = {
+            roleValue:undefined,
+            managerValue:undefined,
+            desginationGradeValue:undefined,
+            desginationValue:undefined,
+            departmentValue:undefined,
+            locationValue:undefined
+
+          };
+          var newA={}
+         
+          setUserDropDownValue(newA)
           setDates({
             joiningDateFrom:"",
             joiningDateTo:"",
@@ -1001,6 +1015,7 @@ const [stateOptions,setOptions]=useState([])
             fofferDateFrom:"",
             fofferDateTo:""
           });
+          handleClickClose()
 
 
           

@@ -1,4 +1,4 @@
-import React,{useRef,useState}  from 'react';
+import React,{useRef,useState,useEffect}  from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -6,6 +6,7 @@ import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { CircularProgress } from '@mui/material';
+import axios from 'axios';
 
 import GeneralInformation from './generalinformation/GeneralInformation';
 import EducationInformation from './educationinformation/EducationInformation';
@@ -20,6 +21,9 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
+
 const steps = ['General Information', 'Education', 'Experience','Documents','Current Work Details'];
 
 export default function OnBoardForm() {
@@ -32,7 +36,57 @@ export default function OnBoardForm() {
   const router=useRouter()
   const [loading, setLoading] = useState(false);
 
+  // configuratio dialog
+
+  const [openDialog,setOpenDialog]=useState();
+  const [dialogHeading,setDialogHeading]=useState();
+  const [dialogMessage,setDialogMessage]=useState();
+  const confirmHandlerDialog=()=>{
+
+  }
+
+  const closeHandlerDialog=()=>{
+    setOpenDialog(false)
+  }
+
+ 
+
   const childref=useRef(null);
+
+  const ApiHitConfiguration=()=>{
+
+    const obj={
+      companyid:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    }
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      // url: `${baseUrl}/updateOnboardingForm`,
+      url: `${baseUrl}/existcompany`,
+      headers: { 
+        'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
+        'Content-Type': 'application/json', 
+      },
+      data : obj
+    };
+     
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      if(!response?.data?.success){
+        setDialogHeading("Configureation Setting");
+        setDialogMessage(response?.data?.message || "");
+        setOpenDialog(true)
+      }
+    
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(()=>{
+    ApiHitConfiguration()
+  },[])
 
   function totalSteps() {
     return steps.length;
@@ -139,6 +193,7 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%' }} >
+      <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage} />
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
