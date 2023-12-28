@@ -26,9 +26,11 @@ import { MobileTimePicker } from '@mui/x-date-pickers';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
 export default function ShiftConfigurationForm({ currentUser }) {
   // const [open, setOpen] = useState(false);
+  const {enqueueSnackbar} = useSnackbar()
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -125,6 +127,14 @@ export default function ShiftConfigurationForm({ currentUser }) {
     fetchData();
   }, []);
   const onSubmit1 = handleSubmit1(async (data) => {
+    const isStartTimeEntered = Boolean(startTime);
+    const isEndTimeEntered = Boolean(endTime);
+
+    if (!isStartTimeEntered || !isEndTimeEntered) {
+      enqueueSnackbar('Please enter both Start Time and End Time.', { variant: 'error' });
+      return;
+    }
+
     (data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID),
       (data.startTime = startTime.format('HH:mm:ss')); // Append Start Time
     data.endTime = endTime.format('HH:mm:ss'); // Append End Time
@@ -139,24 +149,27 @@ export default function ShiftConfigurationForm({ currentUser }) {
       const response = await axios.post(baseUrl + '/addShiftConfig', data);
       if (response?.status === 200) {
         handleClose();
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Shift Configuration Added Succuessfully!');
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage('Shift Configuration Added Succuessfully!');
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleClose();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response?.data);
       }
     } catch (error) {
       setOpen(true);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+      // setSnackbarOpen(true);
+      enqueueSnackbar(error,{variant:'error'})
       handleClose();
       console.log('error', error);
     }
@@ -190,7 +203,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
         Add Shift Configuration
@@ -223,18 +236,23 @@ export default function ShiftConfigurationForm({ currentUser }) {
                 label="Shift Name"
                 name="ShiftName"
                 options={ShiftNames.map((name) => name.type)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent form submission on Enter key press
+                  }
+                }}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="Start Time"
-                  defaultValue={dayjs()}
+                  defaultValue={null}
                   onChange={(newValue) => setStartTime(newValue)}
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
                   label="End Time"
-                  defaultValue={dayjs()}
+                  defaultValue={null}
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </LocalizationProvider>

@@ -8,8 +8,10 @@ import { Icon } from '@iconify/react';
 import { baseUrl } from '../global/BaseUrl';
 import axios from 'axios';
 import { height } from '@mui/system';
+import { useSnackbar } from 'notistack';
 const OrganizationChart = () => {
   const [selectedManager, setSelectedManager] = useState(null);
+  const {enqueueSnackbar} = useSnackbar()
   var [emp, setEmp] = useState();
   const [orgDatas, setOrgDatas] = useState(null);
   const [allData, setAllData] = useState([]);
@@ -30,9 +32,11 @@ const OrganizationChart = () => {
     axios
       .request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data.data));
-        setOrgDatas(response?.data?.data);
-        // setSelectedManager(employeeId);
+        if (response?.data?.code === 200) {
+          setOrgDatas(response?.data?.data);
+        } else if (response?.data?.code === 400) {
+          enqueueSnackbar(error.response.data.message,{variant:'error'})
+        } 
       })
       .catch((error) => {
         console.log(error);
