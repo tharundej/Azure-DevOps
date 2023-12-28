@@ -42,11 +42,12 @@ export default function OnBoardForm() {
   const [dialogHeading,setDialogHeading]=useState();
   const [dialogMessage,setDialogMessage]=useState();
   const confirmHandlerDialog=()=>{
-
+    router.push('/configurations/leaveconfiguration')
   }
 
   const closeHandlerDialog=()=>{
-    setOpenDialog(false)
+    router.push('/dashboard')
+    // setOpenDialog(false)
   }
 
  
@@ -193,7 +194,7 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%' }} >
-      <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage} />
+      <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage}  confirmButtonText="Go To Configuration" cancelButtonText="Go To Dashboard"/>
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
