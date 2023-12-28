@@ -844,7 +844,7 @@ const [index, setIndex]=useState(""); // index setting
             <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
-          <Card>
+          <Card sx={{margin:'10px'}}>
             <TableContainer
              component={Paper} sx={{top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', minheight:100,  }}
             >
