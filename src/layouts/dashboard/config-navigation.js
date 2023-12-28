@@ -4,8 +4,6 @@ import { paths } from 'src/routes/paths';
 // locales
 import { useLocales } from 'src/locales';
 // components
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 import UserContext from 'src/nextzen/context/user/UserConext';
  
@@ -143,6 +141,13 @@ export function useNavData() {
       icon: ICONS.g_itDeclarations,
       key: 'itDeclaration',
       name: 'IT Declaration',
+    },
+    {
+      title: t('IT Declaration v2'),
+      path: paths.dashboard.itdeclarationv2.root,
+      icon: ICONS.g_itDeclarations,
+      key: 'itDeclarationV2',
+      name: 'IT Declaration V2',
     },
     {
       title: t('Monthly Additions and Deductions'),

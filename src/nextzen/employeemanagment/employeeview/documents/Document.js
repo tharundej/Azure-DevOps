@@ -121,7 +121,8 @@ const Documets = ({employeeIDForApis}) => {
      
         
     }}
-    sx={{backgroundColor:'#3B82F6'}}
+    variant="contained"
+    color="primary"
     >Upload Documents</Button>
 
     </Grid>

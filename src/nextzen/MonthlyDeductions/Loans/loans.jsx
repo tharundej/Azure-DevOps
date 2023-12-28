@@ -17,7 +17,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import { LoadingButton } from '@mui/lab';
-export default function Loans({defaultPayload,componentPage}) {
+export default function Loans({defaultPayload,componentPage,fullAccess}) {
   const {user} = useContext(UserContext);
   const [count,setCount] = useState(0)
   const {enqueueSnackbar} = useSnackbar()
@@ -99,7 +99,7 @@ export default function Loans({defaultPayload,componentPage}) {
     "companyID":(user?.companyID)?user?.companyID:'',
     "employeeID":(user?.employeeID)?user?.employeeID:'',
     "roleID":(user?.roleID)?user?.roleID:'',
-    "records":"All Records",
+    "fullAccess":true,
     "externalFilters": {
   "requestDate": {
    

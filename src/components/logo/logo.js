@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
-import { forwardRef, useContext } from 'react';
+import { forwardRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import UserContext from 'src/nextzen/context/user/UserConext';
 // routes
 import { RouterLink } from 'src/routes/components';
 // ----------------------------------------------------------------------
 
 const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   const theme = useTheme();
-  const {user}=useContext(UserContext)
-  const companyLogo= (user?.companyLogo)?user?.companyLogo:''
+
   const PRIMARY_LIGHT = theme.palette.primary.light;
 
   const PRIMARY_MAIN = theme.palette.primary.main;

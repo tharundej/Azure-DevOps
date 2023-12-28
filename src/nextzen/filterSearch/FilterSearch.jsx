@@ -83,8 +83,8 @@ function getStyles(name, personName, theme) {
 export default function SearchFilter({filterSearch,filterData}){
   const theme = useTheme();
   const pfTypenames = [
-    'TypeA',
-    'TypeH'
+    'pfnolimit',
+    'pflimit'
     
   ];
 
@@ -243,6 +243,7 @@ export default function SearchFilter({filterSearch,filterData}){
       const data = {};
       const data1=await formWithDropdown(data);
       console.log(data,';;;')
+      setOpen(false)
 
       filterData(data);
       // call parent function and pass it

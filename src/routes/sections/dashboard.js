@@ -102,6 +102,7 @@ const MyCompoff = lazy(() => import('src/nextzen/LeaveManagement/compoff/MyCompo
  
 // IT Declaration------------------------
 const Itdeclaration = lazy(() => import('src/nextzen/ITDeclaration/Itdeclaration'));
+const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclarationVersionTwo'));
  
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
@@ -119,6 +120,7 @@ const PayScheduleform = lazy(() => import('src/nextzen/Payroll/payschedule/PaySc
  
 // Monthly Deductions manangement------------------------
 const MonthlyDeductions = lazy(() => import('src/nextzen/MonthlyDeductions/Month'));
+
  
 // Appraisal manangement------------------------
 const Appraisal = lazy(() => import('src/nextzen/AppraisalManagement/Appraisal'));
@@ -476,9 +478,7 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
-      //  { path: ':id/edit', element: <Edits /> },
-      // { path: 'reusetable', element: <ReuseTable /> },
-      //  { path: 'reusetabletwo', element: <ReuseTableTwo /> },
+
     ],
   },
   {
@@ -582,6 +582,40 @@ export const dashboardRoutes = [
     ],
   },
   {
+    path: 'itdeclarationv2',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclarationv2 />, index: true },
+
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
+    path: 'itdeclarationv2',
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Itdeclarationv2 />, index: true },
+
+      // { path: 'profile', element: <UserProfilePage /> },
+    ],
+  },
+  {
     path:'changepassword',
     element: (
       <AuthGuard>
@@ -641,11 +675,6 @@ export const dashboardRoutes = [
     </AuthGuard>
   ),
   children: [
-    // {
-    //   element: <Personal />,
-    //   index: true,
-    // },
- 
     { element: <Organizationchart/> ,index:true },
 ],
 },
