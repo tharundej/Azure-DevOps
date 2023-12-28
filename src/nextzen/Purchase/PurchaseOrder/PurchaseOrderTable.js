@@ -115,7 +115,7 @@ const PurchaseOrderTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     roleid: 1,

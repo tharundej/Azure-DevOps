@@ -161,14 +161,17 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-      <Toolbar
+      {
+        !lgUp ? <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
         }}
+        style={{width: '10px', zIndex: '9999'}}
       >
         {renderContent}
-      </Toolbar>
+      </Toolbar> : ""
+      }
     </AppBar>
   );
 }

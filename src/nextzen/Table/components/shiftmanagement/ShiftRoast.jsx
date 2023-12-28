@@ -62,7 +62,7 @@ export default function ShiftRoast() {
         "locationId": (user?.locationID)?user?.locationID : '',
         "search": "",
         "page": 1,
-        "count": 5,
+        "count": 10,
         "externalFilters": {
             "shiftName": "",
             "shiftGroupName":""

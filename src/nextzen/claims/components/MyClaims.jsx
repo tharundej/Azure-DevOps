@@ -112,7 +112,7 @@ export default function MyClaims({ currentUser, }) {
     "companyId": companyID,
     "employeeId": employeeID,
     "page": 0,
-    "count": 5,
+    "count": 10,
     "search": "",
     "externalFilters": {
       "claimStartDate": "",
