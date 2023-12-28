@@ -11,6 +11,9 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { useTheme, alpha } from '@mui/material/styles';
+
 
 // components
 import { useAuthContext } from 'src/auth/hooks';
@@ -21,11 +24,12 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { baseUrl,baseImageUrl } from 'src/nextzen/global/BaseUrl';
 
 import { Country, State, City }  from 'country-state-city';
 
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import ProfileCover from 'src/sections/user/profile-cover';
 
 
 const genderOptions=[
@@ -96,6 +100,44 @@ const bloodGroupsOptions = [
 export default function 
 
 EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeIDForApis }) {
+
+  const theme = useTheme();
+
+
+  const [userData,setUserData]=useState({})
+  const ApiHitAboutEmployeePic=()=>{
+         
+    let data = JSON.stringify({
+      "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      "employeeID": employeeIDForApis
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/getMiniOnboardingDetails`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data.data,'setUserData'));
+      setUserData(response.data.data)
+      setNewAvatarUrl(baseImageUrl+response.data.data?.imageData)
+     console.log(baseImageUrl+response.data.data?.imageData,'avatarUrl')
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+useEffect(()=>{
+  ApiHitAboutEmployeePic()
+},[])
 
  
   const userlocation={
@@ -295,7 +337,145 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
  const handleCallSnackbarP=(msg,sev)=>{
   handleCallSnackbar(msg,sev);
  }
- 
+
+ const [isMobileView, setIsMobileView] = useState(false);
+
+ useEffect(() => {
+   const handleResize = () => {
+     setIsMobileView(window.innerWidth <= 900);
+   };
+
+   // Initial check on mount
+   handleResize();
+
+   // Listen for window resize events
+   window.addEventListener('resize', handleResize);
+
+   // Remove the event listener when the component is unmounted
+   return () => {
+     window.removeEventListener('resize', handleResize);
+   };
+ }, []);
+
+ const handleFileChange = (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewAvatarUrl(reader.result);
+      var obj=userData;
+      obj.imageData=reader.result;
+      setUserData(obj);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+const handleCameraIconClick = () => {
+  // Trigger a click on the file input when the camera icon is clicked
+  document.getElementById('fileInput').click();
+};
+
+const [newAvatarUrl, setNewAvatarUrl] = useState("");
+
+ const renderProfile=(
+  <>
+  <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        sx={{
+          // left: { md: 24 },
+          // bottom: { md: 24 },
+          // zIndex: { md: 10 },
+          // pt: { xs: 6, md: 0 },
+          // position: { md: 'absolute' },
+        }}
+      >
+    <label
+      htmlFor="fileInput"
+      style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
+    >
+      
+      <Avatar
+       src={newAvatarUrl}
+        // alt={name}
+        sx={{
+          mx: 'auto',
+          width: { xs: 64, md: 128 },
+          height: { xs: 64, md: 128 },
+          border: `solid 2px ${theme.palette.common.white}`,
+        }}
+      />
+      <input
+        id="fileInput"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0 }}
+      />
+       {!isMobileView && ( // Only show the icon if the screen width is greater than 600px
+            <IconButton
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                backgroundColor: theme.palette.common.white,
+              }}
+              onClick={handleCameraIconClick}
+            >
+              <PhotoCameraIcon />
+            </IconButton>
+          )}
+    </label>
+   {/* <FormProvider methods={methods} onSubmit={onSubmit}>
+   <Box >
+              <RHFUploadAvatar
+              
+                name="avatarUrl1"
+                maxSize={3145728}
+                onDrop={handleDrop}
+                
+              />
+            </Box>
+          
+            </FormProvider> */}
+
+        {/* <ListItemText
+          sx={{
+            // mt: 3,
+            ml: { md: 3 },
+            textAlign: { xs: 'center', md: 'unset' },
+          }}
+          primary={name}
+          secondary={role}
+          primaryTypographyProps={{
+            typography: 'h4',
+            color:'white'
+          }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            color:'white',
+            component: 'span',
+            typography: 'body2',
+            sx: { opacity: 0.48 },
+          }}
+        /> */}
+      </Stack>
+  </>
+)
+
+// const renderProfile=(
+//   <>
+
+// <ProfileCover
+//         role={userData?.roleName}
+//         name={userData?.firstName}
+       
+//         avatarUrl ={userData?.imageData}
+//         coverUrl={"bg"}
+//       />
+//   </>
+// )
+
 
   const renderAbout = (
     <>
@@ -317,7 +497,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Grid>
     </Grid>
      
-      <Grid container spacing={{ xs: 10, sm: 10, lg: 20 ,md:5}}>
+      <Grid container spacing={{ xs: 10, sm: 10, lg: 10 ,md:5}}>
 
         <Grid item>
         <Stack spacing={1.5} sx={{ p: 3, typography: 'body2' }}>
@@ -467,7 +647,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
         </Stack>
         <Stack direction="row" alignItems="center">
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0 }}>
-          Employment Type
+          Employement Type
           </Box>
           <Box component="span" sx={{ color: 'text.secondary', width: 120, flexShrink: 0,fontWeight:'Bold' }}>
           {currentEmployee?.employmentType}
@@ -543,6 +723,8 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
 
 
         </Grid>
+
+        <Grid item>{renderProfile}</Grid>
       </Grid>
     
     </>
@@ -724,6 +906,7 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
     </>
   );
 
+ 
   return (
     <Card sx={{ marginTop: '30px' }}>
       {/* {renderCustomer} */}
@@ -737,8 +920,8 @@ EmployeeAbout({ handleCallSnackbar, delivery, shippingAddress, payment,employeeI
       {renderShipping}
 
       <Divider sx={{ borderStyle: 'dashed' }} />
-
-      {/* {renderRole} */}
+{/* 
+      {renderProfile} */}
     </Card>
   );
 }

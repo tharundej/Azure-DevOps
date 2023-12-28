@@ -255,7 +255,30 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
     useEffect(()=>{
       if(employeeData){
+        if(endpoint!=="updateWorkDetails"){
+          setDefaultValues([{
+
+            "previousCompanyName": "",
+            "designation": "",
+            "startDate": "",
+            "presentlyWorking": "",
+            "endDate": "",
+              documents:[
+                {
+                  fileType:'',
+                  fileName:'',
+                  fileContent:''
+              },
+            ]
+             
+            
+           
+          }])
+        }
+        else{
+        console.log(employeeData,'employeeData')
       setDefaultValues(employeeData)
+        }
 
 
       }

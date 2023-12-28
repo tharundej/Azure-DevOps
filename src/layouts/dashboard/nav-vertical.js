@@ -58,7 +58,7 @@ const router = useRouter()
      <Grid sx={{display:'flex',mt:1.5,ml:4}}>
      <Logo />
      <Typography variant="subtitle2" sx={{ml:2}}>
-            {/* {user?.employeeName} */} Infobellit
+            {user?.companyName} 
           </Typography>
       </Grid> 
       <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
@@ -84,7 +84,7 @@ const router = useRouter()
             {user?.roleName}
           </Typography>
           </Box>
-<Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
+        <Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
         </Grid>
         <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
       <NavSectionVertical

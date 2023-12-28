@@ -20,7 +20,9 @@ import axios from 'axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 export default function WorkWeek({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [open, setOpen] = useState(false);
@@ -69,7 +71,7 @@ export default function WorkWeek({ currentUser }) {
     // { name: 'View', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -133,24 +135,27 @@ export default function WorkWeek({ currentUser }) {
     try {
       const response = await axios.post(baseUrl + '/editWorkWeek', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleClose();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('UnExpected Error. Please try again.');
-      setSnackbarOpen(true);
-      handleClose();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('UnExpected Error. Please try again.');
+      // setSnackbarOpen(true);
+      // handleClose();
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });

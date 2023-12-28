@@ -1,16 +1,18 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import { forwardRef, useContext } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import UserContext from 'src/nextzen/context/user/UserConext';
 // routes
 import { RouterLink } from 'src/routes/components';
 // ----------------------------------------------------------------------
 
 const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   const theme = useTheme();
-
+  const {user}=useContext(UserContext)
+  const companyLogo= (user?.companyLogo)?user?.companyLogo:''
   const PRIMARY_LIGHT = theme.palette.primary.light;
 
   const PRIMARY_MAIN = theme.palette.primary.main;
@@ -21,10 +23,11 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   // -------------------------------------------------------
   const logo = (
     <Box
-      component="img"
-      src="/logo/logo_single.svg"
-      sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }}
-    />
+    component="img"
+    src={companyLogo ? companyLogo :"/logo/logo_single.svg" }
+    style={companyLogo ? { marginLeft: '20px' } : {}}
+    sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }}
+  />  
   );
 
   // const logo = (

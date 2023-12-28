@@ -105,7 +105,7 @@ const AssetsTable = () => {
   const defaultPayload = {
     company_id: user?.companyID ? user?.companyID : '',
     page: 0,
-    count: 5,
+    count: 10,
     search: '',
     externalFilters: {
       podate: {
