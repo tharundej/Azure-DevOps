@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext  } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -9,6 +10,7 @@ import { _userList } from '../../../_mock';
 import { BasicTable } from '../../Table/BasicTable';
 
 const SalePaymentTable = () => {
+  const { user } = useContext(UserContext);
   const actions = [
     { name: 'Edit', icon: 'hh', id: 'edit' },
     { name: 'Delete', icon: 'hh', id: 'delete' },
@@ -25,20 +27,55 @@ const SalePaymentTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 5,
+    companyId: user?.companyID ? user?.companyID : '',
+    count: 10,
     page: 0,
-    search: '',
-    fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    search: "4500",
+    // fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    externalFilters: {
+      status:"",
+      paymentMethod: "",
+      dateSalesOrder: {
+        from: "",
+        to: ""
+    },
+
+        dueDate: {
+            from: "",
+            to: ""
+        },
+        PaidDate: {
+            from: "",
+            to: ""
+        },
+        InvoiceDate: {
+            from: "",
+            to: ""
+        },
+        sort: {
+          key: 0,
+          orderBy: ""
+      }
+
+    },
+
+
   };
   const [TABLE_HEAD, setTableHead] = useState([
-    { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'SONumber', label: 'SO Number', type: 'text', minWidth: '180px' },
-    { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
-    { id: 'Invoice Date', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'E-way bill', label: 'E-way bill', type: 'text', minWidth: '180px' },
-    { id: 'Number of Installments', label: 'Number of Installments', type: 'text', minWidth: '180px' },
-    { id: ' Received Amount', label: 'Received Amount', type: 'text', minWidth: '180px' },
-    { id: 'Due Date', label: 'Due Date', type: 'text', minWidth: '180px' },
+    // { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
+    { id: 'balanceAmount', label: 'balanceAmount', type: 'text', minWidth: '180px' },
+    { id: 'dateSalesOrder', label: 'dateSalesOrder', type: 'text', minWidth: '180px' },
+    { id: 'dueDate', label: 'dueDate', type: 'text', minWidth: '180px' },
+    { id: 'invoiceDate', label: 'invoiceDate', type: 'text', minWidth: '180px' },
+    { id: 'invoiceNumber', label: 'invoiceNumber', type: 'text', minWidth: '180px' },
+    { id: 'numOfInstallments', label: 'numOfInstallments', type: 'text', minWidth: '180px' },
+    { id: 'paidAmount', label: 'paidAmount', type: 'text', minWidth: '180px' },
+    { id: 'paidDate', label: 'paidDate', type: 'text', minWidth: '180px' },
+    { id: 'paymentId', label: 'paymentId', type: 'text', minWidth: '180px' },
+    { id: 'paymentMethod', label: 'paymentMethod', type: 'text', minWidth: '180px' },
+    { id: 'paymentStatus', label: 'paymentStatus', type: 'text', minWidth: '180px' },
+    { id: 'salesOrderNo', label: 'salesOrderNo', type: 'text', minWidth: '180px' },
+    { id: 'totalAmount', label: 'totalAmount', type: 'text', minWidth: '180px' },
 
 
   ]);
@@ -49,7 +86,7 @@ const SalePaymentTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/PurchasePaymentDetails"
+        endpoint="/listSalesPayment"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
