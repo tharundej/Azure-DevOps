@@ -73,7 +73,7 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
   return (
     <>
      
-      <TableRow hover  sx={{cursor:'pointer',backgroundColor:'#F0F5FE'}} selected={selected} >
+      <TableRow hover  sx={{cursor:'pointer'}} selected={selected} >
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}

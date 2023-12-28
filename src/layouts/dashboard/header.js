@@ -93,7 +93,7 @@ export default function Header({ onOpenNav }) {
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
       {!lgUp && (
-        <IconButton onClick={onOpenNav}>
+        <IconButton  sx={{height:'10px',margin:'0px'}}onClick={onOpenNav}>
           <SvgColor src="/assets/icons/navbar/ic_menu_item.svg" />
         </IconButton>
       )}
