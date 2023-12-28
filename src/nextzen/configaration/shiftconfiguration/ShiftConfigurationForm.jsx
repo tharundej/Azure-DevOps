@@ -30,6 +30,7 @@ import { useSnackbar } from 'notistack';
 
 export default function ShiftConfigurationForm({ currentUser }) {
   // const [open, setOpen] = useState(false);
+  const [errorMessage,setErrorMessage]=useState("")
   const {enqueueSnackbar} = useSnackbar()
   const handleOpen = () => setOpen(true);
   const handleClose = () => {

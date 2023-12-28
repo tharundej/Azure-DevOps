@@ -116,10 +116,12 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     defaultValues: defaultValues3, // Use defaultValues instead of defaultValues2
   });
   const payPcheduleTypes = [
-    { type: '52-Once a week' },
-    { type: '26-Once in a two weeks' },
+    { type: '52- Once a week' },
+    { type: '26- Once in a two weeks' },
     { type: '24- Twice a month' },
     { type: '12-Once a month' },
+    {type: '366- Once a day'},
+    {type: 'Hour a day'}
   ];
   //   const m2 = useForm();
   const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' },{type:'Daily Wise'},{type:'Hour Wise'}];
@@ -336,11 +338,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   getOptionSelected={(option, value) => option.type === value.type}
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
-                  // sx={{
-                  //   width: 330,
-                  //   margin: 'auto',
-                  //   marginTop: '-1px',
-                  // }}
+                  sx={{ width: '100%', marginRight: '5%' }} 
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
 
@@ -406,11 +404,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   getOptionSelected={(option, value) => option.type === value.type}
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
-                  // sx={{
-                  //   width: 330,
-                  //   margin: 'auto',
-                  //   marginTop: '-1px',
-                  // }}
+                  sx={{ width: '100%', marginRight: '5%' }} 
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
 
@@ -477,11 +471,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                getOptionSelected={(option, value) => option.type === value.type}
                value={selectedOption}
                onChange={handleAutocompleteChange}
-              //  sx={{
-              //    width: 330,
-              //    margin: 'auto',
-              //    marginTop: '-1px',
-              //  }}
+               sx={{ width: '100%', marginRight: '5%' }} 
                renderInput={(params) => <TextField {...params} label="Employee Type" />}
              />
 

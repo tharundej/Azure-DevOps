@@ -292,6 +292,8 @@ export default function PaySchedule({ currentUser }) {
     { type: '26-Once in a two weeks' },
     { type: '24- Twice a month' },
     { type: '12-Once a month' },
+    {type: '366- Once a day'},
+    {type: 'Hour a day'}
   ];
   const [showEdit, setShowEdit] = useState(false);
   const [tableEDitData, SetTableEditData] = useState({});
