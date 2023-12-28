@@ -28,8 +28,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
 export default function HolidaysForm({ currentUser, getTableData }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -127,30 +129,29 @@ export default function HolidaysForm({ currentUser, getTableData }) {
         data
       );
       if(response?.data?.code===200  ){
-        handleClose()
-        setSnackbarSeverity('success');
         getTableData()
-         setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-         handleClose();
-      
+        handleClose()
+        // setSnackbarSeverity('success');
+        //  setSnackbarMessage(response?.data?.message);
+        //  setSnackbarOpen(true);
+        //  handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
       console.log('sucess', response);
 
       }
       if(response?.data?.code===400  ){
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-         setSnackbarOpen(true);
-         handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        //  setSnackbarOpen(true);
+        //  handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
       console.log('sucess', response);
 
       }
     
   } catch (error) {
-    setSnackbarSeverity('error');
-    setSnackbarMessage('Error While Adding Leave Period. Please try again.');
-    setSnackbarOpen(true);
-    handleClose();
+   
+    enqueueSnackbar(error.response.data.message,{variant:'error'})
    console.log('error', error);
  }
   });
@@ -192,7 +193,7 @@ export default function HolidaysForm({ currentUser, getTableData }) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
         Add Holidays

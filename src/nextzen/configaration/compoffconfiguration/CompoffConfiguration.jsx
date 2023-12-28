@@ -24,9 +24,11 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { width } from '@mui/system';
 import { Snackbar, Alert } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
-export default function ComoffConfigurationForm({ currentUser }) {
+export default function ComoffConfigurationForm({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
+  const {enqueueSnackbar} = useSnackbar()
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -149,24 +151,28 @@ export default function ComoffConfigurationForm({ currentUser }) {
     try {
       const response = await axios.post(baseUrl + '/addCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        getTableData()
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleClose();
         console.log('sucess', response?.data?.code);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response?.data?.code);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
-      setSnackbarOpen(true);
-      handleClose();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Deleting Leave Period. Please try again.');
+      // setSnackbarOpen(true);
+      // handleClose();
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -199,7 +205,7 @@ export default function ComoffConfigurationForm({ currentUser }) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', backgroundColor: '#3B82F6' }}
       >
         Add Configuration

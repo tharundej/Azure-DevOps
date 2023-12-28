@@ -45,7 +45,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
   const [editData, setEditData] = useState();
   // const [selectedOption, setSelectedOption] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
-  const [count, setCount] = useState();
+  const [count, setCount] = useState(0);
   const TABLE_HEAD = [
     { id: 'compensantoryPolicies', label: 'Compensatory', type: 'text', minWidth: 280 },
     { id: 'expiryDays', label: 'Expiry Days', type: 'text', minWidth: 280 },
@@ -185,7 +185,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
 
   const defaultValues2 = useMemo(
     () => ({
-      amount: currentUser?.amount || null,
+      amount: currentUser?.amount || undefined,
     }),
     [currentUser]
   );
@@ -220,7 +220,7 @@ export default function CompoffConfigurationTable({ currentUser }) {
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = editData?.compensantoryPolicies;
     data.compensantoryConfigurationID = editData?.compensantoryConfigurationID;
-    data.expiryDays = JSON.parse(editData?.expiryDays,10);
+    data.expiryDays = parseInt(editData?.expiryDays,10);
     console.log('submitted data111', data);
 
     try {
@@ -251,17 +251,18 @@ export default function CompoffConfigurationTable({ currentUser }) {
   });
 
   const onSubmit2 = handleSubmit2(async (data) => {
+
     data.companyId = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
     data.compensantoryPolicies = editData?.compensantoryPolicies;
     data.compensantoryConfigurationID = editData?.compensantoryConfigurationID;
-    data.amount = JSON.parse(editData?.amount,10);
-    console.log('submitted data2222', data);
+    data.amount = parseInt(editData?.amount,10);
+    console.log('submitted data222', data);
 
     try {
       const response = await axios.post(baseUrl + '/editCompensantoryConfiguration', data);
       if (response?.data?.code === 200) {
-        handleCloseEdit();
         setCount(count+1);
+        handleCloseEdit();
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
@@ -393,17 +394,17 @@ export default function CompoffConfigurationTable({ currentUser }) {
 
             <DialogContent>
               <Autocomplete
-                disablePortal
-                name="compensatory"
-                id="combo-box-demo"
-                options={compensatorytypes1}
-                getOptionLabel={getOptionLabel}
-                defaultValue={editData?.compensantoryPolicies || []}
-                value={editData?.compensantoryPolicies || ''} // Use selectedOption or an empty string
-                // onChange={handleAutocompleteChange}
-                onChange={(e, newValue) => handleAutocompleteChange('compensantoryPolicies', newValue )}
-                sx={{ width: 300, padding: '8px' }}
-                renderInput={(params) => <TextField {...params} label="Compensatory" />}
+                 disablePortal
+                 name="compensatory"
+                 id="combo-box-demo"
+                 options={compensatorytypes1}
+                 defaultValue={editData?.compensantoryPolicies || ''}
+                 getOptionLabel={getOptionLabel}
+                 value={editData?.compensantoryPolicies || ""} // Use selectedOption or an empty string
+                 // onChange={handleAutocompleteChange}
+                 onChange={(e, newValue) => handleAutocompleteChange('compensantoryPolicies', newValue )}
+                 sx={{ width: 300, padding: '8px' }}
+                 renderInput={(params) => <TextField {...params} label="Compensatory" />}
               />
               <Box
                 rowGap={3}
