@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import Badge from '@mui/material/Badge';
 import {
   Card,
   TextField,
@@ -96,6 +96,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
   const theme = useTheme();
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [leavePeriodTypes,setLeavePeriodTypes]=useState([])
+  const [badgeContent, setBadgeContent] = useState(false);
   useEffect(() => {
     async function call() {
       const arr = await leaveTypeName();
@@ -239,7 +240,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
 
   const handleApply = async () => {
     // setDatesData([]);
-
+    setBadgeContent(true);
     const data = await formWithDropdown();
 
     const comma = data.join(',');
@@ -319,13 +320,40 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
           <LeaveTypeForm getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2}>
-          <Grid>
+          {/* <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
             </Stack>
-          </Grid>
+          </Grid> */}
+
+
+
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+                <Iconify icon="mi:filter" />
+              </Button>
+            </Stack> */}
+          
         </Grid>
       </Grid>
 

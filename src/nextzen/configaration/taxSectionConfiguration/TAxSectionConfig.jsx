@@ -154,16 +154,16 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   const errors = {};
 
   // Validate taxSection
-  if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  if (!valueSelected?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
     errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
   }
 
   // Validate taxScheme
-  if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  if (!valueSelected?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
     errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
   }
 
-  if (isNaN(formData?.taxLimit)) {
+  if (isNaN(valueSelected?.taxLimit)) {
     errors.taxLimit = 'Invalid value. Please enter a valid number.';
   }
   return errors;
@@ -299,7 +299,7 @@ const  deleteFunction =(rowdata, event)=>{
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
         itemName="Delete Assets"
-        message={`Are you sure you want to delete ${deleteData?.assetsName}?`}
+        message={`Are you sure you want to delete ?`}
       />
       {showForm && (
         <Dialog
