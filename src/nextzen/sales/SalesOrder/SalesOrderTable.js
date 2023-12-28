@@ -51,7 +51,7 @@ const SalesOrderTable = () => {
   const [bodyContent, setBodyContent] = useState([]);
   const [count, setCount] = useState(0);
   // const [body_for_employee, setBody] = useState({
-  //   count: 5,
+  //   count: 10,
   //   page: 1,
   // });
   const onClickActions = (rowdata, event) => {
@@ -127,7 +127,7 @@ const SalesOrderTable = () => {
 
 
   // const defaultPayload = {
-  //   count: 5,
+  //   count: 10,
   //   page: 0,
   //   search: '',
   //   fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,

@@ -193,7 +193,7 @@ const handleCallSnackbar=(message,severity)=>{
   }
 
   return (
-    <Box sx={{ width: '100%' }} >
+    <Box sx={{ width: '100%', marginBottom: '10vh' }} >
       <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage}  confirmButtonText="Go To Configuration" cancelButtonText="Go To Dashboard"/>
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
