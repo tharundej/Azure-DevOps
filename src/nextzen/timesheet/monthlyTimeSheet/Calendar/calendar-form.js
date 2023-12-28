@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,Dialog,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -18,6 +18,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import dayjs from 'dayjs';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -288,12 +289,14 @@ console.log(editData,"editttttttdata",projectInfo)
 //   )
 // };
 
-
+const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
 // second method
 const initialProjectDetails = {
   // employeeName: projectInfo?.employeeName,
-  companyId: "COMP22",
-  employeeId:"GANG12",
+  companyId: companyID,
+  employeeId:projectInfo?.employeeId,
   // projectID: [
   //   { "projectId": 1, "projectName": "ERP" },
   //   { "projectId": 3, "projectName": "ACCOUNTS" }
