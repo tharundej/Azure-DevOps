@@ -103,7 +103,7 @@ const SaleInvoiceHead = ({ filterSearch, filterData }) => {
           </Grid>
         </Grid>
       </Grid> */}
-      <Grid container alignItems="center" marginBottom='10px' >
+      <Grid container alignItems="center" marginBottom='10px' marginTop='20px' >
           <Grid md={8} xs={12} lg={8} item>
   <TextField
     placeholder='Search....'
