@@ -107,7 +107,7 @@ const handleConfirmLogout = async()=>{
         onClose={handleCancelLogout}
         onConfirm={handleConfirmLogout}
         itemName="Logout"
-        confirmButtonText="Ok"
+        confirmButtonText="OK"
         message="Are you sure want to logout?"
       />
 
