@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 
 import Box from '@mui/material/Box';
@@ -20,32 +21,32 @@ const bull = (
   </Box>
 );
 
-export default function BasicCard() {
+export default function Compoff() {
   const { user } = useContext(UserContext);
   const [tabLabels, setTabLabels] = useState([]);
   const [tabContents, setTabContents] = useState([]);
 
   const dataObj = [
-    {
-      id: 'approveLeave',
-      label: user?.roleID === 1 ? 'Leave Applications' : 'Leave Approval',
-      content: <Approveleave key="approveLeave" />,
-    },
-    {
-      id: 'leaveOverview',
-      label: 'Leave Schedule',
-      content: <LeaveRequest key="leaveOverview" />,
-    },
     // {
-    //   id: 'myCompoff',
-    //   label: 'My Compoff',
-    //   content: <MyCompoff key="myCompoff" />,
+    //   id: 'approveLeave',
+    //   label: user?.roleID === 1 ? 'Leave Applications' : 'Leave Approval',
+    //   content: <Approveleave key="approveLeave" />,
     // },
     // {
-    //   id: 'compoffApprove',
-    //   label: 'Compoff Approval',
-    //   content: <CompoffApprove key="compoffAprove" />,
+    //   id: 'leaveOverview',
+    //   label: 'Leave Schedule',
+    //   content: <LeaveRequest key="leaveOverview" />,
     // },
+    {
+      id: 'myCompoff',
+      label: 'My Compoff',
+      content: <MyCompoff key="myCompoff" />,
+    },
+    {
+      id: 'compoffApprove',
+      label: 'Compoff Approval',
+      content: <CompoffApprove key="compoffAprove" />,
+    },
   ];
 
   useEffect(() => {
@@ -65,8 +66,7 @@ export default function BasicCard() {
         arrContents.push(item.content);
       }
     });
-    // arrLabels.push("My Compoff","Approve Compoff");
-    // arrContents.push(<MyCompoff/>,<CompoffApprove/>);
+ 
     setTabLabels(arrLabels);
 
     setTabContents(arrContents);

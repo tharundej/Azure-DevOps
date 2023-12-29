@@ -31,6 +31,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
 import Label from 'src/components/label/label';
 import axios from 'axios';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { getAvailableLeaveAPI, getLeaveTypeAPI, getLossOfPayAPI } from 'src/api/HRMS/LeaveManagement';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -521,18 +522,32 @@ console.log(output);
     const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
+        enqueueSnackbar(res.data.message,{variant:'success'})
+        onClose()
         
       },
       (error) => {
         console.log('lllll', error);
+        enqueueSnackbar(error.res.data.message,{variant:'error'})
+        onClose()
        
       }
     );
   } catch (error) {
     console.error(error);
+    enqueueSnackbar(error.res.data.message,{variant:'error'})
+    // enqueueSnackbar(error.response.data.message,{variant:'error'})
+    onClose()
    
   }
 }
+// confirmation dialog
+ // confirmation dialog
+ const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+ const handleCancelDelete = () => {
+   setDel(null);
+   setConfirmDeleteOpen(false);
+ };
   return (
   
   <>
@@ -602,7 +617,7 @@ console.log(output);
       </DialogActions>
     </FormProvider>
 
-    
+  
     </>
   );
 }
