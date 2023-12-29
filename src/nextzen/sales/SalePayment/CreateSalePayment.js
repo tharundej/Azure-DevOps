@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -20,22 +21,36 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { createSalesPaymentAPI } from 'src/api/Accounts/SalePayment';
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 export default function CreateSalePayment({ currentData, handleClose }) {
+  const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     name: Yup.string(),
     status: Yup.string(),
   });
 
+
   const defaultValues = useMemo(
     () => ({
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+      soNumber: currentData?.soNumber || '',
+      invoiceNumber: currentData?.invoiceNumber || '',
       ProductName: currentData?.ProductName || '',
       ProductCategory: currentData?.ProductCategory || '',
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
+      paidDate: currentData?.paidDate || '',
     }),
     [currentData]
   );
+  const [datesUsed, setDatesUsed] = useState({
+    paidDate: defaultValues?.paidDate
+      ? dayjs(defaultValues?.paidDate)
+      : dayjs(new Date()),
+  });
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -51,25 +66,51 @@ export default function CreateSalePayment({ currentData, handleClose }) {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snacbarMessage, setSnacbarMessage] = useState('');
+  const [severity, setSeverity] = useState('');
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
-    try {
-      console.log(data, 'data111ugsghghh');
+    data.paidDate = formatDateToYYYYMMDD(datesUsed?.paidDate);
 
-      const response = await instance.post('addPurchasePayment', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+    try {
+      data.locationPhone = parseInt(data.locationPhone);
+      data.locationPincode = parseInt(data.locationPincode);
+
+      console.log('Create Factory Data', data);
+      let response = '';
+      if (currentData?.invoiceNumber) {
+        response = '';
+      } else {
+        response = await createSalesPaymentAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      // currentData?.locationName ? handleCountChange() : getTableData();
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+  const handleCallSnackbar = (message, severity) => {
+    setOpenSnackbar(true);
+    setSnacbarMessage(message);
+    setSeverity(severity);
+  };
+  const HandleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
 
   return (
 
@@ -78,6 +119,12 @@ export default function CreateSalePayment({ currentData, handleClose }) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
 
         {/* <DialogTitle>Add New Sale Payment</DialogTitle> */}
+        <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
 
 
         <DialogContent>
@@ -91,22 +138,22 @@ export default function CreateSalePayment({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <RHFTextField name="SO Number" label="SO Number" />
-            <RHFTextField name="Invoice Number" label="Invoice Number" />
+            <RHFTextField name="SoNumber" label="SO Number" />
+            <RHFTextField name="InvoiceNumber" label="Invoice Number" />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
                   sx={{ width: '100%', paddingLeft: '3px' }}
-                  label="Invoice Date"
-                  // value={datesUsed?.expectedDeliveryDate}
+                  label="Paid Date"
+                  value={datesUsed?.paidDate}
                   defaultValue={dayjs(new Date())}
-                  // onChange={(newValue) => {
-                  //   setDatesUsed((prev) => ({
-                  //     ...prev,
-                  //     expectedDeliveryDate: newValue,
-                  //   }));
-                  // }}
+                  onChange={(newValue) => {
+                    setDatesUsed((prev) => ({
+                      ...prev,
+                      paidDate: newValue,
+                    }));
+                  }}
                 />
               </DemoContainer>
             </LocalizationProvider>
