@@ -791,20 +791,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
               />
                 
-                    <DatePicker
-                    maxDate={new Date()}
-                      sx={{ width: '100%', paddingLeft: '3px' }}
-                      label="Offer Date"
-                      value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
-                      defaultValue={dayjs(new Date())}
-                      onChange={(newValue) => {
-                        
-                        setDatesUsed((prev) => ({
-                          ...prev,
-                          offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
-                        }));
-                      }}
-                    />
+                   
                  
                 
                     <DatePicker
@@ -833,6 +820,21 @@ const   GeneralInformation=forwardRef((props,ref)=> {
                         setDatesUsed((prev) => ({
                           ...prev,
                           joining_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
+                        }));
+                      }}
+                    />
+
+                <DatePicker
+                    maxDate={datesUsed?.joining_date ? dayjs(datesUsed?.joining_date).toDate():new Date()}
+                      sx={{ width: '100%', paddingLeft: '3px' }}
+                      label="Offer Date"
+                      value={datesUsed?.offer_date ? dayjs(datesUsed?.offer_date).toDate() : null}
+                      defaultValue={dayjs(new Date())}
+                      onChange={(newValue) => {
+                        
+                        setDatesUsed((prev) => ({
+                          ...prev,
+                          offer_date: newValue ? dayjs(newValue).format('YYYY-MM-DD') : null
                         }));
                       }}
                     />
