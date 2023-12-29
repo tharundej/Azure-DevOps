@@ -84,6 +84,7 @@ export default function TableHeadCustom({
        <TableCell   key='headCell.id'
             align='left'
             sortDirection={ false}
+            sx={{ backgroundColor:'#F0F5FE',color:'#3B82F6'}}
           >{empty_space}</TableCell>
           
         }

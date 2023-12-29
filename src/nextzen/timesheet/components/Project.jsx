@@ -139,6 +139,7 @@ const handleClose =()=>{
 const [selectedIds, setSelectedIds] = useState([]);
 const handleCloseEmployee=()=>{
   setEditEmployee(false)
+  setViewProject(false)
   setSelectedIds([])
 }
 const [showAll, setShowAll] = useState(false);
