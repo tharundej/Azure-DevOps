@@ -39,9 +39,9 @@ export default function History(){
        
          
             {id : "leaveTypeName",label:"Leave Type",minWidth:"8pc",type:"text"},
-            { id: "applyDate", label: "Apply Date",minWidth:"7pc", type: "date" },
-            { id: "fromDate", label: "Start Date",minWidth:"7pc", type: "date" },
-            {id: "toDate",label:"End Date",minWidth:"7pc",type:"date"},
+            { id: "applyDate", label: "Apply Date",minWidth:"8pc", type: "date" },
+            { id: "fromDate", label: "Start Date",minWidth:"8pc", type: "date" },
+            {id: "toDate",label:"End Date",minWidth:"8pc",type:"date"},
             {id: "leaveDays",label:"Requested Duration",minWidth:"11pc",type:'text'},
             {id: "comments",label:"Leave Reason",minWidth:"8pc",type:"text"},
             {id:'loseOfPay',label:"Loss of Pay",minWidth:'7pc',type:"text"},

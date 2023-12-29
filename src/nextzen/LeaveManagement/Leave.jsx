@@ -36,16 +36,16 @@ export default function BasicCard() {
       label: 'Leave Schedule',
       content: <LeaveRequest key="leaveOverview" />,
     },
-    {
-      id: 'myCompoff',
-      label: 'My Compoff',
-      content: <MyCompoff key="myCompoff" />,
-    },
-    {
-      id: 'compoffApprove',
-      label: 'Compoff Approval',
-      content: <CompoffApprove key="compoffAprove" />,
-    },
+    // {
+    //   id: 'myCompoff',
+    //   label: 'My Compoff',
+    //   content: <MyCompoff key="myCompoff" />,
+    // },
+    // {
+    //   id: 'compoffApprove',
+    //   label: 'Compoff Approval',
+    //   content: <CompoffApprove key="compoffAprove" />,
+    // },
   ];
 
   useEffect(() => {

@@ -66,8 +66,7 @@ export default function Compoff() {
         arrContents.push(item.content);
       }
     });
-    arrLabels.push("My Compoff","Approve Compoff");
-    arrContents.push(<MyCompoff/>,<CompoffApprove/>);
+ 
     setTabLabels(arrLabels);
 
     setTabContents(arrContents);
