@@ -361,11 +361,12 @@ export default function EditShiftRoaster({ currentUser, editData, handleClose ,c
         shiftConfigurationId: parseInt(foundShift?.shiftConfigurationId),
 
         // supervisorId: (user?.employeeID)?user?.employeeID : '',
-        departmentId: (foundDepartment?.departmentID)?parseInt(foundDepartment?.departmentID) : 0,
-        designationId:(fountDesignation?.designationID)? parseInt(fountDesignation?.designationID): 0,
-        DesignationGradeId: (fountGrade?.designationGradeID)?parseInt(fountGrade?.designationGradeID): 0,
+        departmentId: (editData?.departmentId)?parseInt(editData?.departmentId ) : 0,
+        designationId:(editData?.designationID)? parseInt(editData?.designationID): 0,
+        DesignationGradeId: (editData?.designationGrade)?parseInt(editData?.designationGrade): 0,
         // locationId:(user?.locationID)?user?.locationID : null,
         companyId:(user?.companyID)?user?.companyID : '',
+        toggle: parseInt( editData?.toggle) || 0,
 
         employeeId: join() ,
 
@@ -515,24 +516,31 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
 
 </RHFSelect> */}
                 {editData?.toggle == '0' && (
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={departmentData || []}
-                    value={foundDepartment || [] }
-                    getOptionLabel={(option) => option.departmentName}
-                    onChange={(e, newvalue) => {
-                      setfountDepartment(newvalue);
-                     getDesignation1(newvalue);
-                    }}
-                    editable={false}   // Set editable prop to false
-                    freeSolo={false}   // Set freeSolo prop to false
-                    disabled  
-                    sx={{
-                      width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Select Department" />}
-                  />
+                  // <Autocomplete
+                  //   disablePortal
+                  //   id="combo-box-demo"
+                  //   options={departmentData || []}
+                  //   value={foundDepartment || [] }
+                  //   getOptionLabel={(option) => option.departmentName}
+                  //   onChange={(e, newvalue) => {
+                  //     setfountDepartment(newvalue);
+                  //    getDesignation1(newvalue);
+                  //   }}
+                  //   editable={false}   // Set editable prop to false
+                  //   freeSolo={false}   // Set freeSolo prop to false
+                  //   disabled  
+                  //   sx={{
+                  //     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+                  //   }}
+                  //   renderInput={(params) => <TextField {...params} label="Select Department" />}
+                  // />
+                  <RHFTextField
+                  required
+                  value={editData?.departmentName}
+                  name="Department"
+                  label="Department"
+                  readonly
+                />
                 )}
                 {/* <RHFSelect name="designationId" label="Select Designation">
 
@@ -544,43 +552,57 @@ renderInput={(params) => <TextField {...params} label="Select Shift Group Name" 
 
 </RHFSelect> */}
                 {editData?.toggle == '0' && (
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo3"
-                    options={designationData || []}
-                    value={fountDesignation || []}
-                    getOptionLabel={(option) => option.designationName}
-                    onChange={(e, newvalue) => {
-                      setfountDesignation(newvalue);
-                     getGrade1(newvalue);
-                    }}
-                    editable={false}   // Set editable prop to false
-                    freeSolo={false}   // Set freeSolo prop to false
-                    disabled  
-                    sx={{
-                      width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Select Designation" />}
-                  />
+                  // <Autocomplete
+                  //   disablePortal
+                  //   id="combo-box-demo3"
+                  //   options={designationData || []}
+                  //   value={fountDesignation || []}
+                  //   getOptionLabel={(option) => option.designationName}
+                  //   onChange={(e, newvalue) => {
+                  //     setfountDesignation(newvalue);
+                  //    getGrade1(newvalue);
+                  //   }}
+                  //   editable={false}   // Set editable prop to false
+                  //   freeSolo={false}   // Set freeSolo prop to false
+                  //   disabled  
+                  //   sx={{
+                  //     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+                  //   }}
+                  //   renderInput={(params) => <TextField {...params} label="Select Designation" />}
+                  // />
+                  <RHFTextField
+                  required
+                  value={editData?.designationName}
+                  name="Designation"
+                  label="Designation"
+                  readonly
+                />
                 )}
                 {editData?.toggle == '0' && (
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={gradeData || []}
-                    value={fountGrade || []}
-                    getOptionLabel={(option) => option.designationGradeName}
-                    onChange={(e, newvalue) => {
-                      setfountGrade(newvalue);
-                    }}
-                    editable={false}   // Set editable prop to false
-                    freeSolo={false}   // Set freeSolo prop to false
-                    disabled  
-                    sx={{
-                      width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Select Grade" />}
-                  />
+                  // <Autocomplete
+                  //   disablePortal
+                  //   id="combo-box-demo"
+                  //   options={gradeData || []}
+                  //   value={fountGrade || []}
+                  //   getOptionLabel={(option) => option.designationGradeName}
+                  //   onChange={(e, newvalue) => {
+                  //     setfountGrade(newvalue);
+                  //   }}
+                  //   editable={false}   // Set editable prop to false
+                  //   freeSolo={false}   // Set freeSolo prop to false
+                  //   disabled  
+                  //   sx={{
+                  //     width: { xs: '100%', sm: '50%', md: '100%', lg: '100%' },
+                  //   }}
+                  //   renderInput={(params) => <TextField {...params} label="Select Grade" />}
+                  // />
+                  <RHFTextField
+                  required
+                  value={editData?.gradeName}
+                  name="Grade"
+                  label="Grade"
+                  readonly
+                />
                 )}
                                 {editData?.toggle == '0' && (
                   <Autocomplete
