@@ -44,20 +44,13 @@ export default function ChangePassword() {
   const password = useBoolean();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
     newPassword: Yup.string()
       .required('New Password is required')
-      .min(6, 'Password must be at least 6 characters')
-      .test(
-        'no-match',
-        'New password must be different than the old password',
-        (value, { parent }) => value !== parent.oldPassword
-      ),
+      .min(6, 'Password must be at least 6 characters'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword')], 'Passwords must match'),
   });
 
   const defaultValues = {
-    oldPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   };
@@ -78,9 +71,8 @@ export default function ChangePassword() {
       // await new Promise((resolve) => setTimeout(resolve, 500));
 
       const payload = {
-        companyEmail: localStorage.getItem('companyEmail'),
-        oldPassword: data.oldPassword,
-        newPassword: data.newPassword,
+        emailId: localStorage.getItem('companyEmail'),
+        password: data.newPassword,
       };
       const config = {
         headers: {
@@ -89,18 +81,13 @@ export default function ChangePassword() {
           // 'Content-Type': 'application/json'
         },
       };
-      const response = await axiosInstance.post(baseUrl + `/changePassword`, payload, config);
+      const response = await axiosInstance.post(baseUrl + `/resetPassword`, payload, config);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleClose();
-        // router.push(paths.auth.jwt.login);
+        router.push(paths.auth.jwt.login);
       } else if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
       }
       // reset();
       // enqueueSnackbar('Update success!');
@@ -115,11 +102,7 @@ export default function ChangePassword() {
 
       <Stack spacing={1} sx={{ my: 1 }}>
         <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-          <Typography variant="h3">Change your password</Typography>
-
-          {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter your email to request a password reset OTP.
-          </Typography> */}
+          <Typography variant="h3">Reset your password</Typography>
         </Grid>
       </Stack>
     </>
@@ -152,15 +135,7 @@ export default function ChangePassword() {
       </Snackbar>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         {renderHead}
-        {/* <Container
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '10vh',
-          //  width:'100vh'
-        }}
-      > */}
+
         <Stack
           spacing={3}
           alignItems="center"
@@ -170,20 +145,6 @@ export default function ChangePassword() {
             my: 'auto',
           }}
         >
-          <RHFTextField
-            name="oldPassword"
-            type={password.value ? 'text' : 'password'}
-            label="Old Password"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={password.onToggle} edge="end">
-                    <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
 
           <RHFTextField
             name="newPassword"
@@ -227,7 +188,7 @@ export default function ChangePassword() {
             loading={isSubmitting}
             sx={{ marginLeft: 'auto', marginRight: 'auto', display: 'block' }}
           >
-            Save Changes
+          Reset Password
           </Button>
           <Link
             component={RouterLink}
@@ -240,7 +201,7 @@ export default function ChangePassword() {
             }}
           >
             <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-            Return to Login
+            Return to login
           </Link>
         </Stack>
         {/* </Container> */}

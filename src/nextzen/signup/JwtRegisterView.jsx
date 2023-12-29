@@ -316,6 +316,26 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       if(!logoUploaded){
         setLogoError(true)
       }
+      const requestData = {
+        email: data.emailId,
+        cin: data.cin,
+        registrationNumber: data.companyRegistrationNo,
+      };
+      const duplicateChecks = await checkDuplicate(requestData);
+      if (duplicateChecks.email) {
+        setErrorMsg('Email is already registered.');
+        return;
+      }
+    
+      if (duplicateChecks.cin) {
+        setErrorMsg('CIN is already registered.');
+        return;
+      }
+    
+      if (duplicateChecks.registrationNumber) {
+        setErrorMsg('Registration number is already registered.');
+        return;
+      }
       else{
       console.log(data, 'hhfhfhh');
       await register?.(
@@ -341,8 +361,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         (data.logoName = imageData[0]?.name),
         (data.companyLogo = imageData[0]?.data.split(',')[1])
       );
-    
       onHandleNextIncrement();
+      
     }
    
 
@@ -474,6 +494,29 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       }
     }
   };
+  const checkDuplicate = async(data)=>{
+    try {
+      const payload = {
+        cin: data.cin,
+        email: data.email,
+        companyRegistrationNo: data.companyRegistrationNo,
+      };
+
+      console.log(payload, 'Payload before API call');
+
+      const response = await axiosInstance.post(baseUrl + '/checkRegisterFields', payload);
+      if (response?.data?.code === 409) {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        console.log('API call successful');
+        // setShouldCallGetCompany(false)
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  }
+  
   const onSubmit1 = handleSubmit(async (data) => {
     try {
       const payload = {

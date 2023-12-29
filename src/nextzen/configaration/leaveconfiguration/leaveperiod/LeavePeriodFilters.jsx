@@ -47,7 +47,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
@@ -295,50 +295,49 @@ export default function LeavePeriodFilters({
   return (
     <>
       <Grid
-  container
-  spacing={2}
-  alignItems="center"
-  direction="row"
-  style={{ marginBottom: '0.1rem' }}
-  lg={12}
-  md={12}
-  xs={12}
->
-  <Grid item lg={8} md={8} xs={12} sm={8}>
-    <TextField
-      placeholder="Search...."
-      fullWidth
-      onChange={(e) => handleSearch(e.target.value)}
-    />
-  </Grid>
-  <Grid item lg={2} md={2} xs={8} sm={2}>
-    <LeavePeriodForm getTableData={getTableData} />
-  </Grid>
-  <Grid item lg={2} md={2} xs={4} sm={2}>
-    {badgeContent === true ? (
-      <Badge
-        badgeContent={""}
-        color="success"
-        variant="dot"
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        container
+        spacing={2}
+        alignItems="center"
+        direction="row"
+        style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Button onClick={handleClickOpen} style={{ width: "80px" }}>
-          <Iconify icon="mi:filter" />
-          Filters
-        </Button>
-      </Badge>
-    ) : (
-      <Button onClick={handleClickOpen} style={{ width: "80px" }}>
-        <Iconify icon="mi:filter" />
-        Filters
-      </Button>
-    )}
-  </Grid>
-</Grid>
-
+        <Grid item lg={8} md={8} xs={12} sm={8}>
+          <TextField
+            placeholder="Search...."
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </Grid>
+        <Grid item lg={2} md={2} xs={8} sm={2}>
+          <LeavePeriodForm getTableData={getTableData} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={4} sm={2}>
+          {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+                <Iconify icon="mi:filter" />
+                Filters
+              </Button>
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
+        </Grid>
+      </Grid>
 
       <BootstrapDialog
         onClose={handleClickClose}
@@ -392,16 +391,16 @@ export default function LeavePeriodFilters({
                   // sx={{minWidth:'300px'}}
                 >
                   {leavePeriodTypes?.length > 0 ? (
-  leavePeriodTypes.map((name) => (
-    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-      {name?.leavePeriodType}
-    </MenuItem>
-  ))
-) : (
-  <MenuItem value="" style={getStyles(name, personName, theme)}>
-    No options available
-  </MenuItem>
-)}
+                    leavePeriodTypes.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                        {name?.leavePeriodType}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="" style={getStyles(name, personName, theme)}>
+                      No options available
+                    </MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
@@ -441,7 +440,7 @@ LeavePeriodFilters.propTypes = {
     PropTypes.shape({
       fieldName: PropTypes.string,
       options: PropTypes.arrayOf(PropTypes.string),
-      getTableData:PropTypes.func
+      getTableData: PropTypes.func,
     })
   ),
 };

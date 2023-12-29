@@ -45,6 +45,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Badge from '@mui/material/Badge';
 // import './ShiftFilter.css'
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
@@ -127,7 +128,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   const [dateError, setDataError] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
   const [personName, setPersonName] = React.useState([]);
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
@@ -250,7 +251,8 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     console.log(searchTerm,"search ........")
     };
     const handleApply = async () => {
- 
+      setDatesData([]);
+      setBadgeContent(true);
       const data = await formWithDropdown();
   console.log('jii',data)
     const comma = data.join(',');
@@ -286,15 +288,17 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     }, [open]);
   return (
     <>
-      <Grid
+       <Grid
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item lg={8} md={8} xs={12} sm={8}>
         <TextField
             placeholder="Search...."
              fullWidth
@@ -302,17 +306,32 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
           />
           
         </Grid>
-        <Grid item md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={8} sm={2}>
         <PayScheduleform getTableData={getTableData}/>
         </Grid>
-        <Grid item md={2} xs={2} >
+        <Grid item lg={2} md={2} xs={4} sm={2}>
         <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+        {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
+                Filters
               </Button>
-            </Stack>
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
           </Grid>
         </Grid>
       </Grid>
@@ -383,34 +402,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
                     </Select>
                   </FormControl>
                 </Grid>
-                {/* <Grid  item xs={12} md={6}>
-                <FormControl fullWidth >
-                <InputLabel id="designation_grade_name">Pay Pchedule Type</InputLabel>
-                  <Select
-                  fullWidth
-                    labelId="demo-multiple-name-shift_name_1"
-                    id="demo-multiple-shift_name_1"
-                    multiple
-                    value={dropdownDesignationGradeName}
-                    onChange={(e) => handleChangeDropDown(e, 'designation_grade_name')}
-                    input={<OutlinedInput label="Pay Pchedule Type" />}
-                    MenuProps={MenuProps}
-                    // sx={{minWidth:'300px'}}
-                  >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-              </FormControl>
-                   </Grid> */}
             </Grid>
-
-           
-            
-             
-          
         </DialogContent>
         
         <div style={{ marginBottom: 12, marginTop: 4 }}>

@@ -58,7 +58,9 @@ const router = useRouter()
      <Grid sx={{display:'flex',mt:1.5,ml:4}}>
      <Logo />
      <Typography variant="subtitle2" sx={{ml:2}}>
-            {user?.companyName} 
+     {user?.companyName && user.companyName.length > 15
+  ? user.companyName.substring(0, 15) + '...'
+  : user?.companyName}
           </Typography>
       </Grid> 
       <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>

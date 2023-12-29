@@ -205,7 +205,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
         onClick={handleOpen}
         variant="contained"
         // startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
+        sx={{ margin: '10px', color: 'white', backgroundColor: '#3B82F6' }}
       >
         Add Shift Configuration
       </Button>
