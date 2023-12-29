@@ -22,9 +22,7 @@ export default function ApproveTimeSheetTable() {
         { id: "totalWorkingTime", label: "Total Worked Time", minWidth: "10pc", type: "text" },
         { id: "workingTime", label: "Approved Date", minWidth: "9pc", type: "text" },
         { id: "activityName", label: "Status", minWidth: "7pc", type: "text" },
-       
-    
-        // { id: "status", label: "Status", width: 100, type: "badge" },
+
     
         // { id: '', width: 88 },
     

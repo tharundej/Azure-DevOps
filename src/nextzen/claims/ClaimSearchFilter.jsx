@@ -216,7 +216,7 @@ const handleApply=()=>{
 console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
+          <Grid container alignItems="center" paddingBottom="10px" marginTop={1}>
             <Grid sm={8} xs={12} item>
 
             <TextField placeholder='Search....' 
