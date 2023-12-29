@@ -1352,7 +1352,7 @@ console.log(currentUser,"jjjjjjjjjj")
                     label="CTC"
                     variant="outlined"
                     id="CTC"
-                     value={currentUser?.ctc}
+                     value={currentUser?.ctc || 0}
                     // onChange={(e) => {
                     //   setcurrentUser(prev=>({
                     //     ...prev,
