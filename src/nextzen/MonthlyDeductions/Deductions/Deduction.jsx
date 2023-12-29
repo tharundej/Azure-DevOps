@@ -321,7 +321,7 @@ return (
   <Typography variant="h5" sx={{justifyContent:'center',alignItems:'center',textAlign:'center',marginTop:20}}>Please select an employee.</Typography>
 ) : (
   loader?<Card sx={{textAlign:'center',justifyContent:'center',alignItems:'center'}}><LoadingScreen/>
-  </Card>:deductionDetails?.data!=null?
+  </Card>:deductionDetails?.data?.length>0?
   <Grid container spacing={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
     {deductionDetails?.data?.map((itm,index)=>(
       <Grid item key={index} xs={6} sm={6} md={4}>
