@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------
 
 export const HEADER = {
-  H_MOBILE: 30,
-  H_DESKTOP: 30,
+  H_MOBILE: 0,
+  H_DESKTOP: 0,
   H_DESKTOP_OFFSET: 50 - 16,
 };
 

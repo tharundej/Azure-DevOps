@@ -71,7 +71,7 @@ export default function WorkWeek({ currentUser }) {
     // { name: 'View', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,

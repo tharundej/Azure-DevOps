@@ -40,7 +40,7 @@ export default function TableHeadCustom({
   console.log(order,'oooooooo')
   return (
     <TableHead sx={sx} >
-      <TableRow>
+      <TableRow >
         {/* {onSelectAllRows && (
           <TableCell padding="checkbox">
             <Checkbox
@@ -57,7 +57,7 @@ export default function TableHeadCustom({
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth ,}}
+            sx={{ width: headCell.width, minWidth: headCell.minWidth ,backgroundColor:'#F0F5FE',color:'#3B82F6'}}
           >
             {onSort ? (
               <TableSortLabel
@@ -84,6 +84,7 @@ export default function TableHeadCustom({
        <TableCell   key='headCell.id'
             align='left'
             sortDirection={ false}
+            sx={{ backgroundColor:'#F0F5FE',color:'#3B82F6'}}
           >{empty_space}</TableCell>
           
         }

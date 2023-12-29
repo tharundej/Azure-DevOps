@@ -24,6 +24,7 @@ export default function TimeSheet() {
       const [tabLabels, setTabLabels] = useState([]);
       const [tabContents, setTabContents] = useState([]);
       const [permissions, setPermissions] = useState({})
+      const companyID = localStorage.getItem('companyID');
      
       const dataObj = [
         {
@@ -80,11 +81,12 @@ export default function TimeSheet() {
          
            <CalendarView key="monthly" />
         );
-        arrLabels.push('Team Attendance',);
-        arrContents.push( 
-         
-           <TimeSheetAttendance key="myTeamAttendance" />
-        );
+// companyID === "COMP48" || 
+    { true && arrLabels.push('Team Attendance',);
+    arrContents.push( 
+      
+        <TimeSheetAttendance key="myTeamAttendance" />
+    );}
         setTabLabels(arrLabels);
         setTabContents(arrContents);
       }, [user]);
