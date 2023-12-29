@@ -24,7 +24,7 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
-import { baseUrl,baseImageUrl } from 'src/nextzen/global/BaseUrl';
+import baseImageUrl, { baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import { Country, State, City }  from 'country-state-city';
 

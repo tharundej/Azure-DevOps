@@ -24,8 +24,9 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
-import { baseImageUrl,baseUrl } from 'src/nextzen/global/BaseUrl';
+import baseImageUrl, { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { ASSETS_API } from 'src/config-global';
+import { useRouter } from 'src/routes/hooks';
 
 import bg from '../../../components/image/bg2.jpg'
 
@@ -141,6 +142,7 @@ const EmployeeView = () => {
     const [searchFriends, setSearchFriends] = useState('');
   
     const [currentTab, setCurrentTab] = useState('About');
+    const router=useRouter()
   
     const handleChangeTab = useCallback((event, newValue) => {
       setCurrentTab(newValue);
@@ -158,6 +160,11 @@ const EmployeeView = () => {
     useEffect(() => {
       setAvatarUrl(`${baseImageUrl}${userData.imageData}`);
     }, [userData]);
+
+    const handleBack = () => {
+      router.push(paths.dashboard.employee.root)
+    };
+  
   
   return (
     <div>
@@ -254,6 +261,21 @@ const EmployeeView = () => {
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
         </Tabs>
+<Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
+  
+   <Button
+                // color="inherit"
+                //disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+                '&:hover': {
+                  backgroundColor: '#1565C0', // Change this to the desired hover color
+                },
+              }}
+              >
+                Cancel
+              </Button></Grid>
+       
       {/* <Grid container justifyContent="flex-end">
       <Button
         component={RouterLink}

@@ -24,6 +24,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import EmployeePermission from './employeepermission/EmployeePermission';
 
 const steps = ['General Information', 'Education', 'Experience','Documents','Statutory','Employee Permission','Current Work Details'];
 
@@ -247,6 +248,10 @@ const handleCallSnackbar=(message,severity)=>{
              {activeStep + 1 === 5 && (
               <CreateStatutoryOnboard handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
+
+          {activeStep + 1 === 6 && (
+                        <EmployeePermission handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+                      )}
              {activeStep + 1 === 7 && (
               <CurrentWork handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
