@@ -30,24 +30,12 @@ const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
     // setDatesData([]);
     setBadgeContent(true);
 
-    // const data = await formDateDataStructure();
-    // const data1=await formWithDropdown(data);
-    // console.log(data,userdropDownvalue,'for filterss')
-    // data.fPDesignation=userdropDownvalue?.desginationValue?.designationID.toString() || "";
-
-    // data.fPdepartmentName=userdropDownvalue?.departmentValue?.departmentID.toString() || "";
-
-
-    // data.fPDesignationGrade=userdropDownvalue?.desginationGradeValue?.desginationGradeID.toString() || "";
-    // data.fWorkingLocation=userdropDownvalue?.locationValue?.locationID.toString() || "";
-
-    // console.log(data,userdropDownvalue,'for filterss')
 
 
 
 
     filterData(data);
-    // call parent function and pass it
+
 
 
 
@@ -174,7 +162,7 @@ const FactoryHead = ({ filterSearch, filterData, getTableData }) => {
         variant="contained"
         onClick={handleTimeForm}
         startIcon={<Iconify icon="mingcute:add-line" />}
-        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add Employee</Button>
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add Factory</Button>
 
 
       </Grid>

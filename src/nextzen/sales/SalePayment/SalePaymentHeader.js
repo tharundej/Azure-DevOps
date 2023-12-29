@@ -1,5 +1,5 @@
 import { styled } from '@mui/system';
-import { Button, Dialog, Grid, TextField, Typography } from '@mui/material';
+import { Button, Dialog, Grid, TextField, Typography, Stack } from '@mui/material';
 import Iconify from 'src/components/iconify/iconify';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
@@ -7,11 +7,28 @@ import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CreateSaleOrder from './CreateSalePayment';
+import Badge from '@mui/material/Badge';
 
 const SalePaymentHead = ({ filterSearch, filterData }) => {
   const router = useRouter();
   const theme = useTheme();
   const [showForm, setShowForm] = useState(false);
+  const [badgeContent, setBadgeContent] = useState(false);
+
+  const handleApply=async()=>{
+    // setDatesData([]);
+    setBadgeContent(true);
+
+
+
+
+
+    filterData(data);
+
+
+
+
+  }
 
   const handleSearch = (e) => {
     filterSearch(e?.target?.value);
@@ -41,7 +58,7 @@ const SalePaymentHead = ({ filterSearch, filterData }) => {
           <CreateSaleOrder currentData={{}} handleClose={handleClose} />
         </Dialog>
       )}
-      <Grid container alignItems="center" paddingBottom="10px">
+      {/* <Grid container alignItems="center" paddingBottom="10px">
         <Grid md={4} xs={4} item>
           <Typography variant="h4">Sale Payment Details</Typography>
         </Grid>
@@ -84,7 +101,58 @@ const SalePaymentHead = ({ filterSearch, filterData }) => {
             </Grid>
           </Grid>
         </Grid>
+      </Grid> */}
+      <Grid container alignItems="center" marginBottom='10px' >
+          <Grid md={8} xs={12} lg={8} item>
+  <TextField
+    placeholder='Search....'
+    fullWidth
+    onChange={e => { handleSearch(e) }}
+
+    size="small"
+  />
+</Grid>
+
+            <Grid md={4} xs={12} lg={4} item>
+          <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+
+      <Grid item>
+      <Button
+
+        variant="contained"
+        onClick={handleTimeForm}
+        startIcon={<Iconify icon="mingcute:add-line" />}
+        sx={{color:'white',backgroundColor:'#3B82F6'}}>Add sales payment</Button>
+
+
       </Grid>
+      <Grid item>
+        <Stack  >
+        {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot"
+
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+
+              >
+                        <Button onClick={handleTimeForm} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleTimeForm} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+
+
+      </Stack>
+             </Grid>
+      </Grid>
+      </Grid>
+         </Grid>
     </>
   );
 };

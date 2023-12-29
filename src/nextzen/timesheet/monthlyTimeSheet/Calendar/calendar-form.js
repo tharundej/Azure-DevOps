@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,Dialog,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -18,6 +18,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import dayjs from 'dayjs';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -236,20 +237,12 @@ const [projectData,setProjectData]=useState(
 // }
 projectInfo
 )
-// useEffect(()=>{
-//   if (projectInfo){
-//     setProjectData(projectInfo)
-//   }
-// },[])
+
 console.log(projectInfo,"data from calendar time sheet",projectData,projectData?.projectID.length)
 //  to store data
 
 
-// const [projectDetails, setProjectDetails] = useState({
-//   employeeName:projectInfo?.employeeName,
-//   projectID:projectInfo?.projectID,
-//   todayDate:date?.start,
-// });
+
 
 // const editData=[
 //   ACCOUNTS={
@@ -278,21 +271,8 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 // });
 
 
-// const editData = [
-//   {
-//     ACCOUNTS: {
-//       hours: "sd",
-//       des: "dfer"
-//     }
-//   },
-//   {
-//     HRMS: {
-//       hours: "12",
-//       des: "23"
-//     }
-//   }
-// ];
-console.log(editData,"editttttttdata")
+
+console.log(editData,"editttttttdata",projectInfo)
 // const initialProjectDetails = {
 //   employeeName: projectInfo?.employeeName,
 //   projectID: [
@@ -309,12 +289,14 @@ console.log(editData,"editttttttdata")
 //   )
 // };
 
-
+const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
 // second method
 const initialProjectDetails = {
   // employeeName: projectInfo?.employeeName,
-  companyId: "COMP22",
-  employeeId:"GANG12",
+  companyId: companyID,
+  employeeId:projectInfo?.employeeId,
   // projectID: [
   //   { "projectId": 1, "projectName": "ERP" },
   //   { "projectId": 3, "projectName": "ACCOUNTS" }
@@ -333,18 +315,18 @@ const initialProjectDetails = {
     ]) || []
   ),
   // Update properties based on editData
+  
   ...Object.fromEntries(
     editData?.map((editItem) => [
-      editItem.projectName,
+      Object.keys(editItem)[0], // Get the project name from the object
       {
-        description: editItem.description || "",
-        // employeename: editItem.employeename || "",
-        hours: editItem.hours || "",
-        projectId: editItem.projectId || "",
-        // projectName: editItem.projectName || ""
+        description: editItem[Object.keys(editItem)[0]].description || "",
+        hours: editItem[Object.keys(editItem)[0]].hours || "",
+        projectId: editItem[Object.keys(editItem)[0]].projectId || "",
       }
     ]) || []
   )
+  
 };
 
 // 3rd method
@@ -410,7 +392,7 @@ console.log(initialProjectDetails);
 
 const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
 
-
+console.log(projectDetails,"projectDetails12")
 const handleTextFieldChange = (projectname, field, value, projectId) => {
   console.log(projectId,"projectId12345")
   setProjectDetails((prevDetails) => ({
@@ -536,7 +518,7 @@ console.log(output);
 
 
     
-    const response = await axios.post( "https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/newupdateTimeSheet", output).then(
+    const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
         
@@ -619,6 +601,8 @@ console.log(output);
         </LoadingButton>
       </DialogActions>
     </FormProvider>
+
+    
     </>
   );
 }

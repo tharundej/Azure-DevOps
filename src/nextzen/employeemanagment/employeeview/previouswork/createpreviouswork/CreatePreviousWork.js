@@ -255,7 +255,30 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
     useEffect(()=>{
       if(employeeData){
+        if(endpoint!=="updateWorkDetails"){
+          setDefaultValues([{
+
+            "previousCompanyName": "",
+            "designation": "",
+            "startDate": "",
+            "presentlyWorking": "",
+            "endDate": "",
+              documents:[
+                {
+                  fileType:'',
+                  fileName:'',
+                  fileContent:''
+              },
+            ]
+             
+            
+           
+          }])
+        }
+        else{
+        console.log(employeeData,'employeeData')
       setDefaultValues(employeeData)
+        }
 
 
       }
@@ -565,7 +588,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                   />
                   
                 </Grid>
-                <Grid md={6} xs={12} item>
+                <Grid md={12} xs={12} item>
                 <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -649,6 +672,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                                         }}
                                         component="label"
                                         variant="contained"
+                                        color="primary"
                                         startIcon={<CloudUploadIcon />}
                                       >
                                         Upload file
@@ -724,7 +748,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
                 <label htmlFor= {`file-upload-input-${index}-${index1}`}>
                 <Button
                   onChange={(e)=>{console.log(index);handleFileUpload(e,index,index1)}}
-                component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                component="label" variant="contained" startIcon={<CloudUploadIcon />} color="primary">
                             Upload file
                             <VisuallyHiddenInput type="file" />
                           </Button>

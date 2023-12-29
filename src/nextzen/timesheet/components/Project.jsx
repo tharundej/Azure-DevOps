@@ -33,7 +33,7 @@ const Project = () => {
 
   const defaultPayload={
       "page": 0,
-      "count": 5,
+      "count": 10,
       "search": "",
       "companyId":(user?.companyID)?user?.companyID:'',
       "roleId": (user?.roleID)?user?.roleID:'',
@@ -139,6 +139,7 @@ const handleClose =()=>{
 const [selectedIds, setSelectedIds] = useState([]);
 const handleCloseEmployee=()=>{
   setEditEmployee(false)
+  setViewProject(false)
   setSelectedIds([])
 }
 const [showAll, setShowAll] = useState(false);

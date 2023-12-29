@@ -24,6 +24,7 @@ export default function TimeSheet() {
       const [tabLabels, setTabLabels] = useState([]);
       const [tabContents, setTabContents] = useState([]);
       const [permissions, setPermissions] = useState({})
+      const companyID = localStorage.getItem('companyID');
      
       const dataObj = [
         {
@@ -31,16 +32,16 @@ export default function TimeSheet() {
           label: 'Projects',
           content: <Project  key="projects" />,
         },
-        {
-          id: 'myTimesheet',
-          label: 'My Time Sheet',
-          content: <MyTimeSheet key="myTimesheet" />,
-        },
-        {
-          id: 'approvals',
-          label: 'Employee Time Sheet ',
-          content: <TimeSheetApproval key="approvals" />,
-        },
+        // {
+        //   id: 'myTimesheet',
+        //   label: 'My Time Sheet',
+        //   content: <MyTimeSheet key="myTimesheet" />,
+        // },
+        // {
+        //   id: 'approvals',
+        //   label: 'Employee Time Sheet ',
+        //   content: <TimeSheetApproval key="approvals" />,
+        // },
         {
           id: 'myTeam',
           label: 'My Team Time Sheet ',
@@ -80,11 +81,12 @@ export default function TimeSheet() {
          
            <CalendarView key="monthly" />
         );
-        arrLabels.push('Team Attendance',);
-        arrContents.push( 
-         
-           <TimeSheetAttendance key="myTeamAttendance" />
-        );
+// companyID === "COMP48" || 
+    { true && arrLabels.push('Team Attendance',);
+    arrContents.push( 
+      
+        <TimeSheetAttendance key="myTeamAttendance" />
+    );}
         setTabLabels(arrLabels);
         setTabContents(arrContents);
       }, [user]);

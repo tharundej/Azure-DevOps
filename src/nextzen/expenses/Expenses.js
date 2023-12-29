@@ -12,7 +12,7 @@ import { fNumber } from 'src/utils/format-number';
 
 export default function Expenses() {
   const [count, setCount] = useState(0);
-  const [totalExpense ,setTotalExpense] = useState([])
+  const [totalExpense, setTotalExpense] = useState([]);
   const handleCountChange = () => {
     setCount(count + 1);
   };
@@ -21,15 +21,15 @@ export default function Expenses() {
   const updateTotalExpense = (newValue) => {
     setTotalExpense(newValue);
     console.log('Updated totalExpense:', newValue);
-  }; 
+  };
 
-  console.log(totalExpense ,"totalExpense")
+  console.log(totalExpense, 'totalExpense');
   const tabContents = [
     <div>
-      <Fuel updateTotalExpense={updateTotalExpense}  />
+      <Fuel updateTotalExpense={updateTotalExpense} />
     </div>,
     <div>
-      <Vehicles  updateTotalExpense={updateTotalExpense} />
+      <Vehicles updateTotalExpense={updateTotalExpense} />
     </div>,
     <div>
       <OtherExpenses updateTotalExpense={updateTotalExpense} />
@@ -69,12 +69,14 @@ export default function Expenses() {
         flexDirection="row"
         justifyContent="space-between"
         sx={{ '& > *': { flex: '1 1 auto', maxWidth: '30%' } }}
+        style={{ marginBottom: '20px' }}
       >
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Total Amount</Typography>
-              <Typography variant="h3">{totalExpense?.totalAmountSum}</Typography>
+              <Typography variant="subtitle2">
+                Total Amount : {totalExpense?.totalAmountSum}
+              </Typography>
             </Box>
           </Card>
         </Grid>
@@ -82,8 +84,9 @@ export default function Expenses() {
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Advance Amount</Typography>
-              <Typography variant="h3">{totalExpense?.paidAmountSum}</Typography>
+              <Typography variant="subtitle2">
+                Advance Amount : {totalExpense?.paidAmountSum}
+              </Typography>
             </Box>
           </Card>
         </Grid>
@@ -91,14 +94,15 @@ export default function Expenses() {
         <Grid xs={4} md={4}>
           <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle2">Balance Amount</Typography>
-              <Typography variant="h3">{totalExpense?.balanceAmountSum}</Typography>
+              <Typography variant="subtitle2">
+                Balance Amount : {totalExpense?.balanceAmountSum}
+              </Typography>
             </Box>
           </Card>
         </Grid>
       </Box>
 
-      <div style={{ textAlign: 'right', marginTop: '20px' }}>
+      {/* <div style={{ textAlign: 'right', marginTop: '20px' }}>
         <Button
           variant="contained"
           color="primary"
@@ -107,8 +111,9 @@ export default function Expenses() {
         >
           Add
         </Button>
-      </div>
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} />
+      </div> */}
+      {/* <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} /> */}
+      <Fuel updateTotalExpense={updateTotalExpense} />
     </>
   );
 }

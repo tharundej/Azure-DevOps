@@ -11,7 +11,7 @@ import Additions from './Additions/Additions';
 export default function Requests() {
   const {user} = useContext(UserContext)
   const loandefaultPayload ={
-    "count": 5,
+    "count": 10,
     "page": 0,
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',
@@ -55,11 +55,12 @@ const additionDefaultPayload={
   "employeeID": user?.employeeID,
   "companyID":user?.companyID
 }
-      const tabLabels = ["Loans" ,"Additions", "My Deductions"]
+      const tabLabels = ["Additions", "My Deductions","Loans" ]
       const tabContents = [
-        <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
+    
         <div><Additions defaultPayload={additionDefaultPayload} componentPage="MyRequests"/></div>,
         <div><Deduction defaultPayload={deductiondefaultpayload} componentPage="MyRequests"/>  </div>,
+        <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
       ]
   return (
     <>

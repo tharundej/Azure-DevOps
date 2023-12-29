@@ -42,6 +42,21 @@ const PreviousWork = ({employeeIDForApis}) => {
   const [endpoint,setEndpoint]=useState("");
 
   const [open,setOpen]=useState(false);
+  const handleAddEducationEdit = (data,endpoint) => {
+    setEndpoint(endpoint)
+    // if(data?.documents.length===0){
+    //   data.documets=[
+    //     {
+    //       fileType:'',
+    //       fileName:'',
+    //       fileContent:''
+    //   },
+    // ]
+    // }
+    
+    setEmployeeDataToEditOrCreate(prev=>(data));
+  };
+  
   const handleAddEducation = (data,endpoint) => {
     setEndpoint(endpoint)
     // if(data?.documents.length===0){
@@ -53,19 +68,25 @@ const PreviousWork = ({employeeIDForApis}) => {
     //   },
     // ]
     // }
-    setEmployeeDataToEditOrCreate(prev=>(data));
+
+    console.log("1")
+    
+    setEmployeeDataToEditOrCreate(employeeData);
   };
   
   useEffect(() => {
-    console.log('aa',employeeDataToEditOrCreate.length)
+    //console.log('aa',employeeDataToEditOrCreate.length)
     if(employeeDataToEditOrCreate?.length>0){
+      console.log(employeeDataToEditOrCreate,'2')
     setOpen(true);
    
   
     }
   }, [employeeDataToEditOrCreate]);
-  const handleClose=()=>{setOpen(false);
-    setEmployeeDataToEditOrCreate([])
+  const handleClose=()=>{
+    setEmployeeDataToEditOrCreate([]);
+    setOpen(false);
+   
   }
   
 
@@ -196,7 +217,7 @@ const PreviousWork = ({employeeIDForApis}) => {
                     <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
-                              handleAddEducation([item], "updateWorkDetails");
+                              handleAddEducationEdit([item], "updateWorkDetails");
                             }}>
                               <Iconify icon="material-symbols:edit" />
                             </IconButton>
