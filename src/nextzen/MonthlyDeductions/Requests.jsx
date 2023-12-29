@@ -55,11 +55,12 @@ const additionDefaultPayload={
   "employeeID": user?.employeeID,
   "companyID":user?.companyID
 }
-      const tabLabels = ["Loans" ,"Additions", "My Deductions"]
+      const tabLabels = ["Additions", "My Deductions","Loans" ]
       const tabContents = [
-        <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
+    
         <div><Additions defaultPayload={additionDefaultPayload} componentPage="MyRequests"/></div>,
         <div><Deduction defaultPayload={deductiondefaultpayload} componentPage="MyRequests"/>  </div>,
+        <div> <Loans defaultPayload={loandefaultPayload} componentPage="MyRequests"/> </div>,
       ]
   return (
     <>
