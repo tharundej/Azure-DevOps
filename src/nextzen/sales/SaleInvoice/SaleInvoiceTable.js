@@ -92,3 +92,4 @@ const SaleInvoiceTable = () => {
   );
 };
 export default SaleInvoiceTable;
+
