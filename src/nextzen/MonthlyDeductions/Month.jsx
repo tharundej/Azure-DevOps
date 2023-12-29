@@ -13,13 +13,12 @@ export default function Month() {
   const [tabLabels, setTabLabels] = useState([]);
   const [tabContents, setTabContents] = useState([]);
   const dataObj = [
-   
     {
-      id: 'loans',
-      label: 'Loans',
-      content: <Loans key="loans" />,
+      id: 'additions',
+      label:"Additions",
+      content:<Additions key ="additions"/>
     },
-   
+     
     {
       id: 'myDeductions',
       label: 'Deductions',
@@ -27,10 +26,17 @@ export default function Month() {
     },
   
     {
+      id: 'loans',
+      label: 'Loans',
+      content: <Loans key="loans" />,
+    },
+  
+    {
       id: 'myRequest',
       label: 'My Requests',
       content: <Requests key="myRequest" />,
     },
+   
   ];
     
   useEffect(() => {
@@ -49,8 +55,7 @@ export default function Month() {
       }
      
     });
-    arrLabels.push('Additions')
-    arrContents.push(<Additions/>)
+  
     setTabLabels(arrLabels);
     setTabContents(arrContents);
   }, [user]);
