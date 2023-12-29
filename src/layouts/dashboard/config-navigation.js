@@ -104,6 +104,20 @@ export function useNavData() {
       path: paths.dashboard.leave.root,
       icon: ICONS.g_leaveManagement,
       key: 'leaveManagement',
+       children: [
+       
+        {
+          title: t('Leave'),
+          path: paths.dashboard.leave.leave,
+        },
+        {
+          title: t('Compoff'),
+          path: paths.dashboard.leave.compoff,
+        },
+       
+        
+      ],
+    
     },
     {
       title: t('Time Sheet Management'),
