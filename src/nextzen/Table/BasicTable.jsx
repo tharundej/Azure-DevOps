@@ -515,6 +515,7 @@ const [index, setIndex]=useState(""); // index setting
         <LoadingScreen sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
       ) : (
         <Container
+        sx={{padding:'10px'}}
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
@@ -844,9 +845,9 @@ const [index, setIndex]=useState(""); // index setting
             <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
-          <Card>
+          <Card >
             <TableContainer
-             component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%',minHeight:100, height:300,  }}
+             component={Paper} sx={{top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', minheight:100,  }}
             >
               <TableSelectedAction
                 dense={table.dense}
@@ -868,7 +869,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'}  stickyHeader={true}>
+                <Table size={table.dense ? 'medium' : 'small'}  >
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}

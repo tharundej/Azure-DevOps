@@ -2,10 +2,10 @@ import React,{useState,useCallback} from 'react'
 import { useParams } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import CryptoJS from "crypto-js";
-
+import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
-import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
+import { Container,Card,Tab ,Link,Grid,Button,Stack} from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import ProfileCover from 'src/sections/user/profile-cover';
 import Iconify from '../../../components/iconify/iconify';
@@ -13,7 +13,9 @@ import Iconify from '../../../components/iconify/iconify';
 import EmployeeAbout from './employeeabout/EmployeeAbout';
 import EmployeeEducation from './employeeeducation/EmployeeEducation';
 import Statoury from './statoury/Statoury';
-
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { useTheme, alpha } from '@mui/material/styles';
+import { bgGradient } from 'src/theme/css';
 import PreviousWork from './previouswork/PreviousWork';
 
 import Documents from "../../employeemanagment/employeeview/documents/Document"
@@ -68,6 +70,7 @@ const EmployeeView = () => {
   const [userData,setUserData]=useState({})
 
   const roleID=3;
+  const theme = useTheme();
   
   
 
@@ -112,7 +115,7 @@ const EmployeeView = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data.data,'setUserData'));
         setUserData(response.data.data)
-       console.log( `${ASSETS_API}/assets/images/cover/cover_${1 + 1}.jpg`,'avatarUrl')
+       console.log( response.data.data,'avatarUrl')
 
       })
       .catch((error) => {
@@ -158,8 +161,10 @@ const EmployeeView = () => {
   
   return (
     <div>
-         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+         <Stack maxWidth={settings.themeStretch ? false : 'lg'}>
+          
+         
+          <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"
@@ -173,21 +178,51 @@ const EmployeeView = () => {
         }}
       /> */}
 
-      <Card
+      {/* <Card
         sx={{
           mb: 3,
-          height: 290,
+          height: 150,
         }}
       >{avatarUrl?.length>0 && 
       <ProfileCover
         role={userData?.roleName}
         name={userData?.firstName}
-        //  avatarUrl="http://192.168.1.199:3001/erp/download?file=COMP22_GANG31_20231212100718_489121__fnss__apple__fnse__.jpg"
-        avatarUrl ={`_GANG1_20231211093305_473297__fnss__gojo___fnse__.jpg`}
-        coverUrl={bg}
-      />}
        
-  <Tabs
+        avatarUrl ={userData?.imageData}
+        coverUrl={bg}
+      />
+      
+      }
+       
+  
+      </Card> */}
+
+{/* <ProfileCover
+        role={userData?.roleName}
+        name={userData?.firstName}
+       
+        avatarUrl ={userData?.imageData}
+        coverUrl={bg}
+      /> */}
+
+{/* <Avatar
+        // src={baseImageUrl+avatarUrl}
+        // alt={name}
+       
+        sx={{
+          left: { md: 14 },
+          bottom: { md: 24 },
+          zIndex: { md: 5 },
+          pt: { xs: 6, md: 0 },
+          position: { md: 'absolute' },
+          mx: 'auto',
+          width: { xs: 64, md: 128 },
+          height: { xs: 64, md: 128 },
+          border: `solid 2px ${theme.palette.common.white}`,
+        }}
+      /> */}
+
+<Tabs
   value={currentTab}
   onChange={handleChangeTab}
   variant="scrollable"
@@ -197,16 +232,16 @@ const EmployeeView = () => {
   sx={{
     
     width: '100%',
-    bottom: 0,
-    zIndex: 9,
-    position: 'absolute',
+    // bottom: 0,
+    // zIndex: 9,
+    // position: 'absolute',
     bgcolor: 'background.paper',
     [`& .${tabsClasses.flexContainer}`]: {
       pr: { md: 3 },
       justifyContent: {
-        sm: 'flex-end',
-        md: 'flex-end',
-        lg: 'flex-end',
+        sm: 'flex-start',
+        md: 'flex-start',
+        lg: 'flex-start',
     
       },
     },
@@ -219,7 +254,6 @@ const EmployeeView = () => {
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
         </Tabs>
-      </Card>
       {/* <Grid container justifyContent="flex-end">
       <Button
         component={RouterLink}
@@ -267,10 +301,10 @@ const EmployeeView = () => {
       // )} */}
 
       {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
-    </Container>
+    </Stack>
 
 
-
+      
     </div>
   )
 }

@@ -126,7 +126,8 @@ const TABLE_HEAD = [
       maxBodyLength: Infinity,
       // url: baseUrl +'getSingleLicPremium',
       // url: baseUrl + '/getPayRunCount',
-      url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
+      url: baseUrl + '/payRunTotalCalculations',
+      // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/payRunTotalCalculations",
       headers: {
         Authorization: token,
         'Content-Type': 'text/plain',

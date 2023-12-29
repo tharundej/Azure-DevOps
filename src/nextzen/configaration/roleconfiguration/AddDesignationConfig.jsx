@@ -46,7 +46,7 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
-export default function AddDesignationConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig }) {
+export default function AddDesignationConfig({ currentUser ,handleCloseAddRoleDilog ,openAddRoleConfig ,getTableData}) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
     start_date: dayjs(new Date()),
@@ -266,9 +266,10 @@ setHitGetDepartment(!hitGetDepartment)
        .then((response) => {
          if (response.data.code === 200) {
           enqueueSnackbar(response?.data?.message,{variant:'success'})
-        
+          
            setHitGetDepartment(!hitGetDepartment)
            handleClose();
+           getTableData()
            console.log("success")
          }else  if (response.data.code === 400) {
           enqueueSnackbar(error.response.data.message,{variant:'error'})

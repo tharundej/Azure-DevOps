@@ -173,7 +173,7 @@ const [loading,setLoading] = useState(false);
   console.log('🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:', tableData);
 
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyID: cmpId,

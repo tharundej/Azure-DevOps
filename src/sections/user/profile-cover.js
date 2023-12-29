@@ -20,9 +20,13 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 
+import { baseImageUrl } from 'src/nextzen/global/BaseUrl';
+
 // ----------------------------------------------------------------------
 
 export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
+
+  console.log(baseImageUrl+avatarUrl,'baseImageUrl+avatarUrl')
   const [avatarUrl1, setAvatarUrl] = useState(avatarUrl);
   console.log(avatarUrl,'avatarUr1')
   const theme = useTheme();

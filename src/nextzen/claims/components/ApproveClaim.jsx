@@ -99,7 +99,7 @@ export default function ApproveClaim({ currentUser }) {
   const defaultPayload = {
     "companyId": companyID,
     "approverManagerId": employeeID,
-    "count": 5,
+    "count": 10,
     "page": 0,
     "search": "",
     "externalFilter": {
@@ -109,7 +109,7 @@ export default function ApproveClaim({ currentUser }) {
       "status": ""
     },
     "sort": {
-      "key": 0,
+     "key": 1,
       "order": ""
     }
 

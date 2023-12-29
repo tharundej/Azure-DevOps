@@ -34,7 +34,7 @@ export const StatouryTable = () => {
   ]);
   const defaultPayload ={
 
-    "count": 5,
+    "count": 10,
   
     "page": 0,
     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -57,7 +57,7 @@ export const StatouryTable = () => {
   
      "sort": {
   
-     "key": 0,
+    "key": 1,
   
      "orderBy": "employee_id"
   

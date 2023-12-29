@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'Staging'}
+    agent {label 'DevOps'}
     stages{
          stage("Env Variables") {
             steps {
@@ -22,7 +22,7 @@ pipeline {
                 script {
                      sh '''
                          docker ps
-                         docker rm -f node_n || true
+                         docker rm -f node_test || true
                          echo y | docker system prune -a
                           echo y | docker image prune -a
 

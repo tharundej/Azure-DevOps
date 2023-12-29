@@ -8,7 +8,7 @@ export default function History(){
           "employeeId":(user?.employeeID)?user?.employeeID:'',
           "search": "",
           "page": 0,
-          "count": 5,
+          "count": 10,
        "externalFilters":{
         "status":"",
         "leaveTypeName":"",

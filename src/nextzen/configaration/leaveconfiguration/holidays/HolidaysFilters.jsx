@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { styled } from '@mui/system';
 
 import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
-
+import Badge from '@mui/material/Badge';
 import {
   Card,
   TextField,
@@ -128,7 +128,7 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
   const [dateError, setDataError] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
   const [personName, setPersonName] = React.useState([]);
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
   const [dropdownshift_name, setDropdownStatus] = useState([]);
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
@@ -198,8 +198,6 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
       dropdown?.holidayName?.forEach((item, index) => {
         arr1.push(item?.holidayName);
       });
-
-      // setDatesData(arr1);
       resolve(arr1);
     });
   }
@@ -293,6 +291,7 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
 
   const handleApply = async () => {
     setDatesData([]);
+    setBadgeContent(true);
     const data = await formWithDropdown();
     const comma = data.join(',');
     const obj = {
@@ -333,19 +332,38 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-        <Grid item md={4} xs={12}>
+        <Grid item md={2} xs={12}>
           <HolidaysForm getTableData={getTableData}/>
-          <Grid item>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+          
+        </Grid>
+        <Grid item md={2} xs={3}>
+      
+
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
-            </Stack>
+            </Stack> */}
           </Grid>
-        </Grid>
-        {/* <Grid item md={2} xs={3}>
         
-        </Grid> */}
       </Grid>
 
       <BootstrapDialog

@@ -42,37 +42,122 @@ const TimeSheetAttendance = () => {
     const handleHoursChange = (event) => {
       setHours(event.target.value);
     };
-  
+  console.log(tdate,data, "dateeeeeeeeee")
     const handleSave = () => {
       // Add your logic to save the entered hours
       console.log(`Saving ${hours} hours`);
     };
 
-    const handleRoleChange=()=>{
-
-    }
+    
 
     const [loader,setLoader] = useState(false)
-    const handleRentAmountChange = (e, index, field) => {
-      // Create a copy of the array
-      const newArray = [...dataMe];
+    const handleRentAmountChange = (e, index, field, employeeId) => {
+      setPayloadAttendance((prevPayload) => {
+        const newAttendance = {
+          ...prevPayload.attendance,
+          [employeeId]: {
+            ...prevPayload.attendance[employeeId],
+            present: e.target.checked,
+          },
+        };
     
-      // Update the specific element in the copied array
-      newArray[index] = {
-        ...newArray[index],
-        [field]: e.target.checked ? 'Present' : 'Absent',
-      };
-    
-      // Set the state with the updated array
-      setDataMe(newArray);
-    
-      console.log(newArray, 'newArray');
+        return {
+          ...prevPayload,
+          attendance: newAttendance,
+        };
+      });
     };
+    
     
     const handleSubmittedAmountChange=()=>{
 
-    }
 
+    }
+    const managerID = localStorage.getItem('reportingManagerID');
+  const employeeID = localStorage.getItem('employeeID');
+  const companyID = localStorage.getItem('companyID');
+const [payloadAttendance,setPayloadAttendance]= useState({
+      companyId: companyID,
+      date: dayjs(tdate).format('YYYY-MM-DD'),
+      type: null,
+      attendance: {
+         
+      },
+      page: 0,
+      count: 10,
+      search: ""
+  })
+  const [attendanceData, useAttendanceData]= useState({
+    GANG12: {employeeId:"12", employeeName:"surendra",present:"false"},
+    GANG11: {employeeId:"13", employeeName:"malli",present:"false"},
+    
+})
+useEffect(()=>{
+  getTeamAttendance(payloadAttendance)
+},[payloadAttendance.type,tdate,payloadAttendance.search])
+const getTeamAttendance = async (payloadAttendance)=>{
+  try {
+  
+   
+    const response = await axios.post(baseUrl+'/teamAttendance', payloadAttendance).then(
+      (response) => {
+        console.log('sucessssssss', response);
+        setPayloadAttendance((prevPayload) => ({
+          ...prevPayload,
+          attendance: response?.data?.data || {},
+        }));
+        // SetActivityData(response?.data?.data)
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+     
+      }
+    );
+
+
+
+    
+    console.log('Response:', );
+
+   
+  } catch (error) {
+    console.error('Error:', error);
+    throw error; 
+  }
+}
+const getTeamAttendance1 = async (payloadAttendance)=>{
+  try {
+  
+   
+    const response = await axios.post(baseUrl+'/teamAttendance', payloadAttendance).then(
+      (response) => {
+        console.log('sucessssssss', response);
+        setPayloadAttendance((prevPayload) => ({
+          ...prevPayload,
+          attendance: response?.data?.data || {},
+        }));
+        // SetActivityData(response?.data?.data)
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+     
+      }
+    );
+
+
+
+    
+    console.log('Response:', );
+
+   
+  } catch (error) {
+    console.error('Error:', error);
+    throw error; 
+  }
+}
+console.log(payloadAttendance,"payloadAttendance")
     const ApiHit=()=>{
       setLoader(true)
         const data={
@@ -131,7 +216,7 @@ const TimeSheetAttendance = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${baseUrl}/addDailyTimesheetForEmployee`,
+        url: `${baseUrl}//addDailyTimesheetForEmployee`,
         headers: {
           'Content-Type': 'application/json'
         },
@@ -186,15 +271,49 @@ const TimeSheetAttendance = () => {
   
   ])
   console.log(dataMe,"ffffffffffffffff")
+  // calling function
+  const apiCallAttendance= ()=>{
+    getTeamAttendance(payloadAttendance)
+
+  }
+  const handleSearch = (searchTerm) => {
+ 
+    // searchData(searchTerm)
+    setPayloadAttendance((prevPayload) => ({
+      ...prevPayload,
+      search: searchTerm,
+    }));
+    // apiCallAttendance()
+    console.log(searchTerm,"search ........")
+    };
+    const teamList = [ 'contract','permanent']
   return (
     <>
-                <Grid md={6} xs={6} lg={6} marginBottom="10px" item>
+    <Grid container flexDirection={"row"} spacing={1} >
+     <Grid sm={12} md={12} xs={12}  lg={12} item marginBottom="10px">
+
+<TextField placeholder='Search....' 
+fullWidth
+// onChange={handleSeacrch}
+onChange={(e) => handleSearch(e.target.value)}
+// size="small"
+
+/>
+</Grid>
+                <Grid md={6} sm={6} xs={12} lg={6} marginBottom="10px" item>
                     <DatePicker
-                      sx={{ width: '20%' }}
+                      sx={{ width: '100%' }}
                       fullWidth
                       value={tdate ? dayjs(tdate).toDate() : null}
                       onChange={(date) => {
-                        setTdate( dayjs(date).format('YYYY-MM-DD') )          
+                        setTdate( dayjs(date).format('YYYY-MM-DD') )  
+                        // setPayloadAttendance() 
+                        setPayloadAttendance((prevPayload) => ({
+                          ...prevPayload,
+                          date: dayjs(date).format('YYYY-MM-DD'),
+                          attendance:{},
+                        }));
+                             
                       }}
                       renderInput={(params) => <TextField {...params} />}
                       inputFormat="yyyy-MM-dd"
@@ -206,6 +325,28 @@ const TimeSheetAttendance = () => {
                       maxDate={new Date()}
                     />
                   </Grid>
+                  <Grid md={6} sm={6} xs={12} lg={6} marginBottom="10px" item>
+                  <Autocomplete
+    id="cobo-box-demo"
+    options={teamList || []}
+    getOptionLabel={(option) => option}
+    value={payloadAttendance?.type} // Set the default selected value as per your requirement
+    onChange={(event, newValue) => {
+      setPayloadAttendance((prevPayload) => ({
+        ...prevPayload,
+        type: newValue,
+      }));
+      // apiCallAttendance();
+    }}
+
+    
+   
+    renderInput={(params) => <TextField {...params} label="Select Employee Type" />}
+  />
+                   
+                  </Grid>
+                  </Grid>
+       
     
     {loader?<Card sx={{height:"60vh"}}><LoadingScreen/></Card>:<TableContainer component={Paper}>
     <Table size="small">
@@ -216,31 +357,32 @@ const TimeSheetAttendance = () => {
     </TableRow>
   </TableHead>
   <TableBody>
-    {dataMe?.map((row, index) => (
-      <TableRow
-        style={{
-          height: '2px',
-          borderBottom: '1px solid black',
-          backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
-        }}
-        key={row?.name}
-      >
-        <TableCell style={{ height: '30px !important;' }} size="small">
-          <Typography size="small">{row?.employeeName}</Typography>
-        </TableCell>
+  {Object.entries(payloadAttendance?.attendance || {}).map(([employeeId, employeeData], index) => (
+  <TableRow
+    style={{
+      height: '2px',
+      borderBottom: '1px solid black',
+      // backgroundColor: index % 2 === 0 ? 'white' : '#f2f2f2',
+    }}
+    key={employeeId}
+  >
+    <TableCell style={{ height: '30px !important;' }} size="small">
+      <Typography size="small">{employeeData?.employeeName}</Typography>
+    </TableCell>
 
-        <TableCell style={{ height: '30px !important;', display: 'flex', alignItems: 'center' }}>
-          <Typography style={{ marginRight: '8px' }}>Absent</Typography>
-          <Switch
-            size="small"
-            checked={row?.attendance === 'Present'}
-            onChange={(e) =>  handleRentAmountChange(e, index, "attendance")
-            }
-          />
-          <Typography style={{ marginLeft: '8px' }}>Present</Typography>
-        </TableCell>
-      </TableRow>
-    ))}
+    <TableCell style={{ height: '30px !important;', display: 'flex', alignItems: 'center' }}>
+      <Typography style={{ marginRight: '8px' }}>Absent</Typography>
+      <Switch
+  size="small"
+  checked={employeeData?.present || false}
+  onChange={(e) => handleRentAmountChange(e, index, "attendance", employeeId)}
+/>
+
+      <Typography style={{ marginLeft: '8px' }}>Present</Typography>
+    </TableCell>
+  </TableRow>
+))}
+
   </TableBody>
 </Table>
 
@@ -249,7 +391,7 @@ const TimeSheetAttendance = () => {
       <Grid sx={{display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'flex-end',margin:'10px'}}>
       <Button
   variant="contained"
-  onClick={ApiHitSave}
+  onClick={apiCallAttendance}
   sx={{
     position: 'relative',
     minHeight: '40px', // Set a minimum height for the button

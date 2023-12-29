@@ -86,7 +86,7 @@ const VendorMaterialsTable = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
-    count: 5,
+    count: 10,
     page: 1,
   });
 
@@ -118,7 +118,7 @@ const VendorMaterialsTable = () => {
       orderBy: 'hsnId',
     },
     page: 0,
-    count: 5,
+    count: 10,
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },

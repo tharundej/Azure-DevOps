@@ -17,7 +17,7 @@ export default function Approveleave(){
       "role_id": (user?.roleID)?user?.roleID:'',
       "company_id": (user?.companyID)?user?.companyID:'',
       "page": 0,
-      "count": 5,
+      "count": 10,
       "search": "",
       "externalFilters": {
           "leaveTypeName": "",
@@ -36,7 +36,7 @@ export default function Approveleave(){
           }
       },
       "sort": {
-          "key": 0,
+         "key": 1,
           "orderby": "al.apply_date"
       }
   }

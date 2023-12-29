@@ -124,7 +124,7 @@ export default function TimeProject() {
 
   const defaultPayload={
     "page": 0,
-    "count": 5,
+    "count": 10,
     "search": "",
     "externalFilters": {
         "startDate": "",
@@ -132,7 +132,7 @@ export default function TimeProject() {
         "status": "",
     },
     "sort": {
-        "key": 0,
+       "key": 1,
         "orderBy": ""
     }
 }
