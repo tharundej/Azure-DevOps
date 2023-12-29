@@ -7,10 +7,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback, useContext } from 'react';
-
+import * as Yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import LoadingButton from '@mui/lab/LoadingButton';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
+import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,DialogActions ,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -28,6 +31,7 @@ import { useCalendar, useEvent } from '../hooks';
 import { StyledCalendar } from '../styles';
 import CalendarForm from '../calendar-form';
 import CalendarToolbar from '../calendar-toolbar';
+import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import CalendarFilters from '../calendar-filters';
 import CalendarFiltersResult from '../calendar-filters-result';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
@@ -57,9 +61,9 @@ export default function CalendarView() {
   const { events, eventsLoading } = useGetEvents();
   const [listOfHolidays,setListOfHolidays]= useState();
  
-useEffect(()=>{
-  holidayslist();
-},[])
+// useEffect(()=>{
+//   holidayslist();
+// },[])
   const dateError =
     filters.from_date && filters.to_date
       ? filters.from_date.getTime() > filters.to_date.getTime()
@@ -89,19 +93,7 @@ useEffect(()=>{
     //
     onClickEventInFilters,
   } = useCalendar();
-  const holidayslist = async (e) => {
-    try{
-      const holidaysListPayload = {
-      companyId:(user?.companyID)?user?.companyID:'',
-      locationId:(user?.locationID)?JSON.stringify(parseInt(user?.locationID)):''
-    };
-      const holidayslistResponse = await getHolidaysListAPI(holidaysListPayload)
-      setListOfHolidays(holidayslistResponse?.data?.data)
-    }
-    catch(error){
-      console.log(error);
-    };
-  };
+  
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
   useEffect(() => {
     onInitialView();
@@ -129,8 +121,69 @@ useEffect(()=>{
     type:"leave",
     color:event.color
   }));
- 
 
+
+
+  const EventSchema = Yup.object().shape({
+    leaveTypeId:Yup.lazy((value) => {
+    return value === 0
+      ? Yup.number().notOneOf([0], 'Please Select Leave Type').required('Please Select Leave Type')
+      : Yup.number().required('Please Select Leave Type');
+  }),
+    companyId:Yup.string(),
+    employeeId:Yup.string(),
+    
+  });
+  const methods = useForm({
+    resolver: yupResolver(EventSchema),
+    defaultValues: currentEvent,
+  });
+  
+  const {
+    reset,
+    watch,
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+  const values = watch();
+const onSubmit = handleSubmit(async (data) => {
+    console.log('uyfgv');
+    console.log(data,"defaultValues111")
+
+    try {
+      // data.company_id = '0001';
+      // data.company_name = 'infbell';
+      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
+      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
+      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
+      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
+
+      console.log(data, 'data111ugsghghh');
+
+      const response = await axios.post(baseUrl+'/q', data).then(
+        (successData) => {
+          // enqueueSnackbar(response?.data?.message,{variant:'success'})
+          console.log('success', successData);
+        },
+        (error) => {
+          console.log('lllll', error);
+          // enqueueSnackbar(response?.data?.message,{variant:'error'})
+        }
+      );
+
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+      // router.push(paths.dashboard.user.list);
+      // console.info('DATA', data);
+    } catch (error) {
+      // enqueueSnackbar(response?.data?.message,{variant:'error'})
+      console.error(error);
+    }
+  });
+
+  
   // surendra
   const [eventGetData,setEventGetData]= useState();
  
@@ -167,30 +220,67 @@ console.log(date,"datedate1234",view,eventsLoading)
 }
   
    ]
+   
+   const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
 
- const getApiCall =  {
-    employeeId: "GANG12",
-    companyId:"comp22",
-    DateOfActivity:{
-        from:"2023-12-01",
-         to: "2023-12-30"
-    }
+   // data setting 1st and last days
+function getMonthStartAndEndDates(inputDate) {
+  const currentDate = new Date(inputDate);
+  
+  // Set the date to the first day of the month
+  currentDate.setDate(1);
+
+  const startDate = currentDate.toISOString().split('T')[0]; // Start date
+
+  // Set the date to the last day of the month
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  currentDate.setDate(0);
+
+  const endDate = currentDate.toISOString().split('T')[0]; // End date
+
+  return { startDate, endDate };
 }
-// console.log(getApiCall,"getApiCall")
+
+// Example usage:
+const inputDate = date; // Your input date
+const { startDate, endDate } = getMonthStartAndEndDates(inputDate);
+
+console.log(endDate,'Start Date:', startDate);
+// console.log('End Date:', endDate);
+useEffect(()=>{
+
+},[])
+
+ const [getApiCall, setGetApiCall] =  useState({
+    employeeId:employeeID ,
+    companyId: companyID,
+    DateOfActivity:{
+        from:startDate,
+         to: endDate
+    }
+})
+console.log(date,"getApiCall")
 
 const calendarGetData = async (getApiCall) => {
   console.log("hello in function",getApiCall)
-  const response = await axios.post('https://898vmqzh-3001.inc1.devtunnels.ms/erp/newtimesheet',getApiCall).then(
+  const response = await axios.post(baseUrl +'/newtimesheet',getApiCall).then(
     (response) => {
       console.log(response?.data?.data,'sucess data in api Calendar', response?.data?.data?.[0]?.projectData);
-      setEventGetData(response?.data?.data)
+      // setEventGetData(response?.data?.data)
+      // const lowercasedString = JSON.stringify(response?.data?.data).toLowerCase();
 
-      const newData = response?.data?.data.map((item) => {
+// if (response?.data?.data !== "null" ){
+
+// }
+      const newData = (response?.data?.data ?? []).map((item) => {
         return {
           managername: item.managername,
           dateofactivity: item.dateofactivity,
+          workedHours:item.workedHours,
           projectData: item.projectData.map((project) => ({
-           projectName: {
+            [project.projectName]: {
               date: project.date,
               projectId: project.projectId,
               projectName: project.projectName,
@@ -204,6 +294,7 @@ const calendarGetData = async (getApiCall) => {
       });
       
       console.log(newData,"newwdataa",);
+      setEventGetData(newData)
       
       // setData()
          // Extract unique projectIds from the API response
@@ -239,11 +330,14 @@ const calendarGetData = async (getApiCall) => {
 }
 const HolidayEvents = eventGetData ? 
 eventGetData?.map((event)=>({
-  title : "10 hours",
+  title : event.workedHours,
   start: event.dateofactivity,
   end: event.dateofactivity,
+  type:"holiday"
+ 
   
  })) : []
+ console.log(eventGetData,"qqqqqqq")
 //  project id setting foe get data 
 //  const [projectIds, setProjectIds] = useState([]);
 
@@ -264,21 +358,7 @@ eventGetData?.map((event)=>({
 //    setProjectIds(formattedProjectIds);
 //  }, [projectData]);
 
-const addTimeSheet={
-   
-  "companyId": "COMP1",
-  "employeeId": "INFO48",
-     "projectId": [
-      {
-          "projectId": 141,
-          "hours": 7.5,
-          "description": "Updated description for Projectttttt 14999"
-      },
-     
-     
-  ]
 
-}
 const overallEvents = [...updatedEvents,...HolidayEvents]
 const calendarUpdateTimeSheet = async (addTimeSheet) => {
   console.log("hello in function",getApiCall)
@@ -298,7 +378,7 @@ useEffect(()=>{
   calendarGetData(getApiCall)
   console.log("hello useeffect")
   // calendarUpdateTimeSheet(addTimeSheet)
-},[])
+},[getApiCall.employeeId, getApiCall.DateOfActivity.to])
     
   const renderResults = (
     <CalendarFiltersResult
@@ -313,14 +393,14 @@ useEffect(()=>{
     />
   );
   const timezone = "Asia/Kolkata";
-const eventsExistOnDate = (date, overallEvents) => {
-  // Filter events to find if any event matches the provided date
-  const eventsOnDate = overallEvents?.filter(event => {
-    const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
-    return eventStartDate === date;
-  }) || []; // Set a default empty array if overallEvents is undefined
-  return eventsOnDate.length > 0; // Return true if events exist, false otherwise
-};
+// const eventsExistOnDate = (date, overallEvents) => {
+//   // Filter events to find if any event matches the provided date
+//   const eventsOnDate = overallEvents?.filter(event => {
+//     const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
+//     return eventStartDate === date;
+//   }) || []; // Set a default empty array if overallEvents is undefined
+//   return eventsOnDate.length > 0; // Return true if events exist, false otherwise
+// };
 const selectAllowCallback = (selectInfo) => {
   const today = new Date().toISOString().split('T')[0]; // Get current date
   const selectedDate = selectInfo.startStr.split('T')[0]; // Get selected date
@@ -339,25 +419,99 @@ const handleSwitchChange = () => {
   setShowAutocomplete(!showAutocomplete);
 };
 
-const projects = [
-  { projectId: 161, projectName: 'ERP',  },
-  { projectId: 167, projectName: 'ERP TESTING',  },
-  { projectId: 168, projectName: 'PUNCHIN', },
-  { projectId: 169, projectName: 'ERPBUZZ',  },
-  { projectId: 171, projectName: 'Buzz Staff',  },
-]
-const employeeList = [
-  { projectId: 1, projectName: 'Surendra',  },
-  { projectId: 2, projectName: 'Anil',  },
-  { projectId: 3, projectName: 'Sai', },
-  { projectId: 4, projectName: 'Muzu',  },
-  { projectId: 4, projectName: 'Nithin',  },
-]
+// const projects = [
+//   { projectId: 161, projectName: 'ERP',  },
+//   { projectId: 167, projectName: 'ERP TESTING',  },
+//   { projectId: 168, projectName: 'PUNCHIN', },
+//   // { projectId: 169, projectName: 'ERPBUZZ',  },
+//   { projectId: 169, projectName: 'HRMS',  },
+//   { projectId: 171, projectName: 'Buzz Staff',  },
+// ]
+const [projects,setProjects]=useState()
 const [data, setData]=useState({
   projectID:[],
-  employeeName:"",
+  // employeeName:"",
 
 })
+
+useEffect(()=>{
+  getProjectName()
+  getEmployeeList(data)
+},[data.projectID])
+const getProjectName = async()=>{
+  try {
+  
+    const data = {
+      
+        employeeID:employeeID,
+        companyID:companyID,
+       
+      // Other data properties as needed 
+    };
+    const response = await axios.post(baseUrl+'/getProjectsForEmployee', data).then(
+      (response) => {
+        console.log(response?.data?.list,'sucesswwww999', response);
+        setProjects(response?.data?.list)
+        // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+        // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+     
+      }
+    );
+
+
+    
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+const getEmployeeList = async(projectData)=>{
+  try {
+  console.log(projectData?.projectID,"projectdataaaaa")
+    const dataPaload = {
+      
+      projectManager:employeeID,
+        companyId:companyID,
+        projectIDs:projectData?.projectID,
+       
+      // Other data properties as needed listEmployeesForProjectManager
+    };
+    const response = await axios.post(baseUrl+'/listEmployeesForProjectManager', dataPaload).then(
+      (response) => {
+        console.log('sucesswww9999w', response);
+        // setProjectDetails(response?.data?.data)
+        setEmployeeList(response?.data?.list)
+        // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+        // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+     
+      }
+    );
+
+
+    
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
+
+const [employeeList, setEmployeeList]= useState([
+  
+
+])
+
 const handleProjectChange = (event, newValue) => {
   setData((prevData) => ({
     ...prevData,
@@ -366,10 +520,17 @@ const handleProjectChange = (event, newValue) => {
 };
 
 const handleEmployeeChange = (event, newValue) => {
+  console.log(newValue,"GANG25GANG25")
   setData((prevData) => ({
     ...prevData,
-    employeeName: newValue,
+    employeeId: newValue.employeeId,
+
   }));
+  setGetApiCall((prevGetApiCall) => ({
+    ...prevGetApiCall,
+    employeeId: newValue.employeeId,
+  }));
+  
 };
 console.log(data,"dataatdada",selectedRange)
 
@@ -377,20 +538,41 @@ console.log(data,"dataatdada",selectedRange)
 const onDayData = () => {
   if (selectedRange?.start) {
     // Assuming eventDataMe is defined in the same scope
-    console.log(eventGetData,"HolidayEventsHolidayEventsHolidayEvents")
+    console.log(eventGetData,"HolidayEventsHolidayEventsHolidayEvents",selectedRange?.start, )
     // const editDataArray = eventDataMe
     const editDataArray = eventGetData
-      .filter((event) => event.projectData && event.Start === selectedRange?.start) // Filter based on start date
+      .filter((event) => event.projectData && event.dateofactivity === selectedRange?.start) // Filter based on start date
+    //   .filter((event) => {console.log(event,"eeeeeeeeee",event.dateofactivity,selectedRange?.start);
+    // return(event.projectData && event.dateofactivity === selectedRange?.start)}) // Filter based on start date
       .map((event) => event.projectData)
       .flat(); // Flatten the array of editData arrays
 
-    console.log(editDataArray, "editDataArray");
+    console.log(editDataArray, "editDataArray",selectedRange?.start);
     // Do something with the extracted editDataArray
     return editDataArray;
   }
 };
 
 
+// for manager Approves
+const [approveData, setApproveData]= useState(
+  {
+    companyId: companyID,
+    employeeId: "INFO30",
+    projectId: [],
+    date: {
+        from: "2023-12-01",
+        to: "2023-12-31"
+    }
+  }
+)
+
+// model   code
+const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
   return (
  <>
      <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -417,7 +599,7 @@ const onDayData = () => {
             fullWidth
             options={employeeList || []}
             value={data.employeeName}
-            getOptionLabel={(option) => option?.projectName}
+            getOptionLabel={(option) => option?.employeeName}
             onChange={handleEmployeeChange}
             renderInput={(params) => <TextField {...params} label="Select Employee" />}
           />
@@ -521,6 +703,58 @@ const onDayData = () => {
         />
         {/* </DialogTitle> */}
       </Dialog>
+      <Button variant="contained" color="primary" onClick={handleOpen}> Approve Time Sheet</Button>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+         <ModalHeader heading="ApproveTimesheet"/>
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          {/* <DialogTitle>Apply My Compoff</DialogTitle> */}
+
+          <DialogContent>
+           
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              
+<TextField label="Start Date"></TextField>
+           
+<TextField label="End Date"></TextField>
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" 
+            onClick={handleClose}
+            >
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+              Save
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+    
       </>
   );
 }

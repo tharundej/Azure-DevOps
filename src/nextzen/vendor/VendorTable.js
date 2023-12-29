@@ -84,7 +84,7 @@ const VendorTable = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
-    count: 5,
+    count: 10,
     page: 1,
   });
 
@@ -104,7 +104,7 @@ const VendorTable = () => {
     companyId: user?.companyID ? user?.companyID : '',
     page: 0,
     search: '',
-    count: 5,
+    count: 10,
     sort: {
       key: 1,
       orderBy: 'vendor_name',

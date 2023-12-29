@@ -27,7 +27,9 @@ import axiosInstance from 'src/utils/axios';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { bgGradient } from 'src/theme/css';
+import { useSnackbar } from 'notistack';
 export default function ExpenseClaimView({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
   const theme = useTheme();
   const color = 'primary';
   const [open, setOpen] = useState(false);
@@ -37,6 +39,7 @@ export default function ExpenseClaimView({ currentUser }) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [editingExpense, setEditingExpense] = useState(null);
   const [valueSelected, setValueSelected] = useState();
+  const [isEditing, setIsEditing] = useState(false);
   const handleClose = () => {
     setOpen(false);
     setExpenseName(''); // Resetting the expenseName state to clear the value
@@ -46,6 +49,7 @@ export default function ExpenseClaimView({ currentUser }) {
 
   const handleOpenDialog = () => {
     setOpen(true);
+    setIsEditing(false);
   };
   const handleEditclose = () => {
     setOpen(false);
@@ -94,25 +98,28 @@ export default function ExpenseClaimView({ currentUser }) {
         handleAddExpenseConfig(data);
         handleCloseDialog();
 
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
         // handleAddExpenseConfig(data);
         reset1();
-        handleCloseDialog();
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // handleCloseDialog();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
       setOpen(false);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('Error While Adding Shift Configuration. Please try again.');
+      // setSnackbarOpen(true);
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -127,24 +134,27 @@ export default function ExpenseClaimView({ currentUser }) {
         reset1();
         handleEditclose();
         getExpenseName();
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         console.log('sucess', response);
       }
       if (response?.data?.status === '400') {
-        handleEditclose();
         reset1();
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // handleEditclose();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
       setOpen(false);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('UnExpected Error. Please try again.');
-      setSnackbarOpen(true);
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('UnExpected Error. Please try again.');
+      // setSnackbarOpen(true);
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });
@@ -160,11 +170,13 @@ export default function ExpenseClaimView({ currentUser }) {
         setExpenseConfigurations(data);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
       }
     } catch (error) {
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.error('Error Fetching Expense Configurations:', error);
     }
   };
@@ -182,6 +194,7 @@ export default function ExpenseClaimView({ currentUser }) {
   const handleExpenseName = (value) => {
     console.log(value, 'valueeee');
     setValue1('expenseName', value);
+    
     setExpenseName(value);
   };
   // console.log(expenseName, 'kkk');
@@ -192,6 +205,7 @@ export default function ExpenseClaimView({ currentUser }) {
   };
   const handlleEdit = (data) => {
     setEditExpenseName(data);
+    setIsEditing(true);
   };
   return (
     <>
@@ -243,9 +257,16 @@ export default function ExpenseClaimView({ currentUser }) {
                 name="expenseName"
                 label="Expense Name"
                 fullWidth
-                value={expenseName}
-                onChange={(e) => handlleEdit(e.target.value)}
-                sx={{ margin: '0 auto' }} // Adjust width and center the text field
+                value={isEditing ? editExpenseName?.expenseName || '' : expenseName}
+                onChange={(e) => {
+                  setValue1('expenseName', e.target.value);
+                  if (isEditing) {
+                    setEditExpenseName({ ...editExpenseName, expenseName: e.target.value });
+                  } else {
+                    setExpenseName(e.target.value);
+                  }
+                }}
+                sx={{ margin: '0 auto' }}
               />
               {/* </div> */}
             </Box>
@@ -267,8 +288,8 @@ export default function ExpenseClaimView({ currentUser }) {
               sx={{ backgroundColor: '#3B82F6' }}
               type="submit"
               variant="contained"
-              onClick={onSubmit1}
-              onSubmit={onSubmit1}
+              onSubmit={isEditing ? onSubmit2 : onSubmit1}
+              onClick={isEditing ? onSubmit2 : onSubmit1}
             >
               Save
             </Button>
@@ -343,7 +364,7 @@ export default function ExpenseClaimView({ currentUser }) {
                     value={editExpenseName?.expenseName || ''}
                     onChange={(e) => {
                       setValue1('expenseName', e.target.value); // Update the form value
-                      setEditExpenseName({ ...editExpenseName, expenseName: e.target.value }); // Update state
+                       setEditExpenseName({ ...editExpenseName, expenseName: e.target.value }); // Update state
                     }}
                     sx={{ margin: '0 auto' }}
                   />

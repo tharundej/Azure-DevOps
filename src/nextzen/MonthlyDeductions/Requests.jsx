@@ -11,7 +11,7 @@ import Additions from './Additions/Additions';
 export default function Requests() {
   const {user} = useContext(UserContext)
   const loandefaultPayload ={
-    "count": 5,
+    "count": 10,
     "page": 0,
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',

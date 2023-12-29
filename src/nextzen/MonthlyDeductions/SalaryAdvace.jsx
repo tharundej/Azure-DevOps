@@ -89,7 +89,7 @@ export default function SalaryAdvace({defaultPayload,componentPage}) {
       } 
   const defaultPayloadValue=(defaultPayload)?defaultPayload:
   {
-    "count": 5,
+    "count": 10,
     "page": 0,
     "search": "",
     "companyID":(user?.companyID)?user?.companyID:'',

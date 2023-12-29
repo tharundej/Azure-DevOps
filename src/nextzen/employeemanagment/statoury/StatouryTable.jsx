@@ -34,7 +34,7 @@ export const StatouryTable = () => {
   ]);
   const defaultPayload ={
 
-    "count": 5,
+    "count": 10,
   
     "page": 0,
     "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,

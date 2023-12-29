@@ -93,14 +93,14 @@ export default function Header({ onOpenNav }) {
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
       {!lgUp && (
-        <IconButton onClick={onOpenNav}>
+        <IconButton  sx={{height:'10px',margin:'0px'}}onClick={onOpenNav}>
           <SvgColor src="/assets/icons/navbar/ic_menu_item.svg" />
         </IconButton>
       )}
 
       {/* <Searchbar /> */}
 
-      <Stack
+      {/* <Stack
         flexGrow={1}
         direction="row"
         alignItems="center"
@@ -110,8 +110,8 @@ export default function Header({ onOpenNav }) {
         <Typography style={{ color: 'black' }} component="span" variant="h5">
           {headerMap.get(splicedPath)}
         </Typography>
-      </Stack>
-
+      </Stack> */}
+{/* 
       <Stack
         flexGrow={1}
         direction="row"
@@ -119,16 +119,16 @@ export default function Header({ onOpenNav }) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        {/* <LanguagePopover />
+        <LanguagePopover />
 
         <NotificationsPopover />
 
         <ContactsPopover />
 
-        <SettingsButton /> */}
+        <SettingsButton />
 
         <AccountPopover />
-      </Stack>
+      </Stack> */}
     </>
   );
 
@@ -161,14 +161,17 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-      <Toolbar
+      {
+        !lgUp ? <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
         }}
+        style={{width: '10px', zIndex: '9999'}}
       >
         {renderContent}
-      </Toolbar>
+      </Toolbar> : ""
+      }
     </AppBar>
   );
 }

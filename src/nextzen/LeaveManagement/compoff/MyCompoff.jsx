@@ -114,7 +114,7 @@ export default function MyCompoff({ currentUser ,}) {
     { id: "status", label: "Status", minWidth: "7pc", type: "badge" },
     
     ,
-    // { id: '', width: 88 },
+    { id: '', width: 88 },
     
   ]
 

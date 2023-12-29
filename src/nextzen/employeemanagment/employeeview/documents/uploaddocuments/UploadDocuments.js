@@ -157,7 +157,7 @@ const   DocumentsUpload=({open,onHandleClose,documents})=> {
 
                         />
                         <label htmlFor= {`file-upload-input-aadhar`}>
-                        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} color="primary">
                             Upload file
                             <VisuallyHiddenInput type="file" />
                           </Button>
