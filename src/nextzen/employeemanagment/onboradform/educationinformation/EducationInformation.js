@@ -69,6 +69,7 @@ const degreeOptions = [
   { label: 'Other', value: 'Other' },
 ];
 
+
 const EducationInformation = forwardRef((props, ref) => {
   const { enqueueSnackbar } = useSnackbar();
   const [employeeData, setEmployeeData] = useState([

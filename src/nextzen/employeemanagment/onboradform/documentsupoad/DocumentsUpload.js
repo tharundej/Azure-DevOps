@@ -17,9 +17,14 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
   const { enqueueSnackbar } = useSnackbar();
 
   var [defaultValues,setDefaultValues]=useState([ {
-    fileType:'',
+    fileType:'aadhar',
     fileName:'',
     fileContent:''
+},
+{
+  fileType:'pancard',
+  fileName:'',
+  fileContent:''
 }])
 
 const VisuallyHiddenInput = styled('input')({
@@ -89,7 +94,16 @@ const VisuallyHiddenInput = styled('input')({
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
+
+      const isAnyFieldEmpty = (arr) => {
+        return arr.some((obj) => Object.values(obj).some((value) => value === ''));
+      };
+      const err=isAnyFieldEmpty(defaultValues);
+      if(!err)
       onSubmit(obj);
+    else {
+      enqueueSnackbar("Please Upload All Required Documents",{variant:"error"});
+    };
 
 
 
@@ -214,12 +228,19 @@ const VisuallyHiddenInput = styled('input')({
                 // }}
               >
 
+
+
                 
                    {defaultValues?.map((file,index)=>(
                  <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                    <InputLabel
+                  id={`demo-simple-select-label-${index}`}
+                  style={{ color: index < 2 ? 'red' : 'inherit' }}
+                >
+                  {index < 2 ? "Select Document *" : "Select Document"}
+                </InputLabel>
                       <Select
                         label="Select Document"
                         value={file?.fileType}
@@ -227,11 +248,12 @@ const VisuallyHiddenInput = styled('input')({
                           handleCategoryChange(e, index);
                         }}
                         name="Select Document"
+                        disabled={index>1?false:true}
                       >
                        
                        <MenuItem value="aadhar">Aadhaar</MenuItem>
-                        <MenuItem value="pan-card">Pan Card</MenuItem>
-                        <MenuItem value="pass-port">Passport</MenuItem>
+                        <MenuItem value="pancard">Pan Card</MenuItem>
+                        <MenuItem value="passport">Passport</MenuItem>
 
                         {/* Add more categories here */}
                       </Select>

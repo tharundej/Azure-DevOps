@@ -655,7 +655,7 @@ export default function MyClaims({ currentUser, }) {
                 )}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comment" label="comments" />
+              <RHFTextField name="comment" label="Comments" />
 
               <Grid sx={{ alignSelf: "flex-end" }}>
                 <input
