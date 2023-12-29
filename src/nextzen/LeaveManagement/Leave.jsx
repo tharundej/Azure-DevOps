@@ -38,12 +38,12 @@ export default function BasicCard() {
     },
     {
       id: 'myCompoff',
-      label: 'MY Compoff',
+      label: 'My Compoff',
       content: <MyCompoff key="leaveCalendar" />,
     },
     {
-      id: 'myCompoff',
-      label: 'My Compoff',
+      id: 'compoffApprove',
+      label: 'Compoff Approval',
       content: <CompoffApprove key="leaveCalendar" />,
     },
   ];

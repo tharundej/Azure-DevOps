@@ -73,6 +73,7 @@ export default function loanDetails(){
 
       const handleCancel=()=>{
         console.log("cancelll")
+        router.push(paths.dashboard.monthlydeductions.root)
         
       }
       const [showAll, setShowAll] = useState(false);
@@ -103,7 +104,7 @@ export default function loanDetails(){
           <Grid container spacing={2}>
               
               {visibleInstallments?.map((item, index) => (
-                <Grid item key={index} xs={12} sm={6} md={6}>
+                <Grid item key={index} xs={visibleInstallments.length === 1 ? 12 : 12} sm={6} md={6}>
                   <Card>
                     <CardContent>
                       <Typography variant="body2">Installment No: {item?.paidNoOfInstallments}</Typography>
