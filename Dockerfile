@@ -1,5 +1,6 @@
 # Use the official Node.js Alpine image for ARM64
-FROM --platform=linux/arm64/v8 node:12.12.0-alpine
+FROM --platform=linux/arm64/v8 node:16.14.0-alpine
+
 
 # Set the working directory in the container
 WORKDIR /app
@@ -7,8 +8,8 @@ WORKDIR /app
 # Add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Install pnpm 
+RUN npm install -g pnpm@5.15.0
 
 # Copy package.json and package-lock.json to the container
 COPY package.json .
