@@ -46,8 +46,7 @@ pipeline {
                          docker ps
                     '''      
                 }
-            }
-            
+            } 
         }
     }
 }
