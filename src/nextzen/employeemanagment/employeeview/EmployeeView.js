@@ -261,20 +261,7 @@ const EmployeeView = () => {
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
         </Tabs>
-<Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
-  
-   <Button
-                // color="inherit"
-                //disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
-                '&:hover': {
-                  backgroundColor: '#1565C0', // Change this to the desired hover color
-                },
-              }}
-              >
-                Cancel
-              </Button></Grid>
+
        
       {/* <Grid container justifyContent="flex-end">
       <Button
@@ -325,7 +312,20 @@ const EmployeeView = () => {
       {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
     </Stack>
 
-
+    <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-start',alignContent:'flex-start'}}>
+  
+  <Button
+               // color="inherit"
+               //disabled={activeStep === 0}
+               onClick={handleBack}
+               sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+               '&:hover': {
+                 backgroundColor: '#1565C0', // Change this to the desired hover color
+               },
+             }}
+             >
+               Cancel
+             </Button></Grid>
       
     </div>
   )

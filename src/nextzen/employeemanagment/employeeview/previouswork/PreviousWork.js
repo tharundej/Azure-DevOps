@@ -313,7 +313,22 @@ xs={12}
      
     </Grid>
     </Grid> */}
-    <Button sx={{float:"right",marginBottom:2}}  onClick={()=>{handleAddEducation(employeeData,"addExperience")}} variant="contained" color="primary">Add Previous Work</Button>
+    <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
+  
+  <Button
+               // color="inherit"
+               //disabled={activeStep === 0}
+               onClick={()=>{handleAddEducation(employeeData,"addExperience")}}
+               sx={{ backgroundColor:'#3B82F6', mb: 1, color:'white',
+               '&:hover': {
+                 backgroundColor: '#1565C0', // Change this to the desired hover color
+               },
+             }}
+             >
+               Add Previous Work
+             </Button>
+             </Grid>
+    {/* <Button sx={{float:"right",marginBottom:2}}  onClick={()=>{handleAddEducation(employeeData,"addExperience")}} variant="contained" color="primary">Add Previous Work</Button> */}
       <BasicTable
       defaultPayload={defaultPayload}
       endpoint='/getExperience'

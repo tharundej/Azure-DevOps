@@ -126,7 +126,7 @@ export default function loanDetails(){
           </CardContent>
           </Grid>
           </Card>
-         <LoanHistory  history={loanDetails?.approverComments} userHistory={loanDetails?.comments}/>
+         <LoanHistory  history={loanDetails?.approverComments1} userHistory={loanDetails?.comments1}/>
          <Button variant="outlined" sx={{marginTop:1}} onClick={handleCancel}>Cancel</Button>
         </>
     )
