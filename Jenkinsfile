@@ -9,9 +9,12 @@ pipeline {
         }
        stage('Clean Workspace') {
           steps {
-             echo 'Cleaning workspace...'
+            sh 'rm -rf *'
+             echo 'Before Cleaning workspace...'
+             sh 'ls -al'
              deleteDir()
              echo 'Workspace cleaned.'
+             sh 'ls -al'
     }
 }
         stage("Git clone"){
