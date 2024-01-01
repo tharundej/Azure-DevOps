@@ -7,8 +7,10 @@ import { _userList } from 'src/_mock';
 // import ReusableTabs from '../../../tabs/ReusableTabs';
 
 import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import { TextField } from '@mui/material';
 // import CalendarView from './view/calendarTimeSheet';
 // import History from '../../LeaveHistory/LeaveHistory';
+import ApproveTimeSheetSearch from './approveTimeSheetSearch';
 
 export default function ApproveTimeSheetTable() {
     const TABLE_HEAD = [
@@ -62,13 +64,13 @@ export default function ApproveTimeSheetTable() {
 
   return (
     <>
-
+ {/* <TextField placeholder='Search' ></TextField> */}
 <BasicTable
  defaultPayload={defaultPayload}
  headerData={TABLE_HEAD}
  endpoint='/Mytimesheets1'
  bodyData='data'
- filterName="TimeSearchFilter1"
+ filterName="TimeSearchFilterCalendar"
  />
       {/* <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom: "none !important" }}/> */}
 </>

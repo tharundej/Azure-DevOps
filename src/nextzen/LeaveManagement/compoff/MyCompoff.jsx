@@ -52,8 +52,8 @@ import { Typography } from '@mui/material';
 export default function MyCompoff({ currentUser ,}) {
   const compoff_type = [
     { compensantoryConfigurationId: null, compensantoryPolicies:""  },
-    {   compensantoryConfigurationId: 11, compensantoryPolicies: "enchachment", id:0 },
-    {   compensantoryConfigurationId: 12, compensantoryPolicies: "leave",  id:1},
+    {   compensantoryConfigurationId: 11, compensantoryPolicies: "Enchachment", id:0 },
+    {   compensantoryConfigurationId: 12, compensantoryPolicies: "Leave",  id:1},
    
 
   ]
@@ -372,7 +372,7 @@ console.log(editData,"ppppppppppppppppppppp")
 
 
   // modal 
-  
+  const [Id, setId] = useState();
   const NewUserSchema = Yup.object().shape({
     
    
@@ -385,36 +385,18 @@ console.log(editData,"ppppppppppppppppppppp")
     endDate: Yup.string(),
     approverId: Yup.string(),
     reason: Yup.string(),
-
-    
-
-
-
-
   });
 
   const defaultValues = useMemo(
     () => ({
-      // claim_amount: currentUser?.claim_amount || null ,
-      
-      // type_oc_claim: currentUser?.type_oc_claim|| '',
-      // currency:currentUser?.currency|| '',
-
       companyId:currentUser?.companyId|| companyID,
-      employeeId:currentUser?.employeeId|| employeeID,
+      employeeId:currentUser?.employeeId|| Id,
       // compensantory_configuration_id:currentUser?.compoffId|| 11,
       compensantoryPolicies:compoffId || currentUser?.compensantoryPolicies ,
       startDate:currentUser?.startDate|| '',
       endDate:currentUser?.endDate|| '',
       approverId: currentUser?.approverId || managerID,
       reason: currentUser?.reason || '',
-
-
-
-
-
- 
-
     }),
     [currentUser]
   );
@@ -441,7 +423,7 @@ console.log(editData,"ppppppppppppppppppppp")
   const onSubmit = handleSubmit(async (data) => {
     
     console.log(data,"defaultValues11122")
-   
+    data.employeeId= Id;
     data.startDate= selectedDates?.startDate;
     data.endDate= selectedDates?.endDate;
     try {
@@ -525,6 +507,64 @@ const handleCancelDelete = () => {
   setConfirmDeleteOpen(false);
 };
 
+
+
+useEffect(() => {
+  getEmployeeList();
+  console.log("useEffecttt");
+}, []);
+
+
+
+// employee list
+const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+const handleEmployeeChange = (event, value) => {
+  // 'value' will be the selected option
+  setSelectedEmployee(value);
+
+  // If you want to store only the employeeId in a separate state, you can do this:
+  if (value) {
+    setId(value.employeeId);
+  } else {
+    setId(null);
+  }
+};
+
+
+console.log(Id,"ooooooooooooo")
+const[employeeList, setEmployeeList]= useState()
+const getEmployeeList = async()=>{
+  try {
+    const dataPayload = {     
+      projectManager:employeeID,
+        companyId:companyID,
+
+    };
+    const response = await axios.post(baseUrl+'/getEmpForPm', dataPayload).then(
+      (response) => {
+        console.log('sucesswww9999w', response);
+        
+        setEmployeeList(response?.data?.list)
+        // enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      
+      },
+      (error) => {
+        console.log('lllll', error);
+        // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+     
+      }
+    );
+
+
+    
+  } catch (error) {
+    // Handle any errors (e.g., network error, request failure, etc.)
+    console.error('Error:', error);
+    // enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+    throw error; // Re-throw the error or handle it according to your needs
+  }
+}
   return (
     <>
       <Helmet>
@@ -572,6 +612,19 @@ const handleCancelDelete = () => {
                 
                 getOptionLabel={(option) => option.compensantoryPolicies} 
                 isOptionEqualToValue={(option, value) => option === value}
+           
+              />
+
+           <RHFAutocomplete
+                name="compensantoryPolicies"
+                label="Select Employee"
+                options={employeeList || []}
+                
+                getOptionLabel={(option) => option.employeeName} 
+                isOptionEqualToValue={(option, value) => option === value}
+                onChange={handleEmployeeChange}
+                value={selectedEmployee}
+     
            
               />
      {/* <RHFAutocomplete

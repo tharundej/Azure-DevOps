@@ -627,7 +627,7 @@ const handleTypographyClick = (value) => {
  <>
      <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
      <Grid container flexDirection={"row"} >
-     <Grid item xs={12}>
+     <Grid item xs={6}>
      <Autocomplete
         id="project-autocomplete"
         fullWidth
@@ -639,17 +639,17 @@ const handleTypographyClick = (value) => {
         renderInput={(params) => <TextField {...params} label="Select Project" />}
       />
 </Grid>
-<Grid item xs={12} marginBottom={1}>
+<Grid item xs={6} marginBottom={1}>
 
       <Box>
   <Grid container alignItems="center">
-    <Grid item xs={8}>
+    <Grid item xs={6}>
       <FormControlLabel
         control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
         label="Select Employee"
       />
     </Grid>
-    <Grid item xs={4} justifyContent={"flex-end"}>
+    <Grid item xs={6} justifyContent={"flex-end"}>
     <Card sx={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Typography
         onClick={() => handleTypographyClick(true)}
@@ -680,6 +680,11 @@ const handleTypographyClick = (value) => {
     </Grid>
   </Grid>
 
+</Box>
+
+
+      </Grid>
+      <Grid  item xs={12} mt={1} mb={1}>
   {showAutocomplete && (
     <Autocomplete
       id="employee-autocomplete"
@@ -691,9 +696,7 @@ const handleTypographyClick = (value) => {
       renderInput={(params) => <TextField {...params} label="Select Employee" />}
     />
   )}
-</Box>
-
-      </Grid>
+  </Grid>
       </Grid>
         {/* <Stack
           alignItems="flex-end"
