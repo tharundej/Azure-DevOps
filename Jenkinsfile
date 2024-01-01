@@ -7,14 +7,16 @@ pipeline {
                 echo "Another method is to use \${BUILD_NUMBER}, which is ${BUILD_NUMBER}"
             }
         }
-       stage('Clean Workspace') {
-          steps {
+      stage('Clean Workspace') {
+    steps {
+        dir('/opt/jenkins/workspace/') {
+            echo 'Before Cleaning workspace...'
+            sh 'ls -al'
             sh 'rm -rf *'
-             echo 'Before Cleaning workspace...'
-             sh 'ls -al'
-             deleteDir()
-             echo 'Workspace cleaned.'
-             sh 'ls -al'
+            deleteDir()
+            echo 'Workspace cleaned.'
+            sh 'ls -al'
+        }
     }
 }
         stage("Git clone"){
