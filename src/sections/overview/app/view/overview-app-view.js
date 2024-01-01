@@ -138,6 +138,8 @@ axios.request(config)
           <AppWelcome
             title={`Welcome 👋  ${user?.employeeName || ""} `}
             description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+            description="Happy New Year!!"
+
             img={<SeoIllustration />}
             // action={
             //   <Button variant="contained" color="primary">
