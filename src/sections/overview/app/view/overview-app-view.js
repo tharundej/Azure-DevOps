@@ -137,7 +137,7 @@ axios.request(config)
         <Grid xs={12} md={8}>
           <AppWelcome
             title={`Welcome 👋  ${user?.employeeName || ""} `}
-            description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+           // description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
             description="Happy New Year!!"
 
             img={<SeoIllustration />}
