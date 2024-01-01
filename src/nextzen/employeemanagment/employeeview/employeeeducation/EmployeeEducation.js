@@ -302,7 +302,21 @@ xs={12}
 
      
       </Grid>
-      <Button sx={{float:"right",marginBottom:2}} variant="contained" color="primary" onClick={()=>{handleAddEducation(employeeData,"addEducation")}}> Add Education</Button>
+      <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
+  
+   <Button
+                // color="inherit"
+                //disabled={activeStep === 0}
+                onClick={()=>{handleAddEducation(employeeData,"addEducation")}}
+                sx={{ backgroundColor:'#3B82F6', mb: 1, color:'white',
+                '&:hover': {
+                  backgroundColor: '#1565C0', // Change this to the desired hover color
+                },
+              }}
+              >
+               Add Education
+              </Button></Grid>
+      {/* <Button sx={{float:"right",marginBottom:2}} variant="contained" color="primary" onClick={()=>{handleAddEducation(employeeData,"addEducation")}}> Add Education</Button> */}
       <BasicTable
       defaultPayload={defaultPayload}
       endpoint='/getEducationDetails'
