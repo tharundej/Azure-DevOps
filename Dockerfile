@@ -1,5 +1,6 @@
 # Use the official Node.js Alpine image for ARM64
-FROM --platform=linux/arm64/v8 node:12.12.0-alpine
+FROM --platform=linux/arm64/v8 node:16.14.0-alpine
+
 
 # Set the working directory in the container
 WORKDIR /app
