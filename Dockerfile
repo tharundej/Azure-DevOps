@@ -1,39 +1,31 @@
-FROM --platform=linux/arm64/v8 node:12.12.0-alpine
+# Use the official Node.js Alpine image for ARM64
+FROM --platform=linux/arm64/v8 node:16.14.0-alpine
 
- 
 
-# set working directory
+# Set the working directory in the container
+WORKDIR /app
 
-#WORKDIR /
-
- 
-
-# add `/app/node_modules/.bin` to $PATH
-
+# Add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
- 
+# Install pnpm globally
+RUN npm install -g pnpm
 
-# install app dependencies
+# Copy package.json and package-lock.json to the container
+COPY package.json .
+COPY package-lock.json .
 
-COPY package.json ./
-
-COPY package-lock.json ./
-
+# Copy the rest of the application code to the container
 COPY . .
 
-RUN npm install
+# Install app dependencies using pnpm, and force recreation of lockfile
+RUN pnpm install --force
 
+# Set the timezone
 ENV TZ Asia/India
 
- 
-
-# add app
-
+# Add the application code to the container
 COPY . .
 
- 
-
-# start app
-
-CMD ["npm" , "start"]
+# Start the application
+CMD ["pnpm", "run", "start:dev"]
