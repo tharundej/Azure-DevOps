@@ -229,38 +229,47 @@ const EmployeeView = () => {
         }}
       /> */}
 
-<Tabs
-  value={currentTab}
-  onChange={handleChangeTab}
-  variant="scrollable"
-  scrollButtons="auto"
-  aria-label="scrollable auto tabs example"
-  
-  sx={{
-    
-    width: '100%',
-    // bottom: 0,
-    // zIndex: 9,
-    // position: 'absolute',
-    bgcolor: 'background.paper',
-    [`& .${tabsClasses.flexContainer}`]: {
-      pr: { md: 3 },
-      justifyContent: {
-        sm: 'flex-start',
-        md: 'flex-start',
-        lg: 'flex-start',
-    
-      },
-    },
-  }}
->
-
-
-        
+<Grid container alignItems="center">
+      <Grid item xs={12} md={10}> {/* Adjust the grid size based on your layout */}
+        <Tabs
+          value={currentTab}
+          onChange={handleChangeTab}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          sx={{
+            width: '100%',
+            bgcolor: 'background.paper',
+            [`& .${tabsClasses.flexContainer}`]: {
+              pr: { md: 3 },
+              justifyContent: {
+                sm: 'flex-start',
+                md: 'flex-start',
+                lg: 'flex-start',
+              },
+            },
+          }}
+        >
           {TABS.map((tab) => (
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
         </Tabs>
+      </Grid>
+      <Grid item xs={12} md={2} sx={{display:'flex',flexDirection:'column',justifyContent:'flex-end',alignItems:'flex-end'}}> {/* Adjust the grid size based on your layout */}
+        <Button
+          onClick={handleBack}
+          sx={{
+            backgroundColor: '#3B82F6',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#1565C0',
+            },
+          }}
+        >
+          Cancel
+        </Button>
+      </Grid>
+    </Grid>
 
        
       {/* <Grid container justifyContent="flex-end">
@@ -312,7 +321,7 @@ const EmployeeView = () => {
       {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
     </Stack>
 
-    <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-start',alignContent:'flex-start'}}>
+    {/* <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-start',alignContent:'flex-start'}}>
   
   <Button
                // color="inherit"
@@ -325,7 +334,7 @@ const EmployeeView = () => {
              }}
              >
                Cancel
-             </Button></Grid>
+             </Button></Grid> */}
       
     </div>
   )
