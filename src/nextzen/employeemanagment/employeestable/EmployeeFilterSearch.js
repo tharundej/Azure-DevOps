@@ -1,5 +1,5 @@
 import PropTypes, { element } from 'prop-types';
-
+import axios from 'axios';
 import React,{ useEffect, useState,useCallback } from 'react';
 import Badge from '@mui/material/Badge';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -46,6 +46,8 @@ import { useRouter } from 'src/routes/hooks';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
 import SentIcon from 'src/assets/icons/sent-icon';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
 
 
 
@@ -87,6 +89,7 @@ function getStyles(name, personName, theme) {
 }
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
+  const {user} = useContext(UserContext)
   const [badgeContent, setBadgeContent] = useState(false);
   const [InviteForm,setInviteForm] = useState(false);
   const [namevalue,setNameValue]=useState();
@@ -474,7 +477,24 @@ const handleChangeMail=(e)=>{
 }
   
 const sendInvitation=()=>{
-  console.log(namevalue,"name",mailValue)
+ const data ={
+  "name":namevalue,
+  "email":mailValue,
+  "companyID":user?.companyID,
+  "link":"http://localhost:3001/"
+ }
+ const config={
+  method:'POST',
+  maxBodyLength:Infinity,
+  url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/PreLoginDetails`,
+  data:data
+ }
+ axios.request(config).then((response)=>{
+  console.log(response,"loginResponsee")
+ })
+ .catch((error)=>{
+  console.log(error)
+ })
 }
     return (
         <>
