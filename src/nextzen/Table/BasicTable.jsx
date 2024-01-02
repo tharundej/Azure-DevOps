@@ -135,6 +135,7 @@ import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
 import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
+import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/PayScheduleHistoryFilter';
 
 const defaultFilters = {
   name: '',
@@ -618,6 +619,14 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'PayScheduleFilterSearch' && (
             <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'PayScheduleHistoryFilter' && (
+            <PayScheduleHistoryFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
