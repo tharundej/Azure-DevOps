@@ -12,7 +12,7 @@ import { Dialog } from '@mui/material';
 import ViewPurchaseOrder from './ViewPurchaseOrder';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import OrderPreview from './OrderPreview';
-
+import { baseUrl } from '../../global/BaseUrl';
 const PurchaseOrderTable = () => {
   const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -49,6 +49,13 @@ const PurchaseOrderTable = () => {
       type: 'serviceCall',
       endpoint: '',
     },
+    {
+      name: 'Download',
+      icon: 'mingcute:pdf-fill',
+      id: 'download',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -71,7 +78,40 @@ const PurchaseOrderTable = () => {
     } else if (event?.name === 'Preview') {
       setPreviewShowForm(true);
       setEditModalData(rowdata);
+    }else if(event?.name === 'Download'){
+      getPoGenarator(rowdata.poNumber)
     }
+  };
+  const getPoGenarator = async (poNumber) => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1' },
+      body: JSON.stringify({
+        companyID: user?.companyID || '',
+        poNumber: poNumber || '',
+      }),
+    };
+    
+    fetch(baseUrl +'getPoGenarator', options)
+    .then((resp) => resp.blob())
+    .then((myBlob) => {
+      const url = window.URL.createObjectURL(
+        new Blob([myBlob], {
+          type: 'application/pdf',
+          encoding: 'UTF-8'
+        })
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `PO_${poNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
   const handleCancelDelete = () => {
     setDeleteData(null);
@@ -198,7 +238,7 @@ const PurchaseOrderTable = () => {
           }}
           className="custom-dialog"
         >
-          <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} />
+          <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} getPoGenarator={getPoGenarator} />
         </Dialog>
       )}
       {previewShowForm && (

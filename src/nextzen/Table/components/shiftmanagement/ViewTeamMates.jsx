@@ -66,7 +66,7 @@ const [EmployeData, setEmployeData] = useState([])
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+            {/* <MoreVertIcon /> */}
           </IconButton>
         }
         title={item.employee_name}

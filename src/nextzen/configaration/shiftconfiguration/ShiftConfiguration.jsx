@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ReusableTabs from '../../tabs/ReusableTabs';
 import ShiftConfigView from './ShiftConfigView';
+import TotalWorkingHourPerDay from './TotalWorkingHoursPerDay';
 
 const bull = (
   <Box
@@ -17,10 +18,14 @@ const bull = (
   </Box>
 );
 
-const tabLabels = ['Shift Configuration'];
+const tabLabels = ['Shift Configuration',"Working Hours/Day"];
   const tabContents = [
     <div>
       <ShiftConfigView/>
+    </div>,
+    <div>
+            <TotalWorkingHourPerDay currentUser={{}}/>
+
     </div>
   ];
 
