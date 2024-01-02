@@ -626,7 +626,7 @@ const handleTypographyClick = (value) => {
   return (
  <>
      <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
-     <Grid container flexDirection={"row"} >
+     <Grid container flexDirection={"row"} spacing={1} >
      <Grid item xs={6}>
      <Autocomplete
         id="project-autocomplete"
@@ -639,7 +639,7 @@ const handleTypographyClick = (value) => {
         renderInput={(params) => <TextField {...params} label="Select Project" />}
       />
 </Grid>
-<Grid item xs={6} marginBottom={1}>
+<Grid item xs={6} marginBottom={1} >
 
       <Box>
   <Grid container alignItems="center">

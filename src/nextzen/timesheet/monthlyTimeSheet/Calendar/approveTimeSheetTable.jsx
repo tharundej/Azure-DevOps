@@ -15,51 +15,33 @@ import ApproveTimeSheetSearch from './approveTimeSheetSearch';
 export default function ApproveTimeSheetTable() {
     const TABLE_HEAD = [
 
-        { id: "projectId", label: "Employee Id", minWidth: "9pc", type: "text" },
-        { id: "projectId", label: "Employee Name", minWidth: "9pc", type: "text" },
+        { id: "employeeId", label: "Employee Id", minWidth: "9pc", type: "text" },
+        { id: "employeeName", label: "Employee Name", minWidth: "9pc", type: "text" },
     
         { id: "projectName", label: "Project Name", minWidth: "9pc", type: "text" },
-    
-        { id: "dateOfActivity", label: "Month", minWidth: "7pc", type: "text" },
-        { id: "totalWorkingTime", label: "Total Worked Time", minWidth: "10pc", type: "text" },
-        { id: "workingTime", label: "Approved Date", minWidth: "9pc", type: "text" },
-        { id: "activityName", label: "Status", minWidth: "7pc", type: "text" },
+        { id: "workedHours", label: "Total Worked Time", minWidth: "10pc", type: "text" },
+        { id: "approvedDate", label: "Approved Date", minWidth: "7pc", type: "text" },
+        { id: "status", label: "status", minWidth: "9pc", type: "badge" },
+        // { id: "activityName", label: "Status", minWidth: "7pc", type: "text" },
 
     
         // { id: '', width: 88 },
     
       ];
+      const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
  
     const defaultPayload={
-        "employee_id":"ibm2",
-  
-        "page":0,
-    
-        "count":30,
-    
-        "search":"",
-    
-        "externalFilters":{
-    
-                 "project_name":"",
-    
-                 "activity_name":"",
-    
-                 "Status":"",
-    
-                 "from_date":"",
-    
-                 "to_date":""
-    
-        },
-    
-        "sort":{
-    
-            "key":1,
-    
-            "orderBy":"pa.activity_name"
-    
-        }
+      "page":0,
+      "count":5,
+      // "companyId":companyID,
+      // "managerId":employeeID,
+      "companyId":"COMP1",
+      "managerId":"INFO47",
+      "startDate":"2023-12-01",
+      "endDate":"2023-12-31",
+      "search":""
       }
 
   return (
@@ -68,7 +50,7 @@ export default function ApproveTimeSheetTable() {
 <BasicTable
  defaultPayload={defaultPayload}
  headerData={TABLE_HEAD}
- endpoint='/Mytimesheets1'
+ endpoint='/projectTotalHours'
  bodyData='data'
  filterName="TimeSearchFilterCalendar"
  />
