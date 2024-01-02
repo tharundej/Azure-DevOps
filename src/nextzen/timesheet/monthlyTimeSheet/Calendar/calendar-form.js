@@ -297,7 +297,7 @@ const managerID = localStorage.getItem('reportingManagerID');
 const initialProjectDetails = {
   // employeeName: projectInfo?.employeeName,
   companyId: companyID,
-  employeeId:projectInfo?.employeeId,
+  employeeId:projectInfo?.employeeId || employeeID,
   // projectID: [
   //   { "projectId": 1, "projectName": "ERP" },
   //   { "projectId": 3, "projectName": "ACCOUNTS" }
@@ -405,51 +405,12 @@ const handleTextFieldChange = (projectname, field, value, projectId) => {
       // [field1]: value1, // Add the additional field and value
     },
   }));
+  calculateTotalHours(projectDetails);
 };
 
-  // project data updation
-  // const handleTextFieldChange = (projectname, field, value) => {
-  //   setProjectDetails((prevDetails) => {
-  //     const updatedProjectDetails = {
-  //       ...prevDetails,
-  //       [projectname]: {
-  //         ...(prevDetails[projectname] || {}),
-  //         [field]: value,
-  //       },
-  //     };
-  
-  //     // Extract projectData array from updatedProjectDetails
-  //     const projectDataArray = Object.keys(updatedProjectDetails)
-  //       .filter(
-  //         (key) =>
-  //           key !== "employeeName" &&
-  //           key !== "todayDate" &&
-  //           key !== "companyId" &&
-  //           key !== "projectID"
-  //       )
-  //       .map((key) => ({
-  //         projectName: key,
-  //         ...updatedProjectDetails[key],
-  //       }));
-  
-  //     return {
-  //       ...updatedProjectDetails,
-  //       projectData: projectDataArray,
-  //     };
-  //   });
-  // };
-  
 
-  // const handleTextFieldChange = (projectId, field, value) => {
-  //   setProjectDetails((prevDetails) => ({
-  //     ...prevDetails,
-  //     projects: prevDetails.projects.map((project) =>
-  //       project.projectId === projectId
-  //         ? { ...project, [field]: value }
-  //         : project
-  //     ),
-  //   }));
-  // };
+
+  
   console.log(projectDetails,"projectDetails",projectData,editData)
 
   // eventdata print 
@@ -515,10 +476,7 @@ const output = {
   projectData: projectDataArray
 };
 
-console.log(output);
-
-
-    
+console.log(output); 
     const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
@@ -548,6 +506,31 @@ console.log(output);
    setDel(null);
    setConfirmDeleteOpen(false);
  };
+ // total hours calculation
+ const[totalHours, setTotalHours]=useState()
+ 
+const calculateTotalHours = (data) => {
+  let totalHours = 0;
+
+  // Iterate over the keys of the outer object
+  Object.keys(data).forEach((key) => {
+    // Check if the current key is not a known property (e.g., "companyId", "employeeId", "dateOfActivity")
+    if (!["companyId", "employeeId", "dateOfActivity"].includes(key)) {
+      // Parse the hours as a float and add it to the total
+      totalHours += parseFloat(data[key].hours) || 0;
+    }
+  });
+  setTotalHours(totalHours)
+  return totalHours;
+};
+
+// const totalHour = calculateTotalHours(projectDetails);
+// console.log(totalHour,"ppppppppppp",totalHours)
+// setTotalHours(totalHours);
+useEffect(()=>{
+   calculateTotalHours(projectDetails)
+},[projectDetails])
+console.log("Total Hours:", totalHours);
   return (
   
   <>
@@ -592,6 +575,7 @@ console.log(output);
           </Grid>
         </Grid>
       ))}
+   {totalHours > 24 && <Typography color={"red"}>Total Worked can`t be greater than 24 hours</Typography>}
   </>
 )}
 </Box>
@@ -605,15 +589,15 @@ console.log(output);
           Cancel
         </Button>
 
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          // disabled={dateError}
-          color='primary'
-        >
-          Save Changes
-        </LoadingButton>
+      { totalHours <= 24 && <LoadingButton
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+        // disabled={dateError}
+        color='primary'
+      >
+        Save Changes
+      </LoadingButton>}
       </DialogActions>
     </FormProvider>
 

@@ -5,7 +5,7 @@ import { styled, alpha } from '@mui/material/styles';
 export const StyledCalendar = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  // height: '100%',
+  height: '600px',
   width: 'calc(100% + 2px)',
   marginLeft: -1,
   marginRight:-1,
