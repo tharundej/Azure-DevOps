@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,Dialog,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -18,6 +18,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import dayjs from 'dayjs';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -30,6 +31,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
 import Label from 'src/components/label/label';
 import axios from 'axios';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { getAvailableLeaveAPI, getLeaveTypeAPI, getLossOfPayAPI } from 'src/api/HRMS/LeaveManagement';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -288,12 +290,14 @@ console.log(editData,"editttttttdata",projectInfo)
 //   )
 // };
 
-
+const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
 // second method
 const initialProjectDetails = {
   // employeeName: projectInfo?.employeeName,
-  companyId: "COMP22",
-  employeeId:"GANG12",
+  companyId: companyID,
+  employeeId:projectInfo?.employeeId,
   // projectID: [
   //   { "projectId": 1, "projectName": "ERP" },
   //   { "projectId": 3, "projectName": "ACCOUNTS" }
@@ -518,18 +522,32 @@ console.log(output);
     const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
+        enqueueSnackbar(res.data.message,{variant:'success'})
+        onClose()
         
       },
       (error) => {
         console.log('lllll', error);
+        enqueueSnackbar(error.res.data.message,{variant:'error'})
+        onClose()
        
       }
     );
   } catch (error) {
     console.error(error);
+    enqueueSnackbar(error.res.data.message,{variant:'error'})
+    // enqueueSnackbar(error.response.data.message,{variant:'error'})
+    onClose()
    
   }
 }
+// confirmation dialog
+ // confirmation dialog
+ const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+ const handleCancelDelete = () => {
+   setDel(null);
+   setConfirmDeleteOpen(false);
+ };
   return (
   
   <>
@@ -599,7 +617,7 @@ console.log(output);
       </DialogActions>
     </FormProvider>
 
-    
+  
     </>
   );
 }

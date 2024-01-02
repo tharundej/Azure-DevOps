@@ -85,7 +85,6 @@ export default function MyClaims({ currentUser, }) {
 
   ];
 
-
   const TABLE_HEAD = [
     { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
@@ -112,7 +111,7 @@ export default function MyClaims({ currentUser, }) {
     "companyId": companyID,
     "employeeId": employeeID,
     "page": 0,
-    "count": 5,
+    "count": 10,
     "search": "",
     "externalFilters": {
       "claimStartDate": "",
@@ -655,7 +654,7 @@ export default function MyClaims({ currentUser, }) {
                 )}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comment" label="comments" />
+              <RHFTextField name="comment" label="Comments" />
 
               <Grid sx={{ alignSelf: "flex-end" }}>
                 <input

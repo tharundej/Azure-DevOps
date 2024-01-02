@@ -38,9 +38,14 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     setOpen(false);
     reset2();
   };
+  const handleClose3 = () => {
+    setOpen(false);
+    reset3();
+  };
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isTDSVisible, setTDSVisible] = useState(false);
   const NewUserSchema1 = Yup.object().shape({
     payScheduleType: Yup.string().required('Payschedule Type is Required'),
     basicPayPercentage: Yup.number().required('Basic Pay is Required'),
@@ -57,7 +62,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     payScheduleType: Yup.string().required('Payschedule Type is Required'),
     tdsPercentage: Yup.number().required('TDS is Required'),
   });
-
+  const NewUserSchema3 = Yup.object().shape({
+    payScheduleType: Yup.string().required('Payschedule Type is Required'),
+  });
   const {enqueueSnackbar} = useSnackbar()
   // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
     // const baseUrl = ' https://2d56hsdn-3001.inc1.devtunnels.ms/erp'
@@ -88,7 +95,13 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     }),
     [currentUser]
   );
-
+  const defaultValues3 = useMemo(
+    () => ({
+      // employementType: currentUser?.employementType || '',
+      payPcheduleType: currentUser?.payPcheduleType,
+    }),
+    [currentUser]
+  );
   const methods1 = useForm({
     resolver: yupResolver(NewUserSchema1),
     defaultValues: defaultValues1, // Use defaultValues instead of defaultValues1
@@ -98,15 +111,20 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     resolver: yupResolver(NewUserSchema2),
     defaultValues: defaultValues2, // Use defaultValues instead of defaultValues2
   });
-
+  const methods3 = useForm({
+    resolver: yupResolver(NewUserSchema3),
+    defaultValues: defaultValues3, // Use defaultValues instead of defaultValues2
+  });
   const payPcheduleTypes = [
-    { type: '52-Once a week' },
-    { type: '26-Once in a two weeks' },
+    { type: '52- Once a week' },
+    { type: '26- Once in a two weeks' },
     { type: '24- Twice a month' },
     { type: '12-Once a month' },
+    {type: '366- Once a day'},
+    {type: 'Hour a day'}
   ];
   //   const m2 = useForm();
-  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' }];
+  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' },{type:'Daily Wise'},{type:'Hour Wise'}];
 
   const {
     setValue: setValue1,
@@ -122,6 +140,12 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     reset: reset2,
   } = methods2;
 
+  const {
+    setValue: setValue3,
+    handleSubmit: handleSubmit3,
+    formState: { isSubmitting: isSubmitting3 },
+    reset: reset3,
+  } = methods3;
   //   const values = watch();
 
   const onSubmit1 = handleSubmit1(async (data) => {
@@ -187,8 +211,41 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
 }
   });
 
+  const onSubmit3 = handleSubmit3(async (data) => {
+    data.employee_type = selectedOption?.type;
+    data.companyId = cmpId,
+    console.log('form3', data);
+
+    try {
+      const response = await axios.post(baseUrl + '/addPaySchedule', data);
+      console.log(response.data ,"responseinpayroll")
+      console.log(response.data ,"responseinpayroll")
+      if (response?.data?.code === 200   )
+      {
+    reset3()
+    handleClose();
+    enqueueSnackbar(response?.data?.message,{variant:'success'})
+    // setLoading(false)
+    getTableData()
+    console.log('sucess', response);
+  }
+ if (response?.data?.code === 400) {
+    console.log(response?.data?.code ,"responseinpayroll")
+    // handleClose();
+    reset3()
+    enqueueSnackbar(response.data.message,{variant:'error'})
+    // setLoading(false)
+    getTableData()
+    console.log('sucess', response);
+  }
+} catch (error) {
+  enqueueSnackbar("Something Went Wrong!",{variant:'error'})
+  // setLoading(false)
+  console.log('error', error);
+}
+  });
   const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
-  const [isTextFieldVisible, setTextFieldVisible] = useState(false); // State to manage the visibility of the text field
+  const [isTextFieldVisible, setTextFieldVisible] = useState(); // State to manage the visibility of the text field
 
   const handleAutocompleteChange = (event, newValue) => {
     setSelectedOption(newValue);
@@ -199,6 +256,12 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     } else {
       setTextFieldVisible(false);
     }
+    if (newValue && (newValue.type === 'Hour Wise' || newValue.type === 'Daily Wise')) {
+      setTDSVisible(true);
+    } else {
+      setTDSVisible(false);
+    }
+
   };
 
   const getOptionLabel = (employeepayType) => employeepayType.type;
@@ -233,7 +296,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{margin:'20px',color:'white',backgroundColor:'#3B82F6'}}
       >
         Add PayRoll
@@ -247,7 +310,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
           sx: { maxWidth: 720 },
         }}
       >
-        {isTextFieldVisible ? (
+        {isTextFieldVisible && !isTDSVisible ? (
           // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <ModalHeader heading="Add PayRoll" />
@@ -275,11 +338,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   getOptionSelected={(option, value) => option.type === value.type}
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
-                  sx={{
-                    width: 330,
-                    margin: 'auto',
-                    marginTop: '-1px',
-                  }}
+                  sx={{ width: '100%', marginRight: '5%' }} 
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
 
@@ -321,12 +380,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                 </Button>
             </DialogActions>
           </FormProvider>
-        ) : (
+        ) : !isTDSVisible && (
           <FormProvider methods={methods2} onSubmit={onSubmit2}>
             <ModalHeader heading="Add PayRoll" />
-            {/* methods1={methods1} onSubmit={onSubmit} */}
-            {/* <DialogTitle>Add PayRoll</DialogTitle> */}
-
             <DialogContent>
               <Box
                 rowGap={3}
@@ -348,11 +404,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                   getOptionSelected={(option, value) => option.type === value.type}
                   value={selectedOption}
                   onChange={handleAutocompleteChange}
-                  sx={{
-                    width: 330,
-                    margin: 'auto',
-                    marginTop: '-1px',
-                  }}
+                  sx={{ width: '100%', marginRight: '5%' }} 
                   renderInput={(params) => <TextField {...params} label="Employee Type" />}
                 />
 
@@ -363,11 +415,13 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                  
                   sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
-                <RHFTextField
-                  name="tdsPercentage"
-                  label="TDS %"
-                  sx={{ width: '100%' }} // Adjust width as needed
-                />
+               
+                  <RHFTextField
+                    name="tdsPercentage"
+                    label="TDS %"
+                    sx={{ width: '100%' }}
+                  />
+                
               </Box>
             </DialogContent>
 
@@ -393,6 +447,58 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
             </DialogActions>
           </FormProvider>
         )}
+        {isTDSVisible &&
+         <FormProvider methods={methods3} onSubmit={onSubmit3}>
+         <ModalHeader heading="Add PayRoll" />
+         <DialogContent>
+           <Box
+             rowGap={3}
+             columnGap={2}
+             display="grid"
+             marginTop={2}
+             gridTemplateColumns={{
+               xs: 'repeat(1, 1fr)',
+               sm: 'repeat(2, 1fr)',
+             }}
+           >
+          <RHFAutocomplete
+               disablePortal
+               name="employementType"
+               id="combo-box-demo"
+               options={employeepayTypes}
+               getOptionLabel={getOptionLabel}
+               isOptionEqualToValue={(option, value) => option.type === value.type}
+               getOptionSelected={(option, value) => option.type === value.type}
+               value={selectedOption}
+               onChange={handleAutocompleteChange}
+               sx={{ width: '100%', marginRight: '5%' }} 
+               renderInput={(params) => <TextField {...params} label="Employee Type" />}
+             />
+
+             <RHFAutocomplete
+               name="payScheduleType"
+               label="Pay Schedule Type"
+               options={payPcheduleTypes.map((name) => name.type)}
+              
+               sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
+             />
+           </Box>
+         </DialogContent>
+
+         <DialogActions>
+           <Button variant="outlined" onClick={handleClose3}>
+             Cancel
+           </Button>
+           <Button
+          sx={{backgroundColor:'#3B82F6'}}
+          variant="contained"
+          onClick={onSubmit3}
+          type="submit"
+          >Save
+          </Button>
+         </DialogActions>
+       </FormProvider>
+        }
       </Dialog>
     </>
   );

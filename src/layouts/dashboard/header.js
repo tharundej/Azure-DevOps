@@ -93,7 +93,7 @@ export default function Header({ onOpenNav }) {
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
       {!lgUp && (
-        <IconButton onClick={onOpenNav}>
+        <IconButton  sx={{height:'10px',margin:'0px'}}onClick={onOpenNav}>
           <SvgColor src="/assets/icons/navbar/ic_menu_item.svg" />
         </IconButton>
       )}
@@ -161,14 +161,17 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-      <Toolbar
+      {
+        !lgUp ? <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
         }}
+        style={{width: '10px', zIndex: '9999'}}
       >
         {renderContent}
-      </Toolbar>
+      </Toolbar> : ""
+      }
     </AppBar>
   );
 }

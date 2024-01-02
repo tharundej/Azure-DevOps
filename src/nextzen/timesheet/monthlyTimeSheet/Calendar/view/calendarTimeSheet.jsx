@@ -7,10 +7,14 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useEffect, useCallback, useContext } from 'react';
-
+import * as Yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useSnackbar } from 'src/components/snackbar';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
+import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,DialogActions ,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -28,6 +32,7 @@ import { useCalendar, useEvent } from '../hooks';
 import { StyledCalendar } from '../styles';
 import CalendarForm from '../calendar-form';
 import CalendarToolbar from '../calendar-toolbar';
+import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import CalendarFilters from '../calendar-filters';
 import CalendarFiltersResult from '../calendar-filters-result';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
@@ -35,21 +40,24 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
 import axios from 'axios';
+import Divider from '@mui/material/Divider';
 const defaultFilters = {
   colors: [],
   from_date: null,
   to_date: null,
 };
-
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import ApproveTimeSheetTable from '../approveTimeSheetTable';
 export default function CalendarView() {
  //----------------Calendar -------------------
   
   const theme = useTheme();
-  const {user} = useContext(UserContext)
+  const {user} = useContext(UserContext);
+  const { enqueueSnackbar } = useSnackbar();
   const settings = useSettingsContext();
   const smUp = useResponsive('up', 'sm');
   const openFilters = useBoolean();
@@ -57,9 +65,9 @@ export default function CalendarView() {
   const { events, eventsLoading } = useGetEvents();
   const [listOfHolidays,setListOfHolidays]= useState();
  
-useEffect(()=>{
-  holidayslist();
-},[])
+// useEffect(()=>{
+//   holidayslist();
+// },[])
   const dateError =
     filters.from_date && filters.to_date
       ? filters.from_date.getTime() > filters.to_date.getTime()
@@ -89,19 +97,7 @@ useEffect(()=>{
     //
     onClickEventInFilters,
   } = useCalendar();
-  const holidayslist = async (e) => {
-    try{
-      const holidaysListPayload = {
-      companyId:(user?.companyID)?user?.companyID:'',
-      locationId:(user?.locationID)?JSON.stringify(parseInt(user?.locationID)):''
-    };
-      const holidayslistResponse = await getHolidaysListAPI(holidaysListPayload)
-      setListOfHolidays(holidayslistResponse?.data?.data)
-    }
-    catch(error){
-      console.log(error);
-    };
-  };
+  
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
   useEffect(() => {
     onInitialView();
@@ -129,8 +125,34 @@ useEffect(()=>{
     type:"leave",
     color:event.color
   }));
- 
 
+
+const [count, setCount]=useState(0)
+  const EventSchema = Yup.object().shape({
+    leaveTypeId:Yup.lazy((value) => {
+    return value === 0
+      ? Yup.number().notOneOf([0], 'Please Select Leave Type').required('Please Select Leave Type')
+      : Yup.number().required('Please Select Leave Type');
+  }),
+    companyId:Yup.string(),
+    employeeId:Yup.string(),
+    
+  });
+  const methods = useForm({
+    resolver: yupResolver(EventSchema),
+    defaultValues: currentEvent,
+  });
+  
+  const {
+    reset,
+    watch,
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+  const values = watch();
+
+  
   // surendra
   const [eventGetData,setEventGetData]= useState();
  
@@ -171,15 +193,60 @@ console.log(date,"datedate1234",view,eventsLoading)
    const managerID = localStorage.getItem('reportingManagerID');
    const employeeID = localStorage.getItem('employeeID');
    const companyID = localStorage.getItem('companyID');
- const getApiCall =  {
+
+   const [getApiCall, setGetApiCall] =  useState({
     employeeId:employeeID ,
     companyId: companyID,
     DateOfActivity:{
-        from:"2023-12-01",
-         to: "2023-12-30"
+        from:"",
+         to: ""
     }
+})
+
+   // data setting 1st and last days
+function getMonthStartAndEndDates(inputDate) {
+  const currentDate = new Date(inputDate);
+  
+  // Set the date to the first day of the month
+  currentDate.setDate(1);
+
+  const startDate = currentDate.toISOString().split('T')[0]; // Start date
+
+  // Set the date to the last day of the month
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  currentDate.setDate(0);
+
+  const endDate = currentDate.toISOString().split('T')[0]; // End date
+  setGetApiCall(prevGetApiCall => ({
+    ...prevGetApiCall,
+    DateOfActivity: {
+      from: startDate,
+      to: endDate
+    }
+  }));
+  setApproveData(prevApproveData => ({
+    ...prevApproveData,
+    date: {
+      from: startDate,
+      to: endDate
+    }
+  }));
+
+  return { startDate, endDate };
 }
-// console.log(getApiCall,"getApiCall")
+
+// Example usage:
+const inputDate = date; // Your input date
+// const { startDate, endDate } = getMonthStartAndEndDates(inputDate);
+
+// console.log(endDate,'Start Date:', startDate);
+// console.log('End Date:', endDate);
+useEffect(()=>{
+  getMonthStartAndEndDates(inputDate)
+},[inputDate])
+
+
+console.log(date,"getApiCall")
 
 const calendarGetData = async (getApiCall) => {
   console.log("hello in function",getApiCall)
@@ -196,6 +263,7 @@ const calendarGetData = async (getApiCall) => {
         return {
           managername: item.managername,
           dateofactivity: item.dateofactivity,
+          workedHours:item.workedHours,
           projectData: item.projectData.map((project) => ({
             [project.projectName]: {
               date: project.date,
@@ -238,6 +306,12 @@ const calendarGetData = async (getApiCall) => {
       projectID: formattedProjectIds,
       // You might need to update other properties of the data state as well
     }));
+    setApproveData((prevData) => ({
+      ...prevData,
+      projectId: formattedProjectIds,
+      // You might need to update other properties of the data state as well
+    }));
+    
 
     },
     (error) => {
@@ -247,11 +321,14 @@ const calendarGetData = async (getApiCall) => {
 }
 const HolidayEvents = eventGetData ? 
 eventGetData?.map((event)=>({
-  title : "10 hours",
+  title : event.workedHours,
   start: event.dateofactivity,
   end: event.dateofactivity,
+  type:"holiday"
+ 
   
  })) : []
+ console.log(eventGetData,"qqqqqqq")
 //  project id setting foe get data 
 //  const [projectIds, setProjectIds] = useState([]);
 
@@ -272,21 +349,7 @@ eventGetData?.map((event)=>({
 //    setProjectIds(formattedProjectIds);
 //  }, [projectData]);
 
-const addTimeSheet={
-   
-  "companyId": "COMP1",
-  "employeeId": "INFO48",
-     "projectId": [
-      {
-          "projectId": 141,
-          "hours": 7.5,
-          "description": "Updated description for Projectttttt 14999"
-      },
-     
-     
-  ]
 
-}
 const overallEvents = [...updatedEvents,...HolidayEvents]
 const calendarUpdateTimeSheet = async (addTimeSheet) => {
   console.log("hello in function",getApiCall)
@@ -306,7 +369,7 @@ useEffect(()=>{
   calendarGetData(getApiCall)
   console.log("hello useeffect")
   // calendarUpdateTimeSheet(addTimeSheet)
-},[])
+},[getApiCall.employeeId, getApiCall.DateOfActivity.to])
     
   const renderResults = (
     <CalendarFiltersResult
@@ -321,14 +384,14 @@ useEffect(()=>{
     />
   );
   const timezone = "Asia/Kolkata";
-const eventsExistOnDate = (date, overallEvents) => {
-  // Filter events to find if any event matches the provided date
-  const eventsOnDate = overallEvents?.filter(event => {
-    const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
-    return eventStartDate === date;
-  }) || []; // Set a default empty array if overallEvents is undefined
-  return eventsOnDate.length > 0; // Return true if events exist, false otherwise
-};
+// const eventsExistOnDate = (date, overallEvents) => {
+//   // Filter events to find if any event matches the provided date
+//   const eventsOnDate = overallEvents?.filter(event => {
+//     const eventStartDate = event.start.split('T')[0]; // Extract the start date from the event
+//     return eventStartDate === date;
+//   }) || []; // Set a default empty array if overallEvents is undefined
+//   return eventsOnDate.length > 0; // Return true if events exist, false otherwise
+// };
 const selectAllowCallback = (selectInfo) => {
   const today = new Date().toISOString().split('T')[0]; // Get current date
   const selectedDate = selectInfo.startStr.split('T')[0]; // Get selected date
@@ -374,9 +437,9 @@ const getProjectName = async()=>{
         employeeID:employeeID,
         companyID:companyID,
        
-      // Other data properties as needed
+      // Other data properties as needed 
     };
-    const response = await axios.post('https://g3nshv81-3001.inc1.devtunnels.ms/erp/getProjectsForEmployee', data).then(
+    const response = await axios.post(baseUrl+'/getProjectsForEmployee', data).then(
       (response) => {
         console.log(response?.data?.list,'sucesswwww999', response);
         setProjects(response?.data?.list)
@@ -408,12 +471,13 @@ const getEmployeeList = async(projectData)=>{
         companyId:companyID,
         projectIDs:projectData?.projectID,
        
-      // Other data properties as needed
+      // Other data properties as needed listEmployeesForProjectManager
     };
-    const response = await axios.post('https://g3nshv81-3001.inc1.devtunnels.ms/erp/getEmployeesForProjectManager', dataPaload).then(
+    const response = await axios.post(baseUrl+'/listEmployeesForProjectManager', dataPaload).then(
       (response) => {
         console.log('sucesswww9999w', response);
         // setProjectDetails(response?.data?.data)
+        setEmployeeList(response?.data?.list)
         // enqueueSnackbar(response?.data?.message, { variant: 'success' })
       
       },
@@ -434,26 +498,39 @@ const getEmployeeList = async(projectData)=>{
   }
 }
 
-const employeeList = [
-  { projectId: 1, projectName: 'Surendra',  },
-  { projectId: 2, projectName: 'Anil',  },
-  { projectId: 3, projectName: 'Sai', },
-  { projectId: 4, projectName: 'Muzu',  },
-  { projectId: 4, projectName: 'Nithin',  },
-]
+const [employeeList, setEmployeeList]= useState([
+  
+
+])
 
 const handleProjectChange = (event, newValue) => {
   setData((prevData) => ({
     ...prevData,
     projectID: newValue,
   }));
+  setApproveData((prevData) => ({
+    ...prevData,
+    projectId: newValue,
+  }));
 };
 
 const handleEmployeeChange = (event, newValue) => {
+  console.log(newValue,"GANG25GANG25")
   setData((prevData) => ({
     ...prevData,
-    employeeName: newValue,
+    employeeId: newValue.employeeId,
+
   }));
+  setGetApiCall((prevGetApiCall) => ({
+    ...prevGetApiCall,
+    employeeId: newValue.employeeId,
+  }));
+  setApproveData((prevGetApiCall) => ({
+    ...prevGetApiCall,
+    employeeId: newValue.employeeId,
+  }));
+  
+  
 };
 console.log(data,"dataatdada",selectedRange)
 
@@ -477,9 +554,80 @@ const onDayData = () => {
 };
 
 
+// for manager Approves
+const [approveData, setApproveData]= useState(
+  {
+    companyId: companyID,
+    employeeId: "",
+    projectId: [],
+    date: {
+        from: "",
+        to: ""
+    }
+  }
+)
+console.log(approveData,"approveData",data)
+const onSubmitEdit2 = async (approveData, event) => {
+ 
+  try {
+    event.preventDefault();     
+    // console.log(editData, "editDataeditData")
+    const response = await axios.post(baseUrl + "/monthlyStatusApprove", approveData).then(
+      (res) => {
+        console.log('sucessmonthlyStatusApprove', res);
+        handleClose()
+        enqueueSnackbar(res?.data?.message, { variant: 'success' })
+        // setCount(count + 1)
+      },
+      (error) => {
+        console.log('lllll', error);
+        handleClose()
+        enqueueSnackbar(error?.res?.data?.message, { variant: 'warning' })
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    handleClose()
+   
+    enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+  }
+}
+
+// model   code
+const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
+
+
+  const onCloseFormRefresh = ()=>{
+    onCloseForm()
+    // set(count+1)
+    // calendarGetData(getApiCall)
+  }
+// confirmation dialod
+// setConfirmDeleteOpen(true);
+const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+const handleCancelDelete = () => {
+  setConfirmDeleteOpen(false);
+};
+
+const handleDeleteConformed=()=>{
+  //HIT API 
+  console.log("confiramtion dialod for approve")
+}
+// table permissions
+const [tablePermission, setTablePermission] = useState(true);
+
+const handleTypographyClick = (value) => {
+  setTablePermission(value);
+};
   return (
  <>
-     <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
+     <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
+     <Grid container flexDirection={"row"} >
+     <Grid item xs={12}>
      <Autocomplete
         id="project-autocomplete"
         fullWidth
@@ -490,25 +638,63 @@ const onDayData = () => {
         onChange={handleProjectChange}
         renderInput={(params) => <TextField {...params} label="Select Project" />}
       />
+</Grid>
+<Grid item xs={12} marginBottom={1}>
 
       <Box>
-        <FormControlLabel
-          control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
-          label="Select Employee"
-        />
+  <Grid container alignItems="center">
+    <Grid item xs={8}>
+      <FormControlLabel
+        control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
+        label="Select Employee"
+      />
+    </Grid>
+    <Grid item xs={4} justifyContent={"flex-end"}>
+    <Card sx={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Typography
+        onClick={() => handleTypographyClick(true)}
+        sx={{
+          cursor: 'pointer',
+          color: tablePermission ? 'white' : 'black',
+          backgroundColor: tablePermission ? 'black' : 'white',
+          padding: '0 5px',
+          borderRadius: '5px 0 0 5px',
+        }}
+      >
+        Calendar
+      </Typography>
+      <Divider orientation="vertical" flexItem sx={{ marginX: 1 }} />
+      <Typography
+        onClick={() => handleTypographyClick(false)}
+        sx={{
+          cursor: 'pointer',
+          color: !tablePermission ? 'white' : 'black',
+          backgroundColor: !tablePermission ? 'black' : 'white',
+          padding: '0 5px',
+          borderRadius: '0 5px 5px 0',
+        }}
+      >
+        Table
+      </Typography>
+    </Card>
+    </Grid>
+  </Grid>
 
-        {showAutocomplete && (
-          <Autocomplete
-            id="employee-autocomplete"
-            fullWidth
-            options={employeeList || []}
-            value={data.employeeName}
-            getOptionLabel={(option) => option?.projectName}
-            onChange={handleEmployeeChange}
-            renderInput={(params) => <TextField {...params} label="Select Employee" />}
-          />
-        )}
-      </Box>
+  {showAutocomplete && (
+    <Autocomplete
+      id="employee-autocomplete"
+      fullWidth
+      options={employeeList || []}
+      value={data.employeeName}
+      getOptionLabel={(option) => option?.employeeName}
+      onChange={handleEmployeeChange}
+      renderInput={(params) => <TextField {...params} label="Select Employee" />}
+    />
+  )}
+</Box>
+
+      </Grid>
+      </Grid>
         {/* <Stack
           alignItems="flex-end"
           justifyContent="flex-end"
@@ -526,7 +712,7 @@ const onDayData = () => {
         </Stack> */}
         {canReset && renderResults}
         <Card>
-          <StyledCalendar>
+        { tablePermission  && <StyledCalendar>
             <CalendarToolbar
               date={date}
               view={view}
@@ -551,7 +737,7 @@ const onDayData = () => {
               // selectAllow={selectAllowCallback}
               events={overallEvents}
               // events={eventDataMe}
-              // eventContent={renderEventContent}
+              eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}
              eventClick={onClickEvent}
@@ -572,14 +758,23 @@ const onDayData = () => {
             timeZone = {timezone}
                
             />
-          </StyledCalendar>
+          </StyledCalendar>}
+          
         </Card>
+        {showAutocomplete&& 
+        <Grid container justifyContent="flex-end" marginTop={1} xs={12}>
+  <Button variant="contained" color="primary" onClick={handleOpen}>
+    Approve Time Sheet
+  </Button>
+</Grid>
+}
+{tablePermission === false &&  <ApproveTimeSheetTable/>}
       </Container>
       <Dialog
         fullWidth
         maxWidth="xs"
         open={openForm}
-        onClose={onCloseForm}
+        onClose={onCloseFormRefresh}
         transitionDuration={{
           enter: theme.transitions.duration.shortest,
           exit: theme.transitions.duration.shortest - 80,
@@ -607,6 +802,74 @@ const onDayData = () => {
         />
         {/* </DialogTitle> */}
       </Dialog>
+     
+      {/* <Button variant="contained" color="primary" onClick={() => setConfirmDeleteOpen(true)}>
+  Approve Time Sheet1
+</Button> */}
+
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={open}
+        // onClose={handleClose}
+        PaperProps={{
+          sx: { maxWidth: 720 },
+        }}
+      >
+         <ModalHeader heading="Approve Time Sheet"/>
+        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(approveData, event)}>
+          {/* methods={methods} onSubmit={onSubmit} */}
+          {/* <DialogTitle>Apply My Compoff</DialogTitle> */}
+
+          <DialogContent>
+           
+
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              marginTop={2}
+              gridTemplateColumns={{
+                // xs: 'repeat(1, 1fr)',
+                // sm: 'repeat(2, 1fr)',
+              }}
+            >
+              
+{/* <TextField label="Start Date"></TextField> */}
+<CardContent fullWidth>
+<Typography>Are you sure you want to Approve Time Sheet</Typography>
+</CardContent>        
+
+            </Box>
+
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" 
+            onClick={handleClose}
+            >
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+              Approve 
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+
+
+       {/* <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConformed}
+        itemName="Approve Time Sheet "
+        message={`Are you sure you want to Approve Time Sheet`}
+      /> */}
+   
+    
       </>
   );
 }
@@ -634,9 +897,9 @@ const onDayData = () => {
     const {event} = eventContent; // Get the event title
     const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
     return (
-      
-        <div style={{color:"black",fontWeight:"700",backgroundColor,padding:"4px",cursor: "pointer" }}>{event?.title}</div>
-      
+      <>
+        <div style={{color:"green",fontWeight:"700",backgroundColor,padding:"1px",cursor: "pointer" }}>{event?.title} Hours</div>
+        </>
     );
   }
   

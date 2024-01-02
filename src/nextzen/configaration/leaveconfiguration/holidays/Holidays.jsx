@@ -28,8 +28,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/material/Button';
 import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
+import { useSnackbar } from 'notistack';
 
 export default function Holidays({ currentUser }) {
+  const {enqueueSnackbar} = useSnackbar()
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -63,7 +65,7 @@ export default function Holidays({ currentUser }) {
   //   },
   // ];
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -307,25 +309,28 @@ console.log(extractedLocationIDs,'lllll')
     try {
       const response = await axios.post(baseUrl + '/editHoliday', data);
       if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleCloseEdit();
         setCount(count + 1);
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleCloseEdit();
+        // setSnackbarSeverity('error');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
+        // handleCloseEdit();
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('UnExpected Error. Please try again.');
-      setSnackbarOpen(true);
-      handleCloseEdit();
+      // setSnackbarSeverity('error');
+      // setSnackbarMessage('UnExpected Error. Please try again.');
+      // setSnackbarOpen(true);
+      // handleCloseEdit();
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
       console.log('error', error);
     }
   });

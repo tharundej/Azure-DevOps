@@ -31,6 +31,7 @@ const employmentTypeOptions=[
   {label:"Permanent",id:'1'},
   {label:"Contract",id:'2'},
   {label:"Daily Wise",id:'3'},
+  {label:"Hours Wise",id:'3'},
 
 ]
 
@@ -231,12 +232,19 @@ console.log(currentUser,"jjjjjjjjjj")
           obj.rCountry=userdropDownvalue?.pCountryValue || {name:" " ,isCode: ""};
           obj.rState=userdropDownvalue?.pStateValue || {name:" " ,isCode: ""};
           obj.rCity=userdropDownvalue?.pCityValue || {name:" " ,isCode: ""};
+          obj.rPincode=currentUser?.pPincode || "";
+          obj.rAddressLine1=currentUser?.pAddressLine1;
+          obj.rAddressLine2=currentUser?.pAddressLine2;
+
         }
         else{
           if(isSameAsResendtial){
             obj.rCountry=userdropDownvalue?.rCountryValue || {name:" " ,isCode: ""};
             obj.rState=userdropDownvalue?.rStateValue || {name:" " ,isCode: ""};
             obj.rCity=userdropDownvalue?.rCityValue || {name:" " ,isCode: ""};
+            obj.rPincode=currentUser?.pPincode || "";
+          obj.rAddressLine1=currentUser?.pAddressLine1;
+          obj.rAddressLine2=currentUser?.pAddressLine2;
           }
         }
     
@@ -566,7 +574,7 @@ console.log(currentUser,"jjjjjjjjjj")
                 
               }
 
-                renderInput={(params) => <TextField {...params} label="Employeement Type"
+                renderInput={(params) => <TextField {...params} label="Employement Type"
                 style={{  width: '100%' }} />}
               />
                  </Grid>
@@ -908,7 +916,7 @@ console.log(currentUser,"jjjjjjjjjj")
                 value={userdropDownvalue?.rCountryValue}
                 getOptionLabel={(option) => option?.name}
                 onChange={async(e, newvalue) => {
-
+                 
                   var newOptiosArray={...userdropDownOptions};
                   
                   newOptiosArray.rStateOptions=State.getStatesOfCountry(newvalue?.isoCode)|| [];
@@ -1351,7 +1359,7 @@ console.log(currentUser,"jjjjjjjjjj")
                     label="CTC"
                     variant="outlined"
                     id="CTC"
-                     value={currentUser?.ctc}
+                     value={currentUser?.ctc || 0}
                     // onChange={(e) => {
                     //   setcurrentUser(prev=>({
                     //     ...prev,

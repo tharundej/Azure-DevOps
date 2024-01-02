@@ -5,7 +5,7 @@ import CryptoJS from "crypto-js";
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 import { RouterLink } from 'src/routes/components';
-import { Container,Card,Tab ,Link,Grid,Button} from '@mui/material';
+import { Container,Card,Tab ,Link,Grid,Button,Stack} from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import ProfileCover from 'src/sections/user/profile-cover';
 import Iconify from '../../../components/iconify/iconify';
@@ -24,8 +24,9 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
-import { baseImageUrl,baseUrl } from 'src/nextzen/global/BaseUrl';
+import baseImageUrl, { baseUrl } from 'src/nextzen/global/BaseUrl';
 import { ASSETS_API } from 'src/config-global';
+import { useRouter } from 'src/routes/hooks';
 
 import bg from '../../../components/image/bg2.jpg'
 
@@ -141,6 +142,7 @@ const EmployeeView = () => {
     const [searchFriends, setSearchFriends] = useState('');
   
     const [currentTab, setCurrentTab] = useState('About');
+    const router=useRouter()
   
     const handleChangeTab = useCallback((event, newValue) => {
       setCurrentTab(newValue);
@@ -158,11 +160,18 @@ const EmployeeView = () => {
     useEffect(() => {
       setAvatarUrl(`${baseImageUrl}${userData.imageData}`);
     }, [userData]);
+
+    const handleBack = () => {
+      router.push(paths.dashboard.employee.root)
+    };
+  
   
   return (
     <div>
-         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-  <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
+         <Stack maxWidth={settings.themeStretch ? false : 'lg'}>
+          
+         
+          <SnackBarComponent  open={openSnackbar} onHandleCloseSnackbar={HandleCloseSnackbar} snacbarMessage={snacbarMessage} severity={severity}/>
 
       {/* <CustomBreadcrumbs
         heading="Profile"
@@ -220,38 +229,49 @@ const EmployeeView = () => {
         }}
       /> */}
 
-<Tabs
-  value={currentTab}
-  onChange={handleChangeTab}
-  variant="scrollable"
-  scrollButtons="auto"
-  aria-label="scrollable auto tabs example"
-  
-  sx={{
-    
-    width: '100%',
-    // bottom: 0,
-    // zIndex: 9,
-    // position: 'absolute',
-    bgcolor: 'background.paper',
-    [`& .${tabsClasses.flexContainer}`]: {
-      pr: { md: 3 },
-      justifyContent: {
-        sm: 'flex-end',
-        md: 'flex-end',
-        lg: 'flex-end',
-    
-      },
-    },
-  }}
->
-
-
-        
+<Grid container alignItems="center">
+      <Grid item xs={12} md={10}> {/* Adjust the grid size based on your layout */}
+        <Tabs
+          value={currentTab}
+          onChange={handleChangeTab}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          sx={{
+            width: '100%',
+            bgcolor: 'background.paper',
+            [`& .${tabsClasses.flexContainer}`]: {
+              pr: { md: 3 },
+              justifyContent: {
+                sm: 'flex-start',
+                md: 'flex-start',
+                lg: 'flex-start',
+              },
+            },
+          }}
+        >
           {TABS.map((tab) => (
             <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
           ))}
         </Tabs>
+      </Grid>
+      <Grid item xs={12} md={2} sx={{display:'flex',flexDirection:'column',justifyContent:'flex-end',alignItems:'flex-end'}}> {/* Adjust the grid size based on your layout */}
+        <Button
+          onClick={handleBack}
+          sx={{
+            backgroundColor: '#3B82F6',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#1565C0',
+            },
+          }}
+        >
+          Cancel
+        </Button>
+      </Grid>
+    </Grid>
+
+       
       {/* <Grid container justifyContent="flex-end">
       <Button
         component={RouterLink}
@@ -299,10 +319,23 @@ const EmployeeView = () => {
       // )} */}
 
       {currentTab === 'Statoury' && <Statoury  handleCallSnackbar={handleCallSnackbar} employeeIDForApis={id}  />}
-    </Container>
+    </Stack>
 
-
-
+    {/* <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-start',alignContent:'flex-start'}}>
+  
+  <Button
+               // color="inherit"
+               //disabled={activeStep === 0}
+               onClick={handleBack}
+               sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
+               '&:hover': {
+                 backgroundColor: '#1565C0', // Change this to the desired hover color
+               },
+             }}
+             >
+               Cancel
+             </Button></Grid> */}
+      
     </div>
   )
 }

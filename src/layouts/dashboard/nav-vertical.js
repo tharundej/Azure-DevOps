@@ -12,9 +12,11 @@ import { usePathname, useRouter } from 'src/routes/hooks';
 import { NavSectionVertical } from 'src/components/nav-section';
 //
 import { NAV } from '../config-layout';
+import { useState } from 'react';
 import { useAuthContext } from 'src/auth/hooks';
 import { useNavData } from './config-navigation';
 import { useSnackbar } from 'src/components/snackbar';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { AccountPopover, NavToggleButton, NavUpgrade } from '../_common';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
@@ -23,19 +25,15 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 export default function NavVertical({ openNav, onCloseNav }) {
   const { user } = useContext(UserContext)
   const { logout } = useAuthContext();
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const pathname = usePathname();
 const router = useRouter()
   const lgUp = useResponsive('up', 'lg');
   const { enqueueSnackbar } = useSnackbar();
   const navData = useNavData();
   const handleLogout = async () => {
-    try {
-      await logout();
-      router.replace('/');
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
-    }
+    setConfirmLogout(true);
+   
   };
   useEffect(() => {
     if (openNav) {
@@ -43,6 +41,22 @@ const router = useRouter()
     }
     
   }, [pathname]);
+
+  const handleCancelLogout = () => {
+    setConfirmLogout(false);
+};
+const handleConfirmLogout = async()=>{
+  try {
+    await logout();
+    router.replace('/');
+  } catch (error) {
+    console.error(error);
+    enqueueSnackbar('Unable to logout!', { variant: 'error' });
+  }
+  setConfirmLogout(false)
+     
+
+}
 
   const renderContent = (
     <Scrollbar
@@ -58,7 +72,7 @@ const router = useRouter()
      <Grid sx={{display:'flex',mt:1.5,ml:4}}>
      <Logo />
      <Typography variant="subtitle2" sx={{ml:2}}>
-            {/* {user?.employeeName} */} Infobellit
+            {user?.companyName} 
           </Typography>
       </Grid> 
       <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
@@ -84,9 +98,19 @@ const router = useRouter()
             {user?.roleName}
           </Typography>
           </Box>
-<Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
+        <Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
         </Grid>
         <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
+
+        <ConfirmationDialog
+        open={confirmLogout}
+        onClose={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+        itemName="Logout"
+        confirmButtonText="Ok"
+        message="Are you sure you want to logout?"
+      />
+
       <NavSectionVertical
         data={navData}
         config={{

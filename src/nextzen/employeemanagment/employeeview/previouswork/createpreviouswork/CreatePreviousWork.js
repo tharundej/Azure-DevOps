@@ -57,7 +57,7 @@ import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat'
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import FilesDisplay from '../../employeeeducation/createeducation/FilesDisplay';
 
-const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi}) => {
+const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApis,callApi,handleCount}) => {
   const { enqueueSnackbar } = useSnackbar();
   const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
     "Contract","Permanent","Daily Wage"
@@ -241,6 +241,7 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
         enqueueSnackbar(response?.data?.message, { variant: 'success' });
         onhandleClose();
         callApi();
+        handleCount()
         setDefaultValues([])
         setAddDocuments([])
       })
@@ -255,7 +256,30 @@ const PreviousWork = ({employeeData,open,onhandleClose,endpoint,employeeIDForApi
 
     useEffect(()=>{
       if(employeeData){
+        if(endpoint!=="updateWorkDetails"){
+          setDefaultValues([{
+
+            "previousCompanyName": "",
+            "designation": "",
+            "startDate": "",
+            "presentlyWorking": "",
+            "endDate": "",
+              documents:[
+                {
+                  fileType:'',
+                  fileName:'',
+                  fileContent:''
+              },
+            ]
+             
+            
+           
+          }])
+        }
+        else{
+        console.log(employeeData,'employeeData')
       setDefaultValues(employeeData)
+        }
 
 
       }

@@ -96,7 +96,7 @@ export default function EmployeeTable() {
     fullAccess:user?.rolePermissions?.employeeManagement?.fullAccess || false,
     employeeID: user?.employeeID,
     roleID:user?.roleID,
-    "count": 5,
+    "count": 10,
      
     "page": 0,
      

@@ -92,7 +92,7 @@ export default function DepartmentConfig() {
   console.log('🚀 ~ file: TimeProject.jsx:113 ~ TimeProject ~ tableData:', tableData);
 
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,

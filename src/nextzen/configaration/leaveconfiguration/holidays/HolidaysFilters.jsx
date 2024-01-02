@@ -198,8 +198,6 @@ export default function HolidaysFilters({ filterData, filterOptions, filterSearc
       dropdown?.holidayName?.forEach((item, index) => {
         arr1.push(item?.holidayName);
       });
-
-      // setDatesData(arr1);
       resolve(arr1);
     });
   }
