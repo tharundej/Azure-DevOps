@@ -138,7 +138,7 @@ axios.request(config)
           <AppWelcome
             title={`Welcome 👋  ${user?.employeeName || ""} `}
            // description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
-            description="Happy New Year!!"
+            description="Happy work anniversary! Your creativity, passion, and hard work are truly valued. Here's to more successful and fulfilling years ahead.~Priya!!"
 
             img={<SeoIllustration />}
             // action={
