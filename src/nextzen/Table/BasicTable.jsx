@@ -135,6 +135,7 @@ import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
 import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
+import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
 
 const defaultFilters = {
   name: '',
@@ -521,6 +522,13 @@ const [index, setIndex]=useState(""); // index setting
         >
           {filterName === 'SwapRequestSearchFilter' && (
             <SwapRequestSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'TimeSearchFilterCalendar' && (
+            <ApproveTimeSheetSearch
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               getTableData={getTableData}
