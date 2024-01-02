@@ -40,7 +40,7 @@ const CreateStatutoryOnboard =forwardRef ((props,ref) => {
  
   const [type,setType]=useState({label:"Permanent",id:'1'})
  
-   const [currentUser,setCurrentUser]=useState({})
+   const [currentUser,setCurrentUser]=useState({aadharNumber:'',panNumber:''})
    useImperativeHandle(ref, () => ({
     childFunctionStatutory() {
       onSubmit();
@@ -171,6 +171,11 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
       const values = watch();
       const { enqueueSnackbar } = useSnackbar();
       const onSubmit = handleSubmit(async (data) => {
+        if(currentUser?.aadharNumber===""||currentUser?.panNumber===""){
+          enqueueSnackbar("Please fill AADHAAR and PAN card number", { variant: 'error' });
+          return;
+
+        }
         console.log(currentUser,'uyfgv');
         
         console.log(localStorage.getItem('employeeIdCreated'),'localStorage')
@@ -207,7 +212,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
           })
           .catch((error) => {
             console.log(error);
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+            enqueueSnackbar(error?.response?.data?.message || "Someting went wrong! please try again", { variant: 'error' });
             props.handleLoaderClose();
           });
       });
@@ -252,7 +257,12 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                     fullWidth
                     type="number"
                     name="aadharNumber"
-                    label="Aadhar Number"
+                    label={
+                      <label >
+                        AADHAAR Number
+                        <span style={{ color: 'red' }}>*</span>
+                      </label>
+                    }
                     variant="outlined"
                     id="accountNumber"
                      value={currentUser?.aadharNumber}
@@ -265,6 +275,32 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                       ))
                     }
                     }}
+                  />
+          </Grid>
+
+          <Grid md={6} xs={12} lg={6}  fullWidth  item>
+                  <TextField
+                    fullWidth
+               
+                    name="panNumber"
+                    label={
+                      <label >
+                        PAN Number
+                        <span style={{ color: 'red' }}>*</span>
+                      </label>
+                    }
+                    variant="outlined"
+                    id="panNumber"
+                     value={currentUser?.panNumber}
+                    onChange={(e) => {
+                      if(e?.target?.value?.length<=10){
+                      setCurrentUser(prev=>({
+                        ...prev,
+                        panNumber:e?.target.value
+                      }
+                      ))}
+                    }}
+                    style={{ paddingLeft: 0, width: '100%' }}
                   />
           </Grid>
  
@@ -410,26 +446,7 @@ const payTypes = [{ type: 'TypeA' }, { type: 'TypeB' }];
                   />
           </Grid>
  
-          <Grid md={6} xs={12} lg={6}  fullWidth  item>
-                  <TextField
-                    fullWidth
-               
-                    name="panNumber"
-                    label="Pan Number"
-                    variant="outlined"
-                    id="panNumber"
-                     value={currentUser?.panNumber}
-                    onChange={(e) => {
-                      if(e?.target?.value?.length<=10){
-                      setCurrentUser(prev=>({
-                        ...prev,
-                        panNumber:e?.target.value
-                      }
-                      ))}
-                    }}
-                    style={{ paddingLeft: 0, width: '100%' }}
-                  />
-          </Grid>
+         
  
  
           <Grid md={6} xs={12} lg={6} fullWidth  item>
