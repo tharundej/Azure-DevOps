@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {Tabs,Tab,Typography,Box} from '@mui/material';
+import GenerateOfferLetter from '../generateofferletter/GenerateOfferLetter';
 
 
 const PreOnboardHome = () => {
@@ -54,7 +55,7 @@ const PreOnboardHome = () => {
         <Tab label="Item Seven" {...a11yProps(6)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        Item One
+       <GenerateOfferLetter />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
