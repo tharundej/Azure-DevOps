@@ -102,7 +102,7 @@ const VisuallyHiddenInput = styled('input')({
       if(!err)
       onSubmit(obj);
     else {
-      enqueueSnackbar("Please Upload All Required Documents",{variant:"error"});
+      enqueueSnackbar("Please Upload AADHAAR and PAN Card",{variant:"error"});
     };
 
 
@@ -236,11 +236,13 @@ const VisuallyHiddenInput = styled('input')({
                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                     <InputLabel
-                  id={`demo-simple-select-label-${index}`}
-                  style={{ color: index < 2 ? 'red' : 'inherit' }}
-                >
-                  {index < 2 ? "Select Document *" : "Select Document"}
-                </InputLabel>
+                    id={`demo-simple-select-label-${index}`}
+                    style={{ color: 'black' }}
+                  >
+                   
+                    Select Document
+                    <span style={{ color: 'red' }}>{index < 2 ? '*' : ''}</span>
+                  </InputLabel>
                       <Select
                         label="Select Document"
                         value={file?.fileType}
@@ -251,8 +253,8 @@ const VisuallyHiddenInput = styled('input')({
                         disabled={index>1?false:true}
                       >
                        
-                       <MenuItem value="aadhar">Aadhaar</MenuItem>
-                        <MenuItem value="pancard">Pan Card</MenuItem>
+                       <MenuItem value="aadhar">AADHAAR Card</MenuItem>
+                        <MenuItem value="pancard">PAN Card</MenuItem>
                         <MenuItem value="passport">Passport</MenuItem>
 
                         {/* Add more categories here */}
@@ -292,7 +294,7 @@ const VisuallyHiddenInput = styled('input')({
 
                           <Grid item>
                             {
-                              index === 0 && (
+                              index === 1 && (
                                 <IconButton
                                   onClick={() => {
                                     handleAddDocument(index);
@@ -301,7 +303,7 @@ const VisuallyHiddenInput = styled('input')({
                                 >
                                   <Iconify
                                     icon="gala:add"
-                                    sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                    sx={{ fontSize: '68px', color: '#3B82F6' }}
                                   />{' '}
                                   {/* Set the font size to 24px */}
                                 </IconButton>
@@ -314,7 +316,7 @@ const VisuallyHiddenInput = styled('input')({
                               // }
                               // >Add Files</Button>
                             }
-                            {index !== 0 && (
+                            {index >= 2 && (
                               <IconButton
                                 onClick={() => {
                                   handleDeleteDocument(index);

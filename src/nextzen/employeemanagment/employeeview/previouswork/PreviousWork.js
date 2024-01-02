@@ -199,7 +199,7 @@ const PreviousWork = ({employeeIDForApis}) => {
 
    ])
    const rowActions=[
-    {name : "edit",icon:"solar:pen-bold"},
+    {name : "Edit",icon:"solar:pen-bold"},
    ]
 
    const onClickActions=(rowdata,event)=>{

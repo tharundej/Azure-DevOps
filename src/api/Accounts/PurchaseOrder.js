@@ -50,3 +50,13 @@ export const ListPurchaseOrderDetailsAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+export const getPoGenaratorAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`getPoGenarator`, requestBody, apiHeaders);
+    console.log('API response:', response); // Log the response data
+    return response.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
