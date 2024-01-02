@@ -26,11 +26,12 @@ const Login = () => {
            }
            axios.request(config).then((response)=>{
                 console.log(response,"loginResponsee")
+                alert(response?.data?.message)
               handleLoginvalue()
            })
            .catch((error)=>{
+            alert(error?.response?.data?.message)
             console.log(error)
-            handleLoginvalue()
            })
            
     }
