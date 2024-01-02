@@ -8,7 +8,7 @@ import { styled } from '@mui/system';
 
 import FormProvider,{ RHFSelect,RHFAutocomplete } from 'src/components/hook-form';
 
-import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,
+import {Card,TextField,InputAdornment,Autocomplete,Grid,Button,Drawer,IconButton,Stack,DialogContent,CardContent,Tooltip,
    DialogActions,Typography} from '@mui/material';
 
 import Iconify from 'src/components/iconify/iconify';
@@ -37,7 +37,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 import { paths } from 'src/routes/paths';
 
@@ -45,6 +44,8 @@ import { paths } from 'src/routes/paths';
 
 import { useRouter } from 'src/routes/hooks';
 import {ApiHitDepartment,ApiHitDesgniation,ApiHitLocations,ApiHitManager,ApiHitRoles,ApiHitDesgniationGrade, ApiHitDepartmentWithoutLocation} from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import SentIcon from 'src/assets/icons/sent-icon';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 
 
 
@@ -87,7 +88,9 @@ function getStyles(name, personName, theme) {
 
 export default function EmployeeFilterSearch({filterSearch,filterData}){
   const [badgeContent, setBadgeContent] = useState(false);
-
+  const [InviteForm,setInviteForm] = useState(false);
+  const [namevalue,setNameValue]=useState();
+  const [mailValue,setEmailValue]=useState()
   const [userdropDownOptions,setUserDropDownOptions]=useState({})
   const [userdropDownvalue,setUserDropDownValue]=useState({})
   const [open,setOpen]=useState(false);
@@ -456,8 +459,23 @@ const [stateOptions,setOptions]=useState([])
       router.push(paths.dashboard.employee.onboardform)
     }
     
+const handleInviteClose=()=>{
+  setInviteForm(false)
+  setNameValue("")
+  setEmailValue("")
+}
 
+const handleChangeName=(e)=>{
+   setNameValue(e.target.value)
+}
+
+const handleChangeMail=(e)=>{
+  setEmailValue(e.target.value)
+}
   
+const sendInvitation=()=>{
+  console.log(namevalue,"name",mailValue)
+}
     return (
         <>
           <Grid container alignItems="center" marginBottom='10px' >
@@ -473,6 +491,17 @@ const [stateOptions,setOptions]=useState([])
 
             <Grid md={4} xs={12} lg={4} item>
           <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
+
+          <Grid item>
+            <Tooltip title="Send Invitations">
+      <Button 
+      
+        onClick={()=>setInviteForm(true)}
+        
+        sx={{color:'black',mr:0.5}}><SentIcon sx={{width:40,height:40}}/></Button>
+</Tooltip>
+
+      </Grid>
            
       <Grid item>
       <Button 
@@ -1026,6 +1055,37 @@ const [stateOptions,setOptions]=useState([])
          
          </Grid>
    
+    </Dialog>
+
+
+    <Dialog
+     fullWidth
+     onClose={handleInviteClose}
+     aria-labelledby="customized-dialog-title"
+     open={InviteForm}
+     PaperProps={{
+          sx: { maxWidth: 500 },
+      }}
+
+      >
+   <ModalHeader heading="Invitation"/>
+<DialogContent>
+ {/* <Card>
+  <CardContent> */}
+ <Grid container flexDirection="row" sx={{mt:1}}>
+<Grid item xs={12} md={6}>
+<TextField name='Name' label="Name" onChange={(e)=>handleChangeName(e)} placeholder='Enter Name'/>
+</Grid>
+<Grid>
+<TextField name='mail' label="Email" onChange={(e)=>handleChangeMail(e)} placeholder='Enter Email'/>
+</Grid>
+  </Grid>
+  {/* </CardContent>
+  </Card>
+  */}
+ <Button variant='contained' onClick={sendInvitation} color='primary' sx={{float:"right",mb:1,mt:1}}>Send</Button>
+ <Button variant='outlined' onClick={handleInviteClose} sx={{float:"right",mt:1,mr:1}}>Cancel</Button>
+</DialogContent>
     </Dialog>
     </>
     )
