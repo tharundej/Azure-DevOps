@@ -229,8 +229,8 @@ export function AuthProvider({ children }) {
       if (response?.data?.statusCode === 200) {
         setSession(accessToken);
         //  setSession("1")
-        if(response?.data?.firstLogin===true){
-          router.push(PATH_TO_REST_PASSWORD);
+        if(response?.data?.firstLogin===false){
+          router.push(paths.auth.jwt.resetpassword);
         }else{
           dispatch({
           type: 'LOGIN',
@@ -269,6 +269,7 @@ export function AuthProvider({ children }) {
       companyDateOfIncorporation,
       companyCeoName,
       companyType,
+      industryType,
       emailId,
       phoneNo,
       firstName,
@@ -282,7 +283,9 @@ export function AuthProvider({ children }) {
       companyPincode,
       empIdPrefix,
       logoName,
+      modules,
       companyLogo,
+      // modules,
       
     ) => {
       console.log('hiiii');
@@ -293,10 +296,12 @@ export function AuthProvider({ children }) {
         // companyDateOfIncorporation,
         companyCeoName,
         companyType,
+        industryType,
         emailId,
         phoneNo,
         firstName,
         // middleName,
+        // selectedCheckboxNames,
         lastName,
         companyAddressLine1,
         companyAddressLine2,
@@ -306,6 +311,7 @@ export function AuthProvider({ children }) {
         companyPincode,
         empIdPrefix,
         logoName,
+        modules,
         companyLogo,
       };
       if (companyDateOfIncorporation != 'NaN-NaN-NaN') {
@@ -315,7 +321,10 @@ export function AuthProvider({ children }) {
         data.middleName = middleName;
       }
       console.log(data, 'data ......');
-     
+    //  if(modules){
+         data.modules =modules
+    //   }
+    console.log(data,'FUN')
       const response = await axios.post(baseUrl + '/signup', data);
       // const response = await axios.post(endpoints.auth.register, data);
       if(response?.data.code === 200){

@@ -82,11 +82,11 @@ export default function ChangePassword() {
         },
       };
       const response = await axiosInstance.post(baseUrl + `/resetPassword`, payload, config);
-      if (response?.data?.code === 200) {
-        enqueueSnackbar(response?.data?.message,{variant:'success'})
-        handleClose();
+      if (response?.data?.status === "200") {
         router.push(paths.auth.jwt.login);
-      } else if (response?.data?.code === 400) {
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        // handleClose();
+      } else if (response?.data?.status === "400") {
         enqueueSnackbar(response?.data?.message,{variant:'error'})
       }
       // reset();

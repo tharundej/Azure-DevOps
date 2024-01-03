@@ -1,7 +1,18 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect } from 'react';
 // @mui
-import { Typography,Avatar,Drawer, Stack,Box,Grid , Button, IconButton, Divider} from '@mui/material';
+import {
+  Typography,
+  Avatar,
+  Drawer,
+  Stack,
+  Box,
+  Grid,
+  Button,
+  IconButton,
+  Divider,
+  Menu,
+} from '@mui/material';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useMockedUser } from 'src/hooks/use-mocked-user';
@@ -20,44 +31,65 @@ import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { AccountPopover, NavToggleButton, NavUpgrade } from '../_common';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import AutocompletePage from 'src/pages/components/mui/autocomplete';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import Iconify from 'src/components/iconify/iconify';
+import MenuItem from '@mui/material/MenuItem';
+import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export default function NavVertical({ openNav, onCloseNav }) {
-  const { user } = useContext(UserContext)
+  const { user } = useContext(UserContext);
   const { logout } = useAuthContext();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const pathname = usePathname();
-const router = useRouter()
+  const router = useRouter();
+  const popover = usePopover();
   const lgUp = useResponsive('up', 'lg');
   const { enqueueSnackbar } = useSnackbar();
   const navData = useNavData();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const handleLogout = async () => {
     setConfirmLogout(true);
-   
   };
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
-    
   }, [pathname]);
 
   const handleCancelLogout = () => {
     setConfirmLogout(false);
-};
-const handleConfirmLogout = async()=>{
-  try {
-    await logout();
-    router.replace('/');
-  } catch (error) {
-    console.error(error);
-    enqueueSnackbar('Unable to logout!', { variant: 'error' });
-  }
-  setConfirmLogout(false)
-     
-
+  };
+  const handleConfirmLogout = async () => {
+    try {
+      await logout();
+      router.replace('/');
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
+    setConfirmLogout(false);
+  };
+const handleClickItem=()=>{
+  router.push(paths.dashboard.personal.root)
 }
-
+  const OPTIONS = [
+    {
+      label: 'Personal',
+      linkTo: '/dashboard/personal',
+    },
+  ];
   const renderContent = (
     <Scrollbar
       sx={{
@@ -69,24 +101,23 @@ const handleConfirmLogout = async()=>{
         },
       }}
     >
-     <Grid sx={{display:'flex',mt:1.5,ml:4}}>
-     <Logo />
-     <Typography variant="subtitle2" sx={{ml:2}}>
-     {user?.companyName && user.companyName.length > 15
-  ? user.companyName.substring(0, 15) + '...'
-  : user?.companyName}
-          </Typography>
-      </Grid> 
-      <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
+      <Grid sx={{ display: 'flex', mt: 1.5, ml: 4 }}>
+        <Logo />
+        <Typography variant="subtitle2" sx={{ ml: 2, wordWrap: 'break-word' }}>
+          {user?.companyName}
+        </Typography>
+      </Grid>
+      <Divider sx={{ borderStyle: 'dashed', mt: 1 }} />
 
-      <Grid sx={{display:"flex",minHeight:'50px'}}>
-      <Avatar
+      <Grid sx={{ display: 'flex', minHeight: '50px' }}>
+        <Avatar
           src={user?.photoURL}
           alt={user?.displayName}
           sx={{
             width: 36,
             height: 36,
-            ml:4,mt:2,
+            ml: 4,
+            mt: 2,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
@@ -99,12 +130,43 @@ const handleConfirmLogout = async()=>{
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.roleName}
           </Typography>
-          </Box>
-        <Button size="small" sx={{marginTop:2}} onClick={handleLogout}><PowerSettingsNewIcon sx={{color:'red'}}/></Button>
-        </Grid>
-        <Divider sx={{ borderStyle: 'dashed',mt:1 }}/>
+        </Box>
 
-        <ConfirmationDialog
+        <Stack sx={{ p: 1 }}>
+          <IconButton onClick={handleOpenMenu}>
+            <Iconify icon="mingcute:down-fill"  />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+            {OPTIONS.map((option) => (
+              <MenuItem
+                key={option.label}
+                onClick={() => {
+                  handleClickItem(option.linkTo);
+                  handleCloseMenu();
+                }} 
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+            <MenuItem
+              onClick={handleLogout}
+              sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
+              style={{ padding: 0, margin: 0 }}
+            >
+              <Button
+                startIcon={<PowerSettingsNewIcon />}
+                variant="contained"
+                color="error"
+                style={{ width: '100%', borderRadius: 0 }}
+              >
+                LOGOUT
+              </Button>
+            </MenuItem>
+          </Menu>
+        </Stack>
+      </Grid>
+      <Divider sx={{ borderStyle: 'dashed', mt: 1 }} />
+      <ConfirmationDialog
         open={confirmLogout}
         onClose={handleCancelLogout}
         onConfirm={handleConfirmLogout}
@@ -116,7 +178,7 @@ const handleConfirmLogout = async()=>{
       <NavSectionVertical
         data={navData}
         config={{
-          currentRole: user?.role || 'admin', 
+          currentRole: user?.role || 'admin',
         }}
       />
 

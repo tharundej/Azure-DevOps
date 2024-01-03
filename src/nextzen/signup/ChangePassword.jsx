@@ -111,15 +111,11 @@ export default function ChangePassword() {
   });
   const renderHead = (
     <>
-      <PasswordIcon sx={{ height: 96 }} />
+      <PasswordIcon sx={{ height: 66 }} />
 
       <Stack spacing={1} sx={{ my: 1 }}>
         <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-          <Typography variant="h3">Change your password</Typography>
-
-          {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter your email to request a password reset OTP.
-          </Typography> */}
+          <Typography variant="h6">Change your password</Typography>
         </Grid>
       </Stack>
     </>
@@ -152,20 +148,11 @@ export default function ChangePassword() {
       </Snackbar>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         {renderHead}
-        {/* <Container
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '10vh',
-          //  width:'100vh'
-        }}
-      > */}
         <Stack
           spacing={3}
           alignItems="center"
           sx={{
-            maxWidth: '400px',
+            maxWidth: '300px',
             mx: 'auto', // Center horizontally
             my: 'auto',
           }}
@@ -231,7 +218,7 @@ export default function ChangePassword() {
           </Button>
           <Link
             component={RouterLink}
-            href={paths.auth.jwt.login}
+            href={paths.dashboard.root}
             color="inherit"
             variant="subtitle2"
             sx={{
@@ -240,7 +227,7 @@ export default function ChangePassword() {
             }}
           >
             <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-            Return to Login
+            Return to Dashboard
           </Link>
         </Stack>
         {/* </Container> */}

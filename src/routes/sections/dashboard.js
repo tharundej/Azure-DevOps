@@ -683,7 +683,8 @@ export const dashboardRoutes = [
     </AuthGuard>
   ),
   children: [
-    { element: <Organizationchart/> ,index:true },
+    { element: <Personal/> ,index:true },
+    {path:'Organizationchart', element: <Organizationchart/> },
 ],
 },
 ];

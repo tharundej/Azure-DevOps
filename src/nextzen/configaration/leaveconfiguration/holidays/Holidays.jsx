@@ -29,7 +29,6 @@ import Button from '@mui/material/Button';
 import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { useSnackbar } from 'notistack';
-import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 
 export default function Holidays({ currentUser }) {
   const {enqueueSnackbar} = useSnackbar()
@@ -40,15 +39,6 @@ export default function Holidays({ currentUser }) {
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState({});
   const [count, setCount] = useState(0);
-  const [del, setDel] = React.useState({ })
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const handleCancelDelete = () => {
-    setDel(null);
-    setConfirmDeleteOpen(false);
-  };
-  const handleDeleteConformed = () => {
-    deleteFunction(del)
-  }
   // const getLocations = location.map((name)=>name.locationName);
   const TABLE_HEAD = [
     { id: 'holidayName', label: 'Holiday Name', type: 'text', minWidth: 180 },
@@ -59,7 +49,7 @@ export default function Holidays({ currentUser }) {
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
-     { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj', endpoint: '/' },
+    //  { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj', endpoint: '/' },
   ];
   // const bodyContent = [
   //   {
@@ -104,13 +94,7 @@ export default function Holidays({ currentUser }) {
       handleOpenEdit();
       buttonFunction(values, event);
     } else if (event?.name === 'Delete') {
-      // setDel(prevState => ({
-      //   ...prevState,
-      //   holidayID: rowdata?.holidayID
-      //   ,
-      // }));
-      setConfirmDeleteOpen(true);
-       deleteFunction(rowdata, event);
+      deleteFunction(rowdata, event);
     }
   };
   const buttonFunction = (rowdata) => {
@@ -122,23 +106,29 @@ export default function Holidays({ currentUser }) {
     console.log('iam here ');
     try {
       console.log(rowdata, 'rowData:::::');
-     const payload ={
-      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      holidayID: 0,
-     }
-      const response = await axios.post(baseUrl + '/deleteHoliday', payload);
+      const data = {
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+        holidayID: rowdata.holidayID,
+      };
+      const response = await axios.post(baseUrl + '/deleteHoliday', data);
       if (response?.data?.code === 200) {
-       
-        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
         handleCloseEdit();
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
         console.log('sucess', response);
       }
     } catch (error) {
-       enqueueSnackbar("Something Went Wrong",{variant:'error'})
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
+      setSnackbarOpen(true);
       handleCloseEdit();
       console.log('error', error);
     }
@@ -322,6 +312,7 @@ console.log(extractedLocationIDs,'lllll')
         // setSnackbarSeverity('success');
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
         handleCloseEdit();
         setCount(count + 1);
         console.log('sucess', response);
@@ -477,13 +468,6 @@ console.log(extractedLocationIDs,'lllll')
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <ConfirmationDialog
-        open={confirmDeleteOpen}
-        onClose={handleCancelDelete}
-        onConfirm={handleDeleteConformed}
-        itemName="Delete Holiday "
-        message={`Are you sure you want to delete Holiday`}
-      />
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/getallHoliday"
