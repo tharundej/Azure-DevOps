@@ -344,6 +344,7 @@ else {
             sx={{ width: '100%', paddingLeft: '3px' }}
             label="Start Date"
             value={datesUsed?.start_date}
+            minDate={dayjs(new Date())}
             defaultValue={dayjs(new Date())}
             onChange={(newValue) => {
               setDatesUsed((prev) => ({
