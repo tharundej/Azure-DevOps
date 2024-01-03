@@ -182,7 +182,7 @@ const handleCallSnackbar=(message,severity)=>{
         ) : (
           <>
             {activeStep + 1 === 1 && (
-             <GeneralInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            <GeneralInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
             
             )}
             {activeStep + 1 === 2 && (

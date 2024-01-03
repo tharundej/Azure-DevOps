@@ -334,7 +334,7 @@ const PreExperience = forwardRef((props, ref) => {
     }
   }
   return (
-    <Stack sx={{ paddingTop: '20px' }}>
+    // <Stack sx={{ paddingTop: '20px' }}>
       <form style={{ padding: '4px' }}>
         <>
           {defaultValues?.map((item, index) => (
@@ -569,7 +569,7 @@ sx={{ width: '100%', '& input': { width: '100%' } }}
         Submit
       </Button> */}
       </form>
-    </Stack>
+    // </Stack>
   );
 });
 PreExperience.propTypes = {
