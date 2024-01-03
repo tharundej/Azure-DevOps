@@ -1,0 +1,434 @@
+import PropTypes, { element } from 'prop-types';
+
+import React, { useEffect, useState, useCallback } from 'react';
+
+import { styled } from '@mui/system';
+
+import FormProvider, { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import {
+  Card,
+  TextField,
+  InputAdornment,
+  Autocomplete,
+  Grid,
+  Button,
+  Drawer,
+  IconButton,
+  Stack,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from '@mui/material';
+
+import Iconify from 'src/components/iconify/iconify';
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import dayjs from 'dayjs';
+
+import Dialog from '@mui/material/Dialog';
+
+import DialogTitle from '@mui/material/DialogTitle';
+import Badge from '@mui/material/Badge';
+import { Today } from '@mui/icons-material';
+
+import { useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+// import './ShiftFilter.css'
+
+import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+
+import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
+import PayScheduleform from './PayScheduleform';
+import { payScheduleType } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
+import GeneralForminfo from './GeneralForminfo';
+
+const defaultFilters = {
+  name: '',
+  type: [],
+  startDate: null,
+  endDate: null,
+};
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+    overflow: 'hidden',
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+export default function PayScheduleFilters({ filterData, filterOptions,searchData ,getTableData }) {
+  const theme = useTheme();
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+  ];
+  
+  const employmentTypes=[
+    'Permanent',
+    'contract'
+  ];
+  // const payscheduleTypes=[
+  //   '52-Once a week',
+  //   '26-Once in a two weeks',
+  // ];  
+  const [payscheduleTypes, setPayscheduleTypes] = useState([])
+  useEffect(() => {
+    async function call() {
+      const arr = await payScheduleType();
+      console.log(arr, 'sairam');
+      setPayscheduleTypes(arr);
+    }
+    call();
+  }, []);
+  const [dropdown, setDropdown] = useState({});
+  const [badgeContent, setBadgeContent] = useState(false);
+  const [dateError, setDataError] = useState('');
+  const [filters, setFilters] = useState(defaultFilters);
+  const [personName, setPersonName] = React.useState([]);
+
+  const [dropdownEmployemtType, setDropdownEmployemtType] = useState([]);
+  const [dropdownshift_name, setDropdownStatus] = useState([]);
+  const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
+  const [dropdownpayscheduleType, setdropdownpayscheduleType] = useState([]);
+  const [dropdownemploymentType, setdropdownemploymentType] = useState([]);
+
+  const [datesFiledArray, setDatesFiledArray] = useState([
+    {
+      field: 'date_activity',
+      from: 'from_date',
+      to: 'to_date',
+    },
+  ]);
+
+  const [dropdownFiledArray, setDropdownFiledArray] = useState([
+    {
+      field: 'designation_grade_name',
+      options: [],
+    },
+    {
+      field: 'payscheduleType',
+      options: [],
+    },
+    {
+      field: 'employmentType',
+      options: [],
+    },
+  ]);
+  const [formData, setFormData] = useState({});
+
+  const [datesSavedArray, setDatesSavedArray] = useState([
+    'from_date',
+    'to_date',
+    'offer_date_from',
+    'offer_date_to',
+  ]);
+  const [datesData, setDatesData] = useState([]);
+
+  const [dates, setDates] = useState({
+    from_date: null,
+    to_date: null,
+  });
+
+  function formDateDataStructure() {
+    return new Promise((resolve) => {
+      const arr1 = {};
+      datesFiledArray.forEach((item, index) => {
+        arr1[item.field] = {
+          from: formatDateToYYYYMMDD(dates[item?.from]),
+          to: formatDateToYYYYMMDD(dates[item?.to]),
+        };
+        //  const obj={
+        //    filed_name:item?.field,
+        //    from:dates[item?.from],
+        //    to:dates[item?.to]
+        //  }
+        //  arr1.push(obj);
+      });
+      setDatesData(arr1);
+      resolve(arr1);
+    });
+  }
+
+  function formWithDropdown() {
+    return new Promise((resolve) => {
+      const arr1 = [];
+      console.log(dropdown?.payscheduleType,'ppoooo')
+      dropdown?.payscheduleType?.forEach((item, index) => {
+        arr1.push(item?.payScheduleType);
+      });
+      resolve(arr1);
+    });
+  }
+
+  const [open, setOpen] = useState(false);
+  const [openDateRange, setOpendateRange] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickClose = () => {
+    setOpen(false);
+  };
+  const [dropdownValues, setDropdownValues] = useState({
+    employmentType: [],
+    payScheduleType: []
+  });
+  // const handleChangeDropDown = (event, field) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+  
+  //   setDropdownValues((prevValues) => ({
+  //     ...prevValues,
+  //     [field]: value,
+  //   }));
+  // };
+  const handleChangeDropDown = (field, newValue) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: newValue,
+    }));
+  };
+  
+  const handleSearch = (searchTerm) => {
+     
+    searchData(searchTerm)
+    console.log(searchTerm,"search ........")
+    };
+
+
+    console.log("filterData " , formData)
+    const handleApply = async () => {
+      const obj = {
+        payScheduleType: formData?.payScheduleType,
+        employmentType: formData?.employmentType
+      };
+      filterData(obj);
+      handleClickClose();
+    };
+    
+    const [options, setOptions] = useState({});
+    useEffect(() => {
+      if (open) {
+        async function call() {
+          try {
+            const Obj = {
+              companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+            };
+            const payScheduleTypees = await payScheduleType(Obj);
+            var optionsArr = { ...options };
+  
+            optionsArr.payScheduleType = payScheduleTypees;
+            // optionsArr.payScheduleTypeType=desgination;
+            console.log(optionsArr, 'optionsArr');
+  
+            setOptions(optionsArr);
+          } catch (error) {}
+        }
+        call();
+      }
+    }, [open]);
+  return (
+    <>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="flex-end"
+        direction="row"
+        style={{ marginBottom: '1rem' }}
+      >
+        <Grid item md={8} xs={8}>
+        <TextField
+            placeholder="Search...."
+             fullWidth
+             onChange={(e) => handleSearch(e.target.value)}
+          />
+          
+        </Grid>
+        <Grid item md={2} xs={2}>
+        <PayScheduleform getTableData={getTableData}/>
+        </Grid>
+        <Grid item md={2} xs={2} >
+        {/* <Grid>
+            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+           
+              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+                <Iconify icon="mi:filter" />
+              </Button>
+            </Stack>
+          </Grid> */}
+          
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
+        </Grid>
+      </Grid>
+
+      <BootstrapDialog
+        onClose={handleClickClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        // className="custom-dialog-width"
+      >
+       <DialogTitle sx={{ paddingBottom: 0, paddingTop: 2 }}>
+          Filters
+          {/* <Button onClick={()=>setOpen(false)} sx={{float:"right"}}><Iconify icon="iconamoon:close-thin"/></Button> */}
+          <CancelOutlinedIcon
+            sx={{ cursor: 'pointer', float: 'right' }}
+            onClick={() => setOpen(false)}
+          />
+        </DialogTitle>
+
+      
+        {/* new DIlog content  */}
+        <DialogContent sx={{ minWidth: '300px' }}>
+          <Grid
+            container
+            spacing={1}
+            sx={{
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '1rem',
+            }}
+            item
+          >
+                 <Grid item xs={6}>
+              <Autocomplete
+                disablePortal
+                name="employmentType"
+                id="combo-box-demo"
+                options={employmentTypes?.map((type) => type)}
+                value={formData?.employmentType}
+               
+                onChange={(_, newValue) => handleChangeDropDown('employmentType', newValue)}
+                renderInput={(params) => <TextField {...params} label="Employee Type" />}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {/* <Autocomplete
+                disablePortal
+                name="payScheduletype"
+                id="combo-box-demo"
+                options={payscheduleTypes?.map((type) => type)}
+                value={formData?.payScheduleType}
+                onChange={(event, newValue, selectedOption) =>
+                  handleChangeDropDown('payScheduleType', newValue, selectedOption)
+                }
+                renderInput={(params) => <TextField {...params} label="Pay Schedule Type" />}
+              /> */}
+
+<Autocomplete
+  disablePortal
+  name="payScheduleType"
+  id="combo-box-demo"
+  options={payscheduleTypes?.map((type) => type.payScheduletype)}
+  value={formData?.payScheduleType}
+  onChange={(_, newValue) => handleChangeDropDown('payScheduleType', newValue)}
+  renderInput={(params) => <TextField {...params} label="Pay Schedule Type" />}
+/>
+            </Grid>
+           
+          </Grid>
+        </DialogContent>
+        <div style={{ marginBottom: 12, marginTop: 4 }}>
+          {' '}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: 'right', marginRight: 2 }}
+            onClick={() => {
+              handleApply();
+            }}
+          >
+            Apply
+          </Button>
+          <Button
+            sx={{ float: 'right', right: 15 }}
+            variant="outlined"
+            onClick={() => 
+              handleClickClose()
+            }
+          >
+            Close
+          </Button>
+        </div>
+      </BootstrapDialog>
+    </>
+  );
+}
+
+// PayScheduleFilters.propTypes={
+//     handleFilters: PropTypes.any,
+// }
+PayScheduleFilters.propTypes = {
+  filterData: PropTypes.func,
+  searchData: PropTypes.any,
+};
+
+PayScheduleFilters.propTypes = {
+  filterOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      fieldName: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+    })
+  ),
+};
