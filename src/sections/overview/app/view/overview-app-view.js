@@ -141,8 +141,8 @@ axios.request(config)
                console.log(error);
            });
           console.log("🚀 ~ file: overview-app-view.js:133 ~ getAvailableLeave ~ instance:", axios.defaults.baseURL)
-          // const response = await instance.post('/availableLeave',data)
-          // setAvailableLeaveData(response?.data?.balances)
+          const response = await instance.post('/availableLeave',data)
+          setAvailableLeaveData(response?.data?.data)
         }catch(error){
           console.log("Error",error)
           throw error;
