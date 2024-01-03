@@ -33,7 +33,12 @@ import { createExpensesAPI, updateExpensesAPI } from 'src/api/Accounts/Expenses'
 import ModalHeader from '../global/modalheader/ModalHeader';
 import SnackBarComponent from '../global/SnackBarComponent';
 
-export default function CreateExpenses({ currentData, handleClose, handleCountChange }) {
+export default function CreateExpenses({
+  currentData,
+  handleClose,
+  handleCountChange,
+  getTableData,
+}) {
   const { user } = useContext(UserContext);
   const NewUserSchema = Yup.object().shape({
     invoiceNO: Yup.string()
@@ -129,7 +134,7 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
       } else {
         response = await createExpensesAPI(data);
       }
-      if (handleCountChange) handleCountChange();
+      handleCountChange ? handleCountChange() : getTableData();
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
@@ -174,10 +179,10 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
   };
   const HandleInputChangeFuel = (e) => {
     setValue(e?.target?.name, e?.target?.value);
-  
+
     const parsedTotalLiter = parseFloat(watch('totalLiter')) || 0;
     const parsedRatePerLiter = parseFloat(watch('ratePerLiter')) || 0;
-  
+
     // Update the totalAmount based on the calculation
     setValue('totalAmount', parsedTotalLiter * parsedRatePerLiter);
   };
@@ -323,12 +328,12 @@ export default function CreateExpenses({ currentData, handleClose, handleCountCh
                     e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
                   }}
                 />
-                  <RHFTextField
+                <RHFTextField
                   type="number"
                   onChange={(e) => HandleInputChangeFuel(e)}
-  name="ratePerLiter"  
-  label="Rate Per Liter"
-  defaultValue={0}
+                  name="ratePerLiter"
+                  label="Price Per Liter"
+                  defaultValue={0}
                   // inputProps={{
                   //   maxLength: 10,
                   //   pattern: '^[0-9]*$',

@@ -13,9 +13,16 @@ import { fToNow } from 'src/utils/format-time';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { formatDateBirthday,formatDateToYYYYMMDD,formatDate } from 'src/nextzen/global/GetDateFormat';
+import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
 // ----------------------------------------------------------------------
 
 export default function LeaveRequest({ title, subheader, list, ...other }) {
+
+  const router = useRouter()
+  const handleViewAll=()=>{
+     router.push(paths.dashboard.leave.leave)
+  }
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 1 }} />
@@ -30,6 +37,7 @@ export default function LeaveRequest({ title, subheader, list, ...other }) {
         <Button
           size="small"
           color="inherit"
+          onClick={handleViewAll}
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
         >
           View All

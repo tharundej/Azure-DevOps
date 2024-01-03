@@ -7,7 +7,7 @@ import UserContext from '../context/user/UserConext';
 import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
 import CreateExpenses from './CreateExpenses';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { Box, Card , CardContent, Dialog, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Dialog, Grid, Typography } from '@mui/material';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { update } from 'lodash';
 import { baseUrl } from '../global/BaseUrl';
@@ -20,8 +20,8 @@ export default function Fuel({ updateTotalExpense }) {
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const [count, setCount] = useState(0);
-  const [expenseData ,setExpenseData] = useState()
- 
+  const [expenseData, setExpenseData] = useState();
+
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -90,7 +90,7 @@ export default function Fuel({ updateTotalExpense }) {
   const [filterOptions, setFilterOptions] = useState({});
 
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
@@ -103,7 +103,7 @@ export default function Fuel({ updateTotalExpense }) {
         fromDate: '',
         toDate: '',
       },
-      expenseType: 'Fuel',
+      expenseType: '',
       locationName: '',
       invoiceNO: '',
       paymentStatus: '',
@@ -115,6 +115,7 @@ export default function Fuel({ updateTotalExpense }) {
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
+    { id: 'expenseType', label: 'Expense Type', type: 'text', minWidth: '180px' },
     { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
     { id: 'expenseDate', label: 'Expense Date', type: 'text', minWidth: '180px' },
     { id: 'vehicleRegNO', label: 'Vehicle Number', type: 'text', minWidth: '180px' },
@@ -129,49 +130,44 @@ export default function Fuel({ updateTotalExpense }) {
     { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
   ]);
 
-  console.log(user ,"user")
+  console.log(user, 'user');
 
-  const updateTotalState=(obj)=>{
-    updateTotalExpense(obj)
+  const updateTotalState = (obj) => {
+    updateTotalExpense(obj);
+  };
+  const ApiHitUpdate = async () => {
+    const payload = defaultPayload;
 
-  }
-  const ApiHitUpdate =async()=>{
-   
-      const payload = defaultPayload
-     
-      const config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: baseUrl + '/listExpenses',
-        headers: {
-          Authorization:  user?.accessToken ,
-          'Content-Type': 'text/plain',
-        },
-        data: payload,
-      };
-      const result = await axios
-        .request(config)
-        .then((response) => {
-          if (response.status === 200) {
-            const rowsData = response?.data;
-            console.log(JSON.stringify(response.data));
-          updateTotalExpense(rowsData)
- 
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      console.log(result, 'resultsreults');
- 
-  }
-  useEffect(()=>{
-    console.log("useEffect called ")
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseUrl + '/listExpenses',
+      headers: {
+        Authorization: user?.accessToken,
+        'Content-Type': 'text/plain',
+      },
+      data: payload,
+    };
+    const result = await axios
+      .request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const rowsData = response?.data;
+          console.log(JSON.stringify(response.data));
+          updateTotalExpense(rowsData);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(result, 'resultsreults');
+  };
+  useEffect(() => {
+    console.log('useEffect called ');
     ApiHitUpdate();
-  } ,[])
+  }, []);
   return (
     <>
-    
       <SnackBarComponent
         open={openSnackbar}
         severity={severity}
@@ -206,9 +202,7 @@ export default function Fuel({ updateTotalExpense }) {
       <Helmet>
         <title> Dashboard: Fuel Expenses</title>
       </Helmet>
-     
 
-      
       <BasicTable
         headerData={TABLE_HEAD}
         endpoint="/listExpenses"

@@ -192,13 +192,9 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
 
   function formWithDropdown() {
     return new Promise((resolve) => {
-      const arr1 = {};
-      console.log(dropdown?.payScheduleType,'ppoooo')
-      // arr1.payScheduleType=dropdown?.payScheduleType?.join(',') || "";
-      // arr1.employmentType=dropdown?.employmentType?.join(',') || "";
-      
-
-      dropdown?.payScheduleType?.forEach((item, index) => {
+      const arr1 = [];
+      console.log(dropdown?.payscheduleType,'ppoooo')
+      dropdown?.payscheduleType?.forEach((item, index) => {
         arr1.push(item?.payScheduleType);
       });
       resolve(arr1);
@@ -233,7 +229,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     } else if (field === 'payScheduletype') {
       console.log(value,'ppppp')
       setdropdownpayscheduleType(value);
-      const obj = {...dropdown};
+      const obj = dropdown;
       obj[field] = value;
       setDropdown(obj);
     } else if (field === 'employmentType') {
@@ -256,7 +252,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     const handleApply = async () => {
  
       const data = await formWithDropdown();
-  
+  console.log('jii',data)
     const comma = data.join(',');
       const obj = {
         payScheduleType: comma,
@@ -375,7 +371,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {payscheduleTypes.map((name,index) => (
+                      {payscheduleTypes?.map((name,index) => (
                         <MenuItem
                           key={index}
                           value={name?.payScheduletype}

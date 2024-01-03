@@ -48,7 +48,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 export default function AddDesignationGradeConfig({
   currentUser,
   handleCloseAddRoleDilog,
-  openAddRoleConfig,
+  openAddRoleConfig,getTableData
 }) {
   const [commaSeparatedString, setCommaSepaatedString] = useState('');
   const [datesUsed, setDatesUsed] = useState({
@@ -292,7 +292,7 @@ const {enqueueSnackbar} = useSnackbar()
       .then((response) => {
         if (response.data.code === 200) {
           enqueueSnackbar(response?.data?.message,{variant:'success'})
-       
+          getTableData()
           setHitGetDepartment(!hitGetDepartment);
           handleClose();
           console.log('success');

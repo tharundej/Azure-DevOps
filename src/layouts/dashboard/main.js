@@ -10,7 +10,7 @@ import { HEADER, NAV } from '../config-layout';
 
 // ----------------------------------------------------------------------
 
-const SPACING = 8;
+const SPACING = 0;
 
 export default function Main({ children, sx, ...other }) {
   const settings = useSettingsContext();
@@ -50,10 +50,11 @@ export default function Main({ children, sx, ...other }) {
         minHeight: 1,
         display: 'flex',
         flexDirection: 'column',
+        marginLeft:'10px',
         py: `${HEADER.H_MOBILE + SPACING}px`,
         ...(lgUp && {
-          px: 2,
-          py: `${HEADER.H_DESKTOP + SPACING}px`,
+          // px: 2,
+          // py: `${HEADER.H_DESKTOP + SPACING}px`,
           width: `calc(100% - ${NAV.W_VERTICAL}px)`,
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_MINI}px)`,

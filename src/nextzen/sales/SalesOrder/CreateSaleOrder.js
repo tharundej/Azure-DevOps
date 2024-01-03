@@ -56,7 +56,6 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       grossTotalAmount: currentData?.grossTotalAmount || 0,
       gstAmount: currentData?.gstAmount || 0,
       advanceAmount: currentData?.advanceAmount || '',
-      vendorId: currentData?.vendorId || '',
       customerID: currentData?.customerID || '',
       // company_phone_no: currentData?.company_phone_no || '6284824092',
     }),
@@ -123,13 +122,14 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
       const response = await getProductListAPI(data);
       setProductOptions(response);
       setSelectedProduct(
-        defaultValues.productId || (response.length > 0 ? response[0].productId : null)
+       response.length > 0 ? response[0].productId : null
       );
     } catch (error) {
       setErrorMessage(error.message);
       console.log('API request failed:', error.message);
     }
   };
+// defaultValues.productId ||
   const fetchCustomer = async () => {
     const data = {
       companyId: user?.companyID ? user?.companyID : '',
@@ -192,10 +192,12 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
   };
-  const HandleDropDownChange = (selectedValue, fieldName, index, gstRate, price) => {
+  const HandleDropDownChange = (selectedValue, fieldName, index, gstRate, hsnId, ) => {
     setValue(fieldName, selectedValue);
     if (gstRate) {
       // setValue(`orderProduct[${index}].rate`, price ? price : 0);
+      setValue(`orderProduct[${index}].hsnCode`, hsnId? hsnId: 0);
+      setValue(`orderProduct[${index}].gstRate`, gstRate ? gstRate : 0);
       setValue(`orderProduct[${index}].gstRate`, gstRate ? gstRate : 0);
     }
   };
@@ -323,7 +325,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
             orderBy: 'hsnId',
           },
           page: 0,
-          count: 5,
+          count: 10,
         };
         setSelectedVendor(newValue.vendorID || 0);
         const vendorMaterialResponse = await getVendorMaterialListAPI(vendorMaterialPayload);
@@ -423,7 +425,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
         label="GST Rate"
         defaultValue={0}
         type="number"
-        onChange={(e) => HandleInputChange(e, index)}
+        // onChange={(e) => HandleInputChange(e, index)}
       />
       {/* <RHFTextField
         name={`orderProduct[${index}].gstAmount`}

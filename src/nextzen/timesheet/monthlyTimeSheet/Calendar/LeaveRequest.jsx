@@ -1,25 +1,25 @@
-import * as React from 'react';
+// import * as React from 'react';
 
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 
-import { _userList } from 'src/_mock';
+// import { _userList } from 'src/_mock';
 
-import ReusableTabs from '../../../tabs/ReusableTabs';
+// import ReusableTabs from '../../../tabs/ReusableTabs';
 
 
-import CalendarView from './view/calendarTimeSheet';
-import History from '../../LeaveHistory/LeaveHistory';
+// import CalendarView from './view/calendarTimeSheet';
+// import History from '../../LeaveHistory/LeaveHistory';
 
-export default function LeaveRequest() {
-  const tabLabels = ['Leave Schedule','Leave History'];
-  const tabContents = [
-    <div><CalendarView/></div>,
-    <div><History/></div>,
-  ];
+// export default function LeaveRequest() {
+//   const tabLabels = ['Leave Schedule','Leave History'];
+//   const tabContents = [
+//     <div><CalendarView/></div>,
+//     <div><History/></div>,
+//   ];
 
-  return (
+//   return (
     
-      <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom: "none !important" }}/>
+//       <ReusableTabs tabLabels={tabLabels} tabContents={tabContents} tabsSx={{ borderBottom: "none !important" }}/>
 
-  );
-}
+//   );
+// }

@@ -317,7 +317,7 @@ const actions = [
       </DialogContent>
       <Grid container alignItems="flex-end" justifyContent="flex-end" margin="5px">
       <Grid marginRight="15px" item>
-      <Button variant="contained"  onClick={()=>{setGroupname("");handleModalClose()}} >
+      <Button variant="outlined"  onClick={()=>{setGroupname("");handleModalClose()}} >
         Cancel
       </Button></Grid>
       <Grid item>

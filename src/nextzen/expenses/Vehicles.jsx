@@ -92,7 +92,7 @@ export default function Vehicle({updateTotalExpense}) {
   };
   const [filterOptions, setFilterOptions] = useState({});
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',

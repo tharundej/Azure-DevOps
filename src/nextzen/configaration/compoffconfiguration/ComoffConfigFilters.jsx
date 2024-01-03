@@ -89,7 +89,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ComoffConfigFilters({ filterData, filterOptions ,filterSearch,searchData}) {
+export default function ComoffConfigFilters({ filterData, filterOptions ,filterSearch,searchData,getTableData }) {
   const theme = useTheme();
   const compensantoryPoliciess = [
     'Leave',
@@ -270,7 +270,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
           
         </Grid>
         <Grid item  md={4} xs={4}>
-            <ComoffConfigurationForm/>
+            <ComoffConfigurationForm getTableData={getTableData}/>
        </Grid>
         <Grid item  md={2} xs={4}>
         <Grid>

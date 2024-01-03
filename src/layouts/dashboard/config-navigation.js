@@ -104,6 +104,20 @@ export function useNavData() {
       path: paths.dashboard.leave.root,
       icon: ICONS.g_leaveManagement,
       key: 'leaveManagement',
+       children: [
+       
+        {
+          title: t('Leave'),
+          path: paths.dashboard.leave.leave,
+        },
+        {
+          title: t('Compoff'),
+          path: paths.dashboard.leave.compoff,
+        },
+       
+        
+      ],
+    
     },
     {
       title: t('Time Sheet Management'),
@@ -141,6 +155,13 @@ export function useNavData() {
       icon: ICONS.g_itDeclarations,
       key: 'itDeclaration',
       name: 'IT Declaration',
+    },
+    {
+      title: t('IT Declaration v2'),
+      path: paths.dashboard.itdeclarationv2.root,
+      icon: ICONS.g_itDeclarations,
+      key: 'itDeclarationV2',
+      name: 'IT Declaration V2',
     },
     {
       title: t('Monthly Additions and Deductions'),

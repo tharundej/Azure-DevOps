@@ -155,9 +155,13 @@ export const paths = {
     itdeclaration: {
       root: `/itdeclaration`,
     },
+    itdeclarationv2: {
+      root: `/itdeclarationv2`,
+    },
     leave: {
       root: `/leave`,
-     
+      compoff: `/leave/compoff`,
+      leave: `/leave/leave`,
     },
  
     timesheet: {
@@ -169,8 +173,8 @@ export const paths = {
  
     claims: {
       root: `/claims`,
-      compoffapprove: `/claims/compoffapprove`,
-      mycompoff: `/claims/ mycompoff`,
+      
+     
     },
  
     payroll: {

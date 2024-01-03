@@ -21,8 +21,8 @@ function ReusableTabs({ tabLabels, tabContents, changeOfTab,tabsSx }) {
   };
   
   return (
-    <Box>
-    <Box>
+    <Box >
+    <Box >
     <Tabs 
     value={value} 
     onChange={handleChange} 

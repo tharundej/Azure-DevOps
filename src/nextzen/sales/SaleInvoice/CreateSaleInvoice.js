@@ -21,6 +21,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { createSalesInvoiceAPI, editSalesInvoiceAPI } from 'src/api/Accounts/SalesInvoice';
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 export default function CreateSaleInvoice({ currentData, handleClose }) {
   const { user } = useContext(UserContext);
@@ -32,11 +34,12 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
   const defaultValues = useMemo(
     () => ({
       ProductName: currentData?.ProductName || '',
+      salesOrderId: currentData?.salesOrderId || 0,
       ProductCategory: currentData?.ProductCategory || '',
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
-      companyId: user?.companyID ? user?.companyID : '',
-      salesOrderNo: currentData?.salesOrderNo || '',
+      SalesOrderNo: currentData?.SalesOrderNo || '',
+      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
     }),
     [currentData]
   );
@@ -80,6 +83,32 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
     setValue(`addPurchaseMaterial[${index}].amount`, amount);
     setValue(`addPurchaseMaterial[${index}].gstAmount`, gstAmount);
     setValue(`addPurchaseMaterial[${index}].totalAmount`, amount + gstAmount);
+  };
+  const handleSalesInvoiceChange = async (event, newValue) => {
+    console.log('newValue', newValue);
+    try {
+
+        setValue('SalesOrderNo', newValue?.salesOrderNo);
+        setValue('billToName', newValue?.customerCompanyName);
+        setValue('billToGST', newValue?.customerGstNo);
+        setValue('billToAddress', newValue?.customerAddressLine1);
+        setValue('billToPincode', newValue?.pincode);
+        setValue('billToStateCode', newValue?.stateCode);
+        setValue('billToState', newValue?.state);
+        // setValue('billToAddress', newValue?.customerAddressLine1);
+        // setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+        // setValue('locationId', response?.locationId ? response?.locationId : 0);
+        // setValue('VendorName', response?.vendorName);
+        // setValue('VendorAddress', response?.vendorAddress);
+        // setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+        const materialArray = Object.values(newValue?.purchaseMaterial || {});
+        setContentList(materialArray);
+        console.log(materialArray);
+
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
   };
 
 
@@ -151,25 +180,91 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
   //     handleCallSnackbar(error.message, 'warning');
   //   }
   // };
-
   const onSubmit = handleSubmit(async (data) => {
     console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
     console.log('uyfgv');
     try {
-      console.log(data, 'data111ugsghghh');
+      // console.log(data, 'data111ugsghghh');
 
-      const response = await instance.post('addPurchaseOrder', data).then(
-        (successData) => {
-          console.log('sucess', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-        }
-      );
+      // const response = await instance.post('AddSalesOrder', data).then(
+      //   (successData) => {
+      //     console.log('sucess', successData);
+      //   },
+      //   (error) => {
+      //     console.log('lllll', error);
+      //   }
+      // );
+      // data.locationPhone = parseInt(data.locationPhone);
+      // data.locationPincode = parseInt(data.locationPincode);
+      data.salesOrderNo = parseInt(data.SalesOrderNo);
+      data.billToStateCode = parseInt(data.billToStateCode);
+      data.shipToPincode = parseInt(data.shipToPincode);
+      data.shipToStateCode = parseInt(data.shipToStateCode);
+      data.grossTotalAmount = parseInt(data.grossTotalAmount);
+      data.gstAmount = parseInt(data.gstAmount);
+      data.advanceAmount = parseInt(data.advanceAmount);
+
+      data?.productList?.forEach((product, index) => {
+        data.productList[index].productId = parseInt(product.productId) || 0;
+        data.productList[index].quantity = parseFloat(product.quantity) || 0;
+        data.productList[index].rate = parseFloat(product.rate) || 0;
+        data.productList[index].amount = parseFloat(product.amount) || 0;
+        data.orderProduct[index].gstRate = parseFloat(product.gstRate) || 0;
+        data.orderProduct[index].gstAmount = parseFloat(product.gstAmount) || 0;
+
+      });
+
+
+      // console.log('Create Factory Data', data);
+      // let response = await createSalesOrderAPI(data);
+      // if (currentData?.locationName) {
+      //   response = await updateFactoryAPI(data);
+      // } else {
+      //   response = await createFactoryAPI(data);
+      // }
+      let response = '';
+      if (currentData?.salesOrderNo) {
+        response = '';
+      } else {
+        response = await createSalesInvoiceAPI(data);
+      }
+      console.log('Create success', response);
+      handleCallSnackbar(response.message, 'success');
+      reset();
+      setTimeout(() => {
+        handleClose(); // Close the dialog on success
+      }, 1000);
+      // currentData?.locationName ? '' : getTableData();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      if (error.response) {
+        handleCallSnackbar(error.response.data.message, 'warning');
+        console.log('request failed:', error.response.data.message);
+      } else {
+        handleCallSnackbar(error.message, 'warning');
+        console.log('API request failed:', error.message);
+      }
     }
   });
+
+  // const onSubmit = handleSubmit(async (data) => {
+  //   console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
+  //   console.log('uyfgv');
+  //   try {
+  //     console.log(data, 'data111ugsghghh');
+
+  //     const response = await instance.post('addPurchaseOrder', data).then(
+  //       (successData) => {
+  //         console.log('sucess', successData);
+  //       },
+  //       (error) => {
+  //         console.log('lllll', error);
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
   const initialContent = (index) => (
     <Box
       key={index}
@@ -318,6 +413,12 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
     <div>
       <ModalHeader heading={"Add New Sales Invoice"} />
       <FormProvider methods={methods} onSubmit={onSubmit}>
+      <SnackBarComponent
+          open={openSnackbar}
+          onHandleCloseSnackbar={HandleCloseSnackbar}
+          snacbarMessage={snacbarMessage}
+          severity={severity}
+        />
         <DialogTitle>Add New Sales Invoice</DialogTitle>
 
         <DialogContent>
@@ -331,17 +432,18 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-             <RHFAutocomplete
-              name="poId"
-              id="poId"
+             {/* <RHFAutocomplete
+              name="salesOrderNo"
+              id="salesOrderNo"
               options={salesOrderOptions || []}
               // onChange={handlePurchaseOrderChange}
+              // onChange={handleSalesInvoiceChange}
               getOptionLabel={(option) => option.salesOrderNo}
               renderInput={(params) => (
                 <TextField {...params} label="Select SO Number" variant="outlined" />
               )}
-            />
-            <RHFTextField name="SO Number" label="SO Number" />
+            /> */}
+            <RHFTextField name="SalesOrderNo" label="SO Number" />
             <RHFTextField name="Invoice Number" label="Invoice Number" />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>

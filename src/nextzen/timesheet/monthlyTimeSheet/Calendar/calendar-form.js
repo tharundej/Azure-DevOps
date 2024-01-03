@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Box,Stack,Button,Tooltip,IconButton,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
+import {Box,Stack,Button,Tooltip,IconButton,Dialog,DialogActions,DialogContent,Typography,MenuItem,Card,Grid,CardContent, TextField} from '@mui/material';
 // utils
 import uuidv4 from 'src/utils/uuidv4';
 import { fTimestamp } from 'src/utils/format-time';
@@ -18,6 +18,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFTextField,RHFRadioGroup,RHFSelect, } from 'src/components/hook-form';
 import dayjs from 'dayjs';
+import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -30,6 +31,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { duration, styled } from '@mui/material/styles';
 import Label from 'src/components/label/label';
 import axios from 'axios';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { getAvailableLeaveAPI, getLeaveTypeAPI, getLossOfPayAPI } from 'src/api/HRMS/LeaveManagement';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -236,20 +238,12 @@ const [projectData,setProjectData]=useState(
 // }
 projectInfo
 )
-// useEffect(()=>{
-//   if (projectInfo){
-//     setProjectData(projectInfo)
-//   }
-// },[])
+
 console.log(projectInfo,"data from calendar time sheet",projectData,projectData?.projectID.length)
 //  to store data
 
 
-// const [projectDetails, setProjectDetails] = useState({
-//   employeeName:projectInfo?.employeeName,
-//   projectID:projectInfo?.projectID,
-//   todayDate:date?.start,
-// });
+
 
 // const editData=[
 //   ACCOUNTS={
@@ -278,21 +272,8 @@ console.log(projectInfo,"data from calendar time sheet",projectData,projectData?
 // });
 
 
-// const editData = [
-//   {
-//     ACCOUNTS: {
-//       hours: "sd",
-//       des: "dfer"
-//     }
-//   },
-//   {
-//     HRMS: {
-//       hours: "12",
-//       des: "23"
-//     }
-//   }
-// ];
-console.log(editData,"editttttttdata")
+
+console.log(editData,"editttttttdata",projectInfo)
 // const initialProjectDetails = {
 //   employeeName: projectInfo?.employeeName,
 //   projectID: [
@@ -309,12 +290,14 @@ console.log(editData,"editttttttdata")
 //   )
 // };
 
-
+const managerID = localStorage.getItem('reportingManagerID');
+   const employeeID = localStorage.getItem('employeeID');
+   const companyID = localStorage.getItem('companyID');
 // second method
 const initialProjectDetails = {
   // employeeName: projectInfo?.employeeName,
-  companyId: "COMP22",
-  employeeId:"GANG12",
+  companyId: companyID,
+  employeeId:projectInfo?.employeeId || employeeID,
   // projectID: [
   //   { "projectId": 1, "projectName": "ERP" },
   //   { "projectId": 3, "projectName": "ACCOUNTS" }
@@ -333,18 +316,18 @@ const initialProjectDetails = {
     ]) || []
   ),
   // Update properties based on editData
+  
   ...Object.fromEntries(
     editData?.map((editItem) => [
-      editItem.projectName,
+      Object.keys(editItem)[0], // Get the project name from the object
       {
-        description: editItem.description || "",
-        // employeename: editItem.employeename || "",
-        hours: editItem.hours || "",
-        projectId: editItem.projectId || "",
-        // projectName: editItem.projectName || ""
+        description: editItem[Object.keys(editItem)[0]].description || "",
+        hours: editItem[Object.keys(editItem)[0]].hours || "",
+        projectId: editItem[Object.keys(editItem)[0]].projectId || "",
       }
     ]) || []
   )
+  
 };
 
 // 3rd method
@@ -410,7 +393,7 @@ console.log(initialProjectDetails);
 
 const [projectDetails, setProjectDetails] = useState(initialProjectDetails);
 
-
+console.log(projectDetails,"projectDetails12")
 const handleTextFieldChange = (projectname, field, value, projectId) => {
   console.log(projectId,"projectId12345")
   setProjectDetails((prevDetails) => ({
@@ -422,51 +405,12 @@ const handleTextFieldChange = (projectname, field, value, projectId) => {
       // [field1]: value1, // Add the additional field and value
     },
   }));
+  calculateTotalHours(projectDetails);
 };
 
-  // project data updation
-  // const handleTextFieldChange = (projectname, field, value) => {
-  //   setProjectDetails((prevDetails) => {
-  //     const updatedProjectDetails = {
-  //       ...prevDetails,
-  //       [projectname]: {
-  //         ...(prevDetails[projectname] || {}),
-  //         [field]: value,
-  //       },
-  //     };
-  
-  //     // Extract projectData array from updatedProjectDetails
-  //     const projectDataArray = Object.keys(updatedProjectDetails)
-  //       .filter(
-  //         (key) =>
-  //           key !== "employeeName" &&
-  //           key !== "todayDate" &&
-  //           key !== "companyId" &&
-  //           key !== "projectID"
-  //       )
-  //       .map((key) => ({
-  //         projectName: key,
-  //         ...updatedProjectDetails[key],
-  //       }));
-  
-  //     return {
-  //       ...updatedProjectDetails,
-  //       projectData: projectDataArray,
-  //     };
-  //   });
-  // };
-  
 
-  // const handleTextFieldChange = (projectId, field, value) => {
-  //   setProjectDetails((prevDetails) => ({
-  //     ...prevDetails,
-  //     projects: prevDetails.projects.map((project) =>
-  //       project.projectId === projectId
-  //         ? { ...project, [field]: value }
-  //         : project
-  //     ),
-  //   }));
-  // };
+
+  
   console.log(projectDetails,"projectDetails",projectData,editData)
 
   // eventdata print 
@@ -532,25 +476,61 @@ const output = {
   projectData: projectDataArray
 };
 
-console.log(output);
-
-
-    
-    const response = await axios.post( "https://kz7mdxrb-3001.inc1.devtunnels.ms/erp/newupdateTimeSheet", output).then(
+console.log(output); 
+    const response = await axios.post( baseUrl +"/newupdateTimeSheet", output).then(
       (res) => {
         console.log('sucess', res);
+        enqueueSnackbar(res.data.message,{variant:'success'})
+        onClose()
         
       },
       (error) => {
         console.log('lllll', error);
+        enqueueSnackbar(error.res.data.message,{variant:'error'})
+        onClose()
        
       }
     );
   } catch (error) {
     console.error(error);
+    enqueueSnackbar(error.res.data.message,{variant:'error'})
+    // enqueueSnackbar(error.response.data.message,{variant:'error'})
+    onClose()
    
   }
 }
+// confirmation dialog
+ // confirmation dialog
+ const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+ const handleCancelDelete = () => {
+   setDel(null);
+   setConfirmDeleteOpen(false);
+ };
+ // total hours calculation
+ const[totalHours, setTotalHours]=useState()
+ 
+const calculateTotalHours = (data) => {
+  let totalHours = 0;
+
+  // Iterate over the keys of the outer object
+  Object.keys(data).forEach((key) => {
+    // Check if the current key is not a known property (e.g., "companyId", "employeeId", "dateOfActivity")
+    if (!["companyId", "employeeId", "dateOfActivity"].includes(key)) {
+      // Parse the hours as a float and add it to the total
+      totalHours += parseFloat(data[key].hours) || 0;
+    }
+  });
+  setTotalHours(totalHours)
+  return totalHours;
+};
+
+// const totalHour = calculateTotalHours(projectDetails);
+// console.log(totalHour,"ppppppppppp",totalHours)
+// setTotalHours(totalHours);
+useEffect(()=>{
+   calculateTotalHours(projectDetails)
+},[projectDetails])
+console.log("Total Hours:", totalHours);
   return (
   
   <>
@@ -595,6 +575,7 @@ console.log(output);
           </Grid>
         </Grid>
       ))}
+   {totalHours > 24 && <Typography color={"red"}>Total Worked can`t be greater than 24 hours</Typography>}
   </>
 )}
 </Box>
@@ -608,17 +589,19 @@ console.log(output);
           Cancel
         </Button>
 
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          // disabled={dateError}
-          color='primary'
-        >
-          Save Changes
-        </LoadingButton>
+      { totalHours <= 24 && <LoadingButton
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+        // disabled={dateError}
+        color='primary'
+      >
+        Save Changes
+      </LoadingButton>}
       </DialogActions>
     </FormProvider>
+
+  
     </>
   );
 }

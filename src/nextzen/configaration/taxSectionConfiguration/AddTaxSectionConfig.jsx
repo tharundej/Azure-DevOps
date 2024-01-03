@@ -346,9 +346,7 @@ useEffect(()=>{
         alignItems: 'center',
       }}
     >
-    
-      {/* sai  */}
-
+ 
       <Button
         onClick={handleOpen}
         variant="contained"
@@ -385,7 +383,7 @@ useEffect(()=>{
               <TextField
                 label="Tax Section "
                 name="taxSection"
-                value={null}
+                value={formData?.taxSection || ''}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -396,7 +394,7 @@ useEffect(()=>{
               <TextField
                 label="Tax Scheme"
                 name="taxScheme"
-                value={null}
+                value={formData?.taxScheme || ''}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -408,7 +406,7 @@ useEffect(()=>{
                 label="Limit"
                 name="taxLimit"
                 type='number'
-                value={null}
+                value={formData?.taxLimit || ''}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
