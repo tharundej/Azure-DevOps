@@ -41,6 +41,9 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
 import axios from 'axios';
 import Divider from '@mui/material/Divider';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 const defaultFilters = {
   colors: [],
   from_date: null,
@@ -52,6 +55,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import ApproveTimeSheetTable from '../approveTimeSheetTable';
+import ButtonGroup from '@mui/material/ButtonGroup';
 export default function CalendarView() {
  //----------------Calendar -------------------
   
@@ -516,6 +520,7 @@ const handleProjectChange = (event, newValue) => {
 
 const handleEmployeeChange = (event, newValue) => {
   console.log(newValue,"GANG25GANG25")
+  if(newValue){
   setData((prevData) => ({
     ...prevData,
     employeeId: newValue.employeeId,
@@ -529,7 +534,7 @@ const handleEmployeeChange = (event, newValue) => {
     ...prevGetApiCall,
     employeeId: newValue.employeeId,
   }));
-  
+}
   
 };
 console.log(data,"dataatdada",selectedRange)
@@ -623,13 +628,27 @@ const [tablePermission, setTablePermission] = useState(true);
 const handleTypographyClick = (value) => {
   setTablePermission(value);
 };
+// size decrease of calendar
+const customViews = {
+  week: {
+    // slotDuration: '00:30:00', // Set the slot duration to 30 minutes
+    // minTime: '00:00:00', // Set the minimum time to midnight
+    // maxTime: '24:00:00', // Set the maximum time to midnight of the next day
+    viewProps: {
+      slotHeight: 30, // Dynamically set the slot height
+    },
+  },
+  // You can customize other views as needed
+};
   return (
  <>
      <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
-     <Grid container flexDirection={"row"} spacing={1} >
-     <Grid item xs={6}>
+     <Grid container flexDirection={"row"} spacing={1} marginBottom={1}>
+     <Grid item xs={4}>
      <Autocomplete
-        id="project-autocomplete"
+        // id="project-autocomplete"
+        limitTags={1}
+      id="multiple-limit-tags"
         fullWidth
         multiple
         options={projects || []}
@@ -637,9 +656,10 @@ const handleTypographyClick = (value) => {
         getOptionLabel={(option) => option?.projectName}
         onChange={handleProjectChange}
         renderInput={(params) => <TextField {...params} label="Select Project" />}
+        // sx={{ width: '500px' }}
       />
 </Grid>
-<Grid item xs={6} marginBottom={1} >
+<Grid item xs={4}  >
 
       <Box>
   <Grid container alignItems="center">
@@ -650,8 +670,8 @@ const handleTypographyClick = (value) => {
       />
     </Grid>
     <Grid item xs={6} justifyContent={"flex-end"}>
-    <Card sx={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography
+    <ButtonGroup variant='contained' sx={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Button
         onClick={() => handleTypographyClick(true)}
         sx={{
           cursor: 'pointer',
@@ -659,12 +679,15 @@ const handleTypographyClick = (value) => {
           backgroundColor: tablePermission ? 'black' : 'white',
           padding: '0 5px',
           borderRadius: '5px 0 0 5px',
+          '&:hover': {
+            backgroundColor: 'grey',
+          },
         }}
       >
-        Calendar
-      </Typography>
-      <Divider orientation="vertical" flexItem sx={{ marginX: 1 }} />
-      <Typography
+        <CalendarMonthIcon/>
+      </Button>
+     
+      <Button
         onClick={() => handleTypographyClick(false)}
         sx={{
           cursor: 'pointer',
@@ -672,11 +695,16 @@ const handleTypographyClick = (value) => {
           backgroundColor: !tablePermission ? 'black' : 'white',
           padding: '0 5px',
           borderRadius: '0 5px 5px 0',
+          '&:hover': {
+            backgroundColor: 'grey',
+          },
+      
         }}
       >
-        Table
-      </Typography>
-    </Card>
+        {/* Table */}
+        <TableRowsIcon/>
+      </Button>
+    </ButtonGroup>
     </Grid>
   </Grid>
 
@@ -684,7 +712,7 @@ const handleTypographyClick = (value) => {
 
 
       </Grid>
-      <Grid  item xs={12} mt={1} mb={1}>
+      <Grid  item xs={4} >
   {showAutocomplete && (
     <Autocomplete
       id="employee-autocomplete"
@@ -759,19 +787,19 @@ const handleTypographyClick = (value) => {
                 interactionPlugin,
               ]}
             timeZone = {timezone}
-               
+            // cellHeight={402} 
             />
           </StyledCalendar>}
           
         </Card>
-        {showAutocomplete&& 
+        {showAutocomplete&& tablePermission && 
         <Grid container justifyContent="flex-end" marginTop={1} xs={12}>
   <Button variant="contained" color="primary" onClick={handleOpen}>
     Approve Time Sheet
   </Button>
 </Grid>
 }
-{tablePermission === false &&  <ApproveTimeSheetTable/>}
+{tablePermission === false  &&  <ApproveTimeSheetTable/>}
       </Container>
       <Dialog
         fullWidth
@@ -901,7 +929,7 @@ const handleTypographyClick = (value) => {
     const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
     return (
       <>
-        <div style={{color:"green",fontWeight:"700",backgroundColor,padding:"1px",cursor: "pointer" }}>{event?.title} Hours</div>
+        <Card style={{color:"blue",fontWeight:"700",backgroundColor,padding:"1px",cursor: "pointer",  alignContent:"center", alignSelf:"center",textAlign:'center'}}>{event?.title} Hours</Card>
         </>
     );
   }
