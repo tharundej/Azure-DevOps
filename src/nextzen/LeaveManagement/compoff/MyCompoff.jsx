@@ -81,7 +81,7 @@ export default function MyCompoff({ currentUser ,}) {
       secondaryText: "email",
     },
       // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-      { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "7pc", type: "text" },
+      // { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "7pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "7pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "date" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "date" },
@@ -99,13 +99,14 @@ export default function MyCompoff({ currentUser ,}) {
   const managerID =localStorage.getItem('reportingManagerID');
   const employeeID =localStorage.getItem('employeeID');
   const companyID =localStorage.getItem('companyID');
+ 
 
   const defaultPayload={
 
   
-    "employeeid":"",
+    "employeeid":employeeID,
     "companyId":companyID,
-    "ApprovalManagerId":employeeID,
+    // "ApprovalManagerId":employeeID,
     "page":0,
     "search":"",
     "count":5,
@@ -135,8 +136,8 @@ const externalFilter = {
 }
 
   const actions = [
-    { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
-    { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
+    // { name: "Approve", icon: "charm:circle-tick", path: "jjj",  type:"status"},
+    // { name: "Reject", icon: "charm:circle-cross", path: "jjj" ,type:"status" },
     // { name: "eerr", icon: "hh", path: "jjj" },
   ];
   const bodyContent = [

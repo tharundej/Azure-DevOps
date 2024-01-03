@@ -30,6 +30,7 @@ export default function AddProject({handleClose,title,rowData,getTableData}){
     const [reportingManager,setReportingManagerData]= useState([])
     const [selectedLocationID, setSelectedLocationID] = useState((rowData?.locationId)?rowData?.locationId:null); 
     const [projectManager,setProjectManagers] = useState([])
+    // const [rowData,setRowData] = useState()
     const [datesUsed, setDatesUsed] = useState({
         startDate: '',
         endDate: '',
@@ -132,6 +133,7 @@ const onSubmit = handleSubmit(async (data) => {
       data.reportingManager=selectedReportingManager?.employeeId,
       data.location= selectedLocationID
       data.companyId = user?.companyID
+      UpdateEmployees()
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
@@ -190,6 +192,7 @@ const onSubmit = handleSubmit(async (data) => {
       data.reportingManager = selectedReportingManager?.employeeId,
       data.projectManager = selectedProjectManager?.employeeId
       data.locationName=rowData?.locationName
+      UpdateEmployees()
       const response = await axios.post(baseUrl+'/updateproject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
@@ -211,7 +214,72 @@ const onSubmit = handleSubmit(async (data) => {
 
 const userManager = user?.employeeID == rowData?.projectManager
 
+// 03/01/2024  new modification
+const [selectedIds, setSelectedIds] = useState([]);
+const handleCloseEmployee=()=>{
+  setEditEmployee(false)
+  // setViewProject(false)
+  setSelectedIds([])
+}
+const [showAll, setShowAll] = useState(false);
 
+const visibleItemsCount = 6
+
+const visibleEmployees = showAll ? rowData?.employees : rowData?.employees?.slice(0, visibleItemsCount);
+let employeeIDs = [];
+useEffect(() => {
+  if (rowData) {
+    employeeIDs = rowData?.employees?.map(employees => employees.employeeId);
+    setSelectedIds(employeeIDs || []);
+  }
+}, [rowData]);
+const [editEmployee,setEditEmployee] = useState(false)
+const [employesListData,setEmployesListData]= useState([])
+const getEmployeesList =()=>{
+  const data ={
+    companyID:user?.companyID
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:baseUrl + '/getEmployeesForProjectManager',
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    setEmployesListData(response?.data?.data)
+   })
+   .catch((error)=>{
+    console.log(error)
+   })
+}
+const selectedEmployees = employesListData?.filter(option => selectedIds.includes(option.employeeID));
+useEffect(()=>{
+   getEmployeesList()
+},[rowData])
+
+const UpdateEmployees=()=>{
+  const data ={
+    projectID : rowData?.projectID,
+    employeeIDs:selectedIds
+  }
+  const config={
+    method:'POST',
+    maxBodyLength:Infinity,
+    url:baseUrl + '/updateEmployeesInProject',
+    // url:`https://g3nshv81-3001.inc1.devtunnels.ms/erp/updateEmployeesInProject`,
+    data:data
+   }
+   axios.request(config).then((response)=>{
+    console.log(response,"Responsee")
+    enqueueSnackbar(response?.data?.message,{variant:'success'})
+    handleCloseEmployee()
+   })
+   .catch((error)=>{
+    console.log(error,"error")
+    enqueueSnackbar(error?.response?.data,{variant:'error'})
+    handleCloseEmployee()
+   })
+}
     return (
         <>
           <FormProvider methods={methods} onSubmit={title=="Edit Project"?onSubmit1:onSubmit}>
@@ -364,6 +432,38 @@ const userManager = user?.employeeID == rowData?.projectManager
                   </LocalizationProvider>
                              </Grid>
   </Grid>
+  <Grid  item md={6} xs={12}>
+        {/* <FormControl fullWidth sx={{margin:0.5}}> */}
+     <Autocomplete
+  sx={{ marginTop: 2 }}
+  fullWidth
+  multiple
+  limitTags={2}
+  id="multiple-limit-tags"
+  options={employesListData && employesListData?.length ? employesListData : []}
+  renderTags={(value, getTagProps) =>
+    value.map((option, index) => (
+      <Chip
+        label={option.employeeName}
+        {...getTagProps({ index })}
+        style={{ backgroundColor: 'white', color: 'black' }}
+      />
+    ))
+  }
+  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
+  getOptionSelected={(option, value) => option.employeeID === value.employeeID}
+  onChange={(event, newValue) => {
+    setSelectedIds(newValue.map((option) => option.employeeID));
+  }}
+  // value={selectedIds?.filter((option) => employesListData?.includes(option.employeeID))}\
+  value={selectedEmployees}
+  renderInput={(params) => (
+    <TextField {...params} label="Employees" placeholder="Employees" sx={{ maxHeight: 500 }} />
+  )}
+/>
+        {/* </FormControl>   */}
+      
+        </Grid>
   
                 <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 

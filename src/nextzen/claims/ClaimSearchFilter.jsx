@@ -326,7 +326,7 @@ console.log(selectedFields,"selectedFields 2nd method")
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleReset}>
             Reset
           </Button>
-      <Button variant='outlined' sx={{margin:"2px"}} onClick={handleApply}>apply</Button>
+      <Button variant='contained'  color="primary" sx={{margin:"2px"}} onClick={handleApply}>Apply</Button>
       {/* </Badge> */}
 
       </Grid >
