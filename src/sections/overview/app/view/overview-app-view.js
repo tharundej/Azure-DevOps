@@ -166,7 +166,11 @@ axios.request(config)
         <Grid xs={12} md={8}>
           <AppWelcome
             title={`Welcome 👋  ${user?.employeeName || ""} `}
-            description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+
+           // description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+            description="Happy work anniversary! Your creativity, passion, and hard work are truly valued. Here's to more successful and fulfilling years ahead.~Priya!!"
+
+
             img={<SeoIllustration />}
             // action={
             //   <Button variant="contained" color="primary">

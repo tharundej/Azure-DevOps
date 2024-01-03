@@ -107,8 +107,8 @@ const handleConfirmLogout = async()=>{
         onClose={handleCancelLogout}
         onConfirm={handleConfirmLogout}
         itemName="Logout"
-        confirmButtonText="OK"
-        message="Are you sure want to logout?"
+        confirmButtonText="Ok"
+        message="Are you sure you want to logout?"
       />
 
       <NavSectionVertical

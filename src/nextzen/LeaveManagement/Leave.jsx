@@ -33,19 +33,19 @@ export default function BasicCard() {
     },
     {
       id: 'leaveOverview',
-      label: 'Leave Overview',
-      content: <LeaveRequest key="leaveCalendar" />,
+      label: 'Leave Schedule',
+      content: <LeaveRequest key="leaveOverview" />,
     },
-    {
-      id: 'myCompoff',
-      label: 'My Compoff',
-      content: <MyCompoff key="leaveCalendar" />,
-    },
-    {
-      id: 'compoffApprove',
-      label: 'Compoff Approval',
-      content: <CompoffApprove key="leaveCalendar" />,
-    },
+    // {
+    //   id: 'myCompoff',
+    //   label: 'My Compoff',
+    //   content: <MyCompoff key="myCompoff" />,
+    // },
+    // {
+    //   id: 'compoffApprove',
+    //   label: 'Compoff Approval',
+    //   content: <CompoffApprove key="compoffAprove" />,
+    // },
   ];
 
   useEffect(() => {

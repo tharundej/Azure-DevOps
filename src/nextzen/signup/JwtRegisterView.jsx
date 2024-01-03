@@ -62,7 +62,7 @@ import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
 import SignUpDialog from './SignUpDialog';
 import { color } from '@mui/system';
-import { baseImageUrl, baseUrl } from '../global/BaseUrl';
+import baseImageUrl, { baseUrl } from '../global/BaseUrl';
 
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');

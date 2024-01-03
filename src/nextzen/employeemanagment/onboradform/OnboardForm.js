@@ -16,6 +16,7 @@ import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 
 import DocumentsUpload from './documentsupoad/DocumentsUpload';
 import CurrentWork from './currentwork/CurrentWork'
+import CreateStatutoryOnboard from './statutory/CreateStatutoryOnboard'
 
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import { paths } from 'src/routes/paths';
@@ -23,8 +24,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import EmployeePermission from './employeepermission/EmployeePermission';
 
-const steps = ['General Information', 'Education', 'Experience','Documents','Current Work Details'];
+const steps = ['General Information', 'Education', 'Experience','Documents','Statutory','Employee Permission','Current Work Details'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -130,6 +132,16 @@ export default function OnBoardForm() {
       childref.current.childFunctionDocuments()
 
     }
+    else if(activeStep+1===5){
+     
+      childref.current.childFunctionStatutory()
+
+    }
+    else if(activeStep+1===6){
+     
+      childref.current.childFunctionEmployeePermission()
+
+    }
 
    
 
@@ -193,7 +205,7 @@ const handleCallSnackbar=(message,severity)=>{
   }
 
   return (
-    <Box sx={{ width: '100%', marginBottom: '10vh' }} >
+    <Box sx={{ width: '100%', marginBottom: '10vh',marginTop:'10px' }} >
       <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage}  confirmButtonText="Go To Configuration" cancelButtonText="Go To Dashboard"/>
         <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
@@ -234,6 +246,13 @@ const handleCallSnackbar=(message,severity)=>{
               <DocumentsUpload handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
             )}
              {activeStep + 1 === 5 && (
+              <CreateStatutoryOnboard handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+            )}
+
+          {activeStep + 1 === 6 && (
+                        <EmployeePermission handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+                      )}
+             {activeStep + 1 === 7 && (
               <CurrentWork handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
@@ -251,7 +270,7 @@ const handleCallSnackbar=(message,severity)=>{
                 Cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep+1!==5 &&
+              {activeStep+1!==7 &&
              <Button
              onClick={handleNext}
              sx={{
@@ -279,7 +298,7 @@ const handleCallSnackbar=(message,severity)=>{
              )}
              {!loading && <Typography>Save and Continue</Typography>}
            </Button>}
-              {activeStep+1===5 &&
+              {activeStep+1===7 &&
               <Button onClick={handleSubmit}  sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
               '&:hover': {
                 backgroundColor: '#1565C0', // Change this to the desired hover color
@@ -287,7 +306,7 @@ const handleCallSnackbar=(message,severity)=>{
             }}>
                 Submit
               </Button>}
-              {(activeStep+1!==1 && activeStep+1!==5)&&(
+              {(activeStep+1!==1 && activeStep+1!==7)&&(
               <Button onClick={handleNextIncrement} sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white','&:hover': {
                 backgroundColor: '#1565C0', // Change this to the desired hover color
               }, }}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-
+import { Country, State, City }  from 'country-state-city';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
@@ -69,6 +69,7 @@ const degreeOptions = [
   { label: 'Other', value: 'Other' },
 ];
 
+
 const EducationInformation = forwardRef((props, ref) => {
   const { enqueueSnackbar } = useSnackbar();
   const [employeeData, setEmployeeData] = useState([
@@ -96,6 +97,7 @@ const EducationInformation = forwardRef((props, ref) => {
     },
   }));
   const currentUser = props.currentUser;
+ const [stateOptions,setStateOptions]=useState(State.getStatesOfCountry("IN")|| [])
 
   const onSave = () => {
     const invalidFields = defaultValues.filter(
@@ -445,7 +447,38 @@ const EducationInformation = forwardRef((props, ref) => {
                       }}
                     />
                   </Grid>
-                </Grid>
+                {/* </Grid>
+                <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item> */}
+                  <Grid md={6} xs={12} item>
+                <Autocomplete
+                disablePortal
+                id="universitystate"
+                options={stateOptions || []}
+                value={item?.universityState}
+                getOptionLabel={(option) => option?.name}
+                onChange={async(e, newvalue) => {
+                  const newArray = [...defaultValues];
+                  newArray[index] = {
+                    ...newArray[index],
+                    universityState: newvalue,
+                    // nameOfTheDegreeObject:value
+                  };
+
+                  setDefaultValues(newArray);
+
+                  
+                 
+                }
+                
+              }
+
+               
+                
+                renderInput={(params) => <TextField {...params} label="University State"
+                style={{  width: '100%' }} />}
+              />
+              </Grid>
+              </Grid>
 
                 <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                   <Grid md={6} xs={12} lg={6} item>

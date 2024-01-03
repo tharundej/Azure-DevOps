@@ -85,20 +85,19 @@ export default function MyClaims({ currentUser, }) {
 
   ];
 
-
   const TABLE_HEAD = [
     { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
     { id: "claimDate", label: "Claim Date", minWidth: "8pc", type: "text" },
     { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
     { id: "claimAmount", label: "Claim Amount", minWidth: "9pc", type: "text" },
-    { id: "expenseStartDate", label: "Expense Start Date", minWidth: "10pc", type: "text" },
-    { id: "expenseEndDate", label: "Expense End Date", minWidth: "10pc", type: "text" },
+    { id: "expenseStartDate", label: "Expense Start Date", minWidth: "10pc", type: "date" },
+    { id: "expenseEndDate", label: "Expense End Date", minWidth: "10pc", type: "date" },
     { id: "totalDays", label: "Total Days", minWidth: "7pc", type: "text" },
     { id: "approveAmount", label: "Approved Amount", minWidth: "10pc", type: "text" },
     { id: "approverName", label: "Approver Name", minWidth: "10pc", type: "text" },
     { id: "reciept", label: "Document View", minWidth: "9pc", type: "icon" },
-    { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "text" },
+    { id: "approvedDate", label: "Approved Date", minWidth: "9pc", type: "date" },
     { id: "userComment", label: "User Comment", minWidth: "9pc", type: "text" },
     { id: "approverComment", label: "Approver Comment", minWidth: "9pc", type: "text" },
     { id: "PaymentStatus", label: "Payment Status", minWidth: "9pc", type: "badge" },
@@ -655,7 +654,7 @@ export default function MyClaims({ currentUser, }) {
                 )}
                 </LocalizationProvider>
               </Grid>
-              <RHFTextField name="comment" label="comments" />
+              <RHFTextField name="comment" label="Comments" />
 
               <Grid sx={{ alignSelf: "flex-end" }}>
                 <input
