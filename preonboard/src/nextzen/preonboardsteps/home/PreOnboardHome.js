@@ -26,6 +26,7 @@ const PreOnboardHome = () => {
   <Box md={9} xs={9} lg={9} sx={{width:'70%'}}>
   {value===0 && <GenerateOfferLetter />}
   {value==2 && <OnboardingHome />}
+  
   </Box>
   </Stack>
   </>
