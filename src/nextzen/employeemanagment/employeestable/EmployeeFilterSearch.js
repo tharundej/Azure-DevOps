@@ -491,6 +491,7 @@ const sendInvitation=()=>{
  }
  axios.request(config).then((response)=>{
   console.log(response,"loginResponsee")
+  handleInviteClose()
  })
  .catch((error)=>{
   console.log(error)
