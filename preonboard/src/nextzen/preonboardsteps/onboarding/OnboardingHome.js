@@ -9,6 +9,9 @@ import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 import GeneralInformation from './generalinformation/GeneralInformation';
 import PreEducation from './education/PreEducation';
+import PreExperience from './experience/PreExperience';
+import PreOnboardDocuments from './documents/PreOnboardDocuments';
+import PreOnboardStatutory from './statutory/PreOnboardStatutory';
 
 
 
@@ -186,13 +189,13 @@ const handleCallSnackbar=(message,severity)=>{
                 <PreEducation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-                2
+               <PreExperience handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
              {activeStep + 1 === 4 && (
-                2
+                <PreOnboardDocuments handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
              {activeStep + 1 === 5 && (
-                2
+                <PreOnboardStatutory handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
 
           {activeStep + 1 === 6 && (
