@@ -43,6 +43,7 @@ import axios from 'axios';
 import Divider from '@mui/material/Divider';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 const defaultFilters = {
   colors: [],
   from_date: null,
@@ -701,7 +702,7 @@ const customViews = {
         }}
       >
         {/* Table */}
-        <TableChartIcon/>
+        <TableRowsIcon/>
       </Button>
     </ButtonGroup>
     </Grid>
