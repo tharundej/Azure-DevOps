@@ -531,24 +531,28 @@ const PreEducation = forwardRef((props, ref) => {
                     flexDirection="row"
                     item
                   >
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
-                        <Select
-                          label="Select Document"
-                          value={file?.fileType}
-                          onChange={(e) => {
-                            handleCategoryChange(e, index, index1);
-                          }}
-                          name="Select Document"
-                        >
-                          <MenuItem value="ssc-cards">SSC Cards</MenuItem>
-                          <MenuItem value="marks-memo">Marks Memo</MenuItem>
-                          <MenuItem value="degree">Degree</MenuItem>
-                          {/* Add more categories here */}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                   <Grid item xs={12} md={6}>
+  <FormControl fullWidth>
+    <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+    <Select
+      label="Select Document"
+      value={file?.fileType}
+      onChange={(e) => {
+        handleCategoryChange(e, index, index1);
+      }}
+      name="Select Document"
+    >
+      <MenuItem value="" disabled>
+        Select Document
+      </MenuItem>
+      <MenuItem value="ssc-cards">SSC Cards</MenuItem>
+      <MenuItem value="marks-memo">Marks Memo</MenuItem>
+      <MenuItem value="degree">Degree</MenuItem>
+      {/* Add more categories here */}
+    </Select>
+  </FormControl>
+</Grid>
+
 
                     <Grid item xs={12} md={6}>
                         <Grid>
@@ -575,10 +579,13 @@ const PreEducation = forwardRef((props, ref) => {
                               <VisuallyHiddenInput type="file" />
                             </Button>
                                 </label>
-                                <Typography variant="body2" color="textSecondary">
+                                {/* <Typography variant="body2" color="textSecondary">
+                            {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
+                          </Typography> */}
+                              </Grid>
+                              <Typography variant="body2" color="textSecondary">
                             {file.fileName ? `Selected File: ${file.fileName}` : 'No file selected'}
                           </Typography>
-                              </Grid>
 
                               <Grid item>
                                 {
