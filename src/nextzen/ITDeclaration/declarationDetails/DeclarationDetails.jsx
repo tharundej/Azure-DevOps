@@ -428,15 +428,15 @@ setSelectedFiles(selectedFiles)
                 style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
               >
                 <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Tax Section</TableCell>
-                      <TableCell>Tax Scheme</TableCell>
-                      <TableCell>Limit</TableCell>
-                      <TableCell>Declared</TableCell>
-                      <TableCell>File Upload</TableCell>
-                    </TableRow>
-                  </TableHead>
+               <TableHead>
+      <TableRow>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Tax Section</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Tax Scheme</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Limit</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Declared</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>File Upload</TableCell>
+      </TableRow>
+    </TableHead>
                   <TableBody>
                     {data &&
                       data

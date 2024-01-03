@@ -35,12 +35,14 @@ export default function ApproveTimeSheetTable() {
     const defaultPayload={
       "page":0,
       "count":5,
-      // "companyId":companyID,
-      // "managerId":employeeID,
-      "companyId":"COMP1",
-      "managerId":"INFO47",
-      "startDate":"2023-12-01",
-      "endDate":"2023-12-31",
+      "companyId":companyID,
+      "managerId":employeeID,
+      // "companyId":"COMP1",
+      // "managerId":"INFO47",
+      "externalFilters": {
+        "startDate": "",
+        "endDate": ""
+    },
       "search":""
       }
 

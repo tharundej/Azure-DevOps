@@ -83,17 +83,19 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
 // https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails
 const handleCreate = async (data) => {
   handleEmpType(data)
+  console.log(data , "data")
   handleCreatePayrun()
   // setLoading(true)
   const payload = {
    companyID : cmpId,
+   employementType : data
   };
 
   const config = {
     method: 'post',
     maxBodyLength: Infinity,
     // url: baseUrl +'getSingleLicPremium',
-    // url: baseUrl + '/getRentDeclarationDetails',
+    url: baseUrl + '/createPayRunDetails',
     // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/createPayRunDetails",
     headers: {
       Authorization: token,
@@ -170,9 +172,23 @@ React.useEffect(()=>{
             </Typography>
           </Grid>
           <Grid item xs={8} style={{paddingLeft:'0.25rem'}}>
-            <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize:'0.75rem',  }}>
-              ( {formatDate(item?.fromDate)} to  {formatDate(item.toDate)})
-            </span>
+            {/* <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize:'0.75rem',  }}>
+              (Month: {item?.financialMonth} ) (Working Days :{item?.daysInFinancialMonth})
+            </span> */}
+            <Grid container spacing={2} alignItems="center">
+  <Grid item>
+    <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize: '0.75rem' }}>
+      Month: {item?.financialMonth}
+    </span>
+    <div>{/* Additional month-related content or values */}</div>
+  </Grid>
+  <Grid item>
+    <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize: '0.75rem' }}>
+      Working Days: {item?.daysInFinancialMonth}
+    </span>
+    <div>{/* Additional day-related content or values */}</div>
+  </Grid>
+</Grid>
 
             <span style={shapeStyles}>
               <Brightness1Icon style={{width:'0.5em',paddingTop:'0.5em'} }/>

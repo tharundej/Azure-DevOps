@@ -82,7 +82,7 @@ export default function TimeSheet() {
            <CalendarView key="monthly" />
         );
 // companyID === "COMP48" || 
-    { true && arrLabels.push('Team Attendance',);
+    {companyID === "COMP48" && arrLabels.push('Team Attendance',);
     arrContents.push( 
       
         <TimeSheetAttendance key="myTeamAttendance" />
