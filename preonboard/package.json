@@ -17,6 +17,7 @@
     "country-state-city": "^3.2.1",
     "date-fns": "^3.0.6",
     "dayjs": "^1.11.10",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
