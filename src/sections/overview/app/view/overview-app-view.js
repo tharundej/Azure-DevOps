@@ -129,20 +129,23 @@ axios.request(config)
             companyId:(user?.companyID)? user?.companyID : '',
             employeeId:(user?.employeeID)? user?.employeeID : '',
           }
-        const res = await  axios({
-            method:'post',
-            url:'/availableLeave',
-            data:data,
-            baseURL: process.env.REACT_APP_API_BASE_URL,
-           })   .then(response => {
-              // window.location.reload();
-           })
-           .catch(error => {
-               console.log(error);
-           });
-          console.log("🚀 ~ file: overview-app-view.js:133 ~ getAvailableLeave ~ instance:", axios.defaults.baseURL)
-          const response = await instance.post('/availableLeave',data)
-          setAvailableLeaveData(response?.data?.data)
+
+          let config = {
+            method: 'post',
+            url: `${baseUrl}/availableLeave`,
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+           
+          axios.request(config)
+          .then((response) => {
+            setAvailableLeaveData(response?.data?.data)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         }catch(error){
           console.log("Error",error)
           throw error;
