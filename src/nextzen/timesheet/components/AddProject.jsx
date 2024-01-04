@@ -37,6 +37,7 @@ export default function AddProject({handleClose,title,rowData,getTableData}){
         actualStartDate:'',
         actualEndDate:''
       });
+      const[employeeData,setEmployeeData]=useState()
       const NewUserSchema = Yup.object().shape({
         projectName: Yup.string(),
         startDate: Yup.string(),
@@ -45,6 +46,7 @@ export default function AddProject({handleClose,title,rowData,getTableData}){
         actualEndDate:Yup.string(),
         projectDescription:Yup.string(),
         status: Yup.string(),
+        // employee: Yup.arrayofObject()
        
       });
       const defaultValues = useMemo(
@@ -247,6 +249,7 @@ const getEmployeesList =()=>{
    }
    axios.request(config).then((response)=>{
     setEmployesListData(response?.data?.data)
+    setEmployeeData(response?.data?.data)
    })
    .catch((error)=>{
     console.log(error)
@@ -440,7 +443,7 @@ const UpdateEmployees=()=>{
   multiple
   limitTags={2}
   id="multiple-limit-tags"
-  options={employesListData && employesListData?.length ? employesListData : []}
+  options={employeeData && employeeData?.length ? employeeData : []}
   renderTags={(value, getTagProps) =>
     value.map((option, index) => (
       <Chip
@@ -452,11 +455,12 @@ const UpdateEmployees=()=>{
   }
   getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
   getOptionSelected={(option, value) => option.employeeID === value.employeeID}
-  onChange={(event, newValue) => {
-    setSelectedIds(newValue.map((option) => option.employeeID));
-  }}
+  // onChange={(event, newValue) => {
+  //   setSelectedIds(newValue.map((option) => option.employeeID));
+  // }}
+  onChange={(event, value)=>{console.log(value,"ppppppppppppp")}}
   // value={selectedIds?.filter((option) => employesListData?.includes(option.employeeID))}\
-  value={selectedEmployees}
+  value={employeeData}
   renderInput={(params) => (
     <TextField {...params} label="Employees" placeholder="Employees" sx={{ maxHeight: 500 }} />
   )}
