@@ -70,11 +70,11 @@ const TABLE_HEAD = [
 
 
   const actions = [
-    { name: 'Approve', icon: 'hh', path: 'jjj' },
+    // { name: 'Approve', icon: 'hh', path: 'jjj' },
 
-    { name: 'View', icon: 'hh', path: 'jjj' },
+    // { name: 'View', icon: 'hh', path: 'jjj' },
 
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
+    // { name: 'Edit', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = 
   {

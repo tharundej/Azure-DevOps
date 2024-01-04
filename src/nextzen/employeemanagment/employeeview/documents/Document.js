@@ -113,7 +113,7 @@ const Documets = ({employeeIDForApis}) => {
     <>
     {/* <DocumentsUpload open={open} documents={documents} onHandleClose={handeleClose} /> */}
     <FileEditCreate callApi={ApiHitGetDocuments} employeeIDForApis={employeeIDForApis} open={open} documents={documentsData} onhandleClose={handeleClose} docType={docType} endpoint="/updateDocs" type={type}/>
-
+    {localStorage.getItem("employeeID")!==employeeIDForApis &&
     <Grid container alignItems="center" justifyContent="flex-end" >
     <Button onClick={()=>{
       setType('create')
@@ -126,7 +126,7 @@ const Documets = ({employeeIDForApis}) => {
     >Upload Documents</Button>
 
     </Grid>
-
+}
    
 
 
