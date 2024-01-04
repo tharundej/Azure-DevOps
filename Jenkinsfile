@@ -85,7 +85,6 @@ pipeline {
     
         stage('Ok') {
             steps {
-                // Your build steps go here
                 echo "Ok"
             }
         }
@@ -94,26 +93,18 @@ pipeline {
     post {
         success {
             emailext (
-                bcc: 'bcc@example.com', 
-                cc: 'cc@example.com', 
-                from: 'jenkins@example.com', 
-                replyTo: 'jenkins@example.com', 
-                subject: 'Build Successful', 
-                to: 'tharun@infobellit.com', 
-                mimeType: 'text/html', 
-                body: '<p>The build was successful.</p>'
+                to: 'tharun@infobellit.com',
+                subject: 'Build Successful',
+                body: '<p>The build was successful.</p>',
+                mimeType: 'text/html'
             )
         }
         failure {
             emailext (
-                bcc: 'bcc@example.com', 
-                cc: 'cc@example.com', 
-                from: 'jenkins@example.com', 
-                replyTo: 'jenkins@example.com', 
-                subject: 'Build Failed', 
-                to: 'tharun@infobellit.com', 
-                mimeType: 'text/html', 
-                body: '<p>The build failed.</p>'
+                to: 'tharun@infobellit.com',
+                subject: 'Build Failed',
+                body: '<p>The build failed.</p>',
+                mimeType: 'text/html'
             )
         }
     }
