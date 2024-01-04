@@ -33,18 +33,18 @@ pipeline {
             }
         }
 
-        stage('Docker Hub Login') {
-            steps {
-                script {
-                    // Use withCredentials to bind Docker credentials to environment variables
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+       stage('Docker Hub Login') {
+    steps {
+        script {
+            // Use withCredentials to bind Docker credentials to environment variables
+            withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 
-                        // Log in to Docker registry using --password-stdin
-                        sh "echo ${DOCKER_PASSWORD} | docker login --username=${DOCKER_USERNAME} --password-stdin ${DOCKER_REGISTRY}"
-                    }
-                }
+                // Log in to Docker registry using --password-stdin
+                sh "echo ${DOCKER_PASSWORD} | docker login --username=${DOCKER_USERNAME} --password-stdin https://index.docker.io/v1/"
             }
         }
+    }
+}
 
         stage('Docker Compose Stop Delete') {
             steps {
