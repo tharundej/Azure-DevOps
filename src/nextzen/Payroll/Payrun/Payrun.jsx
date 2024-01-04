@@ -82,9 +82,7 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
   console.log(payRunDetails ,"detailsResult")
 // https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails
 const handleCreate = async (data) => {
-  handleEmpType(data)
-  console.log(data , "data")
-  handleCreatePayrun()
+
   // setLoading(true)
   const payload = {
    companyID : cmpId,
@@ -111,6 +109,9 @@ const handleCreate = async (data) => {
         const rowsData = response?.data?.data;
         handleCreatePayrun()
         handleEmpType(data)
+        // handleEmpType(data)
+        // console.log(data , "data")
+        // handleCreatePayrun()
         console.log(JSON.stringify(response?.data?.data), 'result');
       }
     })
@@ -158,10 +159,10 @@ React.useEffect(()=>{
     return formattedDate;
   };
   return (
-    <div>
+    <div  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
 
  {payRunDetails?.data && payRunDetails?.data?.map((item ,index) =>(
-  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" ,alignItems:"center" }}>
+  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" ,alignItems:"center" ,paddingLeft:"2rem" }}>
       <CardContent style={{padding:"16px !important"}}>
         <Grid container spacing={0} alignItems="center">
           {/* Heading Text */}

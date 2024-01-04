@@ -89,8 +89,8 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
       ltaPercentage: currentUser?.ltaPercentage,
       esicPercentage: currentUser?.esicPercentage,
       tdsPercentage: currentUser?.tdsPercentage,
-      foodAllowance: currentUser?.foodAllowance,
-      travelAllowance: currentUser?.travelAllowance,
+      // foodAllowance: currentUser?.foodAllowance,
+      // travelAllowance: currentUser?.travelAllowance,
       medicalAllowance: currentUser?.medicalAllowance
     }),
     [currentUser]
@@ -410,8 +410,8 @@ const [isContract,setIsContract ] =useState(false)
                 <RHFTextField name="esicPercentage" label="ESIC %" />
                 <RHFTextField name="tdsPercentage" label="TDS %" />
                 <RHFTextField name="medicalAllowance" label="Medical Allowance %" />
-                <RHFTextField name="travelAllowance" label="Travel Allowance %" />
-                <RHFTextField name="foodAllowance" label="Food Allowance %" />
+                {/* <RHFTextField name="travelAllowance" label="Travel Allowance %" /> */}
+                {/* <RHFTextField name="foodAllowance" label="Food Allowance %" /> */}
               </Box>
             </DialogContent>
 

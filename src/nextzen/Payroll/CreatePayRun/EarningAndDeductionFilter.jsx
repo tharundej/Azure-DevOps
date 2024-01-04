@@ -407,7 +407,7 @@ const [openComponent ,setOpenComponent] =useState(false)
         lg={12}
         style={{ marginBottom: '0.5rem' }}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item md={6} xs={6}>
           <TextField
             placeholder="Search...."
             fullWidth
@@ -415,7 +415,7 @@ const [openComponent ,setOpenComponent] =useState(false)
           />
         </Grid>
 
-        <Grid item xs={2} msd={2}>
+        <Grid item xs={4} msd={4}>
          {/* <AddTaxSectionConfig /> */}
          {/* <EarningsAndDeduction /> */}
          <Button style={{ backgroundColor: '#007AFF', color: 'white' }} onClick={handleOpen}>
