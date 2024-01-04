@@ -4,6 +4,7 @@ import {Tabs,Tab,Typography,Box,Stack} from '@mui/material';
 import GenerateOfferLetter from '../generateofferletter/GenerateOfferLetter';
 import OnboardingHome from '../onboarding/OnboardingHome';
 import AcceptOfferLetter from '../acceptofferletter/AcceptOfferLetter';
+import { Button } from '@mui/base';
 
 const PreOnboardHome = () => {
    
@@ -22,8 +23,9 @@ const PreOnboardHome = () => {
       <Tab label="Details" />
       <Tab label="Accept Offer" />
       <Tab label="Onboarding" />
+      <Tab label="Log Out" sx={{ color: 'black',backgroundColor:'orange' }} />
     </Tabs>
-    <Typography>Logout</Typography>
+    
   </Box>
   <Box  width="100%"
    >
