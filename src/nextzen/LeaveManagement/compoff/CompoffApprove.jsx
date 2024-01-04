@@ -428,7 +428,7 @@ console.log(editData,"ppppppppppppppppppppp")
   const onSubmit = handleSubmit(async (data) => {
    
     console.log(data,"defaultValues11122")
-    data.employeeId= Id;
+    data.employeeId= Id || employeeID;
     data.startDate= selectedDates?.startDate;
     data.endDate= selectedDates?.endDate;
     try {
