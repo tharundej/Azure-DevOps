@@ -82,7 +82,7 @@ pipeline {
         }
     }
 }
-     
+    
         stage('Ok') {
             steps {
                 // Your build steps go here
@@ -90,11 +90,30 @@ pipeline {
             }
         }
     
+
     post {
         success {
-            emailext bcc: 'bcc@example.com', cc: 'cc@example.com', from: 'jenkins@example.com', replyTo: 'jenkins@example.com', subject: 'Build Successful', to: 'tharun@infobellit.com', mimeType: 'text/html', body: '<p>The build was successful.</p>'
+            emailext (
+                bcc: 'bcc@example.com', 
+                cc: 'cc@example.com', 
+                from: 'jenkins@example.com', 
+                replyTo: 'jenkins@example.com', 
+                subject: 'Build Successful', 
+                to: 'tharun@infobellit.com', 
+                mimeType: 'text/html', 
+                body: '<p>The build was successful.</p>'
+            )
         }
         failure {
-            emailext bcc: 'bcc@example.com', cc: 'cc@example.com', from: 'jenkins@example.com', replyTo: 'jenkins@example.com', subject: 'Build Failed', to: 'tharun@infobellit.com', mimeType: 'text/html', body: '<p>The build failed.</p>'
+            emailext (
+                bcc: 'bcc@example.com', 
+                cc: 'cc@example.com', 
+                from: 'jenkins@example.com', 
+                replyTo: 'jenkins@example.com', 
+                subject: 'Build Failed', 
+                to: 'tharun@infobellit.com', 
+                mimeType: 'text/html', 
+                body: '<p>The build failed.</p>'
+            )
         }
     }
