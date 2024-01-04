@@ -72,6 +72,7 @@ export default function MyClaims({ currentUser, }) {
   ]
   const [claimTypeOptions, setClaimTypeOptions] = useState([]);
   const [currentDate, setCurrentDate] = useState()
+  const[Id,setId]=useState(null)
   const currency = [
     {
       value: 'USD',
@@ -86,7 +87,7 @@ export default function MyClaims({ currentUser, }) {
   ];
 
   const TABLE_HEAD = [
-    { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
+    // { id: "expenseClaimId", label: "Expense Claim ID", minWidth: "7pc", type: "text" },
     { id: "claimType", label: "Claim Type", minWidth: "7pc", type: "text" },
     { id: "claimDate", label: "Claim Date", minWidth: "8pc", type: "text" },
     { id: "currency", label: "Currency", minWidth: "7pc", type: "text" },
@@ -206,18 +207,11 @@ export default function MyClaims({ currentUser, }) {
     p: 4,
   };
 
-  const handleChangeDate = (newValue, name) => {
-    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
-    const newObj = { ...defaultValues };
-    newObj[name] = formattedDate;
-  };
-
-
-  const [datesUsed, setDatesUsed] = useState({
-    date_of_birth: dayjs(new Date()),
-    joining_date: dayjs(new Date()),
-    offer_date: dayjs(new Date()),
-  });
+  // const handleChangeDate = (newValue, name) => {
+  //   const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
+  //   const newObj = { ...defaultValues };
+  //   newObj[name] = formattedDate;
+  // };
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -243,14 +237,15 @@ export default function MyClaims({ currentUser, }) {
     error: ""
 
   });
-
+  const maxDate = dayjs();
+  const minDate = dayjs().subtract(1, 'month');
   const handleDateChange = (newValue, dateFieldName) => {
     const selectedDateValue = dayjs(newValue).format("YYYY-MM-DD");
     const currentDate = dayjs().format("YYYY-MM-DD");
 
     if (dateFieldName === "expenseStartDate") {
       const lastMonthDate = dayjs().subtract(1, "month").format("YYYY-MM-DD");
-      if (dayjs(selectedDateValue).isAfter(lastMonthDate) && dayjs(selectedDateValue).isBefore(currentDate)) {
+      if (dayjs(selectedDateValue).isAfter(lastMonthDate) || dayjs(selectedDateValue).isSame(lastMonthDate)|| dayjs(selectedDateValue).isSame(currentDate)) {
         setSelectedDate((prev) => ({
           ...prev,
           [dateFieldName]: selectedDateValue,
@@ -265,22 +260,26 @@ export default function MyClaims({ currentUser, }) {
     }
 
     if (dateFieldName === "expenseEndDate") {
-      if (selectedDate.expenseStartDate &&
-        (dayjs(selectedDateValue).isBefore(currentDate) && dayjs(selectedDateValue).isAfter(selectedDate.expenseStartDate)) ||
-        dayjs(selectedDateValue).isSame(selectedDate.expenseStartDate)
+      if (
+        selectedDate.expenseStartDate &&
+        (dayjs(selectedDateValue).isSame(selectedDate.expenseStartDate) ||
+          dayjs(selectedDateValue).isAfter(selectedDate.expenseStartDate))
       ) {
         setSelectedDate((prev) => ({
           ...prev,
           [dateFieldName]: selectedDateValue,
           error: "",
+          errorend: "", // Reset the error for expenseEndDate when changing it
         }));
       } else {
         setSelectedDate((prev) => ({
           ...prev,
-          errorend: "Plaese Select Valid Expense End Date.",
+          errorend: "Expense End Date cannot be less than Expense Start Date.",
         }));
       }
     }
+    
+    
   };
 
 
@@ -292,7 +291,7 @@ export default function MyClaims({ currentUser, }) {
       currency: currentUser?.currency || 'INR',
       companyId: currentUser?.companyId || companyID,
       employeeId: currentUser?.employeeId || employeeID,
-      expenseConfigId: currentUser?.expenseConfigId || 1,
+      expenseConfigId: currentUser?.expenseConfigId || 0,
       expenseStartDate: currentUser?.expenseStartDate || "",
       file_format: currentUser?.file_format || "pdf",
       file: currentUser?.file,
@@ -320,6 +319,7 @@ export default function MyClaims({ currentUser, }) {
   const onSubmit = handleSubmit(async (data) => {
     console.log(data,'uyfgv');
     //  data?.expense_date= selectedDate;
+    data.expenseConfigId = Id
     data.expenseStartDate = selectedDate?.expenseStartDate;
     data.expenseEndDate = selectedDate?.expenseEndDate;
     data.file = file;
@@ -334,7 +334,7 @@ export default function MyClaims({ currentUser, }) {
       const response = await axios.post(baseUrl + "/applyClaim", formDataForRequest).then(
         (res) => {
           if (res?.data?.code === "400" || 400){
-            enqueueSnackbar(res?.data?.message, { variant: 'warning' })
+            enqueueSnackbar(res?.data?.message, { variant: 'success' })
           }
           console.log('responsesss', res?.code);
           handleClose()
@@ -345,7 +345,7 @@ export default function MyClaims({ currentUser, }) {
         (error) => {
           console.log('lllll', error);
           handleClose()
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'warning' })
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         }
       );
     } catch (error) {
@@ -559,7 +559,7 @@ export default function MyClaims({ currentUser, }) {
     setConfirmDeleteOpen(false);
   };
 //
-
+console.log(defaultValues,"expenseConfigurationId",Id)
   return (
     <>
       <Helmet>
@@ -605,10 +605,13 @@ export default function MyClaims({ currentUser, }) {
                 name="type_oc_claim"
                 label="Type Of Claim"
                 required
-                options={(claimTypeOptions?.map((claimtype) => claimtype.expenseName)) || []}
-                getOptionLabel={(option) => option}
+                // options={(claimTypeOptions?.map((claimtype) => claimtype.expenseName)) || []}
+                options={claimTypeOptions|| []}
+                getOptionLabel={(option) => option.expenseName}
                 isOptionEqualToValue={(option, value) => option === value}
-              />
+                getOptionValue={(option) => option.expenseConfigurationId} // Convert to string if needed
+               onChange={(e,getOptionValue)=>{  setId(getOptionValue?.expenseConfigurationId),console.log(e,"aaaaaaaaaaaa",getOptionValue)}}
+            />
               <RHFAutocomplete
                 name="currency"
                 label="currency"
@@ -627,6 +630,8 @@ export default function MyClaims({ currentUser, }) {
                     name="expenseStartDate"
                     value={selectedDate?.expenseStartDate}
                     onChange={(date) => handleDateChange(date, 'expenseStartDate')}
+                    maxDate={maxDate} 
+                    minDate={minDate}
                   />
                   {/* </DemoContainer> */}
                 </LocalizationProvider>
@@ -645,6 +650,8 @@ export default function MyClaims({ currentUser, }) {
                     name="expenseEndDate"
                     value={selectedDate?.expenseEndDate}
                     onChange={(date) => handleDateChange(date, 'expenseEndDate')}
+                    maxDate={maxDate} 
+                    minDate={minDate}
                   />
                   {/* </DemoContainer> */}
                   {selectedDate?.errorend && (

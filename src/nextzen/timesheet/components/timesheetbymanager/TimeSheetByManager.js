@@ -49,7 +49,13 @@ const TimeSheetByManager = () => {
 
     const handleRoleChange=()=>{
 
+
     }
+    const managerID = localStorage.getItem('reportingManagerID');
+  const employeeID = localStorage.getItem('employeeID');
+  const companyID = localStorage.getItem('companyID');
+  const locationID = localStorage.getItem('locationID');
+  // console.log( locationID,"locationIDlocationID")
 
     const [loader,setLoader] = useState(false)
     const handleRentAmountChange = (e, index,filed) => {
@@ -74,12 +80,13 @@ const TimeSheetByManager = () => {
     const ApiHit=()=>{
       setLoader(true)
         const data={
-           // "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-           companyID:'COMP1',
-           locationID:30,
-           reportingManagerID:'INFO75',
-            // "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
-            // "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+         
+          //  companyID:companyID,
+          //  locationID:locationID,
+          //  reportingManagerID:managerID,
+            "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+            "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+              "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
             "date": dayjs(tdate).format('YYYY-MM-DD')
         }
         let config = {
@@ -114,12 +121,13 @@ const TimeSheetByManager = () => {
     const ApiHitSave=()=>{
       setLoading(true)
       const obj={
-           //"companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-           companyID:'COMP1',
-           locationID:30,
-           reportingManagerID:'INFO75',
-           // "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
-            // "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+           "companyID": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+           "locationID": JSON.parse(localStorage.getItem('userDetails'))?.locationID,
+            "reportingManagerID": JSON.parse(localStorage.getItem('userDetails'))?.employeeID,
+
+            // companyID:companyID,
+            // locationID:locationID,
+            // reportingManagerID:managerID,
             "date": dayjs(tdate).format('YYYY-MM-DD'),
             addDailyTimesheet:data
 
