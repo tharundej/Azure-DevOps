@@ -202,6 +202,8 @@ export const paths = {
       shiftconfiguration: `/configurations/shiftconfiguration`,
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
+      payschedule : `/configurations/payschedule`
+      
       },
 
     product: {

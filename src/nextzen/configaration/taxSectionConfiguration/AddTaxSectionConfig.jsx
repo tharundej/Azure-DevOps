@@ -195,12 +195,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     const errors = {};
   
     // Validate taxSection
-    if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+    if (!formData?.taxSection?.match(/^[a-zA-Z0-9()\-_ *]+$/)) {
       errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
     }
   
     // Validate taxScheme
-    if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+    if (!formData?.taxScheme?.match(/^[a-zA-Z0-9()\-_* ]+$/)) {
       errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
     }
   

@@ -29,8 +29,8 @@ import EmployeePermission from './employeepermission/EmployeePermission';
 const steps = ['General Information', 'Education', 'Experience','Documents','Statutory','Employee Permission','Current Work Details'];
 
 export default function OnBoardForm() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState({});
+  const [activeStep, setActiveStep] = useState(0);
+  const [completed, setCompleted] = useState({});
   const [employeeId,setemployeeId]=useState("");
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");

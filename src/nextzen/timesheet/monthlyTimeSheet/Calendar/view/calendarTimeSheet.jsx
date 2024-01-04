@@ -644,7 +644,7 @@ const customViews = {
  <>
      <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
      <Grid container flexDirection={"row"} spacing={1} marginBottom={1}>
-     <Grid item xs={4}>
+     <Grid item xs={12} md={4}>
      <Autocomplete
         // id="project-autocomplete"
         limitTags={1}
@@ -659,11 +659,11 @@ const customViews = {
         // sx={{ width: '500px' }}
       />
 </Grid>
-<Grid item xs={4}  >
+<Grid item xs={12} md={4} >
 
       <Box>
   <Grid container alignItems="center">
-    <Grid item xs={6}>
+    <Grid item xs={6} >
       <FormControlLabel
         control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
         label="Select Employee"
@@ -712,7 +712,7 @@ const customViews = {
 
 
       </Grid>
-      <Grid  item xs={4} >
+      <Grid  item xs={12} md={4} >
   {showAutocomplete && (
     <Autocomplete
       id="employee-autocomplete"

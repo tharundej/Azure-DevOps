@@ -160,8 +160,8 @@ React.useEffect(()=>{
   return (
     <div>
 
- {payRunDetails && payRunDetails?.map((item ,index) =>(
-  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" }}>
+ {payRunDetails?.data && payRunDetails?.data?.map((item ,index) =>(
+  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" ,alignItems:"center" }}>
       <CardContent style={{padding:"16px !important"}}>
         <Grid container spacing={0} alignItems="center">
           {/* Heading Text */}
@@ -190,10 +190,10 @@ React.useEffect(()=>{
   </Grid>
 </Grid>
 
-            <span style={shapeStyles}>
+            {/* <span style={shapeStyles}>
               <Brightness1Icon style={{width:'0.5em',paddingTop:'0.5em'} }/>
               Ready
-            </span>
+            </span> */}
           </Grid>
 
         
@@ -203,29 +203,19 @@ React.useEffect(()=>{
         <Grid container spacing={2} alignItems="center">
           {/* Heading Text */}
 
-          <Grid item xs={3}>
-            <Grid container direction="column" spacing={2}>
-              {/* Heading Text */}
-              <Grid item>
-                <Typography style={{ color: '#7D7878' , fontSize: '0.9rem' }}>EMPLOYEE`S NET PAY</Typography>
-              </Grid>
-              <Grid item>
-                <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>YET TO PROCESS</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={3}>
+        
+          <Grid item xs={4}>
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
                 <Typography style={{ color: '#7D7878', fontSize: '0.9rem' }}>PAYMENT DATE</Typography>
               </Grid>
               <Grid item>
-                <Typography style={{ color: '#000000' , fontSize: '0.9rem'}}> {formatDate(item?.paymentDate)}</Typography>
+                <Typography style={{ color: '#000000' , fontSize: '0.9rem'}}> {formatDate(item?.date)}</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
@@ -238,7 +228,7 @@ React.useEffect(()=>{
           </Grid>
 
           {/* Badge */}
-          <Grid item xs={3} container justifyContent="flex-start">
+          <Grid item xs={4} container alignItems="center">
             <Button
               style={{ backgroundColor: '#007AFF', color: 'white' }}
               onClick={()=>handleCreate(item?.type)}
@@ -248,12 +238,7 @@ React.useEffect(()=>{
           </Grid>
         </Grid>
       </CardContent>
-      <CardContent style={{ display: 'flex' }}>
-        <InfoIcon style={{ color: '#7D7878', marginRight: '7px' }} />
-        <Typography style={{ color: '#7D7878' , fontSize: '0.9rem' }}>
-          You haven&apos;t processed this pay run and it&apos;s past the pay day
-        </Typography>
-      </CardContent>
+     
     </Card>
  ))
 
