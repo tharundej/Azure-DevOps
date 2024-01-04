@@ -407,7 +407,7 @@ const [openComponent ,setOpenComponent] =useState(false)
         lg={12}
         style={{ marginBottom: '0.5rem' }}
       >
-        <Grid item md={6} xs={6}>
+        <Grid item md={8} xs={8}>
           <TextField
             placeholder="Search...."
             fullWidth
@@ -422,7 +422,7 @@ const [openComponent ,setOpenComponent] =useState(false)
                Verify And Complete
               </Button>
         </Grid>
-        <Grid item md={2} xs={2}>
+        {/* <Grid item md={2} xs={2}>
           <Grid>
           {badgeContent ===  true?(
                <Badge badgeContent={""} color="success" variant="dot" 
@@ -442,13 +442,9 @@ const [openComponent ,setOpenComponent] =useState(false)
           <Iconify icon="mi:filter"/>
           Filters
      </Button>)}
-            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
-                <Iconify icon="mi:filter" />
-              </Button>
-            </Stack> */}
+          
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
 
       <BootstrapDialog
