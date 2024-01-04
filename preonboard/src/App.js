@@ -8,7 +8,8 @@ function App() {
     <div className="App">
      <Router>
         <Routes>
-          <Route path="/" element={<PreOnboardHome />} />
+          <Route path="/onboard" element={<Login/>}/>
+          <Route path="/preonboard" element={<PreOnboardHome />} />
           {/* <Route path="/preonboard" element={<PreOnboardHome />} /> */}
         </Routes>
       </Router>
