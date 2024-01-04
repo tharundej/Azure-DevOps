@@ -51,9 +51,9 @@ const [loading,setLoading] = React.useState(false);
     { id: 'Incentives', label: 'Incentives', type: 'text' },
     { id: 'Bonus', label: 'Bonus', type: 'text' },
     { id: 'OTAmount', label: 'OT Amount', type: 'text' },
-    { id: 'specialAllowance', label: 'Spacial Alowance', type: 'text' },
+    { id: 'specialAllowance', label: 'Special allowance', type: 'text' },
 
-    { id: 'conveyanceAllowance', label: 'Conveyance Alowance', type: 'text' },
+    { id: 'conveyanceAllowance', label: 'Conveyance Allowance', type: 'text' },
     { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text' },
     // { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
 
@@ -162,7 +162,7 @@ const handleClose = () => {
     
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getPayRunDetailsContract"
+        endpoint="/getPayRunByType"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="EarningAndDeductionFilter"

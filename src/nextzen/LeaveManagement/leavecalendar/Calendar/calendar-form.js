@@ -262,7 +262,7 @@ const lossOfPay = async()=>{
     <Typography variant="subtitle1" sx={{ px: 4 }}>Available Leaves</Typography>
 <Grid container spacing={1} sx={{ px: 3 , py:2}}>
       {availableLeaves? (
-    availableLeaves?.balances?.map((itm) => (
+    availableLeaves?.data?.map((itm) => (
           <Grid item xs={6} md={4} lg={4} key={itm?.leaveTypeId}>
             <Stack direction="row" alignItems="center" spacing={1}>
           

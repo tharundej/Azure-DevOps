@@ -83,6 +83,7 @@ const CreateEducation = ({
   employeeIDForApis,
   callApi,
   handleCallSnackbar,
+  handleCount
 }) => {
 
   const { enqueueSnackbar } = useSnackbar();
@@ -196,6 +197,7 @@ const CreateEducation = ({
         setAddDocuments([]);
         callApi();
         handleCallSnackbar(response?.data?.message, 'success');
+        handleCount()
         onhandleClose();
       })
       .catch((error) => {

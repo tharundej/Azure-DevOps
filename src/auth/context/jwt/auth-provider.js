@@ -16,7 +16,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import ScrollTopButton from './scroll-top';
 import { useSnackbar } from 'notistack';
 import { PATH_TO_REST_PASSWORD } from 'src/config-global';
-
+import CircularProgress from '@mui/material/CircularProgress';
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
@@ -138,7 +138,7 @@ export function AuthProvider({ children }) {
   const [OptVerify, setOptVerify] = useState(false);
   const router = useRouter();
   const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
-
+  const [loader ,setLoader] = useState(true);
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -326,8 +326,11 @@ export function AuthProvider({ children }) {
     //   }
     console.log(data,'FUN')
       const response = await axios.post(baseUrl + '/signup', data);
-      // const response = await axios.post(endpoints.auth.register, data);
+      {loader &&
+      <CircularProgress />
+      }
       if(response?.data.code === 200){
+        setLoader(false);
         console.log(response);
         enqueueSnackbar(response?.data?.message,{variant:'success'})
         const accessToken = response?.data?.data?.jwt;
@@ -340,6 +343,7 @@ export function AuthProvider({ children }) {
       }
       else if(response?.data.code === 400 || 409){
         enqueueSnackbar(response?.data?.message,{variant:'error'})
+        setLoader(false);
       }
     },
     []

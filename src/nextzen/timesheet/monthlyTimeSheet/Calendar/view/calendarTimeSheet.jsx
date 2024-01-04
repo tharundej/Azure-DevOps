@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useSnackbar } from 'src/components/snackbar';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import {Card,OutlinedInput,FormControl,Box,Switch,Select,MenuItem,DialogActions ,InputLabel,Stack,Button,Dialog,Container,TextField,Autocomplete,CardContent,Typography,DialogTitle,Grid,Tab,Tabs,IconButton,DialogContent} from '@mui/material';
@@ -39,21 +40,28 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { getHolidaysListAPI } from 'src/api/HRMS/LeaveManagement';
 import axios from 'axios';
+import Divider from '@mui/material/Divider';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 const defaultFilters = {
   colors: [],
   from_date: null,
   to_date: null,
 };
-
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import ApproveTimeSheetTable from '../approveTimeSheetTable';
+import ButtonGroup from '@mui/material/ButtonGroup';
 export default function CalendarView() {
  //----------------Calendar -------------------
   
   const theme = useTheme();
-  const {user} = useContext(UserContext)
+  const {user} = useContext(UserContext);
+  const { enqueueSnackbar } = useSnackbar();
   const settings = useSettingsContext();
   const smUp = useResponsive('up', 'sm');
   const openFilters = useBoolean();
@@ -123,7 +131,7 @@ export default function CalendarView() {
   }));
 
 
-
+const [count, setCount]=useState(0)
   const EventSchema = Yup.object().shape({
     leaveTypeId:Yup.lazy((value) => {
     return value === 0
@@ -147,41 +155,6 @@ export default function CalendarView() {
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-const onSubmit = handleSubmit(async (data) => {
-    console.log('uyfgv');
-    console.log(data,"defaultValues111")
-
-    try {
-      // data.company_id = '0001';
-      // data.company_name = 'infbell';
-      // const FinalDal=data+"company_id": "0001"+"company_name": "infbell",
-      // data.offer_date = formatDateToYYYYMMDD(datesUsed?.offer_date);
-      // data.joining_date = formatDateToYYYYMMDD(datesUsed?.joining_date);
-      // data.date_of_birth = formatDateToYYYYMMDD(datesUsed?.date_of_birth);
-
-      console.log(data, 'data111ugsghghh');
-
-      const response = await axios.post(baseUrl+'/q', data).then(
-        (successData) => {
-          // enqueueSnackbar(response?.data?.message,{variant:'success'})
-          console.log('success', successData);
-        },
-        (error) => {
-          console.log('lllll', error);
-          // enqueueSnackbar(response?.data?.message,{variant:'error'})
-        }
-      );
-
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      // router.push(paths.dashboard.user.list);
-      // console.info('DATA', data);
-    } catch (error) {
-      // enqueueSnackbar(response?.data?.message,{variant:'error'})
-      console.error(error);
-    }
-  });
 
   
   // surendra
@@ -225,6 +198,15 @@ console.log(date,"datedate1234",view,eventsLoading)
    const employeeID = localStorage.getItem('employeeID');
    const companyID = localStorage.getItem('companyID');
 
+   const [getApiCall, setGetApiCall] =  useState({
+    employeeId:employeeID ,
+    companyId: companyID,
+    DateOfActivity:{
+        from:"",
+         to: ""
+    }
+})
+
    // data setting 1st and last days
 function getMonthStartAndEndDates(inputDate) {
   const currentDate = new Date(inputDate);
@@ -239,28 +221,35 @@ function getMonthStartAndEndDates(inputDate) {
   currentDate.setDate(0);
 
   const endDate = currentDate.toISOString().split('T')[0]; // End date
+  setGetApiCall(prevGetApiCall => ({
+    ...prevGetApiCall,
+    DateOfActivity: {
+      from: startDate,
+      to: endDate
+    }
+  }));
+  setApproveData(prevApproveData => ({
+    ...prevApproveData,
+    date: {
+      from: startDate,
+      to: endDate
+    }
+  }));
 
   return { startDate, endDate };
 }
 
 // Example usage:
 const inputDate = date; // Your input date
-const { startDate, endDate } = getMonthStartAndEndDates(inputDate);
+// const { startDate, endDate } = getMonthStartAndEndDates(inputDate);
 
-console.log(endDate,'Start Date:', startDate);
+// console.log(endDate,'Start Date:', startDate);
 // console.log('End Date:', endDate);
 useEffect(()=>{
+  getMonthStartAndEndDates(inputDate)
+},[inputDate])
 
-},[])
 
- const [getApiCall, setGetApiCall] =  useState({
-    employeeId:employeeID ,
-    companyId: companyID,
-    DateOfActivity:{
-        from:startDate,
-         to: endDate
-    }
-})
 console.log(date,"getApiCall")
 
 const calendarGetData = async (getApiCall) => {
@@ -321,6 +310,12 @@ const calendarGetData = async (getApiCall) => {
       projectID: formattedProjectIds,
       // You might need to update other properties of the data state as well
     }));
+    setApproveData((prevData) => ({
+      ...prevData,
+      projectId: formattedProjectIds,
+      // You might need to update other properties of the data state as well
+    }));
+    
 
     },
     (error) => {
@@ -517,10 +512,15 @@ const handleProjectChange = (event, newValue) => {
     ...prevData,
     projectID: newValue,
   }));
+  setApproveData((prevData) => ({
+    ...prevData,
+    projectId: newValue,
+  }));
 };
 
 const handleEmployeeChange = (event, newValue) => {
   console.log(newValue,"GANG25GANG25")
+  if(newValue){
   setData((prevData) => ({
     ...prevData,
     employeeId: newValue.employeeId,
@@ -530,6 +530,11 @@ const handleEmployeeChange = (event, newValue) => {
     ...prevGetApiCall,
     employeeId: newValue.employeeId,
   }));
+  setApproveData((prevGetApiCall) => ({
+    ...prevGetApiCall,
+    employeeId: newValue.employeeId,
+  }));
+}
   
 };
 console.log(data,"dataatdada",selectedRange)
@@ -558,14 +563,40 @@ const onDayData = () => {
 const [approveData, setApproveData]= useState(
   {
     companyId: companyID,
-    employeeId: "INFO30",
+    employeeId: "",
     projectId: [],
     date: {
-        from: "2023-12-01",
-        to: "2023-12-31"
+        from: "",
+        to: ""
     }
   }
 )
+console.log(approveData,"approveData",data)
+const onSubmitEdit2 = async (approveData, event) => {
+ 
+  try {
+    event.preventDefault();     
+    // console.log(editData, "editDataeditData")
+    const response = await axios.post(baseUrl + "/monthlyStatusApprove", approveData).then(
+      (res) => {
+        console.log('sucessmonthlyStatusApprove', res);
+        handleClose()
+        enqueueSnackbar(res?.data?.message, { variant: 'success' })
+        // setCount(count + 1)
+      },
+      (error) => {
+        console.log('lllll', error);
+        handleClose()
+        enqueueSnackbar(error?.res?.data?.message, { variant: 'warning' })
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    handleClose()
+   
+    enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+  }
+}
 
 // model   code
 const [open, setOpen] = React.useState(false);
@@ -573,11 +604,51 @@ const [open, setOpen] = React.useState(false);
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
+
+
+  const onCloseFormRefresh = ()=>{
+    onCloseForm()
+    // set(count+1)
+    // calendarGetData(getApiCall)
+  }
+// confirmation dialod
+// setConfirmDeleteOpen(true);
+const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+const handleCancelDelete = () => {
+  setConfirmDeleteOpen(false);
+};
+
+const handleDeleteConformed=()=>{
+  //HIT API 
+  console.log("confiramtion dialod for approve")
+}
+// table permissions
+const [tablePermission, setTablePermission] = useState(true);
+
+const handleTypographyClick = (value) => {
+  setTablePermission(value);
+};
+// size decrease of calendar
+const customViews = {
+  week: {
+    // slotDuration: '00:30:00', // Set the slot duration to 30 minutes
+    // minTime: '00:00:00', // Set the minimum time to midnight
+    // maxTime: '24:00:00', // Set the maximum time to midnight of the next day
+    viewProps: {
+      slotHeight: 30, // Dynamically set the slot height
+    },
+  },
+  // You can customize other views as needed
+};
   return (
  <>
-     <Container sx={{height:"100%",width:"100%"}} maxWidth={settings.themeStretch ? false : 'lg'}>
+     <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
+     <Grid container flexDirection={"row"} spacing={1} marginBottom={1}>
+     <Grid item xs={4}>
      <Autocomplete
-        id="project-autocomplete"
+        // id="project-autocomplete"
+        limitTags={1}
+      id="multiple-limit-tags"
         fullWidth
         multiple
         options={projects || []}
@@ -585,26 +656,76 @@ const [open, setOpen] = React.useState(false);
         getOptionLabel={(option) => option?.projectName}
         onChange={handleProjectChange}
         renderInput={(params) => <TextField {...params} label="Select Project" />}
+        // sx={{ width: '500px' }}
       />
+</Grid>
+<Grid item xs={4}  >
 
       <Box>
-        <FormControlLabel
-          control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
-          label="Select Employee"
-        />
+  <Grid container alignItems="center">
+    <Grid item xs={6}>
+      <FormControlLabel
+        control={<Switch checked={showAutocomplete} onChange={handleSwitchChange} />}
+        label="Select Employee"
+      />
+    </Grid>
+    <Grid item xs={6} justifyContent={"flex-end"}>
+    <ButtonGroup variant='contained' sx={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        onClick={() => handleTypographyClick(true)}
+        sx={{
+          cursor: 'pointer',
+          color: tablePermission ? 'white' : 'black',
+          backgroundColor: tablePermission ? 'black' : 'white',
+          padding: '0 5px',
+          borderRadius: '5px 0 0 5px',
+          '&:hover': {
+            backgroundColor: 'grey',
+          },
+        }}
+      >
+        <CalendarMonthIcon/>
+      </Button>
+     
+      <Button
+        onClick={() => handleTypographyClick(false)}
+        sx={{
+          cursor: 'pointer',
+          color: !tablePermission ? 'white' : 'black',
+          backgroundColor: !tablePermission ? 'black' : 'white',
+          padding: '0 5px',
+          borderRadius: '0 5px 5px 0',
+          '&:hover': {
+            backgroundColor: 'grey',
+          },
+      
+        }}
+      >
+        {/* Table */}
+        <TableRowsIcon/>
+      </Button>
+    </ButtonGroup>
+    </Grid>
+  </Grid>
 
-        {showAutocomplete && (
-          <Autocomplete
-            id="employee-autocomplete"
-            fullWidth
-            options={employeeList || []}
-            value={data.employeeName}
-            getOptionLabel={(option) => option?.employeeName}
-            onChange={handleEmployeeChange}
-            renderInput={(params) => <TextField {...params} label="Select Employee" />}
-          />
-        )}
-      </Box>
+</Box>
+
+
+      </Grid>
+      <Grid  item xs={4} >
+  {showAutocomplete && (
+    <Autocomplete
+      id="employee-autocomplete"
+      fullWidth
+      options={employeeList || []}
+      value={data.employeeName}
+      getOptionLabel={(option) => option?.employeeName}
+      onChange={handleEmployeeChange}
+      renderInput={(params) => <TextField {...params} label="Select Employee" />}
+    />
+  )}
+  </Grid>
+      </Grid>
         {/* <Stack
           alignItems="flex-end"
           justifyContent="flex-end"
@@ -622,7 +743,7 @@ const [open, setOpen] = React.useState(false);
         </Stack> */}
         {canReset && renderResults}
         <Card>
-          <StyledCalendar>
+        { tablePermission  && <StyledCalendar>
             <CalendarToolbar
               date={date}
               view={view}
@@ -647,7 +768,7 @@ const [open, setOpen] = React.useState(false);
               // selectAllow={selectAllowCallback}
               events={overallEvents}
               // events={eventDataMe}
-              // eventContent={renderEventContent}
+              eventContent={renderEventContent}
               headerToolbar={false}
               select={onSelectRange}
              eventClick={onClickEvent}
@@ -666,16 +787,25 @@ const [open, setOpen] = React.useState(false);
                 interactionPlugin,
               ]}
             timeZone = {timezone}
-               
+            // cellHeight={402} 
             />
-          </StyledCalendar>
+          </StyledCalendar>}
+          
         </Card>
+        {showAutocomplete&& tablePermission && 
+        <Grid container justifyContent="flex-end" marginTop={1} xs={12}>
+  <Button variant="contained" color="primary" onClick={handleOpen}>
+    Approve Time Sheet
+  </Button>
+</Grid>
+}
+{tablePermission === false  &&  <ApproveTimeSheetTable/>}
       </Container>
       <Dialog
         fullWidth
         maxWidth="xs"
         open={openForm}
-        onClose={onCloseForm}
+        onClose={onCloseFormRefresh}
         transitionDuration={{
           enter: theme.transitions.duration.shortest,
           exit: theme.transitions.duration.shortest - 80,
@@ -703,7 +833,11 @@ const [open, setOpen] = React.useState(false);
         />
         {/* </DialogTitle> */}
       </Dialog>
-      <Button variant="contained" color="primary" onClick={handleOpen}> Approve Time Sheet</Button>
+     
+      {/* <Button variant="contained" color="primary" onClick={() => setConfirmDeleteOpen(true)}>
+  Approve Time Sheet1
+</Button> */}
+
       <Dialog
         fullWidth
         maxWidth={false}
@@ -713,8 +847,8 @@ const [open, setOpen] = React.useState(false);
           sx: { maxWidth: 720 },
         }}
       >
-         <ModalHeader heading="ApproveTimesheet"/>
-        <FormProvider methods={methods} onSubmit={onSubmit}>
+         <ModalHeader heading="Approve Time Sheet"/>
+        <FormProvider methods={methods} onSubmit={(event) => onSubmitEdit2(approveData, event)}>
           {/* methods={methods} onSubmit={onSubmit} */}
           {/* <DialogTitle>Apply My Compoff</DialogTitle> */}
 
@@ -728,14 +862,16 @@ const [open, setOpen] = React.useState(false);
               display="grid"
               marginTop={2}
               gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                // xs: 'repeat(1, 1fr)',
+                // sm: 'repeat(2, 1fr)',
               }}
             >
               
-<TextField label="Start Date"></TextField>
-           
-<TextField label="End Date"></TextField>
+{/* <TextField label="Start Date"></TextField> */}
+<CardContent fullWidth>
+<Typography>Are you sure you want to Approve Time Sheet</Typography>
+</CardContent>        
+
             </Box>
 
 
@@ -749,11 +885,21 @@ const [open, setOpen] = React.useState(false);
             </Button>
 
             <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
-              Save
+              Approve 
             </LoadingButton>
           </DialogActions>
         </FormProvider>
       </Dialog>
+
+
+       {/* <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConformed}
+        itemName="Approve Time Sheet "
+        message={`Are you sure you want to Approve Time Sheet`}
+      /> */}
+   
     
       </>
   );
@@ -782,9 +928,9 @@ const [open, setOpen] = React.useState(false);
     const {event} = eventContent; // Get the event title
     const backgroundColor = event?.title==="Vacation Leave"?"#c9de8c":event?.title==="Sick Leave"?"#e8caf1":event?.title==="Paid Leave"?"#d4a085":event?.title==="Maternity Leave"?"#ffbed1":event?.title==="Personal Leave"?"	#04c4ca":"#6fa8dc"
     return (
-      
-        <div style={{color:"black",fontWeight:"700",backgroundColor,padding:"4px",cursor: "pointer" }}>{event?.title}</div>
-      
+      <>
+        <Card style={{color:"blue",fontWeight:"700",backgroundColor,padding:"1px",cursor: "pointer",  alignContent:"center", alignSelf:"center",textAlign:'center'}}>{event?.title} Hours</Card>
+        </>
     );
   }
   

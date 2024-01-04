@@ -157,7 +157,7 @@ const handleClickItem=()=>{
                 startIcon={<PowerSettingsNewIcon />}
                 variant="contained"
                 color="error"
-                style={{ width: '100%', borderRadius: 0 }}
+                // style={{ width: '100%', borderRadius: 0 }}
               >
                 LOGOUT
               </Button>
@@ -172,7 +172,7 @@ const handleClickItem=()=>{
         onConfirm={handleConfirmLogout}
         itemName="Logout"
         confirmButtonText="Ok"
-        message="Are you sure want to logout?"
+        message="Are you sure you want to logout?"
       />
 
       <NavSectionVertical

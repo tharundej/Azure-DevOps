@@ -12,8 +12,8 @@
   // export const baseUrl=`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`
 
 
+export const baseImageUrl =`https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`;
 
-
-export const baseImageUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`
+export default `https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`;
 
 

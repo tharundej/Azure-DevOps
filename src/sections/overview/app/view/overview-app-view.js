@@ -32,6 +32,8 @@ import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import axios from 'axios';
 import HolidayList from 'src/nextzen/usersdashboard/holiday/HolidayList';
 import LeaveRequest from 'src/nextzen/usersdashboard/leaverequest/LeaveRequest';
+import instance from 'src/api/BaseURL';
+import AvailableLeave from 'src/nextzen/usersdashboard/AvailableLeave/Availableleave';
 
 
 
@@ -41,6 +43,7 @@ export default function OverviewAppView() {
   const { user } = useContext(UserContext);
   const [birthdayList,setBirthdayList]=useState([]);
   const [holidayList,setHolidayList]=useState([])
+  const [AvailableLeaveData,setAvailableLeaveData]=useState([])
   const [leaveRequestList,setLeaveRequestList]=useState([])
 
   const ApiHitBirthday=()=>{
@@ -120,11 +123,25 @@ axios.request(config)
       console.log(error);
     });
       }
+      const getAvailableLeave = async()=>{
+        try{
+          const data={
+            companyId:(user?.companyID)? user?.companyID : '',
+            employeeId:(user?.employeeID)? user?.employeeID : '',
+          }
+          const response = await instance.post('/availableLeave',data)
+          setAvailableLeaveData(response?.data?.balances)
+        }catch(error){
+          console.log("Error",error)
+          throw error;
+        }
+      }
 
   useEffect(()=>{
     ApiHitBirthday();
     ApiHitHolidays();
     ApiHitLeaveRequest();
+    getAvailableLeave()
   },[])
 
   const theme = useTheme();
@@ -137,7 +154,11 @@ axios.request(config)
         <Grid xs={12} md={8}>
           <AppWelcome
             title={`Welcome 👋  ${user?.employeeName || ""} `}
-            description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+
+           // description="Every day is a new chance to achieve your goals. Seize the day with enthusiasm and determination."
+            description="Happy work anniversary! Your creativity, passion, and hard work are truly valued. Here's to more successful and fulfilling years ahead.~Priya!!"
+
+
             img={<SeoIllustration />}
             // action={
             //   <Button variant="contained" color="primary">
@@ -160,7 +181,7 @@ axios.request(config)
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <HolidayList title="Up Coming Holiday" list={holidayList} />
+          <AvailableLeave title="Available Leaves" list={AvailableLeaveData} />
         </Grid>
 
         <Grid xs={12} md={6} lg={6}>

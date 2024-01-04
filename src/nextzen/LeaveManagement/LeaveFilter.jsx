@@ -189,6 +189,7 @@ export default function LeaveFilter({filterSearch,filterData}){
     status: "",        
     leave_type_name: "",  
       })
+      setBadgeContent(false)
       setOpen(false);
     }
     const debounce = (func, delay) => {

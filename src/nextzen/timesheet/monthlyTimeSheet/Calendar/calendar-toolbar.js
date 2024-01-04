@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import Stack from '@mui/material/Stack';
+import { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -48,6 +49,20 @@ export default function CalendarToolbar({
   const popover = usePopover();
 
   const selectedItem = VIEW_OPTIONS.filter((item) => item.value === view)[0];
+
+  useEffect(()=>{
+    fDate(date)
+  },[date])
+  function fDate(date) {
+    const options = { month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+  
+  // Example usage
+  // const formattedDate = fDate(new Date('2023-12-01'));
+  // console.log(date,"formattedDate"); 
+   // Output: December 2023
+  
 
   return (
     <>

@@ -106,6 +106,8 @@ const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclaration
 
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
+const Compoff = lazy(() => import('src/nextzen/LeaveManagement/Compoff'));
+ 
 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
@@ -499,7 +501,13 @@ export const dashboardRoutes = [
         </DashboardLayout>
       </AuthGuard>
     ),
-    children: [{ element: <Leave />, index: true }],
+    children: [
+      { element: <Leave />, index: true },
+     
+      { path: 'leave', element: <Leave /> },
+      { path: 'compoff', element: <Compoff/> },
+  
+  ],
   },
   {
     path: 'monthlydeductions',

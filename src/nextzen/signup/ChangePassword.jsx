@@ -84,8 +84,7 @@ export default function ChangePassword() {
       };
       const config = {
         headers: {
-          Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI1MjcxMTEsInJhbmRvbSI6Nzk5MjR9.f4v9qRoF8PInZjvNmB0k2VDVunDRdJkcmE99qZHZaDA',
+          Authorization:localStorage.getItem('accessToken'),
           // 'Content-Type': 'application/json'
         },
       };
@@ -95,7 +94,7 @@ export default function ChangePassword() {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         handleClose();
-        // router.push(paths.auth.jwt.login);
+         router.push(paths.auth.jwt.login);
       } else if (response?.data?.code === 400) {
         setSnackbarSeverity('error');
         setSnackbarMessage(response?.data?.message);
@@ -115,7 +114,7 @@ export default function ChangePassword() {
 
       <Stack spacing={1} sx={{ my: 1 }}>
         <Grid container flexDirection="column" justifyContent="center" alignItems="center">
-          <Typography variant="h6">Change your password</Typography>
+          <Typography variant="h6">Change Password</Typography>
         </Grid>
       </Stack>
     </>
@@ -214,23 +213,11 @@ export default function ChangePassword() {
             loading={isSubmitting}
             sx={{ marginLeft: 'auto', marginRight: 'auto', display: 'block' }}
           >
-            Save Changes
+            Update Password
           </Button>
-          <Link
-            component={RouterLink}
-            href={paths.dashboard.root}
-            color="inherit"
-            variant="subtitle2"
-            sx={{
-              alignItems: 'center',
-              display: 'inline-flex',
-            }}
-          >
-            <Iconify icon="eva:arrow-ios-back-fill" width={16} />
-            Return to Dashboard
-          </Link>
+         
         </Stack>
-        {/* </Container> */}
+      
       </FormProvider>
     </>
   );

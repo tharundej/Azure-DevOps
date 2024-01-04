@@ -390,7 +390,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {payscheduleTypes.map((name,index) => (
+                      {payscheduleTypes?.map((name,index) => (
                         <MenuItem
                           key={index}
                           value={name?.payScheduletype}

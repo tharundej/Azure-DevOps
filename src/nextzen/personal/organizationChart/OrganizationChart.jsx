@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Icon } from '@iconify/react';
-import { baseImageUrl, baseUrl } from '../../global/BaseUrl';
+import baseImageUrl, { baseUrl } from '../../global/BaseUrl';
 import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../context/user/UserConext';

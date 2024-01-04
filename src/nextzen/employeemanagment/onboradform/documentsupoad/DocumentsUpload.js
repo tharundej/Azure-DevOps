@@ -17,9 +17,14 @@ const   DocumentsUpload=forwardRef((props,ref)=> {
   const { enqueueSnackbar } = useSnackbar();
 
   var [defaultValues,setDefaultValues]=useState([ {
-    fileType:'',
+    fileType:'aadhar',
     fileName:'',
     fileContent:''
+},
+{
+  fileType:'pancard',
+  fileName:'',
+  fileContent:''
 }])
 
 const VisuallyHiddenInput = styled('input')({
@@ -89,7 +94,16 @@ const VisuallyHiddenInput = styled('input')({
         "employeeId": localStorage.getItem('employeeIdCreated'),
         documents:defaultValues
       }
+
+      const isAnyFieldEmpty = (arr) => {
+        return arr.some((obj) => Object.values(obj).some((value) => value === ''));
+      };
+      const err=isAnyFieldEmpty(defaultValues);
+      if(!err)
       onSubmit(obj);
+    else {
+      enqueueSnackbar("Please Upload AADHAAR and PAN Card",{variant:"error"});
+    };
 
 
 
@@ -214,12 +228,21 @@ const VisuallyHiddenInput = styled('input')({
                 // }}
               >
 
+
+
                 
                    {defaultValues?.map((file,index)=>(
                  <Grid spacing={2} sx={{ paddingBottom: '10px' }} container flexDirection="row" item>
                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Select Document</InputLabel>
+                    <InputLabel
+                    id={`demo-simple-select-label-${index}`}
+                    style={{ color: 'black' }}
+                  >
+                   
+                    Select Document
+                    <span style={{ color: 'red' }}>{index < 2 ? '*' : ''}</span>
+                  </InputLabel>
                       <Select
                         label="Select Document"
                         value={file?.fileType}
@@ -227,11 +250,12 @@ const VisuallyHiddenInput = styled('input')({
                           handleCategoryChange(e, index);
                         }}
                         name="Select Document"
+                        disabled={index>1?false:true}
                       >
                        
-                       <MenuItem value="aadhar">Aadhaar</MenuItem>
-                        <MenuItem value="pan-card">Pan Card</MenuItem>
-                        <MenuItem value="pass-port">Passport</MenuItem>
+                       <MenuItem value="aadhar">AADHAAR Card</MenuItem>
+                        <MenuItem value="pancard">PAN Card</MenuItem>
+                        <MenuItem value="passport">Passport</MenuItem>
 
                         {/* Add more categories here */}
                       </Select>
@@ -270,7 +294,7 @@ const VisuallyHiddenInput = styled('input')({
 
                           <Grid item>
                             {
-                              index === 0 && (
+                              index === 1 && (
                                 <IconButton
                                   onClick={() => {
                                     handleAddDocument(index);
@@ -279,7 +303,7 @@ const VisuallyHiddenInput = styled('input')({
                                 >
                                   <Iconify
                                     icon="gala:add"
-                                    sx={{ fontSize: '48px', color: '#3B82F6' }}
+                                    sx={{ fontSize: '68px', color: '#3B82F6' }}
                                   />{' '}
                                   {/* Set the font size to 24px */}
                                 </IconButton>
@@ -292,7 +316,7 @@ const VisuallyHiddenInput = styled('input')({
                               // }
                               // >Add Files</Button>
                             }
-                            {index !== 0 && (
+                            {index >= 2 && (
                               <IconButton
                                 onClick={() => {
                                   handleDeleteDocument(index);

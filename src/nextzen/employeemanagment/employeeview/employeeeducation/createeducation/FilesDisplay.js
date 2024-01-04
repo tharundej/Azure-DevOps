@@ -16,7 +16,7 @@ const FilesDisplay = ({dataOfFiles,handleDeleteDocument}) => {
     <>
   <Grid container spacing={5}>
   {dataOfFiles && dataOfFiles?.map((category,index) => (
-    <Grid key={category.name} item xs={12} md={6} lg={6} container flexDirection="row" alignItems="center" justifyContent="space-between">
+    <Grid key={category.name} item xs={12} md={12} lg={12} container flexDirection="row" alignItems="center" justifyContent="space-between">
       <Grid  item>
         <Box sx={{ width: 40, height: 40 }}>
           <Box component="img" src="/assets/icons/files/ic_pdf.svg" />

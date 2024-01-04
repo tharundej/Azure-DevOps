@@ -53,7 +53,7 @@ function parseCustomDateTime(dateTimeString) {
   const year = parseInt(parts[0]);
   const month = parseInt(parts[1]) - 1; // Months are zero-based in JavaScript Date
   const day = parseInt(parts[2]);
-  const timeParts = parts[3].split(':');
+  const timeParts = parts[3]?.split(':');
   const hour = parseInt(timeParts[0]);
   const minute = parseInt(timeParts[1]);
   const second = parseInt(timeParts[2]);
@@ -62,7 +62,6 @@ function parseCustomDateTime(dateTimeString) {
 }
 
 function formatDateTimeToYYYYMMDDHHMMSS(dateTimeString) {
-  console.log(dateTimeString,"dateTimeStringg")
   const date = parseCustomDateTime(dateTimeString);
   const months = [
     "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"

@@ -286,8 +286,8 @@ console.log(extractedLocationIDs,'lllll')
       locations: [
         ...prevData.locations,
         {
-          locationID: extractedLocationIDs[0], // Assuming extractedLocationIDs is an array
-          locationName: extractedLocationNames[0], // Assuming extractedLocationNames is an array
+          locationID: extractedLocationIDs, // Assuming extractedLocationIDs is an array
+          locationName: extractedLocationNames, // Assuming extractedLocationNames is an array
         },
       ],
       // [locations]: [extractedLocationIDs,extractedLocationNames],

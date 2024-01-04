@@ -26,6 +26,7 @@ import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {useSnackbar} from '../../../components/snackbar'
+import { useEffect } from 'react';
 
 export default function GeneralForminfo({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
@@ -56,6 +57,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
+    foodAllowance: Yup.number(),
+    travelAllowance: Yup.number(),
+    medicalAllowance: Yup.number(),
   });
 
   const NewUserSchema2 = Yup.object().shape({
@@ -115,16 +119,29 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     resolver: yupResolver(NewUserSchema3),
     defaultValues: defaultValues3, // Use defaultValues instead of defaultValues2
   });
+  const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
+  const [isTextFieldVisible, setTextFieldVisible] = useState(); // State to manage the visibility of the text field
+
   const payPcheduleTypes = [
-    { type: '52- Once a week' },
-    { type: '26- Once in a two weeks' },
-    { type: '24- Twice a month' },
-    { type: '12-Once a month' },
-    {type: '366- Once a day'},
+    { type: 'Once a week' },
+    { type: 'Once in a two weeks' },
+    { type: 'Twice a month' },
+    { type: 'Once a month' },
+    {type: 'Once a day'},
+    {type: 'Hour a day'}
+  ];
+
+  const payPcheduleTypes1 = [
+ 
+    {type: 'Once a day'},
+  ];
+
+  const payPcheduleTypes2 = [
+    
     {type: 'Hour a day'}
   ];
   //   const m2 = useForm();
-  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' },{type:'Daily Wise'},{type:'Hour Wise'}];
+  const employeepayTypes = [{ type: 'Permanent' }, { type: 'Contract' },{type:'Daily Wages'},{type:'Hour Wages'}];
 
   const {
     setValue: setValue1,
@@ -147,6 +164,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     reset: reset3,
   } = methods3;
   //   const values = watch();
+  // const [selectedOption, setSelectedOption] = useState(null);
+  const [payScheduleType, setPayScheduleType] = useState('');
+
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.employee_type = selectedOption?.type;
@@ -177,9 +197,10 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
       console.log('error', error);
     }
   });
-
+  console.log(selectedOption?.type ,"selectedOption?.type")
   const onSubmit2 = handleSubmit2(async (data) => {
     data.employee_type = selectedOption?.type;
+    console.log(selectedOption?.type ,"selectedOption?.type")
     data.companyId = cmpId,
     console.log('submitted data2222', data);
 
@@ -244,9 +265,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
   console.log('error', error);
 }
   });
-  const [selectedOption, setSelectedOption] = useState(null); // State to manage the selected option in Autocomplete
-  const [isTextFieldVisible, setTextFieldVisible] = useState(); // State to manage the visibility of the text field
-
+ 
   const handleAutocompleteChange = (event, newValue) => {
     setSelectedOption(newValue);
 
@@ -273,6 +292,17 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     setSnackbarOpen(false);
     setOpen(false);
   };
+  useEffect(() => {
+    console.log("useEffect")
+    // Check the selected option and set the payScheduleType accordingly
+    if (selectedOption && selectedOption.type === 'Hour Wages') {
+      setPayScheduleType('Hour a day');
+    } else if (selectedOption && selectedOption.type === 'Daily Wages') {
+      setPayScheduleType('Once a day');
+    } else {
+      setPayScheduleType(''); // Reset if not 'Hour Wages' or 'Daily Wages'
+    }
+  }, [selectedOption]);
 
   return (
     <>
@@ -311,11 +341,8 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
         }}
       >
         {isTextFieldVisible && !isTDSVisible ? (
-          // Render the first dialog when isTextFieldVisible is true
           <FormProvider methods={methods1} onSubmit={onSubmit1}>
             <ModalHeader heading="Add PayRoll" />
-            {/* methods1={methods1} onSubmit={onSubmit} */}
-            {/* <DialogTitle>Add PayRoll</DialogTitle> */}
 
             <DialogContent>
               <Box
@@ -345,6 +372,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
+                  disabled={selectedOption && (selectedOption.type === 'Hour Wages' || selectedOption.type === 'Daily Wages')}
+                  value={payScheduleType}
+                  onChange={(event, newValue) => setPayScheduleType(newValue)}
                   options={payPcheduleTypes.map((name) => name.type)}
                  
                 />
@@ -357,6 +387,9 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                 <RHFTextField name="ltaPercentage" label="LTA %" />
                 <RHFTextField name="esicPercentage" label="ESIC %" />
                 <RHFTextField name="tdsPercentage" label="TDS %" />
+                <RHFTextField name="medicalAllowance" label="Medical Allowance %" />
+                <RHFTextField name="travelAllowance" label="Travel Allowance %" />
+                <RHFTextField name="foodAllowance" label="Food Allowance %" />
               </Box>
             </DialogContent>
 
@@ -411,8 +444,11 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
                 <RHFAutocomplete
                   name="payScheduleType"
                   label="Pay Schedule Type"
-                  options={payPcheduleTypes.map((name) => name.type)}
-                 
+                  options={payPcheduleTypes1.map((name) => name.type)}
+                  // disabled={selectedOption && (selectedOption.type === 'Hour Wages' || selectedOption.type === 'Daily Wages')}
+                  // value={payScheduleType}
+                  // onChange={(event, newValue) => setPayScheduleType(newValue)}
+                  // options={payPcheduleTypes.map((name) => name.type)}
                   sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
                 />
                
@@ -427,7 +463,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
 
             <DialogActions>
               <Button variant="outlined" onClick={handleClose2}>
-                Cancel
+                Cancel 
               </Button>
               {/* <LoadingButton
                 type="submit"
@@ -478,7 +514,10 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
              <RHFAutocomplete
                name="payScheduleType"
                label="Pay Schedule Type"
-               options={payPcheduleTypes.map((name) => name.type)}
+              //  disabled={selectedOption && (selectedOption.type === 'Hour Wages' || selectedOption.type === 'Daily Wages')}
+              //  value={payScheduleType}
+              //  onChange={(event, newValue) => setPayScheduleType(newValue)}
+               options={payPcheduleTypes2.map((name) => name.type)}
               
                sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
              />
@@ -487,7 +526,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
 
          <DialogActions>
            <Button variant="outlined" onClick={handleClose3}>
-             Cancel
+             Cancel 
            </Button>
            <Button
           sx={{backgroundColor:'#3B82F6'}}

@@ -192,7 +192,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
     })
     
     .catch((error) => {
-      enqueueSnackbar(response?.data?.message, { variant: 'success' })
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       props.handleLoaderClose()
       console.log(error);
     
@@ -826,7 +826,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
 
       
 
-
+{/* 
           <Autocomplete
             disablePortal
             id="combo-box-demo"
@@ -847,7 +847,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
               width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
             }}
             renderInput={(params) => <TextField {...params} label="Group Name" />}
-          />
+          /> */}
                
                
               </Box>
@@ -884,7 +884,7 @@ const [assignManagerOptions,setassignManagerOptions]=useState([])
         </Grid>
       </FormProvider>
 
-      {groupValue && <AssignPages open={groupValue} employeeId={localStorage.getItem('employeeIdCreated')}/>}
+      {/* {groupValue && <AssignPages open={groupValue} employeeId={localStorage.getItem('employeeIdCreated')}/>} */}
     </div>
   );
 })
