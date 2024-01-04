@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {Tabs,Tab,Typography,Box,Stack} from '@mui/material';
 import GenerateOfferLetter from '../generateofferletter/GenerateOfferLetter';
-import OnboardingHome from '../onboarding/OnboardingHome'
-
+import OnboardingHome from '../onboarding/OnboardingHome';
+import AcceptOfferLetter from '../acceptofferletter/AcceptOfferLetter';
 
 const PreOnboardHome = () => {
    
@@ -28,6 +28,7 @@ const PreOnboardHome = () => {
   <Box  width="100%"
    >
   {value===0 && <GenerateOfferLetter />}
+  {value===1 && <AcceptOfferLetter />}
   {value==2 && <OnboardingHome />}
   
   </Box>
