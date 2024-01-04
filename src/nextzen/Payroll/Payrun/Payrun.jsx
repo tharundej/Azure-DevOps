@@ -245,6 +245,7 @@ React.useEffect(()=>{
 
  
     }
+    {!payRunDetails?.data && <p>No Pay Schedule is avialable</p> }
     </div>
   );
 }
