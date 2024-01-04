@@ -82,29 +82,3 @@ pipeline {
         }
     }
 }
-    
-        stage('Ok') {
-            steps {
-                echo "Ok"
-            }
-        }
-    
-
-    post {
-        success {
-            emailext (
-                to: 'tharun@infobellit.com',
-                subject: 'Build Successful',
-                body: '<p>The build was successful.</p>',
-                mimeType: 'text/html'
-            )
-        }
-        failure {
-            emailext (
-                to: 'tharun@infobellit.com',
-                subject: 'Build Failed',
-                body: '<p>The build failed.</p>',
-                mimeType: 'text/html'
-            )
-        }
-    }
