@@ -28,6 +28,10 @@ export const StyledCalendar = styled('div')(({ theme }) => ({
     '--fc-highlight-color': theme.palette.action.hover,
   },
 
+  
+
+  // '& .fc-day': { display: 'none' },
+  // '& .fc-day-sun': { display: 'none' },
   '& .fc .fc-license-message': { display: 'none' },
   '& .fc a': { color: theme.palette.text.primary },
 

@@ -88,11 +88,11 @@ export default function BasicCard(currentUser) {
     console.log(' i am called in useEffect');
     setShow(true);
   }, [show]);
-  const tabLabels = ['Pay Schedule', 'Pay Run', 'Pay Schedule History'];
+  const tabLabels = [ 'Pay Run', 'Pay Schedule History'];
   const tabContents = [
-    <div>
-      <PaySchedule />
-    </div>,
+    // <div>
+    //   <PaySchedule />
+    // </div>,
     <div>
       {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} handleEmpType = {handleEmpType}/>}
       {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)}  employmentType={employmentType}/>}
