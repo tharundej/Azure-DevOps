@@ -26,7 +26,7 @@ const Login = () => {
            }
            axios.request(config).then((response)=>{
                 console.log(response,"loginResponsee")
-                alert(response?.data?.message)
+                localStorage?.setItem('onboardDetails',JSON.stringify(response?.data))
               handleLoginvalue()
            })
            .catch((error)=>{
