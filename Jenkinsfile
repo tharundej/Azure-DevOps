@@ -1,5 +1,9 @@
 pipeline {
     agent {label 'DevOps'}
+
+    environment {
+        DOCKER_REGISTRY = 'https://hub.docker.com/'
+        DOCKER_CREDENTIALS_ID = 'dockerlogin'
     stages{
          stage("Env Variables") {
             steps {
@@ -24,6 +28,15 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'Info_Github', url: 'https://github.com/Infobell-IT-Solutions-India/ERP_FE.git']])
             }
         }
+
+        stage('dockerhub login') {
+            steps {
+                script {
+                    // Use withCredentials to bind Docker credentials to environment variables
+                    withCredentials([usernamePassword(credentialsId:dockerlogin , usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        
+                        // Authenticate with Docker registry
+                        def dockerAuth = "--username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD} ${DOCKER_REGISTRY}"
          stage('Docker Compose Stop Delete') {
             steps {
                 script {
@@ -49,4 +62,9 @@ pipeline {
             } 
         }
 }
+}
+}
+        }
+    }
+    }
 }
