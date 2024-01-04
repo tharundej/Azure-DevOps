@@ -314,7 +314,7 @@ xs={12}
     </Grid>
     </Grid> */}
     <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
-  
+    {localStorage.getItem("employeeID")!==employeeIDForApis &&
   <Button
                // color="inherit"
                //disabled={activeStep === 0}
@@ -327,6 +327,7 @@ xs={12}
              >
                Add Previous Work
              </Button>
+}
              </Grid>
     {/* <Button sx={{float:"right",marginBottom:2}}  onClick={()=>{handleAddEducation(employeeData,"addExperience")}} variant="contained" color="primary">Add Previous Work</Button> */}
       <BasicTable
