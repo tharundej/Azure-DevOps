@@ -492,7 +492,7 @@ const handleClickItem=()=>{
 }
   const OPTIONS = [
     {
-      label: 'Personal',
+      label: 'Profile',
       linkTo: '/dashboard/personal',
     },
   ];
@@ -556,7 +556,7 @@ const handleClickItem=()=>{
             ))}
             <MenuItem
               onClick={handleLogout}
-              sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
+              sx={{  fontWeight: 'fontWeightBold', color: 'error.main' }}
               style={{ padding: 0, margin: 0 }}
             >
               <Button
