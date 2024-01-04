@@ -485,6 +485,7 @@ const [newAvatarUrl, setNewAvatarUrl] = useState("");
         <Typography variant='h5' component="body">General Information</Typography>
 
         </Grid>
+        {localStorage.getItem("employeeID")!==employeeIDForApis &&
         <Grid item>
         <Iconify 
         sx={{cursor: "pointer",color:'black'}}
@@ -495,6 +496,7 @@ const [newAvatarUrl, setNewAvatarUrl] = useState("");
         icon="solar:pen-bold" />
 
         </Grid>
+}
     </Grid>
      
       <Grid container spacing={{ xs: 10, sm: 10, lg: 10 ,md:5}}>
