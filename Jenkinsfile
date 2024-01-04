@@ -39,11 +39,8 @@ pipeline {
                     // Use withCredentials to bind Docker credentials to environment variables
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 
-                        // Authenticate with Docker registry
-                        def dockerAuth = "--username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD} ${DOCKER_REGISTRY}"
-
-                        // Log in to Docker registry
-                        sh "docker login ${dockerAuth}"
+                        // Log in to Docker registry using --password-stdin
+                        sh "echo ${DOCKER_PASSWORD} | docker login --username=${DOCKER_USERNAME} --password-stdin ${DOCKER_REGISTRY}"
                     }
                 }
             }
