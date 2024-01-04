@@ -101,17 +101,19 @@ const PreEducation = forwardRef((props, ref) => {
     props.handleLoader();
 
     const obj = {
-      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      employeeId: localStorage.getItem('employeeIdCreated'),
+      // companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      companyId:"COMP22",
+      applicantId: "COMPPRE2024010318025530",
       education: defaultValues,
     };
 
     console.log(obj);
-
+    props.handleLoader()
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addEducation`,
+    url: `https://mallard-blessed-lobster.ngrok-free.app/erp/AddApplicantEducation`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
@@ -126,6 +128,8 @@ const PreEducation = forwardRef((props, ref) => {
         console.log(JSON.stringify(response.data));
         //props.onhandleClose()
         props.nextStep();
+        props.handleLoaderClose()
+        
         //  props.handleCallSnackbar(response.data.message,"success")
         console.log(response.data.message, 'response.data.message');
         // enqueueSnackbar(response?.data?.message, { variant: 'success' });

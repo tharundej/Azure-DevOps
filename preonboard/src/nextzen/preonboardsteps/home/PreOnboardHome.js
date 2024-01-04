@@ -25,7 +25,7 @@ const PreOnboardHome = () => {
     </Tabs>
     <Typography>Logout</Typography>
   </Box>
-  <Box 
+  <Box  width="100%"
    >
   {value===0 && <GenerateOfferLetter />}
   {value==2 && <OnboardingHome />}
