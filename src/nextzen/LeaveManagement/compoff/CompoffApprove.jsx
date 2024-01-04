@@ -98,7 +98,7 @@ export default function CompoffApprove({ currentUser ,}) {
     //   secondaryText: "email",
     // },
     // { id: "projectName", label: "Project Name", width: 180, type: "text" },
-    { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "8pc", type: "text" },
+    // { id: "compensantoryRequestId", label: "Compensantory ID", minWidth: "8pc", type: "text" },
     { id: "compensantoryPolicies", label: "Compensantory Policies", minWidth: "8pc", type: "text" },
     { id: "startDate", label: "Start Date", minWidth: "7pc", type: "date" },
     { id: "endDate", label: "End Date", minWidth: "7pc", type: "date" },
@@ -124,8 +124,9 @@ export default function CompoffApprove({ currentUser ,}) {
   const defaultPayload={
  
  
-    "employeeId":employeeID,
+    "employeeId":"",
     "companyId":companyID,
+    "ApprovalManagerId":employeeID,
     "page":0,
     "search":"",
     "count":5,
@@ -175,7 +176,7 @@ export default function CompoffApprove({ currentUser ,}) {
  
     if (dateFieldName === "startDate") {
       const lastMonthDate = dayjs().subtract(1, "month").format("YYYY-MM-DD");
-      if (dayjs(selectedDateValue).isAfter(lastMonthDate) && dayjs(selectedDateValue).isBefore(currentDate)) {
+      if (dayjs(selectedDateValue).isAfter(lastMonthDate) || dayjs(selectedDateValue).isSame(currentDate)) {
         setSelectedDates((prev) => ({
           ...prev,
           [dateFieldName]: selectedDateValue,
@@ -188,16 +189,20 @@ export default function CompoffApprove({ currentUser ,}) {
         }));
       }
     }
+
+    
+    
  
     if (dateFieldName === "endDate") {
-      if (selectedDates.startDate &&
-        (dayjs(selectedDateValue).isBefore(currentDate) && dayjs(selectedDateValue).isAfter(selectedDates.startDate)) ||
-        dayjs(selectedDateValue).isSame(selectedDates.startDate)
+      if ( selectedDates.startDate &&
+        (dayjs(selectedDateValue).isSame(selectedDates.startDate) ||
+          dayjs(selectedDateValue).isAfter(selectedDates.startDate))
       ) {
         setSelectedDates((prev) => ({
           ...prev,
           [dateFieldName]: selectedDateValue,
           error: "",
+          errorend: ""
         }));
       } else {
         setSelectedDates((prev) => ({
@@ -369,7 +374,8 @@ console.log(editData,"ppppppppppppppppppppp")
   }
   const handleCloseEdit = () => setOpenEdit(false);
  
- 
+  const maxDate = dayjs();
+  const minDate = dayjs().subtract(1, 'month');
   // modal
   const [Id, setId] = useState();
   const NewUserSchema = Yup.object().shape({
@@ -394,7 +400,7 @@ console.log(editData,"ppppppppppppppppppppp")
       compensantoryPolicies:compoffId || currentUser?.compensantoryPolicies ,
       startDate:currentUser?.startDate|| '',
       endDate:currentUser?.endDate|| '',
-      approverId: currentUser?.approverId || managerID,
+      approverId: currentUser?.approverId || employeeID,
       reason: currentUser?.reason || '',
     }),
     [currentUser]
@@ -422,7 +428,7 @@ console.log(editData,"ppppppppppppppppppppp")
   const onSubmit = handleSubmit(async (data) => {
    
     console.log(data,"defaultValues11122")
-    data.employeeId= Id;
+    data.employeeId= Id || employeeID;
     data.startDate= selectedDates?.startDate;
     data.endDate= selectedDates?.endDate;
     try {
@@ -433,7 +439,7 @@ console.log(editData,"ppppppppppppppppppppp")
         (res) => {
           console.log('sucesspppp', res);
           if (res?.data?.code === "400" || 400){
-            enqueueSnackbar(res?.data?.message, { variant: 'warning' })
+            enqueueSnackbar(res?.data?.message, { variant: 'success' })
           }
           handleClose()
           enqueueSnackbar(res?.data?.message,{variant:'success'})
@@ -442,7 +448,7 @@ console.log(editData,"ppppppppppppppppppppp")
         (error) => {
           console.log('lllll', error);
           handleClose()
-          enqueueSnackbar(error?.response?.data?.message,{variant:'warning'})
+          enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
         }
       );
  
@@ -644,6 +650,8 @@ const getEmployeeList = async()=>{
                     label="Compoff Start Date"
                     value={selectedDates?.startDate}
                       onChange={(newValue) => handleDateChange(newValue, 'startDate')}
+                      maxDate={maxDate} 
+                      minDate={minDate}
                   /> {selectedDates?.error && (
                     <Typography color="error" variant="caption">
                       {selectedDates.error}
@@ -660,6 +668,8 @@ const getEmployeeList = async()=>{
                     label="Compoff End Date"
                     value={selectedDates.endDate}
                      onChange={(newValue) => handleDateChange(newValue, 'endDate')}
+                      maxDate={maxDate} 
+                    minDate={minDate}
                   />
                    {selectedDates?.errorend && (
                   <Typography color="error" variant="caption">
@@ -686,9 +696,9 @@ const getEmployeeList = async()=>{
               Cancel
             </Button>
  
-            <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
+            {!selectedDates?.errorend && !selectedDates?.error &&  <LoadingButton type="submit" variant="contained" color="primary" loading={isSubmitting}>
               Save
-            </LoadingButton>
+            </LoadingButton>}
           </DialogActions>
         </FormProvider>
       </Dialog>

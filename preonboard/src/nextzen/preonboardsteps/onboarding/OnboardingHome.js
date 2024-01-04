@@ -7,26 +7,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
-
 import GeneralInformation from './generalinformation/GeneralInformation';
-import EducationInformation from './educationinformation/EducationInformation';
+import PreEducation from './education/PreEducation';
+import PreExperience from './experience/PreExperience';
+import PreOnboardDocuments from './documents/PreOnboardDocuments';
+import PreOnboardStatutory from './statutory/PreOnboardStatutory';
 
-import PreviousWorkDetails from './preveiousworkdetails/PreviousWorkDetails';
 
 
-import DocumentsUpload from './documentsupoad/DocumentsUpload';
-import CurrentWork from './currentwork/CurrentWork'
-import CreateStatutoryOnboard from './statutory/CreateStatutoryOnboard'
-
-import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
-import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { baseUrl } from 'src/nextzen/global/BaseUrl';
-import EmployeePermission from './employeepermission/EmployeePermission';
-
-const steps = ['General Information', 'Education', 'Experience','Documents','Statutory','Employee Permission','Current Work Details'];
+const steps = ['General Information', 'Education', 'Experience','Documents','Statutory'];
 
 export default function OnBoardForm() {
   const [activeStep, setActiveStep] = useState(0);
@@ -35,7 +24,7 @@ export default function OnBoardForm() {
   const [openSnackbar,setOpenSnackbar]=useState(false);
   const [snacbarMessage,setSnacbarMessage]=useState("");
   const [severity,setSeverity]=useState("")
-  const router=useRouter()
+  //const router=useRouter()
   const [loading, setLoading] = useState(false);
 
   // configuratio dialog
@@ -43,53 +32,13 @@ export default function OnBoardForm() {
   const [openDialog,setOpenDialog]=useState();
   const [dialogHeading,setDialogHeading]=useState();
   const [dialogMessage,setDialogMessage]=useState();
-  const confirmHandlerDialog=()=>{
-    router.push('/configurations/leaveconfiguration')
-  }
-
-  const closeHandlerDialog=()=>{
-    router.push('/dashboard')
-    // setOpenDialog(false)
-  }
+  
 
  
 
   const childref=useRef(null);
 
-  const ApiHitConfiguration=()=>{
 
-    const obj={
-      companyid:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    }
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      // url: `${baseUrl}/updateOnboardingForm`,
-      url: `${baseUrl}/existcompany`,
-      headers: { 
-        'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
-        'Content-Type': 'application/json', 
-      },
-      data : obj
-    };
-     
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      if(!response?.data?.success){
-        setDialogHeading("Configureation Setting");
-        setDialogMessage(response?.data?.message || "");
-        setOpenDialog(true)
-      }
-    
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-  useEffect(()=>{
-    ApiHitConfiguration()
-  },[])
 
   function totalSteps() {
     return steps.length;
@@ -169,7 +118,7 @@ export default function OnBoardForm() {
   }
 
   const handleBack = () => {
-    router.push(paths.dashboard.employee.root)
+   // router.push(paths.dashboard.employee.root)
   };
 
   const handleStep = (step) => () => {
@@ -206,8 +155,7 @@ const handleCallSnackbar=(message,severity)=>{
 
   return (
     <Box sx={{ width: '100%', marginBottom: '10vh',marginTop:'10px' }} >
-      <ConfirmationDialog open={openDialog} onClose={closeHandlerDialog} onConfirm={confirmHandlerDialog} itemName={dialogHeading} message={dialogMessage}  confirmButtonText="Go To Configuration" cancelButtonText="Go To Dashboard"/>
-        <SnackBarComponent open={openSnackbar} snacbarMessage={snacbarMessage} severity={severity} onHandleCloseSnackbar={HandleCloseSnackbar}/>
+      
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -235,25 +183,26 @@ const handleCallSnackbar=(message,severity)=>{
           <>
             {activeStep + 1 === 1 && (
             <GeneralInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}  />
+            
             )}
             {activeStep + 1 === 2 && (
-              <EducationInformation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader}style={{ paddingTop: '20px' }} currentUser={[]}   handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+                <PreEducation handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref}/>
             )}
             {activeStep + 1 === 3 && (
-              <PreviousWorkDetails handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref}/>
+               <PreExperience handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
              {activeStep + 1 === 4 && (
-              <DocumentsUpload handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} ref={childref}/>
+                <PreOnboardDocuments handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
              {activeStep + 1 === 5 && (
-              <CreateStatutoryOnboard handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+                <PreOnboardStatutory handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} handleCallSnackbar={handleCallSnackbar} nextStep={handleNextIncrement} currentUser={{}} ref={childref} />
             )}
 
           {activeStep + 1 === 6 && (
-                        <EmployeePermission handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+            2
                       )}
              {activeStep + 1 === 7 && (
-              <CurrentWork handleLoaderClose={handleLoaderClose} handleLoader={handleLoader} style={{ paddingTop: '20px' }} currentUser={[]}  handleCallSnackbar={handleCallSnackbar}  nextStep={handleNextIncrement} ref={childref} />
+                2
             )}
             {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography> */}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
