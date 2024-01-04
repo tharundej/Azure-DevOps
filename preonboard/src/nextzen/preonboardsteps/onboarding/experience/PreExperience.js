@@ -188,7 +188,7 @@ const PreExperience = forwardRef((props, ref) => {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addExperience`,
-    url: `https://mallard-blessed-lobster.ngrok-free.app/erp/AddApplicantEducation`,
+    url: `https://mallard-blessed-lobster.ngrok-free.app/erp/addApplicantWorkDetails`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
