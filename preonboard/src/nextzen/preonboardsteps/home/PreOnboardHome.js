@@ -16,14 +16,17 @@ const PreOnboardHome = () => {
   return (
     <>
     <Stack sx={{display:'flex',flexDirection:'row'}}>
-    <Box md={3} xs={3} lg={3} sx={{  bgcolor: 'background.paper' }} width="10%">
+    <Box  sx={{  bgcolor: 'background.paper' }} >
+    <Typography>Display Logo</Typography>
     <Tabs value={value} onChange={handleChange} centered orientation="vertical">
       <Tab label="Details" />
       <Tab label="Accept Offer" />
       <Tab label="Onboarding" />
     </Tabs>
+    <Typography>Logout</Typography>
   </Box>
-  <Box width="100%" >
+  <Box 
+   >
   {value===0 && <GenerateOfferLetter />}
   {value==2 && <OnboardingHome />}
   

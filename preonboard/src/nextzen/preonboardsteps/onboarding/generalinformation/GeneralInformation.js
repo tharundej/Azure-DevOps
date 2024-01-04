@@ -111,7 +111,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         email: '',
         gender:'',
         dataOfBirth:dayjs(new Date()),
-        joiningDate:dayjs(new Date()),
+        
         fatherName: currentUser?.fatherName ||'',
         motherName: currentUser?.motherName ||'',
         maritalStatus: currentUser?.maritalStatus ||undefined,
@@ -174,22 +174,47 @@ const   GeneralInformation=forwardRef((props,ref)=> {
       const handleSubmit = () => {
         props.handleLoader()
         // event.preventDefault();
+        console.log("harshaa")
         localStorage.setItem("formData",JSON.stringify(formData));
         const newErrors = {};
         console.log(formData);
       
         // Check for empty fields
-        for (const [key, value] of Object.entries(formData)) {
-          // Ensure that value is a string before calling trim
-          if (typeof value === 'string' && value.trim() === '') {
-            newErrors[key] = `${camelToPascalWithSpaces(key)} is required`;
-          }
-        }
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
+        // for (const [key, value] of Object.entries(formData)) {
+        //   // Ensure that value is a string before calling trim
+        //   if (typeof value === 'string' && value.trim() === '') {
+        //     newErrors[key] = `${camelToPascalWithSpaces(key)} is required`;
+        //   }
+        // }
+        // if (Object.keys(newErrors).length > 0) {
+        //     setErrors(newErrors);
+        //     return;
 
-        }
+        // }
+        const data={...formData};
+        data.gender=data?.gender?.label|| "";
+       data.maritalStatus=data?.maritalStatus?.label || ""
+       data.religion=data?.religion?.label || "";
+       data.nationality=data?.nationality?.nationality || "";
+       data.bloodGroup=data?.bloodGroup?.label || "";
+       data.pCountry=data?.country|| {name:"",isoCode:""};
+      data.pState=data?.state || {name:"",isoCode:""};
+      data.pCity=data?.city || {name:"",isoCode:""}
+      if(isSameAsResendtial){
+        data.rAddressLine1=data.pAddressLine1;
+        data.rAddressLine2=data.pAddressLine2
+        data.rCountry=data?.country||{name:"",isoCode:""};
+        data.rState=data?.state || {name:"",isoCode:""};
+        data.rCity=data?.city || {name:"",isoCode:""};
+        data.rPincode=data.pPincode;
+     
+      }
+      else{
+        data.rCountry=data?.rCountry||{name:"",isoCode:""};
+        data.rState=data?.rState || {name:"",isoCode:""};
+        data.rCity=data?.rCity || {name:"",isoCode:""}
+      }
+        console.log(data,'formData general')
 
         
         
@@ -327,7 +352,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
  <Grid item  md={3} lg={3} >
               
               <Autocomplete
-                  id="bloodGroup"
+                  id="martialstatus"
                   options={maritalStatusOptions || []}
                   value={formData?.maritalStatus}
                   getOptionLabel={(option) => option.label}
@@ -543,8 +568,16 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           
           sx={{ width: '100%', '& input': { width: '100%' } }}
         /></Grid>
-
-
+              <Grid style={{ display: 'flex', alignItems: 'center' }} md={12} lg={12} xs={12} >
+                  <Switch
+                    checked={isSameAsResendtial}
+                    onChange={()=>{
+                      setIsSameAsResendtial((prevValue) => !prevValue);
+                    }}
+                    inputProps={{ 'aria-label': 'Toggle' }}
+                  />
+                  <Typography component="p">Same As Permanent</Typography>
+              </Grid>
 {!isSameAsResendtial &&<>
                   <Grid md={6} xs={12} lg={6} item>
                   <TextField
@@ -719,11 +752,11 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
     </Grid>
      
-    <Grid container justifyContent="flex-end" alignItems="flex-end">
+    {/* <Grid container justifyContent="flex-end" alignItems="flex-end">
     <Button type="submit" variant="contained" color="primary">
       Submit
     </Button>
-    </Grid>
+    </Grid> */}
   </form>
   )
 });
