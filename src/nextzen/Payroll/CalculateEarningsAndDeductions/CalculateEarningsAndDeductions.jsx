@@ -80,6 +80,7 @@ const TABLE_HEAD = [
   {
       page:0,
       count:5,
+     
       companyID:cmpId,
       employementType:employmentType,
       sort:{
@@ -231,7 +232,7 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
                 <TextField
                   {...params}
                   label={
-                     'Please Select Financial Year'
+                     'Please Select Financial Year working'
                     
                   }
                 />
@@ -258,7 +259,8 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
             />
           </Grid> }
       </Grid>
-    <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
+ { 
+ <>  <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
      <Grid xs={12} md={6} lg={6}>
   <Stack
     direction="column"
@@ -437,14 +439,15 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
     
      
      <BasicTable
-    isShowHandle={isShowHandle}
+    // isShowHandle={isShowHandle}
         headerData={TABLE_HEAD}
-        endpoint="/getPayRunDetailsContract"
+        endpoint="/getPayRunByType"
         defaultPayload={defaultPayload}
         rowActions={actions}
-        filterName="CreatePayRunFilter"
+        filterName="PayScheduleHistoryFilter"
       /> 
-      
+      </>
+      }
       </>
 }
     </Box>

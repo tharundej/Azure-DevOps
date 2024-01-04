@@ -84,7 +84,7 @@ import DeductionFilter from '../MonthlyDeductions/Deductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
-import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+
 import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
@@ -135,7 +135,10 @@ import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
 import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
+import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/PayScheduleHistoryFilter';
 import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
+// import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+import PayScheduleFilters from '../configaration/PayRoll/payScheduleConfig/PayScheduleFilters';
 
 const defaultFilters = {
   name: '',
@@ -624,8 +627,24 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+          {filterName === 'PayScheduleCongifFilterSearch' && (
+            <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
           {filterName === 'PayScheduleFilterSearch' && (
             <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'PayScheduleHistoryFilter' && (
+            <PayScheduleHistoryFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
