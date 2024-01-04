@@ -417,13 +417,13 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
         <Button
           onClick={() => {
             handleApply();
           }}
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor: '#3B82F6' ,color:'white',marginRight:"10px"}}
         >
           Apply
         </Button>
