@@ -534,7 +534,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
   const genderOptions=[
     {label:'Male'},
-    {label:'Female'}
+    {label:'Female'},
+    {label:'Other'}
   ]
 
   const maritalStatusOptions = [

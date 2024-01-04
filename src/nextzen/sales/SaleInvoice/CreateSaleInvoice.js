@@ -23,6 +23,7 @@ import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { createSalesInvoiceAPI, editSalesInvoiceAPI } from 'src/api/Accounts/SalesInvoice';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
+import { getSalesOrderDetailsAPI } from 'src/api/Accounts/SalesOrder';
 
 export default function CreateSaleInvoice({ currentData, handleClose }) {
   const { user } = useContext(UserContext);
@@ -33,13 +34,15 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
 
   const defaultValues = useMemo(
     () => ({
+      companyId: user?.companyID ? user?.companyID : '',
       ProductName: currentData?.ProductName || '',
       salesOrderId: currentData?.salesOrderId || 0,
       ProductCategory: currentData?.ProductCategory || '',
       hsnID: currentData?.hsnID || '',
       status: currentData?.status || '',
-      SalesOrderNo: currentData?.SalesOrderNo || '',
-      companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
+      salesOrderNo: currentData?.salesOrderNo || undefined,
+      // salesOrderNo: currentData?.soNumber || '',
+      // companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
     }),
     [currentData]
   );
@@ -48,7 +51,6 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
   const [unitOptions, setUnitOptions] = useState([]);
   const [salesOrderOptions, setSalesOrderOptions] = useState();
   const [selectedSalesOrder, setSelectedSalesOrder] = useState();
-
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -88,7 +90,7 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
     console.log('newValue', newValue);
     try {
 
-        setValue('SalesOrderNo', newValue?.salesOrderNo);
+        setValue('salesOrderNo', newValue?.soNumber);
         setValue('billToName', newValue?.customerCompanyName);
         setValue('billToGST', newValue?.customerGstNo);
         setValue('billToAddress', newValue?.customerAddressLine1);
@@ -101,9 +103,9 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
         // setValue('VendorName', response?.vendorName);
         // setValue('VendorAddress', response?.vendorAddress);
         // setValue('FactoryShippingAddress', response?.factoryShippingAddress);
-        const materialArray = Object.values(newValue?.purchaseMaterial || {});
-        setContentList(materialArray);
-        console.log(materialArray);
+        // const materialArray = Object.values(newValue?.purchaseMaterial || {});
+        // setContentList(materialArray);
+        // console.log(materialArray);
 
     } catch (error) {
       console.log('API request failed:', error.message);
@@ -138,8 +140,8 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
       } else {
         setSalesOrderOptions(response);
         setSelectedSalesOrder(
-          defaultValues.purchaseOrderID ||
-            (response.length > 0 ? response[0].purchaseOrderID : null)
+          defaultValues.companyId ||
+            (response.length > 0 ? response[0].companyId : null)
         );
       }
     } catch (error) {
@@ -150,39 +152,39 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
   useEffect(() => {
     fetchSalesOrder();
   }, []);
-  // const handlePurchaseOrderChange = async (event, newValue) => {
-  //   console.log('newValue', newValue);
-  //   try {
-  //     const data = {
-  //       companyId: user?.companyID ? user?.companyID : '',
-  //       poNumber: newValue?.poNumber ? newValue?.poNumber : '',
-  //     };
-  //     const response = await ListPurchaseOrderDetailsAPI(data);
-  //     console.log({ response });
-  //     if (response === null) {
-  //       handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
-  //     } else {
-  //       setValue('poNumber', response?.poNumber);
-  //       setValue('PODate', response?.poDate);
-  //       setValue('ExpectedDeliveryDate', response?.expectedDeliveryDate);
-  //       setValue('paymentMode', response?.paymentTerm);
-  //       setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
-  //       setValue('locationId', response?.locationId ? response?.locationId : 0);
-  //       setValue('VendorName', response?.vendorName);
-  //       setValue('VendorAddress', response?.vendorAddress);
-  //       setValue('FactoryShippingAddress', response?.factoryShippingAddress);
-  //       const materialArray = Object.values(response?.purchaseMaterial || {});
-  //       setContentList(materialArray);
-  //       console.log(materialArray);
-  //     }
-  //   } catch (error) {
-  //     console.log('API request failed:', error.message);
-  //     handleCallSnackbar(error.message, 'warning');
-  //   }
-  // };
+  const handleSalesOrderChange = async (event, newValue) => {
+    console.log('newValue', newValue);
+    try {
+      const data = {
+        companyId: user?.companyID ? user?.companyID : '',
+        soNumber: newValue?.salesOrderNo ? newValue?.salesOrderNo : '',
+      };
+      const response = await getSalesOrderDetailsAPI(data);
+      console.log({ response });
+      if (response === null) {
+        handleCallSnackbar('No Purchase Order Found. Please Add Purchase Order', 'warning');
+      } else {
+        setValue('soNumber', response?.salesOrderNo);
+        setValue('ProductName', response?.companyName);
+        // setValue('ExpectedDeliveryDate', response?.billToName);
+        // setValue('paymentMode', response?.billToAddress);
+        // setValue('vendorId', response?.vendorId ? response?.vendorId : 0);
+        // setValue('locationId', response?.locationId ? response?.locationId : 0);
+        // setValue('VendorName', response?.billToState);
+        // setValue('VendorAddress', response?.vendorAddress);
+        // setValue('FactoryShippingAddress', response?.factoryShippingAddress);
+        // const materialArray = Object.values(response?.purchaseMaterial || {});
+        // setContentList(materialArray);
+        // console.log(materialArray);
+      }
+    } catch (error) {
+      console.log('API request failed:', error.message);
+      handleCallSnackbar(error.message, 'warning');
+    }
+  };
   const onSubmit = handleSubmit(async (data) => {
-    console.log('🚀 ~ file: AddTimeProject.jsx:93 ~ onSubmit ~ data:', data);
-    console.log('uyfgv');
+
+    console.log('uyfgv',data);
     try {
       // console.log(data, 'data111ugsghghh');
 
@@ -196,7 +198,7 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
       // );
       // data.locationPhone = parseInt(data.locationPhone);
       // data.locationPincode = parseInt(data.locationPincode);
-      data.salesOrderNo = parseInt(data.SalesOrderNo);
+      data.selectedUnitalesOrderNo = parseInt(data.salesOrderNo);
       data.billToStateCode = parseInt(data.billToStateCode);
       data.shipToPincode = parseInt(data.shipToPincode);
       data.shipToStateCode = parseInt(data.shipToStateCode);
@@ -222,7 +224,7 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
       // } else {
       //   response = await createFactoryAPI(data);
       // }
-      let response = '';
+      // let response = await createSalesInvoiceAPI(data);;
       if (currentData?.salesOrderNo) {
         response = '';
       } else {
@@ -432,18 +434,18 @@ export default function CreateSaleInvoice({ currentData, handleClose }) {
               sm: 'repeat(3, 1fr)',
             }}
           >
-             {/* <RHFAutocomplete
+             <RHFAutocomplete
               name="salesOrderNo"
               id="salesOrderNo"
               options={salesOrderOptions || []}
               // onChange={handlePurchaseOrderChange}
-              // onChange={handleSalesInvoiceChange}
+              onChange={handleSalesOrderChange}
               getOptionLabel={(option) => option.salesOrderNo}
               renderInput={(params) => (
                 <TextField {...params} label="Select SO Number" variant="outlined" />
               )}
-            /> */}
-            <RHFTextField name="SalesOrderNo" label="SO Number" />
+            />
+            <RHFTextField name="ProductName" label="Product Name" />
             <RHFTextField name="Invoice Number" label="Invoice Number" />
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
