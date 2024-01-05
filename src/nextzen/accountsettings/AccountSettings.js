@@ -1,9 +1,9 @@
 import SettingsTable from './SettingsTable';
 
-const Settings = () => (
+const AccountSettings = () => (
   <>
     <SettingsTable />
   </>
 );
 
-export default Settings;
+export default AccountSettings;
