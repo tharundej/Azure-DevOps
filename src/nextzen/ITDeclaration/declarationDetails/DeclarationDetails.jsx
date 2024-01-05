@@ -76,8 +76,8 @@ const DeclarationDetails = () => {
     }
   }
 
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [financialYears, setFinancialYears] = useState([]);
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
     localStorage.setItem('selectedYear', JSON.stringify(value));
@@ -392,7 +392,7 @@ setSelectedFiles(selectedFiles)
   };
   
 
-
+  console.log('financialYears:', financialYears);
   console.log(selectedFiles  ,selectedYear,"file uploaded inselectedFiles")
   return (
     <div>
@@ -405,7 +405,13 @@ setSelectedFiles(selectedFiles)
           <Grid item xs={12} style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}>
             <Autocomplete
               id="financialYear"
-              options={financialYears || []}
+              // options={financialYears || []}
+              options={
+                financialYears && financialYears.length > 0 && financialYears[0].financialYear !== ''
+                  ? financialYears
+                  : ['No financial years available']
+              }
+              
               getOptionLabel={(option) =>
                 option?.financialYear ?? 'There Is No Financial Year Alloted! Please Connect To HR'
               }

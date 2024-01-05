@@ -96,6 +96,7 @@ export default function PaySchedule({ currentUser }) {
     { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 140 },
     { id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth: 100 },
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
+    { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text', minWidth: 200 }
   ];
 
   const actions = [
@@ -159,6 +160,10 @@ export default function PaySchedule({ currentUser }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
+    
+    
+      // travelAllowance:Yup.number(),
+      medicalAllowance: Yup.number(),
     // employementType:Yup.string(),
   });
 
@@ -183,6 +188,8 @@ export default function PaySchedule({ currentUser }) {
       ltaPercentage: currentUser?.ltaPercentage,
       esicPercentage: currentUser?.esicPercentage,
       tdsPercentage: currentUser?.tdsPercentage,
+      // travelAllowance: currentUser?.travelAllowance,
+      medicalAllowance: currentUser?.medicalAllowance
     }),
     [currentUser]
   );
@@ -350,7 +357,11 @@ export default function PaySchedule({ currentUser }) {
       (data.hraPercentage = JSON.parse(valueSelected?.hraPercentage, 10)),
       (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
       (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
+      (data.medicalAllowance = JSON.parse(valueSelected?.medicalAllowance, 10)),
+      // (data.travelAllowance = JSON.parse(valueSelected?.travelAllowance, 10)),
       (data.payScheduleId = valueSelected?.payScheduleId);
+      
+    
     // (data.employementType = valueSelected?.employementType),
     data.payScheduleType = valueSelected?.payPcheduleType;
     console.log('valueSelectedaaaaaaaaaa', data);
@@ -603,6 +614,21 @@ export default function PaySchedule({ currentUser }) {
                     value={valueSelected?.tdsPercentage}
                     onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
                   />
+                  
+                  <RHFTextField
+                    name="medicalAllowance"
+                    label="Medical Allowance"
+                    value={valueSelected?.medicalAllowance}
+                    onChange={(e) => handleSelectChange('medicalAllowance', e.target.value)}
+                  />
+                   {/* <RHFTextField
+                    name="travelAllowance"
+                    label="Travel Allowance"
+                    value={valueSelected?.travelAllowance}
+                    onChange={(e) => handleSelectChange('travelAllowance', e.target.value)}
+                  /> */}
+                {/* <RHFTextField name="medicalAllowance" label="Medical Allowance %" />
+                <RHFTextField name="travelAllowance" label="Travel Allowance %" /> */}
                 </Box>
               </DialogContent>
 
