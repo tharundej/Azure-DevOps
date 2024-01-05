@@ -343,6 +343,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
+                    style={{ width: '200px' }} 
                     value={dropdowncompensantoryPolicies}
                     onChange={(e) => handleChangeDropDown(e, 'compensantoryPolicies')}
                     input={<OutlinedInput label="Compensantory Policies" />}
@@ -412,13 +413,13 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button
           onClick={() => {
             handleApply();
           }}
           // variant="outlined"
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor: '#3B82F6' ,color:'white',marginRight:"10px"}}
         >
           Apply
         </Button>

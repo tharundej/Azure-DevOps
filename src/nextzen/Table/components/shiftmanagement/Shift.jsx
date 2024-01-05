@@ -11,7 +11,7 @@ const Shift = () => {
 
     }
   const  tabLabels=[
-        "Shift Roaster" ,  "My Shift Details" , "Self Swap", " Requested Swap"
+        "Shift Roaster" ,  "My Shift Details" , "Manager Swap", " Requested Swap"
     ]
     const tabContents=[
         <div><ShiftRoast/> </div>,

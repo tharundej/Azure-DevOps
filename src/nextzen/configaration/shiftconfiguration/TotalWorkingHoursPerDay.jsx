@@ -335,7 +335,7 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
         }}
       > 
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
-          <ModalHeader heading="Add Expense Configuration" />
+          <ModalHeader heading="Add Total Working Hours/Day" />
           <DialogContent>
             <Box
               rowGap={3}
@@ -383,7 +383,7 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
                     renderInput={(params) => <TextField 
                       // error={Employerror}
                       // helperText={(Employerror)? "please select the employe" : ""}
-                       {...params} label=" Select employee" />}
+                       {...params} label=" Select Location" />}
                   />
                   
               {/* </div> */}

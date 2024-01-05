@@ -29,9 +29,13 @@ import Button from '@mui/material/Button';
 import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { useSnackbar } from 'notistack';
+import { useContext } from 'react';
+import UserContext from 'src/nextzen/context/user/UserConext';
+import instance from 'src/api/BaseURL';
 
 export default function Holidays({ currentUser }) {
   const {enqueueSnackbar} = useSnackbar()
+  const {user}=useContext(UserContext)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -49,7 +53,10 @@ export default function Holidays({ currentUser }) {
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
-    //  { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj', endpoint: '/' },
+
+    { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
+    // { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
+
   ];
   // const bodyContent = [
   //   {
@@ -82,6 +89,7 @@ export default function Holidays({ currentUser }) {
     },
   };
   const onClickActions = (rowdata, event) => {
+    console.log("🚀 ~ file: Holidays.jsx:89 ~ onClickActions ~ rowdata:", rowdata)
     if (event?.name === 'Edit') {
 
       const values = JSON.parse(JSON.stringify(rowdata))
@@ -102,37 +110,60 @@ export default function Holidays({ currentUser }) {
     setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
-  const deleteFunction = async (rowdata, event) => {
-    console.log('iam here ');
-    try {
-      console.log(rowdata, 'rowData:::::');
-      const data = {
-        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-        holidayID: rowdata.holidayID,
-      };
-      const response = await axios.post(baseUrl + '/deleteHoliday', data);
-      if (response?.data?.code === 200) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleCloseEdit();
-        console.log('sucess', response);
-      }
-      if (response?.data?.code === 400) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleCloseEdit();
-        console.log('sucess', response);
-      }
-    } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
-      setSnackbarOpen(true);
-      handleCloseEdit();
-      console.log('error', error);
+
+  const deleteFunction= async(rowdata,event)=>{
+    var  holidays=[]
+    holidays= rowdata.locations
+    console.log("🚀 ~ file: Holidays.jsx:113 ~ deleteFunction ~ holidays:", holidays[0]?.holidayID)
+    try{
+ const data={
+  companyID:(user?.companyID)? user?.companyID :'',
+  holidayID:holidays[0]?.holidayID,
+
+ }
+ const response = await instance.post("/deleteHoliday",data)
+      enqueueSnackbar(response.data.message,{variant:'success'})
+      setCount(count + 1);
+
+    }catch (error){
+      console.error("Error",error)
+      enqueueSnackbar(error.Message,{variant:'Error'})
+      throw error 
+
     }
-  };
+  }
+  // const deleteFunction = async (rowdata, event) => {
+  //   console.log('iam here ');
+  //   try {
+  //     console.log(rowdata, 'rowData:::::');
+  //     const data = {
+  //       companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+  //       holidayID: rowdata.holidayID,
+  //     };
+  //     const response = await axios.post(baseUrl + '/deleteHoliday', data);
+  //     if (response?.data?.code === 200) {
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       handleCloseEdit();
+  //       console.log('sucess', response);
+  //     }
+  //     if (response?.data?.code === 400) {
+  //       setSnackbarSeverity('success');
+  //       setSnackbarMessage(response?.data?.message);
+  //       setSnackbarOpen(true);
+  //       handleCloseEdit();
+  //       console.log('sucess', response);
+  //     }
+  //   } catch (error) {
+  //     setSnackbarSeverity('error');
+  //     setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
+  //     setSnackbarOpen(true);
+  //     handleCloseEdit();
+  //     console.log('error', error);
+  //   }
+  // };
+
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
