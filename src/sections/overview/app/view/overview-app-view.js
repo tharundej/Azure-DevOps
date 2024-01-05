@@ -34,6 +34,7 @@ import HolidayList from 'src/nextzen/usersdashboard/holiday/HolidayList';
 import LeaveRequest from 'src/nextzen/usersdashboard/leaverequest/LeaveRequest';
 import instance from 'src/api/BaseURL';
 import AvailableLeave from 'src/nextzen/usersdashboard/AvailableLeave/Availableleave';
+import Alert from 'src/nextzen/usersdashboard/Alert/Alert';
 
 
 
@@ -186,6 +187,9 @@ axios.request(config)
         <Grid xs={12} md={4}>
           {/* <AppFeatured list={_appFeatured} /> */}
           <PunchINOutCard />
+        </Grid>
+        <Grid xs={12} md={6} lg={4}>
+          <Alert title="Alert" list={birthdayList} />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
           <BirthdayReminders title="Bithday Reminders" list={birthdayList} />

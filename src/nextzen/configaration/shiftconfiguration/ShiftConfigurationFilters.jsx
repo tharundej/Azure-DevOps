@@ -314,6 +314,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        
         // className="custom-dialog-width"
       >
         <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
@@ -388,11 +389,12 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                   <FormControl fullWidth>
                     <InputLabel id="locationID">Location</InputLabel>
                     <Select
-                    fullWidth
+                    fullWidth     
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownLocation}
+                   
                       onChange={(e) => handleChangeDropDown(e, 'locationID')}
                       input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
@@ -401,6 +403,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                       {locationID.map((name) => (
                         <MenuItem
                           key={name}
+                          
                           value={name}
                           style={getStyles(name, personName, theme)}
                         >
