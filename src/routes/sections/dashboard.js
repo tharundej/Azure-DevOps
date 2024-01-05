@@ -16,8 +16,10 @@ import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
 // import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
 // import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
 // import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
-import Settings from 'src/nextzen/settings/Settings';
+import Settings from 'src/nextzen/accountsettings/AccountSettings';
 import LoanDetails from 'src/nextzen/MonthlyDeductions/Loans/loanDetails';
+import AccountSettings from 'src/nextzen/accountsettings/AccountSettings';
+import GstSettings from 'src/nextzen/gstsettings/GstSettings';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -110,7 +112,7 @@ const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclaration
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
 const Compoff = lazy(() => import('src/nextzen/LeaveManagement/Compoff'));
- 
+
 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
@@ -460,13 +462,22 @@ export const dashboardRoutes = [
           },
         ],
       },
+      // {
+      //   path: 'settings',
+      //   children: [
+      //     {
+      //       element: <Settings />,
+      //       index: true,
+      //     },
+      //   ],
+      // },
       {
         path: 'settings',
         children: [
-          {
-            element: <Settings />,
-            index: true,
-          },
+          { element: <AccountSettings />, index: true },
+          { path: 'accountsettings', element: <AccountSettings /> },
+          { path: 'gstsettings', element: <GstSettings /> },
+
         ],
       },
     ],
@@ -507,10 +518,10 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <Leave />, index: true },
-     
+
       { path: 'leave', element: <Leave /> },
       { path: 'compoff', element: <Compoff/> },
-  
+
   ],
   },
   {

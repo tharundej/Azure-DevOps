@@ -378,7 +378,7 @@ export default function CreateSaleOrder({ currentData, handleClose }) {
           newValue?.hsnId )
         }
 
-        value={productOptions.find((option) => option.productId === selectedProduct) || null}
+        // value={productOptions.find((option) => option.productId === selectedProduct) || null}
         getOptionLabel={(option) => option.productName} // Specify the property to display in the input
         renderInput={(params) => (
           <TextField {...params} label="Select Product" variant="outlined" />
