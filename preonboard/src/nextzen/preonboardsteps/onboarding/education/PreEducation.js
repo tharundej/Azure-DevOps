@@ -6,6 +6,8 @@ import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import { useSnackbar } from '../../../../components/Snackbar';
 
+import { baseUrl } from '../../../../components/baseUrl';
+
 import dayjs, { Dayjs } from 'dayjs';
 import {
   IconButton,
@@ -66,6 +68,8 @@ const PreEducation = forwardRef((props, ref) => {
       stream: '',
       university: '',
       yearOfPassing: undefined,
+      startDate:'',
+      endDate:"",
 
       gradeType: '',
       grade: undefined,
@@ -102,8 +106,8 @@ const PreEducation = forwardRef((props, ref) => {
 
     const obj = {
       // companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      companyId:"COMP22",
-      applicantId: "COMPPRE2024010318025530",
+      companyId:JSON.parse(localStorage.getItem("onboardDetails")).companyID,
+      applicantId:JSON.parse(localStorage.getItem("onboardDetails")).applicantID,
       education: defaultValues,
     };
 
@@ -113,7 +117,7 @@ const PreEducation = forwardRef((props, ref) => {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addEducation`,
-    url: `https://mallard-blessed-lobster.ngrok-free.app/erp/AddApplicantEducation`,
+    url: `${baseUrl}/AddApplicantEducation`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',

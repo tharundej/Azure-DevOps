@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import { Country, State, City }  from 'country-state-city';
 import axios from 'axios';
+import { baseUrl } from '../../../../components/baseUrl';
 
 const employmentTypeOptions=[
     {label:"Permanent",id:'1'},
@@ -179,7 +180,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         method: 'post',
         maxBodyLength: Infinity,
         // url: `${baseUrl}/updateOnboardingForm`,
-        url: `https://mallard-blessed-lobster.ngrok-free.app/erp/preOnboarding`,
+        url: `${baseUrl}/preOnboarding`,
         headers: { 
           'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
           'Content-Type': 'application/json', 
@@ -221,8 +222,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
         // }
         const data={...formData};
-       data.companyID="COMP22";
-       data.applicantID="COMPPRE2024010318025530";
+       data.companyID=JSON.parse(localStorage.getItem("onboardDetails")).companyID
+       data.applicantID=JSON.parse(localStorage.getItem("onboardDetails")).applicantID
        data.maritalStatus=data?.maritalStatus?.label || ""
        data.religion=data?.religion?.label || "";
        data.nationality=data?.nationality?.nationality || "";
