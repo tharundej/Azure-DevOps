@@ -41,6 +41,26 @@ export const updateAccountInformationAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+export const updateGstInformationAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`UpdateGstInformation`, requestBody, apiHeaders);
+    console.log('API response:', response.data); // Log the response data
+    return response.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
+export const DeleteGstInformationAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`DeleteGstInformation`, requestBody, apiHeaders);
+    console.log('API response:', response.data); // Log the response data
+    return response.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
 export const DeleteAccountInformationAPI = async (requestBody) => {
   try {
     const response = await instance.post(`DeleteAccountInformation`, requestBody, apiHeaders);

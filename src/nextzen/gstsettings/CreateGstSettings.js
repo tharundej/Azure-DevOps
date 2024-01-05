@@ -18,7 +18,7 @@ import UserContext from '../context/user/UserConext';
 import { City, Country, State } from 'country-state-city';
 import {
   createAccountInformationAPI,
-  updateAccountInformationAPI,
+  updateGstInformationAPI,
   creategstInformationAPI
 } from 'src/api/Accounts/Settings';
 
@@ -40,7 +40,7 @@ export default function CreateGstSettings({
   const defaultValues = useMemo(
     () => ({
       // accountInformationId: currentData?.accountInformationId || 0,
-      // locationID: currentData?.locationID || 0,
+      locationId: currentData?.locationId || '',
       // companyID: currentData?.companyID || user?.companyID ? user?.companyID : '',
       // bankName: currentData?.bankName || '',
       // bankAccountNo: currentData?.bankAccountNo || '',
@@ -52,6 +52,7 @@ export default function CreateGstSettings({
       GSTNo: currentData?.GSTNo || '',
       PanNo: currentData?.PanNo || '',
       TanNo: currentData?.TanNo || '',
+      // gstInformationID: currentData?.gstInformationID || 0,
     }),
     [currentData]
   );
@@ -77,27 +78,51 @@ export default function CreateGstSettings({
   const [selectedFactory, setSelectedFactory] = useState();
   const [factoryOptions, setFactoryOptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const fetchFactory = async () => {
+  const [locationsOptions, setLocationsOptions] = useState([
+    { locationId: '', locationName: 'Select Location *' },
+  ]);
+  const [selectedLocation, setSelectedLocation] = useState(
+    defaultValues.locationId || locationsOptions[0]
+  );
+  // const fetchFactory = async () => {
+  //   const data = { companyID: user?.companyID ? user?.companyID : '' };
+  //   try {
+  //     const response = await getLocationAPI(data);
+  //     setFactoryOptions(response);
+  //     setSelectedFactory(defaultValues.locationID);
+  //   } catch (error) {
+  //     setErrorMessage(error.message);
+  //     console.log('API request failed:', error.message);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchFactory();
+  // }, []);
+  const fetchData = async () => {
     const data = { companyID: user?.companyID ? user?.companyID : '' };
     try {
       const response = await getLocationAPI(data);
-      setFactoryOptions(response);
-      setSelectedFactory(defaultValues.locationID);
+      console.log('location success', response);
+      setLocationsOptions(response);
+      const defaultLocation = response.find(
+        (location) => location.locationID === defaultValues.locationId
+      );
+      setSelectedLocation(defaultLocation || response[0]);
     } catch (error) {
       setErrorMessage(error.message);
       console.log('API request failed:', error.message);
     }
   };
   useEffect(() => {
-    fetchFactory();
+    fetchData();
   }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     console.log('oooo', data);
-    // data.locationID = selectedFactory;
-    data.GSTNo = parseInt(data.GSTNo);
-    data.PanNo = parseInt(data.PanNo);
-    data.TanNo = parseInt(data.TanNo);
+    data.locationId = selectedLocation.locationID;
+    // data.GSTNo = parseInt(data.GSTNo);
+    // data.PanNo = parseInt(data.PanNo);
+    // data.TanNo = parseInt(data.TanNo);
     // data.accountInformationId= currentData?.accountInformationId || 0;
     data.companyID= currentData?.companyID || user?.companyID ? user?.companyID : '';
 
@@ -106,9 +131,9 @@ export default function CreateGstSettings({
       console.log('Create Factory Data', data);
       let response = ''
       // creategstInformationAPI(data);
-      if (currentData?.PanNo) {
-        // response = 'await updateAccountInformationAPI(data)';
-        response = ''
+      if (currentData?.GSTNo) {
+        response = await updateGstInformationAPI(data);
+        // response = ''
       } else {
         response = await creategstInformationAPI(data);
       }
@@ -118,7 +143,7 @@ export default function CreateGstSettings({
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      currentData?.PanNo ? handleCountChange() : getTableData();
+      currentData?.GSTNo ? handleCountChange() : getTableData();
     } catch (error) {
       if (error.response) {
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -188,6 +213,17 @@ export default function CreateGstSettings({
                 e.target.value = e.target.value.replace(/\D/g, '').slice(0, 20);
               }}
             /> */}
+             <RHFAutocomplete
+              name="locationId"
+              id="location-autocomplete"
+              options={locationsOptions || []}
+              value={selectedLocation}
+              onChange={(event, newValue) => setSelectedLocation(newValue)}
+              getOptionLabel={(option) => option.locationName}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Location" variant="outlined" />
+              )}
+            />
             <RHFTextField name="GSTNo" label="GSTNo" />
             <RHFTextField name="PanNo" label="PanNo" />
             <RHFTextField name="TanNo" label="TanNo" />

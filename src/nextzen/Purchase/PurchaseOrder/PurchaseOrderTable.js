@@ -13,6 +13,7 @@ import ViewPurchaseOrder from './ViewPurchaseOrder';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import OrderPreview from './OrderPreview';
 import { baseUrl } from '../../global/BaseUrl';
+import CreatePurchaseOrder from './CreatePurchaseOrder';
 const PurchaseOrderTable = () => {
   const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -63,6 +64,9 @@ const PurchaseOrderTable = () => {
   const [deleteData, setDeleteData] = useState(null);
   const [viewShowForm, setViewShowForm] = useState(false);
   const [previewShowForm, setPreviewShowForm] = useState(false);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
@@ -91,7 +95,7 @@ const PurchaseOrderTable = () => {
         poNumber: poNumber || '',
       }),
     };
-    
+
     fetch(baseUrl +'/getPoGenarator', options)
     .then((resp) => resp.blob())
     .then((myBlob) => {
@@ -227,6 +231,25 @@ const PurchaseOrderTable = () => {
   };
   return (
     <>
+    {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000 },
+          }}
+          className="custom-dialog"
+        >
+
+          <CreatePurchaseOrder
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
+        </Dialog>
+      )}
       {viewShowForm && (
         <Dialog
           fullWidth

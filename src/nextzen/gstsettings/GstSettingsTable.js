@@ -12,6 +12,7 @@ import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
 import UserContext from '../context/user/UserConext';
 import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
+import { DeleteGstInformationAPI } from 'src/api/Accounts/Settings';
 
 const GstSettingsTable = () => {
   const { user } = useContext(UserContext);
@@ -55,6 +56,7 @@ const GstSettingsTable = () => {
         locationID: rowdata?.locationID || 0,
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
+        gstInformationID: rowdata?.gstInformationID || 0,
       };
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
@@ -77,7 +79,7 @@ const GstSettingsTable = () => {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await DeleteAccountInformationAPI(deleteData);
+      const response = await DeleteGstInformationAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
       handleCountChange();
@@ -139,6 +141,7 @@ const GstSettingsTable = () => {
             handleClose={handleClose}
             handleCountChange={handleCountChange}
           />
+
         </Dialog>
       )}
       <Helmet>
