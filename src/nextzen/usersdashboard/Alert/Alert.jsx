@@ -14,9 +14,6 @@ const Alert = ({ title,  list, ...other }) => {
       {/* {list.map((author, index) => (
         <AuthorItem key={author.employeeID} author={author} index={index} />
       ))} */}
-      <Card 
-      sx={{backgroundColor:"blue" ,padding:'10px',margin:"10px"}}
-      >Please Configure </Card>
     </Stack>
     </Scrollbar>
   
