@@ -47,7 +47,7 @@ const [loading,setLoading] = React.useState(false);
     { id: 'basicMonthSalary', label: 'Basic Of Month', type: 'text' , minWidth: 140},
     { id: 'hra', label: 'HRA', type: 'text' , minWidth: 140},
     { id: 'lta', label: 'LTA', type: 'text' , minWidth: 140},
-    { id: 'esic', label: 'ESIC  Amount', type: 'text' , minWidth: 140},
+    { id: 'esic', label: 'ESI  Amount', type: 'text' , minWidth: 140},
     { id: 'tds', label: 'TDS', type: 'text', minWidth: 140 },
     { id: 'specialAllowance', label: 'Special Allowance', type: 'text', minWidth: 140 },
 
