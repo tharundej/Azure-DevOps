@@ -21,12 +21,12 @@ const Login = () => {
         const config={
             method:'POST',
             maxBodyLength:Infinity,
-            url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp/PreLogin`,
+            url:`http://192.168.1.199:3001/erp/PreLogin`,
             data:data
            }
            axios.request(config).then((response)=>{
                 console.log(response,"loginResponsee")
-                alert(response?.data?.message)
+                localStorage?.setItem('onboardDetails',JSON.stringify(response?.data))
               handleLoginvalue()
            })
            .catch((error)=>{

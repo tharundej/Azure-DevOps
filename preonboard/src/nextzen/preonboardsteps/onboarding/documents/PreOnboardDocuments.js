@@ -12,6 +12,8 @@ import { Grid,Box,Card ,Typography,Button,  FormControl,
 // import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import {baseUrl} from '../../../../components/baseUrl'
+
 const  PreOnboardDocuments=forwardRef((props,ref)=> {
 
 //   const { enqueueSnackbar } = useSnackbar();
@@ -90,8 +92,8 @@ const VisuallyHiddenInput = styled('input')({
     childFunctionDocuments(){
       console.log('ggg')
       const obj={
-        "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-        "employeeId": localStorage.getItem('employeeIdCreated'),
+        "companyId": JSON.parse(localStorage.getItem("onboardDetails")).companyID,
+        "applicantId": JSON.parse(localStorage.getItem("onboardDetails")).applicantID,
         documents:defaultValues
       }
 
@@ -117,7 +119,7 @@ const VisuallyHiddenInput = styled('input')({
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-    //   url: `${baseUrl}/addDocuments`,
+      url: `${baseUrl}/addAplicantsDocument`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'

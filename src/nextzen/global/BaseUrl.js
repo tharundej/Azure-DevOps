@@ -1,6 +1,5 @@
 // ngrok
 
-
   export const baseUrl=`https://mallard-blessed-lobster.ngrok-free.app/erp`
 
 
@@ -14,6 +13,6 @@
 
 export const baseImageUrl =`https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`;
 
-export default `https://mallard-blessed-lobster.ngrok-free.app/erp/download?file=`;
+
 
 

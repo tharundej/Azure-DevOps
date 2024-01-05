@@ -21,7 +21,7 @@ import axios from 'axios';
 import UserContext from 'src/nextzen/context/user/UserConext';
 
 
-export default function EmployeeTable() {
+export default function PreOnboardTable() {
 
   const actions = [
 
@@ -94,7 +94,7 @@ export default function EmployeeTable() {
 
   const defaultPayload={
     
-    employeeID: user?.employeeID,
+    // employeeID: user?.employeeID,
     roleID:user?.roleID,
     "count": 10,
      
@@ -219,7 +219,8 @@ export default function EmployeeTable() {
        
       };
       //encryptData()
-     router.push(paths.dashboard.employee.userview(ele?.employeeId));
+      console.log(ele,'eleele')
+     router.push(paths.dashboard.employee.userviewpreonboard(ele?.applicant_id));
       
       
     },
@@ -239,9 +240,9 @@ export default function EmployeeTable() {
 
       headerData={TABLE_HEAD} */}
 
-      <BasicTable headerData={TABLE_HEAD} endpoint="/employeeDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
+      <BasicTable headerData={TABLE_HEAD} endpoint="/getApplicantDetails"  defaultPayload={defaultPayload} filterOptions={filterOptions}
 
-rowActions={actions} filterName="EmployeeFilterSearch"  handleEditRowParent={handleEditRowParent}
+rowActions={actions} filterName=""  handleEditRowParent={handleEditRowParent}
  />
     </>
   );

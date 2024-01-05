@@ -165,7 +165,8 @@ const BasicTable = ({
   isShowHandle,
   componentPage,count,
   mergingRowArray,
-  updateTotalState
+  updateTotalState,
+  handleOpenOffer
 
 }) => {
   const popover = usePopover();
@@ -939,6 +940,7 @@ const [index, setIndex]=useState(""); // index setting
                             //   handleEditRowParent(id)
                             //   }
                             // }
+                           
                             onHandleEditRow={(row, clickedElementId) => {
 
                               if (handleEditRowParent) {
@@ -953,7 +955,10 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
-
+                              else if(clickedElementId==="generateOfferLetter"){
+                                handleOpenOffer(row)
+                              }
+                             
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}

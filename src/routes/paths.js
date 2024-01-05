@@ -132,6 +132,7 @@ export const paths = {
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
        onboardform: `/employeemanagementhome/onboardform`,
        userview: (id) => `/employeemanagementhome/${id}/employeeview`,
+       userviewpreonboard: (id) => `/employeemanagementhome/${id}/preonboard`,
        changepassword:`/changepassword`,
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
