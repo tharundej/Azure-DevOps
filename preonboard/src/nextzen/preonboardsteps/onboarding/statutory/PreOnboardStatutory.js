@@ -16,6 +16,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { baseUrl } from '../../../../components/baseUrl';
  
 import { Button,Box,Autocomplete,TextField ,Grid,Stack} from '@mui/material';
  
@@ -49,9 +50,9 @@ const PreOnboardStatutory = forwardRef((props,ref) => {
         
         console.log(localStorage.getItem('employeeIdCreated'),'localStorage')
        // currentUser.employeeID=localStorage.getItem('employeeIdCreated');
-       currentUser.applicantID="COMPPRE2024010318025530";
+       currentUser.applicantID=JSON.parse(localStorage.getItem("onboardDetails")).applicantID
         //currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
-        currentUser.companyID="comp22"
+        currentUser.companyID=JSON.parse(localStorage.getItem("onboardDetails")).companyID
         props.handleLoader();
      
          

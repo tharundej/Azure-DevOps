@@ -93,7 +93,7 @@ export default function EmployeeTable() {
   console.log(user,'pppoppp')
 
   const defaultPayload={
-    records:user?.rolePermissions?.employeeManagement?.fullAccess,
+    
     employeeID: user?.employeeID,
     roleID:user?.roleID,
     "count": 10,

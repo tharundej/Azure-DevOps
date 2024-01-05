@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import Iconify from '../../../../components/Iconify';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import { useSnackbar } from 'src/components/snackbar';
+import {baseUrl} from "../../../../components/baseUrl"
 
 import React, {
   useState,
@@ -164,7 +165,7 @@ const PreExperience = forwardRef((props, ref) => {
   };
 
   const ApiHitExperience = () => {
-    console.log('aswinnn')
+   
     const invalidFields = defaultValues.filter(
       (item) => !item.previousCompanyName || !item.designation
     );
@@ -178,8 +179,8 @@ const PreExperience = forwardRef((props, ref) => {
 
     const obj = {
       // companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      companyId:"COMP22",
-      applicantId: "COMPPRE2024010318025530",
+      companyId:JSON.parse(localStorage.getItem("onboardDetails")).companyID,
+      applicantId:JSON.parse(localStorage.getItem("onboardDetails")).applicantID,
       experience: defaultValues,
     };
     console.log(obj, 'obbbbb');
@@ -188,7 +189,7 @@ const PreExperience = forwardRef((props, ref) => {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addExperience`,
-    url: `https://mallard-blessed-lobster.ngrok-free.app/erp/addApplicantWorkDetails`,
+      url: `${baseUrl}/addApplicantWorkDetails`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
