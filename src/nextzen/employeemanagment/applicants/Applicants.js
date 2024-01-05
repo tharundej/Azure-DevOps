@@ -108,7 +108,7 @@ export default function Applicants(){
             { id: 'contactNumber', label: 'Contact Number',  type: 'text',minWidth:"10pc"  },
             { id: 'email', label: 'Email',  type: 'text',minWidth:"10pc"  },
             { id : 'gender', label:'Gender',type:'text',minWidth:'8pc'},
-            { id: 'lastWorkingDay', label: 'Commencement Date',  type: 'date',minWidth:"12pc"  },
+            { id: 'joining_date', label: 'Commencement Date',  type: 'date',minWidth:"12pc"  },
             { id: 'generateOfferLetter',label:'Offer Letter',type:'button'}
         ])
         const handleInviteClose=()=>{
@@ -454,52 +454,70 @@ export default function Applicants(){
            ApiHitDepartment(obj)
             
          },[])
-        
+const [offerLetter,setOfferLetter] = useState(false)
 const generateOfferLetter =()=>{
-    const obj={
-                
-        "companyID":currentWorkData?.companyID,
-        "applicantID":applicantDetails?.applicant_id,
-        "employmentType":currentWorkData?.employmentType,
-        "departmentID":currentWorkData?.departmentID?.departmentID,
-        "designationID":currentWorkData?.designationID?.designationID,
-        "designationGradeID":currentWorkData?.designationGradeID?.designationGradeID,
-        "ctc":parseInt(currentWorkData?.ctc,10),
-        "monthlyPay":currentWorkData?.monthlyPay,
-        "bonus":currentWorkData?.bonus,
-        "variablePay":currentWorkData?.variablePay,
-        "followSalaryStructure":currentWorkData?.salaryStructure
-    
+ 
+const options = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1' },
+  body: JSON.stringify({
+    "companyID":currentWorkData?.companyID,
+    "applicantID":applicantDetails?.applicant_id,
+    "employmentType":currentWorkData?.employmentType,
+    "departmentID":currentWorkData?.departmentID?.departmentID,
+    "designationID":currentWorkData?.designationID?.designationID,
+    "designationGradeID":currentWorkData?.designationGradeID?.designationGradeID,
+    "ctc":parseInt(currentWorkData?.ctc,10),
+    "monthlyPay":currentWorkData?.monthlyPay,
+    "bonus":currentWorkData?.bonus,
+    "variablePay":currentWorkData?.variablePay,
+    "followSalaryStructure":currentWorkData?.salaryStructure
+  }),
+};
+
+fetch('http://192.168.1.199:3001/erp/addCurrentWorkDetails', options)
+  .then((resp) => resp.blob())
+  .then((myBlob) => {
+    const url = window.URL.createObjectURL(
+      new Blob([myBlob], {
+        type: 'application/pdf',
+        encoding: 'UTF-8'
+      })
+    );
+
+    // Open the PDF in a new tab
+    window.open(url, '_blank');
+    setOfferLetter(true)
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 }
-const config={
-    method: 'POST',
+
+const sentMail =()=>{
+  const payload ={
+      "applicantEmail":applicantDetails?.email,
+      "applicantId":applicantDetails?.applicant_id,
+      "link":"randomlink.com"
+  }
+  const config={
+    method:'POST',
     maxBodyLength: Infinity,
-    url: `http://192.168.1.199:3001/erp/addCurrentWorkDetails`,
-    data: obj,
+    url: baseUrl + `/SendOfferLater`,
+    data: payload,
   }
   axios
       .request(config)
       .then((response) => {
         console.log(response, 'responsedata', response.data);
-       if(response.data){
-         dowloadPDF(response.data)
-       }
+     
       })
       .catch((error) => {
         console.log(error);
       });
+
 }
-const dowloadPDF =(resp)=>{
-          const myBlob = resp.blob()
-          const url = window.URL.createObjectURL(
-            new Blob([myBlob], {
-              type: 'application/pdf',
-              encoding: 'UTF-8'
-            })
-          );
-      
-          window.open(url, '_blank');
-}
+
 return (
         <>
             <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
@@ -800,7 +818,7 @@ return (
 </Box>
 <Grid sx={{float:"right",display:"flex",justifyContent:'flex-end'}}>
 <Button sx={{marginRight:2}} variant="contained" color="primary" onClick={generateOfferLetter}>Generate Offer</Button>
-<Button variant="contained" color="primary" onClick={generateOfferLetter}>Send</Button>
+<Button variant="contained" disabled={offerLetter==false} color="primary" onClick={sentMail}>Send</Button>
 </Grid>
 </Stack>
 </Grid>
