@@ -11,13 +11,14 @@ import Grid from '@mui/material/Grid';
 import InfoIcon from '@mui/icons-material/Info';
 import Paper from '@mui/material/Paper';
 import { Route } from 'react-router';
-
+import { Link } from 'react-router-dom';
 import Brightness1Icon from '@mui/icons-material/Brightness1';
 import { useContext  ,useState} from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import axios from 'axios';
 import "./payrun.css"
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
+import { LoadingScreen } from 'src/components/loading-screen';
 function Payrun( {handleCreatePayrun ,handleEmpType} ) {
   const {user} = useContext(UserContext)
   // const baseUrl ="https://2d56hsdn-3001.inc1.devtunnels.ms/erp"
@@ -45,7 +46,7 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
 
 
   const getPayRunDetails = async () => {
-    // setLoading(true)
+     setLoading(true)
     const payload = {
      companyID : cmpId,
     };
@@ -66,7 +67,7 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
       .request(config)
       .then((response) => {
         if (response.status === 200) {
-          // setLoading(false)
+           setLoading(false)
           const rowsData = response?.data;
           setPayRunDetails(rowsData)
           console.log(JSON.stringify(response?.data), 'result');
@@ -83,7 +84,7 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
 // https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails
 const handleCreate = async (data) => {
 
-  // setLoading(true)
+   setLoading(true)
   const payload = {
    companyID : cmpId,
    employementType : data
@@ -105,7 +106,7 @@ const handleCreate = async (data) => {
     .request(config)
     .then((response) => {
       if (response.status === 200) {
-        // setLoading(false)
+         setLoading(false)
         const rowsData = response?.data?.data;
         handleCreatePayrun()
         handleEmpType(data)
@@ -160,7 +161,12 @@ React.useEffect(()=>{
   };
   return (
     <div  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
-
+  {loading ? (
+        <Card sx={{ height: '60vh' }}>
+          <LoadingScreen />
+        </Card>
+      ) : (
+        <>
  {payRunDetails?.data && payRunDetails?.data?.map((item ,index) =>(
   <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" ,alignItems:"center" ,paddingLeft:"2rem" }}>
       <CardContent style={{padding:"16px !important"}}>
@@ -245,7 +251,9 @@ React.useEffect(()=>{
 
  
     }
-    {!payRunDetails?.data && <p>No Pay Schedule is avialable</p> }
+    {!payRunDetails?.data && <p>No Payroll is  available. <Link to="/configurations/payschedule">Click Here</Link> to Add Payroll</p> }
+    </>
+ ) }
     </div>
   );
 }

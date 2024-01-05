@@ -232,7 +232,7 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
                 <TextField
                   {...params}
                   label={
-                     'Please Select Financial Year working'
+                     'Please Select Financial Year'
                     
                   }
                 />
@@ -259,8 +259,12 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
             />
           </Grid> }
       </Grid>
- { 
- <>  <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
+ { (!selectedYear || selectedYear.length === 0) ?
+  <div  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+ <p>No History is available</p>
+ </div> :
+ <> 
+  <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
      <Grid xs={12} md={6} lg={6}>
   <Stack
     direction="column"

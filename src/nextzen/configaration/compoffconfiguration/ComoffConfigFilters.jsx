@@ -48,7 +48,7 @@ import Select from '@mui/material/Select';
 // import './ShiftFilter.css'
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
-
+import Badge from '@mui/material/Badge';
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import ComoffConfigurationForm from './CompoffConfiguration';
 
@@ -115,7 +115,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
   const [dropdownDesignationGradeName, setDropdownDesignationGradeName] = useState([]);
   const [dropdownLocation, setdropdownLocation] = useState([]);
   const [dropdowncompensantoryPolicies, setdropdowncompensantoryPolicies] = useState([]);
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'date_activity',
@@ -239,6 +239,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
 
   const handleApply = async () => {
     setDatesData([]);
+    setBadgeContent(true);
     const data = await formWithDropdown();
     filterData(data);
     console.log(data, ';;;');
@@ -253,34 +254,50 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
     };
   return (
     <>
-       <Grid
+        <Grid
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Grid item  md={6} xs={4}>
+        <Grid item lg={8} md={8} xs={12} sm={8}>
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item  md={4} xs={4}>
+        <Grid item lg={2} md={2} xs={8} sm={2}>
             <ComoffConfigurationForm getTableData={getTableData}/>
        </Grid>
-        <Grid item  md={2} xs={4}>
-        <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+       <Grid item lg={2} md={2} xs={4} sm={2}>
+       {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
+                Filters
               </Button>
-            </Stack>
-          </Grid>
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
         </Grid>
       </Grid>
 

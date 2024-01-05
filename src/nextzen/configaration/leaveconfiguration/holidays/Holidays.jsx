@@ -49,7 +49,7 @@ export default function Holidays({ currentUser }) {
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
-    // { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
+    //  { name: 'Delete', icon: 'solar:trash-bin-trash-bold', path: 'jjj', endpoint: '/' },
   ];
   // const bodyContent = [
   //   {
@@ -102,37 +102,37 @@ export default function Holidays({ currentUser }) {
     setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
-  // const deleteFunction = async (rowdata, event) => {
-  //   console.log('iam here ');
-  //   try {
-  //     console.log(rowdata, 'rowData:::::');
-  //     const data = {
-  //       companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-  //       holidayID: rowdata.holidayID,
-  //     };
-  //     const response = await axios.post(baseUrl + '/deleteHoliday', data);
-  //     if (response?.data?.code === 200) {
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage(response?.data?.message);
-  //       setSnackbarOpen(true);
-  //       handleCloseEdit();
-  //       console.log('sucess', response);
-  //     }
-  //     if (response?.data?.code === 400) {
-  //       setSnackbarSeverity('success');
-  //       setSnackbarMessage(response?.data?.message);
-  //       setSnackbarOpen(true);
-  //       handleCloseEdit();
-  //       console.log('sucess', response);
-  //     }
-  //   } catch (error) {
-  //     setSnackbarSeverity('error');
-  //     setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
-  //     setSnackbarOpen(true);
-  //     handleCloseEdit();
-  //     console.log('error', error);
-  //   }
-  // };
+  const deleteFunction = async (rowdata, event) => {
+    console.log('iam here ');
+    try {
+      console.log(rowdata, 'rowData:::::');
+      const data = {
+        companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+        holidayID: rowdata.holidayID,
+      };
+      const response = await axios.post(baseUrl + '/deleteHoliday', data);
+      if (response?.data?.code === 200) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
+      if (response?.data?.code === 400) {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(response?.data?.message);
+        setSnackbarOpen(true);
+        handleCloseEdit();
+        console.log('sucess', response);
+      }
+    } catch (error) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error While Deleting Leave Type. Please try again.');
+      setSnackbarOpen(true);
+      handleCloseEdit();
+      console.log('error', error);
+    }
+  };
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
