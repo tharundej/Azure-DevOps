@@ -57,7 +57,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const [options, setOptions] = useState({
     countryOptions: [],
     stateOptions: [],
-    cityOptions:[],
+    cityOptions: [],
   });
   const [datesUsed, setDatesUsed] = useState({
     companyDateOfIncorporation: null,
@@ -82,7 +82,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const [companyId, setCompanyId] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [empIdPrefix, setEmpIdPrefix] = useState(false);
-  const [country,setCountry] = useState(false);
+  const [country, setCountry] = useState(false);
   const [LogoError, setLogoError] = useState(false);
   const [form, setForm] = useState({
     cin: '',
@@ -92,7 +92,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyDateOfIncorporation: '',
     companyType: '',
     industryType: '',
-    modules:'',
+    modules: '',
     emailId: '',
     phoneNo: '',
     firstName: '',
@@ -105,7 +105,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     companyCountry: '',
     companyState: '',
     companyCity: '',
-    logoName:'',
+    logoName: '',
   });
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -213,7 +213,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   const defaultValues = {
     cin: '',
     companyName: '',
-    companyRegistrationNo: undefined,
+    companyRegistrationNo: '',
     companyCeoName: '',
     companyDateOfIncorporation: '',
     companyType: '',
@@ -252,6 +252,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     accounts: false,
     wms: false,
   });
+  const [storeModules, setStoreModules] = useState();
   const handleCheckboxChange = (name) => {
     setCheckboxes((prevCheckboxes) => {
       let updatedCheckboxes;
@@ -289,11 +290,11 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     setOptions(newArray);
   }, []);
   const onChnageAutoComplete = (obj) => {
-    const fieldName='companyCountry'
-    setForm((prevForm) => ({
-      ...prevForm,
-      [fieldName]: obj?.name,
-    }));
+    const fieldName = 'companyCountry';
+    // setForm((prevForm) => ({
+    //   ...prevForm,
+    //   [fieldName]: obj?.name,
+    // }));
     console.log(obj, 'objjjjj');
     const objCountry = {
       country: obj?.name,
@@ -316,10 +317,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   };
   const onChnageAutoCompleteState = (obj) => {
     const fieldName = 'companyState';
-    setForm((prevForm) => ({
-      ...prevForm,
-      [fieldName]: obj?.name,
-    }));
+    // setForm((prevForm) => ({
+    //   ...prevForm,
+    //   [fieldName]: obj?.name,
+    // }));
     const objState = {
       country: obj?.name,
     };
@@ -409,10 +410,11 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     }
   });
   const handleFieldChange = (fieldName, newValue) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      [fieldName]: newValue,
-    }));
+    // setForm((prevForm) => ({
+    //   ...prevForm,
+    //   [fieldName]: newValue,
+    // }));
+    methods.setValue(fieldName, newValue);
   };
   // Inside JwtRegisterView component
   const handleCINChange = async (newValue) => {
@@ -429,36 +431,33 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       if (response?.data?.code === 200) {
         setCompanyId(response?.data?.data?.companyId);
         const responseData = response?.data?.data;
-        console.log(responseData,'responseData')
+        console.log(responseData, 'responseData');
         setEmpIdPrefix(true);
-        setCountry(true)
+        setStoreModules(responseData?.modules);
+        setCountry(true);
         setImageData([{ name: 'sais', data: baseImageUrl + responseData?.logoName }]);
         setImageUrl(baseImageUrl + responseData?.logoName);
-        setForm((prevForm) => ({
-          ...prevForm,
-          companyName: responseData?.companyName,
-          companyRegistrationNo: responseData?.companyRegistrationNo,
-          companyCeoName: responseData?.companyCeoName,
-          companyDateOfIncorporation: responseData?.companyDateOfIncorporation,
-          companyType: responseData?.companyType,
-          industryType: responseData?.industryType,
-          modules:responseData?.modules,
-          emailId: responseData?.emailId,
-          phoneNo: responseData?.phoneNo,
-          firstName: responseData?.firstName,
-          middleName: responseData?.middleName,
-          lastName: responseData?.lastName,
-          companyAddressLine1: responseData?.companyAddressLine1,
-          companyAddressLine2: responseData?.companyAddressLine2,
-          companyPincode: responseData?.companyPincode,
-          empIdPrefix: responseData?.empIdPrefix,
-          companyCountry: responseData?.companyCountry?.name,
-          companyState: responseData?.companyState?.name,
-          companyCity: responseData?.companyCity?.name,
-          logoName:responseData?.logoName
-        }));
-
-        console.log('success', response);
+        methods.setValue('companyName', responseData?.companyName),
+          methods.setValue('companyRegistrationNo', responseData?.companyRegistrationNo),
+          methods.setValue('companyCeoName', responseData?.companyCeoName),
+          methods.setValue('companyDateOfIncorporation', responseData?.companyDateOfIncorporation),
+          methods.setValue('companyType', responseData?.companyType),
+          methods.setValue('industryType', responseData?.industryType),
+          methods.setValue('modules', responseData?.modules),
+          methods.setValue('emailId', responseData?.emailId),
+          methods.setValue('phoneNo', responseData?.phoneNo),
+          methods.setValue('firstName', responseData?.firstName),
+          methods.setValue('middleName', responseData?.middleName),
+          methods.setValue('lastName', responseData?.lastName),
+          methods.setValue('companyAddressLine1', responseData?.companyAddressLine1),
+          methods.setValue('companyAddressLine2', responseData?.companyAddressLine2),
+          methods.setValue('companyCountry', responseData?.companyCountry),
+          methods.setValue('companyState', responseData?.companyState),
+          methods.setValue('companyPincode', responseData?.companyPincode),
+          methods.setValue('companyCity', responseData?.companyCity),
+          methods.setValue('logoName', responseData?.logoName),
+          methods.setValue('empIdPrefix', responseData?.empIdPrefix),
+          console.log('success', response);
         setButton(false);
       }
 
@@ -479,9 +478,9 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     callApiIfAllFieldsFilled();
   };
   const callApiIfAllFieldsFilled = async () => {
-    const cinValue = form?.cin;
-    const emailValue = form?.emailId;
-    const regNoValue = form?.companyRegistrationNo;
+    const cinValue = methods.getValues('cin');
+    const emailValue = methods.getValues('emailId');
+    const regNoValue = methods.getValues('companyRegistrationNo');
     if (cinValue !== null && emailValue !== null && regNoValue !== null) {
       try {
         const payload = {
@@ -528,19 +527,22 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       console.error('API Error:', error);
     }
   };
-
+  const onSample =()=>{console.log('Update hitting')}
   const onSubmit1 = handleSubmit(async (data) => {
+    console.log("calling me ")
     try {
       const payload = {
         cin: data.cin,
         companyName: data.companyName,
         companyRegistrationNo: parseInt(data.companyRegistrationNo, 10),
+        companyDateOfIncorporation:formatDateToYYYYMMDD(datesUsed.companyDateOfIncorporation),
         companyCeoName: data.companyCeoName,
         companyType: data.companyType,
         industryType: data.industryType,
         companyEmailId: data.emailId,
         companyPhoneNo: parseInt(data.phoneNo, 10),
         firstName: data.firstName,
+        middleName:data.middleName,
         lastName: data.lastName,
         companyAddressLine1: data.companyAddressLine1,
         companyAddressLine2: data.companyAddressLine2,
@@ -550,12 +552,12 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
         companyPincode: parseInt(data.companyPincode, 10),
         empIdPrefix: data.empIdPrefix,
         logoName: imageData[0]?.name,
-        modules: moduleArray || [],
+        modules: moduleArray ,
         companyLogo: imageData[0]?.data.split(',')[1],
-        companyId: companyId,
+        // companyId: companyId,
       };
 
-      console.log(payload);
+      console.log(payload, 'payloaddddd');
       if (data.companyDateOfIncorporation != 'NaN-NaN-NaN') {
         data.companyDateOfIncorporation = formatDateToYYYYMMDD(
           datesUsed.companyDateOfIncorporation
@@ -585,18 +587,19 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
   });
-
   useEffect(() => {
-    // Set the initial state based on the 'modules' array
-    setCheckboxes((prevCheckboxes) => ({
-      ...prevCheckboxes,
-      all: form?.modules.includes('all'),
-      hrms: form?.modules.includes('hrms'),
-      accounts: form?.modules.includes('accounts'),
-      wms: form?.modules.includes('wms'),
-    }));
-  }, [form]);
+    const updatedCheckboxes = { ...checkboxes };
+    storeModules?.forEach((module) => {
+      if (updatedCheckboxes.hasOwnProperty(module)) {
+        updatedCheckboxes[module] = true;
+      }
+    });
+    setCheckboxes(updatedCheckboxes);
 
+    // Update form data with the modules array
+    // methods.setValue('modules', responseData?.modules);
+  }, [storeModules]);
+  // console.log(modules,'')
   const renderTerms = (
     <Typography
       component="div"
@@ -639,9 +642,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   placeholder=" Ex: L67190MH2020PLC123456"
                   maxLength={21}
-
                   // onChange={(e) => handleFieldChange('cin', e.target.value)}
-                 onBlur={(e) => handleCINChange(e.target.value)}
+                  onBlur={(e) => handleCINChange(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -652,7 +654,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Company Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.companyName}
+                  // value={form?.companyName}
                   onChange={(e) => handleFieldChange('companyName', e.target.value)}
                 />
               </Grid>
@@ -667,7 +669,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   maxLength={8}
                   type="number"
                   onBlur={handleRegistrationNoBlur}
-                  value={form?.companyRegistrationNo}
                   onChange={(e) => handleFieldChange('companyRegistrationNo', e.target.value)}
                 />
               </Grid>
@@ -708,7 +709,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   maxLength={50}
                   type="text"
-                  value={form?.companyCeoName}
                   onChange={(e) => handleFieldChange('companyCeoName', e.target.value)}
                 />
               </Grid>
@@ -720,9 +720,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Company Type<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.companyType}
                   options={companyTypes.map((companyType) => companyType.type)}
-                  onChange={(e,value) => handleFieldChange('companyType', value)}
+                  onChange={(e, value) => handleFieldChange('companyType', value)}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -733,7 +732,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Email ID<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.emailId}
                   onBlur={handleEmailBlur}
                   onChange={(e) => handleFieldChange('emailId', e.target.value)}
                 />
@@ -746,7 +744,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Phone Number<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.phoneNo}
                   maxLength={10}
                   type="number"
                   onChange={(e) => handleFieldChange('phoneNo', e.target.value)}
@@ -760,7 +757,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Contact Person First Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.firstName}
                   maxLength={30}
                   type="text"
                   onChange={(e) => handleFieldChange('firstName', e.target.value)}
@@ -772,7 +768,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   label="Contact Person Middle Name"
                   maxLength={30}
                   type="text"
-                  value={form?.middleName}
                   onChange={(e) => handleFieldChange('middleName', e.target.value)}
                 />
               </Grid>
@@ -784,7 +779,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Contact Person Last Name<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.lastName}
                   maxLength={30}
                   type="text"
                   onChange={(e) => handleFieldChange('lastName', e.target.value)}
@@ -798,7 +792,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Permanent Address Line 1 <span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.companyAddressLine1}
                   maxLength={40}
                   type="text"
                   onChange={(e) => handleFieldChange('companyAddressLine1', e.target.value)}
@@ -810,7 +803,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   label={<span>Permanent Address Line 2</span>}
                   maxLength={40}
                   type="text"
-                  value={form?.companyAddressLine2}
                   onChange={(e) => handleFieldChange('companyAddressLine2', e.target.value)}
                 />
               </Grid>
@@ -824,14 +816,14 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   options={options?.countryOptions || []}
                   getOptionLabel={(option) => option.name}
-                  disabled={country}
-                  onChnageAutoComplete={onChnageAutoComplete}
+                 
+                   onChnageAutoComplete={onChnageAutoComplete}
                   renderOption={(props, option) => (
                     <li {...props} key={option.name}>
                       {option.name}
                     </li>
                   )}
-                  value={options?.countryOptions.find((country) => country.name === form?.companyCountry) || null}
+                  // value={options?.countryOptions.find((country) => country.name === form?.companyCountry) || null}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -844,15 +836,14 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   options={options?.stateOptions || []}
                   getOptionLabel={(option) => option.name}
-                  disabled={country}
-                  onChnageAutoComplete={onChnageAutoCompleteState}
+                 
+                   onChnageAutoComplete={onChnageAutoCompleteState}
                   renderOption={(props, option) => (
                     <li {...props} key={option.name}>
                       {option.name}
                     </li>
                   )}
-                   value={options?.stateOptions.find((state) => state.name === form?.companyState) || null}
-                  
+                  //  value={options?.stateOptions.find((state) => state.name === form?.companyState) || null}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -865,14 +856,14 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                   }
                   options={options?.cityOptions || []}
                   getOptionLabel={(option) => option.name}
-                  disabled={country}
+                 
                   renderOption={(props, option) => (
                     <li {...props} key={option.name}>
                       {option.name}
                     </li>
                   )}
-                   value={options?.cityOptions.find((city) => city.name === form?.companyCity) || null}
-                   onChange={(e,value) => handleFieldChange('companyCity', value?.name)}
+                  //  value={options?.cityOptions.find((city) => city.name === form?.companyCity) || null}
+                  // onChange={(e, value) => handleFieldChange('companyCity', value)}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -883,9 +874,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Pin Code<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.companyPincode}
                   maxLength={6}
-                  type="text"
+                  type="number"
                   onChange={(e) => handleFieldChange('companyPincode', e.target.value)}
                 />
               </Grid>
@@ -897,7 +887,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Employee ID Prefix<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.empIdPrefix}
                   maxLength={4}
                   type="text"
                   disabled={empIdPrefix}
@@ -913,9 +902,8 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
                       Industry Type<span style={{ color: 'red' }}>*</span>
                     </span>
                   }
-                  value={form?.industryType}
                   options={industryTypes.map((names) => names.type)}
-                  onChange={(e) => handleFieldChange('industryType', e.target.value)}
+                  onChange={(e, value) => handleFieldChange('industryType', value)}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -1100,7 +1088,6 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
     setSnackbarOpen(false);
     setOpen(false);
   };
-  console.log(form,'form')
   return (
     <StyledContainer>
       <div style={{ backgroundColor: '' }}>

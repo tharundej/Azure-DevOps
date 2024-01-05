@@ -267,6 +267,7 @@ export default function ShiftConfigurationForm({ currentUser }) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
+                isOptionEqualToValue={(option, value) => option.label === value.label}
                 onChange={(event, newValue, selectedOption) =>
                   handleAutocompleteChange('Location', newValue, selectedOption)
                 }
