@@ -268,14 +268,14 @@ useEffect(()=>{
 
     const ApiHit=()=>{
       let data = JSON.stringify({
-        "employeeID": employeeIDForApis,
+        "applicantId": employeeIDForApis,
         // companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
       });
        
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${baseUrl}/getOnboardingFormDetails`,
+        url: `${baseUrl}/getpreOnboardingFormDetails`,
         headers: { 
           'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
           'Content-Type': 'application/json', 
